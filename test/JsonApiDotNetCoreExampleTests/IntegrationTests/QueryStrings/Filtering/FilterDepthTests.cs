@@ -422,7 +422,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 

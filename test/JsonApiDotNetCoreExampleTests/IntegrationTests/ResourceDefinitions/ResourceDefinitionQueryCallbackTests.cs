@@ -48,7 +48,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -97,7 +96,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -148,7 +146,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -196,7 +193,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -244,7 +240,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -277,7 +272,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -305,7 +299,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -336,7 +329,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -369,7 +361,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -400,7 +391,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -451,7 +441,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -500,7 +489,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -539,7 +527,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 

@@ -274,7 +274,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             {
                 await dbContext.ClearTableAsync<MusicTrack>();
                 dbContext.MusicTracks.AddRange(musicTracks);
-
                 await dbContext.SaveChangesAsync();
             });
 

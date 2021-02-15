@@ -37,7 +37,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.Add(post);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -101,7 +100,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -537,7 +535,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 

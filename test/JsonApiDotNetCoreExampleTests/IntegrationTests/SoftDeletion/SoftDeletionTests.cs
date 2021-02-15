@@ -48,7 +48,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 await dbContext.ClearTableAsync<Department>();
                 dbContext.Departments.AddRange(departments);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -89,7 +88,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 await dbContext.ClearTableAsync<Department>();
                 dbContext.Departments.AddRange(departments);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -118,7 +116,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Departments.Add(department);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -160,7 +157,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -195,7 +191,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -254,7 +249,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 await dbContext.ClearTableAsync<Company>();
                 dbContext.Companies.AddRange(companies);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -298,7 +292,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -333,7 +326,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -364,7 +356,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -415,7 +406,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Companies.Add(company);
-
                 await dbContext.SaveChangesAsync();
             });
 

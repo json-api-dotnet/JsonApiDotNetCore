@@ -35,7 +35,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -193,7 +192,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -574,7 +572,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             {
                 await dbContext.ClearTableAsync<WebAccount>();
                 dbContext.Accounts.AddRange(accounts);
-
                 await dbContext.SaveChangesAsync();
             });
 

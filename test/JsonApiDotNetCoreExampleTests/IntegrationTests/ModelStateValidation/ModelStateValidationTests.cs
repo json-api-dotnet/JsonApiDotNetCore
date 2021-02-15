@@ -211,7 +211,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 dbContext.Directories.AddRange(parentDirectory, subdirectory);
                 dbContext.Files.Add(file);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -602,7 +601,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 dbContext.Directories.AddRange(directory, otherParent, otherSubdirectory);
                 dbContext.Files.Add(otherFile);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -853,7 +851,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 dbContext.Directories.Add(directory);
                 dbContext.Files.Add(otherFile);
-
                 await dbContext.SaveChangesAsync();
             });
 

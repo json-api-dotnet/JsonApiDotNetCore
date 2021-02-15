@@ -89,7 +89,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<Blog>();
                 dbContext.Blogs.AddRange(blogs);
-
                 await dbContext.SaveChangesAsync();
             });
 

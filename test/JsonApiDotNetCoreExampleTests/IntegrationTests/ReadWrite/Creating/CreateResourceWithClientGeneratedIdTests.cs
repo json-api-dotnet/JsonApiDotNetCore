@@ -214,7 +214,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.RgbColors.Add(existingColor);
-                
                 await dbContext.SaveChangesAsync();
             });
 

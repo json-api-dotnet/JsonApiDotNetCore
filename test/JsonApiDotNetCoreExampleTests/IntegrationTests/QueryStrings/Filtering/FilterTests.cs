@@ -91,7 +91,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<WebAccount>();
                 dbContext.Accounts.AddRange(accounts);
-
                 await dbContext.SaveChangesAsync();
             });
 

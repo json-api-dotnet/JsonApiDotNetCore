@@ -45,7 +45,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -340,7 +339,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.Add(post);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -536,7 +534,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 

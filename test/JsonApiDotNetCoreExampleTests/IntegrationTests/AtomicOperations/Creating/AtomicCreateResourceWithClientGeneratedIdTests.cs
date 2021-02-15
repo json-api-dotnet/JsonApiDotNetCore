@@ -140,7 +140,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.TextLanguages.Add(languageToCreate);
-
                 await dbContext.SaveChangesAsync();
             });
 

@@ -30,7 +30,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 await dbContext.ClearTableAsync<BankAccount>();
                 dbContext.BankAccounts.AddRange(bankAccounts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -56,7 +55,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 await dbContext.ClearTableAsync<BankAccount>();
                 dbContext.BankAccounts.AddRange(bankAccounts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -150,7 +148,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.BankAccounts.Add(bankAccount);
-
                 await dbContext.SaveChangesAsync();
             });
 
