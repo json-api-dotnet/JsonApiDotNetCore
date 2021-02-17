@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
+// @formatter:wrap_chained_method_calls chop_always
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 {
     public sealed class OperationsDbContext : DbContext

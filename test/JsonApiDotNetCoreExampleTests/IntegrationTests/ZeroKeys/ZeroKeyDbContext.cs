@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
+// @formatter:wrap_chained_method_calls chop_always
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
     public sealed class ZeroKeyDbContext : DbContext
@@ -14,8 +16,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
-
             builder.Entity<Game>()
                 .HasMany(game => game.Maps)
                 .WithOne(map => map.Game);
