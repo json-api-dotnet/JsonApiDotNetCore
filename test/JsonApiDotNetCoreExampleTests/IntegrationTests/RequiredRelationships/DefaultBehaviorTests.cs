@@ -4,6 +4,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -117,10 +118,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingCustomerInDatabase = await dbContext.Customers.FindAsync(existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstOrDefaultAsync(customer => customer.Id == existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().BeNull();
 
-                var existingOrderInDatabase = await dbContext.Orders.FindAsync(existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstOrDefaultAsync(order => order.Id == existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
             });
         }
@@ -151,13 +152,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingOrderInDatabase = await dbContext.Orders.FindAsync(existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstOrDefaultAsync(order => order.Id == existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
 
-                var existingShipmentInDatabase = await dbContext.Shipments.FindAsync(existingOrder.Shipment.Id);
+                var existingShipmentInDatabase = await dbContext.Shipments.FirstOrDefaultAsync(shipment => shipment.Id == existingOrder.Shipment.Id);
                 existingShipmentInDatabase.Should().BeNull();
 
-                var existingCustomerInDatabase = await dbContext.Customers.FindAsync(existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstOrDefaultAsync(customer => customer.Id == existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().NotBeNull();
             });
         }
