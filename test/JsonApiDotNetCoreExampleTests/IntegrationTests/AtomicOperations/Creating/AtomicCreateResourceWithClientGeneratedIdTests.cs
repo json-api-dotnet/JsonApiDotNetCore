@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     .FirstAsync(musicTrack => musicTrack.Id == newTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTrack.Title);
-                trackInDatabase.LengthInSeconds.Should().BeApproximately(newTrack.LengthInSeconds, 0.00000000001M);
+                trackInDatabase.LengthInSeconds.Should().BeApproximately(newTrack.LengthInSeconds);
             });
         }
 

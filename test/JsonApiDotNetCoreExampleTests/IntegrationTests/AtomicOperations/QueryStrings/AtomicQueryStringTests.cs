@@ -383,7 +383,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
         }
 
         [Fact]
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
         }
     }
 }

@@ -125,13 +125,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             for (int index = 0; index < elementCount; index++)
             {
-                responseDocument.Results[index].SingleData.Should().NotBeNull();
-                responseDocument.Results[index].SingleData.Type.Should().Be("musicTracks");
-                responseDocument.Results[index].SingleData.Attributes["title"].Should().Be(newTracks[index].Title);
-                responseDocument.Results[index].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds, 0.00000000001M);
-                responseDocument.Results[index].SingleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
-                responseDocument.Results[index].SingleData.Attributes["releasedAt"].Should().BeCloseTo(newTracks[index].ReleasedAt);
-                responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+                var singleData = responseDocument.Results[index].SingleData;
+
+                singleData.Should().NotBeNull();
+                singleData.Type.Should().Be("musicTracks");
+                singleData.Attributes["title"].Should().Be(newTracks[index].Title);
+                singleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds);
+                singleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
+                singleData.Attributes["releasedAt"].Should().BeCloseTo(newTracks[index].ReleasedAt);
+                singleData.Relationships.Should().NotBeEmpty();
             }
 
             var newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id));
@@ -149,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     var trackInDatabase = tracksInDatabase.Single(musicTrack => musicTrack.Id == Guid.Parse(responseDocument.Results[index].SingleData.Id));
 
                     trackInDatabase.Title.Should().Be(newTracks[index].Title);
-                    trackInDatabase.LengthInSeconds.Should().BeApproximately(newTracks[index].LengthInSeconds, 0.00000000001M);
+                    trackInDatabase.LengthInSeconds.Should().BeApproximately(newTracks[index].LengthInSeconds);
                     trackInDatabase.Genre.Should().Be(newTracks[index].Genre);
                     trackInDatabase.ReleasedAt.Should().BeCloseTo(newTracks[index].ReleasedAt);
                 }

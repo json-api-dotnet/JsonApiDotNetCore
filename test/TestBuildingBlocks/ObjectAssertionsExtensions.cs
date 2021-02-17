@@ -1,5 +1,6 @@
 using System;
 using FluentAssertions;
+using FluentAssertions.Numeric;
 using FluentAssertions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,6 +9,8 @@ namespace TestBuildingBlocks
 {
     public static class ObjectAssertionsExtensions
     {
+        private const decimal NumericPrecision = 0.00000000001M;
+
         private static readonly JsonSerializerSettings _deserializationSettings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
@@ -35,6 +38,25 @@ namespace TestBuildingBlocks
                 // We lose a little bit of precision (milliseconds) on roundtrip through PostgreSQL database.
                 value.Should().BeCloseTo(expected.Value, because: because, becauseArgs: becauseArgs);
             }
+        }
+
+        /// <summary>
+        /// Same as <see cref="NumericAssertionsExtensions.BeApproximately(NumericAssertions{decimal}, decimal, decimal, string, object[])"/>, but with default precision.
+        /// </summary>
+        public static AndConstraint<NumericAssertions<decimal>> BeApproximately(this NumericAssertions<decimal> parent,
+            decimal expectedValue, string because = "", params object[] becauseArgs)
+        {
+            return parent.BeApproximately(expectedValue, NumericPrecision, because, becauseArgs);
+        }
+
+        /// <summary>
+        /// Same as <see cref="NumericAssertionsExtensions.BeApproximately(NullableNumericAssertions{decimal}, decimal?, decimal, string, object[])"/>, but with default precision.
+        /// </summary>
+        public static AndConstraint<NullableNumericAssertions<decimal>> BeApproximately(
+            this NullableNumericAssertions<decimal> parent, decimal? expectedValue, string because = "",
+            params object[] becauseArgs)
+        {
+            return parent.BeApproximately(expectedValue, NumericPrecision, because, becauseArgs);
         }
 
         /// <summary>
