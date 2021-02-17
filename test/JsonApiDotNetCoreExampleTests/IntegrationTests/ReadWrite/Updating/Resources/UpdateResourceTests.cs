@@ -753,7 +753,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource of type 'workItems' in PATCH request body at endpoint '/workItems/{existingWorkItem.StringId}', instead of 'rgbColors'.");
+            error.Detail.Should().Be($"Expected resource of type 'workItems' in PATCH request body at endpoint " +
+                $"'/workItems/{existingWorkItem.StringId}', instead of 'rgbColors'.");
         }
 
         [Fact]
@@ -790,7 +791,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource ID mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource ID '{existingWorkItems[1].StringId}' in PATCH request body at endpoint '/workItems/{existingWorkItems[1].StringId}', instead of '{existingWorkItems[0].StringId}'.");
+            error.Detail.Should().Be($"Expected resource ID '{existingWorkItems[1].StringId}' in PATCH request body at endpoint " +
+                $"'/workItems/{existingWorkItems[1].StringId}', instead of '{existingWorkItems[0].StringId}'.");
         }
 
         [Fact]

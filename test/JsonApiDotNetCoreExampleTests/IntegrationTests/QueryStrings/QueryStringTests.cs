@@ -40,7 +40,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Unknown query string parameter.");
-            error.Detail.Should().Be("Query string parameter 'foo' is unknown. Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
+            error.Detail.Should().Be("Query string parameter 'foo' is unknown. " +
+                "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
             error.Source.Parameter.Should().Be("foo");
         }
 

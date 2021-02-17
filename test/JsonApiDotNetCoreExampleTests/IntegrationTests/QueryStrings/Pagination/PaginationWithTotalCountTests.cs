@@ -382,8 +382,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/blogs?include=owner.posts.comments&" +
-                "page[size]=1,owner.posts:1,owner.posts.comments:1&" +
+            const string route = "/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1&" +
                 "page[number]=2,owner.posts:2,owner.posts.comments:2";
 
             // Act

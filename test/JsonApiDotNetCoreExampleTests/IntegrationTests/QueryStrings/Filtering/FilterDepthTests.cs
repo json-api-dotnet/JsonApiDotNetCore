@@ -464,10 +464,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
+            // @formatter:keep_existing_linebreaks true
+
             const string route = "/blogs?include=owner.posts.comments&" +
                 "filter=and(equals(title,'Technology'),has(owner.posts),equals(owner.userName,'Smith'))&" +
                 "filter[owner.posts]=equals(caption,'Two')&" +
                 "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05')";
+
+            // @formatter:keep_existing_linebreaks restore
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -448,10 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/blogs?include=owner.posts.comments&" +
-                "sort=-title&" +
-                "sort[owner.posts]=-caption&" +
-                "sort[owner.posts.comments]=-createdAt";
+            const string route = "/blogs?include=owner.posts.comments&sort=-title&sort[owner.posts]=-caption&sort[owner.posts.comments]=-createdAt";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -184,7 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var certificateInDatabase = await dbContext.GiftCertificates
-                    .Include(giftCertificate => giftCertificate.Issuer)
+                    .Include(certificate => certificate.Issuer)
                     .FirstWithIdAsync(newCertificateId);
 
                 certificateInDatabase.IssueDate.Should().Be(newIssueDate);

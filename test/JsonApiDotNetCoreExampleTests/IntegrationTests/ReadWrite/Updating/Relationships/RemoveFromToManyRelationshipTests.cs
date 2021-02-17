@@ -591,7 +591,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource of type 'workTags' in DELETE request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
+            error.Detail.Should().Be($"Expected resource of type 'workTags' in DELETE request body at endpoint " +
+                $"'/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
 
         [Fact]

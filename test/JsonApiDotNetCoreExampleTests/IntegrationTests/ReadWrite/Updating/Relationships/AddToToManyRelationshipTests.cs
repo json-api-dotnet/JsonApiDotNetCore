@@ -183,14 +183,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
                 var workItemInDatabase1 = workItemsInDatabase.Single(workItem => workItem.Id == existingWorkItems[0].Id);
 
+                int tagId1 = existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.Id;
+                int tagId2 = existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.Id;
+
                 workItemInDatabase1.WorkItemTags.Should().HaveCount(2);
-                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.Id);
+                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == tagId1);
+                workItemInDatabase1.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == tagId2);
 
                 var workItemInDatabase2 = workItemsInDatabase.Single(workItem => workItem.Id == existingWorkItems[1].Id);
 
                 workItemInDatabase2.WorkItemTags.Should().HaveCount(1);
-                workItemInDatabase2.WorkItemTags.ElementAt(0).Tag.Id.Should().Be(existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.Id);
+                workItemInDatabase2.WorkItemTags.ElementAt(0).Tag.Id.Should().Be(tagId2);
             });
         }
 
@@ -596,7 +599,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource of type 'workTags' in POST request body at endpoint '/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
+            error.Detail.Should().Be($"Expected resource of type 'workTags' in POST request body at endpoint " +
+                $"'/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
 
         [Fact]
@@ -854,10 +858,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
+                int toItemId = existingWorkItem.RelatedToItems[0].ToItem.Id;
+
                 workItemInDatabase.RelatedToItems.Should().HaveCount(2);
                 workItemInDatabase.RelatedToItems.Should().OnlyContain(workItemToWorkItem => workItemToWorkItem.FromItem.Id == existingWorkItem.Id);
                 workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == existingWorkItem.RelatedToItems[0].ToItem.Id);
+                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == toItemId);
             });
         }
     }

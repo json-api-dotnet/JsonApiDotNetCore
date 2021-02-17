@@ -368,7 +368,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTime,'{DateTime.ParseExact(filterDateTime, "yyyy-MM-dd", null)}')";
+            var route = $"/filterableResources?filter={filterOperator.ToString().Camelize()}(someDateTime," +
+                $"'{DateTime.ParseExact(filterDateTime, "yyyy-MM-dd", null)}')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

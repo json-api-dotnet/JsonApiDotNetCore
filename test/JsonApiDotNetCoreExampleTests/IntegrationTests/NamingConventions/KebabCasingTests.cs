@@ -73,7 +73,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/public-api/swimming-pools/{pool.StringId}/water-slides?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
+            var route = $"/public-api/swimming-pools/{pool.StringId}/water-slides" +
+                "?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
