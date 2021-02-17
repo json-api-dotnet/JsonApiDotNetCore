@@ -50,10 +50,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_create_user_with_password()
         {
             // Arrange
-            var user = _fakers.User.Generate();
+            var newUser = _fakers.User.Generate();
 
             var serializer = GetRequestSerializer<User>(p => new {p.Password, p.UserName});
-            string requestBody = serializer.Serialize(user);
+            string requestBody = serializer.Serialize(newUser);
 
             const string route = "/api/v1/users";
 
@@ -67,14 +67,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             var document = JsonConvert.DeserializeObject<Document>(responseDocument);
 
             document.SingleData.Attributes.Should().NotContainKey("password");
-            document.SingleData.Attributes["userName"].Should().Be(user.UserName);
+            document.SingleData.Attributes["userName"].Should().Be(newUser.UserName);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userInDatabase = await dbContext.Users.FirstAsync(u => u.Id == responseUser.Id);
+                var userInDatabase = await dbContext.Users.FirstAsync(user => user.Id == responseUser.Id);
 
-                userInDatabase.UserName.Should().Be(user.UserName);
-                userInDatabase.Password.Should().Be(user.Password);
+                userInDatabase.UserName.Should().Be(newUser.UserName);
+                userInDatabase.Password.Should().Be(newUser.Password);
             });
         }
 
@@ -82,20 +82,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public async Task Can_update_user_password()
         {
             // Arrange
-            var user = _fakers.User.Generate();
+            var existingUser = _fakers.User.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Users.Add(user);
+                dbContext.Users.Add(existingUser);
                 await dbContext.SaveChangesAsync();
             });
 
-            user.Password = _fakers.User.Generate().Password;
+            existingUser.Password = _fakers.User.Generate().Password;
 
             var serializer = GetRequestSerializer<User>(p => new {p.Password});
-            string requestBody = serializer.Serialize(user);
+            string requestBody = serializer.Serialize(existingUser);
 
-            var route = $"/api/v1/users/{user.Id}";
+            var route = $"/api/v1/users/{existingUser.Id}";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -104,13 +104,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Attributes.Should().NotContainKey("password");
-            responseDocument.SingleData.Attributes["userName"].Should().Be(user.UserName);
+            responseDocument.SingleData.Attributes["userName"].Should().Be(existingUser.UserName);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userInDatabase = await dbContext.Users.FirstAsync(u => u.Id == user.Id);
+                var userInDatabase = await dbContext.Users.FirstAsync(user => user.Id == existingUser.Id);
 
-                userInDatabase.Password.Should().Be(user.Password);
+                userInDatabase.Password.Should().Be(existingUser.Password);
             });
         }
 

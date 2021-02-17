@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_inherited_attributes()
         {
             // Arrange
-            var man = new Man
+            var newMan = new Man
             {
                 FamilyName = "Smith",
                 IsRetired = true,
@@ -38,9 +38,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                     type = "men",
                     attributes = new
                     {
-                        familyName = man.FamilyName,
-                        isRetired = man.IsRetired,
-                        hasBeard = man.HasBeard
+                        familyName = newMan.FamilyName,
+                        isRetired = newMan.IsRetired,
+                        hasBeard = newMan.HasBeard
                     }
                 }
             };
@@ -55,20 +55,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("men");
-            responseDocument.SingleData.Attributes["familyName"].Should().Be(man.FamilyName);
-            responseDocument.SingleData.Attributes["isRetired"].Should().Be(man.IsRetired);
-            responseDocument.SingleData.Attributes["hasBeard"].Should().Be(man.HasBeard);
+            responseDocument.SingleData.Attributes["familyName"].Should().Be(newMan.FamilyName);
+            responseDocument.SingleData.Attributes["isRetired"].Should().Be(newMan.IsRetired);
+            responseDocument.SingleData.Attributes["hasBeard"].Should().Be(newMan.HasBeard);
 
             var newManId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var manInDatabase = await dbContext.Men
-                    .FirstAsync(m => m.Id == newManId);
+                    .FirstAsync(man => man.Id == newManId);
                 
-                manInDatabase.FamilyName.Should().Be(man.FamilyName);
-                manInDatabase.IsRetired.Should().Be(man.IsRetired);
-                manInDatabase.HasBeard.Should().Be(man.HasBeard);
+                manInDatabase.FamilyName.Should().Be(newMan.FamilyName);
+                manInDatabase.IsRetired.Should().Be(newMan.IsRetired);
+                manInDatabase.HasBeard.Should().Be(newMan.HasBeard);
             });
         }
 
