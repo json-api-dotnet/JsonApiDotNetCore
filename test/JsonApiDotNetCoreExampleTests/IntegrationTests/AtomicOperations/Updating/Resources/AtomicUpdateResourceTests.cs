@@ -1577,11 +1577,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Lyric)
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Include(musicTrack => musicTrack.Performers)
                     .FirstWithIdAsync(existingTrack.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.Genre.Should().Be(newGenre);

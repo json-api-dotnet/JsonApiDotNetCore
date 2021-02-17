@@ -313,10 +313,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstWithIdAsync(newWorkItemId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(3);
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);

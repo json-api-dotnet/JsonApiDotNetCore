@@ -234,10 +234,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(existingPlaylist.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
                 playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);

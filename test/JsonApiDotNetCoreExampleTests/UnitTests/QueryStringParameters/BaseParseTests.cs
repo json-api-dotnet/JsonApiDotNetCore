@@ -15,6 +15,9 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         {
             Options = new JsonApiOptions();
 
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             ResourceGraph = new ResourceGraphBuilder(Options, NullLoggerFactory.Instance)
                 .Add<Blog>()
                 .Add<BlogPost>()
@@ -23,6 +26,9 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
                 .Add<WebAccount>()
                 .Add<AccountPreferences>()
                 .Build();
+
+            // @formatter:wrap_chained_method_calls restore
+            // @formatter:keep_existing_linebreaks restore
 
             Request = new JsonApiRequest
             {

@@ -290,10 +290,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
@@ -621,10 +627,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Include(musicTrack => musicTrack.Performers)
                     .FirstWithIdAsync(newTrackId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -922,10 +934,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
@@ -1167,10 +1185,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
@@ -1436,10 +1460,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
@@ -1730,10 +1760,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(existingPlaylist.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
                 playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);

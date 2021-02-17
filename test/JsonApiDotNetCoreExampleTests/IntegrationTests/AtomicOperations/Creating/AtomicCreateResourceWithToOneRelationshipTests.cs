@@ -230,10 +230,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var tracksInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Where(musicTrack => newTrackIds.Contains(musicTrack.Id))
                     .ToListAsync();
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 tracksInDatabase.Should().HaveCount(elementCount);
 

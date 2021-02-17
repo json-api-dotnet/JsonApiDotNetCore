@@ -242,11 +242,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
                     .FirstWithIdOrDefaultAsync(newBuildingId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuilding.Number);
@@ -300,11 +306,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
                     .FirstWithIdOrDefaultAsync(existingBuilding.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuildingNumber);

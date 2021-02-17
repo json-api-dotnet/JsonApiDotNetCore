@@ -96,10 +96,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstWithIdAsync(existingWorkItem.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 workItemInDatabase.WorkItemTags.Should().BeEmpty();
             });
@@ -219,10 +225,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstWithIdAsync(existingWorkItem.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(3);
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
@@ -829,10 +841,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.RelatedFromItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
                     .FirstWithIdAsync(existingWorkItem.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 workItemInDatabase.RelatedFromItems.Should().BeEmpty();
             });
@@ -919,10 +937,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.RelatedToItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
                     .FirstWithIdAsync(existingWorkItem.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 workItemInDatabase.RelatedToItems.Should().HaveCount(1);
                 workItemInDatabase.RelatedToItems[0].FromItem.Id.Should().Be(existingWorkItem.Id);

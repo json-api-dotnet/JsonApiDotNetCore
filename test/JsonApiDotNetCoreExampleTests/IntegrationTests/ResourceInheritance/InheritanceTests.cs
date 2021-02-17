@@ -400,10 +400,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var contentItems = await dbContext.HumanFavoriteContentItems
                     .Where(favorite => favorite.Human.Id == newManId)
                     .Select(favorite => favorite.ContentItem)
                     .ToListAsync();
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 contentItems.Should().HaveCount(2);
                 contentItems.Should().ContainSingle(item => item is Book);
@@ -455,10 +461,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var contentItems = await dbContext.HumanFavoriteContentItems
                     .Where(favorite => favorite.Human.Id == existingMan.Id)
                     .Select(favorite => favorite.ContentItem)
                     .ToListAsync();
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 contentItems.Should().HaveCount(2);
                 contentItems.Should().ContainSingle(item => item is Book);

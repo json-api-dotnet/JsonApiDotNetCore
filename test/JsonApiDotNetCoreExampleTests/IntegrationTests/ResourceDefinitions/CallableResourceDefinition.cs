@@ -88,9 +88,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: always retrieve percentageComplete and never include riskLevel in responses.
 
+            // @formatter:keep_existing_linebreaks true
+
             return existingSparseFieldSet
                 .Including<CallableResource>(resource => resource.PercentageComplete, ResourceGraph)
                 .Excluding<CallableResource>(resource => resource.RiskLevel, ResourceGraph);
+
+            // @formatter:keep_existing_linebreaks restore
         }
 
         public override QueryStringParameterHandlers<CallableResource> OnRegisterQueryableHandlersForQueryStringParameters()
