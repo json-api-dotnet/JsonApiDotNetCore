@@ -80,11 +80,11 @@ namespace UnitTests.Serialization
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { "stringField", "some string" },
-                        { "intField", 1 },
-                        { "nullableIntField", null },
-                        { "guidField", "1a68be43-cc84-4924-a421-7f4d614b7781" },
-                        { "dateTimeField", "9/11/2019 11:41:40 AM" }
+                        ["stringField"] = "some string",
+                        ["intField"] = 1,
+                        ["nullableIntField"] = null,
+                        ["guidField"] = "1a68be43-cc84-4924-a421-7f4d614b7781",
+                        ["dateTimeField"] = "9/11/2019 11:41:40 AM"
                     }
                 }
             };

@@ -116,7 +116,7 @@ namespace UnitTests.Serialization.Common
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { member, value }
+                        [member] = value
                     }
                 }
             };
@@ -174,7 +174,10 @@ namespace UnitTests.Serialization.Common
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { "complexField", new Dictionary<string, object> { {"compoundName", "testName" } } } // this is not right
+                        ["complexField"] = new Dictionary<string, object>
+                        {
+                            ["compoundName"] = "testName"
+                        }
                     }
                 }
             };
@@ -200,7 +203,13 @@ namespace UnitTests.Serialization.Common
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        { "complexFields", new [] { new Dictionary<string, object> { {"compoundName", "testName" } } } }
+                        ["complexFields"] = new []
+                        {
+                            new Dictionary<string, object>
+                            {
+                                ["compoundName"] = "testName"
+                            }
+                        }
                     }
                 }
             };

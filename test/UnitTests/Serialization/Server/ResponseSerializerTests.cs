@@ -302,7 +302,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithMeta_IncludesMetaInResult()
         {
             // Arrange
-            var meta = new Dictionary<string, object> { { "test", "meta" } };
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
             var resource = new OneToManyPrincipal { Id = 10 };
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta);
 
@@ -329,7 +329,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_NullWithLinksAndMeta_StillShowsLinksAndMeta()
         {
             // Arrange
-            var meta = new Dictionary<string, object> { { "test", "meta" } };
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
             
             // Act
