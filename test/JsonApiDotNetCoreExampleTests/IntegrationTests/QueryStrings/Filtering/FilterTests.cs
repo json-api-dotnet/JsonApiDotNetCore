@@ -37,10 +37,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter[doesNotExist]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be("filter[doesNotExist]");
         }
 
         [Fact]
@@ -56,10 +58,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter[posts.doesNotExist]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be("filter[posts.doesNotExist]");
         }
 
         [Fact]
@@ -75,10 +79,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Filtering on the requested attribute is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
+            error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
+            error.Source.Parameter.Should().Be("filter");
         }
 
         [Fact]

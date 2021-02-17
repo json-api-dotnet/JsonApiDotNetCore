@@ -288,10 +288,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            responseDocument.Errors[0].Detail.Should().Be("Expected 'type' element in 'lyric' relationship.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
+            error.Detail.Should().Be("Expected 'type' element in 'lyric' relationship.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -333,10 +335,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -377,10 +381,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
-            responseDocument.Errors[0].Detail.Should().Be("Expected 'id' or 'lid' element in 'lyric' relationship.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
+            error.Detail.Should().Be("Expected 'id' or 'lid' element in 'lyric' relationship.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -422,10 +428,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'lyrics' with ID '12345678' in relationship 'lyric' does not exist.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("A related resource does not exist.");
+            error.Detail.Should().Be("Related resource of type 'lyrics' with ID '12345678' in relationship 'lyric' does not exist.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -467,10 +475,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'lyric' contains incompatible resource type 'playlists'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
+            error.Detail.Should().Be("Relationship 'lyric' contains incompatible resource type 'playlists'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -595,10 +605,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
-            responseDocument.Errors[0].Detail.Should().Be("Expected single data element for 'lyric' relationship.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
+            error.Detail.Should().Be("Expected single data element for 'lyric' relationship.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
     }
 }

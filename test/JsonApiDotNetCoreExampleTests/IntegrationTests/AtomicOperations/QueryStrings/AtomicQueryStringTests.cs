@@ -70,10 +70,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -107,10 +109,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("filter");
         }
 
         [Fact]
@@ -144,10 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("sort");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("sort");
         }
 
         [Fact]
@@ -181,10 +187,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
@@ -218,10 +226,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Fact]
@@ -255,10 +265,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[recordCompanies]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("fields[recordCompanies]");
         }
 
         [Fact]
@@ -323,10 +335,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Unknown query string parameter.");
-            responseDocument.Errors[0].Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("isRecentlyReleased");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Unknown query string parameter.");
+            error.Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
+            error.Source.Parameter.Should().Be("isRecentlyReleased");
         }
 
         [Fact]

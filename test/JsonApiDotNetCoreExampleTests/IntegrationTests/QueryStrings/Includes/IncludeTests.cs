@@ -567,10 +567,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -586,10 +588,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -605,10 +609,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Including the requested relationship is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Including the requested relationship is not allowed.");
+            error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -689,10 +695,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
+            error.Source.Parameter.Should().Be("include");
         }
     }
 }

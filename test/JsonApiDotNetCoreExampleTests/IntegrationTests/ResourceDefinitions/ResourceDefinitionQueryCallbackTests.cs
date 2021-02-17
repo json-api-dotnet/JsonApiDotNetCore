@@ -60,8 +60,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Including owner is not permitted.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Including owner is not permitted.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -539,10 +542,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
-            responseDocument.Errors[0].Detail.Should().Be("Query string parameter 'isHighRisk' cannot be used on a nested resource endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("isHighRisk");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
+            error.Detail.Should().Be("Query string parameter 'isHighRisk' cannot be used on a nested resource endpoint.");
+            error.Source.Parameter.Should().Be("isHighRisk");
         }
 
         private sealed class FakeUserRolesService : IUserRolesService

@@ -196,9 +196,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
-            responseDocument.Errors[0].Title.Should().Be("The specified Accept header value does not contain any supported media types.");
-            responseDocument.Errors[0].Detail.Should().Be("Please include 'application/vnd.api+json' in the Accept header values.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
+            error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
+            error.Detail.Should().Be("Please include 'application/vnd.api+json' in the Accept header values.");
         }
 
         [Fact]
@@ -239,9 +241,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
-            responseDocument.Errors[0].Title.Should().Be("The specified Accept header value does not contain any supported media types.");
-            responseDocument.Errors[0].Detail.Should().Be("Please include 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' in the Accept header values.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
+            error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
+            error.Detail.Should().Be("Please include 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' in the Accept header values.");
         }
     }
 }

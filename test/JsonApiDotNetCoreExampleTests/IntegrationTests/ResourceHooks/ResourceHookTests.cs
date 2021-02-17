@@ -127,9 +127,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update the author of todo items.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update the author of todo items.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -145,9 +147,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to include passports on individual persons.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to include passports on individual persons.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -172,9 +176,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to see this article.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to see this article.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -367,9 +373,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -416,9 +424,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -461,9 +471,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'passports'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -489,9 +501,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'people'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -545,9 +559,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -605,9 +621,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -634,9 +652,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            responseDocument.Errors[0].Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
-            responseDocument.Errors[0].Detail.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+            error.Title.Should().Be("You are not allowed to update fields or relationships of locked resource of type 'todoItems'.");
+            error.Detail.Should().BeNull();
         }
 
         private IRequestSerializer GetRequestSerializer<TResource>(Expression<Func<TResource, dynamic>> attributes = null,

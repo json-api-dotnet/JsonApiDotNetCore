@@ -149,9 +149,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
-            responseDocument.Errors[0].Meta.Data.Should().ContainKey("stack-trace");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Meta.Data.Should().ContainKey("stack-trace");
         }
 
         [Fact]
@@ -188,10 +190,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/height-in-meters");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
+            error.Source.Pointer.Should().Be("/data/attributes/height-in-meters");
         }
     }
 }

@@ -39,10 +39,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'nulls' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("nulls");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'nulls' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("nulls");
         }
 
         [Theory]

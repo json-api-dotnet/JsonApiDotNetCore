@@ -43,10 +43,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The Name field is required.");
+            error.Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -75,10 +77,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The Name field is required.");
+            error.Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -107,10 +111,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            error.Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -169,20 +175,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+            var error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.Pointer.Should().Be("/data/attributes/name");
 
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
+            var error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
+            error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
 
-            responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[2].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[2].Detail.Should().Be("The IsCaseSensitive field is required.");
-            responseDocument.Errors[2].Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
+            var error3 = responseDocument.Errors[2];
+            error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error3.Title.Should().Be("Input validation failed.");
+            error3.Detail.Should().Be("The IsCaseSensitive field is required.");
+            error3.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
         }
 
         [Fact]
@@ -396,10 +405,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The Name field is required.");
+            error.Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -440,10 +451,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/name");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            error.Source.Pointer.Should().Be("/data/attributes/name");
         }
 
         [Fact]
@@ -498,16 +511,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(2);
-            
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/id");
-            
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/data/attributes/Subdirectories[0].Id");
+
+            var error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            error1.Source.Pointer.Should().Be("/data/attributes/id");
+
+            var error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            error2.Source.Pointer.Should().Be("/data/attributes/Subdirectories[0].Id");
         }
 
         [Fact]

@@ -587,10 +587,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified fieldset is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[doesNotExist]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified fieldset is invalid.");
+            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Source.Parameter.Should().Be("fields[doesNotExist]");
         }
 
         [Fact]
@@ -608,10 +610,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Retrieving the requested attribute is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[webAccounts]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Retrieving the requested attribute is not allowed.");
+            error.Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");
+            error.Source.Parameter.Should().Be("fields[webAccounts]");
         }
 
         [Fact]

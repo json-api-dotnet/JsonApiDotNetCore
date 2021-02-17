@@ -536,9 +536,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("A related resource does not exist.");
+            error.Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
         }
 
         [Fact]

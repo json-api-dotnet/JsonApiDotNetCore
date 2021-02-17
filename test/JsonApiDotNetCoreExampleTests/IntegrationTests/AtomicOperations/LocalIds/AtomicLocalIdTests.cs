@@ -354,10 +354,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Local ID cannot be both defined and used within the same operation.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'company-1' cannot be both defined and used within the same operation.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Local ID cannot be both defined and used within the same operation.");
+            error.Detail.Should().Be("Local ID 'company-1' cannot be both defined and used within the same operation.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -418,10 +420,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Another local ID with the same name is already defined at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Another local ID with name 'playlist-1' is already defined at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Another local ID with the same name is already defined at this point.");
+            error.Detail.Should().Be("Another local ID with name 'playlist-1' is already defined at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
         [Fact]
@@ -1840,10 +1844,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
+            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -1887,10 +1893,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
+            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -1948,10 +1956,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
+            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -2002,10 +2012,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
+            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -2059,10 +2071,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            responseDocument.Errors[0].Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
+            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -2116,10 +2130,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[1]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
         [Fact]
@@ -2171,10 +2187,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
         [Fact]
@@ -2229,10 +2247,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
         [Fact]
@@ -2301,10 +2321,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
         [Fact]
@@ -2372,10 +2394,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
         [Fact]
@@ -2440,10 +2464,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Type mismatch in local ID usage.");
-            responseDocument.Errors[0].Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[2]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
     }
 }

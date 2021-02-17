@@ -83,9 +83,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Invalid ID value.");
-            responseDocument.Errors[0].Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Invalid ID value.");
+            error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
         }
 
         [Fact]
@@ -467,10 +469,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
-            responseDocument.Errors[0].Source.Parameter.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("The requested resource does not exist.");
+            error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
+            error.Source.Parameter.Should().BeNull();
         }
     }
 }

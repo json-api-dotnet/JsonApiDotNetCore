@@ -50,10 +50,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
         }
 
         [Fact]
@@ -82,10 +84,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
         }
 
         [Fact]
@@ -196,10 +200,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -229,10 +235,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -273,10 +281,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -306,10 +316,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -346,10 +358,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -397,10 +411,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
         }
 
         [Fact]
@@ -437,10 +453,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
         }
     }
 }

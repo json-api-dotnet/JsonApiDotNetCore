@@ -56,9 +56,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
-            responseDocument.Errors[0].Title.Should().Be("The request method is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource does not support POST requests.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+            error.Title.Should().Be("The request method is not allowed.");
+            error.Detail.Should().Be("Resource does not support POST requests.");
         }
 
         [Fact]

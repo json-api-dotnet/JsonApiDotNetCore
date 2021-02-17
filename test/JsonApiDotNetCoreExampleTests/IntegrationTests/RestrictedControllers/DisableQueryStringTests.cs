@@ -39,10 +39,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("sort");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("sort");
         }
 
         [Fact]
@@ -58,10 +60,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
@@ -77,10 +81,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'skipCache' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("skipCache");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'skipCache' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("skipCache");
         }
     }
 }

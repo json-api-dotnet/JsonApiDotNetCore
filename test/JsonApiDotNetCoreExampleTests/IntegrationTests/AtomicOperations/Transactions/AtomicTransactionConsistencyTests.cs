@@ -67,10 +67,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported resource type in atomic:operations request.");
-            responseDocument.Errors[0].Detail.Should().Be("Operations on resources of type 'performers' cannot be used because transaction support is unavailable.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported resource type in atomic:operations request.");
+            error.Detail.Should().Be("Operations on resources of type 'performers' cannot be used because transaction support is unavailable.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -104,10 +106,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
-            responseDocument.Errors[0].Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
+            error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -141,10 +145,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
-            responseDocument.Errors[0].Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
+            error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
     }
 }

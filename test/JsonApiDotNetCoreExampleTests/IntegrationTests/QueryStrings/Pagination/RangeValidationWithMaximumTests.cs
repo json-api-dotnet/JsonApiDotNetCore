@@ -70,10 +70,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}.");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
@@ -89,10 +91,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Page size cannot be unconstrained.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be("Page size cannot be unconstrained.");
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Fact]
@@ -137,10 +141,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}.");
+            error.Source.Parameter.Should().Be("page[size]");
         }
     }
 }

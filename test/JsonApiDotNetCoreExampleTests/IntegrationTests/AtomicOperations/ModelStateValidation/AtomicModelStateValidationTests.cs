@@ -55,15 +55,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Title field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
+            var error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Title field is required.");
+            error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
+            var error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
         }
 
         [Fact]
@@ -179,15 +181,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Title field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
+            var error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Title field is required.");
+            error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
+            var error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error2.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/lengthInSeconds");
         }
 
         [Fact]
@@ -470,20 +474,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The Name field is required.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
+            var error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
-            responseDocument.Errors[1].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[1].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[1].Detail.Should().Be("The Title field is required.");
-            responseDocument.Errors[1].Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/title");
+            var error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The Title field is required.");
+            error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/title");
 
-            responseDocument.Errors[2].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[2].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[2].Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
-            responseDocument.Errors[2].Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
+            var error3 = responseDocument.Errors[2];
+            error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error3.Title.Should().Be("Input validation failed.");
+            error3.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
+            error3.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/lengthInSeconds");
         }
     }
 }

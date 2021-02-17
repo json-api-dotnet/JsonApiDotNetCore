@@ -31,7 +31,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
+
+            var error = responseDocument.Errors[0];
+            error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
         }
     }
 }

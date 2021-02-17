@@ -249,10 +249,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Query creation failed due to incompatible types.");
-            responseDocument.Errors[0].Detail.Should().Be("No coercion operator is defined between types 'System.TimeSpan' and 'System.Double'.");
-            responseDocument.Errors[0].Source.Parameter.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Query creation failed due to incompatible types.");
+            error.Detail.Should().Be("No coercion operator is defined between types 'System.TimeSpan' and 'System.Double'.");
+            error.Source.Parameter.Should().BeNull();
         }
 
         [Theory]
