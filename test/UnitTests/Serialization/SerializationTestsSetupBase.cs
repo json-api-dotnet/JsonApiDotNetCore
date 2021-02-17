@@ -9,30 +9,41 @@ namespace UnitTests.Serialization
     public class SerializationTestsSetupBase
     {
         protected IResourceGraph ResourceGraph { get; }
-        protected readonly Faker<Food> _foodFaker;
-        protected readonly Faker<Song> _songFaker;
-        protected readonly Faker<Article> _articleFaker;
-        protected readonly Faker<Blog> _blogFaker;
-        protected readonly Faker<Person> _personFaker;
+        protected Faker<Food> FoodFaker { get; }
+        protected Faker<Song> SongFaker { get; }
+        protected Faker<Article> ArticleFaker { get; }
+        protected Faker<Blog> BlogFaker { get; }
+        protected Faker<Person> PersonFaker { get; }
 
         public SerializationTestsSetupBase()
         {
             ResourceGraph = BuildGraph();
-            _articleFaker = new Faker<Article>()
-                    .RuleFor(f => f.Title, f => f.Hacker.Phrase())
-                    .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
-            _personFaker = new Faker<Person>()
-                    .RuleFor(f => f.Name, f => f.Person.FullName)
-                    .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
-            _blogFaker = new Faker<Blog>()
-                    .RuleFor(f => f.Title, f => f.Hacker.Phrase())
-                    .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
-            _songFaker = new Faker<Song>()
-                    .RuleFor(f => f.Title, f => f.Lorem.Sentence())
-                    .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
-            _foodFaker = new Faker<Food>()
-                    .RuleFor(f => f.Dish, f => f.Lorem.Sentence())
-                    .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
+            ArticleFaker = new Faker<Article>()
+                .RuleFor(f => f.Title, f => f.Hacker.Phrase())
+                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            PersonFaker = new Faker<Person>()
+                .RuleFor(f => f.Name, f => f.Person.FullName)
+                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            BlogFaker = new Faker<Blog>()
+                .RuleFor(f => f.Title, f => f.Hacker.Phrase())
+                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            SongFaker = new Faker<Song>()
+                .RuleFor(f => f.Title, f => f.Lorem.Sentence())
+                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            FoodFaker = new Faker<Food>()
+                .RuleFor(f => f.Dish, f => f.Lorem.Sentence())
+                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+
+            // @formatter:wrap_chained_method_calls restore
+            // @formatter:keep_existing_linebreaks restore
         }
 
         protected IResourceGraph BuildGraph()
@@ -62,8 +73,8 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.Add<BaseModel>();
             resourceGraphBuilder.Add<FirstDerivedModel>();
             resourceGraphBuilder.Add<SecondDerivedModel>();
-            
+
             return resourceGraphBuilder.Build();
         }
-   }
+    }
 }

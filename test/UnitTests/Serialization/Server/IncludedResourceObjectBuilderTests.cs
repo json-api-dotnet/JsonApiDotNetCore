@@ -41,7 +41,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var (article, author, _, _, _) = GetAuthorChainInstances();
-            var secondArticle = _articleFaker.Generate();
+            var secondArticle = ArticleFaker.Generate();
             secondArticle.Author = author;
             var builder = GetBuilder();
 
@@ -90,22 +90,22 @@ namespace UnitTests.Serialization.Server
 
         private (Person, Song, Person, Song) GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
         {
-            var reviewer = _personFaker.Generate();
+            var reviewer = PersonFaker.Generate();
             article.Reviewer = reviewer;
 
-            var blogs = _blogFaker.Generate(1);
+            var blogs = BlogFaker.Generate(1);
             blogs.Add(sharedBlog);
             reviewer.Blogs = blogs.ToHashSet();
 
             blogs[0].Author = reviewer;
-            var author = _personFaker.Generate();
+            var author = PersonFaker.Generate();
             blogs[1].Author = sharedBlogAuthor;
 
-            var authorSong = _songFaker.Generate();
+            var authorSong = SongFaker.Generate();
             author.FavoriteSong = authorSong;
             sharedBlogAuthor.FavoriteSong = authorSong;
 
-            var reviewerSong = _songFaker.Generate();
+            var reviewerSong = SongFaker.Generate();
             reviewer.FavoriteSong = reviewerSong;
 
             return (reviewer, reviewerSong, author, authorSong);
@@ -113,20 +113,20 @@ namespace UnitTests.Serialization.Server
 
         private (Article, Person, Food, Person, Food) GetAuthorChainInstances()
         {
-            var article = _articleFaker.Generate();
-            var author = _personFaker.Generate();
+            var article = ArticleFaker.Generate();
+            var author = PersonFaker.Generate();
             article.Author = author;
 
-            var blogs = _blogFaker.Generate(2);
+            var blogs = BlogFaker.Generate(2);
             author.Blogs = blogs.ToHashSet();
 
             blogs[0].Reviewer = author;
-            var reviewer = _personFaker.Generate();
+            var reviewer = PersonFaker.Generate();
             blogs[1].Reviewer = reviewer;
 
-            var authorFood = _foodFaker.Generate();
+            var authorFood = FoodFaker.Generate();
             author.FavoriteFood = authorFood;
-            var reviewerFood = _foodFaker.Generate();
+            var reviewerFood = FoodFaker.Generate();
             reviewer.FavoriteFood = reviewerFood;
 
             return (article, author, authorFood, reviewer, reviewerFood);
@@ -135,8 +135,8 @@ namespace UnitTests.Serialization.Server
         [Fact]
         public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
         {
-            var person = _personFaker.Generate();
-            var articles = _articleFaker.Generate(5);
+            var person = PersonFaker.Generate();
+            var articles = ArticleFaker.Generate(5);
             articles.ForEach(a => a.Author = person);
             articles.ForEach(a => a.Reviewer = person);
             var builder = GetBuilder();

@@ -15,10 +15,10 @@ namespace UnitTests.ResourceHooks
         protected ResourceHook[] NoHooks { get; } = new ResourceHook[0];
         protected ResourceHook[] EnableDbValues { get; } = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
         protected ResourceHook[] DisableDbValues { get; } = new ResourceHook[0];
-        protected readonly Faker<Person> _personFaker;
         protected readonly Faker<TodoItem> _todoFaker;
-        protected readonly Faker<Tag> _tagFaker;
+        protected readonly Faker<Person> _personFaker;
         protected readonly Faker<Article> _articleFaker;
+        protected readonly Faker<Tag> _tagFaker;
         protected readonly Faker<ArticleTag> _articleTagFaker;
         protected readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<Passport> _passportFaker;
@@ -34,17 +34,31 @@ namespace UnitTests.ResourceHooks
                 .Add<Tag>()
                 .Build();
 
-            _todoFaker = new Faker<TodoItem>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _personFaker = new Faker<Person>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
 
-            _articleFaker = new Faker<Article>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
-            _articleTagFaker = new Faker<ArticleTag>();
-            _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>().Rules((f, i) => i.Id = f.UniqueIndex + 1);
+            _todoFaker = new Faker<TodoItem>()
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+
+            _personFaker = new Faker<Person>()
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+
+            _articleFaker = new Faker<Article>()
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+
             _tagFaker = new Faker<Tag>()
-                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+
+            _articleTagFaker = new Faker<ArticleTag>();
+
+            _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>()
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
 
             _passportFaker = new Faker<Passport>()
-                .Rules((f, i) => i.Id = f.UniqueIndex + 1);
+                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+
+            // @formatter:wrap_chained_method_calls restore
+            // @formatter:keep_existing_linebreaks restore
         }
 
         protected List<TodoItem> CreateTodoWithToOnePerson()
