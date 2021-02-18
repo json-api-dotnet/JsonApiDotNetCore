@@ -148,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Performers)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Performers.Should().HaveCount(3);
                 trackInDatabase.Performers.Should().ContainSingle(performer => performer.Id == existingTrack.Performers[0].Id);
@@ -237,7 +237,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
+                    .FirstWithIdAsync(existingPlaylist.Id);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
                 playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);
@@ -954,7 +954,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Performers)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Performers.Should().HaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(existingTrack.Performers[0].Id);

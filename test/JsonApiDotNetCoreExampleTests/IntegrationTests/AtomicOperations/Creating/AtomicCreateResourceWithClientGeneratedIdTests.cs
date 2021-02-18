@@ -72,8 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var languageInDatabase = await dbContext.TextLanguages
-                    .FirstAsync(language => language.Id == newLanguage.Id);
+                var languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(newLanguage.Id);
 
                 languageInDatabase.IsoCode.Should().Be(newLanguage.IsoCode);
             });
@@ -119,8 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .FirstAsync(musicTrack => musicTrack.Id == newTrack.Id);
+                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(newTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTrack.Title);
                 trackInDatabase.LengthInSeconds.Should().BeApproximately(newTrack.LengthInSeconds);

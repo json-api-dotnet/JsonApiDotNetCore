@@ -45,8 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemsInDatabase.Should().BeNull();
             });
@@ -97,13 +96,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorsInDatabase = await dbContext.RgbColors
-                    .FirstOrDefaultAsync(color => color.Id == existingColor.Id);
+                var colorsInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingColor.Id);
                 
                 colorsInDatabase.Should().BeNull();
 
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == existingColor.Group.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(existingColor.Group.Id);
 
                 groupInDatabase.Color.Should().BeNull();
             });
@@ -134,13 +131,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups
-                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                var groupsInDatabase = await dbContext.Groups.FirstWithIdOrDefaultAsync(existingGroup.Id);
 
                 groupsInDatabase.Should().BeNull();
 
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstOrDefaultAsync(color => color.Id == existingGroup.Color.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
                 colorInDatabase.Should().NotBeNull();
                 colorInDatabase.Group.Should().BeNull();
@@ -172,8 +167,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Should().BeNull();
 
@@ -212,8 +206,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItemTag.Item.Id);
+                var workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItemTag.Item.Id);
 
                 workItemsInDatabase.Should().BeNull();
 

@@ -65,8 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performerInDatabase = await dbContext.Performers
-                    .FirstOrDefaultAsync(performer => performer.Id == existingPerformer.Id);
+                var performerInDatabase = await dbContext.Performers.FirstWithIdOrDefaultAsync(existingPerformer.Id);
 
                 performerInDatabase.Should().BeNull();
             });
@@ -166,13 +165,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var lyricsInDatabase = await dbContext.Lyrics
-                    .FirstOrDefaultAsync(lyric => lyric.Id == existingLyric.Id);
+                var lyricsInDatabase = await dbContext.Lyrics.FirstWithIdOrDefaultAsync(existingLyric.Id);
 
                 lyricsInDatabase.Should().BeNull();
 
-                var trackInDatabase = await dbContext.MusicTracks
-                    .FirstAsync(musicTrack => musicTrack.Id == existingLyric.Track.Id);
+                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(existingLyric.Track.Id);
 
                 trackInDatabase.Lyric.Should().BeNull();
             });
@@ -219,13 +216,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var tracksInDatabase = await dbContext.MusicTracks
-                    .FirstOrDefaultAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                var tracksInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(existingTrack.Id);
 
                 tracksInDatabase.Should().BeNull();
 
-                var lyricInDatabase = await dbContext.Lyrics
-                    .FirstAsync(lyric => lyric.Id == existingTrack.Lyric.Id);
+                var lyricInDatabase = await dbContext.Lyrics.FirstWithIdAsync(existingTrack.Lyric.Id);
 
                 lyricInDatabase.Track.Should().BeNull();
             });
@@ -272,8 +267,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .FirstOrDefaultAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(existingTrack.Id);
 
                 trackInDatabase.Should().BeNull();
 
@@ -328,8 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var playlistInDatabase = await dbContext.Playlists
-                    .FirstOrDefaultAsync(playlist => playlist.Id == existingPlaylistMusicTrack.Playlist.Id);
+                var playlistInDatabase = await dbContext.Playlists.FirstWithIdOrDefaultAsync(existingPlaylistMusicTrack.Playlist.Id);
 
                 playlistInDatabase.Should().BeNull();
 

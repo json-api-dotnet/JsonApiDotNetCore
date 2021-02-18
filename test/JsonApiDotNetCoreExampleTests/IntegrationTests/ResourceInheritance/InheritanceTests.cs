@@ -63,8 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var manInDatabase = await dbContext.Men
-                    .FirstAsync(man => man.Id == newManId);
+                var manInDatabase = await dbContext.Men.FirstWithIdAsync(newManId);
                 
                 manInDatabase.FamilyName.Should().Be(newMan.FamilyName);
                 manInDatabase.IsRetired.Should().Be(newMan.IsRetired);
@@ -119,7 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.HealthInsurance)
-                    .FirstAsync(man => man.Id == newManId);
+                    .FirstWithIdAsync(newManId);
                 
                 manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
@@ -177,8 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var manInDatabase = await dbContext.Men
-                    .FirstAsync(man => man.Id == existingMan.Id);
+                var manInDatabase = await dbContext.Men.FirstWithIdAsync(existingMan.Id);
 
                 manInDatabase.FamilyName.Should().Be(newMan.FamilyName);
                 manInDatabase.IsRetired.Should().Be(newMan.IsRetired);
@@ -223,7 +221,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.HealthInsurance)
-                    .FirstAsync(man => man.Id == existingMan.Id);
+                    .FirstWithIdAsync(existingMan.Id);
 
                 manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
@@ -286,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.Parents)
-                    .FirstAsync(man => man.Id == newManId);
+                    .FirstWithIdAsync(newManId);
 
                 manInDatabase.Parents.Should().HaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);
@@ -340,7 +338,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
             {
                 var manInDatabase = await dbContext.Men
                     .Include(man => man.Parents)
-                    .FirstAsync(man => man.Id == existingChild.Id);
+                    .FirstWithIdAsync(existingChild.Id);
                 
                 manInDatabase.Parents.Should().HaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);

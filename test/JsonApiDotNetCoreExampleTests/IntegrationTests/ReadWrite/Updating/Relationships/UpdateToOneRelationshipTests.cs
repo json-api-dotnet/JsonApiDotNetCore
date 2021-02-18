@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Assignee.Should().BeNull();
             });
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var groupInDatabase = await dbContext.Groups
                     .Include(group => group.Color)
-                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                    .FirstWithIdOrDefaultAsync(existingGroup.Id);
                 
                 groupInDatabase.Color.Should().BeNull();
             });
@@ -238,9 +238,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                int itemId = existingUserAccounts[0].AssignedItems.ElementAt(1).Id;
+
                 var workItemInDatabase2 = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
-                    .FirstAsync(workItem => workItem.Id == existingUserAccounts[0].AssignedItems.ElementAt(1).Id);
+                    .FirstWithIdAsync(itemId);
 
                 workItemInDatabase2.Assignee.Should().NotBeNull();
                 workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
@@ -643,7 +645,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Parent)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Parent.Should().BeNull();
             });
@@ -684,7 +686,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Parent)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Parent.Should().NotBeNull();
                 workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);

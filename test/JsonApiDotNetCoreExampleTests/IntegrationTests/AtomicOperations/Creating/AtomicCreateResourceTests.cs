@@ -72,8 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performerInDatabase = await dbContext.Performers
-                    .FirstAsync(performer => performer.Id == newPerformerId);
+                var performerInDatabase = await dbContext.Performers.FirstWithIdAsync(newPerformerId);
 
                 performerInDatabase.ArtistName.Should().Be(newArtistName);
                 performerInDatabase.BornAt.Should().BeCloseTo(newBornAt);
@@ -202,8 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performerInDatabase = await dbContext.Performers
-                    .FirstAsync(performer => performer.Id == newPerformerId);
+                var performerInDatabase = await dbContext.Performers.FirstWithIdAsync(newPerformerId);
 
                 performerInDatabase.ArtistName.Should().BeNull();
                 performerInDatabase.BornAt.Should().Be(default);
@@ -254,8 +252,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performerInDatabase = await dbContext.Playlists
-                    .FirstAsync(playlist => playlist.Id == newPlaylistId);
+                var performerInDatabase = await dbContext.Playlists.FirstWithIdAsync(newPlaylistId);
 
                 performerInDatabase.Name.Should().Be(newName);
             });
@@ -309,8 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var lyricInDatabase = await dbContext.Lyrics
-                    .FirstAsync(lyric => lyric.Id == newLyricId);
+                var lyricInDatabase = await dbContext.Lyrics.FirstWithIdAsync(newLyricId);
 
                 lyricInDatabase.Should().NotBeNull();
             });
@@ -789,7 +785,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     .Include(musicTrack => musicTrack.Lyric)
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Include(musicTrack => musicTrack.Performers)
-                    .FirstAsync(musicTrack => musicTrack.Id == newTrackId);
+                    .FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTitle);
 

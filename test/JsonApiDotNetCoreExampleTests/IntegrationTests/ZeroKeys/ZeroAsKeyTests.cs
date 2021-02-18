@@ -124,8 +124,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .FirstAsync(game => game.Id == 0);
+                var gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Title.Should().Be(newTitle);
@@ -175,8 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .FirstAsync(game => game.Id == 0);
+                var gameInDatabase = await dbContext.Games.FirstWithIdAsync((int?)0);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Title.Should().Be(newTitle);
@@ -217,7 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.ActiveGame)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.ActiveGame.Should().BeNull();
@@ -263,7 +261,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.ActiveGame)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.ActiveGame.Id.Should().Be(0);
@@ -310,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.ActiveGame)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.ActiveGame.Id.Should().Be(0);
@@ -351,7 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.RecentlyPlayed)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.RecentlyPlayed.Should().BeEmpty();
@@ -400,7 +398,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.RecentlyPlayed)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
@@ -451,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.RecentlyPlayed)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
@@ -502,7 +500,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.RecentlyPlayed)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.RecentlyPlayed.Should().HaveCount(2);
@@ -551,7 +549,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             {
                 var playerInDatabase = await dbContext.Players
                     .Include(player => player.RecentlyPlayed)
-                    .FirstAsync(player => player.Id == existingPlayer.Id);
+                    .FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.Should().NotBeNull();
                 playerInDatabase.RecentlyPlayed.Should().HaveCount(1);
@@ -585,8 +583,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .FirstOrDefaultAsync(game => game.Id == existingGame.Id);
+                var gameInDatabase = await dbContext.Games.FirstWithIdOrDefaultAsync(existingGame.Id);
 
                 gameInDatabase.Should().BeNull();
             });

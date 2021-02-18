@@ -127,8 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var poolInDatabase = await dbContext.SwimmingPools
-                    .FirstAsync(pool => pool.Id == newPoolId);
+                var poolInDatabase = await dbContext.SwimmingPools.FirstWithIdAsync(newPoolId);
 
                 poolInDatabase.IsIndoor.Should().Be(newPool.IsIndoor);
             });

@@ -238,7 +238,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.SingleData.Attributes["primaryDoorColor"].Should().BeNull();
             responseDocument.SingleData.Attributes["secondaryDoorColor"].Should().BeNull();
 
-            var newId = int.Parse(responseDocument.SingleData.Id);
+            var newBuildingId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
-                    .FirstOrDefaultAsync(building => building.Id == newId);
+                    .FirstWithIdOrDefaultAsync(newBuildingId);
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuilding.Number);
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
-                    .FirstOrDefaultAsync(building => building.Id == existingBuilding.Id);
+                    .FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuildingNumber);
@@ -340,8 +340,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var buildingInDatabase = await dbContext.Buildings
-                    .FirstOrDefaultAsync(building => building.Id == existingBuilding.Id);
+                var buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
                 buildingInDatabase.Should().BeNull();
             });

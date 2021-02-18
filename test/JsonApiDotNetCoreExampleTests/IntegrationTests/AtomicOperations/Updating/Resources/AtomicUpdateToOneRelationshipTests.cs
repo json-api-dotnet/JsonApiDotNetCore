@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var lyricInDatabase = await dbContext.Lyrics
                     .Include(lyric => lyric.Track)
-                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
+                    .FirstWithIdAsync(existingLyric.Id);
 
                 lyricInDatabase.Track.Should().BeNull();
 
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Lyric)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Lyric.Should().BeNull();
 
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.OwnedBy.Should().BeNull();
 
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var lyricInDatabase = await dbContext.Lyrics
                     .Include(lyric => lyric.Track)
-                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
+                    .FirstWithIdAsync(existingLyric.Id);
 
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
             });
@@ -317,7 +317,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Lyric)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
             });
@@ -377,7 +377,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
             });
@@ -440,7 +440,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var lyricInDatabase = await dbContext.Lyrics
                     .Include(lyric => lyric.Track)
-                    .FirstAsync(lyric => lyric.Id == existingLyric.Id);
+                    .FirstWithIdAsync(existingLyric.Id);
 
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
 
@@ -506,7 +506,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Lyric)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
@@ -572,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 

@@ -206,7 +206,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
@@ -277,7 +277,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Description.Should().Be(newWorkItem.Description);
                 workItemInDatabase.Priority.Should().Be(newWorkItem.Priority);
@@ -545,7 +545,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[1].Id);

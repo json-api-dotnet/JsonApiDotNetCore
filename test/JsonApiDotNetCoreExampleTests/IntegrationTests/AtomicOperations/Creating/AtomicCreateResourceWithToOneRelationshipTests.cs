@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 var lyricInDatabase = await dbContext.Lyrics
                     .Include(lyric => lyric.Track)
-                    .FirstAsync(lyric => lyric.Id == newLyricId);
+                    .FirstWithIdAsync(newLyricId);
 
                 lyricInDatabase.Track.Should().NotBeNull();
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.Lyric)
-                    .FirstAsync(musicTrack => musicTrack.Id == newTrackId);
+                    .FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Lyric.Should().NotBeNull();
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == newTrackId);
+                    .FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.OwnedBy.Should().NotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);

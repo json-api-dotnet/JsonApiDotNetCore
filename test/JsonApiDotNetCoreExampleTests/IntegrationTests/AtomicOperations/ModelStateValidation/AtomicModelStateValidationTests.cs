@@ -131,7 +131,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == newPlaylistId);
+                    .FirstWithIdAsync(newPlaylistId);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
                 playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);
@@ -239,8 +239,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.Genre.Should().Be(newTrackGenre);
@@ -305,7 +304,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
+                    .FirstWithIdAsync(existingPlaylist.Id);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
                 playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);
@@ -361,7 +360,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.OwnedBy.Should().NotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
@@ -421,7 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                 var playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstAsync(playlist => playlist.Id == existingPlaylist.Id);
+                    .FirstWithIdAsync(existingPlaylist.Id);
 
                 playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
                 playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingTrack.Id);

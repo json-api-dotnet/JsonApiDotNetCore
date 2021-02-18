@@ -63,8 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == newGroup.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
@@ -110,8 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == newGroup.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
@@ -151,8 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == newColor.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync(newColor.Id);
 
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
@@ -192,8 +189,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == newColor.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync(newColor.Id);
 
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });

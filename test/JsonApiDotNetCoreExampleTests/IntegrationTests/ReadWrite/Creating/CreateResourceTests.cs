@@ -102,8 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Description.Should().Be(newWorkItem.Description);
                 workItemInDatabase.DueAt.Should().Be(newWorkItem.DueAt);
@@ -150,8 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .FirstAsync(userAccount => userAccount.Id == newUserAccountId);
+                var userAccountInDatabase = await dbContext.UserAccounts.FirstWithIdAsync(newUserAccountId);
 
                 userAccountInDatabase.FirstName.Should().Be(newUserAccount.FirstName);
                 userAccountInDatabase.LastName.Should().Be(newUserAccount.LastName);
@@ -196,8 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == newGroupId);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroupId);
 
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
@@ -242,8 +239,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Description.Should().BeNull();
                 workItemInDatabase.DueAt.Should().BeNull();
@@ -286,8 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Description.Should().Be(newWorkItem.Description);
             });
@@ -333,8 +328,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == newWorkItemId);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(newWorkItemId);
 
                 workItemInDatabase.Should().NotBeNull();
             });
@@ -712,7 +706,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                     .Include(workItem => workItem.Subscribers)
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Description.Should().Be(newDescription);
 

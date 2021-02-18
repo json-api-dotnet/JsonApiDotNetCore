@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(3);
                 workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingWorkItem.Subscribers.ElementAt(0).Id);
@@ -637,7 +637,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
@@ -675,7 +675,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(0);
             });
@@ -786,7 +786,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Children)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Children.Should().HaveCount(2);
                 workItemInDatabase.Children.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Children[0].Id);
@@ -840,7 +840,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.RelatedToItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.RelatedToItems.Should().HaveCount(2);
                 workItemInDatabase.RelatedToItems.Should().OnlyContain(workItemToWorkItem => workItemToWorkItem.FromItem.Id == existingWorkItem.Id);

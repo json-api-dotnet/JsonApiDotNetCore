@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.Genre.Should().Be(existingTrack.Genre);
@@ -197,8 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTitle);
             });
@@ -303,7 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.LengthInSeconds.Should().Be(existingTrack.LengthInSeconds);
@@ -370,7 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 var trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTitle);
                 trackInDatabase.LengthInSeconds.Should().Be(newLengthInSeconds);
@@ -432,8 +431,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var languageInDatabase = await dbContext.TextLanguages
-                    .FirstAsync(language => language.Id == existingLanguage.Id);
+                var languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(existingLanguage.Id);
 
                 languageInDatabase.IsoCode.Should().Be(newIsoCode);
             });
@@ -565,8 +563,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performerInDatabase = await dbContext.Performers
-                    .FirstAsync(performer => performer.Id == existingPerformer.Id);
+                var performerInDatabase = await dbContext.Performers.FirstWithIdAsync(existingPerformer.Id);
 
                 performerInDatabase.ArtistName.Should().Be(newArtistName);
                 performerInDatabase.BornAt.Should().BeCloseTo(existingPerformer.BornAt);
@@ -1584,7 +1581,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     .Include(musicTrack => musicTrack.Lyric)
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Include(musicTrack => musicTrack.Performers)
-                    .FirstAsync(musicTrack => musicTrack.Id == existingTrack.Id);
+                    .FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
                 trackInDatabase.Genre.Should().Be(newGenre);

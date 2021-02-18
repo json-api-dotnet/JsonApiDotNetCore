@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userInDatabase = await dbContext.Users.FirstAsync(user => user.Id == responseUser.Id);
+                var userInDatabase = await dbContext.Users.FirstWithIdAsync(responseUser.Id);
 
                 userInDatabase.UserName.Should().Be(newUser.UserName);
                 userInDatabase.Password.Should().Be(newUser.Password);
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userInDatabase = await dbContext.Users.FirstAsync(user => user.Id == existingUser.Id);
+                var userInDatabase = await dbContext.Users.FirstWithIdAsync(existingUser.Id);
 
                 userInDatabase.Password.Should().Be(existingUser.Password);
             });

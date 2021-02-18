@@ -249,7 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 var debitCardInDatabase = await dbContext.DebitCards
                     .Include(debitCard => debitCard.Account)
-                    .FirstAsync(debitCard => debitCard.Id == newDebitCardId);
+                    .FirstWithIdAsync(newDebitCardId);
 
                 debitCardInDatabase.OwnerName.Should().Be(newDebitCard.OwnerName);
                 debitCardInDatabase.PinCode.Should().Be(newDebitCard.PinCode);
@@ -318,7 +318,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 var bankAccountInDatabase = await dbContext.BankAccounts
                     .Include(bankAccount => bankAccount.Cards)
-                    .FirstAsync(bankAccount => bankAccount.Id == existingBankAccount.Id);
+                    .FirstWithIdAsync(existingBankAccount.Id);
 
                 bankAccountInDatabase.Iban.Should().Be(newIban);
 
@@ -370,7 +370,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 var bankAccountInDatabase = await dbContext.BankAccounts
                     .Include(bankAccount => bankAccount.Cards)
-                    .FirstAsync(bankAccount => bankAccount.Id == existingBankAccount.Id);
+                    .FirstWithIdAsync(existingBankAccount.Id);
 
                 bankAccountInDatabase.Cards.Should().HaveCount(2);
             });
@@ -415,7 +415,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 var bankAccountInDatabase = await dbContext.BankAccounts
                     .Include(bankAccount => bankAccount.Cards)
-                    .FirstAsync(bankAccount => bankAccount.Id == existingBankAccount.Id);
+                    .FirstWithIdAsync(existingBankAccount.Id);
 
                 bankAccountInDatabase.Cards.Should().HaveCount(1);
             });
@@ -448,7 +448,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 var bankAccountInDatabase = await dbContext.BankAccounts
                     .Include(bankAccount => bankAccount.Cards)
-                    .FirstOrDefaultAsync(bankAccount => bankAccount.Id == existingBankAccount.Id);
+                    .FirstWithIdOrDefaultAsync(existingBankAccount.Id);
 
                 bankAccountInDatabase.Should().BeNull();
             });

@@ -63,8 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .FirstAsync(userAccount => userAccount.Id == existingUserAccount.Id);
+                var userAccountInDatabase = await dbContext.UserAccounts.FirstWithIdAsync(existingUserAccount.Id);
 
                 userAccountInDatabase.FirstName.Should().Be(existingUserAccount.FirstName);
                 userAccountInDatabase.LastName.Should().Be(existingUserAccount.LastName);
@@ -110,8 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .FirstAsync(userAccount => userAccount.Id == existingUserAccount.Id);
+                var userAccountInDatabase = await dbContext.UserAccounts.FirstWithIdAsync(existingUserAccount.Id);
 
                 userAccountInDatabase.FirstName.Should().Be(newFirstName);
                 userAccountInDatabase.LastName.Should().Be(existingUserAccount.LastName);
@@ -204,8 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == existingGroup.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(existingGroup.Id);
 
                 groupInDatabase.Name.Should().Be(newName);
                 groupInDatabase.IsPublic.Should().Be(existingGroup.IsPublic);
@@ -253,8 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == existingColor.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync(existingColor.Id);
 
                 colorInDatabase.DisplayName.Should().Be(newDisplayName);
             });
@@ -302,8 +298,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var userAccountInDatabase = await dbContext.UserAccounts
-                    .FirstAsync(userAccount => userAccount.Id == existingUserAccount.Id);
+                var userAccountInDatabase = await dbContext.UserAccounts.FirstWithIdAsync(existingUserAccount.Id);
 
                 userAccountInDatabase.FirstName.Should().Be(newUserAccount.FirstName);
                 userAccountInDatabase.LastName.Should().Be(newUserAccount.LastName);
@@ -356,8 +351,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Description.Should().Be(newDescription);
                 workItemInDatabase.DueAt.Should().BeNull();
@@ -410,8 +404,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Description.Should().Be(newDescription);
                 workItemInDatabase.DueAt.Should().BeNull();
@@ -481,8 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Description.Should().Be(newDescription);
                 workItemInDatabase.DueAt.Should().BeNull();
@@ -1087,7 +1079,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     .Include(workItem => workItem.Subscribers)
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Description.Should().Be(newDescription);
 
@@ -1182,7 +1174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     .Include(workItem => workItem.Children)
                     .Include(workItem => workItem.RelatedToItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
-                    .FirstAsync(workItem => workItem.Id == existingWorkItem.Id);
+                    .FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Parent.Should().NotBeNull();
                 workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);

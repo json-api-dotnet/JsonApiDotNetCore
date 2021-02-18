@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(subscriber => subscriber.Id == existingUserAccounts[0].Id);
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingUserAccounts[0].Id);
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.WorkItemTags.Should().HaveCount(3);
                 workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
@@ -604,7 +604,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 var workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Subscribers)
-                    .FirstAsync(workItem => workItem.Id == newWorkItemId);
+                    .FirstWithIdAsync(newWorkItemId);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccount.Id);

@@ -185,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             {
                 var certificateInDatabase = await dbContext.GiftCertificates
                     .Include(giftCertificate => giftCertificate.Issuer)
-                    .FirstAsync(giftCertificate => giftCertificate.Id == newCertificateId);
+                    .FirstWithIdAsync(newCertificateId);
 
                 certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
@@ -253,7 +253,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             {
                 var officeInDatabase = await dbContext.PostOffice
                     .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstAsync(postOffice => postOffice.Id == existingOffice.Id);
+                    .FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.Address.Should().Be(newAddress);
 
@@ -286,8 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var officeInDatabase = await dbContext.PostOffice
-                    .FirstOrDefaultAsync(postOffice => postOffice.Id == existingOffice.Id);
+                var officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
 
                 officeInDatabase.Should().BeNull();
             });
@@ -354,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             {
                 var officeInDatabase = await dbContext.PostOffice
                     .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstAsync(postOffice => postOffice.Id == existingOffice.Id);
+                    .FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.GiftCertificates.Should().HaveCount(2);
             });

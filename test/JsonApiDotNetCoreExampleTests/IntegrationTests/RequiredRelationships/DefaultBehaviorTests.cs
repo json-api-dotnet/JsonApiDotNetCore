@@ -118,10 +118,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingCustomerInDatabase = await dbContext.Customers.FirstOrDefaultAsync(customer => customer.Id == existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().BeNull();
 
-                var existingOrderInDatabase = await dbContext.Orders.FirstOrDefaultAsync(order => order.Id == existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
             });
         }
@@ -152,13 +152,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingOrderInDatabase = await dbContext.Orders.FirstOrDefaultAsync(order => order.Id == existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
 
-                var existingShipmentInDatabase = await dbContext.Shipments.FirstOrDefaultAsync(shipment => shipment.Id == existingOrder.Shipment.Id);
+                var existingShipmentInDatabase = await dbContext.Shipments.FirstWithIdOrDefaultAsync(existingOrder.Shipment.Id);
                 existingShipmentInDatabase.Should().BeNull();
 
-                var existingCustomerInDatabase = await dbContext.Customers.FirstOrDefaultAsync(customer => customer.Id == existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().NotBeNull();
             });
         }

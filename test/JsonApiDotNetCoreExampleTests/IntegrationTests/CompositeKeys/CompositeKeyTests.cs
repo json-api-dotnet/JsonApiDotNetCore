@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(engine => engine.Car)
-                    .FirstAsync(engine => engine.Id == existingEngine.Id);
+                    .FirstWithIdAsync(existingEngine.Id);
 
                 engineInDatabase.Car.Should().NotBeNull();
                 engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
@@ -303,7 +303,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(engine => engine.Car)
-                    .FirstAsync(engine => engine.Id == existingEngine.Id);
+                    .FirstWithIdAsync(existingEngine.Id);
 
                 engineInDatabase.Car.Should().BeNull();
             });
@@ -364,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
@@ -418,7 +418,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
@@ -491,7 +491,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(2);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
