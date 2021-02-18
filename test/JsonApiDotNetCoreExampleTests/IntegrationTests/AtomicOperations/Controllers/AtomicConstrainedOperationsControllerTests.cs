@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -25,8 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         public async Task Can_create_resources_for_matching_resource_type()
         {
             // Arrange
-            var newTitle1 = _fakers.MusicTrack.Generate().Title;
-            var newTitle2 = _fakers.MusicTrack.Generate().Title;
+            string newTitle1 = _fakers.MusicTrack.Generate().Title;
+            string newTitle2 = _fakers.MusicTrack.Generate().Title;
 
             var requestBody = new
             {
@@ -62,7 +63,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             const string route = "/operations/musicTracks/create";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -95,14 +97,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             const string route = "/operations/musicTracks/create";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -113,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         public async Task Cannot_update_resources_for_matching_resource_type()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -143,14 +145,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             const string route = "/operations/musicTracks/create";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -161,8 +163,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         public async Task Cannot_add_to_ToMany_relationship_for_matching_resource_type()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
-            var existingPerformer = _fakers.Performer.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+            Performer existingPerformer = _fakers.Performer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -198,14 +200,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             const string route = "/operations/musicTracks/create";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");

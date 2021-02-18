@@ -32,9 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         {
             if (bool.Parse(parameterValue))
             {
-                source = source.Where(musicTrack =>
-                    musicTrack.ReleasedAt < _systemClock.UtcNow &&
-                    musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
+                source = source.Where(musicTrack => musicTrack.ReleasedAt < _systemClock.UtcNow && musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
             }
 
             return source;

@@ -7,21 +7,25 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <inheritdoc />
-    public interface IResourceWriteRepository<TResource>
-        : IResourceWriteRepository<TResource, int>
+    public interface IResourceWriteRepository<TResource> : IResourceWriteRepository<TResource, int>
         where TResource : class, IIdentifiable<int>
-    { }
+    {
+    }
 
     /// <summary>
     /// Groups write operations.
     /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    /// <typeparam name="TResource">
+    /// The resource type.
+    /// </typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier type.
+    /// </typeparam>
     public interface IResourceWriteRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
-        /// Creates a new resource instance, in preparation for <see cref="CreateAsync"/>.
+        /// Creates a new resource instance, in preparation for <see cref="CreateAsync" />.
         /// </summary>
         /// <remarks>
         /// This method can be overridden to assign resource-specific required relationships.
@@ -34,7 +38,7 @@ namespace JsonApiDotNetCore.Repositories
         Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for <see cref="UpdateAsync"/>.
+        /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for <see cref="UpdateAsync" />.
         /// </summary>
         Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
 

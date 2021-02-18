@@ -14,10 +14,71 @@ namespace UnitTests.ResourceHooks
         private readonly HasManyAttribute _toManyAttr;
 
         private readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> _relationships = new Dictionary<RelationshipAttribute, HashSet<Dummy>>();
-        private readonly HashSet<Dummy> _firstToOnesResources = new HashSet<Dummy> { new Dummy { Id = 1 }, new Dummy { Id = 2 }, new Dummy { Id = 3 } };
-        private readonly HashSet<Dummy> _secondToOnesResources = new HashSet<Dummy> { new Dummy { Id = 4 }, new Dummy { Id = 5 }, new Dummy { Id = 6 } };
-        private readonly HashSet<Dummy> _toManiesResources = new HashSet<Dummy> { new Dummy { Id = 7 }, new Dummy { Id = 8 }, new Dummy { Id = 9 } };
-        private readonly HashSet<Dummy> _noRelationshipsResources = new HashSet<Dummy> { new Dummy { Id = 10 }, new Dummy { Id = 11 }, new Dummy { Id = 12 } };
+
+        private readonly HashSet<Dummy> _firstToOnesResources = new HashSet<Dummy>
+        {
+            new Dummy
+            {
+                Id = 1
+            },
+            new Dummy
+            {
+                Id = 2
+            },
+            new Dummy
+            {
+                Id = 3
+            }
+        };
+
+        private readonly HashSet<Dummy> _secondToOnesResources = new HashSet<Dummy>
+        {
+            new Dummy
+            {
+                Id = 4
+            },
+            new Dummy
+            {
+                Id = 5
+            },
+            new Dummy
+            {
+                Id = 6
+            }
+        };
+
+        private readonly HashSet<Dummy> _toManiesResources = new HashSet<Dummy>
+        {
+            new Dummy
+            {
+                Id = 7
+            },
+            new Dummy
+            {
+                Id = 8
+            },
+            new Dummy
+            {
+                Id = 9
+            }
+        };
+
+        private readonly HashSet<Dummy> _noRelationshipsResources = new HashSet<Dummy>
+        {
+            new Dummy
+            {
+                Id = 10
+            },
+            new Dummy
+            {
+                Id = 11
+            },
+            new Dummy
+            {
+                Id = 12
+            }
+        };
+
         private readonly HashSet<Dummy> _allResources;
 
         public RelationshipDictionaryTests()
@@ -29,6 +90,7 @@ namespace UnitTests.ResourceHooks
                 RightType = typeof(ToOne),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.FirstToOne))
             };
+
             _secondToOneAttr = new HasOneAttribute
             {
                 PublicName = "secondToOne",
@@ -36,6 +98,7 @@ namespace UnitTests.ResourceHooks
                 RightType = typeof(ToOne),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.SecondToOne))
             };
+
             _toManyAttr = new HasManyAttribute
             {
                 PublicName = "toManies",
@@ -43,6 +106,7 @@ namespace UnitTests.ResourceHooks
                 RightType = typeof(ToMany),
                 Property = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
             };
+
             _relationships.Add(_firstToOneAttr, _firstToOnesResources);
             _relationships.Add(_secondToOneAttr, _secondToOnesResources);
             _relationships.Add(_toManyAttr, _toManiesResources);
@@ -53,7 +117,7 @@ namespace UnitTests.ResourceHooks
         public void RelationshipsDictionary_GetByRelationships()
         {
             // Arrange
-            RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(_relationships);
+            var relationshipsDictionary = new RelationshipsDictionary<Dummy>(_relationships);
 
             // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = relationshipsDictionary.GetByRelationship<ToOne>();
@@ -68,12 +132,12 @@ namespace UnitTests.ResourceHooks
         public void RelationshipsDictionary_GetAffected()
         {
             // Arrange
-            RelationshipsDictionary<Dummy> relationshipsDictionary = new RelationshipsDictionary<Dummy>(_relationships);
+            var relationshipsDictionary = new RelationshipsDictionary<Dummy>(_relationships);
 
             // Act
-            var affectedThroughFirstToOne = relationshipsDictionary.GetAffected(d => d.FirstToOne).ToList();
-            var affectedThroughSecondToOne = relationshipsDictionary.GetAffected(d => d.SecondToOne).ToList();
-            var affectedThroughToMany = relationshipsDictionary.GetAffected(d => d.ToManies).ToList();
+            List<Dummy> affectedThroughFirstToOne = relationshipsDictionary.GetAffected(d => d.FirstToOne).ToList();
+            List<Dummy> affectedThroughSecondToOne = relationshipsDictionary.GetAffected(d => d.SecondToOne).ToList();
+            List<Dummy> affectedThroughToMany = relationshipsDictionary.GetAffected(d => d.ToManies).ToList();
 
             // Assert
             affectedThroughFirstToOne.ForEach(resource => Assert.Contains(resource, _firstToOnesResources));
@@ -85,7 +149,7 @@ namespace UnitTests.ResourceHooks
         public void ResourceHashSet_GetByRelationships()
         {
             // Arrange
-            ResourceHashSet<Dummy> resources = new ResourceHashSet<Dummy>(_allResources, _relationships);
+            var resources = new ResourceHashSet<Dummy>(_allResources, _relationships);
 
             // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = resources.GetByRelationship<ToOne>();
@@ -95,7 +159,8 @@ namespace UnitTests.ResourceHooks
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
-            var allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+
             _noRelationshipsResources.ToList().ForEach(e =>
             {
                 Assert.DoesNotContain(e, allResourcesWithAffectedRelationships);
@@ -106,8 +171,12 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetByRelationships()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }).ToList());
-            DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
+            {
+                Id = e.Id
+            }).ToList());
+
+            var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Act
             Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.GetByRelationship<ToOne>();
@@ -117,18 +186,22 @@ namespace UnitTests.ResourceHooks
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
-            var allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+
             _noRelationshipsResources.ToList().ForEach(e =>
             {
                 Assert.DoesNotContain(e, allResourcesWithAffectedRelationships);
             });
 
-            var requestResourcesFromDiff = diffs;
+            DiffableResourceHashSet<Dummy> requestResourcesFromDiff = diffs;
+
             requestResourcesFromDiff.ToList().ForEach(e =>
             {
                 Assert.Contains(e, _allResources);
             });
-            var databaseResourcesFromDiff = diffs.GetDiffs().Select(d => d.DatabaseValue);
+
+            IEnumerable<Dummy> databaseResourcesFromDiff = diffs.GetDiffs().Select(d => d.DatabaseValue);
+
             databaseResourcesFromDiff.ToList().ForEach(e =>
             {
                 Assert.Contains(e, dbResources);
@@ -139,8 +212,12 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_Loops_Over_Diffs()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
-            DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
+            {
+                Id = e.Id
+            }));
+
+            var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Assert & act
             foreach (ResourceDiffPair<Dummy> diff in diffs.GetDiffs())
@@ -156,13 +233,17 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetAffected_Relationships()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
-            DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
+            {
+                Id = e.Id
+            }));
+
+            var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Act
-            var affectedThroughFirstToOne = diffs.GetAffected(d => d.FirstToOne).ToList();
-            var affectedThroughSecondToOne = diffs.GetAffected(d => d.SecondToOne).ToList();
-            var affectedThroughToMany = diffs.GetAffected(d => d.ToManies).ToList();
+            List<Dummy> affectedThroughFirstToOne = diffs.GetAffected(d => d.FirstToOne).ToList();
+            List<Dummy> affectedThroughSecondToOne = diffs.GetAffected(d => d.SecondToOne).ToList();
+            List<Dummy> affectedThroughToMany = diffs.GetAffected(d => d.ToManies).ToList();
 
             // Assert
             affectedThroughFirstToOne.ForEach(resource => Assert.Contains(resource, _firstToOnesResources));
@@ -174,16 +255,21 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetAffected_Attributes()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
+            {
+                Id = e.Id
+            }));
+
             var updatedAttributes = new Dictionary<PropertyInfo, HashSet<Dummy>>
             {
                 { typeof(Dummy).GetProperty("SomeUpdatedProperty"), _allResources }
             };
-            DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, updatedAttributes);
+
+            var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, updatedAttributes);
 
             // Act
-            var affectedThroughSomeUpdatedProperty = diffs.GetAffected(d => d.SomeUpdatedProperty);
-            var affectedThroughSomeNotUpdatedProperty = diffs.GetAffected(d => d.SomeNotUpdatedProperty);
+            HashSet<Dummy> affectedThroughSomeUpdatedProperty = diffs.GetAffected(d => d.SomeUpdatedProperty);
+            HashSet<Dummy> affectedThroughSomeNotUpdatedProperty = diffs.GetAffected(d => d.SomeNotUpdatedProperty);
 
             // Assert
             Assert.NotEmpty(affectedThroughSomeUpdatedProperty);
@@ -191,9 +277,8 @@ namespace UnitTests.ResourceHooks
         }
 
         private void AssertRelationshipDictionaryGetters(Dictionary<RelationshipAttribute, HashSet<Dummy>> relationshipsDictionary,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes, Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
         {
             Assert.Contains(_firstToOneAttr, toOnes.Keys);
             Assert.Contains(_secondToOneAttr, toOnes.Keys);
@@ -214,6 +299,7 @@ namespace UnitTests.ResourceHooks
             {
                 Assert.Contains(resource, _toManiesResources);
             });
+
             Assert.Empty(notTargeted);
         }
     }

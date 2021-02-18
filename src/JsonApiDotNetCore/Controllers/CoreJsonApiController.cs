@@ -13,7 +13,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            return Error(new[] {error});
+            return Error(new[]
+            {
+                error
+            });
         }
 
         protected IActionResult Error(IEnumerable<Error> errors)
@@ -24,7 +27,7 @@ namespace JsonApiDotNetCore.Controllers
 
             return new ObjectResult(document)
             {
-                StatusCode = (int) document.GetErrorStatusCode()
+                StatusCode = (int)document.GetErrorStatusCode()
             };
         }
     }

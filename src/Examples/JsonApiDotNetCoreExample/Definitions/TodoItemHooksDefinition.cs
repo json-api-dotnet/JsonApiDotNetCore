@@ -11,7 +11,10 @@ namespace JsonApiDotNetCoreExample.Definitions
 {
     public class TodoItemHooksDefinition : LockableHooksDefinition<TodoItem>
     {
-        public TodoItemHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TodoItemHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
         public override void BeforeRead(ResourcePipeline pipeline, bool isIncluded = false, string stringId = null)
         {

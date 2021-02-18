@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         ResourceLinks GetResourceLinks(string resourceName, string id);
 
         /// <summary>
-        /// Builds the links object that is included in the values of the <see cref="RelationshipEntry"/>.
+        /// Builds the links object that is included in the values of the <see cref="RelationshipEntry" />.
         /// </summary>
         RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent);
     }

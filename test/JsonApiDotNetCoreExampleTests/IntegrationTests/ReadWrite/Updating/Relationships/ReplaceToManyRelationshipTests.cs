@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -11,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Relationships
 {
-    public sealed class ReplaceToManyRelationshipTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class ReplaceToManyRelationshipTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_clear_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -40,10 +40,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = new object[0]
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -52,9 +52,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().BeEmpty();
             });
@@ -64,7 +62,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_clear_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+
             existingWorkItem.WorkItemTags = new[]
             {
                 new WorkItemTag
@@ -84,10 +83,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = new object[0]
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -99,7 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var workItemInDatabase = await dbContext.WorkItems
+                WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstWithIdAsync(existingWorkItem.Id);
@@ -115,15 +114,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Subscribers = _fakers.UserAccount.Generate(2).ToHashSet();
 
-            var existingSubscriber = _fakers.UserAccount.Generate();
+            UserAccount existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {                                                                               
-               dbContext.AddRange(existingWorkItem, existingSubscriber);
-               await dbContext.SaveChangesAsync();
+            {
+                dbContext.AddRange(existingWorkItem, existingSubscriber);
+                await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
@@ -143,10 +142,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -155,9 +154,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(2);
                 workItemInDatabase.Subscribers.Should().ContainSingle(userAccount => userAccount.Id == existingWorkItem.Subscribers.ElementAt(1).Id);
@@ -169,7 +166,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resources()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+
             existingWorkItem.WorkItemTags = new[]
             {
                 new WorkItemTag
@@ -182,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var existingTags = _fakers.WorkTag.Generate(2);
+            List<WorkTag> existingTags = _fakers.WorkTag.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -213,10 +211,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -228,7 +226,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var workItemInDatabase = await dbContext.WorkItems
+                WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.WorkItemTags)
                     .ThenInclude(workItemTag => workItemTag.Tag)
                     .FirstWithIdAsync(existingWorkItem.Id);
@@ -247,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_for_missing_request_body()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -255,19 +253,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = string.Empty;
+            string requestBody = string.Empty;
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -277,7 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_for_missing_type()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -296,17 +294,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
@@ -316,7 +314,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_for_unknown_type()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -336,17 +334,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
@@ -356,7 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_for_missing_ID()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -375,17 +373,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             error.Detail.Should().StartWith("Request body: <<");
@@ -395,7 +393,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_with_unknown_IDs_in_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -420,22 +418,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            var error1 = responseDocument.Errors[0];
+            Error error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
             error1.Detail.Should().Be("Related resource of type 'userAccounts' with ID '88888888' in relationship 'subscribers' does not exist.");
 
-            var error2 = responseDocument.Errors[1];
+            Error error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
             error2.Detail.Should().Be("Related resource of type 'userAccounts' with ID '99999999' in relationship 'subscribers' does not exist.");
@@ -445,7 +443,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_with_unknown_IDs_in_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -470,22 +468,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            var error1 = responseDocument.Errors[0];
+            Error error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
             error1.Detail.Should().Be("Related resource of type 'workTags' with ID '88888888' in relationship 'tags' does not exist.");
 
-            var error2 = responseDocument.Errors[1];
+            Error error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
             error2.Detail.Should().Be("Related resource of type 'workTags' with ID '99999999' in relationship 'tags' does not exist.");
@@ -495,8 +493,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_on_unknown_resource_type_in_url()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingSubscriber = _fakers.UserAccount.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            UserAccount existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -516,10 +514,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -531,7 +529,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_on_unknown_resource_ID_in_url()
         {
             // Arrange
-            var existingSubscriber = _fakers.UserAccount.Generate();
+            UserAccount existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -547,14 +545,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             const string route = "/workItems/99999999/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
@@ -564,7 +562,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_on_unknown_relationship_in_url()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -584,17 +582,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
             error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
@@ -604,8 +602,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_on_relationship_mismatch_between_url_and_body()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingSubscriber = _fakers.UserAccount.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            UserAccount existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -625,20 +623,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource of type 'workTags' in PATCH request body at endpoint " +
+
+            error.Detail.Should().Be("Expected resource of type 'workTags' in PATCH request body at endpoint " +
                 $"'/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
         }
 
@@ -646,10 +645,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_replace_with_duplicates()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
 
-            var existingSubscriber = _fakers.UserAccount.Generate();
+            UserAccount existingSubscriber = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -674,10 +673,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -686,9 +685,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Subscribers)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingSubscriber.Id);
@@ -699,7 +696,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_with_null_data_in_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -712,17 +709,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = (object)null
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().StartWith("Expected data[] element for 'subscribers' relationship. - Request body: <<");
@@ -732,7 +729,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Cannot_replace_with_null_data_in_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -745,17 +742,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = (object)null
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
@@ -765,7 +762,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_clear_cyclic_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -776,6 +773,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 {
                     existingWorkItem
                 };
+
                 await dbContext.SaveChangesAsync();
             });
 
@@ -784,10 +782,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = new object[0]
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -796,9 +794,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Children)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Children.Should().BeEmpty();
             });
@@ -808,7 +804,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_clear_cyclic_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -822,6 +818,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                         FromItem = existingWorkItem
                     }
                 };
+
                 await dbContext.SaveChangesAsync();
             });
 
@@ -830,10 +827,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 data = new object[0]
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedFrom";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedFrom";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -845,7 +842,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var workItemInDatabase = await dbContext.WorkItems
+                WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.RelatedFromItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
                     .FirstWithIdAsync(existingWorkItem.Id);
@@ -861,7 +858,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_assign_cyclic_HasMany_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -881,10 +878,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -893,9 +890,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Children)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Children).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Children.Should().HaveCount(1);
                 workItemInDatabase.Children[0].Id.Should().Be(existingWorkItem.Id);
@@ -906,7 +901,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public async Task Can_assign_cyclic_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -926,10 +921,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedTo";
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedTo";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -941,7 +936,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var workItemInDatabase = await dbContext.WorkItems
+                WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.RelatedToItems)
                     .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
                     .FirstWithIdAsync(existingWorkItem.Id);

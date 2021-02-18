@@ -15,14 +15,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public DbSet<Calendar> Calendars { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
 
-        public QueryStringDbContext(DbContextOptions<QueryStringDbContext> options) : base(options)
+        public QueryStringDbContext(DbContextOptions<QueryStringDbContext> options)
+            : base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<BlogPostLabel>()
-                .HasKey(blogPostLabel => new {blogPostLabel.BlogPostId, blogPostLabel.LabelId});
+                .HasKey(blogPostLabel => new
+                {
+                    blogPostLabel.BlogPostId,
+                    blogPostLabel.LabelId
+                });
 
             builder.Entity<WebAccount>()
                 .HasMany(webAccount => webAccount.Posts)

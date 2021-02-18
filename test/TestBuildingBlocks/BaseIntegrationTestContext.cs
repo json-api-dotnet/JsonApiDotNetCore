@@ -11,14 +11,19 @@ using Microsoft.Extensions.Logging;
 namespace TestBuildingBlocks
 {
     /// <summary>
-    /// Base class for a test context that creates a new database and server instance before running tests and cleans up afterwards.
-    /// You can either use this as a fixture on your tests class (init/cleanup runs once before/after all tests) or
-    /// have your tests class inherit from it (init/cleanup runs once before/after each test). See
-    /// <see href="https://xunit.net/docs/shared-context"/> for details on shared context usage.
+    /// Base class for a test context that creates a new database and server instance before running tests and cleans up afterwards. You can either use this
+    /// as a fixture on your tests class (init/cleanup runs once before/after all tests) or have your tests class inherit from it (init/cleanup runs once
+    /// before/after each test). See <see href="https://xunit.net/docs/shared-context" /> for details on shared context usage.
     /// </summary>
-    /// <typeparam name="TStartup">The server Startup class, which can be defined in the test project.</typeparam>
-    /// <typeparam name="TRemoteStartup">The base class for <typeparamref name="TStartup"/>, which MUST be defined in the API project.</typeparam>
-    /// <typeparam name="TDbContext">The EF Core database context, which can be defined in the test project.</typeparam>
+    /// <typeparam name="TStartup">
+    /// The server Startup class, which can be defined in the test project.
+    /// </typeparam>
+    /// <typeparam name="TRemoteStartup">
+    /// The base class for <typeparamref name="TStartup" />, which MUST be defined in the API project.
+    /// </typeparam>
+    /// <typeparam name="TDbContext">
+    /// The EF Core database context, which can be defined in the test project.
+    /// </typeparam>
     public abstract class BaseIntegrationTestContext<TStartup, TRemoteStartup, TDbContext> : IntegrationTest, IDisposable
         where TStartup : class
         where TRemoteStartup : class
@@ -31,21 +36,20 @@ namespace TestBuildingBlocks
 
         public WebApplicationFactory<TRemoteStartup> Factory => _lazyFactory.Value;
 
-        protected override HttpClient CreateClient()
-        {
-            return Factory.CreateClient();
-        }
-
         protected BaseIntegrationTestContext()
         {
             _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
         }
 
+        protected override HttpClient CreateClient()
+        {
+            return Factory.CreateClient();
+        }
+
         private WebApplicationFactory<TRemoteStartup> CreateFactory()
         {
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
-            string dbConnectionString =
-                $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
+            string dbConnectionString = $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
 
             var factory = new IntegrationTestWebApplicationFactory();
 
@@ -57,8 +61,7 @@ namespace TestBuildingBlocks
 
                 services.AddDbContext<TDbContext>(options =>
                 {
-                    options.UseNpgsql(dbConnectionString,
-                        postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
+                    options.UseNpgsql(dbConnectionString, postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
 
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
@@ -127,26 +130,25 @@ namespace TestBuildingBlocks
 
             protected override IHostBuilder CreateHostBuilder()
             {
-                return Host.CreateDefaultBuilder(null)
-                    .ConfigureWebHostDefaults(webBuilder =>
+                return Host.CreateDefaultBuilder(null).ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureLogging(options =>
                     {
-                        webBuilder.ConfigureLogging(options =>
-                        {
-                            _loggingConfiguration?.Invoke(options);
-                        });
-
-                        webBuilder.ConfigureServices(services =>
-                        {
-                            _beforeServicesConfiguration?.Invoke(services);
-                        });
-                    
-                        webBuilder.UseStartup<TStartup>();
-
-                        webBuilder.ConfigureServices(services =>
-                        {
-                            _afterServicesConfiguration?.Invoke(services);
-                        });
+                        _loggingConfiguration?.Invoke(options);
                     });
+
+                    webBuilder.ConfigureServices(services =>
+                    {
+                        _beforeServicesConfiguration?.Invoke(services);
+                    });
+
+                    webBuilder.UseStartup<TStartup>();
+
+                    webBuilder.ConfigureServices(services =>
+                    {
+                        _afterServicesConfiguration?.Invoke(services);
+                    });
+                });
             }
         }
     }

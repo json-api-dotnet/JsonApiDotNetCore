@@ -8,16 +8,20 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <inheritdoc />
-    public interface IResourceReadRepository<TResource>
-       : IResourceReadRepository<TResource, int>
-       where TResource : class, IIdentifiable<int>
-    { }
+    public interface IResourceReadRepository<TResource> : IResourceReadRepository<TResource, int>
+        where TResource : class, IIdentifiable<int>
+    {
+    }
 
     /// <summary>
     /// Groups read operations.
     /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    /// <typeparam name="TResource">
+    /// The resource type.
+    /// </typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier type.
+    /// </typeparam>
     public interface IResourceReadRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {

@@ -8,6 +8,10 @@ namespace JsonApiDotNetCore.Configuration
     /// <inheritdoc />
     public sealed class JsonApiOptions : IJsonApiOptions
     {
+        // Workaround for https://github.com/dotnet/efcore/issues/21026
+        internal bool DisableTopPagination { get; set; }
+        internal bool DisableChildrenPagination { get; set; }
+
         /// <inheritdoc />
         public string Namespace { get; set; }
 
@@ -82,9 +86,5 @@ namespace JsonApiDotNetCore.Configuration
                 NamingStrategy = new CamelCaseNamingStrategy()
             }
         };
-
-        // Workaround for https://github.com/dotnet/efcore/issues/21026
-        internal bool DisableTopPagination { get; set; }
-        internal bool DisableChildrenPagination { get; set; }
     }
 }

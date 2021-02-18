@@ -5,6 +5,7 @@ namespace UnitTests.TestModels
 {
     public class Song : Identifiable
     {
-        [Attr] public string Title { get; set; }
+        [Attr]
+        public string Title { get; set; }
     }
 }

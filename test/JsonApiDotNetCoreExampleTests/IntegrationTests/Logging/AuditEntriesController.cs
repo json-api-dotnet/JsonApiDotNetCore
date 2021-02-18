@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
     public sealed class AuditEntriesController : JsonApiController<AuditEntry>
     {
-        public AuditEntriesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<AuditEntry> resourceService)
+        public AuditEntriesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<AuditEntry> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

@@ -4,7 +4,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
     public sealed class QueryParseException : Exception
     {
-        public QueryParseException(string message) : base(message)
+        public QueryParseException(string message)
+            : base(message)
         {
         }
     }

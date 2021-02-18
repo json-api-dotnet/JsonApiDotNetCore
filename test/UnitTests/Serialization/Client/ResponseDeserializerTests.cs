@@ -29,12 +29,16 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = new Document
             {
-                Meta = new Dictionary<string, object> { ["foo"] = "bar" }
+                Meta = new Dictionary<string, object>
+                {
+                    ["foo"] = "bar"
+                }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<TestResource>(body);
+            SingleResponse<TestResource> result = _deserializer.DeserializeSingle<TestResource>(body);
 
             // Assert
             Assert.Null(result.Data);
@@ -48,12 +52,18 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = new Document
             {
-                Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] }
+                Links = new TopLevelLinks
+                {
+                    Self = _linkValues["self"],
+                    Next = _linkValues["next"],
+                    Last = _linkValues["last"]
+                }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<TestResource>(body);
+            SingleResponse<TestResource> result = _deserializer.DeserializeSingle<TestResource>(body);
 
             // Assert
             Assert.Null(result.Data);
@@ -70,13 +80,19 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = new Document
             {
-                Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] },
+                Links = new TopLevelLinks
+                {
+                    Self = _linkValues["self"],
+                    Next = _linkValues["next"],
+                    Last = _linkValues["last"]
+                },
                 Data = new List<ResourceObject>()
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeMany<TestResource>(body);
+            ManyResponse<TestResource> result = _deserializer.DeserializeMany<TestResource>(body);
 
             // Assert
             Assert.Empty(result.Data);
@@ -91,12 +107,12 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_ResourceWithAttributes_CanDeserialize()
         {
             // Arrange
-            var content = CreateTestResourceDocument();
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateTestResourceDocument();
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<TestResource>(body);
-            var resource = result.Data;
+            SingleResponse<TestResource> result = _deserializer.DeserializeSingle<TestResource>(body);
+            TestResource resource = result.Data;
 
             // Assert
             Assert.Null(result.Links);
@@ -109,33 +125,41 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_MultipleDependentRelationshipsWithIncluded_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("multiPrincipals");
+            Document content = CreateDocumentWithRelationships("multiPrincipals");
             content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
-            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", isToManyData: true));
+            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
             content.SingleData.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
             const string toOneAttributeValue = "populatedToOne member content";
             const string toManyAttributeValue = "populatedToManies member content";
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "oneToOneDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toOneAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = toOneAttributeValue
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = toManyAttributeValue
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var resource = result.Data;
+            SingleResponse<MultipleRelationshipsPrincipalPart> result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
+            MultipleRelationshipsPrincipalPart resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
@@ -152,33 +176,41 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_MultiplePrincipalRelationshipsWithIncluded_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("multiDependents");
+            Document content = CreateDocumentWithRelationships("multiDependents");
             content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
             content.SingleData.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
             content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
             content.SingleData.Relationships.Add("emptyToMany", CreateRelationshipData());
             const string toOneAttributeValue = "populatedToOne member content";
             const string toManyAttributeValue = "populatedToManies member content";
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "oneToOnePrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toOneAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = toOneAttributeValue
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = toManyAttributeValue
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<MultipleRelationshipsDependentPart>(body);
-            var resource = result.Data;
+            SingleResponse<MultipleRelationshipsDependentPart> result = _deserializer.DeserializeSingle<MultipleRelationshipsDependentPart>(body);
+            MultipleRelationshipsDependentPart resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
@@ -194,31 +226,42 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_NestedIncluded_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("multiPrincipals");
-            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", isToManyData: true));
+            Document content = CreateDocumentWithRelationships("multiPrincipals");
+            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
             const string toManyAttributeValue = "populatedToManies member content";
             const string nestedIncludeAttributeValue = "nested include member content";
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue },
-                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = toManyAttributeValue
+                    },
+                    Relationships = new Dictionary<string, RelationshipEntry>
+                    {
+                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludeAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = nestedIncludeAttributeValue
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var resource = result.Data;
+            SingleResponse<MultipleRelationshipsPrincipalPart> result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
+            MultipleRelationshipsPrincipalPart resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
@@ -226,59 +269,76 @@ namespace UnitTests.Serialization.Client
             Assert.Null(resource.EmptyToManies);
             Assert.Null(resource.EmptyToOne);
             Assert.NotNull(resource.PopulatedToManies);
-            var includedResource = resource.PopulatedToManies.First();
+            OneToManyDependent includedResource = resource.PopulatedToManies.First();
             Assert.Equal(toManyAttributeValue, includedResource.AttributeMember);
-            var nestedIncludedResource = includedResource.Principal;
+            OneToManyPrincipal nestedIncludedResource = includedResource.Principal;
             Assert.Equal(nestedIncludeAttributeValue, nestedIncludedResource.AttributeMember);
         }
-        
+
         [Fact]
         public void DeserializeSingle_DeeplyNestedIncluded_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("multiPrincipals");
+            Document content = CreateDocumentWithRelationships("multiPrincipals");
             content.SingleData.Relationships.Add("multi", CreateRelationshipData("multiPrincipals"));
             const string includedAttributeValue = "multi member content";
             const string nestedIncludedAttributeValue = "nested include member content";
             const string deeplyNestedIncludedAttributeValue = "deeply nested member content";
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "multiPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = includedAttributeValue },
-                    Relationships = new Dictionary<string, RelationshipEntry> { ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", isToManyData: true) }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = includedAttributeValue
+                    },
+                    Relationships = new Dictionary<string, RelationshipEntry>
+                    {
+                        ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", true)
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludedAttributeValue },
-                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = nestedIncludedAttributeValue
+                    },
+                    Relationships = new Dictionary<string, RelationshipEntry>
+                    {
+                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = deeplyNestedIncludedAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = deeplyNestedIncludedAttributeValue
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
-            var resource = result.Data;
+            SingleResponse<MultipleRelationshipsPrincipalPart> result = _deserializer.DeserializeSingle<MultipleRelationshipsPrincipalPart>(body);
+            MultipleRelationshipsPrincipalPart resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
-            var included = resource.Multi;
+            MultipleRelationshipsPrincipalPart included = resource.Multi;
             Assert.Equal(10, included.Id);
             Assert.Equal(includedAttributeValue, included.AttributeMember);
-            var nestedIncluded = included.PopulatedToManies.First();
+            OneToManyDependent nestedIncluded = included.PopulatedToManies.First();
             Assert.Equal(10, nestedIncluded.Id);
             Assert.Equal(nestedIncludedAttributeValue, nestedIncluded.AttributeMember);
-            var deeplyNestedIncluded = nestedIncluded.Principal;
+            OneToManyPrincipal deeplyNestedIncluded = nestedIncluded.Principal;
             Assert.Equal(10, deeplyNestedIncluded.Id);
             Assert.Equal(deeplyNestedIncludedAttributeValue, deeplyNestedIncluded.AttributeMember);
         }
@@ -287,100 +347,135 @@ namespace UnitTests.Serialization.Client
         public void DeserializeList_DeeplyNestedIncluded_CanDeserialize()
         {
             // Arrange
-            var content = new Document { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multiPrincipals").SingleData } };
+            var content = new Document
+            {
+                Data = new List<ResourceObject>
+                {
+                    CreateDocumentWithRelationships("multiPrincipals").SingleData
+                }
+            };
+
             content.ManyData[0].Relationships.Add("multi", CreateRelationshipData("multiPrincipals"));
             const string includedAttributeValue = "multi member content";
             const string nestedIncludedAttributeValue = "nested include member content";
             const string deeplyNestedIncludedAttributeValue = "deeply nested member content";
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "multiPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = includedAttributeValue },
-                    Relationships = new Dictionary<string, RelationshipEntry> { ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", isToManyData: true) }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = includedAttributeValue
+                    },
+                    Relationships = new Dictionary<string, RelationshipEntry>
+                    {
+                        ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", true)
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludedAttributeValue },
-                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = nestedIncludedAttributeValue
+                    },
+                    Relationships = new Dictionary<string, RelationshipEntry>
+                    {
+                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["attributeMember"] = deeplyNestedIncludedAttributeValue }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["attributeMember"] = deeplyNestedIncludedAttributeValue
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeMany<MultipleRelationshipsPrincipalPart>(body);
-            var resource = result.Data.First();
+            ManyResponse<MultipleRelationshipsPrincipalPart> result = _deserializer.DeserializeMany<MultipleRelationshipsPrincipalPart>(body);
+            MultipleRelationshipsPrincipalPart resource = result.Data.First();
 
             // Assert
             Assert.Equal(1, resource.Id);
-            var included = resource.Multi;
+            MultipleRelationshipsPrincipalPart included = resource.Multi;
             Assert.Equal(10, included.Id);
             Assert.Equal(includedAttributeValue, included.AttributeMember);
-            var nestedIncluded = included.PopulatedToManies.First();
+            OneToManyDependent nestedIncluded = included.PopulatedToManies.First();
             Assert.Equal(10, nestedIncluded.Id);
             Assert.Equal(nestedIncludedAttributeValue, nestedIncluded.AttributeMember);
-            var deeplyNestedIncluded = nestedIncluded.Principal;
+            OneToManyPrincipal deeplyNestedIncluded = nestedIncluded.Principal;
             Assert.Equal(10, deeplyNestedIncluded.Id);
             Assert.Equal(deeplyNestedIncludedAttributeValue, deeplyNestedIncluded.AttributeMember);
         }
-        
+
         [Fact]
         public void DeserializeSingle_ResourceWithInheritanceAndInclusions_CanDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("testResourceWithAbstractRelationships");
-            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", isToManyData: true, id: "10"));
+            Document content = CreateDocumentWithRelationships("testResourceWithAbstractRelationships");
+            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", true, "10"));
             content.SingleData.Relationships["toMany"].ManyData.Add(CreateRelationshipData("secondDerivedModels", id: "11").SingleData);
             content.SingleData.Relationships.Add("toOne", CreateRelationshipData("firstDerivedModels", id: "20"));
+
             content.Included = new List<ResourceObject>
             {
                 new ResourceObject
                 {
                     Type = "firstDerivedModels",
                     Id = "10",
-                    Attributes = new Dictionary<string, object> { ["firstProperty"] = "true" }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["firstProperty"] = "true"
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "secondDerivedModels",
                     Id = "11",
-                    Attributes = new Dictionary<string, object> { ["secondProperty"] = "false" }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["secondProperty"] = "false"
+                    }
                 },
                 new ResourceObject
                 {
                     Type = "firstDerivedModels",
                     Id = "20",
-                    Attributes = new Dictionary<string, object> { ["firstProperty"] = "true" }
+                    Attributes = new Dictionary<string, object>
+                    {
+                        ["firstProperty"] = "true"
+                    }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.DeserializeSingle<TestResourceWithAbstractRelationship>(body);
-            var resource = result.Data;
+            SingleResponse<TestResourceWithAbstractRelationship> result = _deserializer.DeserializeSingle<TestResourceWithAbstractRelationship>(body);
+            TestResourceWithAbstractRelationship resource = result.Data;
 
             // Assert
             Assert.Equal(1, resource.Id);
             Assert.NotNull(resource.ToOne);
             Assert.True(resource.ToOne is FirstDerivedModel);
             Assert.True(((FirstDerivedModel)resource.ToOne).FirstProperty);
-            
+
             Assert.NotEmpty(resource.ToMany);
-            var first = resource.ToMany[0];
+            BaseModel first = resource.ToMany[0];
             Assert.True(first is FirstDerivedModel);
             Assert.True(((FirstDerivedModel)first).FirstProperty);
-            
-            var second = resource.ToMany[1];
+
+            BaseModel second = resource.ToMany[1];
             Assert.True(second is SecondDerivedModel);
             Assert.False(((SecondDerivedModel)second).SecondProperty);
         }

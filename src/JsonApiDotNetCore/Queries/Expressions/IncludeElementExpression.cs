@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Represents an element in <see cref="IncludeExpression"/>.
+    /// Represents an element in <see cref="IncludeExpression" />.
     /// </summary>
     public class IncludeElementExpression : QueryExpression
     {
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 builder.Append(string.Join(",", Children.Select(child => child.ToString())));
                 builder.Append('}');
             }
-            
+
             return builder.ToString();
         }
 
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (IncludeElementExpression) obj;
+            var other = (IncludeElementExpression)obj;
 
             return Relationship.Equals(other.Relationship) == Children.SequenceEqual(other.Children);
         }
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             var hashCode = new HashCode();
             hashCode.Add(Relationship);
 
-            foreach (var child in Children)
+            foreach (IncludeElementExpression child in Children)
             {
                 hashCode.Add(child);
             }

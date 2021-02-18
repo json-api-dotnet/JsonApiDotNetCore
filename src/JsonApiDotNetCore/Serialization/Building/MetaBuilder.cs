@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
+using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
@@ -30,9 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             ArgumentGuard.NotNull(values, nameof(values));
 
-            _meta = values.Keys.Union(_meta.Keys)
-                .ToDictionary(key => key,
-                    key => values.ContainsKey(key) ? values[key] : _meta[key]);
+            _meta = values.Keys.Union(_meta.Keys).ToDictionary(key => key, key => values.ContainsKey(key) ? values[key] : _meta[key]);
         }
 
         /// <inheritdoc />
@@ -40,13 +39,14 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             if (_paginationContext.TotalResourceCount != null)
             {
-                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
+                NamingStrategy namingStrategy = _options.SerializerContractResolver.NamingStrategy;
                 string key = namingStrategy.GetPropertyName("TotalResources", false);
 
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }
 
-            var extraMeta = _responseMeta.GetMeta();
+            IReadOnlyDictionary<string, object> extraMeta = _responseMeta.GetMeta();
+
             if (extraMeta != null)
             {
                 Add(extraMeta);

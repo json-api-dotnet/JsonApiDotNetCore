@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
     public sealed class PlayersController : JsonApiController<Player, string>
     {
-        public PlayersController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Player, string> resourceService)
+        public PlayersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Player, string> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

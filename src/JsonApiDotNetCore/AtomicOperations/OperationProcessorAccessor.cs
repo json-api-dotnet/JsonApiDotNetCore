@@ -15,8 +15,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IServiceProvider _serviceProvider;
 
-        public OperationProcessorAccessor(IResourceContextProvider resourceContextProvider,
-            IServiceProvider serviceProvider)
+        public OperationProcessorAccessor(IResourceContextProvider resourceContextProvider, IServiceProvider serviceProvider)
         {
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
             ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
@@ -30,17 +29,17 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var processor = ResolveProcessor(operation);
+            IOperationProcessor processor = ResolveProcessor(operation);
             return processor.ProcessAsync(operation, cancellationToken);
         }
 
         protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
         {
-            var processorInterface = GetProcessorInterface(operation.Kind);
-            var resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
+            Type processorInterface = GetProcessorInterface(operation.Kind);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
 
-            var processorType = processorInterface.MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
-            return (IOperationProcessor) _serviceProvider.GetRequiredService(processorType);
+            Type processorType = processorInterface.MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            return (IOperationProcessor)_serviceProvider.GetRequiredService(processorType);
         }
 
         private static Type GetProcessorInterface(OperationKind kind)

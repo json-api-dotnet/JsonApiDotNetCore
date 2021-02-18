@@ -10,7 +10,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource,bool}})"/> calls.
+    /// Transforms <see cref="FilterExpression" /> into
+    /// <see cref="Queryable.Where{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,bool}})" /> calls.
     /// </summary>
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
@@ -134,8 +135,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             throw new InvalidOperationException($"Unknown logical operator '{expression.Operator}'.");
         }
 
-        private static BinaryExpression Compose(Queue<Expression> argumentQueue,
-            Func<Expression, Expression, BinaryExpression> applyOperator)
+        private static BinaryExpression Compose(Queue<Expression> argumentQueue, Func<Expression, Expression, BinaryExpression> applyOperator)
         {
             Expression left = argumentQueue.Dequeue();
             Expression right = argumentQueue.Dequeue();
@@ -193,7 +193,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Type TryResolveCommonType(QueryExpression left, QueryExpression right)
         {
-            var leftType = ResolveFixedType(left);
+            Type leftType = ResolveFixedType(left);
 
             if (TypeHelper.CanContainNull(leftType))
             {
@@ -205,7 +205,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 return typeof(Nullable<>).MakeGenericType(leftType);
             }
 
-            var rightType = TryResolveFixedType(right);
+            Type rightType = TryResolveFixedType(right);
+
             if (rightType != null && TypeHelper.CanContainNull(rightType))
             {
                 return rightType;
@@ -216,7 +217,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Type ResolveFixedType(QueryExpression expression)
         {
-            var result = Visit(expression, null);
+            Expression result = Visit(expression, null);
             return result.Type;
         }
 
@@ -240,9 +241,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             try
             {
-                return targetType != null && expression.Type != targetType
-                    ? Expression.Convert(expression, targetType)
-                    : expression;
+                return targetType != null && expression.Type != targetType ? Expression.Convert(expression, targetType) : expression;
             }
             catch (InvalidOperationException exception)
             {
@@ -257,9 +256,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type expressionType)
         {
-            var convertedValue = expressionType != null
-                ? ConvertTextToTargetType(expression.Value, expressionType)
-                : expression.Value;
+            object convertedValue = expressionType != null ? ConvertTextToTargetType(expression.Value, expressionType) : expression.Value;
 
             return CreateTupleAccessExpressionForConstant(convertedValue, expressionType ?? typeof(string));
         }
@@ -278,7 +275,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(GetPropertyName).ToArray();
+            string[] components = chain.Select(GetPropertyName).ToArray();
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }
 

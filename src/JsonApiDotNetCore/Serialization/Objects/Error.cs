@@ -6,16 +6,11 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// Provides additional information about a problem encountered while performing an operation.
-    /// Error objects MUST be returned as an array keyed by errors in the top level of a JSON:API document.
+    /// Provides additional information about a problem encountered while performing an operation. Error objects MUST be returned as an array keyed by errors
+    /// in the top level of a JSON:API document.
     /// </summary>
     public sealed class Error
     {
-        public Error(HttpStatusCode statusCode)
-        {
-            StatusCode = statusCode;
-        }
-
         /// <summary>
         /// A unique identifier for this particular occurrence of the problem.
         /// </summary>
@@ -27,8 +22,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// </summary>
         [JsonProperty]
         public ErrorLinks Links { get; set; } = new ErrorLinks();
-
-        public bool ShouldSerializeLinks() => Links?.About != null;
 
         /// <summary>
         /// The HTTP status code applicable to this problem.
@@ -50,7 +43,8 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public string Code { get; set; }
 
         /// <summary>
-        /// A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+        /// A short, human-readable summary of the problem that SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of
+        /// localization.
         /// </summary>
         [JsonProperty]
         public string Title { get; set; }
@@ -67,14 +61,30 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty]
         public ErrorSource Source { get; set; } = new ErrorSource();
 
-        public bool ShouldSerializeSource() => Source != null && (Source.Pointer != null || Source.Parameter != null);
-
         /// <summary>
         /// An object containing non-standard meta-information (key/value pairs) about the error.
         /// </summary>
         [JsonProperty]
         public ErrorMeta Meta { get; set; } = new ErrorMeta();
 
-        public bool ShouldSerializeMeta() => Meta != null && Meta.Data.Any();
+        public Error(HttpStatusCode statusCode)
+        {
+            StatusCode = statusCode;
+        }
+
+        public bool ShouldSerializeLinks()
+        {
+            return Links?.About != null;
+        }
+
+        public bool ShouldSerializeSource()
+        {
+            return Source != null && (Source.Pointer != null || Source.Parameter != null);
+        }
+
+        public bool ShouldSerializeMeta()
+        {
+            return Meta != null && Meta.Data.Any();
+        }
     }
 }

@@ -12,8 +12,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
 
-        public InverseNavigationResolver(IResourceContextProvider resourceContextProvider,
-            IEnumerable<IDbContextResolver> dbContextResolvers)
+        public InverseNavigationResolver(IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers)
         {
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
             ArgumentGuard.NotNull(dbContextResolvers, nameof(dbContextResolvers));
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public void Resolve()
         {
-            foreach (var dbContextResolver in _dbContextResolvers)
+            foreach (IDbContextResolver dbContextResolver in _dbContextResolvers)
             {
                 DbContext dbContext = dbContextResolver.GetContext();
                 Resolve(dbContext);
@@ -37,9 +36,10 @@ namespace JsonApiDotNetCore.Configuration
             foreach (ResourceContext resourceContext in _resourceContextProvider.GetResourceContexts())
             {
                 IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
+
                 if (entityType != null)
                 {
-                    foreach (var relationship in resourceContext.Relationships)
+                    foreach (RelationshipAttribute relationship in resourceContext.Relationships)
                     {
                         if (!(relationship is HasManyThroughAttribute))
                         {

@@ -5,12 +5,15 @@ namespace JsonApiDotNetCore.Resources
 {
     /// <inheritdoc />
     public abstract class Identifiable : Identifiable<int>
-    { }
+    {
+    }
 
     /// <summary>
-    /// A convenient basic implementation of <see cref="IIdentifiable"/> that provides conversion between <see cref="Id"/> and <see cref="StringId"/>.
+    /// A convenient basic implementation of <see cref="IIdentifiable" /> that provides conversion between <see cref="Id" /> and <see cref="StringId" />.
     /// </summary>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier type.
+    /// </typeparam>
     public abstract class Identifiable<TId> : IIdentifiable<TId>
     {
         /// <inheritdoc />

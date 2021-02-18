@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            var expression = ParseFilter();
+            FilterExpression expression = ParseFilter();
 
             AssertTokenStackIsEmpty();
 
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatSingleCharacterToken(TokenKind.OpenParen);
 
             // Allow equality comparison of a HasOne relationship with null.
-            var leftChainRequirements = comparisonOperator == ComparisonOperator.Equals
+            FieldChainRequirements leftChainRequirements = comparisonOperator == ComparisonOperator.Equals
                 ? FieldChainRequirements.EndsInAttribute | FieldChainRequirements.EndsInToOne
                 : FieldChainRequirements.EndsInAttribute;
 
@@ -147,14 +147,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             if (leftTerm is ResourceFieldChainExpression leftChain)
             {
-                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) &&
-                    !(rightTerm is NullConstantExpression))
+                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && !(rightTerm is NullConstantExpression))
                 {
                     // Run another pass over left chain to have it fail when chain ends in relationship.
                     OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
                 }
 
                 PropertyInfo leftProperty = leftChain.Fields.Last().Property;
+
                 if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
                     string id = DeObfuscateStringId(leftProperty.ReflectedType, rightConstant.Value);
@@ -212,6 +212,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatSingleCharacterToken(TokenKind.CloseParen);
 
             PropertyInfo targetAttributeProperty = targetAttribute.Fields.Last().Property;
+
             if (targetAttributeProperty.Name == nameof(Identifiable.Id))
             {
                 for (int index = 0; index < constants.Count; index++)
@@ -300,7 +301,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private string DeObfuscateStringId(Type resourceType, string stringId)
         {
-            var tempResource = _resourceFactory.CreateInstance(resourceType);
+            IIdentifiable tempResource = _resourceFactory.CreateInstance(resourceType);
             tempResource.StringId = stringId;
             return tempResource.GetTypedId().ToString();
         }
@@ -317,8 +318,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceContextInScope, path, _validateSingleFieldCallback);
             }
 
-            if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) &&
-                chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
+            if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
             {
                 return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceContextInScope, path, _validateSingleFieldCallback);
             }

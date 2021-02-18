@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (NotExpression) obj;
+            var other = (NotExpression)obj;
 
             return Child.Equals(other.Child);
         }

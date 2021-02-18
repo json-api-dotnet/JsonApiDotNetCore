@@ -41,8 +41,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Fields);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Fields);
         }
 
         /// <inheritdoc />
@@ -58,15 +57,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             try
             {
-                var targetResource = GetSparseFieldType(parameterName);
-                var sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
+                ResourceContext targetResource = GetSparseFieldType(parameterName);
+                SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
 
                 _sparseFieldTable[targetResource] = sparseFieldSet;
             }
             catch (QueryParseException exception)
             {
-                throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.",
-                    exception.Message, exception);
+                throw new InvalidQueryStringParameterException(parameterName, "The specified fieldset is invalid.", exception.Message, exception);
             }
         }
 

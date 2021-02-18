@@ -5,8 +5,13 @@ namespace UnitTests.TestModels
 {
     public class Blog : Identifiable
     {
-        [Attr] public string Title { get; set; }
-        [HasOne] public Person Reviewer { get; set; }
-        [HasOne] public Person Author { get; set; }
+        [Attr]
+        public string Title { get; set; }
+
+        [HasOne]
+        public Person Reviewer { get; set; }
+
+        [HasOne]
+        public Person Author { get; set; }
     }
 }

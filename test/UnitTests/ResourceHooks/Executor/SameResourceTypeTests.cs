@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -8,22 +10,52 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class SameResourceTypeTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
+        private readonly ResourceHook[] _targetHooks =
+        {
+            ResourceHook.OnReturn
+        };
 
         [Fact]
         public void Resource_Has_Multiple_Relations_To_Same_Type()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
-            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
+
+            (var _, var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+
             var person1 = new Person();
-            var todo = new TodoItem { Owner = person1 };
-            var person2 = new Person { AssignedTodoItems = new HashSet<TodoItem> { todo } };
+
+            var todo = new TodoItem
+            {
+                Owner = person1
+            };
+
+            var person2 = new Person
+            {
+                AssignedTodoItems = new HashSet<TodoItem>
+                {
+                    todo
+                }
+            };
+
             todo.Assignee = person2;
-            var person3 = new Person { StakeHolderTodoItem = todo };
-            todo.StakeHolders = new HashSet<Person> { person3 };
-            var todoList = new List<TodoItem> { todo };
+
+            var person3 = new Person
+            {
+                StakeHolderTodoItem = todo
+            };
+
+            todo.StakeHolders = new HashSet<Person>
+            {
+                person3
+            };
+
+            var todoList = new List<TodoItem>
+            {
+                todo
+            };
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
@@ -38,12 +70,20 @@ namespace UnitTests.ResourceHooks.Executor
         public void Resource_Has_Cyclic_Relations()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            (var _, ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
-            todo.ParentTodo  = todo;
-            todo.ChildTodoItems = new List<TodoItem> { todo };
-            var todoList = new List<TodoItem> { todo };
+            todo.ParentTodo = todo;
+
+            todo.ChildTodoItems = new List<TodoItem>
+            {
+                todo
+            };
+
+            var todoList = new List<TodoItem>
+            {
+                todo
+            };
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
@@ -57,17 +97,56 @@ namespace UnitTests.ResourceHooks.Executor
         public void Resource_Has_Nested_Cyclic_Relations()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
-            var rootTodo = new TodoItem { Id = 1 };
-            var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };
-            rootTodo.ChildTodoItems = new List<TodoItem> { child };
-            var grandChild = new TodoItem { ParentTodo  = child, Id = 3 };
-            child.ChildTodoItems = new List<TodoItem> { grandChild };
-            var greatGrandChild = new TodoItem { ParentTodo  = grandChild, Id = 4 };
-            grandChild.ChildTodoItems = new List<TodoItem> { greatGrandChild };
-            greatGrandChild.ChildTodoItems = new List<TodoItem> { rootTodo };
-            var todoList = new List<TodoItem> { rootTodo };
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            (var _, ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
+
+            var rootTodo = new TodoItem
+            {
+                Id = 1
+            };
+
+            var child = new TodoItem
+            {
+                ParentTodo = rootTodo,
+                Id = 2
+            };
+
+            rootTodo.ChildTodoItems = new List<TodoItem>
+            {
+                child
+            };
+
+            var grandChild = new TodoItem
+            {
+                ParentTodo = child,
+                Id = 3
+            };
+
+            child.ChildTodoItems = new List<TodoItem>
+            {
+                grandChild
+            };
+
+            var greatGrandChild = new TodoItem
+            {
+                ParentTodo = grandChild,
+                Id = 4
+            };
+
+            grandChild.ChildTodoItems = new List<TodoItem>
+            {
+                greatGrandChild
+            };
+
+            greatGrandChild.ChildTodoItems = new List<TodoItem>
+            {
+                rootTodo
+            };
+
+            var todoList = new List<TodoItem>
+            {
+                rootTodo
+            };
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);

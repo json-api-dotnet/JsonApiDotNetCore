@@ -12,7 +12,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContext;
 
-        public SparseFieldSetParser(IResourceContextProvider resourceContextProvider, Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
+        public SparseFieldSetParser(IResourceContextProvider resourceContextProvider,
+            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
             : base(resourceContextProvider)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            var expression = ParseSparseFieldSet();
+            SparseFieldSetExpression expression = ParseSparseFieldSet();
 
             AssertTokenStackIsEmpty();
 
@@ -55,11 +56,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            var field = ChainResolver.GetField(path, _resourceContext, path);
+            ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceContext, path);
 
             _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
 
-            return new[] {field};
+            return new[]
+            {
+                field
+            };
         }
     }
 }

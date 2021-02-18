@@ -65,12 +65,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             }
 
             CountExpression count = TryParseCount();
+
             if (count != null)
             {
                 return new SortElementExpression(count, isAscending);
             }
 
-            var errorMessage = isAscending ? "-, count function or field name expected." : "Count function or field name expected.";
+            string errorMessage = isAscending ? "-, count function or field name expected." : "Count function or field name expected.";
             ResourceFieldChainExpression targetAttribute = ParseFieldChain(FieldChainRequirements.EndsInAttribute, errorMessage);
             return new SortElementExpression(targetAttribute, isAscending);
         }

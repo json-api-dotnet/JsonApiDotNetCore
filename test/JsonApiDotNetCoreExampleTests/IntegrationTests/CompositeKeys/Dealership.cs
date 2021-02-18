@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         [Attr]
         public string Address { get; set; }
 
-        [HasMany] 
+        [HasMany]
         public ISet<Car> Inventory { get; set; }
     }
 }

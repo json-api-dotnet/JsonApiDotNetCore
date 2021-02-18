@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,8 +11,8 @@ namespace JsonApiDotNetCore.Configuration
     /// <inheritdoc />
     public class ResourceGraph : IResourceGraph
     {
-        private readonly IReadOnlyCollection<ResourceContext> _resources;
         private static readonly Type _proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
+        private readonly IReadOnlyCollection<ResourceContext> _resources;
 
         public ResourceGraph(IReadOnlyCollection<ResourceContext> resources)
         {
@@ -21,7 +22,10 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ResourceContext> GetResourceContexts() => _resources;
+        public IReadOnlyCollection<ResourceContext> GetResourceContexts()
+        {
+            return _resources;
+        }
 
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
@@ -42,23 +46,29 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable
-            => GetResourceContext(typeof(TResource));
+        public ResourceContext GetResourceContext<TResource>()
+            where TResource : class, IIdentifiable
+        {
+            return GetResourceContext(typeof(TResource));
+        }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+            where TResource : class, IIdentifiable
         {
             return Getter(selector);
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+            where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToArray();
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null) where TResource : class, IIdentifiable
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+            where TResource : class, IIdentifiable
         {
             return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToArray();
         }
@@ -97,14 +107,15 @@ namespace JsonApiDotNetCore.Configuration
                 return null;
             }
 
-            return GetResourceContext(relationship.RightType)
-                .Relationships
-                .SingleOrDefault(r => r.Property == relationship.InverseNavigationProperty);
+            return GetResourceContext(relationship.RightType).Relationships.SingleOrDefault(r => r.Property == relationship.InverseNavigationProperty);
         }
 
-        private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null, FieldFilterType type = FieldFilterType.None) where TResource : class, IIdentifiable
+        private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null,
+            FieldFilterType type = FieldFilterType.None)
+            where TResource : class, IIdentifiable
         {
             IReadOnlyCollection<ResourceFieldAttribute> available;
+
             if (type == FieldFilterType.Attribute)
             {
                 available = GetResourceContext(typeof(TResource)).Attributes;
@@ -125,10 +136,10 @@ namespace JsonApiDotNetCore.Configuration
 
             var targeted = new List<ResourceFieldAttribute>();
 
-            var selectorBody = RemoveConvert(selector.Body);
+            Expression selectorBody = RemoveConvert(selector.Body);
 
             if (selectorBody is MemberExpression memberExpression)
-            {   
+            {
                 // model => model.Field1
                 try
                 {
@@ -142,9 +153,10 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             if (selectorBody is NewExpression newExpression)
-            {   
+            {
                 // model => new { model.Field1, model.Field2 }
                 string memberName = null;
+
                 try
                 {
                     if (newExpression.Members == null)
@@ -152,11 +164,12 @@ namespace JsonApiDotNetCore.Configuration
                         return targeted;
                     }
 
-                    foreach (var member in newExpression.Members)
+                    foreach (MemberInfo member in newExpression.Members)
                     {
                         memberName = member.Name;
                         targeted.Add(available.Single(f => f.Property.Name == memberName));
                     }
+
                     return targeted;
                 }
                 catch (InvalidOperationException)
@@ -165,13 +178,14 @@ namespace JsonApiDotNetCore.Configuration
                 }
             }
 
-            throw new ArgumentException(
-                $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
+            throw new ArgumentException($"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
                 "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
         }
 
-        private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>
-            _proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+        private bool IsLazyLoadingProxyForResourceType(Type resourceType)
+        {
+            return _proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+        }
 
         private static Expression RemoveConvert(Expression expression)
         {

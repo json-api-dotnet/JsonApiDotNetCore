@@ -16,22 +16,23 @@ namespace UnitTests.Serialization.Common
         public BaseDocumentBuilderTests()
         {
             var mock = new Mock<IResourceObjectBuilder>();
-            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+
+            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(),
+                It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+
             _builder = new TestSerializer(mock.Object);
         }
-
 
         [Fact]
         public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
-            var document = _builder.Build((TestResource) null);
+            Document document = _builder.Build((TestResource)null);
 
             // Assert
             Assert.Null(document.Data);
             Assert.False(document.IsPopulated);
         }
-
 
         [Fact]
         public void ResourceToDocument_EmptyList_CanBuild()
@@ -40,13 +41,12 @@ namespace UnitTests.Serialization.Common
             var resources = new List<TestResource>();
 
             // Act
-            var document = _builder.Build(resources);
+            Document document = _builder.Build(resources);
 
             // Assert
             Assert.NotNull(document.Data);
             Assert.Empty(document.ManyData);
         }
-
 
         [Fact]
         public void ResourceToDocument_SingleResource_CanBuild()
@@ -55,7 +55,7 @@ namespace UnitTests.Serialization.Common
             IIdentifiable dummy = new DummyResource();
 
             // Act
-            var document = _builder.Build(dummy);
+            Document document = _builder.Build(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -66,10 +66,14 @@ namespace UnitTests.Serialization.Common
         public void ResourceToDocument_ResourceList_CanBuild()
         {
             // Arrange
-            var resources = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
+            var resources = new List<IIdentifiable>
+            {
+                new DummyResource(),
+                new DummyResource()
+            };
 
             // Act
-            var document = _builder.Build(resources);
+            Document document = _builder.Build(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

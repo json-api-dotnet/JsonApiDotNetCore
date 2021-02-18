@@ -28,11 +28,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             var chain = new List<ResourceFieldAttribute>();
 
-            var publicNameParts = path.Split(".");
+            string[] publicNameParts = path.Split(".");
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                var relationship = GetRelationship(publicName, resourceContext, path);
+                RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
                 validateCallback?.Invoke(relationship, resourceContext, path);
 
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             }
 
             string lastName = publicNameParts[^1];
-            var lastToManyRelationship = GetToManyRelationship(lastName, resourceContext, path);
+            RelationshipAttribute lastToManyRelationship = GetToManyRelationship(lastName, resourceContext, path);
 
             validateCallback?.Invoke(lastToManyRelationship, resourceContext, path);
 
@@ -61,14 +61,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// articles.revisions.author
         /// </example>
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveRelationshipChain(ResourceContext resourceContext, string path, 
+        public IReadOnlyCollection<ResourceFieldAttribute> ResolveRelationshipChain(ResourceContext resourceContext, string path,
             Action<RelationshipAttribute, ResourceContext, string> validateCallback = null)
         {
             var chain = new List<ResourceFieldAttribute>();
 
             foreach (string publicName in path.Split("."))
             {
-                var relationship = GetRelationship(publicName, resourceContext, path);
+                RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
                 validateCallback?.Invoke(relationship, resourceContext, path);
 
@@ -84,20 +84,18 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// <example>
         /// author.address.country.name
         /// </example>
-        /// <example>
-        /// name
-        /// </example>
+        /// <example>name</example>
         /// </summary>
         public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            List<ResourceFieldAttribute> chain = new List<ResourceFieldAttribute>();
+            var chain = new List<ResourceFieldAttribute>();
 
-            var publicNameParts = path.Split(".");
+            string[] publicNameParts = path.Split(".");
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                var toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
 
                 validateCallback?.Invoke(toOneRelationship, resourceContext, path);
 
@@ -106,7 +104,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             }
 
             string lastName = publicNameParts[^1];
-            var lastAttribute = GetAttribute(lastName, resourceContext, path);
+            AttrAttribute lastAttribute = GetAttribute(lastName, resourceContext, path);
 
             validateCallback?.Invoke(lastAttribute, resourceContext, path);
 
@@ -126,13 +124,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            List<ResourceFieldAttribute> chain = new List<ResourceFieldAttribute>();
+            var chain = new List<ResourceFieldAttribute>();
 
-            var publicNameParts = path.Split(".");
+            string[] publicNameParts = path.Split(".");
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                var toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
 
                 validateCallback?.Invoke(toOneRelationship, resourceContext, path);
 
@@ -142,7 +140,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             string lastName = publicNameParts[^1];
 
-            var toManyRelationship = GetToManyRelationship(lastName, resourceContext, path);
+            RelationshipAttribute toManyRelationship = GetToManyRelationship(lastName, resourceContext, path);
 
             validateCallback?.Invoke(toManyRelationship, resourceContext, path);
 
@@ -162,13 +160,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            List<ResourceFieldAttribute> chain = new List<ResourceFieldAttribute>();
+            var chain = new List<ResourceFieldAttribute>();
 
-            var publicNameParts = path.Split(".");
+            string[] publicNameParts = path.Split(".");
 
             foreach (string publicName in publicNameParts[..^1])
             {
-                var toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
+                RelationshipAttribute toOneRelationship = GetToOneRelationship(publicName, resourceContext, path);
 
                 validateCallback?.Invoke(toOneRelationship, resourceContext, path);
 
@@ -177,7 +175,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             }
 
             string lastName = publicNameParts[^1];
-            var lastField = GetField(lastName, resourceContext, path);
+            ResourceFieldAttribute lastField = GetField(lastName, resourceContext, path);
 
             if (lastField is HasManyAttribute)
             {
@@ -194,7 +192,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
         {
-            var relationship = resourceContext.Relationships.FirstOrDefault(r => r.PublicName == publicName);
+            RelationshipAttribute relationship = resourceContext.Relationships.FirstOrDefault(r => r.PublicName == publicName);
 
             if (relationship == null)
             {
@@ -208,7 +206,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public RelationshipAttribute GetToManyRelationship(string publicName, ResourceContext resourceContext, string path)
         {
-            var relationship = GetRelationship(publicName, resourceContext, path);
+            RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
             if (!(relationship is HasManyAttribute))
             {
@@ -222,7 +220,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public RelationshipAttribute GetToOneRelationship(string publicName, ResourceContext resourceContext, string path)
         {
-            var relationship = GetRelationship(publicName, resourceContext, path);
+            RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
             if (!(relationship is HasOneAttribute))
             {
@@ -236,7 +234,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
         {
-            var attribute = resourceContext.Attributes.FirstOrDefault(a => a.PublicName == publicName);
+            AttrAttribute attribute = resourceContext.Attributes.FirstOrDefault(a => a.PublicName == publicName);
 
             if (attribute == null)
             {
@@ -250,7 +248,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public ResourceFieldAttribute GetField(string publicName, ResourceContext resourceContext, string path)
         {
-            var field = resourceContext.Fields.FirstOrDefault(a => a.PublicName == publicName);
+            ResourceFieldAttribute field = resourceContext.Fields.FirstOrDefault(a => a.PublicName == publicName);
 
             if (field == null)
             {

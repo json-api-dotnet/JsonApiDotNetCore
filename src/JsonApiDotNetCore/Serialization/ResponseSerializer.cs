@@ -4,6 +4,7 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
@@ -11,16 +12,16 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="BaseSerializer"/> for resources of a specific type.
+    /// Server serializer implementation of <see cref="BaseSerializer" /> for resources of a specific type.
     /// </summary>
     /// <remarks>
-    /// Because in JsonApiDotNetCore every JSON:API request is associated with exactly one
-    /// resource (the primary resource, see <see cref="IJsonApiRequest.PrimaryResource"/>),
-    /// the serializer can leverage this information using generics.
-    /// See <see cref="ResponseSerializerFactory"/> for how this is instantiated.
+    /// Because in JsonApiDotNetCore every JSON:API request is associated with exactly one resource (the primary resource, see
+    /// <see cref="IJsonApiRequest.PrimaryResource" />), the serializer can leverage this information using generics. See
+    /// <see cref="ResponseSerializerFactory" /> for how this is instantiated.
     /// </remarks>
-    /// <typeparam name="TResource">Type of the resource associated with the scope of the request
-    /// for which this serializer is used.</typeparam>
+    /// <typeparam name="TResource">
+    /// Type of the resource associated with the scope of the request for which this serializer is used.
+    /// </typeparam>
     public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer
         where TResource : class, IIdentifiable
     {
@@ -34,12 +35,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public string ContentType { get; } = HeaderConstants.MediaType;
 
-        public ResponseSerializer(IMetaBuilder metaBuilder,
-            ILinkBuilder linkBuilder,
-            IIncludedResourceObjectBuilder includedBuilder,
-            IFieldsToSerialize fieldsToSerialize,
-            IResourceObjectBuilder resourceObjectBuilder,
-            IJsonApiOptions options)
+        public ResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
+            IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
@@ -79,22 +76,26 @@ namespace JsonApiDotNetCore.Serialization
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer => { serializer.ApplyErrorSettings(); });
+            return SerializeObject(errorDocument, _options.SerializerSettings, serializer =>
+            {
+                serializer.ApplyErrorSettings();
+            });
         }
 
         /// <summary>
-        /// Converts a single resource into a serialized <see cref="Document"/>.
+        /// Converts a single resource into a serialized <see cref="Document" />.
         /// </summary>
         /// <remarks>
         /// This method is internal instead of private for easier testability.
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
-            var attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
-            var relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
+            IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
+            IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 
-            var document = Build(resource, attributes, relationships);
-            var resourceObject = document.SingleData;
+            Document document = Build(resource, attributes, relationships);
+            ResourceObject resourceObject = document.SingleData;
+
             if (resourceObject != null)
             {
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
@@ -102,24 +103,29 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
+            return SerializeObject(document, _options.SerializerSettings, serializer =>
+            {
+                serializer.NullValueHandling = NullValueHandling.Include;
+            });
         }
 
         /// <summary>
-        /// Converts a collection of resources into a serialized <see cref="Document"/>.
+        /// Converts a collection of resources into a serialized <see cref="Document" />.
         /// </summary>
         /// <remarks>
         /// This method is internal instead of private for easier testability.
         /// </remarks>
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
-            var attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
-            var relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
+            IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
+            IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 
-            var document = Build(resources, attributes, relationships);
+            Document document = Build(resources, attributes, relationships);
+
             foreach (ResourceObject resourceObject in document.ManyData)
             {
-                var links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+                ResourceLinks links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
+
                 if (links == null)
                 {
                     break;
@@ -130,12 +136,14 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer => { serializer.NullValueHandling = NullValueHandling.Include; });
+            return SerializeObject(document, _options.SerializerSettings, serializer =>
+            {
+                serializer.NullValueHandling = NullValueHandling.Include;
+            });
         }
 
         /// <summary>
-        /// Adds top-level objects that are only added to a document in the case
-        /// of server-side serialization.
+        /// Adds top-level objects that are only added to a document in the case of server-side serialization.
         /// </summary>
         private void AddTopLevelObjects(Document document)
         {

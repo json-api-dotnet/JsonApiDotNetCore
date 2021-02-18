@@ -14,8 +14,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         private readonly ILocalIdTracker _localIdTracker;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker,
-            IResourceContextProvider resourceContextProvider)
+        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider)
         {
             ArgumentGuard.NotNull(service, nameof(service));
             ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
@@ -27,17 +26,16 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
-            CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var newResource = await _service.CreateAsync((TResource) operation.Resource, cancellationToken);
+            TResource newResource = await _service.CreateAsync((TResource)operation.Resource, cancellationToken);
 
             if (operation.Resource.LocalId != null)
             {
-                var serverId = newResource != null ? newResource.StringId : operation.Resource.StringId;
-                var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
+                string serverId = newResource != null ? newResource.StringId : operation.Resource.StringId;
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
 
                 _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, serverId);
             }

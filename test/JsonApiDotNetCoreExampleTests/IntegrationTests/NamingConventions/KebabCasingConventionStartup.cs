@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
     public sealed class KebabCasingConventionStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public KebabCasingConventionStartup(IConfiguration configuration) : base(configuration)
+        public KebabCasingConventionStartup(IConfiguration configuration)
+            : base(configuration)
         {
         }
 
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             options.IncludeTotalResourceCount = true;
             options.ValidateModelState = true;
 
-            var resolver = (DefaultContractResolver) options.SerializerSettings.ContractResolver;
+            var resolver = (DefaultContractResolver)options.SerializerSettings.ContractResolver;
             resolver!.NamingStrategy = new KebabCaseNamingStrategy();
         }
     }

@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries
 {
     /// <summary>
-    /// A nested data structure that contains <see cref="QueryExpression"/> constraints per resource type.
+    /// A nested data structure that contains <see cref="QueryExpression" /> constraints per resource type.
     /// </summary>
     public sealed class QueryLayer
     {
@@ -67,9 +67,10 @@ namespace JsonApiDotNetCore.Queries
                 if (layer.Projection != null && layer.Projection.Any())
                 {
                     writer.WriteLine(nameof(Projection));
+
                     using (writer.Indent())
                     {
-                        foreach (var (field, nextLayer) in layer.Projection)
+                        foreach ((ResourceFieldAttribute field, QueryLayer nextLayer) in layer.Projection)
                         {
                             if (nextLayer == null)
                             {

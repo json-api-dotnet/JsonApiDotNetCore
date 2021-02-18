@@ -11,8 +11,10 @@ namespace UnitTests.ResourceHooks
 
         [HasOne]
         public ToOne FirstToOne { get; set; }
+
         [HasOne]
         public ToOne SecondToOne { get; set; }
+
         [HasMany]
         public ISet<ToMany> ToManies { get; set; }
     }

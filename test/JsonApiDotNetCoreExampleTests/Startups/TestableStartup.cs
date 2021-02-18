@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.Startups
     public class TestableStartup<TDbContext> : EmptyStartup
         where TDbContext : DbContext
     {
-        public TestableStartup(IConfiguration configuration) : base(configuration)
+        public TestableStartup(IConfiguration configuration)
+            : base(configuration)
         {
         }
 

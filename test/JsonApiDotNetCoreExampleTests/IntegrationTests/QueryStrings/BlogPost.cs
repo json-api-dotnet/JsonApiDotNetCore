@@ -22,6 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         [NotMapped]
         [HasManyThrough(nameof(BlogPostLabels))]
         public ISet<Label> Labels { get; set; }
+
         public ISet<BlogPostLabel> BlogPostLabels { get; set; }
 
         [HasMany]

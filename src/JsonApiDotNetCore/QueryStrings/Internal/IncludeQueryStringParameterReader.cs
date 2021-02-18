@@ -32,8 +32,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (!relationship.CanInclude)
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName,
-                    "Including the requested relationship is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName, "Including the requested relationship is not allowed.",
                     path == relationship.PublicName
                         ? $"Including the relationship '{relationship.PublicName}' on '{resourceContext.PublicName}' is not allowed."
                         : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceContext.PublicName}' is not allowed.");
@@ -45,8 +44,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Include);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Include);
         }
 
         /// <inheritdoc />
@@ -66,8 +64,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
             catch (QueryParseException exception)
             {
-                throw new InvalidQueryStringParameterException(parameterName, "The specified include is invalid.",
-                    exception.Message, exception);
+                throw new InvalidQueryStringParameterException(parameterName, "The specified include is invalid.", exception.Message, exception);
             }
         }
 
@@ -79,11 +76,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            var expressionInScope = _includeExpression != null
+            ExpressionInScope expressionInScope = _includeExpression != null
                 ? new ExpressionInScope(null, _includeExpression)
                 : new ExpressionInScope(null, IncludeExpression.Empty);
 
-            return new[] {expressionInScope};
+            return new[]
+            {
+                expressionInScope
+            };
         }
     }
 }

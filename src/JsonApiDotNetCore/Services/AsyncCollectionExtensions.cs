@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Services
     {
         public static async Task AddRangeAsync<T>(this ICollection<T> source, IAsyncEnumerable<T> elementsToAdd, CancellationToken cancellationToken = default)
         {
-            await foreach (var missingResource in elementsToAdd.WithCancellation(cancellationToken))
+            await foreach (T missingResource in elementsToAdd.WithCancellation(cancellationToken))
             {
                 source.Add(missingResource);
             }
@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Services
         {
             var list = new List<T>();
 
-            await foreach (var element in source.WithCancellation(cancellationToken))
+            await foreach (T element in source.WithCancellation(cancellationToken))
             {
                 list.Add(element);
             }

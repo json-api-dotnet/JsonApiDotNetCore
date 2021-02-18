@@ -7,7 +7,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 {
     public sealed class TextLanguageMetaDefinition : JsonApiResourceDefinition<TextLanguage, Guid>
     {
-        public TextLanguageMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public TextLanguageMetaDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 

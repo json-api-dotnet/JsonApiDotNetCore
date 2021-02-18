@@ -10,8 +10,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
         /// <summary>
-        /// The property name of the EF Core inverse navigation, which may or may not exist.
-        /// Even if it exists, it may not be exposed as a JSON:API relationship.
+        /// The property name of the EF Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed as a JSON:API relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -34,13 +33,13 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// The internal navigation property path to the related resource.
         /// </summary>
         /// <remarks>
-        /// In all cases except for <see cref="HasManyThroughAttribute"/> relationships, this equals the property name.
+        /// In all cases except for <see cref="HasManyThroughAttribute" /> relationships, this equals the property name.
         /// </remarks>
         public virtual string RelationshipPath => Property.Name;
 
         /// <summary>
-        /// The child resource type. This does not necessarily match the navigation property type.
-        /// In the case of a <see cref="HasManyAttribute"/> relationship, this value will be the collection element type.
+        /// The child resource type. This does not necessarily match the navigation property type. In the case of a <see cref="HasManyAttribute" /> relationship,
+        /// this value will be the collection element type.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -55,16 +54,18 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public Type LeftType { get; internal set; }
 
         /// <summary>
-        /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks"/>
-        /// object for this relationship.
-        /// Defaults to <see cref="LinkTypes.NotConfigured"/>, which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks"/>
-        /// and then falls back to <see cref="IJsonApiOptions.RelationshipLinks"/>.
+        /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for this relationship. Defaults to
+        /// <see cref="LinkTypes.NotConfigured" />, which falls back to <see cref="ResourceLinksAttribute.RelationshipLinks" /> and then falls back to
+        /// <see cref="IJsonApiOptions.RelationshipLinks" />.
         /// </summary>
         public LinkTypes Links { get; set; } = LinkTypes.NotConfigured;
 
         /// <summary>
-        /// Whether or not this relationship can be included using the <c>?include=publicName</c> query string parameter.
-        /// This is <c>true</c> by default.
+        /// Whether or not this relationship can be included using the
+        /// <c>
+        /// ?include=publicName
+        /// </c>
+        /// query string parameter. This is <c>true</c> by default.
         /// </summary>
         public bool CanInclude { get; set; } = true;
 
@@ -100,10 +101,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 return false;
             }
 
-            var other = (RelationshipAttribute) obj;
+            var other = (RelationshipAttribute)obj;
 
-            return LeftType == other.LeftType && RightType == other.RightType && Links == other.Links && 
-                CanInclude == other.CanInclude && base.Equals(other);
+            return LeftType == other.LeftType && RightType == other.RightType && Links == other.Links && CanInclude == other.CanInclude && base.Equals(other);
         }
 
         public override int GetHashCode()

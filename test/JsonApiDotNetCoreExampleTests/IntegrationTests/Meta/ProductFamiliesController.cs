@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
     public sealed class ProductFamiliesController : JsonApiController<ProductFamily>
     {
-        public ProductFamiliesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<ProductFamily> resourceService)
+        public ProductFamiliesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ProductFamily> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

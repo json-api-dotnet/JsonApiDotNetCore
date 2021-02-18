@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -7,16 +10,19 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class BeforeDeleteTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeDelete };
+        private readonly ResourceHook[] _targetHooks =
+        {
+            ResourceHook.BeforeDelete
+        };
 
         [Fact]
         public void BeforeDelete()
         {
             // Arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
+            IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            (var _, ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
 
-            var todoList = CreateTodoWithOwner();
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
             // Act
             hookExecutor.BeforeDelete(todoList, ResourcePipeline.Delete);
 
@@ -29,10 +35,10 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         public void BeforeDelete_Without_Any_Hook_Implemented()
         {
             // Arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
+            IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            (var _, ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
 
-            var todoList = CreateTodoWithOwner();
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
             // Act
             hookExecutor.BeforeDelete(todoList, ResourcePipeline.Delete);
 
@@ -41,4 +47,3 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         }
     }
 }
-

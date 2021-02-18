@@ -26,8 +26,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return null;
             }
 
-            var newLeft = Visit(expression.Left, argument);
-            var newRight = Visit(expression.Right, argument);
+            QueryExpression newLeft = Visit(expression.Left, argument);
+            QueryExpression newRight = Visit(expression.Right, argument);
 
             var newExpression = new ComparisonExpression(expression.Operator, newLeft, newRight);
             return newExpression.Equals(expression) ? expression : newExpression;
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newTerms = VisitSequence(expression.Terms, argument);
+                IReadOnlyCollection<QueryExpression> newTerms = VisitSequence(expression.Terms, argument);
 
                 if (newTerms.Count == 1)
                 {
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newChild = Visit(expression.Child, argument);
+                QueryExpression newChild = Visit(expression.Child, argument);
 
                 if (newChild != null)
                 {
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newElements = VisitSequence(expression.Elements, argument);
+                IReadOnlyCollection<SortElementExpression> newElements = VisitSequence(expression.Elements, argument);
 
                 if (newElements.Count != 0)
                 {
@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             if (expression != null)
             {
                 var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
-                var newConstants = VisitSequence(expression.Constants, argument);
+                IReadOnlyCollection<LiteralConstantExpression> newConstants = VisitSequence(expression.Constants, argument);
 
                 var newExpression = new EqualsAnyOfExpression(newTargetAttribute, newConstants);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -198,7 +198,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             {
                 var newTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
 
-                foreach (var (resourceContext, sparseFieldSet) in expression.Table)
+                foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in expression.Table)
                 {
                     if (Visit(sparseFieldSet, argument) is SparseFieldSetExpression newSparseFieldSet)
                     {
@@ -227,9 +227,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             {
                 var newParameterName = Visit(expression.ParameterName, argument) as LiteralConstantExpression;
 
-                var newScope = expression.Scope != null
-                    ? Visit(expression.Scope, argument) as ResourceFieldChainExpression
-                    : null;
+                ResourceFieldChainExpression newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
 
                 var newExpression = new QueryStringParameterScopeExpression(newParameterName, newScope);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -242,7 +240,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newElements = VisitSequence(expression.Elements, argument);
+                IReadOnlyCollection<PaginationElementQueryStringValueExpression> newElements = VisitSequence(expression.Elements, argument);
 
                 var newExpression = new PaginationQueryStringValueExpression(newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -251,14 +249,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return null;
         }
 
-        public override QueryExpression PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression,
-            TArgument argument)
+        public override QueryExpression PaginationElementQueryStringValue(PaginationElementQueryStringValueExpression expression, TArgument argument)
         {
             if (expression != null)
             {
-                var newScope = expression.Scope != null
-                    ? Visit(expression.Scope, argument) as ResourceFieldChainExpression
-                    : null;
+                ResourceFieldChainExpression newScope = expression.Scope != null ? Visit(expression.Scope, argument) as ResourceFieldChainExpression : null;
 
                 var newExpression = new PaginationElementQueryStringValueExpression(newScope, expression.Value);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -271,7 +266,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newElements = VisitSequence(expression.Elements, argument);
+                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Elements, argument);
 
                 if (newElements.Count == 0)
                 {
@@ -289,7 +284,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newElements = VisitSequence(expression.Children, argument);
+                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Children, argument);
 
                 var newExpression = new IncludeElementExpression(expression.Relationship, newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -303,8 +298,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return expression;
         }
 
-        protected virtual IReadOnlyCollection<TExpression> VisitSequence<TExpression>(IEnumerable<TExpression> elements,
-            TArgument argument)
+        protected virtual IReadOnlyCollection<TExpression> VisitSequence<TExpression>(IEnumerable<TExpression> elements, TArgument argument)
             where TExpression : QueryExpression
         {
             var newElements = new List<TExpression>();

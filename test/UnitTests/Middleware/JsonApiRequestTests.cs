@@ -29,7 +29,8 @@ namespace UnitTests.Middleware
         [InlineData("PATCH", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
         [InlineData("DELETE", "/articles/1", false, EndpointKind.Primary, false)]
         [InlineData("DELETE", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
-        public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind, bool expectIsReadOnly)
+        public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind,
+            bool expectIsReadOnly)
         {
             // Arrange
             var options = new JsonApiOptions
@@ -41,13 +42,11 @@ namespace UnitTests.Middleware
             graphBuilder.Add<Article>();
             graphBuilder.Add<Author>();
 
-            var resourceGraph = graphBuilder.Build();
+            IResourceGraph resourceGraph = graphBuilder.Build();
 
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
-            controllerResourceMappingMock
-                .Setup(x => x.GetResourceTypeForController(It.IsAny<string>()))
-                .Returns(typeof(Article));
+            controllerResourceMappingMock.Setup(x => x.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(Article));
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);
@@ -81,7 +80,8 @@ namespace UnitTests.Middleware
                 }
             };
 
-            var pathSegments = requestPath.Split("/", StringSplitOptions.RemoveEmptyEntries);
+            string[] pathSegments = requestPath.Split("/", StringSplitOptions.RemoveEmptyEntries);
+
             if (pathSegments.Length > 1)
             {
                 feature.RouteValues["id"] = pathSegments[1];

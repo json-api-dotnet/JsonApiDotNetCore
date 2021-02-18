@@ -11,9 +11,8 @@ namespace MultiDbContextExample.Repositories
     public class DbContextBRepository<TResource> : EntityFrameworkCoreRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> contextResolver,
-            IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-            IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+        public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> contextResolver, IResourceGraph resourceGraph,
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
             : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
         {
         }

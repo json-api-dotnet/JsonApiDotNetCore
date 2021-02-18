@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
     public sealed class SupportTicketsController : JsonApiController<SupportTicket>
     {
-        public SupportTicketsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<SupportTicket> resourceService)
+        public SupportTicketsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SupportTicket> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

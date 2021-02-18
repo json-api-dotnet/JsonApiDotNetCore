@@ -1,4 +1,6 @@
 namespace UnitTests.Graph
 {
-    public interface IGenericInterface<T> { }
+    public interface IGenericInterface<T>
+    {
+    }
 }

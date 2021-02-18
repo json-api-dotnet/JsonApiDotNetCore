@@ -4,8 +4,8 @@ using JsonApiDotNetCore.QueryStrings;
 namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <summary>
-    /// This implementation of the behavior provider reads the defaults/nulls query string parameters that
-    /// can, if provided, override the settings in <see cref="IJsonApiOptions"/>.
+    /// This implementation of the behavior provider reads the defaults/nulls query string parameters that can, if provided, override the settings in
+    /// <see cref="IJsonApiOptions" />.
     /// </summary>
     public sealed class ResourceObjectBuilderSettingsProvider : IResourceObjectBuilderSettingsProvider
     {

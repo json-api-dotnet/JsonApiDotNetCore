@@ -15,7 +15,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
         }
 
         public ErrorDocument(Error error)
-            : this(new[] {error})
+            : this(new[]
+            {
+                error
+            })
         {
         }
 
@@ -28,17 +31,14 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         public HttpStatusCode GetErrorStatusCode()
         {
-            var statusCodes = Errors
-                .Select(e => (int)e.StatusCode)
-                .Distinct()
-                .ToArray();
+            int[] statusCodes = Errors.Select(e => (int)e.StatusCode).Distinct().ToArray();
 
             if (statusCodes.Length == 1)
             {
                 return (HttpStatusCode)statusCodes[0];
             }
 
-            var statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
+            int statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
             return (HttpStatusCode)statusCode;
         }
     }

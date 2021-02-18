@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var builder = new StringBuilder();
 
-            foreach (var (resource, fields) in Table)
+            foreach ((ResourceContext resource, SparseFieldSetExpression fields) in Table)
             {
                 if (builder.Length > 0)
                 {
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (SparseFieldTableExpression) obj;
+            var other = (SparseFieldTableExpression)obj;
 
             return Table.SequenceEqual(other.Table);
         }
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var (resourceContext, sparseFieldSet) in Table)
+            foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in Table)
             {
                 hashCode.Add(resourceContext);
                 hashCode.Add(sparseFieldSet);

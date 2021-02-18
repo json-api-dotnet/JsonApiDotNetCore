@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -8,16 +10,23 @@ namespace UnitTests.ResourceHooks.Executor.Update
 {
     public sealed class AfterUpdateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterUpdate, ResourceHook.AfterUpdateRelationship };
+        private readonly ResourceHook[] _targetHooks =
+        {
+            ResourceHook.AfterUpdate,
+            ResourceHook.AfterUpdateRelationship
+        };
 
         [Fact]
         public void AfterUpdate()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
-            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
+
+            (var _, var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -32,10 +41,13 @@ namespace UnitTests.ResourceHooks.Executor.Update
         public void AfterUpdate_Without_Parent_Hook_Implemented()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
-            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
+
+            (var _, var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -49,10 +61,13 @@ namespace UnitTests.ResourceHooks.Executor.Update
         public void AfterUpdate_Without_Child_Hook_Implemented()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
-            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
+
+            (var _, var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -66,10 +81,13 @@ namespace UnitTests.ResourceHooks.Executor.Update
         public void AfterUpdate_Without_Any_Hook_Implemented()
         {
             // Arrange
-            var todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
-            var (_, _, hookExecutor, todoResourceMock, ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
+
+            (var _, var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
+
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -79,4 +97,3 @@ namespace UnitTests.ResourceHooks.Executor.Update
         }
     }
 }
-

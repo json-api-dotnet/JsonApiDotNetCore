@@ -10,16 +10,15 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
-    public sealed class DiffableResourceHashSet<TResource> : ResourceHashSet<TResource>, IDiffableResourceHashSet<TResource> where TResource : class, IIdentifiable
+    public sealed class DiffableResourceHashSet<TResource> : ResourceHashSet<TResource>, IDiffableResourceHashSet<TResource>
+        where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
         private readonly Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
 
-        public DiffableResourceHashSet(HashSet<TResource> requestResources,
-                          HashSet<TResource> databaseResources,
-                          Dictionary<RelationshipAttribute, HashSet<TResource>> relationships,
-                          Dictionary<PropertyInfo, HashSet<TResource>> updatedAttributes)
+        public DiffableResourceHashSet(HashSet<TResource> requestResources, HashSet<TResource> databaseResources,
+            Dictionary<RelationshipAttribute, HashSet<TResource>> relationships, Dictionary<PropertyInfo, HashSet<TResource>> updatedAttributes)
             : base(requestResources, relationships)
         {
             _databaseValues = databaseResources;
@@ -30,14 +29,15 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <summary>
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
-        internal DiffableResourceHashSet(IEnumerable requestResources,
-                  IEnumerable databaseResources,
-                  Dictionary<RelationshipAttribute, IEnumerable> relationships,
-                  ITargetedFields targetedFields)
-            : this((HashSet<TResource>)requestResources, (HashSet<TResource>)databaseResources, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-                targetedFields.Attributes == null ? null : TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
-        { }
-
+        internal DiffableResourceHashSet(IEnumerable requestResources, IEnumerable databaseResources,
+            Dictionary<RelationshipAttribute, IEnumerable> relationships, ITargetedFields targetedFields)
+            : this((HashSet<TResource>)requestResources, (HashSet<TResource>)databaseResources,
+                TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
+                targetedFields.Attributes == null
+                    ? null
+                    : TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
+        {
+        }
 
         /// <inheritdoc />
         public IEnumerable<ResourceDiffPair<TResource>> GetDiffs()
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 ThrowNoDbValuesError();
             }
 
-            foreach (var resource in this)
+            foreach (TResource resource in this)
             {
                 TResource currentValueInDatabase = _databaseValues.Single(e => resource.StringId == e.StringId);
                 yield return new ResourceDiffPair<TResource>(resource, currentValueInDatabase);
@@ -57,8 +57,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <inheritdoc />
         public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
-            var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
-            var propertyType = propertyInfo.PropertyType;
+            PropertyInfo propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
+            Type propertyType = propertyInfo.PropertyType;
+
             if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IEnumerable)))
             {
                 propertyType = TypeHelper.TryGetCollectionElementType(propertyType);
@@ -70,9 +71,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 return base.GetAffected(navigationAction);
             }
 
-            return _updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources)
-                ? resources
-                : new HashSet<TResource>();
+            return _updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources) ? resources : new HashSet<TResource>();
         }
 
         private void ThrowNoDbValuesError()

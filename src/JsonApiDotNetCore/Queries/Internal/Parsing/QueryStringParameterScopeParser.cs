@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;
 
-        public QueryStringParameterScopeParser(IResourceContextProvider resourceContextProvider, FieldChainRequirements chainRequirements, 
+        public QueryStringParameterScopeParser(IResourceContextProvider resourceContextProvider, FieldChainRequirements chainRequirements,
             Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
             : base(resourceContextProvider)
         {
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            var expression = ParseQueryStringParameterScope();
+            QueryStringParameterScopeExpression expression = ParseQueryStringParameterScope();
 
             AssertTokenStackIsEmpty();
 

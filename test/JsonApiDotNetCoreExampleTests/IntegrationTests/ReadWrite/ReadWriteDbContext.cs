@@ -34,10 +34,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
                 .HasForeignKey<RgbColor>();
 
             builder.Entity<WorkItemTag>()
-                .HasKey(workItemTag => new { workItemTag.ItemId, workItemTag.TagId});
+                .HasKey(workItemTag => new
+                {
+                    workItemTag.ItemId,
+                    workItemTag.TagId
+                });
 
             builder.Entity<WorkItemToWorkItem>()
-                .HasKey(item => new { item.FromItemId, item.ToItemId});
+                .HasKey(item => new
+                {
+                    item.FromItemId,
+                    item.ToItemId
+                });
 
             builder.Entity<WorkItemToWorkItem>()
                 .HasOne(workItemToWorkItem => workItemToWorkItem.FromItem)

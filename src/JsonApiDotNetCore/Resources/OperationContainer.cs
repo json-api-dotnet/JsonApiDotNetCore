@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
@@ -14,8 +15,7 @@ namespace JsonApiDotNetCore.Resources
         public ITargetedFields TargetedFields { get; }
         public IJsonApiRequest Request { get; }
 
-        public OperationContainer(OperationKind kind, IIdentifiable resource, ITargetedFields targetedFields,
-            IJsonApiRequest request)
+        public OperationContainer(OperationKind kind, IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Resources
 
         public void SetTransactionId(Guid transactionId)
         {
-            ((JsonApiRequest) Request).TransactionId = transactionId;
+            ((JsonApiRequest)Request).TransactionId = transactionId;
         }
 
         public OperationContainer WithResource(IIdentifiable resource)
@@ -43,10 +43,11 @@ namespace JsonApiDotNetCore.Resources
         {
             var secondaryResources = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
 
-            foreach (var relationship in TargetedFields.Relationships)
+            foreach (RelationshipAttribute relationship in TargetedFields.Relationships)
             {
-                var rightValue = relationship.GetValue(Resource);
-                foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
+                object rightValue = relationship.GetValue(Resource);
+
+                foreach (IIdentifiable rightResource in TypeHelper.ExtractResources(rightValue))
                 {
                     secondaryResources.Add(rightResource);
                 }

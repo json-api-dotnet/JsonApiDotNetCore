@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -27,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
         }
 
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_primary_resource_by_ID_returns_relative_links()
         {
             // Arrange
-            var album = _fakers.PhotoAlbum.Generate();
+            PhotoAlbum album = _fakers.PhotoAlbum.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -43,10 +44,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/photoAlbums/" + album.StringId;
+            string route = "/photoAlbums/" + album.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -68,7 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_primary_resources_with_include_returns_relative_links()
         {
             // Arrange
-            var album = _fakers.PhotoAlbum.Generate();
+            PhotoAlbum album = _fakers.PhotoAlbum.Generate();
             album.Photos = _fakers.Photo.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -81,7 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             const string route = "/photoAlbums?include=photos";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -112,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_secondary_resource_returns_relative_links()
         {
             // Arrange
-            var photo = _fakers.Photo.Generate();
+            Photo photo = _fakers.Photo.Generate();
             photo.Album = _fakers.PhotoAlbum.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -121,10 +122,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/photos/{photo.StringId}/album";
+            string route = $"/photos/{photo.StringId}/album";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -148,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_secondary_resources_returns_relative_links()
         {
             // Arrange
-            var album = _fakers.PhotoAlbum.Generate();
+            PhotoAlbum album = _fakers.PhotoAlbum.Generate();
             album.Photos = _fakers.Photo.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -157,10 +158,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/photoAlbums/{album.StringId}/photos";
+            string route = $"/photoAlbums/{album.StringId}/photos";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -184,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_HasOne_relationship_returns_relative_links()
         {
             // Arrange
-            var photo = _fakers.Photo.Generate();
+            Photo photo = _fakers.Photo.Generate();
             photo.Album = _fakers.PhotoAlbum.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -193,10 +194,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/photos/{photo.StringId}/relationships/album";
+            string route = $"/photos/{photo.StringId}/relationships/album";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -217,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_HasMany_relationship_returns_relative_links()
         {
             // Arrange
-            var album = _fakers.PhotoAlbum.Generate();
+            PhotoAlbum album = _fakers.PhotoAlbum.Generate();
             album.Photos = _fakers.Photo.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -226,10 +227,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/photoAlbums/{album.StringId}/relationships/photos";
+            string route = $"/photoAlbums/{album.StringId}/relationships/photos";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -250,7 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Create_resource_with_side_effects_and_include_returns_relative_links()
         {
             // Arrange
-            var existingPhoto = _fakers.Photo.Generate();
+            Photo existingPhoto = _fakers.Photo.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -283,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             const string route = "/photoAlbums?include=photos";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -313,8 +314,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Update_resource_with_side_effects_and_include_returns_relative_links()
         {
             // Arrange
-            var existingPhoto = _fakers.Photo.Generate();
-            var existingAlbum = _fakers.PhotoAlbum.Generate();
+            Photo existingPhoto = _fakers.Photo.Generate();
+            PhotoAlbum existingAlbum = _fakers.PhotoAlbum.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -342,10 +343,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 }
             };
 
-            var route = $"/photos/{existingPhoto.StringId}?include=album";
+            string route = $"/photos/{existingPhoto.StringId}?include=album";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

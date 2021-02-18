@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
-            var canParse = _reader.CanRead(parameterName);
+            bool canParse = _reader.CanRead(parameterName);
 
             // Assert
             canParse.Should().Be(expectCanParse);
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             var reader = new DefaultsQueryStringParameterReader(options);
 
             // Act
-            var isEnabled = reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+            bool isEnabled = reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(allowOverride && expectIsEnabled);
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read(parameterName, parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
@@ -107,12 +107,16 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("true", DefaultValueHandling.Ignore, true, DefaultValueHandling.Include)]
         [InlineData("false", DefaultValueHandling.Include, true, DefaultValueHandling.Ignore)]
         [InlineData("true", DefaultValueHandling.Include, true, DefaultValueHandling.Include)]
-        public void Reader_Outcome(string queryStringParameterValue, DefaultValueHandling optionsDefaultValue, bool optionsAllowOverride, DefaultValueHandling expected)
+        public void Reader_Outcome(string queryStringParameterValue, DefaultValueHandling optionsDefaultValue, bool optionsAllowOverride,
+            DefaultValueHandling expected)
         {
             // Arrange
             var options = new JsonApiOptions
             {
-                SerializerSettings = {DefaultValueHandling = optionsDefaultValue},
+                SerializerSettings =
+                {
+                    DefaultValueHandling = optionsDefaultValue
+                },
                 AllowQueryStringOverrideForSerializerDefaultValueHandling = optionsAllowOverride
             };
 

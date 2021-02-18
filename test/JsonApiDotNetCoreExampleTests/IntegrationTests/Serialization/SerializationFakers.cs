@@ -36,8 +36,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 
         private static DateTimeOffset TruncateToWholeMilliseconds(DateTimeOffset value)
         {
-            var ticksToSubtract = value.DateTime.Ticks % TimeSpan.TicksPerMillisecond;
-            var ticksInWholeMilliseconds = value.DateTime.Ticks - ticksToSubtract;
+            long ticksToSubtract = value.DateTime.Ticks % TimeSpan.TicksPerMillisecond;
+            long ticksInWholeMilliseconds = value.DateTime.Ticks - ticksToSubtract;
 
             return new DateTimeOffset(new DateTime(ticksInWholeMilliseconds), value.Offset);
         }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -25,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
             options.DefaultPageSize = new PageSize(DefaultPageSize);
             options.MaximumPageSize = null;
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_primary_resources()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogPosts?page[number]=2&page[size]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -72,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_single_primary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -80,17 +81,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}?page[number]=2";
+            string route = $"/blogPosts/{post.StringId}?page[number]=2";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -101,7 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_secondary_resources()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -110,10 +111,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts?page[number]=2&page[size]=1";
+            string route = $"/blogs/{blog.StringId}/posts?page[number]=2&page[size]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -133,7 +134,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_single_secondary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -141,17 +142,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}/author?page[size]=5";
+            string route = $"/blogPosts/{post.StringId}/author?page[size]=5";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -162,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(3);
+            List<Blog> blogs = _fakers.Blog.Generate(3);
             blogs[0].Posts = _fakers.BlogPost.Generate(2);
             blogs[1].Posts = _fakers.BlogPost.Generate(2);
 
@@ -176,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogs?include=posts&page[number]=posts:2&page[size]=2,posts:1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -199,7 +200,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Owner = _fakers.WebAccount.Generate();
             blog.Owner.Posts = _fakers.BlogPost.Generate(2);
 
@@ -209,10 +210,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/owner?include=posts&page[number]=posts:2&page[size]=posts:1";
+            string route = $"/blogs/{blog.StringId}/owner?include=posts&page[number]=posts:2&page[size]=posts:1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -233,7 +234,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_HasMany_relationship_on_relationship_endpoint()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -242,10 +243,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/relationships/posts?page[number]=2&page[size]=1";
+            string route = $"/blogs/{blog.StringId}/relationships/posts?page[number]=2&page[size]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -265,7 +266,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+
             posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -277,6 +279,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                     Label = _fakers.Label.Generate()
                 }
             };
+
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -297,14 +300,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             });
 
             // Workaround for https://github.com/dotnet/efcore/issues/21026
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DisableTopPagination = true;
             options.DisableChildrenPagination = false;
 
             const string route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -327,7 +330,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_HasManyThrough_relationship_on_relationship_endpoint()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
+
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -347,10 +351,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}/relationships/labels?page[number]=2&page[size]=1";
+            string route = $"/blogPosts/{post.StringId}/relationships/labels?page[number]=2&page[size]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -370,7 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Can_paginate_in_multiple_scopes()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Owner = _fakers.WebAccount.Generate();
             blogs[1].Owner.Posts = _fakers.BlogPost.Generate(2);
             blogs[1].Owner.Posts[1].Comments = _fakers.Comment.Generate(2).ToHashSet();
@@ -386,7 +390,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 "page[number]=2,owner.posts:2,owner.posts.comments:2";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -416,14 +420,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/webAccounts?page[number]=doesNotExist:1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
@@ -437,14 +441,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/webAccounts?page[size]=posts.doesNotExist:1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
@@ -455,10 +459,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Uses_default_page_number_and_size()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = new PageSize(2);
 
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -467,10 +471,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts";
+            string route = $"/blogs/{blog.StringId}/posts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -491,10 +495,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Returns_all_resources_when_paging_is_disabled()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(25);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -503,10 +507,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts";
+            string route = $"/blogs/{blog.StringId}/posts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -529,13 +533,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_correct_top_level_links_for_page_number(int pageNumber, int? firstLink, int? lastLink, int? prevLink, int? nextLink)
         {
             // Arrange
-            var account = _fakers.WebAccount.Generate();
+            WebAccount account = _fakers.WebAccount.Generate();
             account.UserName = "&" + account.UserName;
 
             const int totalCount = 3 * DefaultPageSize + 3;
-            var posts = _fakers.BlogPost.Generate(totalCount);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(totalCount);
 
-            foreach (var post in posts)
+            foreach (BlogPost post in posts)
             {
                 post.Author = account;
             }
@@ -547,12 +551,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var routePrefix = "/blogPosts?filter=equals(author.userName,'" + WebUtility.UrlEncode(account.UserName) + "')" +
-                              "&fields[webAccounts]=userName&include=author&sort=id&foo=bar,baz";
-            var route = routePrefix + $"&page[number]={pageNumber}";
+            string routePrefix = "/blogPosts?filter=equals(author.userName,'" + WebUtility.UrlEncode(account.UserName) + "')" +
+                "&fields[webAccounts]=userName&include=author&sort=id&foo=bar,baz";
+
+            string route = routePrefix + $"&page[number]={pageNumber}";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -561,7 +566,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (firstLink != null)
             {
-                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, firstLink.Value);
+                string expected = HostPrefix + SetPageNumberInUrl(routePrefix, firstLink.Value);
                 responseDocument.Links.First.Should().Be(expected);
             }
             else
@@ -571,7 +576,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (prevLink != null)
             {
-                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, prevLink.Value);
+                string expected = HostPrefix + SetPageNumberInUrl(routePrefix, prevLink.Value);
                 responseDocument.Links.Prev.Should().Be(expected);
             }
             else
@@ -581,7 +586,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (nextLink != null)
             {
-                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, nextLink.Value);
+                string expected = HostPrefix + SetPageNumberInUrl(routePrefix, nextLink.Value);
                 responseDocument.Links.Next.Should().Be(expected);
             }
             else
@@ -591,7 +596,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (lastLink != null)
             {
-                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, lastLink.Value);
+                string expected = HostPrefix + SetPageNumberInUrl(routePrefix, lastLink.Value);
                 responseDocument.Links.Last.Should().Be(expected);
             }
             else

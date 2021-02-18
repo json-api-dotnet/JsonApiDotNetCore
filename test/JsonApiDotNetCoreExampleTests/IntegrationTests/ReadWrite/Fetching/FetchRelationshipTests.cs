@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -10,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 {
-    public sealed class FetchRelationshipTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class FetchRelationshipTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
@@ -24,19 +24,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         [Fact]
         public async Task Can_get_HasOne_relationship()
         {
-            var workItem = _fakers.WorkItem.Generate();
+            WorkItem workItem = _fakers.WorkItem.Generate();
             workItem.Assignee = _fakers.UserAccount.Generate();
-            
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/workItems/{workItem.StringId}/relationships/assignee";
+            string route = $"/workItems/{workItem.StringId}/relationships/assignee";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -51,18 +51,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         [Fact]
         public async Task Can_get_empty_HasOne_relationship()
         {
-            var workItem = _fakers.WorkItem.Generate();
-            
+            WorkItem workItem = _fakers.WorkItem.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/workItems/{workItem.StringId}/relationships/assignee";
+            string route = $"/workItems/{workItem.StringId}/relationships/assignee";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Can_get_HasMany_relationship()
         {
             // Arrange
-            var userAccount = _fakers.UserAccount.Generate();
+            UserAccount userAccount = _fakers.UserAccount.Generate();
             userAccount.AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -83,22 +83,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/userAccounts/{userAccount.StringId}/relationships/assignedItems";
+            string route = $"/userAccounts/{userAccount.StringId}/relationships/assignedItems";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
 
-            var item1 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
+            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes.Should().BeNull();
             item1.Relationships.Should().BeNull();
 
-            var item2 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
+            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes.Should().BeNull();
             item2.Relationships.Should().BeNull();
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Can_get_empty_HasMany_relationship()
         {
             // Arrange
-            var userAccount = _fakers.UserAccount.Generate();
+            UserAccount userAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -116,10 +116,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/userAccounts/{userAccount.StringId}/relationships/assignedItems";
+            string route = $"/userAccounts/{userAccount.StringId}/relationships/assignedItems";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -131,7 +131,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Can_get_HasManyThrough_relationship()
         {
             // Arrange
-            var workItem = _fakers.WorkItem.Generate();
+            WorkItem workItem = _fakers.WorkItem.Generate();
+
             workItem.WorkItemTags = new List<WorkItemTag>
             {
                 new WorkItemTag
@@ -150,22 +151,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/workItems/{workItem.StringId}/relationships/tags";
+            string route = $"/workItems/{workItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
 
-            var item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(0).Tag.StringId);
+            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(0).Tag.StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes.Should().BeNull();
             item1.Relationships.Should().BeNull();
-            
-            var item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(1).Tag.StringId);
+
+            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(1).Tag.StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes.Should().BeNull();
             item2.Relationships.Should().BeNull();
@@ -175,7 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public async Task Can_get_empty_HasManyThrough_relationship()
         {
             // Arrange
-            var workItem = _fakers.WorkItem.Generate();
+            WorkItem workItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -183,10 +184,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/workItems/{workItem.StringId}/relationships/tags";
+            string route = $"/workItems/{workItem.StringId}/relationships/tags";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -200,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
             const string route = "/doesNotExist/99999999/relationships/assignee";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -214,14 +215,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
             const string route = "/workItems/99999999/relationships/assignee";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
@@ -230,25 +231,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         [Fact]
         public async Task Cannot_get_relationship_for_unknown_relationship_type()
         {
-            var workItem = _fakers.WorkItem.Generate();
-            
+            WorkItem workItem = _fakers.WorkItem.Generate();
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/workItems/{workItem.StringId}/relationships/doesNotExist";
+            string route = $"/workItems/{workItem.StringId}/relationships/doesNotExist";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
             error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");

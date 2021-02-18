@@ -6,8 +6,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
     public sealed class DebitCardsController : ObfuscatedIdentifiableController<DebitCard>
     {
-        public DebitCardsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<DebitCard> resourceService)
+        public DebitCardsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<DebitCard> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

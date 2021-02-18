@@ -16,6 +16,7 @@ namespace Benchmarks
                 typeof(QueryParserBenchmarks),
                 typeof(LinkBuilderGetNamespaceFromPathBenchmarks)
             });
+
             switcher.Run(args);
         }
     }

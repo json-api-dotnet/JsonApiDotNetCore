@@ -19,8 +19,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
     [Route("/operations/musicTracks/create")]
     public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController
     {
-        public CreateMusicTrackOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+        public CreateMusicTrackOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor,
+            IJsonApiRequest request, ITargetedFields targetedFields)
             : base(options, loggerFactory, processor, request, targetedFields)
         {
         }
@@ -35,7 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         private static void AssertOnlyCreatingMusicTracks(IEnumerable<OperationContainer> operations)
         {
             int index = 0;
-            foreach (var operation in operations)
+
+            foreach (OperationContainer operation in operations)
             {
                 if (operation.Kind != OperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
                 {

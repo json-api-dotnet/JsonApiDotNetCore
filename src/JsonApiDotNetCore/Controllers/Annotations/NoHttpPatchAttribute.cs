@@ -11,6 +11,9 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// ]]></example>
     public sealed class NoHttpPatchAttribute : HttpRestrictAttribute
     {
-        protected override string[] Methods { get; } = { "PATCH" };
+        protected override string[] Methods { get; } =
+        {
+            "PATCH"
+        };
     }
 }

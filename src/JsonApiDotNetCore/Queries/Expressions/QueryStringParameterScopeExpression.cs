@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (QueryStringParameterScopeExpression) obj;
+            var other = (QueryStringParameterScopeExpression)obj;
 
             return ParameterName.Equals(other.ParameterName) && Equals(Scope, other.Scope);
         }

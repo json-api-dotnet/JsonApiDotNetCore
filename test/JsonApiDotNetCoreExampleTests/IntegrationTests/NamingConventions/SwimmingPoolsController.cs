@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
     public sealed class SwimmingPoolsController : JsonApiController<SwimmingPool>
     {
-        public SwimmingPoolsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<SwimmingPool> resourceService)
+        public SwimmingPoolsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SwimmingPool> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

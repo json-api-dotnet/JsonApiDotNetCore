@@ -25,10 +25,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -53,10 +53,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
                 }
             };
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -72,10 +72,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -100,10 +100,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
                 }
             };
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -119,10 +119,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -138,10 +138,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
 
-            var client = _factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
-            var httpResponse = await client.SendAsync(request);
+            HttpResponseMessage httpResponse = await client.SendAsync(request);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

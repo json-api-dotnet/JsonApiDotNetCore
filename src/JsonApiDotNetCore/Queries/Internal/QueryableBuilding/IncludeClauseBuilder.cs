@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="IncludeExpression"/> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}"/> calls.
+    /// Transforms <see cref="IncludeExpression" /> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}" /> calls.
     /// </summary>
     public class IncludeClauseBuilder : QueryClauseBuilder<object>
     {
@@ -39,17 +39,17 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitInclude(IncludeExpression expression, object argument)
         {
-            var source = ApplyEagerLoads(_source, _resourceContext.EagerLoads, null);
+            Expression source = ApplyEagerLoads(_source, _resourceContext.EagerLoads, null);
 
             foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
             {
                 string path = null;
 
-                foreach (var relationship in chain.Fields.Cast<RelationshipAttribute>())
+                foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
                 {
                     path = path == null ? relationship.RelationshipPath : path + "." + relationship.RelationshipPath;
 
-                    var resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                    ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
                     source = ApplyEagerLoads(source, resourceContext.EagerLoads, path);
                 }
 
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string pathPrefix)
         {
-            foreach (var eagerLoad in eagerLoads)
+            foreach (EagerLoadAttribute eagerLoad in eagerLoads)
             {
                 string path = pathPrefix != null ? pathPrefix + "." + eagerLoad.Property.Name : eagerLoad.Property.Name;
                 source = IncludeExtensionMethodCall(source, path);

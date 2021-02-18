@@ -1,4 +1,6 @@
 namespace UnitTests.Graph
 {
-    public class BaseType<T> { }
+    public class BaseType<T>
+    {
+    }
 }

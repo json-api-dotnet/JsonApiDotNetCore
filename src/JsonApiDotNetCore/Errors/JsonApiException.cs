@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The base class for an <see cref="Exception"/> that represents one or more JSON:API error objects in an unsuccessful response.
+    /// The base class for an <see cref="Exception" /> that represents one or more JSON:API error objects in an unsuccessful response.
     /// </summary>
     public class JsonApiException : Exception
     {
@@ -19,12 +19,17 @@ namespace JsonApiDotNetCore.Errors
 
         public IReadOnlyList<Error> Errors { get; }
 
+        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, _errorSerializerSettings);
+
         public JsonApiException(Error error, Exception innerException = null)
             : base(null, innerException)
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            Errors = new[] {error};
+            Errors = new[]
+            {
+                error
+            };
         }
 
         public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)
@@ -39,7 +44,5 @@ namespace JsonApiDotNetCore.Errors
                 throw new ArgumentException("At least one error is required.", nameof(errors));
             }
         }
-
-        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, _errorSerializerSettings);
     }
 }

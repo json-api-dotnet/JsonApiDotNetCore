@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExample.Data
         public DbSet<Author> AuthorDifferentDbContextName { get; set; }
         public DbSet<User> Users { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
         {
         }
 
@@ -28,10 +29,18 @@ namespace JsonApiDotNetCoreExample.Data
                 .WithMany(p => p.TodoItems);
 
             builder.Entity<ArticleTag>()
-                .HasKey(bc => new {bc.ArticleId, bc.TagId});
+                .HasKey(bc => new
+                {
+                    bc.ArticleId,
+                    bc.TagId
+                });
 
             builder.Entity<IdentifiableArticleTag>()
-                .HasKey(bc => new {bc.ArticleId, bc.TagId});
+                .HasKey(bc => new
+                {
+                    bc.ArticleId,
+                    bc.TagId
+                });
 
             builder.Entity<Person>()
                 .HasOne(t => t.StakeHolderTodoItem)

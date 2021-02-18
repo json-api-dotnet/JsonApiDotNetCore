@@ -13,8 +13,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         IList<ResourceObject> Build();
 
         /// <summary>
-        /// Extracts the included resources from <paramref name="rootResource"/> using the
-        /// (arbitrarily deeply nested) included relationships in <paramref name="inclusionChain"/>.
+        /// Extracts the included resources from <paramref name="rootResource" /> using the (arbitrarily deeply nested) included relationships in
+        /// <paramref name="inclusionChain" />.
         /// </summary>
         void IncludeRelationshipChain(IReadOnlyCollection<RelationshipAttribute> inclusionChain, IIdentifiable rootResource);
     }

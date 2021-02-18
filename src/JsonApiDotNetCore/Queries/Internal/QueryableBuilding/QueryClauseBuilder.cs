@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Base class for transforming <see cref="QueryExpression"/> trees into system <see cref="Expression"/> trees.
+    /// Base class for transforming <see cref="QueryExpression" /> trees into system <see cref="Expression" /> trees.
     /// </summary>
     public abstract class QueryClauseBuilder<TArgument> : QueryExpressionVisitor<TArgument, Expression>
     {
@@ -24,9 +24,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitCount(CountExpression expression, TArgument argument)
         {
-            var collectionExpression = Visit(expression.TargetCollection, argument);
+            Expression collectionExpression = Visit(expression.TargetCollection, argument);
 
-            var propertyExpression = TryGetCollectionCount(collectionExpression);
+            Expression propertyExpression = TryGetCollectionCount(collectionExpression);
+
             if (propertyExpression == null)
             {
                 throw new Exception($"Field '{expression.TargetCollection}' must be a collection.");
@@ -38,15 +39,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private static Expression TryGetCollectionCount(Expression collectionExpression)
         {
             var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
+
             if (collectionExpression.Type.IsInterface)
             {
-                foreach (var item in collectionExpression.Type.GetInterfaces().SelectMany(i => i.GetProperties()))
+                foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(i => i.GetProperties()))
                 {
                     properties.Add(item);
                 }
             }
 
-            foreach (var property in properties)
+            foreach (PropertyInfo property in properties)
             {
                 if (property.Name == "Count" || property.Name == "Length")
                 {
@@ -64,9 +66,9 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected virtual MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(field =>
-                field is RelationshipAttribute relationship ? relationship.RelationshipPath : field.Property.Name).ToArray();
-            
+            string[] components = chain.Select(field => field is RelationshipAttribute relationship ? relationship.RelationshipPath : field.Property.Name)
+                .ToArray();
+
             return CreatePropertyExpressionFromComponents(source, components);
         }
 
@@ -74,19 +76,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             MemberExpression property = null;
 
-            foreach (var propertyName in components)
+            foreach (string propertyName in components)
             {
                 Type parentType = property == null ? source.Type : property.Type;
 
                 if (parentType.GetProperty(propertyName) == null)
                 {
-                    throw new InvalidOperationException(
-                        $"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
+                    throw new InvalidOperationException($"Type '{parentType.Name}' does not contain a property named '{propertyName}'.");
                 }
 
-                property = property == null
-                    ? Expression.Property(source, propertyName)
-                    : Expression.Property(property, propertyName);
+                property = property == null ? Expression.Property(source, propertyName) : Expression.Property(property, propertyName);
             }
 
             return property;

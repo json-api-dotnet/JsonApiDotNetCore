@@ -13,20 +13,6 @@ namespace UnitTests.Builders
 {
     public sealed class ResourceGraphBuilderTests
     {
-        private sealed class NonDbResource : Identifiable { }
-
-        private sealed class DbResource : Identifiable { }
-
-        private class TestContext : DbContext
-        {
-            public DbSet<DbResource> DbResources { get; set; }
-
-            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            {
-                optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
-            }
-        }
-
         [Fact]
         public void Can_Build_ResourceGraph_Using_Builder()
         {
@@ -34,16 +20,16 @@ namespace UnitTests.Builders
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddDbContext<TestContext>();
-            
+
             services.AddJsonApi<TestContext>(resources: builder => builder.Add<NonDbResource>("nonDbResources"));
 
             // Act
-            var container = services.BuildServiceProvider();
+            ServiceProvider container = services.BuildServiceProvider();
 
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
-            var dbResource = resourceGraph.GetResourceContext("dbResources");
-            var nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
+            ResourceContext dbResource = resourceGraph.GetResourceContext("dbResources");
+            ResourceContext nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
             Assert.Equal(typeof(DbResource), dbResource.ResourceType);
             Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
         }
@@ -56,10 +42,10 @@ namespace UnitTests.Builders
             builder.Add<TestResource>();
 
             // Act
-            var resourceGraph = builder.Build();
+            IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
+            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("testResources", resource.PublicName);
         }
 
@@ -71,10 +57,10 @@ namespace UnitTests.Builders
             builder.Add<TestResource>();
 
             // Act
-            var resourceGraph = builder.Build();
+            IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
+            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Contains(resource.Attributes, i => i.PublicName == "compoundAttribute");
         }
 
@@ -86,26 +72,46 @@ namespace UnitTests.Builders
             builder.Add<TestResource>();
 
             // Act
-            var resourceGraph = builder.Build();
+            IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
+            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicName);
             Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicName);
         }
 
+        private sealed class NonDbResource : Identifiable
+        {
+        }
+
+        private sealed class DbResource : Identifiable
+        {
+        }
+
+        private class TestContext : DbContext
+        {
+            public DbSet<DbResource> DbResources { get; set; }
+
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                optionsBuilder.UseInMemoryDatabase(Guid.NewGuid().ToString());
+            }
+        }
+
         public sealed class TestResource : Identifiable
         {
-            [Attr] 
+            [Attr]
             public string CompoundAttribute { get; set; }
-            
-            [HasOne] 
+
+            [HasOne]
             public RelatedResource RelatedResource { get; set; }
-            
-            [HasMany] 
+
+            [HasMany]
             public ISet<RelatedResource> RelatedResources { get; set; }
         }
 
-        public class RelatedResource : Identifiable { }
+        public class RelatedResource : Identifiable
+        {
+        }
     }
 }

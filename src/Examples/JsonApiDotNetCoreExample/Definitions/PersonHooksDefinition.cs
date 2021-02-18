@@ -8,9 +8,13 @@ namespace JsonApiDotNetCoreExample.Definitions
 {
     public class PersonHooksDefinition : LockableHooksDefinition<Person>
     {
-        public PersonHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public PersonHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
-        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship, ResourcePipeline pipeline)
+        public override IEnumerable<string> BeforeUpdateRelationship(HashSet<string> ids, IRelationshipsDictionary<Person> resourcesByRelationship,
+            ResourcePipeline pipeline)
         {
             BeforeImplicitUpdateRelationship(resourcesByRelationship, pipeline);
             return ids;

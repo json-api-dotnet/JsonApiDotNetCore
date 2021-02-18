@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             AssertIsDeclared(localId);
 
-            var item = _idsTracked[localId];
+            LocalIdState item = _idsTracked[localId];
 
             AssertSameResourceType(resourceType, item.ResourceType, localId);
 
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             AssertIsDeclared(localId);
 
-            var item = _idsTracked[localId];
+            LocalIdState item = _idsTracked[localId];
 
             AssertSameResourceType(resourceType, item.ResourceType, localId);
 

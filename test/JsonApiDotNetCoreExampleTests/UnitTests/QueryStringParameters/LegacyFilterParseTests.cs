@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings;
@@ -45,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read(parameterName, parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
@@ -85,13 +88,13 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             // Act
             _reader.Read(parameterName, parameterValue);
 
-            var constraints = _reader.GetConstraints();
+            IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            var scope = constraints.Select(x => x.Scope).Single();
+            ResourceFieldChainExpression scope = constraints.Select(x => x.Scope).Single();
             scope.Should().BeNull();
 
-            var value = constraints.Select(x => x.Expression).Single();
+            QueryExpression value = constraints.Select(x => x.Expression).Single();
             value.ToString().Should().Be(expressionExpected);
         }
     }

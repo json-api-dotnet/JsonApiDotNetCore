@@ -24,17 +24,13 @@ namespace NoEntityFrameworkExample
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddJsonApi(
-                options => options.Namespace = "api/v1",
-                resources: builder => builder.Add<WorkItem>("workItems")
-            );
+            services.AddJsonApi(options => options.Namespace = "api/v1", resources: builder => builder.Add<WorkItem>("workItems"));
 
             services.AddScoped<IResourceService<WorkItem>, WorkItemService>();
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseNpgsql(_connectionString,
-                    postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
+                options.UseNpgsql(_connectionString, postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
             });
         }
 
