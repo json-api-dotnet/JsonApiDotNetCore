@@ -13,6 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
     public sealed class AtomicAbsoluteLinksTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
+        private const string HostPrefix = "http://localhost";
+
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
@@ -82,21 +84,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Links.Self.Should().Be("http://localhost/textLanguages/" + existingLanguage.StringId);
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Self.Should().Be($"http://localhost/textLanguages/{existingLanguage.StringId}/relationships/lyrics");
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Related.Should().Be($"http://localhost/textLanguages/{existingLanguage.StringId}/lyrics");
+            string languageLink = HostPrefix + "/textLanguages/" + existingLanguage.StringId;
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Links.Self.Should().Be("http://localhost/recordCompanies/" + existingCompany.StringId);
-            responseDocument.Results[1].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Self.Should().Be($"http://localhost/recordCompanies/{existingCompany.StringId}/relationships/tracks");
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Related.Should().Be($"http://localhost/recordCompanies/{existingCompany.StringId}/tracks");
+            var singleData1 = responseDocument.Results[0].SingleData;
+            singleData1.Should().NotBeNull();
+            singleData1.Links.Should().NotBeNull();
+            singleData1.Links.Self.Should().Be(languageLink);
+            singleData1.Relationships.Should().NotBeEmpty();
+            singleData1.Relationships["lyrics"].Links.Should().NotBeNull();
+            singleData1.Relationships["lyrics"].Links.Self.Should().Be(languageLink + "/relationships/lyrics");
+            singleData1.Relationships["lyrics"].Links.Related.Should().Be(languageLink + "/lyrics");
+
+            string companyLink = HostPrefix + "/recordCompanies/" + existingCompany.StringId;
+
+            var singleData2 = responseDocument.Results[1].SingleData;
+            singleData2.Should().NotBeNull();
+            singleData2.Links.Should().NotBeNull();
+            singleData2.Links.Self.Should().Be(companyLink);
+            singleData2.Relationships.Should().NotBeEmpty();
+            singleData2.Relationships["tracks"].Links.Should().NotBeNull();
+            singleData2.Relationships["tracks"].Links.Self.Should().Be(companyLink + "/relationships/tracks");
+            singleData2.Relationships["tracks"].Links.Related.Should().Be(companyLink + "/tracks");
         }
     }
 }

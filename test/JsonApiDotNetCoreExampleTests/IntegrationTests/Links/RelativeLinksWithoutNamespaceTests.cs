@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photoAlbums/{album.StringId}");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
@@ -59,9 +59,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             responseDocument.Links.Next.Should().BeNull();
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be($"/photoAlbums/{album.StringId}");
-            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be($"/photoAlbums/{album.StringId}/relationships/photos");
-            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be($"/photoAlbums/{album.StringId}/photos");
+            responseDocument.SingleData.Links.Self.Should().Be(route);
+            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be(route + "/relationships/photos");
+            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be(route + "/photos");
         }
 
         [Fact]
@@ -86,22 +86,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be("/photoAlbums?include=photos");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be("/photoAlbums?include=photos");
-            responseDocument.Links.Last.Should().Be("/photoAlbums?include=photos");
+            responseDocument.Links.First.Should().Be(route);
+            responseDocument.Links.Last.Should().Be(route);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
+            string albumLink = $"/photoAlbums/{album.StringId}";
+
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Links.Self.Should().Be($"/photoAlbums/{album.StringId}");
-            responseDocument.ManyData[0].Relationships["photos"].Links.Self.Should().Be($"/photoAlbums/{album.StringId}/relationships/photos");
-            responseDocument.ManyData[0].Relationships["photos"].Links.Related.Should().Be($"/photoAlbums/{album.StringId}/photos");
+            responseDocument.ManyData[0].Links.Self.Should().Be(albumLink);
+            responseDocument.ManyData[0].Relationships["photos"].Links.Self.Should().Be(albumLink + "/relationships/photos");
+            responseDocument.ManyData[0].Relationships["photos"].Links.Related.Should().Be(albumLink + "/photos");
+
+            string photoLink = $"/photos/{album.Photos.ElementAt(0).StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}");
-            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}/relationships/album");
-            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}/album");
+            responseDocument.Included[0].Links.Self.Should().Be(photoLink);
+            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be(photoLink + "/relationships/album");
+            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be(photoLink + "/album");
         }
 
         [Fact]
@@ -125,17 +129,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photos/{photo.StringId}/album");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
+            string albumLink = $"/photoAlbums/{photo.Album.StringId}";
+
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be($"/photoAlbums/{photo.Album.StringId}");
-            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be($"/photoAlbums/{photo.Album.StringId}/relationships/photos");
-            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be($"/photoAlbums/{photo.Album.StringId}/photos");
+            responseDocument.SingleData.Links.Self.Should().Be(albumLink);
+            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be(albumLink + "/relationships/photos");
+            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be(albumLink + "/photos");
         }
 
         [Fact]
@@ -159,17 +165,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photoAlbums/{album.StringId}/photos");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be($"/photoAlbums/{album.StringId}/photos");
+            responseDocument.Links.First.Should().Be(route);
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
+            string photoLink = $"/photos/{album.Photos.ElementAt(0).StringId}";
+
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Links.Self.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}");
-            responseDocument.ManyData[0].Relationships["album"].Links.Self.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}/relationships/album");
-            responseDocument.ManyData[0].Relationships["album"].Links.Related.Should().Be($"/photos/{album.Photos.ElementAt(0).StringId}/album");
+            responseDocument.ManyData[0].Links.Self.Should().Be(photoLink);
+            responseDocument.ManyData[0].Relationships["album"].Links.Self.Should().Be(photoLink + "/relationships/album");
+            responseDocument.ManyData[0].Relationships["album"].Links.Related.Should().Be(photoLink + "/album");
         }
 
         [Fact]
@@ -193,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photos/{photo.StringId}/relationships/album");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().Be($"/photos/{photo.StringId}/album");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
@@ -226,9 +234,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photoAlbums/{album.StringId}/relationships/photos");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().Be($"/photoAlbums/{album.StringId}/photos");
-            responseDocument.Links.First.Should().Be($"/photoAlbums/{album.StringId}/relationships/photos");
+            responseDocument.Links.First.Should().Be(route);
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
@@ -280,24 +288,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Links.Self.Should().Be("/photoAlbums?include=photos");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            var newAlbumId = responseDocument.SingleData.Id;
+            string albumLink = $"/photoAlbums/{responseDocument.SingleData.Id}";
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be($"/photoAlbums/{newAlbumId}");
-            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be($"/photoAlbums/{newAlbumId}/relationships/photos");
-            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be($"/photoAlbums/{newAlbumId}/photos");
+            responseDocument.SingleData.Links.Self.Should().Be(albumLink);
+            responseDocument.SingleData.Relationships["photos"].Links.Self.Should().Be(albumLink + "/relationships/photos");
+            responseDocument.SingleData.Relationships["photos"].Links.Related.Should().Be(albumLink + "/photos");
+
+            string photoLink = $"/photos/{existingPhoto.StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be($"/photos/{existingPhoto.StringId}");
-            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be($"/photos/{existingPhoto.StringId}/relationships/album");
-            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be($"/photos/{existingPhoto.StringId}/album");
+            responseDocument.Included[0].Links.Self.Should().Be(photoLink);
+            responseDocument.Included[0].Relationships["album"].Links.Self.Should().Be(photoLink + "/relationships/album");
+            responseDocument.Included[0].Relationships["album"].Links.Related.Should().Be(photoLink + "/album");
         }
 
         [Fact]
@@ -341,22 +350,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be($"/photos/{existingPhoto.StringId}?include=album");
+            responseDocument.Links.Self.Should().Be(route);
             responseDocument.Links.Related.Should().BeNull();
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
+            string photoLink = $"/photos/{existingPhoto.StringId}";
+
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be($"/photos/{existingPhoto.StringId}");
-            responseDocument.SingleData.Relationships["album"].Links.Self.Should().Be($"/photos/{existingPhoto.StringId}/relationships/album");
-            responseDocument.SingleData.Relationships["album"].Links.Related.Should().Be($"/photos/{existingPhoto.StringId}/album");
+            responseDocument.SingleData.Links.Self.Should().Be(photoLink);
+            responseDocument.SingleData.Relationships["album"].Links.Self.Should().Be(photoLink + "/relationships/album");
+            responseDocument.SingleData.Relationships["album"].Links.Related.Should().Be(photoLink + "/album");
+
+            string albumLink = $"/photoAlbums/{existingAlbum.StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Links.Self.Should().Be($"/photoAlbums/{existingAlbum.StringId}");
-            responseDocument.Included[0].Relationships["photos"].Links.Self.Should().Be($"/photoAlbums/{existingAlbum.StringId}/relationships/photos");
-            responseDocument.Included[0].Relationships["photos"].Links.Related.Should().Be($"/photoAlbums/{existingAlbum.StringId}/photos");
+            responseDocument.Included[0].Links.Self.Should().Be(albumLink);
+            responseDocument.Included[0].Relationships["photos"].Links.Self.Should().Be(albumLink + "/relationships/photos");
+            responseDocument.Included[0].Relationships["photos"].Links.Related.Should().Be(albumLink + "/photos");
         }
     }
 }

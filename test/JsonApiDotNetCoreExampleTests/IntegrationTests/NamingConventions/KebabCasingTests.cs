@@ -118,12 +118,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             responseDocument.SingleData.Attributes["is-indoor"].Should().Be(newPool.IsIndoor);
 
             var newPoolId = int.Parse(responseDocument.SingleData.Id);
+            string poolLink = route + $"/{newPoolId}";
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be($"/public-api/swimming-pools/{newPoolId}/relationships/water-slides");
-            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be($"/public-api/swimming-pools/{newPoolId}/water-slides");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be($"/public-api/swimming-pools/{newPoolId}/relationships/diving-boards");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be($"/public-api/swimming-pools/{newPoolId}/diving-boards");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be(poolLink + "/relationships/water-slides");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be(poolLink + "/water-slides");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be(poolLink + "/relationships/diving-boards");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be(poolLink + "/diving-boards");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

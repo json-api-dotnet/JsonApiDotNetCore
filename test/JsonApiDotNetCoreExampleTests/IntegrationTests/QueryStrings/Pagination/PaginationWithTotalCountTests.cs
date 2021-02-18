@@ -15,6 +15,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
     public sealed class PaginationWithTotalCountTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
+        private const string HostPrefix = "http://localhost";
         private const int DefaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
@@ -60,8 +61,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogPosts?page[size]=1");
             responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -121,11 +122,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1");
+            responseDocument.Links.Next.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1");
         }
 
         [Fact]
@@ -187,9 +188,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogs?include=posts&page[size]=2,posts:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/blogs?include=posts&page[number]=2&page[size]=2,posts:1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogs?include=posts&page[size]=2,posts:1");
+            responseDocument.Links.Last.Should().Be(HostPrefix + "/blogs?include=posts&page[number]=2&page[size]=2,posts:1");
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
@@ -221,7 +222,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -253,8 +254,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogs/{blog.StringId}/relationships/posts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/relationships/posts?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -315,8 +316,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(posts[1].BlogPostLabels.Skip(1).First().Label.StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?include=labels&page[size]=labels:1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogPosts?include=labels&page[size]=labels:1");
             responseDocument.Links.Last.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
@@ -358,8 +359,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(1).Label.StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogPosts/{post.StringId}/relationships/labels?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogPosts/{post.StringId}/relationships/labels?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -399,10 +400,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
 
+            const string linkPrefix = HostPrefix + "/blogs?include=owner.posts.comments";
+
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1&page[number]=2");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(linkPrefix + "&page[size]=1,owner.posts:1,owner.posts.comments:1");
+            responseDocument.Links.Last.Should().Be(linkPrefix + "&page[size]=1,owner.posts:1,owner.posts.comments:1&page[number]=2");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
@@ -478,11 +481,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[1].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[number]=2");
+            responseDocument.Links.Next.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[number]=2");
         }
 
         [Fact]
@@ -512,7 +515,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Should().HaveCount(25);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -555,11 +558,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
 
             if (firstLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, firstLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, firstLink.Value);
                 responseDocument.Links.First.Should().Be(expected);
             }
             else
@@ -569,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (prevLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, prevLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, prevLink.Value);
                 responseDocument.Links.Prev.Should().Be(expected);
             }
             else
@@ -579,7 +582,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (nextLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, nextLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, nextLink.Value);
                 responseDocument.Links.Next.Should().Be(expected);
             }
             else
@@ -589,7 +592,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (lastLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, lastLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, lastLink.Value);
                 responseDocument.Links.Last.Should().Be(expected);
             }
             else
