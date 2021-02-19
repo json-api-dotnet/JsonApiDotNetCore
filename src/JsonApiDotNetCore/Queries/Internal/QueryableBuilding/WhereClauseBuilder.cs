@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (elementType == null)
             {
-                throw new Exception("Expression must be a collection.");
+                throw new InvalidOperationException("Expression must be a collection.");
             }
 
             return AnyExtensionMethodCall(elementType, property);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (property.Type != typeof(string))
             {
-                throw new Exception("Expression must be a string.");
+                throw new InvalidOperationException("Expression must be a string.");
             }
 
             Expression text = Visit(expression.TextValue, property.Type);

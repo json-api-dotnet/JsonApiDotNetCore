@@ -57,19 +57,19 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc />
-        public string Serialize(object data)
+        public string Serialize(object content)
         {
-            if (data == null || data is IIdentifiable)
+            if (content == null || content is IIdentifiable)
             {
-                return SerializeSingle((IIdentifiable)data);
+                return SerializeSingle((IIdentifiable)content);
             }
 
-            if (data is IEnumerable<IIdentifiable> collectionOfIdentifiable)
+            if (content is IEnumerable<IIdentifiable> collectionOfIdentifiable)
             {
                 return SerializeMany(collectionOfIdentifiable.ToArray());
             }
 
-            if (data is ErrorDocument errorDocument)
+            if (content is ErrorDocument errorDocument)
             {
                 return SerializeErrorDocument(errorDocument);
             }

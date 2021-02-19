@@ -106,6 +106,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceContext resourceContext)
         {
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+
             if (!_visitedTable.ContainsKey(resourceContext))
             {
                 var inputFields = _lazySourceTable.Value.ContainsKey(resourceContext)

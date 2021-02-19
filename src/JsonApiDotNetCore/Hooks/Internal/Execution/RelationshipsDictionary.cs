@@ -37,14 +37,16 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type resourceType)
         {
-            return this.Where(p => p.Key.RightType == relatedType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(p => p.Key.RightType == resourceType).ToDictionary(p => p.Key, p => p.Value);
         }
 
         /// <inheritdoc />
         public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
+            ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
+
             var property = TypeHelper.ParseNavigationExpression(navigationAction);
             return this.Where(p => p.Key.Property.Name == property.Name).Select(p => p.Value).SingleOrDefault();
         }

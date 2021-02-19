@@ -11,9 +11,9 @@ namespace JsonApiDotNetCoreExample.Definitions
     {
         public TagHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 
-        public override IEnumerable<Tag> BeforeCreate(IResourceHashSet<Tag> affected, ResourcePipeline pipeline)
+        public override IEnumerable<Tag> BeforeCreate(IResourceHashSet<Tag> resources, ResourcePipeline pipeline)
         {
-            return base.BeforeCreate(affected, pipeline);
+            return base.BeforeCreate(resources, pipeline);
         }
 
         public override IEnumerable<Tag> OnReturn(HashSet<Tag> resources, ResourcePipeline pipeline)

@@ -57,6 +57,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <inheritdoc />
         public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
+            ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
+
             var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
             var propertyType = propertyInfo.PropertyType;
             if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IEnumerable)))

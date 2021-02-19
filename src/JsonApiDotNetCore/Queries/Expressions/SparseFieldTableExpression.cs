@@ -38,13 +38,13 @@ namespace JsonApiDotNetCore.Queries.Expressions
             {
                 if (builder.Length > 0)
                 {
-                    builder.Append(",");
+                    builder.Append(',');
                 }
 
                 builder.Append(resource.PublicName);
-                builder.Append("(");
+                builder.Append('(');
                 builder.Append(fields);
-                builder.Append(")");
+                builder.Append(')');
             }
 
             return builder.ToString();

@@ -116,6 +116,8 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> navigationExpression)
         {
+            ArgumentGuard.NotNull(navigationExpression, nameof(navigationExpression));
+
             MemberExpression exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
@@ -127,7 +129,7 @@ namespace JsonApiDotNetCore
                 }
                 else
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Invalid expression.", nameof(navigationExpression));
                 }
             }
             else if (navigationExpression.Body is MemberExpression memberExpression)
@@ -136,7 +138,7 @@ namespace JsonApiDotNetCore
             }
             else
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid expression.", nameof(navigationExpression));
             }
 
             return (PropertyInfo)exp.Member;

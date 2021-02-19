@@ -16,9 +16,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// </summary>
         Dictionary<RelationshipAttribute, HashSet<TLeftResource>> GetByRelationship<TRightResource>() where TRightResource : class, IIdentifiable;
         /// <summary>
-        /// Gets a dictionary of all resources that have an affected relationship to type <paramref name="relatedResourceType"/>
+        /// Gets a dictionary of all resources that have an affected relationship to type <paramref name="resourceType"/>
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TLeftResource>> GetByRelationship(Type relatedResourceType);
+        Dictionary<RelationshipAttribute, HashSet<TLeftResource>> GetByRelationship(Type resourceType);
         /// <summary>
         /// Gets a collection of all the resources for the property within <paramref name="navigationAction"/>
         /// has been affected by the request

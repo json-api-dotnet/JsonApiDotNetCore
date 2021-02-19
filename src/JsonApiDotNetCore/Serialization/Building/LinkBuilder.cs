@@ -112,12 +112,12 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             var builder = new StringBuilder();
             builder.Append(_request.BasePath);
-            builder.Append("/");
+            builder.Append('/');
             builder.Append(resourceContext.PublicName);
 
             if (_request.PrimaryId != null)
             {
-                builder.Append("/");
+                builder.Append('/');
                 builder.Append(_request.PrimaryId);
             }
 
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (_request.Relationship != null)
             {
-                builder.Append("/");
+                builder.Append('/');
                 builder.Append(_request.Relationship.PublicName);
             }
 

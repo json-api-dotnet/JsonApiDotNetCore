@@ -7,9 +7,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
     {
         public bool Value { get; }
 
-        public LoadDatabaseValuesAttribute(bool mode = true)
+        public LoadDatabaseValuesAttribute(bool value = true)
         {
-            Value = mode;
+            Value = value;
         }
     }
 }

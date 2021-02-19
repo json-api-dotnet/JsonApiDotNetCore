@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             var propertyExpression = TryGetCollectionCount(collectionExpression);
             if (propertyExpression == null)
             {
-                throw new Exception($"Field '{expression.TargetCollection}' must be a collection.");
+                throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
             }
 
             return propertyExpression;

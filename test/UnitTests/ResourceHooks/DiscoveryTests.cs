@@ -18,7 +18,7 @@ namespace UnitTests.ResourceHooks
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
 
-            public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> resources, ResourcePipeline pipeline) { return resources; }
             public override void AfterDelete(HashSet<Dummy> resources, ResourcePipeline pipeline, bool succeeded) { }
         }
 
@@ -69,7 +69,7 @@ namespace UnitTests.ResourceHooks
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }
 
-            public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> affected, ResourcePipeline pipeline) { return affected; }
+            public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> resources, ResourcePipeline pipeline) { return resources; }
 
             [LoadDatabaseValues(false)]
             public override void AfterDelete(HashSet<YetAnotherDummy> resources, ResourcePipeline pipeline, bool succeeded) { }

@@ -58,28 +58,30 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+
             var isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "filter" || isNested;
         }
 
         /// <inheritdoc />
-        public virtual void Read(string parameterName, StringValues parameterValues)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
 
-            foreach (string parameterValue in ExtractParameterValues(parameterName, parameterValues))
+            foreach (string value in ExtractParameterValues(parameterValue))
             {
-                ReadSingleValue(parameterName, parameterValue);
+                ReadSingleValue(parameterName, value);
             }
         }
 
-        private IEnumerable<string> ExtractParameterValues(string parameterName, StringValues parameterValues)
+        private IEnumerable<string> ExtractParameterValues(StringValues parameterValues)
         {
             foreach (string parameterValue in parameterValues)
             {
                 if (_options.EnableLegacyFilterNotation)
                 {
-                    foreach (string condition in LegacyConverter.ExtractConditions(parameterName, parameterValue))
+                    foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
                     {
                         yield return condition;
                     }

@@ -405,7 +405,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)
             {
-                throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the " +
+                throw new InvalidOperationException("The returned collection from this hook may contain at most one item in the case of the " +
                     pipeline.ToString("G") + " pipeline");
             }
         }
