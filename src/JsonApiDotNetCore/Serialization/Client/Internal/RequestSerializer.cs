@@ -69,10 +69,10 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { private get; set; }
+        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { get; set; }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
+        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { get; set; }
 
         /// <summary>
         /// By default, the client serializer includes all attributes in the result,

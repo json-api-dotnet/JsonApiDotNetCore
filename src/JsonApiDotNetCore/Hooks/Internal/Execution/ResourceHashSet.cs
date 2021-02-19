@@ -37,9 +37,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type leftType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type resourceType)
         {
-            return _relationships.GetByRelationship(leftType);
+            return _relationships.GetByRelationship(resourceType);
         }
 
         /// <inheritdoc />

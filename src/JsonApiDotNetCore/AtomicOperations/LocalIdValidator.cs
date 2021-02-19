@@ -25,6 +25,8 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public void Validate(IEnumerable<OperationContainer> operations)
         {
+            ArgumentGuard.NotNull(operations, nameof(operations));
+
             _localIdTracker.Reset();
 
             int operationIndex = 0;

@@ -342,6 +342,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource)
         {
+            ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(primaryResource);
@@ -358,6 +360,9 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds)
         {
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
 
@@ -380,6 +385,9 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
         {
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             var leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.LeftType);
             var leftIdAttribute = GetIdAttribute(leftResourceContext);
 

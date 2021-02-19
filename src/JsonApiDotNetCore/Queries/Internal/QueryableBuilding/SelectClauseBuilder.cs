@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
                 if (typedCollectionConstructor == null)
                 {
-                    throw new Exception(
+                    throw new InvalidOperationException(
                         $"Constructor on '{typedCollection.Name}' that accepts '{enumerableOfElementType.Name}' not found.");
                 }
 
