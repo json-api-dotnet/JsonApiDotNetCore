@@ -7,6 +7,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 {
     public sealed class TextLanguageMetaDefinition : JsonApiResourceDefinition<TextLanguage, Guid>
     {
+        internal const string NoticeText = "See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes.";
+
         public TextLanguageMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {
         }
@@ -15,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
         {
             return new Dictionary<string, object>
             {
-                ["Notice"] = "See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes."
+                ["Notice"] = NoticeText
             };
         }
     }

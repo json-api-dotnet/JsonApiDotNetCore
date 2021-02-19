@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Meta.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Meta["Notice"].Should().Be("See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes.");
+            responseDocument.Results[0].SingleData.Meta["Notice"].Should().Be(TextLanguageMetaDefinition.NoticeText);
         }
     }
 }

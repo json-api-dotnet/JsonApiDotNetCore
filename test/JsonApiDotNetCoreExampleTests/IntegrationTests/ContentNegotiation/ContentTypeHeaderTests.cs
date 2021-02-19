@@ -121,6 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.MediaType;
 
             // Act
+            // ReSharper disable once RedundantArgumentDefaultValue
             var (httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
 
             // Assert
@@ -352,6 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.MediaType;
 
             // Act
+            // ReSharper disable once RedundantArgumentDefaultValue
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
 
             // Assert
@@ -359,10 +361,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
+            string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
+
             var error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
-            error.Detail.Should().Be("Please specify 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' instead of 'application/vnd.api+json' for the Content-Type header value.");
+            error.Detail.Should().Be(detail);
         }
     }
 }
