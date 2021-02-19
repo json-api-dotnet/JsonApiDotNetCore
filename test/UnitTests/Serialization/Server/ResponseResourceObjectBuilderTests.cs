@@ -21,7 +21,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10 };
-            var builder = GetResponseResourceObjectBuilder(relationshipLinks: _dummyRelationshipLinks);
+            var builder = GetResponseResourceObjectBuilder(relationshipLinks: DummyRelationshipLinks);
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
@@ -69,7 +69,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
-            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
+            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: DummyRelationshipLinks);
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);

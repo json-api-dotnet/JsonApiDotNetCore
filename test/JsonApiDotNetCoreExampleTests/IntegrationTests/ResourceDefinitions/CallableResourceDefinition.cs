@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
         private readonly IUserRolesService _userRolesService;
-        private static readonly PageSize _maxPageSize = new PageSize(5);
+        private static readonly PageSize MaxPageSize = new PageSize(5);
 
         public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService) : base(resourceGraph)
         {
@@ -77,11 +77,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             if (existingPagination != null)
             {
-                var pageSize = existingPagination.PageSize?.Value <= _maxPageSize.Value ? existingPagination.PageSize : _maxPageSize;
+                var pageSize = existingPagination.PageSize?.Value <= MaxPageSize.Value ? existingPagination.PageSize : MaxPageSize;
                 return new PaginationExpression(existingPagination.PageNumber, pageSize);
             }
 
-            return new PaginationExpression(PageNumber.ValueOne, _maxPageSize);
+            return new PaginationExpression(PageNumber.ValueOne, MaxPageSize);
         }
 
         public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)

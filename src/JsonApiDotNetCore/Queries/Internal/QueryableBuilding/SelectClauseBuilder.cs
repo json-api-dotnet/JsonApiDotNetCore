@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// </summary>
     public class SelectClauseBuilder : QueryClauseBuilder<object>
     {
-        private static readonly ConstantExpression _nullConstant = Expression.Constant(null);
+        private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
         private readonly IModel _entityModel;
@@ -207,8 +207,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static Expression TestForNull(Expression expressionToTest, Expression ifFalseExpression)
         {
-            BinaryExpression equalsNull = Expression.Equal(expressionToTest, _nullConstant);
-            return Expression.Condition(equalsNull, Expression.Convert(_nullConstant, expressionToTest.Type), ifFalseExpression);
+            BinaryExpression equalsNull = Expression.Equal(expressionToTest, NullConstant);
+            return Expression.Condition(equalsNull, Expression.Convert(NullConstant, expressionToTest.Type), ifFalseExpression);
         }
 
         private static Expression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)

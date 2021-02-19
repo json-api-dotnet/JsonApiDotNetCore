@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     public class FilterQueryStringParameterReader : QueryStringParameterReader, IFilterQueryStringParameterReader
     {
-        private static readonly LegacyFilterNotationConverter _legacyConverter = new LegacyFilterNotationConverter();
+        private static readonly LegacyFilterNotationConverter LegacyConverter = new LegacyFilterNotationConverter();
 
         private readonly IJsonApiOptions _options;
         private readonly QueryStringParameterScopeParser _scopeParser;
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 if (_options.EnableLegacyFilterNotation)
                 {
-                    foreach (string condition in _legacyConverter.ExtractConditions(parameterName, parameterValue))
+                    foreach (string condition in LegacyConverter.ExtractConditions(parameterName, parameterValue))
                     {
                         yield return condition;
                     }
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 if (_options.EnableLegacyFilterNotation)
                 {
-                    (parameterName, parameterValue) = _legacyConverter.Convert(parameterName, parameterValue);
+                    (parameterName, parameterValue) = LegacyConverter.Convert(parameterName, parameterValue);
                 }
 
                 ResourceFieldChainExpression scope = GetScope(parameterName);

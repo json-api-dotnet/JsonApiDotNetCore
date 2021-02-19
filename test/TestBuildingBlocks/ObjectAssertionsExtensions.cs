@@ -11,7 +11,7 @@ namespace TestBuildingBlocks
     {
         private const decimal NumericPrecision = 0.00000000001M;
 
-        private static readonly JsonSerializerSettings _deserializationSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings DeserializationSettings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented
         };
@@ -65,8 +65,8 @@ namespace TestBuildingBlocks
         public static void BeJson(this StringAssertions source, string expected, string because = "",
             params object[] becauseArgs)
         {
-            var sourceToken = JsonConvert.DeserializeObject<JToken>(source.Subject, _deserializationSettings);
-            var expectedToken = JsonConvert.DeserializeObject<JToken>(expected, _deserializationSettings);
+            var sourceToken = JsonConvert.DeserializeObject<JToken>(source.Subject, DeserializationSettings);
+            var expectedToken = JsonConvert.DeserializeObject<JToken>(expected, DeserializationSettings);
 
             string sourceText = sourceToken?.ToString();
             string expectedText = expectedToken?.ToString();

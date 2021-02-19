@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
     public sealed class AtomicQueryStringTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private static readonly DateTime _frozenTime = 30.July(2018).At(13, 46, 12);
+        private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
 
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             {
                 services.AddControllersFromExampleProject();
 
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = _frozenTime});
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = FrozenTime});
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
@@ -278,9 +278,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         {
             // Arrange
             var musicTracks = _fakers.MusicTrack.Generate(3);
-            musicTracks[0].ReleasedAt = _frozenTime.AddMonths(5);
-            musicTracks[1].ReleasedAt = _frozenTime.AddMonths(-5);
-            musicTracks[2].ReleasedAt = _frozenTime.AddMonths(-1);
+            musicTracks[0].ReleasedAt = FrozenTime.AddMonths(5);
+            musicTracks[1].ReleasedAt = FrozenTime.AddMonths(-5);
+            musicTracks[2].ReleasedAt = FrozenTime.AddMonths(-1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

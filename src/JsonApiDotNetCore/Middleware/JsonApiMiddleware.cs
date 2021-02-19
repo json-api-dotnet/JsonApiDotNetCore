@@ -23,8 +23,8 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public sealed class JsonApiMiddleware
     {
-        private static readonly MediaTypeHeaderValue _mediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
-        private static readonly MediaTypeHeaderValue _atomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
+        private static readonly MediaTypeHeaderValue MediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
+        private static readonly MediaTypeHeaderValue AtomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
 
         private readonly RequestDelegate _next;
 
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Middleware
             if (primaryResourceContext != null)
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(_mediaType, httpContext, options.SerializerSettings))
+                    !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerSettings))
                 {
                     return;
                 }
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Middleware
             else if (IsOperationsRequest(routeValues))
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(_atomicOperationsMediaType, httpContext, options.SerializerSettings))
+                    !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerSettings))
                 {
                     return;
                 }

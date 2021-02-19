@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// </summary>
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
-        private static readonly ConstantExpression _nullConstant = Expression.Constant(null);
+        private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
         private readonly Type _extensionType;
@@ -252,7 +252,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitNullConstant(NullConstantExpression expression, Type expressionType)
         {
-            return _nullConstant;
+            return NullConstant;
         }
 
         public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type expressionType)

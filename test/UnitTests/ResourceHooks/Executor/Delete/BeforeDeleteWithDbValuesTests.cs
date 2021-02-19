@@ -17,10 +17,10 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         private readonly Person _person;
         public BeforeDeleteWithDbValuesTests()
         {
-            _person = _personFaker.Generate();
-            var todo1 = _todoFaker.Generate();
-            var todo2 = _todoFaker.Generate();
-            var passport = _passportFaker.Generate();
+            _person = PersonFaker.Generate();
+            var todo1 = TodoFaker.Generate();
+            var todo2 = TodoFaker.Generate();
+            var passport = PassportFaker.Generate();
 
             _person.Passport = passport;
             _person.TodoItems = new HashSet<TodoItem> { todo1 };

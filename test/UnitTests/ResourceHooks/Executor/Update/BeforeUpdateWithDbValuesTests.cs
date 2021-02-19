@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             _personId = personId.ToString();
             var implicitPersonId = personId + 10000;
 
-            var implicitTodo = _todoFaker.Generate();
+            var implicitTodo = TodoFaker.Generate();
             implicitTodo.Id += 1000;
             implicitTodo.OneToOnePerson = new Person {Id = personId, LastName = LastName};
             implicitTodo.Description = Description + Description;

@@ -13,9 +13,9 @@ namespace UnitTests.ResourceHooks.Executor
 
         private (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
         {
-            var tagsSubset = _tagFaker.Generate(3);
-            var joinsSubSet = _articleTagFaker.Generate(3);
-            var articleTagsSubset = _articleFaker.Generate();
+            var tagsSubset = TagFaker.Generate(3);
+            var joinsSubSet = ArticleTagFaker.Generate(3);
+            var articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
             {
@@ -23,10 +23,10 @@ namespace UnitTests.ResourceHooks.Executor
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
 
-            var allTags = _tagFaker.Generate(3).Concat(tagsSubset).ToList();
-            var completeJoin = _articleTagFaker.Generate(6);
+            var allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
+            var completeJoin = ArticleTagFaker.Generate(6);
 
-            var articleWithAllTags = _articleFaker.Generate();
+            var articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
             for (int i = 0; i < 6; i++)

@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExample.Startups
 {
     public class Startup : EmptyStartup
     {
-        private static readonly Version _postgresCiBuildVersion = new Version(9, 6);
+        private static readonly Version PostgresCiBuildVersion = new Version(9, 6);
         private readonly string _connectionString;
 
         public Startup(IConfiguration configuration)
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExample.Startups
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.EnableSensitiveDataLogging();
-                options.UseNpgsql(_connectionString, postgresOptions => postgresOptions.SetPostgresVersion(_postgresCiBuildVersion));
+                options.UseNpgsql(_connectionString, postgresOptions => postgresOptions.SetPostgresVersion(PostgresCiBuildVersion));
             });
 
             services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());

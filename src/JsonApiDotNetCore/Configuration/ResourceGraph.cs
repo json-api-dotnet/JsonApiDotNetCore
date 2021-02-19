@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Configuration
     public class ResourceGraph : IResourceGraph
     {
         private readonly IReadOnlyCollection<ResourceContext> _resources;
-        private static readonly Type _proxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
+        private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
 
         public ResourceGraph(IReadOnlyCollection<ResourceContext> resources)
         {
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         private bool IsLazyLoadingProxyForResourceType(Type resourceType) =>
-            _proxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+            ProxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
 
         private static Expression RemoveConvert(Expression expression)
         {

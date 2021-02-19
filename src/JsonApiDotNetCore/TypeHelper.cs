@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore
 {
     internal static class TypeHelper
     {
-        private static readonly Type[] _hashSetCompatibleCollectionTypes =
+        private static readonly Type[] HashSetCompatibleCollectionTypes =
         {
             typeof(HashSet<>), typeof(ICollection<>), typeof(ISet<>), typeof(IEnumerable<>), typeof(IReadOnlyCollection<>)
         };
@@ -251,7 +251,7 @@ namespace JsonApiDotNetCore
             if (collectionType.IsGenericType)
             {
                 var openCollectionType = collectionType.GetGenericTypeDefinition();
-                return _hashSetCompatibleCollectionTypes.Contains(openCollectionType);
+                return HashSetCompatibleCollectionTypes.Contains(openCollectionType);
             }
 
             return false;

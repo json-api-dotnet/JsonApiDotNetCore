@@ -15,12 +15,12 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
-        protected readonly TopLevelLinks _dummyTopLevelLinks;
-        protected readonly ResourceLinks _dummyResourceLinks;
-        protected readonly RelationshipLinks _dummyRelationshipLinks;
+        protected readonly TopLevelLinks DummyTopLevelLinks;
+        protected readonly ResourceLinks DummyResourceLinks;
+        protected readonly RelationshipLinks DummyRelationshipLinks;
         public SerializerTestsSetup()
         {
-            _dummyTopLevelLinks = new TopLevelLinks
+            DummyTopLevelLinks = new TopLevelLinks
             {
                 Self = "http://www.dummy.com/dummy-self-link",
                 Next = "http://www.dummy.com/dummy-next-link",
@@ -28,11 +28,11 @@ namespace UnitTests.Serialization
                 First = "http://www.dummy.com/dummy-first-link",
                 Last = "http://www.dummy.com/dummy-last-link"
             };
-            _dummyResourceLinks = new ResourceLinks
+            DummyResourceLinks = new ResourceLinks
             {
                 Self = "http://www.dummy.com/dummy-resource-self-link"
             };
-            _dummyRelationshipLinks = new RelationshipLinks
+            DummyRelationshipLinks = new RelationshipLinks
             {
                 Related = "http://www.dummy.com/dummy-relationship-related-link",
                 Self = "http://www.dummy.com/dummy-relationship-self-link"

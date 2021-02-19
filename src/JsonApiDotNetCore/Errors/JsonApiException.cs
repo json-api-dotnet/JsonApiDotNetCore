@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     /// </summary>
     public class JsonApiException : Exception
     {
-        private static readonly JsonSerializerSettings _errorSerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings ErrorSerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented
@@ -40,6 +40,6 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, _errorSerializerSettings);
+        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, ErrorSerializerSettings);
     }
 }
