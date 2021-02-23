@@ -73,21 +73,15 @@ namespace JsonApiDotNetCore.Middleware
             var errors = exception is JsonApiException jsonApiException
                 ? jsonApiException.Errors
                 : exception is OperationCanceledException
-                    ? new[]
-                    {
-                        new Error((HttpStatusCode) 499)
+                    ? new Error((HttpStatusCode) 499)
                         {
                             Title = "Request execution was canceled."
-                        }
-                    }
-                    : new[]
-                    {
-                        new Error(HttpStatusCode.InternalServerError)
+                        }.AsArray()
+                    : new Error(HttpStatusCode.InternalServerError)
                         {
                             Title = "An unhandled error occurred while processing this request.",
                             Detail = exception.Message
-                        }
-                    };
+                        }.AsArray();
 
             foreach (var error in errors)
             {

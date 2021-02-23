@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -37,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
+            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allJoins, allTags);
         }
 

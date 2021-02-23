@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -23,7 +24,7 @@ namespace UnitTests.ResourceHooks.Executor
             todo.Assignee = person2;
             var person3 = new Person { StakeHolderTodoItem = todo };
             todo.StakeHolders = new HashSet<Person> { person3 };
-            var todoList = new List<TodoItem> { todo };
+            var todoList = todo.AsList();
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
@@ -42,8 +43,8 @@ namespace UnitTests.ResourceHooks.Executor
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodo  = todo;
-            todo.ChildTodoItems = new List<TodoItem> { todo };
-            var todoList = new List<TodoItem> { todo };
+            todo.ChildTodoItems = todo.AsList();
+            var todoList = todo.AsList();
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);
@@ -61,13 +62,13 @@ namespace UnitTests.ResourceHooks.Executor
             var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
             var rootTodo = new TodoItem { Id = 1 };
             var child = new TodoItem { ParentTodo  = rootTodo, Id = 2 };
-            rootTodo.ChildTodoItems = new List<TodoItem> { child };
+            rootTodo.ChildTodoItems = child.AsList();
             var grandChild = new TodoItem { ParentTodo  = child, Id = 3 };
-            child.ChildTodoItems = new List<TodoItem> { grandChild };
+            child.ChildTodoItems = grandChild.AsList();
             var greatGrandChild = new TodoItem { ParentTodo  = grandChild, Id = 4 };
-            grandChild.ChildTodoItems = new List<TodoItem> { greatGrandChild };
-            greatGrandChild.ChildTodoItems = new List<TodoItem> { rootTodo };
-            var todoList = new List<TodoItem> { rootTodo };
+            grandChild.ChildTodoItems = greatGrandChild.AsList();
+            greatGrandChild.ChildTodoItems = rootTodo.AsList();
+            var todoList = rootTodo.AsList();
 
             // Act
             hookExecutor.OnReturn(todoList, ResourcePipeline.Post);

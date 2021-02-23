@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks
             var ufMock = new Mock<ITargetedFields>();
 
             var constraintsMock = new Mock<IEnumerable<IQueryConstraintProvider>>();
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(new IQueryConstraintProvider[0]).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
 
             var optionsMock = new JsonApiOptions { LoadDatabaseValues = false };
             return (ufMock, constraintsMock, pfMock, optionsMock);
@@ -137,7 +137,7 @@ namespace UnitTests.ResourceHooks
                     .Returns(enableDbValuesHooks);
             }
             mock.Setup(discovery => discovery.DatabaseValuesEnabledHooks)
-                .Returns(new[] { ResourceHook.BeforeImplicitUpdateRelationship }.Concat(enableDbValuesHooks).ToArray());
+                .Returns(ResourceHook.BeforeImplicitUpdateRelationship.AsEnumerable().Concat(enableDbValuesHooks).ToArray());
 
             return mock.Object;
         }
@@ -246,7 +246,7 @@ namespace UnitTests.ResourceHooks
             var targetedFields = new TargetedFields();
 
             return new EntityFrameworkCoreRepository<TModel, int>(targetedFields, resolver, resourceGraph, resourceFactory,
-                new List<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
+                Enumerable.Empty<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
         private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
@@ -258,7 +258,7 @@ namespace UnitTests.ResourceHooks
 
         private void ResolveInverseRelationships(AppDbContext context)
         {
-            var dbContextResolvers = new[] {new DbContextResolver<AppDbContext>(context)};
+            var dbContextResolvers = new DbContextResolver<AppDbContext>(context).AsEnumerable();
             var inverseRelationships = new InverseNavigationResolver(ResourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
@@ -314,7 +314,7 @@ namespace UnitTests.ResourceHooks
             mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
-            return new List<IQueryConstraintProvider> {includeConstraintProvider};
+            return includeConstraintProvider.AsEnumerable();
         }
 
     }

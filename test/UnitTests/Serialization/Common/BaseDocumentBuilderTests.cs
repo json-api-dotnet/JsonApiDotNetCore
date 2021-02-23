@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -66,7 +67,7 @@ namespace UnitTests.Serialization.Common
         public void ResourceToDocument_ResourceList_CanBuild()
         {
             // Arrange
-            var resources = new List<IIdentifiable> { new DummyResource(), new DummyResource() };
+            var resources = ArrayFactory.Create(new DummyResource(), new DummyResource());
 
             // Act
             var document = _builder.Build(resources);

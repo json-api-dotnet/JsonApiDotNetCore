@@ -12,7 +12,6 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using TestBuildingBlocks;

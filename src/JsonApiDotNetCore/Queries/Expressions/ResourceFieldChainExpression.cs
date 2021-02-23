@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             ArgumentGuard.NotNull(field, nameof(field));
 
-            Fields = new[] {field};
+            Fields = field.AsArray();
         }
 
         public ResourceFieldChainExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)

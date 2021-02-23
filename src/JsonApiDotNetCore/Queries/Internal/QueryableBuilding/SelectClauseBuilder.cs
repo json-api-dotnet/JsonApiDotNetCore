@@ -187,10 +187,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 Type enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
                 Type typedCollection = TypeHelper.ToConcreteCollectionType(collectionProperty.PropertyType);
 
-                ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(new[]
-                {
-                    enumerableOfElementType
-                });
+                ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(enumerableOfElementType.AsArray());
 
                 if (typedCollectionConstructor == null)
                 {
@@ -213,19 +210,13 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static Expression CopyCollectionExtensionMethodCall(Expression source, string operationName, Type elementType)
         {
-            return Expression.Call(typeof(Enumerable), operationName, new[]
-            {
-                elementType
-            }, source);
+            return Expression.Call(typeof(Enumerable), operationName, elementType.AsArray(), source);
         }
 
         private Expression SelectExtensionMethodCall(Expression source, Type elementType, Expression selectorBody)
         {
-            return Expression.Call(_extensionType, "Select", new[]
-            {
-                elementType,
-                elementType
-            }, source, selectorBody);
+            var typeArguments = ArrayFactory.Create(elementType, elementType);
+            return Expression.Call(_extensionType, "Select", typeArguments, source, selectorBody);
         }
 
         private sealed class PropertySelector

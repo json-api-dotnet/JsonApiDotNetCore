@@ -38,10 +38,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             SortElementExpression firstElement = ParseSortElement();
 
-            var elements = new List<SortElementExpression>
-            {
-                firstElement
-            };
+            var elements = firstElement.AsList();
 
             while (TokenStack.Any())
             {

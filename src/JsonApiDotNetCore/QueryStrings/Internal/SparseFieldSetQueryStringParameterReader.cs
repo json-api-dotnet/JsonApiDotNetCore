@@ -86,10 +86,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _sparseFieldTable.Any()
-                ? new[]
-                {
-                    new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable))
-                }
+                ? new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable)).AsArray()
                 : Array.Empty<ExpressionInScope>();
         }
     }

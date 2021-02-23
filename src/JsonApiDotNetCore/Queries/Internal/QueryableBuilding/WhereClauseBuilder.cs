@@ -41,10 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression WhereExtensionMethodCall(LambdaExpression predicate)
         {
-            return Expression.Call(_extensionType, "Where", new[]
-            {
-                LambdaScope.Parameter.Type
-            }, _source, predicate);
+            return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
         }
 
         public override Expression VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, Type argument)
@@ -63,10 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source)
         {
-            return Expression.Call(typeof(Enumerable), "Any", new[]
-            {
-                elementType
-            }, source);
+            return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
         }
 
         public override Expression VisitMatchText(MatchTextExpression expression, Type argument)
@@ -111,10 +105,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static Expression ContainsExtensionMethodCall(Expression collection, Expression value)
         {
-            return Expression.Call(typeof(Enumerable), "Contains", new[]
-            {
-                value.Type
-            }, collection, value);
+            return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
         }
 
         public override Expression VisitLogical(LogicalExpression expression, Type argument)

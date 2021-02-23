@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -52,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             return existingFilter == null
                 ? (FilterExpression) isNotDeleted
-                : new LogicalExpression(LogicalOperator.And, new[] {isNotDeleted, existingFilter});
+                : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotDeleted, existingFilter));
         }
 
         public override SortExpression OnApplySort(SortExpression existingSort)

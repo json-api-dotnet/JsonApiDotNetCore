@@ -39,10 +39,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             ResourceFieldChainExpression firstChain =
                 ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
 
-            var chains = new List<ResourceFieldChainExpression>
-            {
-                firstChain
-            };
+            var chains = firstChain.AsList();
 
             while (TokenStack.Any())
             {

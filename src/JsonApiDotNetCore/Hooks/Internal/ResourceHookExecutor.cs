@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
-            var calledContainers = new List<LeftType> { typeof(TResource) };
+            var calledContainers = typeof(TResource).AsList();
 
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
-                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueResources, pipeline });
+                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline));
                 nextNode.UpdateUnique(filteredUniqueSet);
                 nextNode.Reassign();
             });
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
-                CallHook(nextContainer, ResourceHook.AfterRead, new object[] { nextNode.UniqueResources, pipeline, true });
+                CallHook(nextContainer, ResourceHook.AfterRead, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline, true));
             });
         }
 
@@ -311,7 +311,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
 
                         var resourcesByRelationship = CreateRelationshipHelper(resourceType, currentResourcesGroupedInverse, dbValues);
-                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueResources), resourcesByRelationship, pipeline }).Cast<string>();
+                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, ArrayFactory.Create<object>(GetIds(uniqueResources), resourcesByRelationship, pipeline)).Cast<string>();
                         var updated = GetAllowedResources(uniqueResources, allowedIds);
                         node.UpdateUnique(updated);
                         node.Reassign();
@@ -392,7 +392,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
-            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline});
+            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, ArrayFactory.Create<object>(resourcesByRelationship, pipeline));
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.
             var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentResourcesGrouped));
-            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
+            CallHook(container, ResourceHook.AfterUpdateRelationship, ArrayFactory.Create<object>(resourcesByRelationship, pipeline));
         }
 
         /// <summary>

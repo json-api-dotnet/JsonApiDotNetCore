@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
-            var inputExpression = new SparseFieldSetExpression(new []{idAttribute});
+            var inputExpression = new SparseFieldSetExpression(idAttribute.AsArray());
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
             var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);

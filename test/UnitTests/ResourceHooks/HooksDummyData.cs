@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bogus;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
@@ -65,7 +66,7 @@ namespace UnitTests.ResourceHooks
         {
             var todoItem = TodoFaker.Generate();
             var person = PersonFaker.Generate();
-            var todoList = new List<TodoItem> { todoItem };
+            var todoList = todoItem.AsList();
             person.OneToOneTodoItem = todoItem;
             todoItem.OneToOnePerson = person;
             return todoList;
@@ -107,7 +108,7 @@ namespace UnitTests.ResourceHooks
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
 
-            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
+            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allJoins, allTags);
         }
 
@@ -135,7 +136,7 @@ namespace UnitTests.ResourceHooks
             }
 
             var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-            var articles = new List<Article> { articleTagsSubset, articleWithAllTags };
+            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allJoins, allTags);
         }
     }

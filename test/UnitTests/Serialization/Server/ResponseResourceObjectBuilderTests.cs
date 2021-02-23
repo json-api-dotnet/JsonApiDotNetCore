@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources.Annotations;
 using UnitTests.TestModels;
 using Xunit;
@@ -52,7 +53,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
-            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
+            var builder = GetResponseResourceObjectBuilder(inclusionChains: _relationshipsForBuild.AsEnumerable());
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
@@ -69,7 +70,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
-            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: DummyRelationshipLinks);
+            var builder = GetResponseResourceObjectBuilder(inclusionChains: _relationshipsForBuild.AsEnumerable(), relationshipLinks: DummyRelationshipLinks);
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);

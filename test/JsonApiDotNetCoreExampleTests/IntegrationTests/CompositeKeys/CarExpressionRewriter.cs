@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                         throw new NotSupportedException("Only equality comparisons are possible on Car IDs.");
                     }
 
-                    return RewriteFilterOnCarStringIds(leftChain, new[] {rightConstant.Value});
+                    return RewriteFilterOnCarStringIds(leftChain, rightConstant.Value.AsEnumerable());
                 }
             }
 

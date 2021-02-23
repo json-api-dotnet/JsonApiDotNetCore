@@ -203,7 +203,7 @@ namespace UnitTests.Serialization.Common
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        ["complexFields"] = new []
+                        ["complexFields"] = new[]
                         {
                             new Dictionary<string, object>
                             {

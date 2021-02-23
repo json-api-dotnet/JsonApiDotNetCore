@@ -53,10 +53,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression constant = CreateTupleAccessExpressionForConstant(value, typeof(int));
 
-            return Expression.Call(_extensionType, operationName, new[]
-            {
-                LambdaScope.Parameter.Type
-            }, source, constant);
+            return Expression.Call(_extensionType, operationName, LambdaScope.Parameter.Type.AsArray(), source, constant);
         }
     }
 }

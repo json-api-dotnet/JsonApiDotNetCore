@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using UnitTests.TestModels;
@@ -52,7 +52,7 @@ namespace UnitTests.Serialization.Server
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
-            string serialized = serializer.SerializeMany(new List<TestResource> { resource });
+            string serialized = serializer.SerializeMany(resource.AsArray());
 
             // Assert
             const string expectedFormatted = @"{
@@ -85,7 +85,7 @@ namespace UnitTests.Serialization.Server
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
+            var chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => r.AsEnumerable()).ToList();
             var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
 
             // Act
@@ -150,10 +150,10 @@ namespace UnitTests.Serialization.Server
             var chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
                 .Select(r =>
                 {
-                    var chain = new List<RelationshipAttribute> {r};
+                    var chain = r.AsList();
                     if (r.PublicName != "populatedToManies")
                     {
-                        return new List<RelationshipAttribute> {r};
+                        return chain;
                     }
 
                     chain.AddRange(ResourceGraph.GetRelationships<OneToManyDependent>());
@@ -246,6 +246,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var serializer = GetResponseSerializer<TestResource>();
+
             // Act
             string serialized = serializer.SerializeMany(new List<TestResource>());
 

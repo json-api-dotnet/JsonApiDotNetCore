@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         }
 
         public ErrorDocument(Error error)
-            : this(new[] {error})
+            : this(error.AsEnumerable())
         {
         }
 

@@ -187,7 +187,10 @@ namespace JsonApiDotNetCore.Configuration
 
         private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
-            var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2 ? new[] { resourceDescriptor.ResourceType, resourceDescriptor.IdType } : new[] { resourceDescriptor.ResourceType };
+            var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
+                ? ArrayFactory.Create(resourceDescriptor.ResourceType, resourceDescriptor.IdType)
+                : ArrayFactory.Create(resourceDescriptor.ResourceType);
+
             var result = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
             if (result != null)
             {

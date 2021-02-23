@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -769,7 +770,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             var existingCompany = _fakers.RecordCompany.Generate();
-            var trackIds = new[] {Guid.NewGuid(), Guid.NewGuid()};
+            var trackIds = ArrayFactory.Create(Guid.NewGuid(), Guid.NewGuid());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

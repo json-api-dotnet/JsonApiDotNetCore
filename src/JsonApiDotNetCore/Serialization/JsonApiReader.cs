@@ -185,7 +185,7 @@ namespace JsonApiDotNetCore.Serialization
                 return resourceCollection.Select(r => r.GetType()).Distinct();
             }
 
-            return model == null ? Array.Empty<Type>() : new[] { model.GetType() };
+            return model == null ? Enumerable.Empty<Type>() : model.GetType().AsEnumerable();
         }
 
         private void ValidateRequestIncludesId(object model, string body)
