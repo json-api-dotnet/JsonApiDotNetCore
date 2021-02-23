@@ -10,7 +10,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
     public sealed class HostingStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public HostingStartup(IConfiguration configuration) : base(configuration)
+        public HostingStartup(IConfiguration configuration)
+            : base(configuration)
         {
         }
 
