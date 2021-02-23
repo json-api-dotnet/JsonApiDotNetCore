@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -10,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
-    public sealed class EagerLoadingTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
+    public sealed class EagerLoadingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
         private readonly EagerLoadingFakers _fakers = new EagerLoadingFakers();
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_get_primary_resource_with_eager_loads()
         {
             // Arrange
-            var building = _fakers.Building.Generate();
+            Building building = _fakers.Building.Generate();
             building.Windows = _fakers.Window.Generate(4);
             building.PrimaryDoor = _fakers.Door.Generate();
             building.SecondaryDoor = _fakers.Door.Generate();
@@ -41,10 +41,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/buildings/" + building.StringId;
+            string route = "/buildings/" + building.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_get_primary_resource_with_nested_eager_loads()
         {
             // Arrange
-            var street = _fakers.Street.Generate();
+            Street street = _fakers.Street.Generate();
             street.Buildings = _fakers.Building.Generate(2);
 
             street.Buildings[0].Windows = _fakers.Window.Generate(2);
@@ -77,10 +77,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/streets/" + street.StringId;
+            string route = "/streets/" + street.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_get_primary_resource_with_fieldset()
         {
             // Arrange
-            var street = _fakers.Street.Generate();
+            Street street = _fakers.Street.Generate();
             street.Buildings = _fakers.Building.Generate(1);
             street.Buildings[0].Windows = _fakers.Window.Generate(3);
             street.Buildings[0].PrimaryDoor = _fakers.Door.Generate();
@@ -108,10 +108,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/streets/{street.StringId}?fields[streets]=windowTotalCount";
+            string route = $"/streets/{street.StringId}?fields[streets]=windowTotalCount";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_get_primary_resource_with_includes()
         {
             // Arrange
-            var state = _fakers.State.Generate();
+            State state = _fakers.State.Generate();
             state.Cities = _fakers.City.Generate(1);
             state.Cities[0].Streets = _fakers.Street.Generate(1);
             state.Cities[0].Streets[0].Buildings = _fakers.Building.Generate(1);
@@ -140,10 +140,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/states/{state.StringId}?include=cities.streets";
+            string route = $"/states/{state.StringId}?include=cities.streets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_get_secondary_resources_with_include_and_fieldsets()
         {
             // Arrange
-            var state = _fakers.State.Generate();
+            State state = _fakers.State.Generate();
             state.Cities = _fakers.City.Generate(1);
             state.Cities[0].Streets = _fakers.Street.Generate(1);
             state.Cities[0].Streets[0].Buildings = _fakers.Building.Generate(1);
@@ -183,10 +183,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/states/{state.StringId}/cities?include=streets&fields[cities]=name&fields[streets]=doorTotalCount,windowTotalCount";
+            string route = $"/states/{state.StringId}/cities?include=streets&fields[cities]=name&fields[streets]=doorTotalCount,windowTotalCount";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_create_resource()
         {
             // Arrange
-            var newBuilding = _fakers.Building.Generate();
+            Building newBuilding = _fakers.Building.Generate();
 
             var requestBody = new
             {
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             const string route = "/buildings";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -238,14 +238,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.SingleData.Attributes["primaryDoorColor"].Should().BeNull();
             responseDocument.SingleData.Attributes["secondaryDoorColor"].Should().BeNull();
 
-            var newBuildingId = int.Parse(responseDocument.SingleData.Id);
+            int newBuildingId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var buildingInDatabase = await dbContext.Buildings
+                Building buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
@@ -266,13 +266,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_update_resource()
         {
             // Arrange
-            var existingBuilding = _fakers.Building.Generate();
+            Building existingBuilding = _fakers.Building.Generate();
             existingBuilding.PrimaryDoor = _fakers.Door.Generate();
             existingBuilding.SecondaryDoor = _fakers.Door.Generate();
             existingBuilding.Windows = _fakers.Window.Generate(2);
 
-            var newBuildingNumber = _fakers.Building.Generate().Number;
-            var newPrimaryDoorColor = _fakers.Door.Generate().Color;
+            string newBuildingNumber = _fakers.Building.Generate().Number;
+            string newPrimaryDoorColor = _fakers.Door.Generate().Color;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -294,10 +294,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 }
             };
 
-            var route = "/buildings/" + existingBuilding.StringId;
+            string route = "/buildings/" + existingBuilding.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -309,7 +309,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var buildingInDatabase = await dbContext.Buildings
+                Building buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingBuilding = _fakers.Building.Generate();
+            Building existingBuilding = _fakers.Building.Generate();
             existingBuilding.PrimaryDoor = _fakers.Door.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -340,10 +340,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/buildings/" + existingBuilding.StringId;
+            string route = "/buildings/" + existingBuilding.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -352,7 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
+                Building buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
                 buildingInDatabase.Should().BeNull();
             });

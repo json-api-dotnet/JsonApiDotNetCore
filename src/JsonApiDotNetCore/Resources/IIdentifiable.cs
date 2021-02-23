@@ -1,8 +1,8 @@
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource.
-    /// Note that JsonApiDotNetCore also assumes that a property named 'Id' exists.
+    /// When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource. Note that JsonApiDotNetCore also assumes
+    /// that a property named 'Id' exists.
     /// </summary>
     public interface IIdentifiable
     {
@@ -20,7 +20,9 @@ namespace JsonApiDotNetCore.Resources
     /// <summary>
     /// When implemented by a class, indicates to JsonApiDotNetCore that the class represents a JSON:API resource.
     /// </summary>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier type.
+    /// </typeparam>
     public interface IIdentifiable<TId> : IIdentifiable
     {
         /// <summary>

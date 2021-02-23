@@ -13,8 +13,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
         internal bool HasExplicitCapabilities => _capabilities != null;
 
         /// <summary>
-        /// The set of capabilities that are allowed to be performed on this attribute.
-        /// When not explicitly assigned, the configured default set of capabilities is used.
+        /// The set of capabilities that are allowed to be performed on this attribute. When not explicitly assigned, the configured default set of capabilities
+        /// is used.
         /// </summary>
         /// <example>
         /// <code>
@@ -32,8 +32,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         }
 
         /// <summary>
-        /// Get the value of the attribute for the given object.
-        /// Throws if the attribute does not belong to the provided object.
+        /// Get the value of the attribute for the given object. Throws if the attribute does not belong to the provided object.
         /// </summary>
         public object GetValue(object resource)
         {
@@ -56,11 +55,10 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
             if (Property.SetMethod == null)
             {
-                throw new InvalidOperationException(
-                    $"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
+                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
             }
 
-            var convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
+            object convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
             Property.SetValue(resource, convertedValue);
         }
 
@@ -76,7 +74,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 return false;
             }
 
-            var other = (AttrAttribute) obj;
+            var other = (AttrAttribute)obj;
 
             return Capabilities == other.Capabilities && base.Equals(other);
         }

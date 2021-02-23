@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public DbSet<SystemDirectory> Directories { get; set; }
         public DbSet<SystemFile> Files { get; set; }
 
-        public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options) : base(options)
+        public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options)
+            : base(options)
         {
         }
 

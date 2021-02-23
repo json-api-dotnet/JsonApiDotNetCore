@@ -31,8 +31,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Fields = fields;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor,
-            TArgument argument)
+        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
             return visitor.VisitResourceFieldChain(this, argument);
         }
@@ -54,7 +53,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (ResourceFieldChainExpression) obj;
+            var other = (ResourceFieldChainExpression)obj;
 
             return Fields.SequenceEqual(other.Fields);
         }
@@ -63,7 +62,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var field in Fields)
+            foreach (ResourceFieldAttribute field in Fields)
             {
                 hashCode.Add(field);
             }

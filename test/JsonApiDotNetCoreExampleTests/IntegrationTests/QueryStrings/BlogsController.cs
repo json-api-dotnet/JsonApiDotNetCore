@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
     public sealed class BlogsController : JsonApiController<Blog>
     {
-        public BlogsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Blog> resourceService)
+        public BlogsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Blog> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

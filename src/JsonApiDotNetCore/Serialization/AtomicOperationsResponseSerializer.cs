@@ -4,13 +4,14 @@ using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Server serializer implementation of <see cref="BaseSerializer"/> for atomic:operations responses.
+    /// Server serializer implementation of <see cref="BaseSerializer" /> for atomic:operations responses.
     /// </summary>
     public sealed class AtomicOperationsResponseSerializer : BaseSerializer, IJsonApiSerializer
     {
@@ -23,9 +24,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
-        public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder,
-            IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IFieldsToSerialize fieldsToSerialize,
-            IJsonApiRequest request, IJsonApiOptions options)
+        public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
+            IFieldsToSerialize fieldsToSerialize, IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
@@ -77,9 +77,9 @@ namespace JsonApiDotNetCore.Serialization
                 _request.CopyFrom(operation.Request);
                 _fieldsToSerialize.ResetCache();
 
-                var resourceType = operation.Resource.GetType();
-                var attributes = _fieldsToSerialize.GetAttributes(resourceType);
-                var relationships = _fieldsToSerialize.GetRelationships(resourceType);
+                Type resourceType = operation.Resource.GetType();
+                IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(resourceType);
+                IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(resourceType);
 
                 resourceObject = ResourceObjectBuilder.Build(operation.Resource, attributes, relationships);
             }
@@ -97,7 +97,10 @@ namespace JsonApiDotNetCore.Serialization
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer => { serializer.ApplyErrorSettings(); });
+            return SerializeObject(errorDocument, _options.SerializerSettings, serializer =>
+            {
+                serializer.ApplyErrorSettings();
+            });
         }
     }
 }

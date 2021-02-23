@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Configuration;
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Represents a pagination, produced from <see cref="PaginationQueryStringValueExpression"/>.
+    /// Represents a pagination, produced from <see cref="PaginationQueryStringValueExpression" />.
     /// </summary>
     public class PaginationExpression : QueryExpression
     {
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (PaginationExpression) obj;
+            var other = (PaginationExpression)obj;
 
             return PageNumber.Equals(other.PageNumber) && Equals(PageSize, other.PageSize);
         }

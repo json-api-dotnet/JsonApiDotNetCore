@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Implements the visitor design pattern that enables traversing a <see cref="QueryExpression"/> tree.
+    /// Implements the visitor design pattern that enables traversing a <see cref="QueryExpression" /> tree.
     /// </summary>
     public abstract class QueryExpressionVisitor<TArgument, TResult>
     {

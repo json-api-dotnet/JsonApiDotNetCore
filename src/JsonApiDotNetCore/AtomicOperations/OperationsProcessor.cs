@@ -22,9 +22,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly ITargetedFields _targetedFields;
         private readonly LocalIdValidator _localIdValidator;
 
-        public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor,
-            IOperationsTransactionFactory operationsTransactionFactory, ILocalIdTracker localIdTracker,
-            IResourceContextProvider resourceContextProvider, IJsonApiRequest request, ITargetedFields targetedFields)
+        public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor, IOperationsTransactionFactory operationsTransactionFactory,
+            ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(operationProcessorAccessor, nameof(operationProcessorAccessor));
             ArgumentGuard.NotNull(operationsTransactionFactory, nameof(operationsTransactionFactory));
@@ -43,8 +42,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public virtual async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations,
-            CancellationToken cancellationToken)
+        public virtual async Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operations, nameof(operations));
 
@@ -53,16 +51,17 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             var results = new List<OperationContainer>();
 
-            await using var transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
+            await using IOperationsTransaction transaction = await _operationsTransactionFactory.BeginTransactionAsync(cancellationToken);
+
             try
             {
-                foreach (var operation in operations)
+                foreach (OperationContainer operation in operations)
                 {
                     operation.SetTransactionId(transaction.TransactionId);
 
                     await transaction.BeforeProcessOperationAsync(cancellationToken);
 
-                    var result = await ProcessOperation(operation, cancellationToken);
+                    OperationContainer result = await ProcessOperation(operation, cancellationToken);
                     results.Add(result);
 
                     await transaction.AfterProcessOperationAsync(cancellationToken);
@@ -76,7 +75,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (JsonApiException exception)
             {
-                foreach (var error in exception.Errors)
+                foreach (Error error in exception.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{results.Count}]" + error.Source.Pointer;
                 }
@@ -93,15 +92,13 @@ namespace JsonApiDotNetCore.AtomicOperations
                     {
                         Pointer = $"/atomic:operations[{results.Count}]"
                     }
-
                 }, exception);
             }
 
             return results;
         }
 
-        protected virtual async Task<OperationContainer> ProcessOperation(OperationContainer operation,
-            CancellationToken cancellationToken)
+        protected virtual async Task<OperationContainer> ProcessOperation(OperationContainer operation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -126,7 +123,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                 AssignStringId(operation.Resource);
             }
 
-            foreach (var secondaryResource in operation.GetSecondaryResources())
+            foreach (IIdentifiable secondaryResource in operation.GetSecondaryResources())
             {
                 AssignStringId(secondaryResource);
             }
@@ -136,7 +133,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
                 _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
             }
         }
@@ -145,7 +142,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
                 resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
             }
         }

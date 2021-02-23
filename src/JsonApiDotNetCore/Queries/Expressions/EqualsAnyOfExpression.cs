@@ -14,8 +14,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public ResourceFieldChainExpression TargetAttribute { get; }
         public IReadOnlyCollection<LiteralConstantExpression> Constants { get; }
 
-        public EqualsAnyOfExpression(ResourceFieldChainExpression targetAttribute,
-            IReadOnlyCollection<LiteralConstantExpression> constants)
+        public EqualsAnyOfExpression(ResourceFieldChainExpression targetAttribute, IReadOnlyCollection<LiteralConstantExpression> constants)
         {
             ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
             ArgumentGuard.NotNull(constants, nameof(constants));
@@ -60,7 +59,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (EqualsAnyOfExpression) obj;
+            var other = (EqualsAnyOfExpression)obj;
 
             return TargetAttribute.Equals(other.TargetAttribute) && Constants.SequenceEqual(other.Constants);
         }
@@ -70,7 +69,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             var hashCode = new HashCode();
             hashCode.Add(TargetAttribute);
 
-            foreach (var constant in Constants)
+            foreach (LiteralConstantExpression constant in Constants)
             {
                 hashCode.Add(constant);
             }

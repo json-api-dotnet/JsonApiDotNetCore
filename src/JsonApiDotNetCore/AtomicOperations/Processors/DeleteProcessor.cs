@@ -19,12 +19,11 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
-            CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var id = (TId) operation.Resource.GetTypedId();
+            var id = (TId)operation.Resource.GetTypedId();
             await _service.DeleteAsync(id, cancellationToken);
 
             return null;

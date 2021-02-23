@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
@@ -34,20 +35,19 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             disableQueryStringAttribute ??= DisableQueryStringAttribute.Empty;
 
-            foreach (var (parameterName, parameterValue) in _queryStringAccessor.Query)
+            foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
             {
                 if (string.IsNullOrEmpty(parameterValue))
                 {
-                    throw new InvalidQueryStringParameterException(parameterName,
-                        "Missing query string parameter value.",
+                    throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
                         $"Missing value for '{parameterName}' query string parameter.");
                 }
 
-                var reader = _parameterReaders.FirstOrDefault(r => r.CanRead(parameterName));
+                IQueryStringParameterReader reader = _parameterReaders.FirstOrDefault(r => r.CanRead(parameterName));
+
                 if (reader != null)
                 {
-                    _logger.LogDebug(
-                        $"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
+                    _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
 
                     if (!reader.IsEnabled(disableQueryStringAttribute))
                     {

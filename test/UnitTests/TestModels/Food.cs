@@ -5,6 +5,7 @@ namespace UnitTests.TestModels
 {
     public class Food : Identifiable
     {
-        [Attr] public string Dish { get; set; }
+        [Attr]
+        public string Dish { get; set; }
     }
 }

@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
 using UnitTests.TestModels;
 using Xunit;
@@ -16,23 +19,23 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
             // Arrange
-            var (article, author, _, reviewer, _) = GetAuthorChainInstances();
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
-            var builder = GetBuilder();
+            (Article article, Person author, var _, Person reviewer, var _) = GetAuthorChainInstances();
+            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
             builder.IncludeRelationshipChain(authorChain, article);
-            var result = builder.Build();
+            IList<ResourceObject> result = builder.Build();
 
             // Assert
             Assert.Equal(6, result.Count);
 
-            var authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
-            var authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceObject authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
+            ResourceIdentifierObject authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
-            var reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
-            var reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceObject reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
+            ResourceIdentifierObject reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
 
@@ -40,18 +43,18 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DeeplyNestedCircularChainOfManyData_BuildsWithoutDuplicates()
         {
             // Arrange
-            var (article, author, _, _, _) = GetAuthorChainInstances();
-            var secondArticle = ArticleFaker.Generate();
+            (Article article, Person author, var _, var _, var _) = GetAuthorChainInstances();
+            Article secondArticle = ArticleFaker.Generate();
             secondArticle.Author = author;
-            var builder = GetBuilder();
+            IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(authorChain, secondArticle);
 
             // Assert
-            var result = builder.Build();
+            IList<ResourceObject> result = builder.Build();
             Assert.Equal(6, result.Count);
         }
 
@@ -59,27 +62,27 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_OverlappingDeeplyNestedCircularChains_CanBuild()
         {
             // Arrange
-            var authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
-            var (article, author, _, reviewer, reviewerFood) = GetAuthorChainInstances();
-            var sharedBlog = author.Blogs.First();
-            var sharedBlogAuthor = reviewer;
-            var (_, _, _, authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
-            var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
-            var builder = GetBuilder();
+            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            (Article article, Person author, var _, Person reviewer, Food reviewerFood) = GetAuthorChainInstances();
+            Blog sharedBlog = author.Blogs.First();
+            Person sharedBlogAuthor = reviewer;
+            (var _, var _, var _, Song authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
+            List<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
+            IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(reviewerChain, article);
-            var result = builder.Build();
+            IList<ResourceObject> result = builder.Build();
 
             // Assert
             Assert.Equal(10, result.Count);
-            var overlappingBlogResourceObject = result.Single(ro => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
+            ResourceObject overlappingBlogResourceObject = result.Single(ro => ro.Type == "blogs" && ro.Id == sharedBlog.StringId);
 
             Assert.Equal(2, overlappingBlogResourceObject.Relationships.Keys.Count);
-            var nonOverlappingBlogs = result.Where(ro => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
+            List<ResourceObject> nonOverlappingBlogs = result.Where(ro => ro.Type == "blogs" && ro.Id != sharedBlog.StringId).ToList();
 
-            foreach (var blog in nonOverlappingBlogs)
+            foreach (ResourceObject blog in nonOverlappingBlogs)
             {
                 Assert.Single(blog.Relationships.Keys);
             }
@@ -88,24 +91,47 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
         }
 
+        [Fact]
+        public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
+        {
+            Person person = PersonFaker.Generate();
+            List<Article> articles = ArticleFaker.Generate(5);
+            articles.ForEach(a => a.Author = person);
+            articles.ForEach(a => a.Reviewer = person);
+            IncludedResourceObjectBuilder builder = GetBuilder();
+            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author");
+            List<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer");
+
+            foreach (Article article in articles)
+            {
+                builder.IncludeRelationshipChain(authorChain, article);
+                builder.IncludeRelationshipChain(reviewerChain, article);
+            }
+
+            IList<ResourceObject> result = builder.Build();
+            Assert.Single(result);
+            Assert.Equal(person.Name, result[0].Attributes["name"]);
+            Assert.Equal(person.Id.ToString(), result[0].Id);
+        }
+
         private (Person, Song, Person, Song) GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
         {
-            var reviewer = PersonFaker.Generate();
+            Person reviewer = PersonFaker.Generate();
             article.Reviewer = reviewer;
 
-            var blogs = BlogFaker.Generate(1);
+            List<Blog> blogs = BlogFaker.Generate(1);
             blogs.Add(sharedBlog);
             reviewer.Blogs = blogs.ToHashSet();
 
             blogs[0].Author = reviewer;
-            var author = PersonFaker.Generate();
+            Person author = PersonFaker.Generate();
             blogs[1].Author = sharedBlogAuthor;
 
-            var authorSong = SongFaker.Generate();
+            Song authorSong = SongFaker.Generate();
             author.FavoriteSong = authorSong;
             sharedBlogAuthor.FavoriteSong = authorSong;
 
-            var reviewerSong = SongFaker.Generate();
+            Song reviewerSong = SongFaker.Generate();
             reviewer.FavoriteSong = reviewerSong;
 
             return (reviewer, reviewerSong, author, authorSong);
@@ -113,68 +139,50 @@ namespace UnitTests.Serialization.Server
 
         private (Article, Person, Food, Person, Food) GetAuthorChainInstances()
         {
-            var article = ArticleFaker.Generate();
-            var author = PersonFaker.Generate();
+            Article article = ArticleFaker.Generate();
+            Person author = PersonFaker.Generate();
             article.Author = author;
 
-            var blogs = BlogFaker.Generate(2);
+            List<Blog> blogs = BlogFaker.Generate(2);
             author.Blogs = blogs.ToHashSet();
 
             blogs[0].Reviewer = author;
-            var reviewer = PersonFaker.Generate();
+            Person reviewer = PersonFaker.Generate();
             blogs[1].Reviewer = reviewer;
 
-            var authorFood = FoodFaker.Generate();
+            Food authorFood = FoodFaker.Generate();
             author.FavoriteFood = authorFood;
-            var reviewerFood = FoodFaker.Generate();
+            Food reviewerFood = FoodFaker.Generate();
             reviewer.FavoriteFood = reviewerFood;
 
             return (article, author, authorFood, reviewer, reviewerFood);
         }
 
-        [Fact]
-        public void BuildIncluded_DuplicateChildrenMultipleChains_OnceInOutput()
-        {
-            var person = PersonFaker.Generate();
-            var articles = ArticleFaker.Generate(5);
-            articles.ForEach(a => a.Author = person);
-            articles.ForEach(a => a.Reviewer = person);
-            var builder = GetBuilder();
-            var authorChain = GetIncludedRelationshipsChain("author");
-            var reviewerChain = GetIncludedRelationshipsChain("reviewer");
-            foreach (var article in articles)
-            {
-                builder.IncludeRelationshipChain(authorChain, article);
-                builder.IncludeRelationshipChain(reviewerChain, article);
-            }
-
-            var result = builder.Build();
-            Assert.Single(result);
-            Assert.Equal(person.Name, result[0].Attributes["name"]);
-            Assert.Equal(person.Id.ToString(), result[0].Id);
-        }
-
         private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = ResourceGraph.GetResourceContext<Article>();
-            var splitPath = chain.Split('.');
-            foreach (var requestedRelationship in splitPath)
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext<Article>();
+            string[] splitPath = chain.Split('.');
+
+            foreach (string requestedRelationship in splitPath)
             {
-                var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
+                RelationshipAttribute relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
+
             return parsedChain;
         }
 
         private IncludedResourceObjectBuilder GetBuilder()
         {
-            var fields = GetSerializableFields();
-            var links = GetLinkBuilder();
+            IFieldsToSerialize fields = GetSerializableFields();
+            ILinkBuilder links = GetLinkBuilder();
 
-            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
-            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor, GetSerializerSettingsProvider());
+            IResourceDefinitionAccessor accessor = new Mock<IResourceDefinitionAccessor>().Object;
+
+            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor,
+                GetSerializerSettingsProvider());
         }
     }
 }

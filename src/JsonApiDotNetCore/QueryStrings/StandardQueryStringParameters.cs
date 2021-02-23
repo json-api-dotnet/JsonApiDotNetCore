@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers.Annotations;
 namespace JsonApiDotNetCore.QueryStrings
 {
     /// <summary>
-    /// Lists query string parameters used by <see cref="DisableQueryStringAttribute"/>.
+    /// Lists query string parameters used by <see cref="DisableQueryStringAttribute" />.
     /// </summary>
     [Flags]
     public enum StandardQueryStringParameters

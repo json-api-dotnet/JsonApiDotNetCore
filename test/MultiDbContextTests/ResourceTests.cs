@@ -26,7 +26,7 @@ namespace MultiDbContextTests
             const string route = "/resourceAs";
 
             // Act
-            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -42,7 +42,7 @@ namespace MultiDbContextTests
             const string route = "/resourceBs";
 
             // Act
-            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

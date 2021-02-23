@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
@@ -14,8 +16,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
-    public sealed class AtomicQueryStringTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicQueryStringTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
 
@@ -30,11 +31,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             {
                 services.AddControllersFromExampleProject();
 
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = FrozenTime});
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock
+                {
+                    UtcNow = FrozenTime
+                });
+
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowQueryStringOverrideForSerializerDefaultValueHandling = true;
             options.AllowQueryStringOverrideForSerializerNullValueHandling = true;
         }
@@ -64,14 +69,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?include=recordCompanies";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
@@ -103,14 +108,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?filter=equals(id,'1')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
@@ -142,14 +147,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?sort=-id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
@@ -181,14 +186,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?page[number]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
@@ -220,14 +225,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?page[size]=1";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
@@ -259,14 +264,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?fields[recordCompanies]=id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
@@ -277,7 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Can_use_Queryable_handler_on_resource_endpoint()
         {
             // Arrange
-            var musicTracks = _fakers.MusicTrack.Generate(3);
+            List<MusicTrack> musicTracks = _fakers.MusicTrack.Generate(3);
             musicTracks[0].ReleasedAt = FrozenTime.AddMonths(5);
             musicTracks[1].ReleasedAt = FrozenTime.AddMonths(-5);
             musicTracks[2].ReleasedAt = FrozenTime.AddMonths(-1);
@@ -292,7 +297,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/musicTracks?isRecentlyReleased=true";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -305,7 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_use_Queryable_handler_on_operations_endpoint()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             var requestBody = new
             {
@@ -329,18 +334,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?isRecentlyReleased=true";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Unknown query string parameter.");
+
             error.Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. " +
                 "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
+
             error.Source.Parameter.Should().Be("isRecentlyReleased");
         }
 
@@ -348,8 +355,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Can_use_defaults_on_operations_endpoint()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            decimal? newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
 
             var requestBody = new
             {
@@ -374,7 +381,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?defaults=false";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -391,8 +399,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Can_use_nulls_on_operations_endpoint()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            decimal? newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
 
             var requestBody = new
             {
@@ -417,7 +425,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             const string route = "/operations?nulls=false";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

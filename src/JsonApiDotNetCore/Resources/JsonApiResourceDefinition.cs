@@ -5,18 +5,21 @@ using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource.
-    /// The goal here is to reduce the need for overriding the service and repository layers.
+    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
+    /// for overriding the service and repository layers.
     /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
+    /// <typeparam name="TResource">
+    /// The resource type.
+    /// </typeparam>
     public class JsonApiResourceDefinition<TResource> : JsonApiResourceDefinition<TResource, int>, IResourceDefinition<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public JsonApiResourceDefinition(IResourceGraph resourceGraph) 
+        public JsonApiResourceDefinition(IResourceGraph resourceGraph)
             : base(resourceGraph)
         {
         }
@@ -54,7 +57,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// Creates a <see cref="SortExpression"/> from a lambda expression.
+        /// Creates a <see cref="SortExpression" /> from a lambda expression.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -69,12 +72,12 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
 
-            List<SortElementExpression> sortElements = new List<SortElementExpression>();
+            var sortElements = new List<SortElementExpression>();
 
-            foreach (var (keySelector, sortDirection) in keySelectors)
+            foreach ((Expression<Func<TResource, dynamic>> keySelector, ListSortDirection sortDirection) in keySelectors)
             {
                 bool isAscending = sortDirection == ListSortDirection.Ascending;
-                var attribute = ResourceGraph.GetAttributes(keySelector).Single();
+                AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
 
                 var sortElement = new SortElementExpression(new ResourceFieldChainExpression(attribute), isAscending);
                 sortElements.Add(sortElement);
@@ -108,8 +111,8 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <summary>
-        /// This is an alias type intended to simplify the implementation's method signature.
-        /// See <see cref="CreateSortExpressionFromLambda"/> for usage details.
+        /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
+        /// details.
         /// </summary>
         public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>> KeySelector, ListSortDirection SortDirection)>
         {

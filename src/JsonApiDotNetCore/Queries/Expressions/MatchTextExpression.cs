@@ -13,8 +13,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public LiteralConstantExpression TextValue { get; }
         public TextMatchKind MatchKind { get; }
 
-        public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue,
-            TextMatchKind matchKind)
+        public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue, TextMatchKind matchKind)
         {
             ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
             ArgumentGuard.NotNull(textValue, nameof(textValue));
@@ -53,7 +52,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (MatchTextExpression) obj;
+            var other = (MatchTextExpression)obj;
 
             return TargetAttribute.Equals(other.TargetAttribute) && TextValue.Equals(other.TextValue) && MatchKind == other.MatchKind;
         }

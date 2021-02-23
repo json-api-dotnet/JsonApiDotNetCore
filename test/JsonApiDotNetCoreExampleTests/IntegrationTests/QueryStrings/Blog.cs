@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
     public sealed class Blog : Identifiable
     {
-        [Attr] 
+        [Attr]
         public string Title { get; set; }
 
         [Attr]

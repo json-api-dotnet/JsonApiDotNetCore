@@ -11,7 +11,8 @@ namespace JsonApiDotNetCoreExample.Definitions
 {
     public class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
-        public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public PassportHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 

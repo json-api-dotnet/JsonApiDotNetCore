@@ -7,7 +7,8 @@ namespace JsonApiDotNetCore.Services
     /// <inheritdoc />
     public interface IGetRelationshipService<TResource> : IGetRelationshipService<TResource, int>
         where TResource : class, IIdentifiable<int>
-    { }
+    {
+    }
 
     /// <summary />
     public interface IGetRelationshipService<TResource, in TId>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
@@ -36,9 +37,9 @@ namespace JsonApiDotNetCore.Middleware
 
         private void LogException(Exception exception)
         {
-            var level = GetLogLevel(exception);
-            var message = GetLogMessage(exception);
-            
+            LogLevel level = GetLogLevel(exception);
+            string message = GetLogMessage(exception);
+
             _logger.Log(level, exception, message);
         }
 
@@ -70,20 +71,17 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
-            var errors = exception is JsonApiException jsonApiException
-                ? jsonApiException.Errors
-                : exception is OperationCanceledException
-                    ? new Error((HttpStatusCode) 499)
-                        {
-                            Title = "Request execution was canceled."
-                        }.AsArray()
-                    : new Error(HttpStatusCode.InternalServerError)
-                        {
-                            Title = "An unhandled error occurred while processing this request.",
-                            Detail = exception.Message
-                        }.AsArray();
+            IReadOnlyList<Error> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
+                exception is OperationCanceledException ? new Error((HttpStatusCode)499)
+                {
+                    Title = "Request execution was canceled."
+                }.AsArray() : new Error(HttpStatusCode.InternalServerError)
+                {
+                    Title = "An unhandled error occurred while processing this request.",
+                    Detail = exception.Message
+                }.AsArray();
 
-            foreach (var error in errors)
+            foreach (Error error in errors)
             {
                 ApplyOptions(error, exception);
             }

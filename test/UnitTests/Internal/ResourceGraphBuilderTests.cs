@@ -40,7 +40,9 @@ namespace UnitTests.Internal
             // Assert
             Assert.Single(loggerFactory.Logger.Messages);
             Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages.Single().LogLevel);
-            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestContext' does not implement 'IIdentifiable'.", loggerFactory.Logger.Messages.Single().Text);
+
+            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestContext' does not implement 'IIdentifiable'.",
+                loggerFactory.Logger.Messages.Single().Text);
         }
 
         [Fact]
@@ -54,7 +56,7 @@ namespace UnitTests.Internal
 
             // Act
             var proxy = proxyGenerator.CreateClassProxy<Bar>();
-            var result = resourceGraph.GetResourceContext(proxy.GetType());
+            ResourceContext result = resourceGraph.GetResourceContext(proxy.GetType());
 
             // Assert
             Assert.Equal(typeof(Bar), result.ResourceType);
@@ -69,21 +71,23 @@ namespace UnitTests.Internal
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Act
-            var result = resourceGraph.GetResourceContext(typeof(Bar));
+            ResourceContext result = resourceGraph.GetResourceContext(typeof(Bar));
 
             // Assert
             Assert.Equal(typeof(Bar), result.ResourceType);
         }
 
-        private class Foo { }
+        private class Foo
+        {
+        }
 
         private class TestContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }
         }
 
-        public class Bar : Identifiable { }
-
+        public class Bar : Identifiable
+        {
+        }
     }
-
 }

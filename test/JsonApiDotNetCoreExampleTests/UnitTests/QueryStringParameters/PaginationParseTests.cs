@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
@@ -30,8 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
-            var canParse = _reader.CanRead(parameterName);
-            
+            bool canParse = _reader.CanRead(parameterName);
+
             // Assert
             canParse.Should().Be(expectCanParse);
         }
@@ -44,8 +47,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
-            
+            bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+
             // Assert
             isEnabled.Should().Be(expectIsEnabled);
         }
@@ -73,7 +76,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read("page[number]", parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be("page[number]");
             exception.Errors.Should().HaveCount(1);
@@ -106,7 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read("page[size]", parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be("page[size]");
             exception.Errors.Should().HaveCount(1);
@@ -125,7 +128,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("4", "posts:5", "|posts", "Page number: 4, size: 25|Page number: 1, size: 5")]
         [InlineData("3,owner.posts:4", "20,owner.posts:10", "|owner.posts", "Page number: 3, size: 20|Page number: 4, size: 10")]
         [InlineData("posts:4,3", "posts:10,20", "|posts", "Page number: 3, size: 20|Page number: 4, size: 10")]
-        [InlineData("posts:4,posts.comments:5,3", "posts:10,posts.comments:15,20", "|posts|posts.comments", "Page number: 3, size: 20|Page number: 4, size: 10|Page number: 5, size: 15")]
+        [InlineData("posts:4,posts.comments:5,3", "posts:10,posts.comments:15,20", "|posts|posts.comments",
+            "Page number: 3, size: 20|Page number: 4, size: 10|Page number: 5, size: 15")]
         public void Reader_Read_Pagination_Succeeds(string pageNumber, string pageSize, string scopeTreesExpected, string valueTreesExpected)
         {
             // Act
@@ -139,17 +143,17 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
                 _reader.Read("page[size]", pageSize);
             }
 
-            var constraints = _reader.GetConstraints();
+            IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            var scopeTreesExpectedArray = scopeTreesExpected.Split("|");
-            var scopeTrees = constraints.Select(x => x.Scope).ToArray();
+            string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
+            ResourceFieldChainExpression[] scopeTrees = constraints.Select(x => x.Scope).ToArray();
 
             scopeTrees.Should().HaveSameCount(scopeTreesExpectedArray);
             scopeTrees.Select(tree => tree?.ToString() ?? "").Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());
 
-            var valueTreesExpectedArray = valueTreesExpected.Split("|");
-            var valueTrees = constraints.Select(x => x.Expression).ToArray();
+            string[] valueTreesExpectedArray = valueTreesExpected.Split("|");
+            QueryExpression[] valueTrees = constraints.Select(x => x.Expression).ToArray();
 
             valueTrees.Should().HaveSameCount(valueTreesExpectedArray);
             valueTrees.Select(tree => tree.ToString()).Should().BeEquivalentTo(valueTreesExpectedArray, options => options.WithStrictOrdering());

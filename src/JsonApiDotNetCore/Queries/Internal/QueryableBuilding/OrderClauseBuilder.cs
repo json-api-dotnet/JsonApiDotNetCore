@@ -8,7 +8,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Transforms <see cref="SortExpression"/> into <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource,TKey}})"/> calls.
+    /// Transforms <see cref="SortExpression" /> into
+    /// <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,TKey}})" /> calls.
     /// </summary>
     public class OrderClauseBuilder : QueryClauseBuilder<Expression>
     {
@@ -46,9 +47,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitSortElement(SortElementExpression expression, Expression previousExpression)
         {
-            Expression body = expression.Count != null
-                ? Visit(expression.Count, null)
-                : Visit(expression.TargetAttribute, null);
+            Expression body = expression.Count != null ? Visit(expression.Count, null) : Visit(expression.TargetAttribute, null);
 
             LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);
 
@@ -67,16 +66,15 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return isAscending ? "OrderBy" : "OrderByDescending";
         }
 
-        private Expression ExtensionMethodCall(Expression source, string operationName, Type keyType,
-            LambdaExpression keySelector)
+        private Expression ExtensionMethodCall(Expression source, string operationName, Type keyType, LambdaExpression keySelector)
         {
-            var typeArguments = ArrayFactory.Create(LambdaScope.Parameter.Type, keyType);
+            Type[] typeArguments = ArrayFactory.Create(LambdaScope.Parameter.Type, keyType);
             return Expression.Call(_extensionType, operationName, typeArguments, source, keySelector);
         }
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(GetPropertyName).ToArray();
+            string[] components = chain.Select(GetPropertyName).ToArray();
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }
 

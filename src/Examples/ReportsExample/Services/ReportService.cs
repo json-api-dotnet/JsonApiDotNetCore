@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Services;
@@ -21,7 +20,7 @@ namespace ReportsExample.Services
         {
             _logger.LogInformation("GetAsync");
 
-            var reports = GetReports();
+            IReadOnlyCollection<Report> reports = GetReports();
 
             return Task.FromResult(reports);
         }

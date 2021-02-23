@@ -5,6 +5,7 @@ namespace UnitTests.TestModels
 {
     public sealed class OneToManyPrincipal : IdentifiableWithAttribute
     {
-        [HasMany] public ISet<OneToManyDependent> Dependents { get; set; }
+        [HasMany]
+        public ISet<OneToManyDependent> Dependents { get; set; }
     }
 }

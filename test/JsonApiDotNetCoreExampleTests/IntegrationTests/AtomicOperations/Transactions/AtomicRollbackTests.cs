@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -9,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transactions
 {
-    public sealed class AtomicRollbackTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicRollbackTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
@@ -26,9 +28,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
         public async Task Can_rollback_on_error()
         {
             // Arrange
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
-            var newBornAt = _fakers.Performer.Generate().BornAt;
-            var newTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            DateTimeOffset newBornAt = _fakers.Performer.Generate().BornAt;
+            string newTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -84,14 +86,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be("Related resource of type 'performers' with ID '99999999' in relationship 'performers' does not exist.");
@@ -99,10 +101,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
                 performersInDatabase.Should().BeEmpty();
 
-                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().BeEmpty();
             });
         }

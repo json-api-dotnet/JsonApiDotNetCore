@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -10,7 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class PaginationWithoutTotalCountTests 
+    public sealed class PaginationWithoutTotalCountTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private const string HostPrefix = "http://localhost";
@@ -23,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
 
             options.IncludeTotalResourceCount = false;
             options.DefaultPageSize = new PageSize(DefaultPageSize);
@@ -34,13 +36,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Hides_pagination_links_when_unconstrained_page_size()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
             const string route = "/blogPosts?foo=bar";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -57,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_size_is_specified_in_query_string_with_no_data()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DefaultPageSize = null;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -69,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogPosts?page[size]=8&foo=bar";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -95,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogPosts?page[number]=2&foo=bar";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -112,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_partially_filled_page()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(12);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(12);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -124,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogPosts?foo=bar&page[number]=3";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -143,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -155,7 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogPosts?page[number]=3&foo=bar";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -174,7 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Renders_pagination_links_when_page_number_is_specified_in_query_string_with_full_page_on_secondary_endpoint()
         {
             // Arrange
-            var account = _fakers.WebAccount.Generate();
+            WebAccount account = _fakers.WebAccount.Generate();
             account.Posts = _fakers.BlogPost.Generate(DefaultPageSize * 3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -183,10 +185,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/webAccounts/{account.StringId}/posts?page[number]=3&foo=bar";
+            string route = $"/webAccounts/{account.StringId}/posts?page[number]=3&foo=bar";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

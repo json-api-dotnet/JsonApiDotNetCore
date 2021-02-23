@@ -13,10 +13,10 @@ namespace UnitTests.Internal
         {
             // Arrange
             var dto = new DateTimeOffset(new DateTime(2002, 2, 2), TimeSpan.FromHours(4));
-            var formattedString = dto.ToString("O");
+            string formattedString = dto.ToString("O");
 
             // Act
-            var result = TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
+            object result = TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
             Assert.Equal(dto, result);
@@ -40,7 +40,7 @@ namespace UnitTests.Internal
             const string formattedString = "1";
 
             // Act
-            var result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
+            object result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
 
             // Assert
             Assert.Equal(TestEnum.Test, result);
@@ -55,10 +55,10 @@ namespace UnitTests.Internal
                 Property = 1
             };
 
-            var type = val.GetType();
+            Type type = val.GetType();
 
             // Act
-            var result = TypeHelper.ConvertType(val, type);
+            object result = TypeHelper.ConvertType(val, type);
 
             // Assert
             Assert.Equal(val, result);
@@ -73,12 +73,12 @@ namespace UnitTests.Internal
                 Property = 1
             };
 
-            var baseType = typeof(BaseType);
-            var iType = typeof(IType);
+            Type baseType = typeof(BaseType);
+            Type iType = typeof(IType);
 
             // Act
-            var baseResult = TypeHelper.ConvertType(val, baseType);
-            var iResult = TypeHelper.ConvertType(val, iType);
+            object baseResult = TypeHelper.ConvertType(val, baseType);
+            object iResult = TypeHelper.ConvertType(val, iType);
 
             // Assert
             Assert.Equal(val, baseResult);
@@ -98,25 +98,25 @@ namespace UnitTests.Internal
                 { typeof(Guid), Guid.Empty }
             };
 
-            foreach (var t in data)
+            foreach (KeyValuePair<Type, object> t in data)
             {
                 // Act
-                var result = TypeHelper.ConvertType(string.Empty, t.Key);
+                object result = TypeHelper.ConvertType(string.Empty, t.Key);
 
                 // Assert
                 Assert.Equal(t.Value, result);
             }
         }
-        
+
         [Fact]
-        public void Can_Convert_TimeSpans() 
+        public void Can_Convert_TimeSpans()
         {
             //arrange
             TimeSpan timeSpan = TimeSpan.FromMinutes(45);
             string stringSpan = timeSpan.ToString();
 
             //act
-            var result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
+            object result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
 
             //assert
             Assert.Equal(timeSpan, result);
@@ -136,7 +136,7 @@ namespace UnitTests.Internal
         public void New_Creates_An_Instance_If_T_Implements_Interface()
         {
             // Arrange
-            var type = typeof(Model);
+            Type type = typeof(Model);
 
             // Act
             var instance = (IIdentifiable)TypeHelper.CreateInstance(type);
@@ -150,10 +150,10 @@ namespace UnitTests.Internal
         public void Implements_Returns_True_If_Type_Implements_Interface()
         {
             // Arrange
-            var type = typeof(Model);
+            Type type = typeof(Model);
 
             // Act
-            var result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
 
             // Assert
             Assert.True(result);
@@ -163,10 +163,10 @@ namespace UnitTests.Internal
         public void Implements_Returns_False_If_Type_DoesNot_Implement_Interface()
         {
             // Arrange
-            var type = typeof(string);
+            Type type = typeof(string);
 
             // Act
-            var result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
 
             // Assert
             Assert.False(result);
@@ -183,10 +183,12 @@ namespace UnitTests.Internal
         }
 
         private class BaseType : IType
-        { }
+        {
+        }
 
         private interface IType
-        { }
+        {
+        }
 
         private sealed class Model : IIdentifiable
         {

@@ -26,8 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         public DateTimeOffset ReleasedAt { get; set; }
 
         [HasOne]
-        public Lyric Lyric { get; set;}
-        
+        public Lyric Lyric { get; set; }
+
         [HasOne]
         public RecordCompany OwnedBy { get; set; }
 

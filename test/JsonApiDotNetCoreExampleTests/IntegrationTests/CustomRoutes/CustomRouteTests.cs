@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -9,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    public sealed class CustomRouteTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
+    public sealed class CustomRouteTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         public async Task Can_get_resource_at_custom_route()
         {
             // Arrange
-            var town = _fakers.Town.Generate();
+            Town town = _fakers.Town.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -34,10 +35,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/world-api/civilization/popular/towns/" + town.StringId;
+            string route = "/world-api/civilization/popular/towns/" + town.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -58,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         public async Task Can_get_resources_at_custom_action_method()
         {
             // Arrange
-            var town = _fakers.Town.Generate(7);
+            List<Town> town = _fakers.Town.Generate(7);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -70,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
             const string route = "/world-api/civilization/popular/towns/largest-5";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

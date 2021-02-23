@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
@@ -26,11 +27,10 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <inheritdoc />
         public async Task<IOperationsTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
         {
-            var dbContext = _dbContextResolver.GetContext();
+            DbContext dbContext = _dbContextResolver.GetContext();
 
-            var transaction = _options.TransactionIsolationLevel != null
-                ? await dbContext.Database.BeginTransactionAsync(_options.TransactionIsolationLevel.Value,
-                    cancellationToken)
+            IDbContextTransaction transaction = _options.TransactionIsolationLevel != null
+                ? await dbContext.Database.BeginTransactionAsync(_options.TransactionIsolationLevel.Value, cancellationToken)
                 : await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
             return new EntityFrameworkCoreTransaction(transaction, dbContext);

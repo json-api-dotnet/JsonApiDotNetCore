@@ -9,7 +9,10 @@ namespace JsonApiDotNetCoreExample.Definitions
 {
     public class TagHooksDefinition : ResourceHooksDefinition<Tag>
     {
-        public TagHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TagHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
         public override IEnumerable<Tag> BeforeCreate(IResourceHashSet<Tag> resources, ResourcePipeline pipeline)
         {

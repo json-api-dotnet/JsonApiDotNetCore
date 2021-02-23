@@ -21,11 +21,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         [NotMapped]
         public MeetingLocation Location
         {
-            get => new MeetingLocation
-            {
-                Latitude = Latitude,
-                Longitude = Longitude
-            };
+            get =>
+                new MeetingLocation
+                {
+                    Latitude = Latitude,
+                    Longitude = Longitude
+                };
             set
             {
                 Latitude = value?.Latitude ?? double.NaN;

@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExample.Startups
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
-            using (var scope = app.ApplicationServices.CreateScope())
+            using (IServiceScope scope = app.ApplicationServices.CreateScope())
             {
                 var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 appDbContext.Database.EnsureCreated();

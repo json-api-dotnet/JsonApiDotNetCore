@@ -3,6 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
@@ -33,7 +34,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             try
             {
-                foreach (var operation in operations)
+                foreach (OperationContainer operation in operations)
                 {
                     if (operation.Kind == OperationKind.CreateResource)
                     {
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                         AssertLocalIdIsAssigned(operation.Resource);
                     }
 
-                    foreach (var secondaryResource in operation.GetSecondaryResources())
+                    foreach (IIdentifiable secondaryResource in operation.GetSecondaryResources())
                     {
                         AssertLocalIdIsAssigned(secondaryResource);
                     }
@@ -56,11 +57,10 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                     operationIndex++;
                 }
-
             }
             catch (JsonApiException exception)
             {
-                foreach (var error in exception.Errors)
+                foreach (Error error in exception.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{operationIndex}]" + error.Source.Pointer;
                 }
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
                 _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
             }
         }
@@ -82,8 +82,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Resource.LocalId != null)
             {
-                var resourceContext =
-                    _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
 
                 _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, string.Empty);
             }
@@ -93,7 +92,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                var resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
                 _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
             }
         }

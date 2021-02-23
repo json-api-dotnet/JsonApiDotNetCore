@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -10,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalIds
 {
-    public sealed class AtomicLocalIdTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicLocalIdTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
@@ -27,8 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_resource_with_ToOne_relationship_using_local_ID()
         {
             // Arrange
-            var newCompany = _fakers.RecordCompany.Generate();
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            RecordCompany newCompany = _fakers.RecordCompany.Generate();
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string companyLocalId = "company-1";
 
@@ -79,7 +80,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -97,14 +99,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            var newCompanyId = short.Parse(responseDocument.Results[0].SingleData.Id);
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -119,8 +119,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_resource_with_OneToMany_relationship_using_local_ID()
         {
             // Arrange
-            var newPerformer = _fakers.Performer.Generate();
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            Performer newPerformer = _fakers.Performer.Generate();
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string performerLocalId = "performer-1";
 
@@ -174,7 +174,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -192,14 +193,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            var newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -214,8 +213,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_resource_with_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
 
             const string trackLocalId = "track-1";
 
@@ -268,7 +267,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -285,15 +285,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newPlaylistName);
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newPlaylistId = long.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var playlistInDatabase = await dbContext.Playlists
+                Playlist playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
@@ -354,14 +354,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Local ID cannot be both defined and used within the same operation.");
             error.Detail.Should().Be("Local ID 'company-1' cannot be both defined and used within the same operation.");
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Cannot_reassign_local_ID()
         {
             // Arrange
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
             const string playlistLocalId = "playlist-1";
 
             var requestBody = new
@@ -420,14 +420,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Another local ID with the same name is already defined at this point.");
             error.Detail.Should().Be("Another local ID with name 'playlist-1' is already defined at this point.");
@@ -438,8 +438,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_update_resource_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newTrackGenre = _fakers.MusicTrack.Generate().Genre;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newTrackGenre = _fakers.MusicTrack.Generate().Genre;
 
             const string trackLocalId = "track-1";
 
@@ -479,7 +479,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -494,11 +495,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[1].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
                 trackInDatabase.Genre.Should().Be(newTrackGenre);
@@ -509,9 +510,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_update_resource_with_relationships_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
-            var newCompanyName = _fakers.RecordCompany.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             const string trackLocalId = "track-1";
             const string performerLocalId = "performer-1";
@@ -597,7 +598,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -621,16 +623,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[3].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
-            var newCompanyId = short.Parse(responseDocument.Results[2].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[2].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var trackInDatabase = await dbContext.MusicTracks
+                MusicTrack trackInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Include(musicTrack => musicTrack.Performers)
                     .FirstWithIdAsync(newTrackId);
@@ -653,8 +655,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_ToOne_relationship_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newCompanyName = _fakers.RecordCompany.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             const string trackLocalId = "track-1";
             const string companyLocalId = "company-1";
@@ -710,7 +712,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -729,14 +732,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newCompanyId = short.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -750,8 +751,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_OneToMany_relationship_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName = _fakers.Performer.Generate().ArtistName;
 
             const string trackLocalId = "track-1";
             const string performerLocalId = "performer-1";
@@ -810,7 +811,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -829,14 +831,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -850,8 +850,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_create_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string playlistLocalId = "playlist-1";
             const string trackLocalId = "track-1";
@@ -910,7 +910,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -929,15 +930,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var playlistInDatabase = await dbContext.Playlists
+                Playlist playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
@@ -957,10 +958,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_replace_OneToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingPerformer = _fakers.Performer.Generate();
+            Performer existingPerformer = _fakers.Performer.Generate();
 
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName = _fakers.Performer.Generate().ArtistName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1039,7 +1040,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1058,14 +1060,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -1079,10 +1079,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_replace_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1161,7 +1161,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1180,15 +1181,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var playlistInDatabase = await dbContext.Playlists
+                Playlist playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
@@ -1208,10 +1209,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_add_to_OneToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingPerformer = _fakers.Performer.Generate();
+            Performer existingPerformer = _fakers.Performer.Generate();
 
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName = _fakers.Performer.Generate().ArtistName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1290,7 +1291,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1309,14 +1311,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[2].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            var newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -1334,10 +1334,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_add_to_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingTracks = _fakers.MusicTrack.Generate(2);
+            List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
 
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string playlistLocalId = "playlist-1";
             const string trackLocalId = "track-1";
@@ -1434,7 +1434,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1455,15 +1456,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[3].Data.Should().BeNull();
 
-            var newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            var newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var playlistInDatabase = await dbContext.Playlists
+                Playlist playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(newPlaylistId);
@@ -1484,11 +1485,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_remove_from_OneToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingPerformer = _fakers.Performer.Generate();
+            Performer existingPerformer = _fakers.Performer.Generate();
 
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            var newArtistName1 = _fakers.Performer.Generate().ArtistName;
-            var newArtistName2 = _fakers.Performer.Generate().ArtistName;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newArtistName1 = _fakers.Performer.Generate().ArtistName;
+            string newArtistName2 = _fakers.Performer.Generate().ArtistName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1596,7 +1597,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1620,13 +1622,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[3].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[2].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[2].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Performers)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Performers).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
@@ -1640,7 +1640,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_remove_from_ManyToMany_relationship_using_local_ID()
         {
             // Arrange
-            var existingPlaylist = _fakers.Playlist.Generate();
+            Playlist existingPlaylist = _fakers.Playlist.Generate();
+
             existingPlaylist.PlaylistMusicTracks = new[]
             {
                 new PlaylistMusicTrack
@@ -1653,7 +1654,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                 }
             };
 
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string trackLocalId = "track-1";
 
@@ -1740,7 +1741,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1763,7 +1765,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var playlistInDatabase = await dbContext.Playlists
+                Playlist playlistInDatabase = await dbContext.Playlists
                     .Include(playlist => playlist.PlaylistMusicTracks)
                     .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
                     .FirstWithIdAsync(existingPlaylist.Id);
@@ -1780,7 +1782,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Can_delete_resource_using_local_ID()
         {
             // Arrange
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string trackLocalId = "track-1";
 
@@ -1816,7 +1818,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -1830,11 +1833,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             responseDocument.Results[1].Data.Should().BeNull();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(newTrackId);
 
                 trackInDatabase.Should().BeNull();
             });
@@ -1872,14 +1875,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
@@ -1921,14 +1924,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
@@ -1939,7 +1942,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Cannot_consume_unassigned_local_ID_in_data_array()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1984,14 +1987,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
@@ -2040,14 +2043,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
@@ -2099,14 +2102,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
@@ -2158,14 +2161,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
@@ -2215,14 +2218,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
@@ -2275,14 +2278,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
@@ -2293,7 +2296,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Cannot_consume_local_ID_of_different_type_in_data_array()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
             const string companyLocalId = "company-1";
 
@@ -2349,14 +2352,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
@@ -2367,7 +2370,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         public async Task Cannot_consume_local_ID_of_different_type_in_relationship_data_element()
         {
             // Arrange
-            var newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
 
             const string playlistLocalId = "playlist-1";
 
@@ -2422,14 +2425,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
@@ -2492,14 +2495,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Type mismatch in local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");

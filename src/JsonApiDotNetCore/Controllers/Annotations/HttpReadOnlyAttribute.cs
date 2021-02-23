@@ -11,6 +11,11 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// ]]></example>
     public sealed class HttpReadOnlyAttribute : HttpRestrictAttribute
     {
-        protected override string[] Methods { get; } = { "POST", "PATCH", "DELETE" };
+        protected override string[] Methods { get; } =
+        {
+            "POST",
+            "PATCH",
+            "DELETE"
+        };
     }
 }

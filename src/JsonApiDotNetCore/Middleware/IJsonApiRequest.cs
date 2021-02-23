@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Middleware
         public EndpointKind Kind { get; }
 
         /// <summary>
-        /// The request URL prefix. This may be an absolute or relative path, depending on <see cref="IJsonApiOptions.UseRelativeLinks"/>.
+        /// The request URL prefix. This may be an absolute or relative path, depending on <see cref="IJsonApiOptions.UseRelativeLinks" />.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -26,28 +26,24 @@ namespace JsonApiDotNetCore.Middleware
         string BasePath { get; }
 
         /// <summary>
-        /// The ID of the primary (top-level) resource for this request.
-        /// This would be null in "/blogs", "123" in "/blogs/123" or "/blogs/123/author".
+        /// The ID of the primary (top-level) resource for this request. This would be null in "/blogs", "123" in "/blogs/123" or "/blogs/123/author".
         /// </summary>
         string PrimaryId { get; }
 
         /// <summary>
-        /// The primary (top-level) resource for this request.
-        /// This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author".
+        /// The primary (top-level) resource for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author".
         /// </summary>
         ResourceContext PrimaryResource { get; }
 
         /// <summary>
-        /// The secondary (nested) resource for this request.
-        /// This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or
-        /// "people" in "/blogs/123/author" and "/blogs/123/relationships/author".
+        /// The secondary (nested) resource for this request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "people" in
+        /// "/blogs/123/author" and "/blogs/123/relationships/author".
         /// </summary>
         ResourceContext SecondaryResource { get; }
 
         /// <summary>
-        /// The relationship for this nested request.
-        /// This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or
-        /// "author" in "/blogs/123/author" and "/blogs/123/relationships/author".
+        /// The relationship for this nested request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "author" in
+        /// "/blogs/123/author" and "/blogs/123/relationships/author".
         /// </summary>
         RelationshipAttribute Relationship { get; }
 

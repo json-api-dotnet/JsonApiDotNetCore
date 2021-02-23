@@ -40,8 +40,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Sort);
         }
 
         /// <inheritdoc />
@@ -49,7 +48,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(parameterName, nameof(parameterName));
 
-            var isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+            bool isNested = parameterName.StartsWith("sort[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "sort" || isNested;
         }
 
@@ -74,7 +73,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
 
             if (parameterScope.Scope == null)
             {

@@ -5,6 +5,7 @@ namespace UnitTests.TestModels
 {
     public class IdentifiableWithAttribute : Identifiable
     {
-        [Attr] public string AttributeMember { get; set; }
+        [Attr]
+        public string AttributeMember { get; set; }
     }
 }

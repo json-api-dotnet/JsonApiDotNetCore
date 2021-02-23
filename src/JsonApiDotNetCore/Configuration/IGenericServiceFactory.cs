@@ -3,13 +3,13 @@ using System;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime.
-    /// This is only used by resource hooks and subject to be removed in a future version.
+    /// Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime. This is only used by resource
+    /// hooks and subject to be removed in a future version.
     /// </summary>
     public interface IGenericServiceFactory
     {
         /// <summary>
-        /// Constructs the generic type and locates the service, then casts to <typeparamref name="TInterface"/>.
+        /// Constructs the generic type and locates the service, then casts to <typeparamref name="TInterface" />.
         /// </summary>
         /// <example>
         /// <code><![CDATA[
@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         TInterface Get<TInterface>(Type openGenericType, Type resourceType);
 
         /// <summary>
-        /// Constructs the generic type and locates the service, then casts to <typeparamref name="TInterface"/>.
+        /// Constructs the generic type and locates the service, then casts to <typeparamref name="TInterface" />.
         /// </summary>
         /// <example>
         /// <code><![CDATA[

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId"/>,
-    /// falling back to <see cref="IIdentifiable.LocalId"/> when both StringIds are null.
+    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId" />, falling back to
+    /// <see cref="IIdentifiable.LocalId" /> when both StringIds are null.
     /// </summary>
     public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>
     {

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Controllers
 
             return new ObjectResult(document)
             {
-                StatusCode = (int) document.GetErrorStatusCode()
+                StatusCode = (int)document.GetErrorStatusCode()
             };
         }
     }

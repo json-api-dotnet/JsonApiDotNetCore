@@ -26,11 +26,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IJsonApiRequest _request;
         private readonly IPaginationContext _paginationContext;
 
-        public LinkBuilder(IJsonApiOptions options,
-                           IJsonApiRequest request,
-                           IPaginationContext paginationContext,
-                           IResourceContextProvider provider,
-                           IRequestQueryStringAccessor queryStringAccessor)
+        public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IResourceContextProvider provider,
+            IRequestQueryStringAccessor queryStringAccessor)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
@@ -51,19 +48,23 @@ namespace JsonApiDotNetCore.Serialization.Building
             ResourceContext resourceContext = _request.PrimaryResource;
 
             TopLevelLinks topLevelLinks = null;
+
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Self))
             {
-                topLevelLinks = new TopLevelLinks {Self = GetSelfTopLevelLink(resourceContext, null)};
+                topLevelLinks = new TopLevelLinks
+                {
+                    Self = GetSelfTopLevelLink(resourceContext, null)
+                };
             }
 
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Related) && _request.Kind == EndpointKind.Relationship)
-            {   
+            {
                 topLevelLinks ??= new TopLevelLinks();
                 topLevelLinks.Related = GetRelatedRelationshipLink(_request.PrimaryResource.PublicName, _request.PrimaryId, _request.Relationship.PublicName);
             }
 
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null && _request.IsCollection)
-            {   
+            {
                 SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());
             }
 
@@ -71,9 +72,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Checks if the top-level <paramref name="link"/> should be added by first checking
-        /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
-        /// global configuration in <see cref="IJsonApiOptions"/>.
+        /// Checks if the top-level <paramref name="link" /> should be added by first checking configuration on the <see cref="ResourceContext" />, and if not
+        /// configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
         /// </summary>
         private bool ShouldAddTopLevelLink(ResourceContext resourceContext, LinkTypes link)
         {
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
         {
-            var parameters = _queryStringAccessor.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
+            Dictionary<string, string> parameters = _queryStringAccessor.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
             updateAction?.Invoke(parameters);
             string queryString = QueryString.Create(parameters).Value;
 
@@ -156,13 +156,12 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             return GetSelfTopLevelLink(resourceContext, parameters =>
             {
-                var existingPageSizeParameterValue = parameters.ContainsKey(PageSizeParameterName)
-                    ? parameters[PageSizeParameterName]
-                    : null;
+                string existingPageSizeParameterValue = parameters.ContainsKey(PageSizeParameterName) ? parameters[PageSizeParameterName] : null;
 
                 PageSize newTopPageSize = Equals(pageSize, _options.DefaultPageSize) ? null : pageSize;
 
                 string newPageSizeParameterValue = ChangeTopPageSize(existingPageSizeParameterValue, newTopPageSize);
+
                 if (newPageSizeParameterValue == null)
                 {
                     parameters.Remove(PageSizeParameterName);
@@ -185,8 +184,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize)
         {
-            var elements = ParsePageSizeExpression(pageSizeParameterValue);
-            var elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
+            List<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue);
+            int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
 
             if (topPageSize != null)
             {
@@ -209,7 +208,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            var parameterValue = string.Join(',',
+            string parameterValue = string.Join(',',
                 elements.Select(expression => expression.Scope == null ? expression.Value.ToString() : $"{expression.Scope}:{expression.Value}"));
 
             return parameterValue == string.Empty ? null : parameterValue;
@@ -222,10 +221,10 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return new List<PaginationElementQueryStringValueExpression>();
             }
 
-            var requestResource = _request.SecondaryResource ?? _request.PrimaryResource;
+            ResourceContext requestResource = _request.SecondaryResource ?? _request.PrimaryResource;
 
             var parser = new PaginationParser(_provider);
-            var paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
+            PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
             return paginationExpression.Elements.ToList();
         }
@@ -236,10 +235,14 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(resourceName, nameof(resourceName));
             ArgumentGuard.NotNull(id, nameof(id));
 
-            var resourceContext = _provider.GetResourceContext(resourceName);
+            ResourceContext resourceContext = _provider.GetResourceContext(resourceName);
+
             if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
             {
-                return new ResourceLinks { Self = GetSelfResourceLink(resourceName, id) };
+                return new ResourceLinks
+                {
+                    Self = GetSelfResourceLink(resourceName, id)
+                };
             }
 
             return null;
@@ -251,12 +254,16 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(parent, nameof(parent));
 
-            var parentResourceContext = _provider.GetResourceContext(parent.GetType());
-            var childNavigation = relationship.PublicName;
+            ResourceContext parentResourceContext = _provider.GetResourceContext(parent.GetType());
+            string childNavigation = relationship.PublicName;
             RelationshipLinks links = null;
+
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Related))
             {
-                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation) };
+                links = new RelationshipLinks
+                {
+                    Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation)
+                };
             }
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Self))
@@ -267,7 +274,6 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             return links;
         }
-
 
         private string GetSelfRelationshipLink(string parent, string parentId, string navigation)
         {
@@ -285,9 +291,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Checks if the resource object level <paramref name="link"/> should be added by first checking
-        /// configuration on the <see cref="ResourceContext"/>, and if not configured, by checking with the
-        /// global configuration in <see cref="IJsonApiOptions"/>.
+        /// Checks if the resource object level <paramref name="link" /> should be added by first checking configuration on the <see cref="ResourceContext" />,
+        /// and if not configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
         /// </summary>
         private bool ShouldAddResourceLink(ResourceContext resourceContext, LinkTypes link)
         {
@@ -300,14 +305,14 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 return resourceContext.ResourceLinks.HasFlag(link);
             }
+
             return _options.ResourceLinks.HasFlag(link);
         }
 
         /// <summary>
-        /// Checks if the resource object level <paramref name="link"/> should be added by first checking
-        /// configuration on the <paramref name="relationship"/> attribute, if not configured by checking
-        /// the <see cref="ResourceContext"/>, and if not configured by checking with the
-        /// global configuration in <see cref="IJsonApiOptions"/>.
+        /// Checks if the resource object level <paramref name="link" /> should be added by first checking configuration on the <paramref name="relationship" />
+        /// attribute, if not configured by checking the <see cref="ResourceContext" />, and if not configured by checking with the global configuration in
+        /// <see cref="IJsonApiOptions" />.
         /// </summary>
         private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, LinkTypes link)
         {
@@ -315,6 +320,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 return relationship.Links.HasFlag(link);
             }
+
             if (resourceContext.RelationshipLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.RelationshipLinks.HasFlag(link);

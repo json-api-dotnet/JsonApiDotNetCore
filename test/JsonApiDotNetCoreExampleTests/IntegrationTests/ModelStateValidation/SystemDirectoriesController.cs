@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
     public sealed class SystemDirectoriesController : JsonApiController<SystemDirectory>
     {
-        public SystemDirectoriesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<SystemDirectory> resourceService)
+        public SystemDirectoriesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SystemDirectory> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

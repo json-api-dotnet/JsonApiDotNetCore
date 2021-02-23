@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JsonApiDotNetCore.Configuration;
@@ -16,7 +17,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            foreach (var field in resourceGraph.GetFields(fieldSelector))
+            foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
                 sparseFieldSet = IncludeField(sparseFieldSet, field);
             }
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
             fieldSet.Add(fieldToInclude);
             return new SparseFieldSetExpression(fieldSet);
         }
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            foreach (var field in resourceGraph.GetFields(fieldSelector))
+            foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
                 sparseFieldSet = ExcludeField(sparseFieldSet, field);
             }
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
             fieldSet.Remove(fieldToExclude);
             return new SparseFieldSetExpression(fieldSet);
         }

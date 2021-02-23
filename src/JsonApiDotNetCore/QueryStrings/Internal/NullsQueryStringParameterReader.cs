@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return _options.AllowQueryStringOverrideForSerializerNullValueHandling &&
-                   !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Nulls);
+                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Nulls);
         }
 
         /// <inheritdoc />
@@ -40,10 +40,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
-            if (!bool.TryParse(parameterValue, out var result))
+            if (!bool.TryParse(parameterValue, out bool result))
             {
-                throw new InvalidQueryStringParameterException(parameterName,
-                    "The specified nulls is invalid.",
+                throw new InvalidQueryStringParameterException(parameterName, "The specified nulls is invalid.",
                     $"The value '{parameterValue}' must be 'true' or 'false'.");
             }
 

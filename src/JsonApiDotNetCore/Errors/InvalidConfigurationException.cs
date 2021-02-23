@@ -7,7 +7,9 @@ namespace JsonApiDotNetCore.Errors
     /// </summary>
     public sealed class InvalidConfigurationException : Exception
     {
-        public InvalidConfigurationException(string message, Exception innerException = null) 
-            : base(message, innerException) { }
+        public InvalidConfigurationException(string message, Exception innerException = null)
+            : base(message, innerException)
+        {
+        }
     }
 }

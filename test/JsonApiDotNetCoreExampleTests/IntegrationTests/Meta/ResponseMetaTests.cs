@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -10,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResponseMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
 
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 services.AddSingleton<IResponseMeta, SupportResponseMeta>();
             });
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = false;
         }
 
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             const string route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

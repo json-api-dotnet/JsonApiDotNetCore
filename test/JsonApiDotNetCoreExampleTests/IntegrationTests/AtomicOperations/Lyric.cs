@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public DateTimeOffset CreatedAt { get; set; }
-        
+
         [HasOne]
         public MusicTrack Track { get; set; }
     }

@@ -6,7 +6,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
     {
         public DbSet<CallableResource> CallableResources { get; set; }
 
-        public CallableDbContext(DbContextOptions<CallableDbContext> options) : base(options)
+        public CallableDbContext(DbContextOptions<CallableDbContext> options)
+            : base(options)
         {
         }
     }

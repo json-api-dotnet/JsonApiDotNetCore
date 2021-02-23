@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Custom implementation of <see cref="IModelMetadataProvider"/> to support JSON:API partial patching.
+    /// Custom implementation of <see cref="IModelMetadataProvider" /> to support JSON:API partial patching.
     /// </summary>
     internal class JsonApiModelMetadataProvider : DefaultModelMetadataProvider
     {
@@ -20,7 +20,8 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider, IOptions<MvcOptions> optionsAccessor, IRequestScopedServiceProvider serviceProvider) 
+        public JsonApiModelMetadataProvider(ICompositeMetadataDetailsProvider detailsProvider, IOptions<MvcOptions> optionsAccessor,
+            IRequestScopedServiceProvider serviceProvider)
             : base(detailsProvider, optionsAccessor)
         {
             _jsonApiValidationFilter = new JsonApiValidationFilter(serviceProvider);

@@ -20,12 +20,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly SparseFieldSetCache _sparseFieldSetCache;
         private RelationshipAttribute _requestRelationship;
 
-        public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder,
-                                             IIncludedResourceObjectBuilder includedBuilder,
-                                             IEnumerable<IQueryConstraintProvider> constraintProviders,
-                                             IResourceContextProvider resourceContextProvider,
-                                             IResourceDefinitionAccessor resourceDefinitionAccessor,
-                                             IResourceObjectBuilderSettingsProvider settingsProvider)
+        public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
+            IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceContextProvider, settingsProvider.Get())
         {
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
@@ -49,11 +46,11 @@ namespace JsonApiDotNetCore.Serialization.Building
             return GetRelationshipData(requestRelationship, resource);
         }
 
-        /// <inheritdoc /> 
+        /// <inheritdoc />
         public override ResourceObject Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null,
             IReadOnlyCollection<RelationshipAttribute> relationships = null)
         {
-            var resourceObject = base.Build(resource, attributes, relationships);
+            ResourceObject resourceObject = base.Build(resource, attributes, relationships);
 
             resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
 
@@ -61,11 +58,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds the values of the relationships object on a resource object.
-        /// The server serializer only populates the "data" member when the relationship is included,
-        /// and adds links unless these are turned off. This means that if a relationship is not included
-        /// and links are turned off, the entry would be completely empty, ie { }, which is not conform
-        /// JSON:API spec. In that case we return null which will omit the entry from the output.
+        /// Builds the values of the relationships object on a resource object. The server serializer only populates the "data" member when the relationship is
+        /// included, and adds links unless these are turned off. This means that if a relationship is not included and links are turned off, the entry would be
+        /// completely empty, ie { }, which is not conform JSON:API spec. In that case we return null which will omit the entry from the output.
         /// </summary>
         protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
@@ -74,12 +69,14 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             RelationshipEntry relationshipEntry = null;
             List<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = null;
+
             if (Equals(relationship, _requestRelationship) || ShouldInclude(relationship, out relationshipChains))
             {
                 relationshipEntry = base.GetRelationshipData(relationship, resource);
+
                 if (relationshipChains != null && relationshipEntry.HasResource)
                 {
-                    foreach (var chain in relationshipChains)
+                    foreach (IReadOnlyCollection<RelationshipAttribute> chain in relationshipChains)
                     {
                         // traverses (recursively) and extracts all (nested) related resources for the current inclusion chain.
                         _includedBuilder.IncludeRelationshipChain(chain, resource);
@@ -92,7 +89,8 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return null;
             }
 
-            var links = _linkBuilder.GetRelationshipLinks(relationship, resource);
+            RelationshipLinks links = _linkBuilder.GetRelationshipLinks(relationship, resource);
+
             if (links != null)
             {
                 // if relationshipLinks should be built for this entry, populate the "links" field.
@@ -107,22 +105,22 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)
         {
-            var resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
+            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
 
-            var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
+            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
             return fieldSet.Contains(relationship);
         }
 
         /// <summary>
-        /// Inspects the included relationship chains (see <see cref="IIncludeQueryStringParameterReader"/>
-        /// to see if <paramref name="relationship"/> should be included or not.
+        /// Inspects the included relationship chains (see <see cref="IIncludeQueryStringParameterReader" /> to see if <paramref name="relationship" /> should be
+        /// included or not.
         /// </summary>
         private bool ShouldInclude(RelationshipAttribute relationship, out List<IReadOnlyCollection<RelationshipAttribute>> inclusionChain)
         {
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
 
-            var chains = _constraintProviders
+            ResourceFieldChainExpression[] chains = _constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<IncludeExpression>()
@@ -134,7 +132,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
 
-            foreach (var chain in chains)
+            foreach (ResourceFieldChainExpression chain in chains)
             {
                 if (chain.Fields.First().Equals(relationship))
                 {

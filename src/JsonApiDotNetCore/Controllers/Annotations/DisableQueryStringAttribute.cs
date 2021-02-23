@@ -19,9 +19,8 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryStringAttribute : Attribute
     {
-        public IReadOnlyCollection<string> ParameterNames { get; }
-
         public static readonly DisableQueryStringAttribute Empty = new DisableQueryStringAttribute(StandardQueryStringParameters.None);
+        public IReadOnlyCollection<string> ParameterNames { get; }
 
         /// <summary>
         /// Disables one or more of the builtin query parameters for a controller.
@@ -32,8 +31,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
 
             foreach (StandardQueryStringParameters value in Enum.GetValues(typeof(StandardQueryStringParameters)))
             {
-                if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All &&
-                    parameters.HasFlag(value))
+                if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All && parameters.HasFlag(value))
                 {
                     parameterNames.Add(value.ToString());
                 }
@@ -43,9 +41,8 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         }
 
         /// <summary>
-        /// It is allowed to use a comma-separated list of strings to indicate which query parameters
-        /// should be disabled, because the user may have defined custom query parameters that are
-        /// not included in the <see cref="StandardQueryStringParameters"/> enum.
+        /// It is allowed to use a comma-separated list of strings to indicate which query parameters should be disabled, because the user may have defined
+        /// custom query parameters that are not included in the <see cref="StandardQueryStringParameters" /> enum.
         /// </summary>
         public DisableQueryStringAttribute(string parameterNames)
         {
@@ -56,7 +53,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
 
         public bool ContainsParameter(StandardQueryStringParameters parameter)
         {
-            var name = parameter.ToString();
+            string name = parameter.ToString();
             return ParameterNames.Contains(name);
         }
     }

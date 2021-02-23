@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (LiteralConstantExpression) obj;
+            var other = (LiteralConstantExpression)obj;
 
             return Value == other.Value;
         }

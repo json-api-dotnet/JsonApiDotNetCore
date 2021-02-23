@@ -15,8 +15,14 @@ namespace JsonApiDotNetCore.Repositories
             _context = context;
         }
 
-        public DbContext GetContext() => _context;
-        
-        public TDbContext GetTypedContext() => _context;
+        public DbContext GetContext()
+        {
+            return _context;
+        }
+
+        public TDbContext GetTypedContext()
+        {
+            return _context;
+        }
     }
 }

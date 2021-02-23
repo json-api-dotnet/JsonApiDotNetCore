@@ -11,8 +11,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     {
         public IReadOnlyCollection<PaginationElementQueryStringValueExpression> Elements { get; }
 
-        public PaginationQueryStringValueExpression(
-            IReadOnlyCollection<PaginationElementQueryStringValueExpression> elements)
+        public PaginationQueryStringValueExpression(IReadOnlyCollection<PaginationElementQueryStringValueExpression> elements)
         {
             ArgumentGuard.NotNull(elements, nameof(elements));
 
@@ -24,8 +23,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Elements = elements;
         }
 
-        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor,
-            TArgument argument)
+        public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
             return visitor.PaginationQueryStringValue(this, argument);
         }
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (PaginationQueryStringValueExpression) obj;
+            var other = (PaginationQueryStringValueExpression)obj;
 
             return Elements.SequenceEqual(other.Elements);
         }
@@ -56,7 +54,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var element in Elements)
+            foreach (PaginationElementQueryStringValueExpression element in Elements)
             {
                 hashCode.Add(element);
             }

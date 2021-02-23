@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
     public sealed class CustomersController : JsonApiController<Customer>
     {
-        public CustomersController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Customer> resourceService)
+        public CustomersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Customer> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

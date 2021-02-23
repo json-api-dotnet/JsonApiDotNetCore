@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -23,11 +24,11 @@ namespace JsonApiDotNetCore.Middleware
 
             if (context.HttpContext.IsJsonApiRequest())
             {
-                var errorDocument = _exceptionHandler.HandleException(context.Exception);
+                ErrorDocument errorDocument = _exceptionHandler.HandleException(context.Exception);
 
                 context.Result = new ObjectResult(errorDocument)
                 {
-                    StatusCode = (int) errorDocument.GetErrorStatusCode()
+                    StatusCode = (int)errorDocument.GetErrorStatusCode()
                 };
             }
 

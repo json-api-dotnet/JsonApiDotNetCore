@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Builds and configures the <see cref="ResourceGraph"/>.
+    /// Builds and configures the <see cref="ResourceGraph" />.
     /// </summary>
     public class ResourceGraphBuilder
     {
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Constructs the <see cref="ResourceGraph"/>.
+        /// Constructs the <see cref="ResourceGraph" />.
         /// </summary>
         public IResourceGraph Build()
         {
@@ -39,6 +39,7 @@ namespace JsonApiDotNetCore.Configuration
         private void SetResourceLinksOptions(ResourceContext resourceContext)
         {
             var attribute = (ResourceLinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(ResourceLinksAttribute));
+
             if (attribute != null)
             {
                 resourceContext.RelationshipLinks = attribute.RelationshipLinks;
@@ -46,38 +47,54 @@ namespace JsonApiDotNetCore.Configuration
                 resourceContext.TopLevelLinks = attribute.TopLevelLinks;
             }
         }
-        
+
         /// <summary>
         /// Adds a JSON:API resource with <code>int</code> as the identifier type.
         /// </summary>
-        /// <typeparam name="TResource">The resource model type.</typeparam>
+        /// <typeparam name="TResource">
+        /// The resource model type.
+        /// </typeparam>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
+        /// applied.
         /// </param>
-        public ResourceGraphBuilder Add<TResource>(string publicName = null) where TResource : class, IIdentifiable<int>
-            => Add<TResource, int>(publicName);
-        
+        public ResourceGraphBuilder Add<TResource>(string publicName = null)
+            where TResource : class, IIdentifiable<int>
+        {
+            return Add<TResource, int>(publicName);
+        }
+
         /// <summary>
         /// Adds a JSON:API resource.
         /// </summary>
-        /// <typeparam name="TResource">The resource model type.</typeparam>
-        /// <typeparam name="TId">The resource model identifier type.</typeparam>
+        /// <typeparam name="TResource">
+        /// The resource model type.
+        /// </typeparam>
+        /// <typeparam name="TId">
+        /// The resource model identifier type.
+        /// </typeparam>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
+        /// applied.
         /// </param>
-        public ResourceGraphBuilder Add<TResource, TId>(string publicName = null) where TResource : class, IIdentifiable<TId>
-            => Add(typeof(TResource), typeof(TId), publicName);
-        
+        public ResourceGraphBuilder Add<TResource, TId>(string publicName = null)
+            where TResource : class, IIdentifiable<TId>
+        {
+            return Add(typeof(TResource), typeof(TId), publicName);
+        }
+
         /// <summary>
         /// Adds a JSON:API resource.
         /// </summary>
-        /// <param name="resourceType">The resource model type.</param>
-        /// <param name="idType">The resource model identifier type.</param>
+        /// <param name="resourceType">
+        /// The resource model type.
+        /// </param>
+        /// <param name="idType">
+        /// The resource model identifier type.
+        /// </param>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. 
-        /// If nothing is specified, the configured naming convention formatter will be applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
+        /// applied.
         /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
@@ -89,7 +106,7 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     publicName ??= FormatResourceName(resourceType);
                     idType ??= TypeLocator.TryGetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(publicName, resourceType, idType);
+                    ResourceContext resourceContext = CreateResourceContext(publicName, resourceType, idType);
                     _resources.Add(resourceContext);
                 }
                 else
@@ -101,15 +118,18 @@ namespace JsonApiDotNetCore.Configuration
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType) => new ResourceContext
+        private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType)
         {
-            PublicName = publicName,
-            ResourceType = resourceType,
-            IdentityType = idType,
-            Attributes = GetAttributes(resourceType),
-            Relationships = GetRelationships(resourceType),
-            EagerLoads = GetEagerLoads(resourceType)
-        };
+            return new ResourceContext
+            {
+                PublicName = publicName,
+                ResourceType = resourceType,
+                IdentityType = idType,
+                Attributes = GetAttributes(resourceType),
+                Relationships = GetRelationships(resourceType),
+                EagerLoads = GetEagerLoads(resourceType)
+            };
+        }
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
@@ -117,7 +137,7 @@ namespace JsonApiDotNetCore.Configuration
 
             var attributes = new List<AttrAttribute>();
 
-            foreach (var property in resourceType.GetProperties())
+            foreach (PropertyInfo property in resourceType.GetProperties())
             {
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
@@ -132,6 +152,7 @@ namespace JsonApiDotNetCore.Configuration
                         Property = property,
                         Capabilities = _options.DefaultAttrCapabilities
                     };
+
                     attributes.Add(idAttr);
                     continue;
                 }
@@ -151,6 +172,7 @@ namespace JsonApiDotNetCore.Configuration
 
                 attributes.Add(attribute);
             }
+
             return attributes;
         }
 
@@ -159,10 +181,12 @@ namespace JsonApiDotNetCore.Configuration
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             var attributes = new List<RelationshipAttribute>();
-            var properties = resourceType.GetProperties();
-            foreach (var prop in properties)
+            PropertyInfo[] properties = resourceType.GetProperties();
+
+            foreach (PropertyInfo prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
+
                 if (attribute == null)
                 {
                     continue;
@@ -176,14 +200,16 @@ namespace JsonApiDotNetCore.Configuration
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
-                    var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
+                    PropertyInfo throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
+
                     if (throughProperty == null)
                     {
                         throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
                             $"Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
                     }
 
-                    var throughType = TryGetThroughType(throughProperty);
+                    Type throughType = TryGetThroughType(throughProperty);
+
                     if (throughType == null)
                     {
                         throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
@@ -196,45 +222,52 @@ namespace JsonApiDotNetCore.Configuration
                     // ArticleTag
                     hasManyThroughAttribute.ThroughType = throughType;
 
-                    var throughProperties = throughType.GetProperties();
+                    PropertyInfo[] throughProperties = throughType.GetProperties();
 
                     // ArticleTag.Article
                     if (hasManyThroughAttribute.LeftPropertyName != null)
                     {
                         // In case of a self-referencing many-to-many relationship, the left property name must be specified.
-                        hasManyThroughAttribute.LeftProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.LeftPropertyName)
-                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.LeftPropertyName}'.");
+                        hasManyThroughAttribute.LeftProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.LeftPropertyName) ??
+                            throw new InvalidConfigurationException(
+                                $"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.LeftPropertyName}'.");
                     }
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType)) 
-                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
+                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType)) ??
+                            throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
                     }
 
                     // ArticleTag.ArticleId
-                    var leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
-                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
+                    string leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
+
+                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName) ??
+                        throw new InvalidConfigurationException(
+                            $"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
 
                     // ArticleTag.Tag
                     if (hasManyThroughAttribute.RightPropertyName != null)
                     {
                         // In case of a self-referencing many-to-many relationship, the right property name must be specified.
-                        hasManyThroughAttribute.RightProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.RightPropertyName)
-                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.RightPropertyName}'.");
+                        hasManyThroughAttribute.RightProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.RightPropertyName) ??
+                            throw new InvalidConfigurationException(
+                                $"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.RightPropertyName}'.");
                     }
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType)
-                            ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
+                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType) ??
+                            throw new InvalidConfigurationException(
+                                $"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
                     }
 
                     // ArticleTag.TagId
-                    var rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
-                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName)
-                        ?? throw new InvalidConfigurationException($"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
+                    string rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
+
+                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName) ??
+                        throw new InvalidConfigurationException(
+                            $"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
                 }
             }
 
@@ -245,10 +278,12 @@ namespace JsonApiDotNetCore.Configuration
         {
             if (throughProperty.PropertyType.IsGenericType)
             {
-                var typeArguments = throughProperty.PropertyType.GetGenericArguments();
+                Type[] typeArguments = throughProperty.PropertyType.GetGenericArguments();
+
                 if (typeArguments.Length == 1)
                 {
-                    var constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
+                    Type constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
+
                     if (TypeHelper.IsOrImplementsInterface(throughProperty.PropertyType, constructedThroughType))
                     {
                         return typeArguments[0];
@@ -275,11 +310,12 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             var attributes = new List<EagerLoadAttribute>();
-            var properties = resourceType.GetProperties();
+            PropertyInfo[] properties = resourceType.GetProperties();
 
-            foreach (var property in properties)
+            foreach (PropertyInfo property in properties)
             {
-                var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
+                var attribute = (EagerLoadAttribute)property.GetCustomAttribute(typeof(EagerLoadAttribute));
+
                 if (attribute == null)
                 {
                     continue;
@@ -297,8 +333,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private Type TypeOrElementType(Type type)
         {
-            var interfaces = type.GetInterfaces()
-                .Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+            Type[] interfaces = type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
 
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }

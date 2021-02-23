@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Services
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(elementsToAdd, nameof(elementsToAdd));
 
-            await foreach (var missingResource in elementsToAdd.WithCancellation(cancellationToken))
+            await foreach (T missingResource in elementsToAdd.WithCancellation(cancellationToken))
             {
                 source.Add(missingResource);
             }
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Services
 
             var list = new List<T>();
 
-            await foreach (var element in source.WithCancellation(cancellationToken))
+            await foreach (T element in source.WithCancellation(cancellationToken))
             {
                 list.Add(element);
             }

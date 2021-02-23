@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
         private bool IsWithinOperatingHours()
         {
-            var currentTime = _systemClock.UtcNow;
+            DateTimeOffset currentTime = _systemClock.UtcNow;
             return currentTime.DayOfWeek >= DayOfWeek.Monday && currentTime.DayOfWeek <= DayOfWeek.Friday && currentTime.Hour >= 9 && currentTime.Hour <= 17;
         }
     }

@@ -8,11 +8,9 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public sealed class ArticlesController : JsonApiController<Article>
     {
-        public ArticlesController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService<Article> resourceService)
+        public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Article> resourceService)
             : base(options, loggerFactory, resourceService)
-        { }
+        {
+        }
     }
 }

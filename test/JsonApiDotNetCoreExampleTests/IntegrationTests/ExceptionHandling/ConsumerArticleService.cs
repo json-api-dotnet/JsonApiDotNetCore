@@ -14,22 +14,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
     {
+        private const string SupportEmailAddress = "company@email.com";
         public const string UnavailableArticlePrefix = "X";
 
-        private const string SupportEmailAddress = "company@email.com";
-
         public ConsumerArticleService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
-            IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<ConsumerArticle> resourceChangeTracker,
-            IResourceHookExecutorFacade hookExecutor)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, hookExecutor)
+            IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
+            IResourceChangeTracker<ConsumerArticle> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
         {
         }
 
         public override async Task<ConsumerArticle> GetAsync(int id, CancellationToken cancellationToken)
         {
-            var consumerArticle = await base.GetAsync(id, cancellationToken);
+            ConsumerArticle consumerArticle = await base.GetAsync(id, cancellationToken);
 
             if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix, StringComparison.Ordinal))
             {

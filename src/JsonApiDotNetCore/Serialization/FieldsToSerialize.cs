@@ -17,11 +17,8 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiRequest _request;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
-        public FieldsToSerialize(
-            IResourceContextProvider resourceContextProvider,
-            IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IJsonApiRequest request)
+        public FieldsToSerialize(IResourceContextProvider resourceContextProvider, IEnumerable<IQueryConstraintProvider> constraintProviders,
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)
         {
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
             ArgumentGuard.NotNull(request, nameof(request));
@@ -41,18 +38,17 @@ namespace JsonApiDotNetCore.Serialization
                 return Array.Empty<AttrAttribute>();
             }
 
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-            var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
 
             return fieldSet.OfType<AttrAttribute>().ToArray();
         }
 
         /// <inheritdoc />
         /// <remarks>
-        /// Note: this method does NOT check if a relationship is included to determine
-        /// if it should be serialized. This is because completely hiding a relationship
-        /// is not the same as not including. In the case of the latter,
-        /// we may still want to add the relationship to expose the navigation link to the client.
+        /// Note: this method does NOT check if a relationship is included to determine if it should be serialized. This is because completely hiding a
+        /// relationship is not the same as not including. In the case of the latter, we may still want to add the relationship to expose the navigation link to
+        /// the client.
         /// </remarks>
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
@@ -63,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
                 return Array.Empty<RelationshipAttribute>();
             }
 
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
             return resourceContext.Relationships;
         }
 

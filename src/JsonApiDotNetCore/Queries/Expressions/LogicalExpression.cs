@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (LogicalExpression) obj;
+            var other = (LogicalExpression)obj;
 
             return Operator == other.Operator && Terms.SequenceEqual(other.Terms);
         }
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             var hashCode = new HashCode();
             hashCode.Add(Operator);
 
-            foreach (var term in Terms)
+            foreach (QueryExpression term in Terms)
             {
                 hashCode.Add(term);
             }

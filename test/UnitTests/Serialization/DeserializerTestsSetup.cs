@@ -19,21 +19,11 @@ namespace UnitTests.Serialization
             MockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             MockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
         }
-        protected sealed class TestDeserializer : BaseDeserializer
+
+        protected Document CreateDocumentWithRelationships(string primaryType, string relationshipMemberName, string relatedType = null,
+            bool isToManyData = false)
         {
-            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory) : base(resourceGraph, resourceFactory) { }
-
-            public object Deserialize(string body)
-            {
-                return DeserializeBody(body);
-            }
-
-            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null) { }
-        }
-
-        protected Document CreateDocumentWithRelationships(string primaryType, string relationshipMemberName, string relatedType = null, bool isToManyData = false)
-        {
-            var content = CreateDocumentWithRelationships(primaryType);
+            Document content = CreateDocumentWithRelationships(primaryType);
             content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
@@ -54,7 +44,14 @@ namespace UnitTests.Serialization
         protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
             var entry = new RelationshipEntry();
-            var rio = relatedType == null ? null : new ResourceIdentifierObject { Id = id, Type = relatedType };
+
+            ResourceIdentifierObject rio = relatedType == null
+                ? null
+                : new ResourceIdentifierObject
+                {
+                    Id = id,
+                    Type = relatedType
+                };
 
             if (isToManyData)
             {
@@ -64,6 +61,7 @@ namespace UnitTests.Serialization
             {
                 entry.Data = rio;
             }
+
             return entry;
         }
 
@@ -85,6 +83,23 @@ namespace UnitTests.Serialization
                     }
                 }
             };
+        }
+
+        protected sealed class TestDeserializer : BaseDeserializer
+        {
+            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
+                : base(resourceGraph, resourceFactory)
+            {
+            }
+
+            public object Deserialize(string body)
+            {
+                return DeserializeBody(body);
+            }
+
+            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
+            {
+            }
         }
     }
 }

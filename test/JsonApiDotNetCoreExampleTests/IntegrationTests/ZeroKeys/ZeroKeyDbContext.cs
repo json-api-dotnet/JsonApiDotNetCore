@@ -10,7 +10,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public DbSet<Player> Players { get; set; }
         public DbSet<Map> Maps { get; set; }
 
-        public ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options) : base(options)
+        public ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options)
+            : base(options)
         {
         }
 

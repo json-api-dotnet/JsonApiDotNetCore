@@ -19,45 +19,12 @@ namespace UnitTests.Controllers
 {
     public sealed class BaseJsonApiControllerTests
     {
-        public sealed class Resource : Identifiable
-        {
-            [Attr] public string TestAttribute { get; set; }
-        }
-
-        public sealed class ResourceController : BaseJsonApiController<Resource>
-        {
-            public ResourceController(
-                IJsonApiOptions options,
-                ILoggerFactory loggerFactory,
-                IResourceService<Resource> resourceService)
-                : base(options, loggerFactory, resourceService)
-            { }
-
-            public ResourceController(
-                IJsonApiOptions options,
-                ILoggerFactory loggerFactory,
-                IGetAllService<Resource, int> getAll = null,
-                IGetByIdService<Resource, int> getById = null,
-                IGetSecondaryService<Resource, int> getSecondary = null,
-                IGetRelationshipService<Resource, int> getRelationship = null,
-                ICreateService<Resource, int> create = null,
-                IAddToRelationshipService<Resource, int> addToRelationship = null,
-                IUpdateService<Resource, int> update = null,
-                ISetRelationshipService<Resource, int> setRelationship = null,
-                IDeleteService<Resource, int> delete = null,
-                IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
-                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship,
-                    update, setRelationship, delete, removeFromRelationship)
-            {
-            }
-        }
-
         [Fact]
         public async Task GetAsync_Calls_Service()
         {
             // Arrange
             var serviceMock = new Mock<IGetAllService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getAll: serviceMock.Object);
+            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, serviceMock.Object);
 
             // Act
             await controller.GetAsync(CancellationToken.None);
@@ -133,7 +100,8 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
+                controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
@@ -163,7 +131,8 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
+                controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
@@ -212,7 +181,11 @@ namespace UnitTests.Controllers
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
             serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
-            controller.ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() };
+
+            controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
 
             // Act
             await controller.PostAsync(resource, CancellationToken.None);
@@ -244,7 +217,8 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None));
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
+                controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
@@ -279,6 +253,31 @@ namespace UnitTests.Controllers
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Delete, exception.Method);
+        }
+
+        public sealed class Resource : Identifiable
+        {
+            [Attr]
+            public string TestAttribute { get; set; }
+        }
+
+        public sealed class ResourceController : BaseJsonApiController<Resource>
+        {
+            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Resource> resourceService)
+                : base(options, loggerFactory, resourceService)
+            {
+            }
+
+            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Resource, int> getAll = null,
+                IGetByIdService<Resource, int> getById = null, IGetSecondaryService<Resource, int> getSecondary = null,
+                IGetRelationshipService<Resource, int> getRelationship = null, ICreateService<Resource, int> create = null,
+                IAddToRelationshipService<Resource, int> addToRelationship = null, IUpdateService<Resource, int> update = null,
+                ISetRelationshipService<Resource, int> setRelationship = null, IDeleteService<Resource, int> delete = null,
+                IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
+                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
+                    removeFromRelationship)
+            {
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Repositories
     public static class DbContextExtensions
     {
         /// <summary>
-        /// If not already tracked, attaches the specified resource to the change tracker in <see cref="EntityState.Unchanged"/> state.
+        /// If not already tracked, attaches the specified resource to the change tracker in <see cref="EntityState.Unchanged" /> state.
         /// </summary>
         public static IIdentifiable GetTrackedOrAttach(this DbContext dbContext, IIdentifiable resource)
         {
@@ -18,6 +18,7 @@ namespace JsonApiDotNetCore.Repositories
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             var trackedIdentifiable = (IIdentifiable)dbContext.GetTrackedIdentifiable(resource);
+
             if (trackedIdentifiable == null)
             {
                 dbContext.Entry(resource).State = EntityState.Unchanged;
@@ -28,25 +29,24 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <summary>
-        /// Searches the change tracker for an entity that matches the type and ID of <paramref name="identifiable"/>.
+        /// Searches the change tracker for an entity that matches the type and ID of <paramref name="identifiable" />.
         /// </summary>
         public static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
         {
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
             ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-            var resourceType = identifiable.GetType();
+            Type resourceType = identifiable.GetType();
             string stringId = identifiable.StringId;
 
-            var entityEntry = dbContext.ChangeTracker.Entries()
-                .FirstOrDefault(entry => IsResource(entry, resourceType, stringId));
+            EntityEntry entityEntry = dbContext.ChangeTracker.Entries().FirstOrDefault(entry => IsResource(entry, resourceType, stringId));
 
             return entityEntry?.Entity;
         }
 
         private static bool IsResource(EntityEntry entry, Type resourceType, string stringId)
         {
-            return entry.Entity.GetType() == resourceType && ((IIdentifiable) entry.Entity).StringId == stringId;
+            return entry.Entity.GetType() == resourceType && ((IIdentifiable)entry.Entity).StringId == stringId;
         }
 
         /// <summary>
