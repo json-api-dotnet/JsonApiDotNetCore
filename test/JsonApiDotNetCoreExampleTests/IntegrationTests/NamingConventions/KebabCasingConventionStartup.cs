@@ -17,7 +17,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         {
             base.SetJsonApiOptions(options);
 
-            options.IncludeExceptionStackTraceInErrors = true;
             options.Namespace = "public-api";
             options.UseRelativeLinks = true;
             options.IncludeTotalResourceCount = true;
