@@ -1,4 +1,5 @@
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -26,8 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             return existingFilter == null
                 ? (FilterExpression) isNotSoftDeleted
-                : new LogicalExpression(LogicalOperator.And, new[] {isNotSoftDeleted, existingFilter});
+                : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotSoftDeleted, existingFilter));
         }
-
     }
 }

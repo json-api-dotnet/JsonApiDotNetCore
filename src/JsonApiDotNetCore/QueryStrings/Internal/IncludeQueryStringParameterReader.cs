@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 ? new ExpressionInScope(null, _includeExpression)
                 : new ExpressionInScope(null, IncludeExpression.Empty);
 
-            return new[] {expressionInScope};
+            return expressionInScope.AsArray();
         }
     }
 }

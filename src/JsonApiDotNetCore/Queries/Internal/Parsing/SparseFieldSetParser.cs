@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
 
-            return new[] {field};
+            return field.AsArray();
         }
     }
 }

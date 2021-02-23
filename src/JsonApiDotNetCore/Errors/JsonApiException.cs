@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Errors
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            Errors = new[] {error};
+            Errors = error.AsArray();
         }
 
         public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)

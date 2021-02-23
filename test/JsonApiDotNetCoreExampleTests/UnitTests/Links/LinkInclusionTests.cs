@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -60,10 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 TopLevelLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(new[]
-            {
-                exampleResourceContext
-            });
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
 
             var request = new JsonApiRequest
             {
@@ -162,10 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 ResourceLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(new[]
-            {
-                exampleResourceContext
-            });
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
 
             var request = new JsonApiRequest();
 
@@ -330,10 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 RelationshipLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(new[]
-            {
-                exampleResourceContext
-            });
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
 
             var request = new JsonApiRequest();
 

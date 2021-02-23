@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             // if there was a container, first check if it implements the hook we 
             // want to use it for.
-            List<ResourceHook> targetHooks;
+            IEnumerable<ResourceHook> targetHooks;
             if (hook == ResourceHook.None)
             {
                 CheckForTargetHookExistence();
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             }
             else
             {
-                targetHooks = new List<ResourceHook> { hook };
+                targetHooks = hook.AsEnumerable();
             }
 
             foreach (ResourceHook targetHook in targetHooks)
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                     .MakeGenericMethod(resourceTypeForRepository, idType);
             var cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
             var ids = TypeHelper.CopyToList(cast.Select(i => i.GetTypedId()), idType);
-            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
+            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, ArrayFactory.Create<object>(ids, relationshipsToNextLayer));
             if (values == null)
             {
                 return null;

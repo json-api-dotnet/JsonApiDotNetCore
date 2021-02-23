@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            return Error(new[] {error});
+            return Error(error.AsEnumerable());
         }
 
         protected IActionResult Error(IEnumerable<Error> errors)

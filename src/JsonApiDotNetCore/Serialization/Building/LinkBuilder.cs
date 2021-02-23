@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var parser = new PaginationParser(_provider);
             var paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
-            return new List<PaginationElementQueryStringValueExpression>(paginationExpression.Elements);
+            return paginationExpression.Elements.ToList();
         }
 
         /// <inheritdoc />

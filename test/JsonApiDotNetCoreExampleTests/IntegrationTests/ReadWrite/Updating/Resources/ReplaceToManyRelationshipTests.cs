@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -887,10 +888,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.Children = new List<WorkItem>
-                {
-                    existingWorkItem
-                };
+                existingWorkItem.Children = existingWorkItem.AsList();
                 await dbContext.SaveChangesAsync();
             });
 

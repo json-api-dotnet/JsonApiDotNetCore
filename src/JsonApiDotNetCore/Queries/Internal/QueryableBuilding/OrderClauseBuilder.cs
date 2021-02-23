@@ -70,11 +70,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private Expression ExtensionMethodCall(Expression source, string operationName, Type keyType,
             LambdaExpression keySelector)
         {
-            return Expression.Call(_extensionType, operationName, new[]
-            {
-                LambdaScope.Parameter.Type,
-                keyType
-            }, source, keySelector);
+            var typeArguments = ArrayFactory.Create(LambdaScope.Parameter.Type, keyType);
+            return Expression.Call(_extensionType, operationName, typeArguments, source, keySelector);
         }
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)

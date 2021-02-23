@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -52,22 +53,18 @@ namespace UnitTests.Serialization
 
         protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
-            var data = new RelationshipEntry();
+            var entry = new RelationshipEntry();
             var rio = relatedType == null ? null : new ResourceIdentifierObject { Id = id, Type = relatedType };
 
             if (isToManyData)
             {
-                data.Data = new List<ResourceIdentifierObject>();
-                if (relatedType != null)
-                {
-                    ((List<ResourceIdentifierObject>)data.Data).Add(rio);
-                }
+                entry.Data = relatedType != null ? rio.AsList() : new List<ResourceIdentifierObject>();
             }
             else
             {
-                data.Data = rio;
+                entry.Data = rio;
             }
-            return data;
+            return entry;
         }
 
         protected Document CreateTestResourceDocument()

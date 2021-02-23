@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <param name="rootNode">Root node.</param>
         public NodeLayer CreateNextLayer(IResourceNode rootNode)
         {
-            return CreateNextLayer(new[] { rootNode });
+            return CreateNextLayer(rootNode.AsEnumerable());
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                         if (proxy.IsContextRelation || uniqueRightResources.Any())
                         {
                             AddToRelationshipGroup(rightResourcesGrouped, proxy, uniqueRightResources);
-                            AddToRelationshipGroup(leftResourcesGrouped, proxy, new[] { leftResource });
+                            AddToRelationshipGroup(leftResourcesGrouped, proxy, leftResource.AsEnumerable());
                         }
                     }
                 }
@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             {
                 var type = kvp.Key.RightType;
                 var list = TypeHelper.CopyToList(kvp.Value, type);
-                processResourcesMethod.MakeGenericMethod(type).Invoke(this, new object[] { list });
+                processResourcesMethod.MakeGenericMethod(type).Invoke(this, ArrayFactory.Create<object>(list));
             }
 
             return (leftResourcesGrouped, rightResourcesGrouped);

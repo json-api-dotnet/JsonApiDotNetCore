@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -37,7 +36,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -59,7 +58,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -83,7 +82,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -105,7 +104,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -127,7 +126,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -150,7 +149,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             var relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(new List<IQueryConstraintProvider>(ConvertInclusionChains(relationshipsChains)).GetEnumerator());
+            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);

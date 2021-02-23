@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -39,7 +40,7 @@ namespace UnitTests.Serialization
             };
         }
 
-        protected ResponseSerializer<T> GetResponseSerializer<T>(List<List<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
+        protected ResponseSerializer<T> GetResponseSerializer<T>(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null, Dictionary<string, object> metaDict = null, TopLevelLinks topLinks = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) where T : class, IIdentifiable
         {
             var meta = GetMetaBuilder(metaDict);
             var link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
@@ -50,7 +51,7 @@ namespace UnitTests.Serialization
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new JsonApiOptions());
         }
 
-        protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(List<List<RelationshipAttribute>> inclusionChains = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) 
+        protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null, ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null) 
         {
             var link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             var includeConstraints = GetIncludeConstraints(inclusionChains);
@@ -100,13 +101,13 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IEnumerable<IQueryConstraintProvider> GetIncludeConstraints(List<List<RelationshipAttribute>> inclusionChains = null)
+        protected IEnumerable<IQueryConstraintProvider> GetIncludeConstraints(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null)
         {
             var expressionsInScope = new List<ExpressionInScope>();
 
             if (inclusionChains != null)
             {
-                var chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
+                var chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships.ToArray())).ToList();
                 var includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
                 expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
             }
@@ -115,7 +116,7 @@ namespace UnitTests.Serialization
             mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
-            return new List<IQueryConstraintProvider> {includeConstraintProvider};
+            return includeConstraintProvider.AsEnumerable();
         }
 
         /// <summary>

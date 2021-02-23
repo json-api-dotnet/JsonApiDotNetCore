@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.QueryStrings;
@@ -43,11 +43,8 @@ namespace Benchmarks.Query
             JsonApiRequest request, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
             var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
-            
-            var readers = new List<IQueryStringParameterReader>
-            {
-                sortReader
-            };
+
+            var readers = sortReader.AsEnumerable();
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
@@ -65,10 +62,7 @@ namespace Benchmarks.Query
             var defaultsReader = new DefaultsQueryStringParameterReader(options);
             var nullsReader = new NullsQueryStringParameterReader(options);
 
-            var readers = new List<IQueryStringParameterReader>
-            {
-                includeReader, filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader
-            };
+            var readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader);
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }

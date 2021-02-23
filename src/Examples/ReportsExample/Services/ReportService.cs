@@ -21,12 +21,12 @@ namespace ReportsExample.Services
         {
             _logger.LogInformation("GetAsync");
 
-            IReadOnlyCollection<Report> reports = GetReports().ToList();
+            var reports = GetReports();
 
             return Task.FromResult(reports);
         }
 
-        private IEnumerable<Report> GetReports()
+        private IReadOnlyCollection<Report> GetReports()
         {
             return new List<Report>
             {

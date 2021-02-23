@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IEnumerable<IncludeElementExpression> includeElements,
             IDictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>> updatesInChildren)
         {
-            var newIncludeElements = new List<IncludeElementExpression>(includeElements);
+            var newIncludeElements = includeElements.ToList();
 
             foreach (var (existingElement, updatedChildren) in updatesInChildren)
             {
@@ -211,7 +211,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var queryLayer = ComposeFromConstraints(resourceContext);
             queryLayer.Sort = null;
             queryLayer.Pagination = null;
-            queryLayer.Filter = CreateFilterById(id, idAttribute, queryLayer.Filter);
+            queryLayer.Filter = CreateFilterByIds(id.AsArray(), idAttribute, queryLayer.Filter);
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = CreateFilterById(primaryId, primaryIdAttribute, primaryFilter),
+                Filter = CreateFilterByIds(primaryId.AsArray(), primaryIdAttribute, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -282,13 +282,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 ? new IncludeElementExpression(secondaryRelationship, relativeInclude.Elements)
                 : new IncludeElementExpression(secondaryRelationship);
 
-            return new IncludeExpression(new[] {parentElement});
-        }
-
-        private FilterExpression CreateFilterById<TId>(TId id, AttrAttribute idAttribute, FilterExpression existingFilter)
-        {
-            var ids = new[] { id };
-            return CreateFilterByIds(ids, idAttribute, existingFilter);
+            return new IncludeExpression(parentElement.AsArray());
         }
 
         private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
@@ -314,7 +308,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 ? existingFilter
                 : existingFilter == null
                     ? filter
-                    : new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
+                    : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(filter, existingFilter));
 
             // @formatter:keep_existing_linebreaks restore
         }
@@ -333,7 +327,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
-            primaryLayer.Filter = CreateFilterById(id, primaryIdAttribute, primaryLayer.Filter);
+            primaryLayer.Filter = CreateFilterByIds(id.AsArray(), primaryIdAttribute, primaryLayer.Filter);
             primaryLayer.Projection = null;
 
             return primaryLayer;
@@ -395,12 +389,12 @@ namespace JsonApiDotNetCore.Queries.Internal
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
             var rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
-            var leftFilter = CreateFilterById(leftId, leftIdAttribute, null);
+            var leftFilter = CreateFilterByIds(leftId.AsArray(), leftIdAttribute, null);
             var rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
 
             return new QueryLayer(leftResourceContext)
             {
-                Include = new IncludeExpression(new[] {new IncludeElementExpression(hasManyRelationship)}),
+                Include = new IncludeExpression(new IncludeElementExpression(hasManyRelationship).AsArray()),
                 Filter = leftFilter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
@@ -451,7 +445,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (sort == null)
             {
                 var idAttribute = GetIdAttribute(resourceContext);
-                sort = new SortExpression(new[] {new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true)});
+                sort = new SortExpression(new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true).AsArray());
             }
 
             return sort;

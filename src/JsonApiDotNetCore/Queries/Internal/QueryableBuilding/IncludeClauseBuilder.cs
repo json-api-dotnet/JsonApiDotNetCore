@@ -76,10 +76,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression navigationExpression = Expression.Constant(navigationPropertyPath);
 
-            return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", new[]
-            {
-                LambdaScope.Parameter.Type
-            }, source, navigationExpression);
+            return Expression.Call(typeof(EntityFrameworkQueryableExtensions), "Include", LambdaScope.Parameter.Type.AsArray(), source, navigationExpression);
         }
     }
 }

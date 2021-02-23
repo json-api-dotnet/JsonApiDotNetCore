@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -42,7 +43,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
 
             // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());
@@ -61,7 +62,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
 
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => CheckImplicitTodoItems(rh)), ResourcePipeline.Delete), Times.Once());
@@ -79,7 +80,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             var (_, hookExecutor, personResourceMock, todoResourceMock, passportResourceMock) = CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, repoDbContextOptions: _options);
 
             // Act
-            hookExecutor.BeforeDelete(new List<Person> { _person }, ResourcePipeline.Delete);
+            hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
 
             // Assert
             personResourceMock.Verify(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<Person>>(), It.IsAny<ResourcePipeline>()), Times.Once());

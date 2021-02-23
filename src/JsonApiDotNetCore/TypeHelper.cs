@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore
         /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new[] {parameter}, constructorArguments);
+            return CreateInstanceOfOpenType(openType, parameter.AsArray(), constructorArguments);
         }
 
         /// <summary>
@@ -287,7 +287,7 @@ namespace JsonApiDotNetCore
 
             if (value is IIdentifiable resource)
             {
-                return new[] {resource};
+                return resource.AsArray();
             }
 
             return Array.Empty<IIdentifiable>();
