@@ -84,6 +84,7 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html">IRepositorySupportsTransaction</a></div>
     <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-1.html">IResourceRepository</a>&lt;TResource&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository</a>&lt;TResource, <span class="xref">System.Int32</span>&gt;</div>
     <div><a class="xref" href="JsonApiDotNetCore.Repositories.IResourceReadRepository-1.html">IResourceReadRepository</a>&lt;TResource&gt;</div>
@@ -93,6 +94,9 @@
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId">EntityFrameworkCoreRepository&lt;TResource, Int32&gt;.TransactionId</a>
+    </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_GetAsync_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_">EntityFrameworkCoreRepository&lt;TResource, Int32&gt;.GetAsync(QueryLayer, CancellationToken)</a>
     </div>
@@ -164,7 +168,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class EntityFrameworkCoreRepository&lt;TResource&gt; : EntityFrameworkCoreRepository&lt;TResource, int&gt;, IResourceRepository&lt;TResource&gt;, IResourceRepository&lt;TResource, int&gt;, IResourceReadRepository&lt;TResource&gt;, IResourceReadRepository&lt;TResource, int&gt;, IResourceWriteRepository&lt;TResource&gt;, IResourceWriteRepository&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class EntityFrameworkCoreRepository&lt;TResource&gt; : EntityFrameworkCoreRepository&lt;TResource, int&gt;, IRepositorySupportsTransaction, IResourceRepository&lt;TResource&gt;, IResourceRepository&lt;TResource, int&gt;, IResourceReadRepository&lt;TResource&gt;, IResourceReadRepository&lt;TResource, int&gt;, IResourceWriteRepository&lt;TResource&gt;, IResourceWriteRepository&lt;TResource, int&gt; where TResource : class, IIdentifiable&lt;int&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,10 +189,10 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%601.%23ctor(JsonApiDotNetCore.Resources.ITargetedFields%2CJsonApiDotNetCore.Repositories.IDbContextResolver%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CJsonApiDotNetCore.Resources.IResourceFactory%2CSystem.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CMicrosoft.Extensions.Logging.ILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%601.%23ctor(JsonApiDotNetCore.Resources.ITargetedFields%2CJsonApiDotNetCore.Repositories.IDbContextResolver%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CJsonApiDotNetCore.Resources.IResourceFactory%2CSystem.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CMicrosoft.Extensions.Logging.ILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L413">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L423">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_" data-uid="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory)">EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt;, ILoggerFactory)</h4>
@@ -242,6 +246,9 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
+      <a class="xref" href="JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html">IRepositorySupportsTransaction</a>
+  </div>
+  <div>
       <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-1.html">IResourceRepository&lt;TResource&gt;</a>
   </div>
   <div>
@@ -267,10 +274,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L410" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/EntityFrameworkCoreRepository.cs/#L420" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

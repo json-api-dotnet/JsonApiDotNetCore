@@ -1,6 +1,865 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: JsonApiDotNetCore.AtomicOperations
+  name: JsonApiDotNetCore.AtomicOperations
+  href: api/JsonApiDotNetCore.AtomicOperations.html
+  commentId: N:JsonApiDotNetCore.AtomicOperations
+  fullName: JsonApiDotNetCore.AtomicOperations
+  nameWithType: JsonApiDotNetCore.AtomicOperations
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
+  name: EntityFrameworkCoreTransaction
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
+  nameWithType: EntityFrameworkCoreTransaction
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction,Microsoft.EntityFrameworkCore.DbContext)
+  name: EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_Microsoft_EntityFrameworkCore_DbContext_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction,Microsoft.EntityFrameworkCore.DbContext)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction, Microsoft.EntityFrameworkCore.DbContext)
+  nameWithType: EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor*
+  name: EntityFrameworkCoreTransaction
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction
+  nameWithType: EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  name: AfterProcessOperationAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_AfterProcessOperationAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreTransaction.AfterProcessOperationAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync*
+  name: AfterProcessOperationAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_AfterProcessOperationAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.AfterProcessOperationAsync
+  nameWithType: EntityFrameworkCoreTransaction.AfterProcessOperationAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  name: BeforeProcessOperationAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_BeforeProcessOperationAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreTransaction.BeforeProcessOperationAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync*
+  name: BeforeProcessOperationAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_BeforeProcessOperationAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.BeforeProcessOperationAsync
+  nameWithType: EntityFrameworkCoreTransaction.BeforeProcessOperationAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync(System.Threading.CancellationToken)
+  name: CommitAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_CommitAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync(System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreTransaction.CommitAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync*
+  name: CommitAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_CommitAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.CommitAsync
+  nameWithType: EntityFrameworkCoreTransaction.CommitAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync
+  name: DisposeAsync()
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_DisposeAsync
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync()
+  nameWithType: EntityFrameworkCoreTransaction.DisposeAsync()
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync*
+  name: DisposeAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_DisposeAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.DisposeAsync
+  nameWithType: EntityFrameworkCoreTransaction.DisposeAsync
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_TransactionId
+  commentId: P:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId
+  nameWithType: EntityFrameworkCoreTransaction.TransactionId
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.TransactionId
+  nameWithType: EntityFrameworkCoreTransaction.TransactionId
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory
+  name: EntityFrameworkCoreTransactionFactory
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory
+  nameWithType: EntityFrameworkCoreTransactionFactory
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.#ctor(JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: EntityFrameworkCoreTransactionFactory(IDbContextResolver, IJsonApiOptions)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory__ctor_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.#ctor(JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.EntityFrameworkCoreTransactionFactory(JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: EntityFrameworkCoreTransactionFactory.EntityFrameworkCoreTransactionFactory(IDbContextResolver, IJsonApiOptions)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.#ctor*
+  name: EntityFrameworkCoreTransactionFactory
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.EntityFrameworkCoreTransactionFactory
+  nameWithType: EntityFrameworkCoreTransactionFactory.EntityFrameworkCoreTransactionFactory
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  name: BeginTransactionAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  nameWithType: EntityFrameworkCoreTransactionFactory.BeginTransactionAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync*
+  name: BeginTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransactionFactory_BeginTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
+  nameWithType: EntityFrameworkCoreTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker
+  name: ILocalIdTracker
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker
+  nameWithType: ILocalIdTracker
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,System.String,System.String)
+  name: Assign(String, String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Assign_System_String_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String,System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign(System.String, System.String, System.String)
+  nameWithType: ILocalIdTracker.Assign(String, String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign*
+  name: Assign
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Assign_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Assign
+  nameWithType: ILocalIdTracker.Assign
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,System.String)
+  name: Declare(String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Declare_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare(System.String, System.String)
+  nameWithType: ILocalIdTracker.Declare(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare*
+  name: Declare
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Declare_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Declare
+  nameWithType: ILocalIdTracker.Declare
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,System.String)
+  name: GetValue(String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_GetValue_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue(System.String, System.String)
+  nameWithType: ILocalIdTracker.GetValue(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue*
+  name: GetValue
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_GetValue_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.GetValue
+  nameWithType: ILocalIdTracker.GetValue
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset
+  name: Reset()
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Reset
+  commentId: M:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset()
+  nameWithType: ILocalIdTracker.Reset()
+- uid: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset*
+  name: Reset
+  href: api/JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_Reset_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.ILocalIdTracker.Reset
+  nameWithType: ILocalIdTracker.Reset
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor
+  name: IOperationProcessorAccessor
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor
+  nameWithType: IOperationProcessorAccessor
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_IOperationProcessorAccessor_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: IOperationProcessorAccessor.ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_IOperationProcessorAccessor_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor.ProcessAsync
+  nameWithType: IOperationProcessorAccessor.ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor
+  name: IOperationsProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.IOperationsProcessor
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor
+  nameWithType: IOperationsProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name: ProcessAsync(IList<OperationContainer>, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_ProcessAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name.vb: ProcessAsync(IList(Of OperationContainer), CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync(System.Collections.Generic.IList<JsonApiDotNetCore.Resources.OperationContainer>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync(System.Collections.Generic.IList(Of JsonApiDotNetCore.Resources.OperationContainer), System.Threading.CancellationToken)
+  nameWithType: IOperationsProcessor.ProcessAsync(IList<OperationContainer>, CancellationToken)
+  nameWithType.vb: IOperationsProcessor.ProcessAsync(IList(Of OperationContainer), CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.ProcessAsync
+  nameWithType: IOperationsProcessor.ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction
+  name: IOperationsTransaction
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction
+  nameWithType: IOperationsTransaction
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  name: AfterProcessOperationAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_AfterProcessOperationAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)
+  nameWithType: IOperationsTransaction.AfterProcessOperationAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync*
+  name: AfterProcessOperationAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_AfterProcessOperationAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync
+  nameWithType: IOperationsTransaction.AfterProcessOperationAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  name: BeforeProcessOperationAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_BeforeProcessOperationAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)
+  nameWithType: IOperationsTransaction.BeforeProcessOperationAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync*
+  name: BeforeProcessOperationAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_BeforeProcessOperationAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync
+  nameWithType: IOperationsTransaction.BeforeProcessOperationAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync(System.Threading.CancellationToken)
+  name: CommitAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_CommitAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync(System.Threading.CancellationToken)
+  nameWithType: IOperationsTransaction.CommitAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync*
+  name: CommitAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_CommitAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync
+  nameWithType: IOperationsTransaction.CommitAsync
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_TransactionId
+  commentId: P:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId
+  nameWithType: IOperationsTransaction.TransactionId
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId
+  nameWithType: IOperationsTransaction.TransactionId
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory
+  name: IOperationsTransactionFactory
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory
+  nameWithType: IOperationsTransactionFactory
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  name: BeginTransactionAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  nameWithType: IOperationsTransactionFactory.BeginTransactionAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync*
+  name: BeginTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_BeginTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory.BeginTransactionAsync
+  nameWithType: IOperationsTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker
+  name: LocalIdTracker
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.LocalIdTracker
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker
+  nameWithType: LocalIdTracker
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,System.String,System.String)
+  name: Assign(String, String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Assign_System_String_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String,System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign(System.String, System.String, System.String)
+  nameWithType: LocalIdTracker.Assign(String, String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign*
+  name: Assign
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Assign_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Assign
+  nameWithType: LocalIdTracker.Assign
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,System.String)
+  name: Declare(String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Declare_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare(System.String, System.String)
+  nameWithType: LocalIdTracker.Declare(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare*
+  name: Declare
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Declare_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Declare
+  nameWithType: LocalIdTracker.Declare
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,System.String)
+  name: GetValue(String, String)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_GetValue_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String,System.String)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue(System.String, System.String)
+  nameWithType: LocalIdTracker.GetValue(String, String)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue*
+  name: GetValue
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_GetValue_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.GetValue
+  nameWithType: LocalIdTracker.GetValue
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset
+  name: Reset()
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Reset
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset()
+  nameWithType: LocalIdTracker.Reset()
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset*
+  name: Reset
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdTracker.html#JsonApiDotNetCore_AtomicOperations_LocalIdTracker_Reset_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdTracker.Reset
+  nameWithType: LocalIdTracker.Reset
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdValidator
+  name: LocalIdValidator
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdValidator.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.LocalIdValidator
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdValidator
+  nameWithType: LocalIdValidator
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.#ctor(JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  name: LocalIdValidator(ILocalIdTracker, IResourceContextProvider)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdValidator.html#JsonApiDotNetCore_AtomicOperations_LocalIdValidator__ctor_JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_JsonApiDotNetCore_Configuration_IResourceContextProvider_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdValidator.#ctor(JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.LocalIdValidator(JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  nameWithType: LocalIdValidator.LocalIdValidator(ILocalIdTracker, IResourceContextProvider)
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.#ctor*
+  name: LocalIdValidator
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdValidator.html#JsonApiDotNetCore_AtomicOperations_LocalIdValidator__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdValidator.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.LocalIdValidator
+  nameWithType: LocalIdValidator.LocalIdValidator
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name: Validate(IEnumerable<OperationContainer>)
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdValidator.html#JsonApiDotNetCore_AtomicOperations_LocalIdValidator_Validate_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name.vb: Validate(IEnumerable(Of OperationContainer))
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Resources.OperationContainer>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Resources.OperationContainer))
+  nameWithType: LocalIdValidator.Validate(IEnumerable<OperationContainer>)
+  nameWithType.vb: LocalIdValidator.Validate(IEnumerable(Of OperationContainer))
+- uid: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate*
+  name: Validate
+  href: api/JsonApiDotNetCore.AtomicOperations.LocalIdValidator.html#JsonApiDotNetCore_AtomicOperations_LocalIdValidator_Validate_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.LocalIdValidator.Validate
+  nameWithType: LocalIdValidator.Validate
+- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory
+  name: MissingTransactionFactory
+  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory
+  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory
+  nameWithType: MissingTransactionFactory
+- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  name: BeginTransactionAsync(CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_BeginTransactionAsync_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync(System.Threading.CancellationToken)
+  nameWithType: MissingTransactionFactory.BeginTransactionAsync(CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync*
+  name: BeginTransactionAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.html#JsonApiDotNetCore_AtomicOperations_MissingTransactionFactory_BeginTransactionAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.MissingTransactionFactory.BeginTransactionAsync
+  nameWithType: MissingTransactionFactory.BeginTransactionAsync
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor
+  name: OperationProcessorAccessor
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor
+  nameWithType: OperationProcessorAccessor
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.IServiceProvider)
+  name: OperationProcessorAccessor(IResourceContextProvider, IServiceProvider)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_System_IServiceProvider_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,System.IServiceProvider)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.OperationProcessorAccessor(JsonApiDotNetCore.Configuration.IResourceContextProvider, System.IServiceProvider)
+  nameWithType: OperationProcessorAccessor.OperationProcessorAccessor(IResourceContextProvider, IServiceProvider)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.#ctor*
+  name: OperationProcessorAccessor
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.OperationProcessorAccessor
+  nameWithType: OperationProcessorAccessor.OperationProcessorAccessor
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: OperationProcessorAccessor.ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ProcessAsync
+  nameWithType: OperationProcessorAccessor.ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor(JsonApiDotNetCore.Resources.OperationContainer)
+  name: ResolveProcessor(OperationContainer)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor_ResolveProcessor_JsonApiDotNetCore_Resources_OperationContainer_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor(JsonApiDotNetCore.Resources.OperationContainer)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor(JsonApiDotNetCore.Resources.OperationContainer)
+  nameWithType: OperationProcessorAccessor.ResolveProcessor(OperationContainer)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor*
+  name: ResolveProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.html#JsonApiDotNetCore_AtomicOperations_OperationProcessorAccessor_ResolveProcessor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationProcessorAccessor.ResolveProcessor
+  nameWithType: OperationProcessorAccessor.ResolveProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor
+  name: OperationsProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.OperationsProcessor
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor
+  nameWithType: OperationsProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  name: OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceContextProvider, IJsonApiRequest, ITargetedFields)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor__ctor_JsonApiDotNetCore_AtomicOperations_IOperationProcessorAccessor_JsonApiDotNetCore_AtomicOperations_IOperationsTransactionFactory_JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor,JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory,JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.OperationsProcessor(JsonApiDotNetCore.AtomicOperations.IOperationProcessorAccessor, JsonApiDotNetCore.AtomicOperations.IOperationsTransactionFactory, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields)
+  nameWithType: OperationsProcessor.OperationsProcessor(IOperationProcessorAccessor, IOperationsTransactionFactory, ILocalIdTracker, IResourceContextProvider, IJsonApiRequest, ITargetedFields)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor*
+  name: OperationsProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.OperationsProcessor
+  nameWithType: OperationsProcessor.OperationsProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name: ProcessAsync(IList<OperationContainer>, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name.vb: ProcessAsync(IList(Of OperationContainer), CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync(System.Collections.Generic.IList<JsonApiDotNetCore.Resources.OperationContainer>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync(System.Collections.Generic.IList(Of JsonApiDotNetCore.Resources.OperationContainer), System.Threading.CancellationToken)
+  nameWithType: OperationsProcessor.ProcessAsync(IList<OperationContainer>, CancellationToken)
+  nameWithType.vb: OperationsProcessor.ProcessAsync(IList(Of OperationContainer), CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync
+  nameWithType: OperationsProcessor.ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessOperation(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperation_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: OperationsProcessor.ProcessOperation(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation*
+  name: ProcessOperation
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperation_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation
+  nameWithType: OperationsProcessor.ProcessOperation
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation(JsonApiDotNetCore.Resources.OperationContainer)
+  name: TrackLocalIdsForOperation(OperationContainer)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_TrackLocalIdsForOperation_JsonApiDotNetCore_Resources_OperationContainer_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation(JsonApiDotNetCore.Resources.OperationContainer)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation(JsonApiDotNetCore.Resources.OperationContainer)
+  nameWithType: OperationsProcessor.TrackLocalIdsForOperation(OperationContainer)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation*
+  name: TrackLocalIdsForOperation
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_TrackLocalIdsForOperation_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation
+  nameWithType: OperationsProcessor.TrackLocalIdsForOperation
+- uid: JsonApiDotNetCore.AtomicOperations.Processors
+  name: JsonApiDotNetCore.AtomicOperations.Processors
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.html
+  commentId: N:JsonApiDotNetCore.AtomicOperations.Processors
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors
+  nameWithType: JsonApiDotNetCore.AtomicOperations.Processors
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2
+  name: AddToRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2
+  name.vb: AddToRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor(Of TResource, TId)
+  nameWithType: AddToRelationshipProcessor<TResource, TId>
+  nameWithType.vb: AddToRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.IAddToRelationshipService{`0,`1})
+  name: AddToRelationshipProcessor(IAddToRelationshipService<TResource, TId>)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_AddToRelationshipProcessor_2__ctor_JsonApiDotNetCore_Services_IAddToRelationshipService__0__1__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.IAddToRelationshipService{`0,`1})
+  name.vb: AddToRelationshipProcessor(IAddToRelationshipService(Of TResource, TId))
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor<TResource, TId>.AddToRelationshipProcessor(JsonApiDotNetCore.Services.IAddToRelationshipService<TResource, TId>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor(Of TResource, TId).AddToRelationshipProcessor(JsonApiDotNetCore.Services.IAddToRelationshipService(Of TResource, TId))
+  nameWithType: AddToRelationshipProcessor<TResource, TId>.AddToRelationshipProcessor(IAddToRelationshipService<TResource, TId>)
+  nameWithType.vb: AddToRelationshipProcessor(Of TResource, TId).AddToRelationshipProcessor(IAddToRelationshipService(Of TResource, TId))
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.#ctor*
+  name: AddToRelationshipProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_AddToRelationshipProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor<TResource, TId>.AddToRelationshipProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor(Of TResource, TId).AddToRelationshipProcessor
+  nameWithType: AddToRelationshipProcessor<TResource, TId>.AddToRelationshipProcessor
+  nameWithType.vb: AddToRelationshipProcessor(Of TResource, TId).AddToRelationshipProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_AddToRelationshipProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: AddToRelationshipProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: AddToRelationshipProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_AddToRelationshipProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.AddToRelationshipProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: AddToRelationshipProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: AddToRelationshipProcessor(Of TResource, TId).ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2
+  name: CreateProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2
+  name.vb: CreateProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor(Of TResource, TId)
+  nameWithType: CreateProcessor<TResource, TId>
+  nameWithType.vb: CreateProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.#ctor(JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  name: CreateProcessor(ICreateService<TResource, TId>, ILocalIdTracker, IResourceContextProvider)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_CreateProcessor_2__ctor_JsonApiDotNetCore_Services_ICreateService__0__1__JsonApiDotNetCore_AtomicOperations_ILocalIdTracker_JsonApiDotNetCore_Configuration_IResourceContextProvider_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.#ctor(JsonApiDotNetCore.Services.ICreateService{`0,`1},JsonApiDotNetCore.AtomicOperations.ILocalIdTracker,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  name.vb: CreateProcessor(ICreateService(Of TResource, TId), ILocalIdTracker, IResourceContextProvider)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>.CreateProcessor(JsonApiDotNetCore.Services.ICreateService<TResource, TId>, JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor(Of TResource, TId).CreateProcessor(JsonApiDotNetCore.Services.ICreateService(Of TResource, TId), JsonApiDotNetCore.AtomicOperations.ILocalIdTracker, JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  nameWithType: CreateProcessor<TResource, TId>.CreateProcessor(ICreateService<TResource, TId>, ILocalIdTracker, IResourceContextProvider)
+  nameWithType.vb: CreateProcessor(Of TResource, TId).CreateProcessor(ICreateService(Of TResource, TId), ILocalIdTracker, IResourceContextProvider)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.#ctor*
+  name: CreateProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_CreateProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>.CreateProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor(Of TResource, TId).CreateProcessor
+  nameWithType: CreateProcessor<TResource, TId>.CreateProcessor
+  nameWithType.vb: CreateProcessor(Of TResource, TId).CreateProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_CreateProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: CreateProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: CreateProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_CreateProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.CreateProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: CreateProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: CreateProcessor(Of TResource, TId).ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2
+  name: DeleteProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2
+  name.vb: DeleteProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor(Of TResource, TId)
+  nameWithType: DeleteProcessor<TResource, TId>
+  nameWithType.vb: DeleteProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.#ctor(JsonApiDotNetCore.Services.IDeleteService{`0,`1})
+  name: DeleteProcessor(IDeleteService<TResource, TId>)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_DeleteProcessor_2__ctor_JsonApiDotNetCore_Services_IDeleteService__0__1__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.#ctor(JsonApiDotNetCore.Services.IDeleteService{`0,`1})
+  name.vb: DeleteProcessor(IDeleteService(Of TResource, TId))
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor<TResource, TId>.DeleteProcessor(JsonApiDotNetCore.Services.IDeleteService<TResource, TId>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor(Of TResource, TId).DeleteProcessor(JsonApiDotNetCore.Services.IDeleteService(Of TResource, TId))
+  nameWithType: DeleteProcessor<TResource, TId>.DeleteProcessor(IDeleteService<TResource, TId>)
+  nameWithType.vb: DeleteProcessor(Of TResource, TId).DeleteProcessor(IDeleteService(Of TResource, TId))
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.#ctor*
+  name: DeleteProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_DeleteProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor<TResource, TId>.DeleteProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor(Of TResource, TId).DeleteProcessor
+  nameWithType: DeleteProcessor<TResource, TId>.DeleteProcessor
+  nameWithType.vb: DeleteProcessor(Of TResource, TId).DeleteProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_DeleteProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: DeleteProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: DeleteProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_DeleteProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.DeleteProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: DeleteProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: DeleteProcessor(Of TResource, TId).ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor`2
+  name: IAddToRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor`2
+  name.vb: IAddToRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.IAddToRelationshipProcessor(Of TResource, TId)
+  nameWithType: IAddToRelationshipProcessor<TResource, TId>
+  nameWithType.vb: IAddToRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor`2
+  name: ICreateProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor`2
+  name.vb: ICreateProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.ICreateProcessor(Of TResource, TId)
+  nameWithType: ICreateProcessor<TResource, TId>
+  nameWithType.vb: ICreateProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor`2
+  name: IDeleteProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor`2
+  name.vb: IDeleteProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.IDeleteProcessor(Of TResource, TId)
+  nameWithType: IDeleteProcessor<TResource, TId>
+  nameWithType.vb: IDeleteProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor
+  name: IOperationProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor
+  nameWithType: IOperationProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.html#JsonApiDotNetCore_AtomicOperations_Processors_IOperationProcessor_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: IOperationProcessor.ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.html#JsonApiDotNetCore_AtomicOperations_Processors_IOperationProcessor_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IOperationProcessor.ProcessAsync
+  nameWithType: IOperationProcessor.ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor`2
+  name: IRemoveFromRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor`2
+  name.vb: IRemoveFromRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.IRemoveFromRelationshipProcessor(Of TResource, TId)
+  nameWithType: IRemoveFromRelationshipProcessor<TResource, TId>
+  nameWithType.vb: IRemoveFromRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor`2
+  name: ISetRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor`2
+  name.vb: ISetRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.ISetRelationshipProcessor(Of TResource, TId)
+  nameWithType: ISetRelationshipProcessor<TResource, TId>
+  nameWithType.vb: ISetRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor`2
+  name: IUpdateProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor`2
+  name.vb: IUpdateProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.IUpdateProcessor(Of TResource, TId)
+  nameWithType: IUpdateProcessor<TResource, TId>
+  nameWithType.vb: IUpdateProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2
+  name: RemoveFromRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2
+  name.vb: RemoveFromRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor(Of TResource, TId)
+  nameWithType: RemoveFromRelationshipProcessor<TResource, TId>
+  nameWithType.vb: RemoveFromRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,`1})
+  name: RemoveFromRelationshipProcessor(IRemoveFromRelationshipService<TResource, TId>)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_RemoveFromRelationshipProcessor_2__ctor_JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0__1__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,`1})
+  name.vb: RemoveFromRelationshipProcessor(IRemoveFromRelationshipService(Of TResource, TId))
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor<TResource, TId>.RemoveFromRelationshipProcessor(JsonApiDotNetCore.Services.IRemoveFromRelationshipService<TResource, TId>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor(Of TResource, TId).RemoveFromRelationshipProcessor(JsonApiDotNetCore.Services.IRemoveFromRelationshipService(Of TResource, TId))
+  nameWithType: RemoveFromRelationshipProcessor<TResource, TId>.RemoveFromRelationshipProcessor(IRemoveFromRelationshipService<TResource, TId>)
+  nameWithType.vb: RemoveFromRelationshipProcessor(Of TResource, TId).RemoveFromRelationshipProcessor(IRemoveFromRelationshipService(Of TResource, TId))
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.#ctor*
+  name: RemoveFromRelationshipProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_RemoveFromRelationshipProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor<TResource, TId>.RemoveFromRelationshipProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor(Of TResource, TId).RemoveFromRelationshipProcessor
+  nameWithType: RemoveFromRelationshipProcessor<TResource, TId>.RemoveFromRelationshipProcessor
+  nameWithType.vb: RemoveFromRelationshipProcessor(Of TResource, TId).RemoveFromRelationshipProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_RemoveFromRelationshipProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: RemoveFromRelationshipProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: RemoveFromRelationshipProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_RemoveFromRelationshipProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.RemoveFromRelationshipProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: RemoveFromRelationshipProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: RemoveFromRelationshipProcessor(Of TResource, TId).ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2
+  name: SetRelationshipProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2
+  name.vb: SetRelationshipProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor(Of TResource, TId)
+  nameWithType: SetRelationshipProcessor<TResource, TId>
+  nameWithType.vb: SetRelationshipProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.ISetRelationshipService{`0,`1})
+  name: SetRelationshipProcessor(ISetRelationshipService<TResource, TId>)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_SetRelationshipProcessor_2__ctor_JsonApiDotNetCore_Services_ISetRelationshipService__0__1__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.#ctor(JsonApiDotNetCore.Services.ISetRelationshipService{`0,`1})
+  name.vb: SetRelationshipProcessor(ISetRelationshipService(Of TResource, TId))
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor<TResource, TId>.SetRelationshipProcessor(JsonApiDotNetCore.Services.ISetRelationshipService<TResource, TId>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor(Of TResource, TId).SetRelationshipProcessor(JsonApiDotNetCore.Services.ISetRelationshipService(Of TResource, TId))
+  nameWithType: SetRelationshipProcessor<TResource, TId>.SetRelationshipProcessor(ISetRelationshipService<TResource, TId>)
+  nameWithType.vb: SetRelationshipProcessor(Of TResource, TId).SetRelationshipProcessor(ISetRelationshipService(Of TResource, TId))
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.#ctor*
+  name: SetRelationshipProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_SetRelationshipProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor<TResource, TId>.SetRelationshipProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor(Of TResource, TId).SetRelationshipProcessor
+  nameWithType: SetRelationshipProcessor<TResource, TId>.SetRelationshipProcessor
+  nameWithType.vb: SetRelationshipProcessor(Of TResource, TId).SetRelationshipProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_SetRelationshipProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: SetRelationshipProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: SetRelationshipProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_SetRelationshipProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.SetRelationshipProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: SetRelationshipProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: SetRelationshipProcessor(Of TResource, TId).ProcessAsync
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2
+  name: UpdateProcessor<TResource, TId>
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html
+  commentId: T:JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2
+  name.vb: UpdateProcessor(Of TResource, TId)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor<TResource, TId>
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor(Of TResource, TId)
+  nameWithType: UpdateProcessor<TResource, TId>
+  nameWithType.vb: UpdateProcessor(Of TResource, TId)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.#ctor(JsonApiDotNetCore.Services.IUpdateService{`0,`1})
+  name: UpdateProcessor(IUpdateService<TResource, TId>)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_UpdateProcessor_2__ctor_JsonApiDotNetCore_Services_IUpdateService__0__1__
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.#ctor(JsonApiDotNetCore.Services.IUpdateService{`0,`1})
+  name.vb: UpdateProcessor(IUpdateService(Of TResource, TId))
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor<TResource, TId>.UpdateProcessor(JsonApiDotNetCore.Services.IUpdateService<TResource, TId>)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor(Of TResource, TId).UpdateProcessor(JsonApiDotNetCore.Services.IUpdateService(Of TResource, TId))
+  nameWithType: UpdateProcessor<TResource, TId>.UpdateProcessor(IUpdateService<TResource, TId>)
+  nameWithType.vb: UpdateProcessor(Of TResource, TId).UpdateProcessor(IUpdateService(Of TResource, TId))
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.#ctor*
+  name: UpdateProcessor
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_UpdateProcessor_2__ctor_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor<TResource, TId>.UpdateProcessor
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor(Of TResource, TId).UpdateProcessor
+  nameWithType: UpdateProcessor<TResource, TId>.UpdateProcessor
+  nameWithType.vb: UpdateProcessor(Of TResource, TId).UpdateProcessor
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_UpdateProcessor_2_ProcessAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor<TResource, TId>.ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor(Of TResource, TId).ProcessAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: UpdateProcessor<TResource, TId>.ProcessAsync(OperationContainer, CancellationToken)
+  nameWithType.vb: UpdateProcessor(Of TResource, TId).ProcessAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.ProcessAsync*
+  name: ProcessAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor-2.html#JsonApiDotNetCore_AtomicOperations_Processors_UpdateProcessor_2_ProcessAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor`2.ProcessAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor<TResource, TId>.ProcessAsync
+  fullName.vb: JsonApiDotNetCore.AtomicOperations.Processors.UpdateProcessor(Of TResource, TId).ProcessAsync
+  nameWithType: UpdateProcessor<TResource, TId>.ProcessAsync
+  nameWithType.vb: UpdateProcessor(Of TResource, TId).ProcessAsync
 - uid: JsonApiDotNetCore.Configuration
   name: JsonApiDotNetCore.Configuration
   href: api/JsonApiDotNetCore.Configuration.html
@@ -282,6 +1141,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumIncludeDepth
   nameWithType: IJsonApiOptions.MaximumIncludeDepth
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest
+  name: MaximumOperationsPerRequest
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumOperationsPerRequest
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest
+  nameWithType: IJsonApiOptions.MaximumOperationsPerRequest
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest*
+  name: MaximumOperationsPerRequest
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumOperationsPerRequest_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumOperationsPerRequest
+  nameWithType: IJsonApiOptions.MaximumOperationsPerRequest
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.MaximumPageNumber
   name: MaximumPageNumber
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_MaximumPageNumber
@@ -373,6 +1245,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.TopLevelLinks
   nameWithType: IJsonApiOptions.TopLevelLinks
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel
+  name: TransactionIsolationLevel
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TransactionIsolationLevel
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel
+  nameWithType: IJsonApiOptions.TransactionIsolationLevel
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel*
+  name: TransactionIsolationLevel
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_TransactionIsolationLevel_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.TransactionIsolationLevel
+  nameWithType: IJsonApiOptions.TransactionIsolationLevel
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.UseRelativeLinks
   name: UseRelativeLinks
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_UseRelativeLinks
@@ -734,6 +1619,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumIncludeDepth
   nameWithType: JsonApiOptions.MaximumIncludeDepth
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest
+  name: MaximumOperationsPerRequest
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumOperationsPerRequest
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest
+  nameWithType: JsonApiOptions.MaximumOperationsPerRequest
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest*
+  name: MaximumOperationsPerRequest
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumOperationsPerRequest_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumOperationsPerRequest
+  nameWithType: JsonApiOptions.MaximumOperationsPerRequest
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.MaximumPageNumber
   name: MaximumPageNumber
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_MaximumPageNumber
@@ -825,6 +1723,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.TopLevelLinks
   nameWithType: JsonApiOptions.TopLevelLinks
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel
+  name: TransactionIsolationLevel
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_TransactionIsolationLevel
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel
+  nameWithType: JsonApiOptions.TransactionIsolationLevel
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel*
+  name: TransactionIsolationLevel
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_TransactionIsolationLevel_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.TransactionIsolationLevel
+  nameWithType: JsonApiOptions.TransactionIsolationLevel
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.UseRelativeLinks
   name: UseRelativeLinks
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_UseRelativeLinks
@@ -1954,6 +2865,73 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource, TId).PostRelationshipAsync
   nameWithType: BaseJsonApiController<TResource, TId>.PostRelationshipAsync
   nameWithType.vb: BaseJsonApiController(Of TResource, TId).PostRelationshipAsync
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController
+  name: BaseJsonApiOperationsController
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html
+  commentId: T:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController
+  nameWithType: BaseJsonApiOperationsController
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  name: BaseJsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_
+  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.BaseJsonApiOperationsController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.AtomicOperations.IOperationsProcessor, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields)
+  nameWithType: BaseJsonApiOperationsController.BaseJsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.#ctor*
+  name: BaseJsonApiOperationsController
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController__ctor_
+  commentId: Overload:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.BaseJsonApiOperationsController
+  nameWithType: BaseJsonApiOperationsController.BaseJsonApiOperationsController
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name: PostOperationsAsync(IList<OperationContainer>, CancellationToken)
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name.vb: PostOperationsAsync(IList(Of OperationContainer), CancellationToken)
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList<JsonApiDotNetCore.Resources.OperationContainer>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList(Of JsonApiDotNetCore.Resources.OperationContainer), System.Threading.CancellationToken)
+  nameWithType: BaseJsonApiOperationsController.PostOperationsAsync(IList<OperationContainer>, CancellationToken)
+  nameWithType.vb: BaseJsonApiOperationsController.PostOperationsAsync(IList(Of OperationContainer), CancellationToken)
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync*
+  name: PostOperationsAsync
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_PostOperationsAsync_
+  commentId: Overload:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync
+  nameWithType: BaseJsonApiOperationsController.PostOperationsAsync
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name: ValidateClientGeneratedIds(IEnumerable<OperationContainer>)
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateClientGeneratedIds_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__
+  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name.vb: ValidateClientGeneratedIds(IEnumerable(Of OperationContainer))
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Resources.OperationContainer>)
+  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Resources.OperationContainer))
+  nameWithType: BaseJsonApiOperationsController.ValidateClientGeneratedIds(IEnumerable<OperationContainer>)
+  nameWithType.vb: BaseJsonApiOperationsController.ValidateClientGeneratedIds(IEnumerable(Of OperationContainer))
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds*
+  name: ValidateClientGeneratedIds
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateClientGeneratedIds_
+  commentId: Overload:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds
+  nameWithType: BaseJsonApiOperationsController.ValidateClientGeneratedIds
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name: ValidateModelState(IEnumerable<OperationContainer>)
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__
+  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})
+  name.vb: ValidateModelState(IEnumerable(Of OperationContainer))
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Resources.OperationContainer>)
+  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Resources.OperationContainer))
+  nameWithType: BaseJsonApiOperationsController.ValidateModelState(IEnumerable<OperationContainer>)
+  nameWithType.vb: BaseJsonApiOperationsController.ValidateModelState(IEnumerable(Of OperationContainer))
+- uid: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState*
+  name: ValidateModelState
+  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_
+  commentId: Overload:JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState
+  nameWithType: BaseJsonApiOperationsController.ValidateModelState
 - uid: JsonApiDotNetCore.Controllers.CoreJsonApiController
   name: CoreJsonApiController
   href: api/JsonApiDotNetCore.Controllers.CoreJsonApiController.html
@@ -2375,6 +3353,41 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiController(Of TResource, TId).PostRelationshipAsync
   nameWithType: JsonApiController<TResource, TId>.PostRelationshipAsync
   nameWithType.vb: JsonApiController(Of TResource, TId).PostRelationshipAsync
+- uid: JsonApiDotNetCore.Controllers.JsonApiOperationsController
+  name: JsonApiOperationsController
+  href: api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html
+  commentId: T:JsonApiDotNetCore.Controllers.JsonApiOperationsController
+  fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController
+  nameWithType: JsonApiOperationsController
+- uid: JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  name: JsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)
+  href: api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html#JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_
+  commentId: M:JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)
+  fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController.JsonApiOperationsController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.AtomicOperations.IOperationsProcessor, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.ITargetedFields)
+  nameWithType: JsonApiOperationsController.JsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)
+- uid: JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor*
+  name: JsonApiOperationsController
+  href: api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html#JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_
+  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController.JsonApiOperationsController
+  nameWithType: JsonApiOperationsController.JsonApiOperationsController
+- uid: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name: PostOperationsAsync(IList<OperationContainer>, CancellationToken)
+  href: api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html#JsonApiDotNetCore_Controllers_JsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)
+  name.vb: PostOperationsAsync(IList(Of OperationContainer), CancellationToken)
+  fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList<JsonApiDotNetCore.Resources.OperationContainer>, System.Threading.CancellationToken)
+  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList(Of JsonApiDotNetCore.Resources.OperationContainer), System.Threading.CancellationToken)
+  nameWithType: JsonApiOperationsController.PostOperationsAsync(IList<OperationContainer>, CancellationToken)
+  nameWithType.vb: JsonApiOperationsController.PostOperationsAsync(IList(Of OperationContainer), CancellationToken)
+- uid: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync*
+  name: PostOperationsAsync
+  href: api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html#JsonApiDotNetCore_Controllers_JsonApiOperationsController_PostOperationsAsync_
+  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync
+  nameWithType: JsonApiOperationsController.PostOperationsAsync
 - uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`1
   name: JsonApiQueryController<TResource>
   href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html
@@ -2488,6 +3501,77 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource, TId).GetSecondaryAsync
   nameWithType: JsonApiQueryController<TResource, TId>.GetSecondaryAsync
   nameWithType.vb: JsonApiQueryController(Of TResource, TId).GetSecondaryAsync
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation
+  name: ModelStateViolation
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html
+  commentId: T:JsonApiDotNetCore.Controllers.ModelStateViolation
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation
+  nameWithType: ModelStateViolation
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.#ctor(System.String,System.String,System.Type,Microsoft.AspNetCore.Mvc.ModelBinding.ModelError)
+  name: ModelStateViolation(String, String, Type, ModelError)
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation__ctor_System_String_System_String_System_Type_Microsoft_AspNetCore_Mvc_ModelBinding_ModelError_
+  commentId: M:JsonApiDotNetCore.Controllers.ModelStateViolation.#ctor(System.String,System.String,System.Type,Microsoft.AspNetCore.Mvc.ModelBinding.ModelError)
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.ModelStateViolation(System.String, System.String, System.Type, Microsoft.AspNetCore.Mvc.ModelBinding.ModelError)
+  nameWithType: ModelStateViolation.ModelStateViolation(String, String, Type, ModelError)
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.#ctor*
+  name: ModelStateViolation
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation__ctor_
+  commentId: Overload:JsonApiDotNetCore.Controllers.ModelStateViolation.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.ModelStateViolation
+  nameWithType: ModelStateViolation.ModelStateViolation
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.Error
+  name: Error
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_Error
+  commentId: P:JsonApiDotNetCore.Controllers.ModelStateViolation.Error
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.Error
+  nameWithType: ModelStateViolation.Error
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.Error*
+  name: Error
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_Error_
+  commentId: Overload:JsonApiDotNetCore.Controllers.ModelStateViolation.Error
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.Error
+  nameWithType: ModelStateViolation.Error
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix
+  name: Prefix
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_Prefix
+  commentId: P:JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix
+  nameWithType: ModelStateViolation.Prefix
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix*
+  name: Prefix
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_Prefix_
+  commentId: Overload:JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.Prefix
+  nameWithType: ModelStateViolation.Prefix
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName
+  name: PropertyName
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_PropertyName
+  commentId: P:JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName
+  nameWithType: ModelStateViolation.PropertyName
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName*
+  name: PropertyName
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_PropertyName_
+  commentId: Overload:JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.PropertyName
+  nameWithType: ModelStateViolation.PropertyName
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType
+  name: ResourceType
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_ResourceType
+  commentId: P:JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType
+  nameWithType: ModelStateViolation.ResourceType
+- uid: JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType*
+  name: ResourceType
+  href: api/JsonApiDotNetCore.Controllers.ModelStateViolation.html#JsonApiDotNetCore_Controllers_ModelStateViolation_ResourceType_
+  commentId: Overload:JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Controllers.ModelStateViolation.ResourceType
+  nameWithType: ModelStateViolation.ResourceType
 - uid: JsonApiDotNetCore.Errors
   name: JsonApiDotNetCore.Errors
   href: api/JsonApiDotNetCore.Errors.html
@@ -2544,6 +3628,15 @@ references:
   commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
   fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary, System.Type, System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
   nameWithType: InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, Boolean, NamingStrategy)
+- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
+  name: InvalidModelStateException(IEnumerable<ModelStateViolation>, Boolean, NamingStrategy)
+  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Controllers_ModelStateViolation__System_Boolean_Newtonsoft_Json_Serialization_NamingStrategy_
+  commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
+  name.vb: InvalidModelStateException(IEnumerable(Of ModelStateViolation), Boolean, NamingStrategy)
+  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Controllers.ModelStateViolation>, System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
+  fullName.vb: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Controllers.ModelStateViolation), System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
+  nameWithType: InvalidModelStateException.InvalidModelStateException(IEnumerable<ModelStateViolation>, Boolean, NamingStrategy)
+  nameWithType.vb: InvalidModelStateException.InvalidModelStateException(IEnumerable(Of ModelStateViolation), Boolean, NamingStrategy)
 - uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor*
   name: InvalidModelStateException
   href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_
@@ -2733,6 +3826,44 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.MissingResourceInRelationship.ResourceType
   nameWithType: MissingResourceInRelationship.ResourceType
+- uid: JsonApiDotNetCore.Errors.MissingTransactionSupportException
+  name: MissingTransactionSupportException
+  href: api/JsonApiDotNetCore.Errors.MissingTransactionSupportException.html
+  commentId: T:JsonApiDotNetCore.Errors.MissingTransactionSupportException
+  fullName: JsonApiDotNetCore.Errors.MissingTransactionSupportException
+  nameWithType: MissingTransactionSupportException
+- uid: JsonApiDotNetCore.Errors.MissingTransactionSupportException.#ctor(System.String)
+  name: MissingTransactionSupportException(String)
+  href: api/JsonApiDotNetCore.Errors.MissingTransactionSupportException.html#JsonApiDotNetCore_Errors_MissingTransactionSupportException__ctor_System_String_
+  commentId: M:JsonApiDotNetCore.Errors.MissingTransactionSupportException.#ctor(System.String)
+  fullName: JsonApiDotNetCore.Errors.MissingTransactionSupportException.MissingTransactionSupportException(System.String)
+  nameWithType: MissingTransactionSupportException.MissingTransactionSupportException(String)
+- uid: JsonApiDotNetCore.Errors.MissingTransactionSupportException.#ctor*
+  name: MissingTransactionSupportException
+  href: api/JsonApiDotNetCore.Errors.MissingTransactionSupportException.html#JsonApiDotNetCore_Errors_MissingTransactionSupportException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.MissingTransactionSupportException.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Errors.MissingTransactionSupportException.MissingTransactionSupportException
+  nameWithType: MissingTransactionSupportException.MissingTransactionSupportException
+- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException
+  name: NonSharedTransactionException
+  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html
+  commentId: T:JsonApiDotNetCore.Errors.NonSharedTransactionException
+  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException
+  nameWithType: NonSharedTransactionException
+- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
+  name: NonSharedTransactionException()
+  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html#JsonApiDotNetCore_Errors_NonSharedTransactionException__ctor
+  commentId: M:JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
+  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException.NonSharedTransactionException()
+  nameWithType: NonSharedTransactionException.NonSharedTransactionException()
+- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor*
+  name: NonSharedTransactionException
+  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html#JsonApiDotNetCore_Errors_NonSharedTransactionException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException.NonSharedTransactionException
+  nameWithType: NonSharedTransactionException.NonSharedTransactionException
 - uid: JsonApiDotNetCore.Errors.RelationshipNotFoundException
   name: RelationshipNotFoundException
   href: api/JsonApiDotNetCore.Errors.RelationshipNotFoundException.html
@@ -2803,25 +3934,28 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.ResourceAlreadyExistsException
   nameWithType: ResourceAlreadyExistsException.ResourceAlreadyExistsException
-- uid: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException
-  name: ResourceIdInPostRequestNotAllowedException
-  href: api/JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.html
-  commentId: T:JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException
-  fullName: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException
-  nameWithType: ResourceIdInPostRequestNotAllowedException
-- uid: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.#ctor
-  name: ResourceIdInPostRequestNotAllowedException()
-  href: api/JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.html#JsonApiDotNetCore_Errors_ResourceIdInPostRequestNotAllowedException__ctor
-  commentId: M:JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.#ctor
-  fullName: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.ResourceIdInPostRequestNotAllowedException()
-  nameWithType: ResourceIdInPostRequestNotAllowedException.ResourceIdInPostRequestNotAllowedException()
-- uid: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.#ctor*
-  name: ResourceIdInPostRequestNotAllowedException
-  href: api/JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.html#JsonApiDotNetCore_Errors_ResourceIdInPostRequestNotAllowedException__ctor_
-  commentId: Overload:JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.#ctor
+- uid: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException
+  name: ResourceIdInCreateResourceNotAllowedException
+  href: api/JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html
+  commentId: T:JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException
+  fullName: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException
+  nameWithType: ResourceIdInCreateResourceNotAllowedException
+- uid: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.#ctor(System.Nullable{System.Int32})
+  name: ResourceIdInCreateResourceNotAllowedException(Nullable<Int32>)
+  href: api/JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html#JsonApiDotNetCore_Errors_ResourceIdInCreateResourceNotAllowedException__ctor_System_Nullable_System_Int32__
+  commentId: M:JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.#ctor(System.Nullable{System.Int32})
+  name.vb: ResourceIdInCreateResourceNotAllowedException(Nullable(Of Int32))
+  fullName: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException(System.Nullable<System.Int32>)
+  fullName.vb: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException(System.Nullable(Of System.Int32))
+  nameWithType: ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException(Nullable<Int32>)
+  nameWithType.vb: ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException(Nullable(Of Int32))
+- uid: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.#ctor*
+  name: ResourceIdInCreateResourceNotAllowedException
+  href: api/JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html#JsonApiDotNetCore_Errors_ResourceIdInCreateResourceNotAllowedException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.ResourceIdInPostRequestNotAllowedException.ResourceIdInPostRequestNotAllowedException
-  nameWithType: ResourceIdInPostRequestNotAllowedException.ResourceIdInPostRequestNotAllowedException
+  fullName: JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException
+  nameWithType: ResourceIdInCreateResourceNotAllowedException.ResourceIdInCreateResourceNotAllowedException
 - uid: JsonApiDotNetCore.Errors.ResourceIdMismatchException
   name: ResourceIdMismatchException
   href: api/JsonApiDotNetCore.Errors.ResourceIdMismatchException.html
@@ -4709,6 +5843,12 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.EndpointKind
   fullName: JsonApiDotNetCore.Middleware.EndpointKind
   nameWithType: EndpointKind
+- uid: JsonApiDotNetCore.Middleware.EndpointKind.AtomicOperations
+  name: AtomicOperations
+  href: api/JsonApiDotNetCore.Middleware.EndpointKind.html#JsonApiDotNetCore_Middleware_EndpointKind_AtomicOperations
+  commentId: F:JsonApiDotNetCore.Middleware.EndpointKind.AtomicOperations
+  fullName: JsonApiDotNetCore.Middleware.EndpointKind.AtomicOperations
+  nameWithType: EndpointKind.AtomicOperations
 - uid: JsonApiDotNetCore.Middleware.EndpointKind.Primary
   name: Primary
   href: api/JsonApiDotNetCore.Middleware.EndpointKind.html#JsonApiDotNetCore_Middleware_EndpointKind_Primary
@@ -4804,6 +5944,12 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.HeaderConstants
   fullName: JsonApiDotNetCore.Middleware.HeaderConstants
   nameWithType: HeaderConstants
+- uid: JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
+  name: AtomicOperationsMediaType
+  href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_AtomicOperationsMediaType
+  commentId: F:JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
+  fullName: JsonApiDotNetCore.Middleware.HeaderConstants.AtomicOperationsMediaType
+  nameWithType: HeaderConstants.AtomicOperationsMediaType
 - uid: JsonApiDotNetCore.Middleware.HeaderConstants.MediaType
   name: MediaType
   href: api/JsonApiDotNetCore.Middleware.HeaderConstants.html#JsonApiDotNetCore_Middleware_HeaderConstants_MediaType
@@ -4916,6 +6062,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.BasePath
   nameWithType: IJsonApiRequest.BasePath
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: CopyFrom(IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_CopyFrom_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: IJsonApiRequest.CopyFrom(IJsonApiRequest)
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom*
+  name: CopyFrom
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_CopyFrom_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.CopyFrom
+  nameWithType: IJsonApiRequest.CopyFrom
 - uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.IsCollection
   name: IsCollection
   href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_IsCollection
@@ -4955,6 +6114,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.Kind
   nameWithType: IJsonApiRequest.Kind
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind
+  name: OperationKind
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_OperationKind
+  commentId: P:JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind
+  nameWithType: IJsonApiRequest.OperationKind
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind*
+  name: OperationKind
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_OperationKind_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.OperationKind
+  nameWithType: IJsonApiRequest.OperationKind
 - uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.PrimaryId
   name: PrimaryId
   href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_PrimaryId
@@ -5007,6 +6179,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.SecondaryResource
   nameWithType: IJsonApiRequest.SecondaryResource
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_TransactionId
+  commentId: P:JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId
+  nameWithType: IJsonApiRequest.TransactionId
+- uid: JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html#JsonApiDotNetCore_Middleware_IJsonApiRequest_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IJsonApiRequest.TransactionId
+  nameWithType: IJsonApiRequest.TransactionId
 - uid: JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention
   name: IJsonApiRoutingConvention
   href: api/JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html
@@ -5128,6 +6313,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.BasePath
   nameWithType: JsonApiRequest.BasePath
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: CopyFrom(IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_CopyFrom_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom(JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: JsonApiRequest.CopyFrom(IJsonApiRequest)
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom*
+  name: CopyFrom
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_CopyFrom_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.CopyFrom
+  nameWithType: JsonApiRequest.CopyFrom
 - uid: JsonApiDotNetCore.Middleware.JsonApiRequest.IsCollection
   name: IsCollection
   href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_IsCollection
@@ -5167,6 +6365,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.Kind
   nameWithType: JsonApiRequest.Kind
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind
+  name: OperationKind
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_OperationKind
+  commentId: P:JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind
+  nameWithType: JsonApiRequest.OperationKind
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind*
+  name: OperationKind
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_OperationKind_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.OperationKind
+  nameWithType: JsonApiRequest.OperationKind
 - uid: JsonApiDotNetCore.Middleware.JsonApiRequest.PrimaryId
   name: PrimaryId
   href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_PrimaryId
@@ -5219,6 +6430,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.SecondaryResource
   nameWithType: JsonApiRequest.SecondaryResource
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_TransactionId
+  commentId: P:JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId
+  nameWithType: JsonApiRequest.TransactionId
+- uid: JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRequest.html#JsonApiDotNetCore_Middleware_JsonApiRequest_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRequest.TransactionId
+  nameWithType: JsonApiRequest.TransactionId
 - uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention
   name: JsonApiRoutingConvention
   href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html
@@ -5264,6 +6488,48 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController
   nameWithType: JsonApiRoutingConvention.GetResourceTypeForController
+- uid: JsonApiDotNetCore.Middleware.OperationKind
+  name: OperationKind
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html
+  commentId: T:JsonApiDotNetCore.Middleware.OperationKind
+  fullName: JsonApiDotNetCore.Middleware.OperationKind
+  nameWithType: OperationKind
+- uid: JsonApiDotNetCore.Middleware.OperationKind.AddToRelationship
+  name: AddToRelationship
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.AddToRelationship
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.AddToRelationship
+  nameWithType: OperationKind.AddToRelationship
+- uid: JsonApiDotNetCore.Middleware.OperationKind.CreateResource
+  name: CreateResource
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.CreateResource
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.CreateResource
+  nameWithType: OperationKind.CreateResource
+- uid: JsonApiDotNetCore.Middleware.OperationKind.DeleteResource
+  name: DeleteResource
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_DeleteResource
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.DeleteResource
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.DeleteResource
+  nameWithType: OperationKind.DeleteResource
+- uid: JsonApiDotNetCore.Middleware.OperationKind.RemoveFromRelationship
+  name: RemoveFromRelationship
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_RemoveFromRelationship
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.RemoveFromRelationship
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.RemoveFromRelationship
+  nameWithType: OperationKind.RemoveFromRelationship
+- uid: JsonApiDotNetCore.Middleware.OperationKind.SetRelationship
+  name: SetRelationship
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.SetRelationship
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.SetRelationship
+  nameWithType: OperationKind.SetRelationship
+- uid: JsonApiDotNetCore.Middleware.OperationKind.UpdateResource
+  name: UpdateResource
+  href: api/JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource
+  commentId: F:JsonApiDotNetCore.Middleware.OperationKind.UpdateResource
+  fullName: JsonApiDotNetCore.Middleware.OperationKind.UpdateResource
+  nameWithType: OperationKind.UpdateResource
 - uid: JsonApiDotNetCore.Queries
   name: JsonApiDotNetCore.Queries
   href: api/JsonApiDotNetCore.Queries.html
@@ -10403,6 +11669,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer
   nameWithType: SparseFieldSetCache.GetSparseFieldSetForSerializer
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset
+  name: Reset()
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_Reset
+  commentId: M:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset()
+  nameWithType: SparseFieldSetCache.Reset()
+- uid: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset*
+  name: Reset
+  href: api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html#JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_Reset_
+  commentId: Overload:JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset
+  nameWithType: SparseFieldSetCache.Reset
 - uid: JsonApiDotNetCore.Queries.IPaginationContext
   name: IPaginationContext
   href: api/JsonApiDotNetCore.Queries.IPaginationContext.html
@@ -11292,6 +12571,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.GetResourceContextForScope
   nameWithType: QueryStringParameterReader.GetResourceContextForScope
+- uid: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest
+  name: IsAtomicOperationsRequest
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_IsAtomicOperationsRequest
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest
+  nameWithType: QueryStringParameterReader.IsAtomicOperationsRequest
+- uid: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest*
+  name: IsAtomicOperationsRequest
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_IsAtomicOperationsRequest_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.IsAtomicOperationsRequest
+  nameWithType: QueryStringParameterReader.IsAtomicOperationsRequest
 - uid: JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.RequestResource
   name: RequestResource
   href: api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_RequestResource
@@ -11822,6 +13114,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach
   nameWithType: DbContextExtensions.GetTrackedOrAttach
+- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
+  name: ResetChangeTracker(DbContext)
+  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_ResetChangeTracker_Microsoft_EntityFrameworkCore_DbContext_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
+  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
+  nameWithType: DbContextExtensions.ResetChangeTracker(DbContext)
+- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker*
+  name: ResetChangeTracker
+  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_ResetChangeTracker_
+  commentId: Overload:JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker
+  nameWithType: DbContextExtensions.ResetChangeTracker
 - uid: JsonApiDotNetCore.Repositories.DbContextResolver`1
   name: DbContextResolver<TDbContext>
   href: api/JsonApiDotNetCore.Repositories.DbContextResolver-1.html
@@ -12159,6 +13464,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).SetRelationshipAsync
   nameWithType: EntityFrameworkCoreRepository<TResource, TId>.SetRelationshipAsync
   nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).SetRelationshipAsync
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId
+  commentId: P:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.TransactionId
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).TransactionId
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.TransactionId
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).TransactionId
+- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource, TId>.TransactionId
+  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource, TId).TransactionId
+  nameWithType: EntityFrameworkCoreRepository<TResource, TId>.TransactionId
+  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource, TId).TransactionId
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2.UpdateAsync(`0,`0,System.Threading.CancellationToken)
   name: UpdateAsync(TResource, TResource, CancellationToken)
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_2_UpdateAsync__0__0_System_Threading_CancellationToken_
@@ -12212,6 +13534,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.IDbContextResolver.GetContext
   nameWithType: IDbContextResolver.GetContext
+- uid: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction
+  name: IRepositorySupportsTransaction
+  href: api/JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html
+  commentId: T:JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction
+  fullName: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction
+  nameWithType: IRepositorySupportsTransaction
+- uid: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html#JsonApiDotNetCore_Repositories_IRepositorySupportsTransaction_TransactionId
+  commentId: P:JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
+  fullName: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
+  nameWithType: IRepositorySupportsTransaction.TransactionId
+- uid: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId*
+  name: TransactionId
+  href: api/JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html#JsonApiDotNetCore_Repositories_IRepositorySupportsTransaction_TransactionId_
+  commentId: Overload:JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
+  nameWithType: IRepositorySupportsTransaction.TransactionId
 - uid: JsonApiDotNetCore.Repositories.IResourceReadRepository`1
   name: IResourceReadRepository<TResource>
   href: api/JsonApiDotNetCore.Repositories.IResourceReadRepository-1.html
@@ -12699,12 +14040,12 @@ references:
   commentId: T:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor
   fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor
   nameWithType: ResourceRepositoryAccessor
-- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  name: ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResourceRepositoryAccessor(System.IServiceProvider, JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  nameWithType: ResourceRepositoryAccessor.ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider)
+- uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider, IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResourceRepositoryAccessor(System.IServiceProvider, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: ResourceRepositoryAccessor.ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider, IJsonApiRequest)
 - uid: JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor*
   name: ResourceRepositoryAccessor
   href: api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html#JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_
@@ -13698,6 +15039,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.Identifiable(Of TId).Id
   nameWithType: Identifiable<TId>.Id
   nameWithType.vb: Identifiable(Of TId).Id
+- uid: JsonApiDotNetCore.Resources.Identifiable`1.LocalId
+  name: LocalId
+  href: api/JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_LocalId
+  commentId: P:JsonApiDotNetCore.Resources.Identifiable`1.LocalId
+  fullName: JsonApiDotNetCore.Resources.Identifiable<TId>.LocalId
+  fullName.vb: JsonApiDotNetCore.Resources.Identifiable(Of TId).LocalId
+  nameWithType: Identifiable<TId>.LocalId
+  nameWithType.vb: Identifiable(Of TId).LocalId
+- uid: JsonApiDotNetCore.Resources.Identifiable`1.LocalId*
+  name: LocalId
+  href: api/JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_LocalId_
+  commentId: Overload:JsonApiDotNetCore.Resources.Identifiable`1.LocalId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Identifiable<TId>.LocalId
+  fullName.vb: JsonApiDotNetCore.Resources.Identifiable(Of TId).LocalId
+  nameWithType: Identifiable<TId>.LocalId
+  nameWithType.vb: Identifiable(Of TId).LocalId
 - uid: JsonApiDotNetCore.Resources.Identifiable`1.StringId
   name: StringId
   href: api/JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_StringId
@@ -13759,6 +15117,19 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.IIdentifiable
   fullName: JsonApiDotNetCore.Resources.IIdentifiable
   nameWithType: IIdentifiable
+- uid: JsonApiDotNetCore.Resources.IIdentifiable.LocalId
+  name: LocalId
+  href: api/JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId
+  commentId: P:JsonApiDotNetCore.Resources.IIdentifiable.LocalId
+  fullName: JsonApiDotNetCore.Resources.IIdentifiable.LocalId
+  nameWithType: IIdentifiable.LocalId
+- uid: JsonApiDotNetCore.Resources.IIdentifiable.LocalId*
+  name: LocalId
+  href: api/JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_LocalId_
+  commentId: Overload:JsonApiDotNetCore.Resources.IIdentifiable.LocalId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.IIdentifiable.LocalId
+  nameWithType: IIdentifiable.LocalId
 - uid: JsonApiDotNetCore.Resources.IIdentifiable.StringId
   name: StringId
   href: api/JsonApiDotNetCore.Resources.IIdentifiable.html#JsonApiDotNetCore_Resources_IIdentifiable_StringId
@@ -14402,6 +15773,116 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
   nameWithType: JsonApiResourceDefinition<TResource, TId>.ResourceGraph
   nameWithType.vb: JsonApiResourceDefinition(Of TResource, TId).ResourceGraph
+- uid: JsonApiDotNetCore.Resources.OperationContainer
+  name: OperationContainer
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html
+  commentId: T:JsonApiDotNetCore.Resources.OperationContainer
+  fullName: JsonApiDotNetCore.Resources.OperationContainer
+  nameWithType: OperationContainer
+- uid: JsonApiDotNetCore.Resources.OperationContainer.#ctor(JsonApiDotNetCore.Middleware.OperationKind,JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  name: OperationContainer(OperationKind, IIdentifiable, ITargetedFields, IJsonApiRequest)
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer__ctor_JsonApiDotNetCore_Middleware_OperationKind_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Middleware_IJsonApiRequest_
+  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.#ctor(JsonApiDotNetCore.Middleware.OperationKind,JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.OperationContainer(JsonApiDotNetCore.Middleware.OperationKind, JsonApiDotNetCore.Resources.IIdentifiable, JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Middleware.IJsonApiRequest)
+  nameWithType: OperationContainer.OperationContainer(OperationKind, IIdentifiable, ITargetedFields, IJsonApiRequest)
+- uid: JsonApiDotNetCore.Resources.OperationContainer.#ctor*
+  name: OperationContainer
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.OperationContainer
+  nameWithType: OperationContainer.OperationContainer
+- uid: JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources
+  name: GetSecondaryResources()
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_GetSecondaryResources
+  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources()
+  nameWithType: OperationContainer.GetSecondaryResources()
+- uid: JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources*
+  name: GetSecondaryResources
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_GetSecondaryResources_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.GetSecondaryResources
+  nameWithType: OperationContainer.GetSecondaryResources
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Kind
+  name: Kind
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Kind
+  commentId: P:JsonApiDotNetCore.Resources.OperationContainer.Kind
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Kind
+  nameWithType: OperationContainer.Kind
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Kind*
+  name: Kind
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Kind_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.Kind
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Kind
+  nameWithType: OperationContainer.Kind
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Request
+  name: Request
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Request
+  commentId: P:JsonApiDotNetCore.Resources.OperationContainer.Request
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Request
+  nameWithType: OperationContainer.Request
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Request*
+  name: Request
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Request_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.Request
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Request
+  nameWithType: OperationContainer.Request
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Resource
+  name: Resource
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Resource
+  commentId: P:JsonApiDotNetCore.Resources.OperationContainer.Resource
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Resource
+  nameWithType: OperationContainer.Resource
+- uid: JsonApiDotNetCore.Resources.OperationContainer.Resource*
+  name: Resource
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_Resource_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.Resource
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.Resource
+  nameWithType: OperationContainer.Resource
+- uid: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
+  name: SetTransactionId(Guid)
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_SetTransactionId_System_Guid_
+  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
+  nameWithType: OperationContainer.SetTransactionId(Guid)
+- uid: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId*
+  name: SetTransactionId
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_SetTransactionId_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId
+  nameWithType: OperationContainer.SetTransactionId
+- uid: JsonApiDotNetCore.Resources.OperationContainer.TargetedFields
+  name: TargetedFields
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_TargetedFields
+  commentId: P:JsonApiDotNetCore.Resources.OperationContainer.TargetedFields
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.TargetedFields
+  nameWithType: OperationContainer.TargetedFields
+- uid: JsonApiDotNetCore.Resources.OperationContainer.TargetedFields*
+  name: TargetedFields
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_TargetedFields_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.TargetedFields
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.TargetedFields
+  nameWithType: OperationContainer.TargetedFields
+- uid: JsonApiDotNetCore.Resources.OperationContainer.WithResource(JsonApiDotNetCore.Resources.IIdentifiable)
+  name: WithResource(IIdentifiable)
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_WithResource_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.WithResource(JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.WithResource(JsonApiDotNetCore.Resources.IIdentifiable)
+  nameWithType: OperationContainer.WithResource(IIdentifiable)
+- uid: JsonApiDotNetCore.Resources.OperationContainer.WithResource*
+  name: WithResource
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_WithResource_
+  commentId: Overload:JsonApiDotNetCore.Resources.OperationContainer.WithResource
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.WithResource
+  nameWithType: OperationContainer.WithResource
 - uid: JsonApiDotNetCore.Resources.QueryStringParameterHandlers`1
   name: QueryStringParameterHandlers<TResource>
   href: api/JsonApiDotNetCore.Resources.QueryStringParameterHandlers-1.html
@@ -14927,6 +16408,51 @@ references:
   commentId: N:JsonApiDotNetCore.Serialization
   fullName: JsonApiDotNetCore.Serialization
   nameWithType: JsonApiDotNetCore.Serialization
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer
+  name: AtomicOperationsResponseSerializer
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html
+  commentId: T:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer
+  nameWithType: AtomicOperationsResponseSerializer
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.#ctor(JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder,JsonApiDotNetCore.Serialization.Building.IMetaBuilder,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: AtomicOperationsResponseSerializer(IResourceObjectBuilder, IMetaBuilder, ILinkBuilder, IFieldsToSerialize, IJsonApiRequest, IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer__ctor_JsonApiDotNetCore_Serialization_Building_IResourceObjectBuilder_JsonApiDotNetCore_Serialization_Building_IMetaBuilder_JsonApiDotNetCore_Serialization_Building_ILinkBuilder_JsonApiDotNetCore_Serialization_IFieldsToSerialize_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.#ctor(JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder,JsonApiDotNetCore.Serialization.Building.IMetaBuilder,JsonApiDotNetCore.Serialization.Building.ILinkBuilder,JsonApiDotNetCore.Serialization.IFieldsToSerialize,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.AtomicOperationsResponseSerializer(JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder, JsonApiDotNetCore.Serialization.Building.IMetaBuilder, JsonApiDotNetCore.Serialization.Building.ILinkBuilder, JsonApiDotNetCore.Serialization.IFieldsToSerialize, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: AtomicOperationsResponseSerializer.AtomicOperationsResponseSerializer(IResourceObjectBuilder, IMetaBuilder, ILinkBuilder, IFieldsToSerialize, IJsonApiRequest, IJsonApiOptions)
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.#ctor*
+  name: AtomicOperationsResponseSerializer
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer__ctor_
+  commentId: Overload:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.AtomicOperationsResponseSerializer
+  nameWithType: AtomicOperationsResponseSerializer.AtomicOperationsResponseSerializer
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer_ContentType
+  commentId: P:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType
+  nameWithType: AtomicOperationsResponseSerializer.ContentType
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType*
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer_ContentType_
+  commentId: Overload:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.ContentType
+  nameWithType: AtomicOperationsResponseSerializer.ContentType
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize(System.Object)
+  name: Serialize(Object)
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer_Serialize_System_Object_
+  commentId: M:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize(System.Object)
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize(System.Object)
+  nameWithType: AtomicOperationsResponseSerializer.Serialize(Object)
+- uid: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize*
+  name: Serialize
+  href: api/JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.html#JsonApiDotNetCore_Serialization_AtomicOperationsResponseSerializer_Serialize_
+  commentId: Overload:JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.AtomicOperationsResponseSerializer.Serialize
+  nameWithType: AtomicOperationsResponseSerializer.Serialize
 - uid: JsonApiDotNetCore.Serialization.BaseDeserializer
   name: BaseDeserializer
   href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html
@@ -14959,6 +16485,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.AfterProcessField
   nameWithType: BaseDeserializer.AfterProcessField
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex
+  name: AtomicOperationIndex
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_AtomicOperationIndex
+  commentId: P:JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex
+  nameWithType: BaseDeserializer.AtomicOperationIndex
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex*
+  name: AtomicOperationIndex
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_AtomicOperationIndex_
+  commentId: Overload:JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.AtomicOperationIndex
+  nameWithType: BaseDeserializer.AtomicOperationIndex
 - uid: JsonApiDotNetCore.Serialization.BaseDeserializer.DeserializeBody(System.String)
   name: DeserializeBody(String)
   href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_DeserializeBody_System_String_
@@ -14985,6 +16524,45 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.Document
   nameWithType: BaseDeserializer.Document
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext(System.String)
+  name: GetExistingResourceContext(String)
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_GetExistingResourceContext_System_String_
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext(System.String)
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext(System.String)
+  nameWithType: BaseDeserializer.GetExistingResourceContext(String)
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext*
+  name: GetExistingResourceContext
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_GetExistingResourceContext_
+  commentId: Overload:JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.GetExistingResourceContext
+  nameWithType: BaseDeserializer.GetExistingResourceContext
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken(System.String)
+  name: LoadJToken(String)
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_LoadJToken_System_String_
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken(System.String)
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken(System.String)
+  nameWithType: BaseDeserializer.LoadJToken(String)
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken*
+  name: LoadJToken
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_LoadJToken_
+  commentId: Overload:JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.LoadJToken
+  nameWithType: BaseDeserializer.LoadJToken
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject(JsonApiDotNetCore.Serialization.Objects.ResourceObject)
+  name: ParseResourceObject(ResourceObject)
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_ParseResourceObject_JsonApiDotNetCore_Serialization_Objects_ResourceObject_
+  commentId: M:JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject(JsonApiDotNetCore.Serialization.Objects.ResourceObject)
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject(JsonApiDotNetCore.Serialization.Objects.ResourceObject)
+  nameWithType: BaseDeserializer.ParseResourceObject(ResourceObject)
+- uid: JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject*
+  name: ParseResourceObject
+  href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_ParseResourceObject_
+  commentId: Overload:JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.BaseDeserializer.ParseResourceObject
+  nameWithType: BaseDeserializer.ParseResourceObject
 - uid: JsonApiDotNetCore.Serialization.BaseDeserializer.ResourceContextProvider
   name: ResourceContextProvider
   href: api/JsonApiDotNetCore.Serialization.BaseDeserializer.html#JsonApiDotNetCore_Serialization_BaseDeserializer_ResourceContextProvider
@@ -16071,6 +17649,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.GetRelationships
   nameWithType: FieldsToSerialize.GetRelationships
+- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache
+  name: ResetCache()
+  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize_ResetCache
+  commentId: M:JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache
+  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache()
+  nameWithType: FieldsToSerialize.ResetCache()
+- uid: JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache*
+  name: ResetCache
+  href: api/JsonApiDotNetCore.Serialization.FieldsToSerialize.html#JsonApiDotNetCore_Serialization_FieldsToSerialize_ResetCache_
+  commentId: Overload:JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache
+  nameWithType: FieldsToSerialize.ResetCache
 - uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize
   name: IFieldsToSerialize
   href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html
@@ -16103,6 +17694,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.GetRelationships
   nameWithType: IFieldsToSerialize.GetRelationships
+- uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache
+  name: ResetCache()
+  href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html#JsonApiDotNetCore_Serialization_IFieldsToSerialize_ResetCache
+  commentId: M:JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache
+  fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache()
+  nameWithType: IFieldsToSerialize.ResetCache()
+- uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache*
+  name: ResetCache
+  href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html#JsonApiDotNetCore_Serialization_IFieldsToSerialize_ResetCache_
+  commentId: Overload:JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.ResetCache
+  nameWithType: IFieldsToSerialize.ResetCache
 - uid: JsonApiDotNetCore.Serialization.IJsonApiDeserializer
   name: IJsonApiDeserializer
   href: api/JsonApiDotNetCore.Serialization.IJsonApiDeserializer.html
@@ -16147,6 +17751,19 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.IJsonApiSerializer
   fullName: JsonApiDotNetCore.Serialization.IJsonApiSerializer
   nameWithType: IJsonApiSerializer
+- uid: JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.IJsonApiSerializer.html#JsonApiDotNetCore_Serialization_IJsonApiSerializer_ContentType
+  commentId: P:JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType
+  fullName: JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType
+  nameWithType: IJsonApiSerializer.ContentType
+- uid: JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType*
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.IJsonApiSerializer.html#JsonApiDotNetCore_Serialization_IJsonApiSerializer_ContentType_
+  commentId: Overload:JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.IJsonApiSerializer.ContentType
+  nameWithType: IJsonApiSerializer.ContentType
 - uid: JsonApiDotNetCore.Serialization.IJsonApiSerializer.Serialize(System.Object)
   name: Serialize(Object)
   href: api/JsonApiDotNetCore.Serialization.IJsonApiSerializer.html#JsonApiDotNetCore_Serialization_IJsonApiSerializer_Serialize_System_Object_
@@ -16255,12 +17872,15 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.JsonApiSerializationException
   fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException
   nameWithType: JsonApiSerializationException
-- uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.#ctor(System.String,System.String,System.Exception)
-  name: JsonApiSerializationException(String, String, Exception)
-  href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException__ctor_System_String_System_String_System_Exception_
-  commentId: M:JsonApiDotNetCore.Serialization.JsonApiSerializationException.#ctor(System.String,System.String,System.Exception)
-  fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException.JsonApiSerializationException(System.String, System.String, System.Exception)
-  nameWithType: JsonApiSerializationException.JsonApiSerializationException(String, String, Exception)
+- uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.#ctor(System.String,System.String,System.Exception,System.Nullable{System.Int32})
+  name: JsonApiSerializationException(String, String, Exception, Nullable<Int32>)
+  href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException__ctor_System_String_System_String_System_Exception_System_Nullable_System_Int32__
+  commentId: M:JsonApiDotNetCore.Serialization.JsonApiSerializationException.#ctor(System.String,System.String,System.Exception,System.Nullable{System.Int32})
+  name.vb: JsonApiSerializationException(String, String, Exception, Nullable(Of Int32))
+  fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException.JsonApiSerializationException(System.String, System.String, System.Exception, System.Nullable<System.Int32>)
+  fullName.vb: JsonApiDotNetCore.Serialization.JsonApiSerializationException.JsonApiSerializationException(System.String, System.String, System.Exception, System.Nullable(Of System.Int32))
+  nameWithType: JsonApiSerializationException.JsonApiSerializationException(String, String, Exception, Nullable<Int32>)
+  nameWithType.vb: JsonApiSerializationException.JsonApiSerializationException(String, String, Exception, Nullable(Of Int32))
 - uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.#ctor*
   name: JsonApiSerializationException
   href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException__ctor_
@@ -16268,6 +17888,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException.JsonApiSerializationException
   nameWithType: JsonApiSerializationException.JsonApiSerializationException
+- uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex
+  name: AtomicOperationIndex
+  href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException_AtomicOperationIndex
+  commentId: P:JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex
+  fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex
+  nameWithType: JsonApiSerializationException.AtomicOperationIndex
+- uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex*
+  name: AtomicOperationIndex
+  href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException_AtomicOperationIndex_
+  commentId: Overload:JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.JsonApiSerializationException.AtomicOperationIndex
+  nameWithType: JsonApiSerializationException.AtomicOperationIndex
 - uid: JsonApiDotNetCore.Serialization.JsonApiSerializationException.GenericMessage
   name: GenericMessage
   href: api/JsonApiDotNetCore.Serialization.JsonApiSerializationException.html#JsonApiDotNetCore_Serialization_JsonApiSerializationException_GenericMessage
@@ -16332,6 +17965,210 @@ references:
   commentId: N:JsonApiDotNetCore.Serialization.Objects
   fullName: JsonApiDotNetCore.Serialization.Objects
   nameWithType: JsonApiDotNetCore.Serialization.Objects
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode
+  name: AtomicOperationCode
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode
+  nameWithType: AtomicOperationCode
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Add
+  name: Add
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationCode_Add
+  commentId: F:JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Add
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Add
+  nameWithType: AtomicOperationCode.Add
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Remove
+  name: Remove
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationCode_Remove
+  commentId: F:JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Remove
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Remove
+  nameWithType: AtomicOperationCode.Remove
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Update
+  name: Update
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationCode_Update
+  commentId: F:JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Update
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.Update
+  nameWithType: AtomicOperationCode.Update
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject
+  name: AtomicOperationObject
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject
+  nameWithType: AtomicOperationObject
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code
+  name: Code
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Code
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code
+  nameWithType: AtomicOperationObject.Code
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code*
+  name: Code
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Code_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Code
+  nameWithType: AtomicOperationObject.Code
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href
+  name: Href
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Href
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href
+  nameWithType: AtomicOperationObject.Href
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href*
+  name: Href
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Href_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Href
+  nameWithType: AtomicOperationObject.Href
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Meta
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta
+  nameWithType: AtomicOperationObject.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta*
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Meta_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Meta
+  nameWithType: AtomicOperationObject.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref
+  name: Ref
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Ref
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref
+  nameWithType: AtomicOperationObject.Ref
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref*
+  name: Ref
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationObject_Ref_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.Ref
+  nameWithType: AtomicOperationObject.Ref
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument
+  name: AtomicOperationsDocument
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument
+  nameWithType: AtomicOperationsDocument
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi
+  name: JsonApi
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_JsonApi
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi
+  nameWithType: AtomicOperationsDocument.JsonApi
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi*
+  name: JsonApi
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_JsonApi_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.JsonApi
+  nameWithType: AtomicOperationsDocument.JsonApi
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links
+  name: Links
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Links
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links
+  nameWithType: AtomicOperationsDocument.Links
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links*
+  name: Links
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Links_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Links
+  nameWithType: AtomicOperationsDocument.Links
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Meta
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta
+  nameWithType: AtomicOperationsDocument.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta*
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Meta_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Meta
+  nameWithType: AtomicOperationsDocument.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations
+  name: Operations
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Operations
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations
+  nameWithType: AtomicOperationsDocument.Operations
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations*
+  name: Operations
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Operations_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Operations
+  nameWithType: AtomicOperationsDocument.Operations
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results
+  name: Results
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Results
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results
+  nameWithType: AtomicOperationsDocument.Results
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results*
+  name: Results
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html#JsonApiDotNetCore_Serialization_Objects_AtomicOperationsDocument_Results_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.Results
+  nameWithType: AtomicOperationsDocument.Results
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicReference
+  name: AtomicReference
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicReference.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.AtomicReference
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicReference
+  nameWithType: AtomicReference
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship
+  name: Relationship
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicReference.html#JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship
+  nameWithType: AtomicReference.Relationship
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship*
+  name: Relationship
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicReference.html#JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship
+  nameWithType: AtomicReference.Relationship
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers(System.Text.StringBuilder)
+  name: WriteMembers(StringBuilder)
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicReference.html#JsonApiDotNetCore_Serialization_Objects_AtomicReference_WriteMembers_System_Text_StringBuilder_
+  commentId: M:JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers(System.Text.StringBuilder)
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers(System.Text.StringBuilder)
+  nameWithType: AtomicReference.WriteMembers(StringBuilder)
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers*
+  name: WriteMembers
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicReference.html#JsonApiDotNetCore_Serialization_Objects_AtomicReference_WriteMembers_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers
+  nameWithType: AtomicReference.WriteMembers
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject
+  name: AtomicResultObject
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.AtomicResultObject
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject
+  nameWithType: AtomicResultObject
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta
+  nameWithType: AtomicResultObject.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta*
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.html#JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta
+  nameWithType: AtomicResultObject.Meta
 - uid: JsonApiDotNetCore.Serialization.Objects.Document
   name: Document
   href: api/JsonApiDotNetCore.Serialization.Objects.Document.html
@@ -16919,6 +18756,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Id
   nameWithType: ResourceIdentifierObject.Id
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid
+  name: Lid
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_Lid
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid
+  nameWithType: ResourceIdentifierObject.Lid
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid*
+  name: Lid
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_Lid_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Lid
+  nameWithType: ResourceIdentifierObject.Lid
 - uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.ToString
   name: ToString()
   href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_ToString
@@ -16945,6 +18795,32 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.Type
   nameWithType: ResourceIdentifierObject.Type
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember(System.Text.StringBuilder,System.String,System.String)
+  name: WriteMember(StringBuilder, String, String)
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMember_System_Text_StringBuilder_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember(System.Text.StringBuilder,System.String,System.String)
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember(System.Text.StringBuilder, System.String, System.String)
+  nameWithType: ResourceIdentifierObject.WriteMember(StringBuilder, String, String)
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember*
+  name: WriteMember
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMember_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMember
+  nameWithType: ResourceIdentifierObject.WriteMember
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers(System.Text.StringBuilder)
+  name: WriteMembers(StringBuilder)
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMembers_System_Text_StringBuilder_
+  commentId: M:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers(System.Text.StringBuilder)
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers(System.Text.StringBuilder)
+  nameWithType: ResourceIdentifierObject.WriteMembers(StringBuilder)
+- uid: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers*
+  name: WriteMembers
+  href: api/JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMembers_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.WriteMembers
+  nameWithType: ResourceIdentifierObject.WriteMembers
 - uid: JsonApiDotNetCore.Serialization.Objects.ResourceLinks
   name: ResourceLinks
   href: api/JsonApiDotNetCore.Serialization.Objects.ResourceLinks.html
@@ -17216,12 +19092,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.RequestDeserializer
   fullName: JsonApiDotNetCore.Serialization.RequestDeserializer
   nameWithType: RequestDeserializer
-- uid: JsonApiDotNetCore.Serialization.RequestDeserializer.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Resources.ITargetedFields,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  name: RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor, IJsonApiRequest)
-  href: api/JsonApiDotNetCore.Serialization.RequestDeserializer.html#JsonApiDotNetCore_Serialization_RequestDeserializer__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Resources_ITargetedFields_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_
-  commentId: M:JsonApiDotNetCore.Serialization.RequestDeserializer.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Resources.ITargetedFields,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  fullName: JsonApiDotNetCore.Serialization.RequestDeserializer.RequestDeserializer(JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Resources.ITargetedFields, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest)
-  nameWithType: RequestDeserializer.RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor, IJsonApiRequest)
+- uid: JsonApiDotNetCore.Serialization.RequestDeserializer.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Resources.ITargetedFields,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  name: RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor, IJsonApiRequest, IJsonApiOptions)
+  href: api/JsonApiDotNetCore.Serialization.RequestDeserializer.html#JsonApiDotNetCore_Serialization_RequestDeserializer__ctor_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Resources_ITargetedFields_Microsoft_AspNetCore_Http_IHttpContextAccessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IJsonApiOptions_
+  commentId: M:JsonApiDotNetCore.Serialization.RequestDeserializer.#ctor(JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Resources.ITargetedFields,Microsoft.AspNetCore.Http.IHttpContextAccessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  fullName: JsonApiDotNetCore.Serialization.RequestDeserializer.RequestDeserializer(JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Resources.ITargetedFields, Microsoft.AspNetCore.Http.IHttpContextAccessor, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IJsonApiOptions)
+  nameWithType: RequestDeserializer.RequestDeserializer(IResourceContextProvider, IResourceFactory, ITargetedFields, IHttpContextAccessor, IJsonApiRequest, IJsonApiOptions)
 - uid: JsonApiDotNetCore.Serialization.RequestDeserializer.#ctor*
   name: RequestDeserializer
   href: api/JsonApiDotNetCore.Serialization.RequestDeserializer.html#JsonApiDotNetCore_Serialization_RequestDeserializer__ctor_
@@ -17281,6 +19157,23 @@ references:
   fullName.vb: JsonApiDotNetCore.Serialization.ResponseSerializer(Of TResource).ResponseSerializer
   nameWithType: ResponseSerializer<TResource>.ResponseSerializer
   nameWithType.vb: ResponseSerializer(Of TResource).ResponseSerializer
+- uid: JsonApiDotNetCore.Serialization.ResponseSerializer`1.ContentType
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_ResponseSerializer_1_ContentType
+  commentId: P:JsonApiDotNetCore.Serialization.ResponseSerializer`1.ContentType
+  fullName: JsonApiDotNetCore.Serialization.ResponseSerializer<TResource>.ContentType
+  fullName.vb: JsonApiDotNetCore.Serialization.ResponseSerializer(Of TResource).ContentType
+  nameWithType: ResponseSerializer<TResource>.ContentType
+  nameWithType.vb: ResponseSerializer(Of TResource).ContentType
+- uid: JsonApiDotNetCore.Serialization.ResponseSerializer`1.ContentType*
+  name: ContentType
+  href: api/JsonApiDotNetCore.Serialization.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_ResponseSerializer_1_ContentType_
+  commentId: Overload:JsonApiDotNetCore.Serialization.ResponseSerializer`1.ContentType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.ResponseSerializer<TResource>.ContentType
+  fullName.vb: JsonApiDotNetCore.Serialization.ResponseSerializer(Of TResource).ContentType
+  nameWithType: ResponseSerializer<TResource>.ContentType
+  nameWithType.vb: ResponseSerializer(Of TResource).ContentType
 - uid: JsonApiDotNetCore.Serialization.ResponseSerializer`1.Serialize(System.Object)
   name: Serialize(Object)
   href: api/JsonApiDotNetCore.Serialization.ResponseSerializer-1.html#JsonApiDotNetCore_Serialization_ResponseSerializer_1_Serialize_System_Object_
