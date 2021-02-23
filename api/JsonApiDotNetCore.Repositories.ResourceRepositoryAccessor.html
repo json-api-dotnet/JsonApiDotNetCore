@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor" class="text-break">Class ResourceRepositoryAccessor
   </h1>
-  <div class="markdown level0 summary"><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a method on it.</p>
+  <div class="markdown level0 summary"><p>Retrieves a <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a callback on it.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -119,18 +119,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Middleware_IJsonApiRequest_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.%23ctor(System.IServiceProvider%2CJsonApiDotNetCore.Configuration.IResourceContextProvider%2CJsonApiDotNetCore.Middleware.IJsonApiRequest)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.%23ctor(System.IServiceProvider%2CJsonApiDotNetCore.Configuration.IResourceContextProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_Middleware_IJsonApiRequest_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.Middleware.IJsonApiRequest)">ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider, IJsonApiRequest)</h4>
+  <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor__ctor_System_IServiceProvider_JsonApiDotNetCore_Configuration_IResourceContextProvider_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.#ctor(System.IServiceProvider,JsonApiDotNetCore.Configuration.IResourceContextProvider)">ResourceRepositoryAccessor(IServiceProvider, IResourceContextProvider)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IJsonApiRequest request)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -152,21 +152,16 @@
         <td><span class="parametername">resourceContextProvider</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.IJsonApiRequest.html">IJsonApiRequest</a></td>
-        <td><span class="parametername">request</span></td>
-        <td></td>
-      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_AddToToManyRelationshipAsync__2___1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.AddToToManyRelationshipAsync%60%602(%60%601%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_AddToToManyRelationshipAsync__2___1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.AddToToManyRelationshipAsync%60%602(%60%601%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L103">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L99">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_AddToToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.AddToToManyRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_AddToToManyRelationshipAsync__2___1_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.AddToToManyRelationshipAsync``2(``1,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">AddToToManyRelationshipAsync&lt;TResource, TId&gt;(TId, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
@@ -241,10 +236,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync__1_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync%60%601(JsonApiDotNetCore.Queries.Expressions.FilterExpression%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync__1_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync%60%601(JsonApiDotNetCore.Queries.Expressions.FilterExpression%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L47">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L43">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CountAsync__1_JsonApiDotNetCore_Queries_Expressions_FilterExpression_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CountAsync``1(JsonApiDotNetCore.Queries.Expressions.FilterExpression,System.Threading.CancellationToken)">CountAsync&lt;TResource&gt;(FilterExpression, CancellationToken)</h4>
@@ -310,10 +305,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync__1___0___0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync%60%601(%60%600%2C%60%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync__1___0___0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync%60%601(%60%600%2C%60%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L63">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_CreateAsync__1___0___0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.CreateAsync``1(``0,``0,System.Threading.CancellationToken)">CreateAsync&lt;TResource&gt;(TResource, TResource, CancellationToken)</h4>
@@ -384,10 +379,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_DeleteAsync__2___1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.DeleteAsync%60%602(%60%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_DeleteAsync__2___1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.DeleteAsync%60%602(%60%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L87">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L83">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_DeleteAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.DeleteAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_DeleteAsync__2___1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.DeleteAsync``2(``1,System.Threading.CancellationToken)">DeleteAsync&lt;TResource, TId&gt;(TId, CancellationToken)</h4>
@@ -457,10 +452,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync_System_Type_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync(System.Type%2CJsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync_System_Type_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync(System.Type%2CJsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L38">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L34">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync_System_Type_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync(System.Type,JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)">GetAsync(Type, QueryLayer, CancellationToken)</h4>
@@ -515,10 +510,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetAsync``1(JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)">GetAsync&lt;TResource&gt;(QueryLayer, CancellationToken)</h4>
@@ -584,10 +579,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync__2___1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync%60%602(%60%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync__2___1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync%60%602(%60%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L55">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForCreateAsync__2___1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForCreateAsync``2(``1,System.Threading.CancellationToken)">GetForCreateAsync&lt;TResource, TId&gt;(TId, CancellationToken)</h4>
@@ -657,10 +652,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForUpdateAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForUpdateAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L71">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L67">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForUpdateAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_GetForUpdateAsync__1_JsonApiDotNetCore_Queries_QueryLayer_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.GetForUpdateAsync``1(JsonApiDotNetCore.Queries.QueryLayer,System.Threading.CancellationToken)">GetForUpdateAsync&lt;TResource&gt;(QueryLayer, CancellationToken)</h4>
@@ -726,10 +721,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync__1___0_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync%60%601(%60%600%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync__1___0_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync%60%601(%60%600%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L111">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L107">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_RemoveFromToManyRelationshipAsync__1___0_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.RemoveFromToManyRelationshipAsync``1(``0,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">RemoveFromToManyRelationshipAsync&lt;TResource&gt;(TResource, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
@@ -800,10 +795,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L118">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L114">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveReadRepository_System_Type_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveReadRepository(System.Type)">ResolveReadRepository(Type)</h4>
@@ -847,10 +842,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L158">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L133">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_ResolveWriteRepository_System_Type_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.ResolveWriteRepository(System.Type)">ResolveWriteRepository(Type)</h4>
@@ -894,10 +889,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_SetRelationshipAsync__1___0_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.SetRelationshipAsync%60%601(%60%600%2CSystem.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_SetRelationshipAsync__1___0_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.SetRelationshipAsync%60%601(%60%600%2CSystem.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L95">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L91">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_SetRelationshipAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.SetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_SetRelationshipAsync__1___0_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.SetRelationshipAsync``1(``0,System.Object,System.Threading.CancellationToken)">SetRelationshipAsync&lt;TResource&gt;(TResource, Object, CancellationToken)</h4>
@@ -968,10 +963,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_UpdateAsync__1___0___0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.UpdateAsync%60%601(%60%600%2C%60%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_UpdateAsync__1___0___0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.UpdateAsync%60%601(%60%600%2C%60%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L79">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L75">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_UpdateAsync_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.UpdateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor_UpdateAsync__1___0___0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.UpdateAsync``1(``0,``0,System.Threading.CancellationToken)">UpdateAsync&lt;TResource&gt;(TResource, TResource, CancellationToken)</h4>
@@ -1052,10 +1047,10 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/release/4.0.4/apiSpec/new?filename=JsonApiDotNetCore_Repositories_ResourceRepositoryAccessor.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L16" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.0.4/src/JsonApiDotNetCore/Repositories/ResourceRepositoryAccessor.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

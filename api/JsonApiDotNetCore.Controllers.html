@@ -83,10 +83,6 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a></h4>
       <section><p>Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a></h4>
-      <section><p>Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
-See <a href="https://jsonapi.org/ext/atomic/">https://jsonapi.org/ext/atomic/</a> for details. Delegates work to <a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html">IOperationsProcessor</a>.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html">CoreJsonApiController</a></h4>
       <section><p>Provides helper methods to raise JSON:API compliant errors from controller actions.</p>
 </section>
@@ -110,11 +106,6 @@ If you want to provide routing templates yourself, you should derive from BaseJs
 This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates.
 If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiOperationsController.html">JsonApiOperationsController</a></h4>
-      <section><p>The base class to derive atomic:operations controllers from.
-This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a> but adds attributes for routing templates.
-If you want to provide routing templates yourself, you should derive from BaseJsonApiOperationsController directly.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html">JsonApiQueryController&lt;TResource&gt;</a></h4>
       <section><p>The base class to derive resource-specific read-only controllers from.
 This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates.
@@ -124,9 +115,6 @@ If you want to provide routing templates yourself, you should derive from BaseJs
       <section><p>The base class to derive resource-specific read-only controllers from.
 This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html">BaseJsonApiController&lt;TResource, TId&gt;</a> but adds attributes for routing templates.
 If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Controllers.ModelStateViolation.html">ModelStateViolation</a></h4>
-      <section><p>Represents the violation of a model state validation rule.</p>
 </section>
 </article>
           </div>
