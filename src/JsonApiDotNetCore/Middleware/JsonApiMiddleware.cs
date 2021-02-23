@@ -208,6 +208,11 @@ namespace JsonApiDotNetCore.Middleware
                 builder.Append(httpRequest.Host);
             }
 
+            if (httpRequest.PathBase.HasValue)
+            {
+                builder.Append(httpRequest.PathBase);
+            }
+
             string customRoute = GetCustomRoute(resourceName, options.Namespace, httpRequest.HttpContext);
             if (!string.IsNullOrEmpty(customRoute))
             {
