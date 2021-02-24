@@ -72,17 +72,21 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 return;
             }
 
-            if (field is HasOneAttribute hasOneAttr)
+            if (data != null)
             {
-                // add attributes and relationships of a parsed HasOne relationship
-                var rio = data.SingleData;
-                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio));
-            }
-            else if (field is HasManyAttribute hasManyAttr)
-            {  // add attributes and relationships of a parsed HasMany relationship
-                var items = data.ManyData.Select(ParseIncludedRelationship);
-                var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
-                hasManyAttr.SetValue(resource, values);
+                if (field is HasOneAttribute hasOneAttr)
+                {
+                    // add attributes and relationships of a parsed HasOne relationship
+                    var rio = data.SingleData;
+                    hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio));
+                }
+                else if (field is HasManyAttribute hasManyAttr)
+                {
+                    // add attributes and relationships of a parsed HasMany relationship
+                    var items = data.ManyData.Select(ParseIncludedRelationship);
+                    var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
+                    hasManyAttr.SetValue(resource, values);
+                }
             }
         }
 

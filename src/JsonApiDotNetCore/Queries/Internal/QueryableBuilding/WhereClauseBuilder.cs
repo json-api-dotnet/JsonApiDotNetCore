@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             foreach (LiteralConstantExpression constant in expression.Constants)
             {
                 object value = ConvertTextToTargetType(constant.Value, property.Type);
-                valueList.Add(value);
+                valueList!.Add(value);
             }
 
             ConstantExpression collection = Expression.Constant(valueList);

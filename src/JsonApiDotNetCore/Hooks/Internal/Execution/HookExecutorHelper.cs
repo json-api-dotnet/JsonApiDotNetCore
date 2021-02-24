@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             var idType = TypeHelper.GetIdType(resourceTypeForRepository);
             var parameterizedGetWhere = GetType()
-                    .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(resourceTypeForRepository, idType);
             var cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
             var ids = TypeHelper.CopyToList(cast.Select(i => i.GetTypedId()), idType);

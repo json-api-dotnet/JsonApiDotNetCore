@@ -177,7 +177,7 @@ namespace UnitTests.ResourceHooks
             var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
             var updatedAttributes = new Dictionary<PropertyInfo, HashSet<Dummy>>
             {
-                { typeof(Dummy).GetProperty("SomeUpdatedProperty"), _allResources }
+                { typeof(Dummy).GetProperty(nameof(Dummy.SomeUpdatedProperty))!, _allResources }
             };
             DiffableResourceHashSet<Dummy> diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, updatedAttributes);
 

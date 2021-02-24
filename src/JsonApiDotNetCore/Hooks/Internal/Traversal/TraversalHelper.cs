@@ -170,7 +170,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             {
                 var type = kvp.Key.RightType;
                 var list = TypeHelper.CopyToList(kvp.Value, type);
-                processResourcesMethod.MakeGenericMethod(type).Invoke(this, ArrayFactory.Create<object>(list));
+                processResourcesMethod!.MakeGenericMethod(type).Invoke(this, ArrayFactory.Create<object>(list));
             }
 
             return (leftResourcesGrouped, rightResourcesGrouped);

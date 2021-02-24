@@ -61,7 +61,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
             foreach (var hook in _allHooks)
             {
                 var method = containerType.GetMethod(hook.ToString("G"));
-                if (method.DeclaringType == _boundResourceDefinitionType)
+                if (method == null || method.DeclaringType == _boundResourceDefinitionType)
                 {
                     continue;
                 }

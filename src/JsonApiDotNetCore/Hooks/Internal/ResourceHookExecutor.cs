@@ -419,7 +419,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // note that some of the hooks return "void". When these hooks, the 
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
-            return (IEnumerable)ThrowJsonApiExceptionOnError(() => method.Invoke(container, arguments));
+            return (IEnumerable)ThrowJsonApiExceptionOnError(() => method?.Invoke(container, arguments));
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             {
                 return action();
             }
-            catch (TargetInvocationException tie)
+            catch (TargetInvocationException tie) when (tie.InnerException != null)
             {
                 throw tie.InnerException;
             }

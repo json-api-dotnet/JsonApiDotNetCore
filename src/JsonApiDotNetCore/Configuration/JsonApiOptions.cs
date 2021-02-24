@@ -8,6 +8,8 @@ namespace JsonApiDotNetCore.Configuration
     /// <inheritdoc />
     public sealed class JsonApiOptions : IJsonApiOptions
     {
+        internal static readonly NamingStrategy DefaultNamingStrategy = new CamelCaseNamingStrategy();
+
         /// <inheritdoc />
         public string Namespace { get; set; }
 
@@ -79,7 +81,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             ContractResolver = new DefaultContractResolver
             {
-                NamingStrategy = new CamelCaseNamingStrategy()
+                NamingStrategy = DefaultNamingStrategy
             }
         };
 

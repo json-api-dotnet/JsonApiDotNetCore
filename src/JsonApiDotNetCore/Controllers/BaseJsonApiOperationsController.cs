@@ -171,8 +171,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (violations.Any())
             {
-                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
-                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
+                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, _options.SerializerNamingStrategy);
             }
         }
     }

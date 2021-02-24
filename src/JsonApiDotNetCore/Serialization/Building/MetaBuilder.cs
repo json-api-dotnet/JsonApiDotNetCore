@@ -40,8 +40,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             if (_paginationContext.TotalResourceCount != null)
             {
-                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
-                string key = namingStrategy.GetPropertyName("TotalResources", false);
+                string key = _options.SerializerNamingStrategy.GetPropertyName("TotalResources", false);
 
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }

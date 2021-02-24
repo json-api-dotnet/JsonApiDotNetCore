@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
                 var colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color.Id);
                 colorInDatabase2.Should().NotBeNull();
-                colorInDatabase2.Group.Should().BeNull();
+                colorInDatabase2!.Group.Should().BeNull();
             });
         }
 

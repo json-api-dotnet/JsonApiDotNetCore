@@ -10,9 +10,9 @@ namespace JsonApiDotNetCore.Configuration
     {
         private readonly NamingStrategy _namingStrategy;
 
-        public ResourceNameFormatter(IJsonApiOptions options)
+        public ResourceNameFormatter(NamingStrategy namingStrategy)
         {
-            _namingStrategy = options.SerializerContractResolver.NamingStrategy;
+            _namingStrategy = namingStrategy;
         }
 
         /// <summary>

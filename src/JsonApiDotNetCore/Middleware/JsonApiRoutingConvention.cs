@@ -124,9 +124,7 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            string controllerName =
-                _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
-
+            string controllerName = _options.SerializerNamingStrategy.GetPropertyName(model.ControllerName, false);
             var template = $"{_options.Namespace}/{controllerName}";
 
             if (_registeredTemplates.Add(template))
