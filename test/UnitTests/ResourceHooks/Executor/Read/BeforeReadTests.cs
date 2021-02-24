@@ -1,4 +1,3 @@
-using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
