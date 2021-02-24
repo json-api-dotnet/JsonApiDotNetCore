@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Configuration
         public int? MaximumOperationsPerRequest { get; set; } = 10;
 
         /// <inheritdoc />
-        public IsolationLevel? TransactionIsolationLevel { get; }
+        public IsolationLevel? TransactionIsolationLevel { get; set; }
 
         /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
