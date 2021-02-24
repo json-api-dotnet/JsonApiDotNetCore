@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -102,6 +103,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
+        [AssertionMethod]
         protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
         {
             if (_options.MaximumPageNumber != null &&

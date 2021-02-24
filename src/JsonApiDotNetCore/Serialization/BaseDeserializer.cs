@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -260,6 +261,7 @@ namespace JsonApiDotNetCore.Serialization
             return null;
         }
 
+        [AssertionMethod]
         private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
         {
             if (resourceIdentifierObject.Type == null)
@@ -300,6 +302,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
+        [AssertionMethod]
         private void AssertHasNoLid(ResourceIdentifierObject resourceIdentifierObject)
         {
             if (resourceIdentifierObject.Lid != null)

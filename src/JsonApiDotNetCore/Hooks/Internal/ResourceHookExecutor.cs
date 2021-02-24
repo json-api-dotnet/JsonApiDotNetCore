@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Hooks.Internal.Traversal;
@@ -401,6 +402,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
         /// <param name="pipeline">The pipeline from which the hook was fired</param>
+        [AssertionMethod]
         private void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourcePipeline pipeline = 0)
         {
             if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)

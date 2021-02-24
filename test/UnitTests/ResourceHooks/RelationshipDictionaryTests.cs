@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
@@ -190,10 +191,11 @@ namespace UnitTests.ResourceHooks
             Assert.Empty(affectedThroughSomeNotUpdatedProperty);
         }
 
+        [AssertionMethod]
         private void AssertRelationshipDictionaryGetters(Dictionary<RelationshipAttribute, HashSet<Dummy>> relationshipsDictionary,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
-        Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes,
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
+            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
         {
             Assert.Contains(_firstToOneAttr, toOnes.Keys);
             Assert.Contains(_secondToOneAttr, toOnes.Keys);

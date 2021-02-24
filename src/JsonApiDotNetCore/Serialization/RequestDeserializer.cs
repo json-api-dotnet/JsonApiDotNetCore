@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Humanizer;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -122,6 +123,7 @@ namespace JsonApiDotNetCore.Serialization
             return ParseForRelationshipOperation(operation, kind, requireToManyRelationship);
         }
 
+        [AssertionMethod]
         private void AssertHasNoHref(AtomicOperationObject operation)
         {
             if (operation.Href != null)
@@ -243,6 +245,7 @@ namespace JsonApiDotNetCore.Serialization
             return operation.SingleData;
         }
 
+        [AssertionMethod]
         private void AssertElementHasType(ResourceIdentifierObject resourceIdentifierObject, string elementPath)
         {
             if (resourceIdentifierObject.Type == null)

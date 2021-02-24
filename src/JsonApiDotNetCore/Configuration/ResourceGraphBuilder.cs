@@ -267,6 +267,7 @@ namespace JsonApiDotNetCore.Configuration
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
             if (recursionDepth >= 500)

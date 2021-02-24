@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -138,6 +139,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
+        [AssertionMethod]
         private static void AssertHasRequestBody(object model, string body)
         {
             if (model == null && string.IsNullOrWhiteSpace(body))
@@ -244,6 +246,7 @@ namespace JsonApiDotNetCore.Serialization
             return false;
         }
 
+        [AssertionMethod]
         private void ValidateForRelationshipType(string requestMethod, object model, string body)
         {
             if (_request.Relationship is HasOneAttribute)

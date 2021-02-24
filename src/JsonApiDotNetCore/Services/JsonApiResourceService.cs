@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks;
@@ -446,6 +447,7 @@ namespace JsonApiDotNetCore.Services
             return resource;
         }
 
+        [AssertionMethod]
         private void AssertPrimaryResourceExists(TResource resource)
         {
             if (resource == null)
@@ -454,6 +456,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
+        [AssertionMethod]
         private void AssertHasRelationship(RelationshipAttribute relationship, string name)
         {
             if (relationship == null)
