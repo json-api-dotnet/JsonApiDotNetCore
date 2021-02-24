@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
         public Guid ConcurrencyToken
         {
             get => Guid.NewGuid();
-            set { }
+            set => _ = value;
         }
 
         [HasOne]

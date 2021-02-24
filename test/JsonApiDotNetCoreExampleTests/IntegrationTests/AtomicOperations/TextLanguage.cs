@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         public Guid ConcurrencyToken
         {
             get => Guid.NewGuid();
-            set { }
+            set => _ = value;
         }
 
         [HasMany]
