@@ -12,7 +12,7 @@ using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample.Startups
 {
-    public class Startup : EmptyStartup
+    public sealed class Startup : EmptyStartup
     {
         private static readonly Version PostgresCiBuildVersion = new Version(9, 6);
         private readonly string _connectionString;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExample.Startups
             services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
         }
 
-        protected void ConfigureJsonApiOptions(JsonApiOptions options)
+        private void ConfigureJsonApiOptions(JsonApiOptions options)
         {
             options.IncludeExceptionStackTraceInErrors = true;
             options.Namespace = "api/v1";

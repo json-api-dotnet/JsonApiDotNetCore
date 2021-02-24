@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTests.Graph
 {
-    public class ResourceDescriptorAssemblyCacheTests
+    public sealed class ResourceDescriptorAssemblyCacheTests
     {
         [Fact]
         public void GetResourceDescriptorsPerAssembly_Locates_Identifiable_Resource()

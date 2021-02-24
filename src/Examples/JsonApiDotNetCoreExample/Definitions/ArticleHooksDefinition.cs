@@ -10,7 +10,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class ArticleHooksDefinition : ResourceHooksDefinition<Article>
+    public sealed class ArticleHooksDefinition : ResourceHooksDefinition<Article>
     {
         public ArticleHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

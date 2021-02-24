@@ -187,7 +187,7 @@ namespace UnitTests.Extensions
         }
 
         public sealed class IntResource : Identifiable { }
-        public class GuidResource : Identifiable<Guid> { }
+        public sealed class GuidResource : Identifiable<Guid> { }
 
         private sealed class IntResourceService : IResourceService<IntResource>
         {

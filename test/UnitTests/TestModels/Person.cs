@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
-    public class Person : Identifiable
+    public sealed class Person : Identifiable
     {
         [Attr] public string Name { get; set; }
         [HasMany] public ISet<Blog> Blogs { get; set; }

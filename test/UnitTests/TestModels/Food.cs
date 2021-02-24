@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
-    public class Food : Identifiable
+    public sealed class Food : Identifiable
     {
         [Attr] public string Dish { get; set; }
     }

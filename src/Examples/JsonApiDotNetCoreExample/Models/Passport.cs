@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Passport : Identifiable, IIsLockable
+    public sealed class Passport : Identifiable, IIsLockable
     {
         [Attr]
         public bool IsLocked { get; set; }

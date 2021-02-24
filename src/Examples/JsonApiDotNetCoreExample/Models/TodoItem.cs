@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItem : Identifiable, IIsLockable
+    public sealed class TodoItem : Identifiable, IIsLockable
     {
         public bool IsLocked { get; set; }
 

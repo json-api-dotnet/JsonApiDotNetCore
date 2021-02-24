@@ -17,7 +17,7 @@ namespace UnitTests.Builders
 
         private sealed class DbResource : Identifiable { }
 
-        private class TestContext : DbContext
+        private sealed class TestContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }
 
@@ -106,6 +106,6 @@ namespace UnitTests.Builders
             public ISet<RelatedResource> RelatedResources { get; set; }
         }
 
-        public class RelatedResource : Identifiable { }
+        public sealed class RelatedResource : Identifiable { }
     }
 }

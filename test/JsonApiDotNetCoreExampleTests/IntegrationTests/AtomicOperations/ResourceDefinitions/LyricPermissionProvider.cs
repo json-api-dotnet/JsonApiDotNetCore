@@ -2,7 +2,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
 {
     public sealed class LyricPermissionProvider
     {
-        public bool CanViewText { get; set; }
-        public int HitCount { get; set; }
+        internal bool CanViewText { get; set; }
+        internal int HitCount { get; set; }
     }
 }

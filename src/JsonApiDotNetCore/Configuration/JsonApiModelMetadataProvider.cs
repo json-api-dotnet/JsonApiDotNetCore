@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Custom implementation of <see cref="IModelMetadataProvider"/> to support JSON:API partial patching.
     /// </summary>
-    internal class JsonApiModelMetadataProvider : DefaultModelMetadataProvider
+    internal sealed class JsonApiModelMetadataProvider : DefaultModelMetadataProvider
     {
         private readonly JsonApiValidationFilter _jsonApiValidationFilter;
 

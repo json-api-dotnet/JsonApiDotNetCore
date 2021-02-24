@@ -2,7 +2,7 @@ using System;
 
 namespace JsonApiDotNetCore.Configuration
 {
-    internal class ResourceDescriptor
+    internal sealed class ResourceDescriptor
     {
         public Type ResourceType { get; }
         public Type IdType { get; }

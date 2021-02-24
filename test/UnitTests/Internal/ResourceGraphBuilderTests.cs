@@ -75,9 +75,9 @@ namespace UnitTests.Internal
             Assert.Equal(typeof(Bar), result.ResourceType);
         }
 
-        private class Foo { }
+        private sealed class Foo { }
 
-        private class TestContext : DbContext
+        private sealed class TestContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }
         }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExampleTests
 {
-    public static class ServiceCollectionExtensions
+    internal static class ServiceCollectionExtensions
     {
         public static void AddControllersFromExampleProject(this IServiceCollection services)
         {

@@ -9,7 +9,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PassportHooksDefinition : LockableHooksDefinition<Passport>
+    public sealed class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
         public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {

@@ -6,7 +6,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PersonHooksDefinition : LockableHooksDefinition<Person>
+    public sealed class PersonHooksDefinition : LockableHooksDefinition<Person>
     {
         public PersonHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

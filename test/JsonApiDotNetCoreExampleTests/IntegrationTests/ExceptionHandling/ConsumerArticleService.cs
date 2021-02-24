@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
     {
-        public const string UnavailableArticlePrefix = "X";
+        internal const string UnavailableArticlePrefix = "X";
 
         private const string SupportEmailAddress = "company@email.com";
 

@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
-    public class MultipleRelationshipsDependentPart : IdentifiableWithAttribute
+    public sealed class MultipleRelationshipsDependentPart : IdentifiableWithAttribute
     {
         [HasOne] public OneToOnePrincipal PopulatedToOne { get; set; }
         public int PopulatedToOneId { get; set; }

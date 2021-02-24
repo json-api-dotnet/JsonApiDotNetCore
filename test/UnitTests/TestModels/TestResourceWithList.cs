@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
-    public class TestResourceWithList : Identifiable
+    public sealed class TestResourceWithList : Identifiable
     {
         [Attr] public List<ComplexType> ComplexFields { get; set; }
     }

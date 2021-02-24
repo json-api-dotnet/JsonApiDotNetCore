@@ -1,4 +1,5 @@
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
     {
         private const string SkipCacheParameterName = "skipCache";
 
+        [UsedImplicitly]
         public bool SkipCache { get; private set; }
 
         public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)

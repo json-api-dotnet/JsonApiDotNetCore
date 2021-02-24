@@ -13,7 +13,7 @@ namespace UnitTests.ResourceHooks
 {
     public sealed class DiscoveryTests
     {
-        public class Dummy : Identifiable { }
+        public sealed class Dummy : Identifiable { }
         public sealed class DummyResourceDefinition : ResourceHooksDefinition<Dummy>
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
@@ -40,7 +40,7 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        public class AnotherDummy : Identifiable { }
+        public sealed class AnotherDummy : Identifiable { }
         public abstract class ResourceDefinitionBase<T> : ResourceHooksDefinition<T> where T : class, IIdentifiable
         {
             protected ResourceDefinitionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
@@ -64,7 +64,7 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        public class YetAnotherDummy : Identifiable { }
+        public sealed class YetAnotherDummy : Identifiable { }
         public sealed class YetAnotherDummyResourceDefinition : ResourceHooksDefinition<YetAnotherDummy>
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }

@@ -1,6 +1,6 @@
 namespace UnitTests.TestModels
 {
-    public class ComplexType
+    public sealed class ComplexType
     {
         public string CompoundName { get; set; }
     }

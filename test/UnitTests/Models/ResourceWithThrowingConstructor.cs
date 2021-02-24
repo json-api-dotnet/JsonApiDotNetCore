@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace UnitTests.Models
 {
-    public class ResourceWithThrowingConstructor : Identifiable
+    public sealed class ResourceWithThrowingConstructor : Identifiable
     {
         public ResourceWithThrowingConstructor()
         {

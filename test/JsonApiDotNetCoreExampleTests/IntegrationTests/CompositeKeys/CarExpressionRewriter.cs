@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
     /// <remarks>
     /// This enables queries to use <see cref="Car.Id"/>, which is not mapped in the database.
     /// </remarks>
-    public sealed class CarExpressionRewriter : QueryExpressionRewriter<object>
+    internal sealed class CarExpressionRewriter : QueryExpressionRewriter<object>
     {
         private readonly AttrAttribute _regionIdAttribute;
         private readonly AttrAttribute _licensePlateAttribute;

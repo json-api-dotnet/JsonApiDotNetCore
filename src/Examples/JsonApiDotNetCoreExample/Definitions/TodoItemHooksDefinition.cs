@@ -9,7 +9,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class TodoItemHooksDefinition : LockableHooksDefinition<TodoItem>
+    public sealed class TodoItemHooksDefinition : LockableHooksDefinition<TodoItem>
     {
         public TodoItemHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
 

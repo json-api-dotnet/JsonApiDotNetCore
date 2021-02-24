@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public class SoftDeletionResourceDefinition<TResource> : JsonApiResourceDefinition<TResource>
+    public sealed class SoftDeletionResourceDefinition<TResource> : JsonApiResourceDefinition<TResource>
         where TResource : class, IIdentifiable<int>, ISoftDeletable
     {
         private readonly IResourceGraph _resourceGraph;

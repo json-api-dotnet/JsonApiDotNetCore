@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace UnitTests.TestModels
 {
-    public class Article : Identifiable
+    public sealed class Article : Identifiable
     {
         [Attr] public string Title { get; set; }
         [HasOne] public Person Reviewer { get; set; }

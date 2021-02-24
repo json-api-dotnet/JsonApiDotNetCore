@@ -156,7 +156,7 @@ namespace DiscoveryTests
 
         public sealed class TestResource : Identifiable { }
 
-        public class TestResourceService : JsonApiResourceService<TestResource>
+        public sealed class TestResourceService : JsonApiResourceService<TestResource>
         {
             public TestResourceService(
                 IResourceRepositoryAccessor repositoryAccessor,
@@ -173,7 +173,7 @@ namespace DiscoveryTests
             }
         }
 
-        public class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
+        public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
         {
             public TestResourceRepository(
                 ITargetedFields targetedFields,
@@ -186,12 +186,12 @@ namespace DiscoveryTests
             { }
         }
         
-        public class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
+        public sealed class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
         {
             public TestResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
 
-        public class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
+        public sealed class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
         {
             public TestResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }

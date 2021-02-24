@@ -12,11 +12,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
     public abstract class BaseToothbrushesController : BaseJsonApiController<Toothbrush>
     {
-        public const int EmptyActionResultId = 11111111;
-        public const int ActionResultWithErrorObjectId = 22222222;
-        public const int ActionResultWithStringParameter = 33333333;
-        public const int ObjectResultWithErrorObjectId = 44444444;
-        public const int ObjectResultWithErrorCollectionId = 55555555;
+        internal const int EmptyActionResultId = 11111111;
+        internal const int ActionResultWithErrorObjectId = 22222222;
+        internal const int ActionResultWithStringParameter = 33333333;
+        internal const int ObjectResultWithErrorObjectId = 44444444;
+        internal const int ObjectResultWithErrorCollectionId = 55555555;
 
         protected BaseToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<Toothbrush> resourceService)

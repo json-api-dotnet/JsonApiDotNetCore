@@ -8,7 +8,7 @@ using MultiDbContextExample.Data;
 
 namespace MultiDbContextExample.Repositories
 {
-    public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
+    public sealed class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
         public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> contextResolver,
