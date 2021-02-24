@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ErrorDbContext : DbContext
     {
         public DbSet<ConsumerArticle> ConsumerArticles { get; set; }

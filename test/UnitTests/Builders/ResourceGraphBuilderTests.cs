@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -17,6 +18,7 @@ namespace UnitTests.Builders
 
         private sealed class DbResource : Identifiable { }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TestContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }

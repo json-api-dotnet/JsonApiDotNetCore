@@ -1,5 +1,6 @@
 using System.Linq;
 using Castle.DynamicProxy;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -77,6 +78,7 @@ namespace UnitTests.Internal
 
         private sealed class Foo { }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TestContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }

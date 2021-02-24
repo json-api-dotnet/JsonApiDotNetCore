@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExample.Data
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class AppDbContext : DbContext
     {
         public DbSet<TodoItem> TodoItems { get; set; }

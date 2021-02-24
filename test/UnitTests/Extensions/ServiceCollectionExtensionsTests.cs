@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -245,6 +246,7 @@ namespace UnitTests.Extensions
             public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public class TestContext : DbContext
         {
             public TestContext(DbContextOptions<TestContext> options) : base(options)

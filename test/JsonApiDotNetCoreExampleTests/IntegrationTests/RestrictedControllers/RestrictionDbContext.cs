@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class RestrictionDbContext : DbContext
     {
         public DbSet<Table> Tables { get; set; }

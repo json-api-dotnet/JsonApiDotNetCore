@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ReadWriteDbContext : DbContext
     {
         public DbSet<WorkItem> WorkItems { get; set; }

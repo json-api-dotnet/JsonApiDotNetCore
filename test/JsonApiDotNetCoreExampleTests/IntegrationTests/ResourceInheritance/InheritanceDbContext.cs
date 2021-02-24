@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InheritanceDbContext : DbContext
     {
         public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options) : base(options) { }

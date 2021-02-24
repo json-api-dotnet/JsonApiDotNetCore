@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InjectionDbContext : DbContext
     {
         public ISystemClock SystemClock { get; }
