@@ -155,6 +155,7 @@ namespace DiscoveryTests
             resourceHooksDefinition.Should().BeOfType<TestResourceHooksDefinition>();
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class TestResource : Identifiable { }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

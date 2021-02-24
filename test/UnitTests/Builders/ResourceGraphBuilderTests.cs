@@ -96,6 +96,7 @@ namespace UnitTests.Builders
             Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicName);
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class TestResource : Identifiable
         {
             [Attr] 

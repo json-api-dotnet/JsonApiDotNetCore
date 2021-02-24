@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class BlogPostLabel
     {
         public int BlogPostId { get; set; }

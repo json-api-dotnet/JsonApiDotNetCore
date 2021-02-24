@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCoreExample.Models
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ArticleTag
     {
         public int ArticleId { get; set; }

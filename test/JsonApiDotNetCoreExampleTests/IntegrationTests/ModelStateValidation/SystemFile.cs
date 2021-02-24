@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SystemFile : Identifiable
     {
         [Attr]

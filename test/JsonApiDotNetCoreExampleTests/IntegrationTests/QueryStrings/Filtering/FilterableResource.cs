@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class FilterableResource : Identifiable
     {
         [Attr] public string SomeString { get; set; }

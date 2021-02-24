@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class HumanFavoriteContentItem
     {
         public int ContentItemId { get; set; }

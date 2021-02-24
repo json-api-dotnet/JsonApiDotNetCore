@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Errors;
@@ -19,6 +20,7 @@ namespace UnitTests.Controllers
 {
     public sealed class BaseJsonApiControllerTests
     {
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class Resource : Identifiable
         {
             [Attr] public string TestAttribute { get; set; }
