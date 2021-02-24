@@ -14,6 +14,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 using LeftType = System.Type;
 using RightType = System.Type;
 
+// ReSharper disable PossibleMultipleEnumeration
+
 namespace JsonApiDotNetCore.Hooks.Internal
 {
     /// <inheritdoc />

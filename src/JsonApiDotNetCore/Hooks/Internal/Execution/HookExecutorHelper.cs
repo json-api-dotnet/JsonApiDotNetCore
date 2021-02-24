@@ -202,6 +202,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
             IEnumerable existingRightResources = null)
         {
+            var existingRightResourceList = existingRightResources?.Cast<IIdentifiable>().ToList();
+
             var implicitlyAffected = new Dictionary<RelationshipAttribute, IEnumerable>();
             foreach (var kvp in leftResourcesByRelation)
             {
@@ -233,9 +235,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                     }
 
                     var dbRightResourceListCast = dbRightResourceList.Cast<IIdentifiable>().ToList();
-                    if (existingRightResources != null)
+                    if (existingRightResourceList != null)
                     {
-                        dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResources.Cast<IIdentifiable>(), _comparer).ToList();
+                        dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResourceList, _comparer).ToList();
                     }
 
                     if (dbRightResourceListCast.Any())

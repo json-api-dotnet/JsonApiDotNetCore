@@ -309,7 +309,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         private IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
-            var cast = TypeHelper.CopyToList(relationshipsFromPrev, relationshipsFromPrev.First().GetType());
+            var relationshipsFromPrevList = relationshipsFromPrev.ToList();
+            var cast = TypeHelper.CopyToList(relationshipsFromPrevList, relationshipsFromPrevList.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
         }
 
