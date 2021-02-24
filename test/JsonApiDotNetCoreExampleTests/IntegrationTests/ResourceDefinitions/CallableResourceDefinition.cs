@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
         private readonly IUserRolesService _userRolesService;

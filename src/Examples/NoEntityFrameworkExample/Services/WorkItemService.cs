@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,7 @@ using Npgsql;
 
 namespace NoEntityFrameworkExample.Services
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class WorkItemService : IResourceService<WorkItem>
     {
         private readonly string _connectionString;

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PersonHooksDefinition : LockableHooksDefinition<Person>
     {
         public PersonHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }

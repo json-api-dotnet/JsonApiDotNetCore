@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
@@ -14,6 +15,8 @@ namespace UnitTests.ResourceHooks
     public sealed class DiscoveryTests
     {
         public sealed class Dummy : Identifiable { }
+        
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class DummyResourceDefinition : ResourceHooksDefinition<Dummy>
         {
             public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
@@ -48,6 +51,7 @@ namespace UnitTests.ResourceHooks
             public override void AfterDelete(HashSet<T> resources, ResourcePipeline pipeline, bool succeeded) { }
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
         {
             public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<AnotherDummy>().Build()) { }
@@ -65,6 +69,8 @@ namespace UnitTests.ResourceHooks
         }
 
         public sealed class YetAnotherDummy : Identifiable { }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class YetAnotherDummyResourceDefinition : ResourceHooksDefinition<YetAnotherDummy>
         {
             public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }
@@ -96,6 +102,7 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class GenericDummyResourceDefinition<TResource> : ResourceHooksDefinition<TResource> where TResource : class, IIdentifiable<int>
         {
             public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TResource>().Build()) { }

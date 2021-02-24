@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket>
     {
         public SupportTicketDefinition(IResourceGraph resourceGraph) : base(resourceGraph)

@@ -190,6 +190,7 @@ namespace UnitTests.Extensions
         public sealed class IntResource : Identifiable { }
         public sealed class GuidResource : Identifiable<Guid> { }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceService : IResourceService<IntResource>
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -204,6 +205,7 @@ namespace UnitTests.Extensions
             public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class GuidResourceService : IResourceService<GuidResource, Guid>
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -218,6 +220,7 @@ namespace UnitTests.Extensions
             public Task RemoveFromToManyRelationshipAsync(Guid primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceRepository : IResourceRepository<IntResource>
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();
@@ -232,6 +235,7 @@ namespace UnitTests.Extensions
             public Task RemoveFromToManyRelationshipAsync(IntResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken) => throw new NotImplementedException();
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class GuidResourceRepository : IResourceRepository<GuidResource, Guid>
         {
             public Task<IReadOnlyCollection<GuidResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken) => throw new NotImplementedException();

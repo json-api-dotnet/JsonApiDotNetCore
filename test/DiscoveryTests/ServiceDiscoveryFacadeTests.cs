@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FluentAssertions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
@@ -156,6 +157,7 @@ namespace DiscoveryTests
 
         public sealed class TestResource : Identifiable { }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceService : JsonApiResourceService<TestResource>
         {
             public TestResourceService(
@@ -173,6 +175,7 @@ namespace DiscoveryTests
             }
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
         {
             public TestResourceRepository(
@@ -185,12 +188,14 @@ namespace DiscoveryTests
                 : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
             { }
         }
-        
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
         {
             public TestResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
         {
             public TestResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }

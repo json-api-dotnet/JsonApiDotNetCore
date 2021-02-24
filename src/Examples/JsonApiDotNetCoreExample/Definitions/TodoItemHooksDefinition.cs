@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -9,6 +10,7 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class TodoItemHooksDefinition : LockableHooksDefinition<TodoItem>
     {
         public TodoItemHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }

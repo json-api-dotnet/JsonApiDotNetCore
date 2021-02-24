@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
     {
         private readonly ISystemClock _systemClock;

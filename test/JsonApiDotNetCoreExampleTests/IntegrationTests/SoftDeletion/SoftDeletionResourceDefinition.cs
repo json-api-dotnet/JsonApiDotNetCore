@@ -1,4 +1,5 @@
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -6,6 +7,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SoftDeletionResourceDefinition<TResource> : JsonApiResourceDefinition<TResource>
         where TResource : class, IIdentifiable<int>, ISoftDeletable
     {

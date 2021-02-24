@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class HostingStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {

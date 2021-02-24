@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -8,6 +9,7 @@ using MultiDbContextExample.Data;
 
 namespace MultiDbContextExample.Repositories
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class DbContextBRepository<TResource> : EntityFrameworkCoreRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {

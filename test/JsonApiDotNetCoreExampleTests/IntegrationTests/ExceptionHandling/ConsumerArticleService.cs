@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
     {
         internal const string UnavailableArticlePrefix = "X";

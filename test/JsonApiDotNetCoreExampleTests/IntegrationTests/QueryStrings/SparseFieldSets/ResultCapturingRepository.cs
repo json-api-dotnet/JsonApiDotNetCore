@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
     /// <summary>
     /// Enables sparse fieldset tests to verify which fields were (not) retrieved from the database.
     /// </summary>
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ResultCapturingRepository<TResource> : EntityFrameworkCoreRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {

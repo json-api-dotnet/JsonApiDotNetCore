@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExampleTests.Startups
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class AbsoluteLinksInApiNamespaceStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {

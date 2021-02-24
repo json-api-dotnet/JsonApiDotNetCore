@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class KebabCasingConventionStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
