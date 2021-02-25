@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             return todoList;
         }
 
-        protected (List<Article>, List<ArticleTag>, List<Tag>) CreateManyToManyData()
+        protected (List<Article>, List<Tag>) CreateManyToManyData()
         {
             var tagsSubset = TagFaker.Generate(3);
             var joinsSubSet = ArticleTagFaker.Generate(3);
@@ -106,10 +106,8 @@ namespace UnitTests.ResourceHooks
                 completeJoin[i].Tag = allTags[i];
             }
 
-            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-
             var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
-            return (articles, allJoins, allTags);
+            return (articles, allTags);
         }
 
         protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()

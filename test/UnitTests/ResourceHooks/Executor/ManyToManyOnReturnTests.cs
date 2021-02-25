@@ -12,7 +12,7 @@ namespace UnitTests.ResourceHooks.Executor
     {
         private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
-        private (List<Article>, List<ArticleTag>, List<Tag>) CreateDummyData()
+        private (List<Article>, List<Tag>) CreateDummyData()
         {
             var tagsSubset = TagFaker.Generate(3);
             var joinsSubSet = ArticleTagFaker.Generate(3);
@@ -36,10 +36,8 @@ namespace UnitTests.ResourceHooks.Executor
                 completeJoin[i].Tag = allTags[i];
             }
 
-            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-
             var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
-            return (articles, allJoins, allTags);
+            return (articles, allTags);
         }
 
         [Fact]
@@ -49,7 +47,7 @@ namespace UnitTests.ResourceHooks.Executor
             var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, _, tags) = CreateDummyData();
+            var (articles, tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -67,7 +65,7 @@ namespace UnitTests.ResourceHooks.Executor
             var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, _, tags) = CreateDummyData();
+            var (articles, tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -84,7 +82,7 @@ namespace UnitTests.ResourceHooks.Executor
             var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, _, _) = CreateDummyData();
+            var (articles, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -102,7 +100,7 @@ namespace UnitTests.ResourceHooks.Executor
             var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
             var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            var (articles, _, _) = CreateDummyData();
+            var (articles, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);

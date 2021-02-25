@@ -63,7 +63,7 @@ namespace UnitTests.Serialization.Server
             var (article, author, _, reviewer, reviewerFood) = GetAuthorChainInstances();
             var sharedBlog = author.Blogs.First();
             var sharedBlogAuthor = reviewer;
-            var (_, _, _, authorSong) = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
+            var authorSong = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
             var reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
             var builder = GetBuilder();
 
@@ -88,7 +88,7 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(reviewerFood.StringId, sharedBlogAuthor.FavoriteFood.StringId);
         }
 
-        private (Person, Song, Person, Song) GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
+        private Song GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
         {
             var reviewer = PersonFaker.Generate();
             article.Reviewer = reviewer;
@@ -108,7 +108,7 @@ namespace UnitTests.Serialization.Server
             var reviewerSong = SongFaker.Generate();
             reviewer.FavoriteSong = reviewerSong;
 
-            return (reviewer, reviewerSong, author, authorSong);
+            return authorSong;
         }
 
         private (Article, Person, Food, Person, Food) GetAuthorChainInstances()

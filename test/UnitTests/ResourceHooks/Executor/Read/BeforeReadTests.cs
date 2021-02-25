@@ -14,7 +14,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
         {
             // Arrange
             var todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (_, hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
+            var (hookExecutor, todoResourceMock) = CreateTestObjects(todoDiscovery);
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);

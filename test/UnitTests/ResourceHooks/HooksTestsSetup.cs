@@ -35,11 +35,11 @@ namespace UnitTests.ResourceHooks
             return (ufMock, constraintsMock, pfMock, optionsMock);
         }
 
-        internal (Mock<IEnumerable<IQueryConstraintProvider>>, ResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>) CreateTestObjects<TPrimary>(IHooksDiscovery<TPrimary> primaryDiscovery = null)
+        internal (ResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>) CreateTestObjects<TPrimary>(IHooksDiscovery<TPrimary> primaryDiscovery = null)
             where TPrimary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
-            var primaryResource = CreateResourceDefinition(primaryDiscovery);
+            var primaryResource = CreateResourceDefinition<TPrimary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
@@ -50,7 +50,7 @@ namespace UnitTests.ResourceHooks
             var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
-            return (constraintsMock, hookExecutor, primaryResource);
+            return (hookExecutor, primaryResource);
         }
 
         protected (Mock<IEnumerable<IQueryConstraintProvider>>, Mock<ITargetedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>, Mock<IResourceHookContainer<TSecondary>>)
@@ -63,8 +63,8 @@ namespace UnitTests.ResourceHooks
             where TSecondary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            var primaryResource = CreateResourceDefinition(primaryDiscovery);
-            var secondaryResource = CreateResourceDefinition(secondaryDiscovery);
+            var primaryResource = CreateResourceDefinition<TPrimary>();
+            var secondaryResource = CreateResourceDefinition<TSecondary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
@@ -98,9 +98,9 @@ namespace UnitTests.ResourceHooks
             where TSecondSecondary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            var primaryResource = CreateResourceDefinition(primaryDiscovery);
-            var firstSecondaryResource = CreateResourceDefinition(firstSecondaryDiscovery);
-            var secondSecondaryResource = CreateResourceDefinition(secondSecondaryDiscovery);
+            var primaryResource = CreateResourceDefinition<TPrimary>();
+            var firstSecondaryResource = CreateResourceDefinition<TFirstSecondary>();
+            var secondSecondaryResource = CreateResourceDefinition<TSecondSecondary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
             var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
@@ -263,9 +263,7 @@ namespace UnitTests.ResourceHooks
             inverseRelationships.Resolve();
         }
 
-        private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition
-            <TModel>(IHooksDiscovery<TModel> discovery
-            )
+        private Mock<IResourceHookContainer<TModel>> CreateResourceDefinition<TModel>()
             where TModel : class, IIdentifiable<int>
         {
             var resourceDefinition = new Mock<IResourceHookContainer<TModel>>();

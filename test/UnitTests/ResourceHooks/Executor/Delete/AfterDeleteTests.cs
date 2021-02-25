@@ -15,7 +15,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         {
             // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
+            var (hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
             var todoList = CreateTodoWithOwner();
 
             // Act
@@ -31,7 +31,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         {
             // Arrange
             var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var (_, hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
+            var (hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
             var todoList = CreateTodoWithOwner();
 
             // Act
