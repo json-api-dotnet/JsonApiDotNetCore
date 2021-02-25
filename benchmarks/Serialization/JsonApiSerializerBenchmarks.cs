@@ -11,6 +11,7 @@ using Moq;
 
 namespace Benchmarks.Serialization
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
     public class JsonApiSerializerBenchmarks
     {

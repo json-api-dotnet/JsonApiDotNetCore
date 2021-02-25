@@ -4,6 +4,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace Benchmarks.LinkBuilder
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter, SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 20), MemoryDiagnoser]
     public class LinkBuilderGetNamespaceFromPathBenchmarks
     {
@@ -17,7 +18,7 @@ namespace Benchmarks.LinkBuilder
         [Benchmark]
         public void UsingReadOnlySpan() => GetNamespaceFromPathUsingReadOnlySpan(RequestPath, ResourceName);
 
-        public static string GetNamespaceFromPathUsingStringSplit(string path, string resourceName)
+        private static void GetNamespaceFromPathUsingStringSplit(string path, string resourceName)
         {
             StringBuilder namespaceBuilder = new StringBuilder(path.Length);
             string[] segments = path.Split('/');
@@ -33,10 +34,10 @@ namespace Benchmarks.LinkBuilder
                 namespaceBuilder.Append(segments[index]);
             }
 
-            return namespaceBuilder.ToString();
+            _ = namespaceBuilder.ToString();
         }
 
-        public static string GetNamespaceFromPathUsingReadOnlySpan(string path, string resourceName)
+        private static void GetNamespaceFromPathUsingReadOnlySpan(string path, string resourceName)
         {
             ReadOnlySpan<char> resourceNameSpan = resourceName.AsSpan();
             ReadOnlySpan<char> pathSpan = path.AsSpan();
@@ -57,14 +58,12 @@ namespace Benchmarks.LinkBuilder
                             bool hasDelimiterAfterSegment = pathSpan.Length >= lastCharacterIndex + 1 && pathSpan[lastCharacterIndex].Equals(PathDelimiter);
                             if (isAtEnd || hasDelimiterAfterSegment)
                             {
-                                return pathSpan.Slice(0, index).ToString();
+                                _ = pathSpan.Slice(0, index).ToString();
                             }
                         }
                     }
                 }
             }
-
-            return string.Empty;
         }
     }
 }

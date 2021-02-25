@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace Benchmarks.Serialization
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
     public class JsonApiDeserializerBenchmarks
     {

@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Query
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter, SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 20), MemoryDiagnoser]
     public class QueryParserBenchmarks
     {
