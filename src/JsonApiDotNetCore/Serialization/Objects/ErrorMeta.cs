@@ -22,8 +22,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
             }
             else
             {
-                Data["StackTrace"] = exception.ToString()
-                    .Split("\n", int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
+                Data["StackTrace"] = exception.ToString().Split("\n", int.MaxValue, StringSplitOptions.RemoveEmptyEntries);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace ReportsExample.Services
         {
             _logger.LogInformation("GetAsync");
 
-            var reports = GetReports();
+            IReadOnlyCollection<Report> reports = GetReports();
 
             return Task.FromResult(reports);
         }

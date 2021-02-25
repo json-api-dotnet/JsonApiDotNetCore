@@ -19,8 +19,7 @@ namespace JsonApiDotNetCore.Queries
         public int? TotalResourceCount { get; set; }
 
         /// <inheritdoc />
-        public int? TotalPageCount => TotalResourceCount == null || PageSize == null
-            ? null
-            : (int?) Math.Ceiling((decimal) TotalResourceCount.Value / PageSize.Value);
+        public int? TotalPageCount =>
+            TotalResourceCount == null || PageSize == null ? null : (int?)Math.Ceiling((decimal)TotalResourceCount.Value / PageSize.Value);
     }
 }

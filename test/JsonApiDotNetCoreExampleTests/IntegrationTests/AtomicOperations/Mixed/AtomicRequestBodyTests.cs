@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -9,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 {
-    public sealed class AtomicRequestBodyTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicRequestBodyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
@@ -28,14 +29,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, null);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, null);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -43,10 +44,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
                 performersInDatabase.Should().BeEmpty();
 
-                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().BeEmpty();
             });
         }
@@ -60,14 +61,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Unexpected end of content while loading JObject.");
@@ -86,14 +87,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: No operations found.");
             error.Detail.Should().BeNull();
@@ -101,10 +102,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
                 performersInDatabase.Should().BeEmpty();
 
-                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().BeEmpty();
             });
         }
@@ -134,14 +135,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Error converting value \"merge\" to type");
@@ -149,10 +150,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var performersInDatabase = await dbContext.Performers.ToListAsync();
+                List<Performer> performersInDatabase = await dbContext.Performers.ToListAsync();
                 performersInDatabase.Should().BeEmpty();
 
-                var tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+                List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
                 tracksInDatabase.Should().BeEmpty();
             });
         }

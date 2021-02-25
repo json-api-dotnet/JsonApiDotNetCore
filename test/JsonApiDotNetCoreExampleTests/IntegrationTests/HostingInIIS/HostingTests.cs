@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,8 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
-    public sealed class HostingTests
-        : IClassFixture<ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
+    public sealed class HostingTests : IClassFixture<ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         public async Task Get_primary_resources_with_include_returns_links()
         {
             // Arrange
-            var gallery = _fakers.ArtGallery.Generate();
+            ArtGallery gallery = _fakers.ArtGallery.Generate();
             gallery.Paintings = _fakers.Painting.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
             const string route = "/iis-application-virtual-directory/public-api/artGalleries?include=paintings";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         public async Task Get_primary_resources_with_include_on_custom_route_returns_links()
         {
             // Arrange
-            var painting = _fakers.Painting.Generate();
+            Painting painting = _fakers.Painting.Generate();
             painting.ExposedAt = _fakers.ArtGallery.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
             const string route = "/iis-application-virtual-directory/custom/path/to/paintings?include=exposedAt";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

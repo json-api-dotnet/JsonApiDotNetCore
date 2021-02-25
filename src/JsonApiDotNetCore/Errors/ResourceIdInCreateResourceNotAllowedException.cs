@@ -18,9 +18,7 @@ namespace JsonApiDotNetCore.Errors
                     : "Specifying the resource ID in operations that create a resource is not allowed.",
                 Source =
                 {
-                    Pointer = atomicOperationIndex != null
-                        ? $"/atomic:operations[{atomicOperationIndex}]/data/id"
-                        : "/data/id"
+                    Pointer = atomicOperationIndex != null ? $"/atomic:operations[{atomicOperationIndex}]/data/id" : "/data/id"
                 }
             })
         {

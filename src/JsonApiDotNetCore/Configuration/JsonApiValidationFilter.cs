@@ -32,13 +32,15 @@ namespace JsonApiDotNetCore.Configuration
                 return true;
             }
 
-            var isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
+            bool isTopResourceInPrimaryRequest = string.IsNullOrEmpty(parentEntry.Key) && IsAtPrimaryEndpoint(request);
+
             if (!isTopResourceInPrimaryRequest)
             {
                 return false;
             }
 
             var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
+
             if (httpContextAccessor.HttpContext.Request.Method == HttpMethods.Patch || request.OperationKind == OperationKind.UpdateResource)
             {
                 var targetedFields = _serviceProvider.GetRequiredService<ITargetedFields>();

@@ -10,14 +10,12 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     {
         protected abstract string[] Methods { get; }
 
-        public override async Task OnActionExecutionAsync(
-            ActionExecutingContext context,
-            ActionExecutionDelegate next)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             ArgumentGuard.NotNull(context, nameof(context));
             ArgumentGuard.NotNull(next, nameof(next));
 
-            var method = context.HttpContext.Request.Method;
+            string method = context.HttpContext.Request.Method;
 
             if (!CanExecuteAction(method))
             {

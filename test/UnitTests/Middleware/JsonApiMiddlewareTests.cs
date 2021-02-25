@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Moq;
+using Moq.Language;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -19,8 +20,8 @@ namespace UnitTests.Middleware
         {
             // Arrange
             const string id = "ABC123ABC";
-            var configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
-            var request = configuration.Request;
+            InvokeConfiguration configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
+            JsonApiRequest request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
@@ -34,8 +35,8 @@ namespace UnitTests.Middleware
         {
             // Arrange
             const string id = "123";
-            var configuration = GetConfiguration($"/users/{id}", id: id);
-            var request = configuration.Request;
+            InvokeConfiguration configuration = GetConfiguration($"/users/{id}", id: id);
+            JsonApiRequest request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
@@ -48,8 +49,8 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_UrlHasNoPrimaryIdSet_ShouldHaveBaseIdSetToNull()
         {
             // Arrange
-            var configuration = GetConfiguration("/users");
-            var request = configuration.Request;
+            InvokeConfiguration configuration = GetConfiguration("/users");
+            JsonApiRequest request = configuration.Request;
 
             // Act
             await RunMiddlewareTask(configuration);
@@ -62,47 +63,42 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_UrlHasNegativePrimaryIdAndTypeIsInt_ShouldNotThrowJAException()
         {
             // Arrange
-            var configuration = GetConfiguration("/users/-5/");
+            InvokeConfiguration configuration = GetConfiguration("/users/-5/");
 
             // Act / Assert
             await RunMiddlewareTask(configuration);
         }
 
-        private sealed class InvokeConfiguration
-        {
-            public JsonApiMiddleware MiddleWare { get; set; }
-            public HttpContext HttpContext { get; set; }
-            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; set; }
-            public Mock<IJsonApiOptions> Options { get; set; }
-            public JsonApiRequest Request { get; set; }
-            public Mock<IResourceGraph> ResourceGraph { get; set; }
-        }
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
-            var controllerResourceMapping = holder.ControllerResourceMapping.Object;
-            var context = holder.HttpContext;
-            var options = holder.Options.Object;
-            var request = holder.Request;
-            var resourceGraph = holder.ResourceGraph.Object;
+            IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMapping.Object;
+            HttpContext context = holder.HttpContext;
+            IJsonApiOptions options = holder.Options.Object;
+            JsonApiRequest request = holder.Request;
+            IResourceGraph resourceGraph = holder.ResourceGraph.Object;
             return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, request, resourceGraph);
         }
-        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
+
+        private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id = null, Type relType = null)
         {
             if (path.First() != '/')
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
+
             var middleware = new JsonApiMiddleware(httpContext =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });
+
             const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             mockMapping.Setup(x => x.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
 
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
-            var mockGraph = CreateMockResourceGraph(resourceName, includeRelationship: relType != null);
+            Mock<IResourceGraph> mockGraph = CreateMockResourceGraph(resourceName, relType != null);
             var request = new JsonApiRequest();
+
             if (relType != null)
             {
                 request.Relationship = new HasManyAttribute
@@ -110,7 +106,9 @@ namespace UnitTests.Middleware
                     RightType = relType
                 };
             }
-            var context = CreateHttpContext(path, isRelationship: relType != null, action: action, id: id);
+
+            DefaultHttpContext context = CreateHttpContext(path, relType != null, action, id);
+
             return new InvokeConfiguration
             {
                 MiddleWare = middleware,
@@ -129,33 +127,43 @@ namespace UnitTests.Middleware
             return mockOptions;
         }
 
-        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id =null)
+        private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id = null)
         {
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
+
             var feature = new RouteValuesFeature
             {
-                RouteValues = {["controller"] = "fake!", ["action"] = isRelationship ? "GetRelationship" : action}
+                RouteValues =
+                {
+                    ["controller"] = "fake!",
+                    ["action"] = isRelationship ? "GetRelationship" : action
+                }
             };
-            if(id != null)
+
+            if (id != null)
             {
                 feature.RouteValues["id"] = id;
             }
+
             context.Features.Set<IRouteValuesFeature>(feature);
             context.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(), null));
             return context;
         }
 
-        private Mock<IResourceGraph> CreateMockResourceGraph( string resourceName, bool includeRelationship = false)
+        private Mock<IResourceGraph> CreateMockResourceGraph(string resourceName, bool includeRelationship = false)
         {
             var mockGraph = new Mock<IResourceGraph>();
+
             var resourceContext = new ResourceContext
             {
                 PublicName = resourceName,
                 IdentityType = typeof(string)
             };
-             var seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+
+            ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+
             if (includeRelationship)
             {
                 var relResourceContext = new ResourceContext
@@ -163,10 +171,21 @@ namespace UnitTests.Middleware
                     PublicName = "todoItems",
                     IdentityType = typeof(string)
                 };
+
                 seq.Returns(relResourceContext);
             }
+
             return mockGraph;
         }
 
+        private sealed class InvokeConfiguration
+        {
+            public JsonApiMiddleware MiddleWare { get; set; }
+            public HttpContext HttpContext { get; set; }
+            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; set; }
+            public Mock<IJsonApiOptions> Options { get; set; }
+            public JsonApiRequest Request { get; set; }
+            public Mock<IResourceGraph> ResourceGraph { get; set; }
+        }
     }
 }

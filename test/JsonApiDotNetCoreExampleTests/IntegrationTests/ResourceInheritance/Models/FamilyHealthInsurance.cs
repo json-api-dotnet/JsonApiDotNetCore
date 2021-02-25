@@ -7,6 +7,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
     public sealed class FamilyHealthInsurance : HealthInsurance
     {
         [Attr]
-        public int PermittedFamilySize  { get; set; }
+        public int PermittedFamilySize { get; set; }
     }
 }

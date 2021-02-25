@@ -18,11 +18,13 @@ namespace JsonApiDotNetCoreExample.Models
         [NotMapped]
         [HasManyThrough(nameof(ArticleTags))]
         public ISet<Tag> Tags { get; set; }
+
         public ISet<ArticleTag> ArticleTags { get; set; }
 
         [NotMapped]
         [HasManyThrough(nameof(IdentifiableArticleTags))]
         public ICollection<Tag> IdentifiableTags { get; set; }
+
         public ICollection<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
     }
 }

@@ -21,7 +21,7 @@ namespace UnitTests.Internal
             var document = new ErrorDocument(errorCodes.Select(code => new Error(code)));
 
             // Act
-            var status = document.GetErrorStatusCode();
+            HttpStatusCode status = document.GetErrorStatusCode();
 
             // Assert
             status.Should().Be(expected);

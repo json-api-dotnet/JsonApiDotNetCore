@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Responsible for getting <see cref="ResourceContext"/>s from the <see cref="ResourceGraph"/>.
+    /// Responsible for getting <see cref="ResourceContext" />s from the <see cref="ResourceGraph" />.
     /// </summary>
     public interface IResourceContextProvider
     {
@@ -27,6 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Gets the resource metadata for the specified resource type.
         /// </summary>
-        ResourceContext GetResourceContext<TResource>() where TResource : class, IIdentifiable;
+        ResourceContext GetResourceContext<TResource>()
+            where TResource : class, IIdentifiable;
     }
 }

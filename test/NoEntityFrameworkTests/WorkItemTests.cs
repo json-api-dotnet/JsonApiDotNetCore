@@ -36,7 +36,7 @@ namespace NoEntityFrameworkTests
             const string route = "/api/v1/workItems";
 
             // Act
-            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -56,10 +56,10 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/workItems/" + workItem.StringId;
+            string route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -90,7 +90,7 @@ namespace NoEntityFrameworkTests
                         isBlocked = newWorkItem.IsBlocked,
                         title = newWorkItem.Title,
                         durationInHours = newWorkItem.DurationInHours,
-                        projectId = newWorkItem.ProjectId,
+                        projectId = newWorkItem.ProjectId
                     }
                 }
             };
@@ -98,7 +98,7 @@ namespace NoEntityFrameworkTests
             const string route = "/api/v1/workItems/";
 
             // Act
-            var (httpResponse, responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -122,10 +122,10 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/api/v1/workItems/" + workItem.StringId;
+            string route = "/api/v1/workItems/" + workItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);

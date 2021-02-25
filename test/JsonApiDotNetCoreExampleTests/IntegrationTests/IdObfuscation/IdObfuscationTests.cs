@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -9,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
-    public sealed class IdObfuscationTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
+    public sealed class IdObfuscationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
         private readonly ObfuscationFakers _fakers = new ObfuscationFakers();
@@ -24,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_filter_equality_in_primary_resources()
         {
             // Arrange
-            var accounts = _fakers.BankAccount.Generate(2);
+            List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -33,10 +34,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts?filter=equals(id,'{accounts[1].StringId}')";
+            string route = $"/bankAccounts?filter=equals(id,'{accounts[1].StringId}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -49,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_filter_any_in_primary_resources()
         {
             // Arrange
-            var accounts = _fakers.BankAccount.Generate(2);
+            List<BankAccount> accounts = _fakers.BankAccount.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -58,10 +59,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{HexadecimalCodec.Encode(99999999)}')";
+            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{HexadecimalCodec.Encode(99999999)}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -77,14 +78,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             const string route = "/bankAccounts/not-a-hex-value";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Invalid ID value.");
             error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
@@ -94,7 +95,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_get_primary_resource_by_ID()
         {
             // Arrange
-            var card = _fakers.DebitCard.Generate();
+            DebitCard card = _fakers.DebitCard.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -102,10 +103,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/debitCards/" + card.StringId;
+            string route = "/debitCards/" + card.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -118,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_get_secondary_resources()
         {
             // Arrange
-            var account = _fakers.BankAccount.Generate();
+            BankAccount account = _fakers.BankAccount.Generate();
             account.Cards = _fakers.DebitCard.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -127,10 +128,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts/{account.StringId}/cards";
+            string route = $"/bankAccounts/{account.StringId}/cards";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -144,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_include_resource_with_sparse_fieldset()
         {
             // Arrange
-            var account = _fakers.BankAccount.Generate();
+            BankAccount account = _fakers.BankAccount.Generate();
             account.Cards = _fakers.DebitCard.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -153,10 +154,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts/{account.StringId}?include=cards&fields[debitCards]=ownerName";
+            string route = $"/bankAccounts/{account.StringId}?include=cards&fields[debitCards]=ownerName";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -174,7 +175,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_get_relationship()
         {
             // Arrange
-            var account = _fakers.BankAccount.Generate();
+            BankAccount account = _fakers.BankAccount.Generate();
             account.Cards = _fakers.DebitCard.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -183,10 +184,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/bankAccounts/{account.StringId}/relationships/cards";
+            string route = $"/bankAccounts/{account.StringId}/relationships/cards";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -199,8 +200,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_create_resource_with_relationship()
         {
             // Arrange
-            var existingAccount = _fakers.BankAccount.Generate();
-            var newCard = _fakers.DebitCard.Generate();
+            BankAccount existingAccount = _fakers.BankAccount.Generate();
+            DebitCard newCard = _fakers.DebitCard.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -235,7 +236,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             const string route = "/debitCards";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -243,13 +244,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             responseDocument.SingleData.Attributes["ownerName"].Should().Be(newCard.OwnerName);
             responseDocument.SingleData.Attributes["pinCode"].Should().Be(newCard.PinCode);
 
-            var newCardId = HexadecimalCodec.Decode(responseDocument.SingleData.Id);
+            int newCardId = HexadecimalCodec.Decode(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var cardInDatabase = await dbContext.DebitCards
-                    .Include(card => card.Account)
-                    .FirstWithIdAsync(newCardId);
+                DebitCard cardInDatabase = await dbContext.DebitCards.Include(card => card.Account).FirstWithIdAsync(newCardId);
 
                 cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
                 cardInDatabase.PinCode.Should().Be(newCard.PinCode);
@@ -264,12 +263,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_update_resource_with_relationship()
         {
             // Arrange
-            var existingAccount = _fakers.BankAccount.Generate();
+            BankAccount existingAccount = _fakers.BankAccount.Generate();
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
-            var existingCard = _fakers.DebitCard.Generate();
+            DebitCard existingCard = _fakers.DebitCard.Generate();
 
-            var newIban = _fakers.BankAccount.Generate().Iban;
+            string newIban = _fakers.BankAccount.Generate().Iban;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -303,11 +302,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                     }
                 }
             };
-            
-            var route = "/bankAccounts/" + existingAccount.StringId;
+
+            string route = "/bankAccounts/" + existingAccount.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -316,9 +315,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var accountInDatabase = await dbContext.BankAccounts
-                    .Include(account => account.Cards)
-                    .FirstWithIdAsync(existingAccount.Id);
+                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
                 accountInDatabase.Iban.Should().Be(newIban);
 
@@ -326,17 +323,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
                 accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
             });
-
         }
 
         [Fact]
         public async Task Can_add_to_ToMany_relationship()
         {
             // Arrange
-            var existingAccount = _fakers.BankAccount.Generate();
+            BankAccount existingAccount = _fakers.BankAccount.Generate();
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
-            var existingDebitCard = _fakers.DebitCard.Generate();
+            DebitCard existingDebitCard = _fakers.DebitCard.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -355,11 +351,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                     }
                 }
             };
-            
-            var route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
+
+            string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -368,9 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var accountInDatabase = await dbContext.BankAccounts
-                    .Include(account => account.Cards)
-                    .FirstWithIdAsync(existingAccount.Id);
+                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
                 accountInDatabase.Cards.Should().HaveCount(2);
             });
@@ -380,7 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_remove_from_ToMany_relationship()
         {
             // Arrange
-            var existingAccount = _fakers.BankAccount.Generate();
+            BankAccount existingAccount = _fakers.BankAccount.Generate();
             existingAccount.Cards = _fakers.DebitCard.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -400,11 +394,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                     }
                 }
             };
-            
-            var route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
+
+            string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -413,9 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var accountInDatabase = await dbContext.BankAccounts
-                    .Include(account => account.Cards)
-                    .FirstWithIdAsync(existingAccount.Id);
+                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
                 accountInDatabase.Cards.Should().HaveCount(1);
             });
@@ -425,7 +417,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingAccount = _fakers.BankAccount.Generate();
+            BankAccount existingAccount = _fakers.BankAccount.Generate();
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -434,10 +426,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/bankAccounts/" + existingAccount.StringId;
+            string route = "/bankAccounts/" + existingAccount.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -446,9 +438,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var accountInDatabase = await dbContext.BankAccounts
-                    .Include(account => account.Cards)
-                    .FirstWithIdOrDefaultAsync(existingAccount.Id);
+                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
 
                 accountInDatabase.Should().BeNull();
             });
@@ -458,19 +448,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Cannot_delete_missing_resource()
         {
             // Arrange
-            var stringId = HexadecimalCodec.Encode(99999999);
+            string stringId = HexadecimalCodec.Encode(99999999);
 
-            var route = "/bankAccounts/" + stringId;
+            string route = "/bankAccounts/" + stringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");

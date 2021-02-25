@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -21,16 +22,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
-            CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var primaryId = (TId) operation.Resource.GetTypedId();
-            var secondaryResourceIds = operation.GetSecondaryResources();
+            var primaryId = (TId)operation.Resource.GetTypedId();
+            ISet<IIdentifiable> secondaryResourceIds = operation.GetSecondaryResources();
 
-            await _service.RemoveFromToManyRelationshipAsync(primaryId, operation.Request.Relationship.PublicName,
-                secondaryResourceIds, cancellationToken);
+            await _service.RemoveFromToManyRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, secondaryResourceIds, cancellationToken);
 
             return null;
         }

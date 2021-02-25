@@ -10,9 +10,11 @@ namespace JsonApiDotNetCore.Middleware
     /// return NotFound() -> return NotFound(null)
     /// ]]></code>
     /// </example>
-    /// This ensures our formatter is invoked, where we'll build a JSON:API compliant response.
-    /// For details, see: https://github.com/dotnet/aspnetcore/issues/16969
+    /// This ensures our formatter is invoked, where we'll build a JSON:API compliant response. For details, see:
+    /// https://github.com/dotnet/aspnetcore/issues/16969
     /// </summary>
     [PublicAPI]
-    public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFilter { }
+    public interface IAsyncConvertEmptyActionResultFilter : IAsyncAlwaysRunResultFilter
+    {
+    }
 }

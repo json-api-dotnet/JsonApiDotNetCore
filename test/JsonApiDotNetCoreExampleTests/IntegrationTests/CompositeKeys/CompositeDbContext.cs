@@ -20,7 +20,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Car>()
-                .HasKey(car => new {car.RegionId, car.LicensePlate});
+                .HasKey(car => new
+                {
+                    car.RegionId,
+                    car.LicensePlate
+                });
 
             builder.Entity<Engine>()
                 .HasOne(engine => engine.Car)

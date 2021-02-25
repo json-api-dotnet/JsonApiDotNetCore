@@ -15,7 +15,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             get => $"{RegionId}:{LicensePlate}";
             set
             {
-                var elements = value.Split(':');
+                string[] elements = value.Split(':');
+
                 if (elements.Length == 2)
                 {
                     if (int.TryParse(elements[0], out int regionId))

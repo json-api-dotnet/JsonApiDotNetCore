@@ -17,8 +17,7 @@ namespace TestBuildingBlocks
             return new HttpResponseMessageAssertions(instance);
         }
 
-        public sealed class HttpResponseMessageAssertions
-            : ReferenceTypeAssertions<HttpResponseMessage, HttpResponseMessageAssertions>
+        public sealed class HttpResponseMessageAssertions : ReferenceTypeAssertions<HttpResponseMessage, HttpResponseMessageAssertions>
         {
             protected override string Identifier => "response";
 

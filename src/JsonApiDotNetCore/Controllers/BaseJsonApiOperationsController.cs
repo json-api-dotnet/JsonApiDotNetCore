@@ -9,13 +9,14 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
-    /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor"/>.
+    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
+    /// https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor" />.
     /// </summary>
     [PublicAPI]
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
@@ -26,8 +27,8 @@ namespace JsonApiDotNetCore.Controllers
         private readonly ITargetedFields _targetedFields;
         private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
-        protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
+        protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor,
+            IJsonApiRequest request, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
@@ -43,9 +44,8 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <summary>
-        /// Atomically processes a list of operations and returns a list of results.
-        /// All changes are reverted if processing fails.
-        /// If processing succeeds but none of the operations returns any data, then HTTP 201 is returned instead of 200.
+        /// Atomically processes a list of operations and returns a list of results. All changes are reverted if processing fails. If processing succeeds but
+        /// none of the operations returns any data, then HTTP 201 is returned instead of 200.
         /// </summary>
         /// <example>
         /// The next example creates a new resource.
@@ -64,7 +64,8 @@ namespace JsonApiDotNetCore.Controllers
         ///     }
         ///   }]
         /// }
-        /// ]]></code></example>
+        /// ]]></code>
+        /// </example>
         /// <example>
         /// The next example updates an existing resource.
         /// <code><![CDATA[
@@ -83,7 +84,8 @@ namespace JsonApiDotNetCore.Controllers
         ///     }
         ///   }]
         /// }
-        /// ]]></code></example>
+        /// ]]></code>
+        /// </example>
         /// <example>
         /// The next example deletes an existing resource.
         /// <code><![CDATA[
@@ -99,11 +101,14 @@ namespace JsonApiDotNetCore.Controllers
         ///     }
         ///   }]
         /// }
-        /// ]]></code></example>
-        public virtual async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations,
-            CancellationToken cancellationToken)
+        /// ]]></code>
+        /// </example>
+        public virtual async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new {operations});
+            _traceWriter.LogMethodStart(new
+            {
+                operations
+            });
 
             ArgumentGuard.NotNull(operations, nameof(operations));
 
@@ -114,8 +119,8 @@ namespace JsonApiDotNetCore.Controllers
                 ValidateModelState(operations);
             }
 
-            var results = await _processor.ProcessAsync(operations, cancellationToken);
-            return results.Any(result => result != null) ? (IActionResult) Ok(results) : NoContent();
+            IList<OperationContainer> results = await _processor.ProcessAsync(operations, cancellationToken);
+            return results.Any(result => result != null) ? (IActionResult)Ok(results) : NoContent();
         }
 
         protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
@@ -123,7 +128,8 @@ namespace JsonApiDotNetCore.Controllers
             if (!_options.AllowClientGeneratedIds)
             {
                 int index = 0;
-                foreach (var operation in operations)
+
+                foreach (OperationContainer operation in operations)
                 {
                     if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
                     {
@@ -143,7 +149,8 @@ namespace JsonApiDotNetCore.Controllers
             var violations = new List<ModelStateViolation>();
 
             int index = 0;
-            foreach (var operation in operations)
+
+            foreach (OperationContainer operation in operations)
             {
                 if (operation.Kind == OperationKind.CreateResource || operation.Kind == OperationKind.UpdateResource)
                 {
@@ -157,11 +164,13 @@ namespace JsonApiDotNetCore.Controllers
 
                     if (!validationContext.ModelState.IsValid)
                     {
-                        foreach (var (key, entry) in validationContext.ModelState)
+                        foreach ((string key, ModelStateEntry entry) in validationContext.ModelState)
                         {
-                            foreach (var error in entry.Errors)
+                            foreach (ModelError error in entry.Errors)
                             {
-                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, operation.Resource.GetType(), error);
+                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, operation.Resource.GetType(),
+                                    error);
+
                                 violations.Add(violation);
                             }
                         }

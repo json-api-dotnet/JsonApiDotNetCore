@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 {
     public sealed class GiftCertificatesController : JsonApiController<GiftCertificate>
     {
-        public GiftCertificatesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<GiftCertificate> resourceService)
+        public GiftCertificatesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<GiftCertificate> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

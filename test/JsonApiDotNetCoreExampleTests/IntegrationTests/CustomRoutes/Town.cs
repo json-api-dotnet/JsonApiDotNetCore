@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 
         [Attr]
         public double Latitude { get; set; }
-        
+
         [Attr]
         public double Longitude { get; set; }
 

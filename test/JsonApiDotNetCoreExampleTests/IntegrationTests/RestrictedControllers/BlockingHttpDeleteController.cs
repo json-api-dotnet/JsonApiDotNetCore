@@ -11,8 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
     [DisableQueryString(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
     public sealed class BlockingHttpDeleteController : JsonApiController<Sofa>
     {
-        public BlockingHttpDeleteController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Sofa> resourceService)
+        public BlockingHttpDeleteController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Sofa> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

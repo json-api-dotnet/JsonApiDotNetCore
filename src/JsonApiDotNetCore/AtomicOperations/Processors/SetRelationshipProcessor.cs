@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,28 +24,26 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
-            CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var primaryId = (TId) operation.Resource.GetTypedId();
+            var primaryId = (TId)operation.Resource.GetTypedId();
             object rightValue = GetRelationshipRightValue(operation);
 
-            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, rightValue,
-                cancellationToken);
+            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, rightValue, cancellationToken);
 
             return null;
         }
 
         private static object GetRelationshipRightValue(OperationContainer operation)
         {
-            var relationship = operation.Request.Relationship;
-            var rightValue = relationship.GetValue(operation.Resource);
+            RelationshipAttribute relationship = operation.Request.Relationship;
+            object rightValue = relationship.GetValue(operation.Resource);
 
             if (relationship is HasManyAttribute)
             {
-                var rightResources = TypeHelper.ExtractResources(rightValue);
+                ICollection<IIdentifiable> rightResources = TypeHelper.ExtractResources(rightValue);
                 return rightResources.ToHashSet(IdentifiableComparer.Instance);
             }
 

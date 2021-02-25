@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (CollectionNotEmptyExpression) obj;
+            var other = (CollectionNotEmptyExpression)obj;
 
             return TargetCollection.Equals(other.TargetCollection);
         }

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,8 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public sealed class NoHttpDeleteTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
+    public sealed class NoHttpDeleteTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
         private readonly RestrictionFakers _fakers = new RestrictionFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/sofas";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/sofas";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Can_update_resource()
         {
             // Arrange
-            var existingSofa = _fakers.Sofa.Generate();
+            Sofa existingSofa = _fakers.Sofa.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -80,10 +80,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            var route = "/sofas/" + existingSofa.StringId;
+            string route = "/sofas/" + existingSofa.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_delete_resource()
         {
             // Arrange
-            var existingSofa = _fakers.Sofa.Generate();
+            Sofa existingSofa = _fakers.Sofa.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -101,17 +101,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/sofas/" + existingSofa.StringId;
+            string route = "/sofas/" + existingSofa.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Resource does not support DELETE requests.");

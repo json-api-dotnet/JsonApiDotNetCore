@@ -11,8 +11,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
     public sealed class ResourceAttribute : Attribute
     {
         /// <summary>
-        /// The publicly exposed name of this resource type.
-        /// When not explicitly assigned, the configured naming convention is applied on the pluralized resource class name.
+        /// The publicly exposed name of this resource type. When not explicitly assigned, the configured naming convention is applied on the pluralized resource
+        /// class name.
         /// </summary>
         public string PublicName { get; }
 

@@ -31,7 +31,11 @@ namespace UnitTests.ResourceHooks
             var constraintsMock = new Mock<IEnumerable<IQueryConstraintProvider>>();
             constraintsMock.Setup(x => x.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
 
-            var optionsMock = new JsonApiOptions { LoadDatabaseValues = false };
+            var optionsMock = new JsonApiOptions
+            {
+                LoadDatabaseValues = false
+            };
+
             return (ufMock, constraintsMock, pfMock, optionsMock);
         }
 
@@ -39,10 +43,11 @@ namespace UnitTests.ResourceHooks
             where TPrimary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
-            var primaryResource = CreateResourceDefinition<TPrimary>();
+            Mock<IResourceHookContainer<TPrimary>> primaryResource = CreateResourceDefinition<TPrimary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
-            var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
+            (Mock<ITargetedFields> ufMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<IGenericServiceFactory> gpfMock,
+                IJsonApiOptions options) = CreateMocks();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery);
 
@@ -53,28 +58,23 @@ namespace UnitTests.ResourceHooks
             return (hookExecutor, primaryResource);
         }
 
-        protected (Mock<IEnumerable<IQueryConstraintProvider>>, Mock<ITargetedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>, Mock<IResourceHookContainer<TSecondary>>)
-            CreateTestObjects<TPrimary, TSecondary>(
-                IHooksDiscovery<TPrimary> primaryDiscovery = null,
-                IHooksDiscovery<TSecondary> secondaryDiscovery = null,
-                DbContextOptions<AppDbContext> repoDbContextOptions = null
-            )
+        protected (Mock<IEnumerable<IQueryConstraintProvider>>, Mock<ITargetedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>,
+            Mock<IResourceHookContainer<TSecondary>>) CreateTestObjects<TPrimary, TSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
+                IHooksDiscovery<TSecondary> secondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TSecondary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            var primaryResource = CreateResourceDefinition<TPrimary>();
-            var secondaryResource = CreateResourceDefinition<TSecondary>();
+            Mock<IResourceHookContainer<TPrimary>> primaryResource = CreateResourceDefinition<TPrimary>();
+            Mock<IResourceHookContainer<TSecondary>> secondaryResource = CreateResourceDefinition<TSecondary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
-            var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
+            (Mock<ITargetedFields> ufMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<IGenericServiceFactory> gpfMock,
+                IJsonApiOptions options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            AppDbContext dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .Add<TPrimary>()
-                .Add<TSecondary>()
-                .Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TPrimary>().Add<TSecondary>().Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondaryResource.Object, secondaryDiscovery, dbContext, resourceGraph);
@@ -86,32 +86,28 @@ namespace UnitTests.ResourceHooks
             return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
 
-        protected (Mock<IEnumerable<IQueryConstraintProvider>>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>, Mock<IResourceHookContainer<TFirstSecondary>>, Mock<IResourceHookContainer<TSecondSecondary>>)
-            CreateTestObjects<TPrimary, TFirstSecondary, TSecondSecondary>(
-                IHooksDiscovery<TPrimary> primaryDiscovery = null,
-                IHooksDiscovery<TFirstSecondary> firstSecondaryDiscovery = null,
-                IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null,
-                DbContextOptions<AppDbContext> repoDbContextOptions = null
-            )
+        protected (Mock<IEnumerable<IQueryConstraintProvider>>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>,
+            Mock<IResourceHookContainer<TFirstSecondary>>, Mock<IResourceHookContainer<TSecondSecondary>>)
+            CreateTestObjects<TPrimary, TFirstSecondary, TSecondSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
+                IHooksDiscovery<TFirstSecondary> firstSecondaryDiscovery = null, IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null,
+                DbContextOptions<AppDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TFirstSecondary : class, IIdentifiable<int>
             where TSecondSecondary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding for a given set of discoverable hooks
-            var primaryResource = CreateResourceDefinition<TPrimary>();
-            var firstSecondaryResource = CreateResourceDefinition<TFirstSecondary>();
-            var secondSecondaryResource = CreateResourceDefinition<TSecondSecondary>();
+            Mock<IResourceHookContainer<TPrimary>> primaryResource = CreateResourceDefinition<TPrimary>();
+            Mock<IResourceHookContainer<TFirstSecondary>> firstSecondaryResource = CreateResourceDefinition<TFirstSecondary>();
+            Mock<IResourceHookContainer<TSecondSecondary>> secondSecondaryResource = CreateResourceDefinition<TSecondSecondary>();
 
             // mocking the genericServiceFactory and JsonApiContext and wiring them up.
-            var (ufMock, constraintsMock, gpfMock, options) = CreateMocks();
+            (Mock<ITargetedFields> ufMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<IGenericServiceFactory> gpfMock,
+                IJsonApiOptions options) = CreateMocks();
 
-            var dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            AppDbContext dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
 
-            var resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .Add<TPrimary>()
-                .Add<TFirstSecondary>()
-                .Add<TSecondSecondary>()
-                .Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TPrimary>().Add<TFirstSecondary>()
+                .Add<TSecondSecondary>().Build();
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, firstSecondaryResource.Object, firstSecondaryDiscovery, dbContext, resourceGraph);
@@ -128,14 +124,13 @@ namespace UnitTests.ResourceHooks
             where TResource : class, IIdentifiable<int>
         {
             var mock = new Mock<IHooksDiscovery<TResource>>();
-            mock.Setup(discovery => discovery.ImplementedHooks)
-                .Returns(implementedHooks);
+            mock.Setup(discovery => discovery.ImplementedHooks).Returns(implementedHooks);
 
             if (!enableDbValuesHooks.Any())
             {
-                mock.Setup(discovery => discovery.DatabaseValuesDisabledHooks)
-                    .Returns(enableDbValuesHooks);
+                mock.Setup(discovery => discovery.DatabaseValuesDisabledHooks).Returns(enableDbValuesHooks);
             }
+
             mock.Setup(discovery => discovery.DatabaseValuesEnabledHooks)
                 .Returns(ResourceHook.BeforeImplicitUpdateRelationship.AsEnumerable().Concat(enableDbValuesHooks).ToArray());
 
@@ -144,7 +139,7 @@ namespace UnitTests.ResourceHooks
 
         protected void VerifyNoOtherCalls(params dynamic[] resourceMocks)
         {
-            foreach (var mock in resourceMocks)
+            foreach (dynamic mock in resourceMocks)
             {
                 mock.VerifyNoOtherCalls();
             }
@@ -152,9 +147,7 @@ namespace UnitTests.ResourceHooks
 
         protected DbContextOptions<AppDbContext> InitInMemoryDb(Action<DbContext> seeder)
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "repository_mock")
-                .Options;
+            DbContextOptions<AppDbContext> options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("repository_mock").Options;
 
             using var context = new AppDbContext(options);
 
@@ -164,83 +157,67 @@ namespace UnitTests.ResourceHooks
             return options;
         }
 
-        private void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition) where TModel : class, IIdentifiable<int>
-        {
-            resourceDefinition
-                .Setup(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeUpdate(It.IsAny<IDiffableResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<DiffableResourceHashSet<TModel>, ResourcePipeline>((resources, context) => resources)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, context, helper) => ids)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterRead(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterUpdate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Verifiable();
-            resourceDefinition
-                .Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>()))
-                .Verifiable();
-        }
-
-        private void SetupProcessorFactoryForResourceDefinition<TModel>(
-            Mock<IGenericServiceFactory> processorFactory,
-            IResourceHookContainer<TModel> modelResource,
-            IHooksDiscovery<TModel> discovery,
-            AppDbContext dbContext = null,
-            IResourceGraph resourceGraph = null
-        )
+        private void MockHooks<TModel>(Mock<IResourceHookContainer<TModel>> resourceDefinition)
             where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel)))
-                .Returns(modelResource);
+            resourceDefinition.Setup(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources).Verifiable();
 
-            processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel)))
-                .Returns(discovery);
+            resourceDefinition.Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>())).Verifiable();
+
+            resourceDefinition.Setup(rd => rd.BeforeUpdate(It.IsAny<IDiffableResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+                .Returns<DiffableResourceHashSet<TModel>, ResourcePipeline>((resources, context) => resources).Verifiable();
+
+            resourceDefinition.Setup(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources).Verifiable();
+
+            resourceDefinition
+                .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(),
+                    It.IsAny<ResourcePipeline>()))
+                .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, context, helper) => ids).Verifiable();
+
+            resourceDefinition.Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
+                .Verifiable();
+
+            resourceDefinition.Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources).Verifiable();
+
+            resourceDefinition.Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>())).Verifiable();
+            resourceDefinition.Setup(rd => rd.AfterRead(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>())).Verifiable();
+            resourceDefinition.Setup(rd => rd.AfterUpdate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>())).Verifiable();
+            resourceDefinition.Setup(rd => rd.AfterDelete(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>(), It.IsAny<bool>())).Verifiable();
+        }
+
+        private void SetupProcessorFactoryForResourceDefinition<TModel>(Mock<IGenericServiceFactory> processorFactory,
+            IResourceHookContainer<TModel> modelResource, IHooksDiscovery<TModel> discovery, AppDbContext dbContext = null, IResourceGraph resourceGraph = null)
+            where TModel : class, IIdentifiable<int>
+        {
+            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
+
+            processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel))).Returns(discovery);
 
             if (dbContext != null)
             {
-                var idType = TypeHelper.GetIdType(typeof(TModel));
+                Type idType = TypeHelper.GetIdType(typeof(TModel));
+
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);
-                    processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
+
+                    processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int)))
+                        .Returns(repo);
                 }
                 else
                 {
                     throw new TypeLoadException("Test not set up properly");
                 }
-
             }
         }
 
-        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph) 
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph)
             where TModel : class, IIdentifiable<int>
         {
-            var serviceProvider = ((IInfrastructure<IServiceProvider>) dbContext).Instance;
+            IServiceProvider serviceProvider = ((IInfrastructure<IServiceProvider>)dbContext).Instance;
             var resourceFactory = new ResourceFactory(serviceProvider);
             IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
@@ -258,7 +235,7 @@ namespace UnitTests.ResourceHooks
 
         private void ResolveInverseRelationships(AppDbContext context)
         {
-            var dbContextResolvers = new DbContextResolver<AppDbContext>(context).AsEnumerable();
+            IEnumerable<DbContextResolver<AppDbContext>> dbContextResolvers = new DbContextResolver<AppDbContext>(context).AsEnumerable();
             var inverseRelationships = new InverseNavigationResolver(ResourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }
@@ -275,7 +252,7 @@ namespace UnitTests.ResourceHooks
         {
             var parsedChains = new List<List<RelationshipAttribute>>();
 
-            foreach (var chain in chains)
+            foreach (string chain in chains)
             {
                 parsedChains.Add(GetIncludedRelationshipsChain(chain));
             }
@@ -286,14 +263,16 @@ namespace UnitTests.ResourceHooks
         private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
-            var resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
-            var splitPath = chain.Split('.');
-            foreach (var requestedRelationship in splitPath)
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
+            string[] splitPath = chain.Split('.');
+
+            foreach (string requestedRelationship in splitPath)
             {
-                var relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
+                RelationshipAttribute relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
+
             return parsedChain;
         }
 
@@ -303,8 +282,8 @@ namespace UnitTests.ResourceHooks
 
             if (inclusionChains != null)
             {
-                var chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
-                var includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
+                List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
+                IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
                 expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
             }
 
@@ -314,6 +293,5 @@ namespace UnitTests.ResourceHooks
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
             return includeConstraintProvider.AsEnumerable();
         }
-
     }
 }

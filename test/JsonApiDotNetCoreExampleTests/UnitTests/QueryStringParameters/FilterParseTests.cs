@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
@@ -33,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
-            var canParse = _reader.CanRead(parameterName);
+            bool canParse = _reader.CanRead(parameterName);
 
             // Assert
             canParse.Should().Be(expectCanParse);
@@ -47,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+            bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(expectIsEnabled);
@@ -57,8 +60,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter[", "equals(caption,'some')", "Field name expected.")]
         [InlineData("filter[caption]", "equals(url,'some')", "Relationship 'caption' does not exist on resource 'blogs'.")]
         [InlineData("filter[posts.caption]", "equals(firstName,'some')", "Relationship 'caption' in 'posts.caption' does not exist on resource 'blogPosts'.")]
-        [InlineData("filter[posts.author]", "equals(firstName,'some')", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource 'blogPosts'.")]
-        [InlineData("filter[posts.comments.author]", "equals(firstName,'some')", "Relationship 'author' in 'posts.comments.author' must be a to-many relationship on resource 'comments'.")]
+        [InlineData("filter[posts.author]", "equals(firstName,'some')",
+            "Relationship 'author' in 'posts.author' must be a to-many relationship on resource 'blogPosts'.")]
+        [InlineData("filter[posts.comments.author]", "equals(firstName,'some')",
+            "Relationship 'author' in 'posts.comments.author' must be a to-many relationship on resource 'comments'.")]
         [InlineData("filter[posts]", "equals(author,'some')", "Attribute 'author' does not exist on resource 'blogPosts'.")]
         [InlineData("filter[posts]", "lessThan(author,null)", "Attribute 'author' does not exist on resource 'blogPosts'.")]
         [InlineData("filter", " ", "Unexpected whitespace.")]
@@ -95,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read(parameterName, parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
@@ -124,20 +129,22 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter", "startsWith(title,'this')", null, "startsWith(title,'this')")]
         [InlineData("filter", "endsWith(title,'this')", null, "endsWith(title,'this')")]
         [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'this','that','there')")]
-        [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null, "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
-        [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))", "posts", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))")]
+        [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null,
+            "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
+        [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))", "posts",
+            "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
         {
             // Act
             _reader.Read(parameterName, parameterValue);
 
-            var constraints = _reader.GetConstraints();
+            IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            var scope = constraints.Select(x => x.Scope).Single();
+            ResourceFieldChainExpression scope = constraints.Select(x => x.Scope).Single();
             scope?.ToString().Should().Be(scopeExpected);
 
-            var value = constraints.Select(x => x.Expression).Single();
+            QueryExpression value = constraints.Select(x => x.Expression).Single();
             value.ToString().Should().Be(valueExpected);
         }
     }

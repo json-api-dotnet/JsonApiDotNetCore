@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 {
     public sealed class PostOfficesController : JsonApiController<PostOffice>
     {
-        public PostOfficesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<PostOffice> resourceService)
+        public PostOfficesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<PostOffice> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

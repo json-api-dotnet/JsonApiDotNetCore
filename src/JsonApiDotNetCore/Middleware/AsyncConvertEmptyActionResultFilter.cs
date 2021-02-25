@@ -20,7 +20,10 @@ namespace JsonApiDotNetCore.Middleware
                 {
                     if (context.Result is IStatusCodeActionResult statusCodeResult)
                     {
-                        context.Result = new ObjectResult(null) {StatusCode = statusCodeResult.StatusCode};
+                        context.Result = new ObjectResult(null)
+                        {
+                            StatusCode = statusCodeResult.StatusCode
+                        };
                     }
                 }
             }

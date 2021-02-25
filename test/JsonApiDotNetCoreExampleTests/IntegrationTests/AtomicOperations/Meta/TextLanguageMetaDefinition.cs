@@ -11,7 +11,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
     {
         internal const string NoticeText = "See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes.";
 
-        public TextLanguageMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public TextLanguageMetaDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 

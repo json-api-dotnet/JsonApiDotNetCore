@@ -8,7 +8,8 @@ namespace JsonApiDotNetCore.Resources
 {
     /// <inheritdoc />
     [PublicAPI]
-    public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource> where TResource : class, IIdentifiable
+    public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
+        where TResource : class, IIdentifiable
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
@@ -18,8 +19,7 @@ namespace JsonApiDotNetCore.Resources
         private IDictionary<string, string> _requestedAttributeValues;
         private IDictionary<string, string> _finallyStoredAttributeValues;
 
-        public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider,
-            ITargetedFields targetedFields)
+        public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
@@ -52,19 +52,18 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            var resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
-        private IDictionary<string, string> CreateAttributeDictionary(TResource resource,
-            IEnumerable<AttrAttribute> attributes)
+        private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)
         {
             var result = new Dictionary<string, string>();
 
-            foreach (var attribute in attributes)
+            foreach (AttrAttribute attribute in attributes)
             {
                 object value = attribute.GetValue(resource);
-                var json = JsonConvert.SerializeObject(value, _options.SerializerSettings);
+                string json = JsonConvert.SerializeObject(value, _options.SerializerSettings);
                 result.Add(attribute.PublicName, json);
             }
 
@@ -74,12 +73,12 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public bool HasImplicitChanges()
         {
-            foreach (var key in _initiallyStoredAttributeValues.Keys)
+            foreach (string key in _initiallyStoredAttributeValues.Keys)
             {
                 if (_requestedAttributeValues.ContainsKey(key))
                 {
-                    var requestedValue = _requestedAttributeValues[key];
-                    var actualValue = _finallyStoredAttributeValues[key];
+                    string requestedValue = _requestedAttributeValues[key];
+                    string actualValue = _finallyStoredAttributeValues[key];
 
                     if (requestedValue != actualValue)
                     {
@@ -88,8 +87,8 @@ namespace JsonApiDotNetCore.Resources
                 }
                 else
                 {
-                    var initiallyStoredValue = _initiallyStoredAttributeValues[key];
-                    var finallyStoredValue = _finallyStoredAttributeValues[key];
+                    string initiallyStoredValue = _initiallyStoredAttributeValues[key];
+                    string finallyStoredValue = _finallyStoredAttributeValues[key];
 
                     if (initiallyStoredValue != finallyStoredValue)
                     {

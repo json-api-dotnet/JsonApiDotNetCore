@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -12,8 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 {
-    public sealed class IncludeTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class IncludeTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = null;
         }
 
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_primary_resources()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
             post.Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "blogPosts?include=author";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_primary_resource_by_ID()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
             post.Author = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -71,10 +71,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"blogPosts/{post.StringId}?include=author";
+            string route = $"blogPosts/{post.StringId}?include=author";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_secondary_resource()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Owner = _fakers.WebAccount.Generate();
             blog.Owner.Posts = _fakers.BlogPost.Generate(1);
 
@@ -103,10 +103,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/owner?include=posts";
+            string route = $"/blogs/{blog.StringId}/owner?include=posts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_in_secondary_resources()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(1);
             blog.Posts[0].Author = _fakers.WebAccount.Generate();
 
@@ -135,10 +135,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts?include=author";
+            string route = $"/blogs/{blog.StringId}/posts?include=author";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -157,7 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_HasOne_relationships()
         {
             // Arrange
-            var comment = _fakers.Comment.Generate();
+            Comment comment = _fakers.Comment.Generate();
             comment.Author = _fakers.WebAccount.Generate();
             comment.Parent = _fakers.BlogPost.Generate();
 
@@ -167,10 +167,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/comments/{comment.StringId}?include=author,parent";
+            string route = $"/comments/{comment.StringId}?include=author,parent";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_HasMany_relationship()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
             post.Comments = _fakers.Comment.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -203,10 +203,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"blogPosts/{post.StringId}?include=comments";
+            string route = $"blogPosts/{post.StringId}?include=comments";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -225,7 +225,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_HasManyThrough_relationship()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
+
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -240,10 +241,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"blogPosts/{post.StringId}?include=labels";
+            string route = $"blogPosts/{post.StringId}?include=labels";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -262,7 +263,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_HasManyThrough_relationship_in_secondary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
+
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -277,10 +279,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}/labels?include=posts";
+            string route = $"/blogPosts/{post.StringId}/labels?include=posts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -300,7 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_chain_of_HasOne_relationships()
         {
             // Arrange
-            var comment = _fakers.Comment.Generate();
+            Comment comment = _fakers.Comment.Generate();
             comment.Parent = _fakers.BlogPost.Generate();
             comment.Parent.Author = _fakers.WebAccount.Generate();
             comment.Parent.Author.Preferences = _fakers.AccountPreferences.Generate();
@@ -311,10 +313,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"comments/{comment.StringId}?include=parent.author.preferences";
+            string route = $"comments/{comment.StringId}?include=parent.author.preferences";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -342,7 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_chain_of_HasMany_relationships()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(1);
             blog.Posts[0].Comments = _fakers.Comment.Generate(1).ToHashSet();
 
@@ -352,10 +354,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}?include=posts.comments";
+            string route = $"/blogs/{blog.StringId}?include=posts.comments";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -379,7 +381,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_chain_of_recursive_relationships()
         {
             // Arrange
-            var comment = _fakers.Comment.Generate();
+            Comment comment = _fakers.Comment.Generate();
             comment.Parent = _fakers.BlogPost.Generate();
             comment.Parent.Author = _fakers.WebAccount.Generate();
             comment.Parent.Comments = _fakers.Comment.Generate(2).ToHashSet();
@@ -394,7 +396,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             string route = $"/comments/{comment.StringId}?include=parent.comments.author";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -430,7 +432,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_chain_of_relationships_with_multiple_paths()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(1);
             blog.Posts[0].Author = _fakers.WebAccount.Generate();
             blog.Posts[0].Author.Preferences = _fakers.AccountPreferences.Generate();
@@ -447,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             string route = $"/blogs/{blog.StringId}?include=posts.author.preferences,posts.comments.author.posts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -491,9 +493,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Prevents_duplicate_includes_over_single_resource()
         {
             // Arrange
-            var account = _fakers.WebAccount.Generate();
+            WebAccount account = _fakers.WebAccount.Generate();
 
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
             post.Author = account;
             post.Reviewer = account;
 
@@ -503,10 +505,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}?include=author&include=reviewer";
+            string route = $"/blogPosts/{post.StringId}?include=author&include=reviewer";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -525,9 +527,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Prevents_duplicate_includes_over_multiple_resources()
         {
             // Arrange
-            var account = _fakers.WebAccount.Generate();
+            WebAccount account = _fakers.WebAccount.Generate();
 
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
             posts[0].Author = account;
             posts[1].Author = account;
 
@@ -541,7 +543,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogPosts?include=author";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -561,14 +563,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "/webAccounts?include=doesNotExist";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
@@ -582,14 +584,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogs?include=posts.doesNotExist";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
@@ -603,14 +605,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogPosts?include=parent";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including the requested relationship is not allowed.");
             error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
@@ -621,7 +623,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Ignores_null_parent_in_nested_include()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
             posts[0].Reviewer = _fakers.WebAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -634,18 +636,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogPosts?include=reviewer.preferences";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
 
-            var postWithReviewer = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData != null).ToArray();
+            ResourceObject[] postWithReviewer = responseDocument.ManyData
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData != null).ToArray();
+
             postWithReviewer.Should().HaveCount(1);
             postWithReviewer[0].Attributes["caption"].Should().Be(posts[0].Caption);
 
-            var postWithoutReviewer = responseDocument.ManyData.Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData == null).ToArray();
+            ResourceObject[] postWithoutReviewer = responseDocument.ManyData
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData == null).ToArray();
+
             postWithoutReviewer.Should().HaveCount(1);
             postWithoutReviewer[0].Attributes["caption"].Should().Be(posts[1].Caption);
 
@@ -659,10 +665,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Can_include_at_configured_maximum_inclusion_depth()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -670,10 +676,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts?include=author,comments";
+            string route = $"/blogs/{blog.StringId}/posts?include=author,comments";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -683,20 +689,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_exceed_configured_maximum_inclusion_depth()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
             const string route = "/blogs/123/owner?include=posts.comments";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");

@@ -14,7 +14,7 @@ namespace UnitTests.Internal
         public void When_http_context_is_unavailable_it_must_fail()
         {
             // Arrange
-            var serviceType = typeof(IIdentifiable<Tag>);
+            Type serviceType = typeof(IIdentifiable<Tag>);
 
             var provider = new RequestScopedServiceProvider(new HttpContextAccessor());
 

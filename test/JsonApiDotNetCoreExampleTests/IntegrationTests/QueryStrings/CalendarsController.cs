@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
     public sealed class CalendarsController : JsonApiController<Calendar>
     {
-        public CalendarsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Calendar> resourceService)
+        public CalendarsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Calendar> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

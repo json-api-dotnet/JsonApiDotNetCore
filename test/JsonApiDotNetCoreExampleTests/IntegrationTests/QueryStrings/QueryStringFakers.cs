@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
                 .UseSeed(GetFakerSeed())
                 .RuleFor(appointment => appointment.Title, f => f.Random.Word())
                 .RuleFor(appointment => appointment.StartTime, f => f.Date.FutureOffset())
-                .RuleFor(appointment => appointment.EndTime,(f, appointment) => appointment.StartTime.AddHours(f.Random.Double(1, 4))));
+                .RuleFor(appointment => appointment.EndTime, (f, appointment) => appointment.StartTime.AddHours(f.Random.Double(1, 4))));
 
         public Faker<Blog> Blog => _lazyBlogFaker.Value;
         public Faker<BlogPost> BlogPost => _lazyBlogPostFaker.Value;

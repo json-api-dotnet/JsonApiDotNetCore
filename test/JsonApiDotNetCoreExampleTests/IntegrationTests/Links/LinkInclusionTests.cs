@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,8 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class LinkInclusionTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
+    public sealed class LinkInclusionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public async Task Get_primary_resource_with_include_applies_links_visibility_from_ResourceLinksAttribute()
         {
             // Arrange
-            var location = _fakers.PhotoLocation.Generate();
+            PhotoLocation location = _fakers.PhotoLocation.Generate();
             location.Photo = _fakers.Photo.Generate();
             location.Album = _fakers.PhotoAlbum.Generate();
 
@@ -33,10 +33,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/photoLocations/{location.StringId}?include=photo,album";
+            string route = $"/photoLocations/{location.StringId}?include=photo,album";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

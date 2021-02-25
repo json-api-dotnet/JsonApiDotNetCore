@@ -7,8 +7,21 @@ using Newtonsoft.Json.Linq;
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     [PublicAPI]
-    public abstract class ExposableData<TResource> where TResource : class
+    public abstract class ExposableData<TResource>
+        where TResource : class
     {
+        private bool IsEmpty => !HasManyData && SingleData == null;
+
+        private bool HasManyData => IsManyData && ManyData.Any();
+
+        /// <summary>
+        /// Internally used to indicate if the document's primary data should still be serialized when it's value is null. This is used when a single resource is
+        /// requested but not present (eg /articles/1/author).
+        /// </summary>
+        internal bool IsPopulated { get; private set; }
+
+        internal bool HasResource => IsPopulated && !IsEmpty;
+
         /// <summary>
         /// See "primary data" in https://jsonapi.org/format/#document-top-level.
         /// </summary>
@@ -17,24 +30,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         {
             get => GetPrimaryData();
             set => SetPrimaryData(value);
-        }
-
-        /// <summary>
-        /// See https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm.
-        /// </summary>
-        /// <remarks>
-        /// Moving this method to the derived class where it is needed only in the
-        /// case of <see cref="RelationshipEntry"/> would make more sense, but
-        /// Newtonsoft does not support this.
-        /// </remarks>
-        public bool ShouldSerializeData()
-        {
-            if (GetType() == typeof(RelationshipEntry))
-            {
-                return IsPopulated;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -56,21 +51,24 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public bool IsManyData { get; private set; }
 
         /// <summary>
-        /// Internally used to indicate if the document's primary data
-        /// should still be serialized when it's value is null. This is used when
-        /// a single resource is requested but not present (eg /articles/1/author).
+        /// See https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm.
         /// </summary>
-        internal bool IsPopulated { get; private set; }
+        /// <remarks>
+        /// Moving this method to the derived class where it is needed only in the case of <see cref="RelationshipEntry" /> would make more sense, but Newtonsoft
+        /// does not support this.
+        /// </remarks>
+        public bool ShouldSerializeData()
+        {
+            if (GetType() == typeof(RelationshipEntry))
+            {
+                return IsPopulated;
+            }
 
-        internal bool HasResource => IsPopulated && !IsEmpty;
-
-        private bool IsEmpty => !HasManyData && SingleData == null;
-
-        private bool HasManyData => IsManyData && ManyData.Any();
+            return true;
+        }
 
         /// <summary>
-        /// Gets the "single" or "many" data depending on which one was
-        /// assigned in this document.
+        /// Gets the "single" or "many" data depending on which one was assigned in this document.
         /// </summary>
         protected object GetPrimaryData()
         {
@@ -88,6 +86,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         protected void SetPrimaryData(object value)
         {
             IsPopulated = true;
+
             if (value is JObject jObject)
             {
                 SingleData = jObject.ToObject<TResource>();
@@ -99,6 +98,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
             else if (value != null)
             {
                 IsManyData = true;
+
                 if (value is JArray jArray)
                 {
                     ManyData = jArray.ToObject<List<TResource>>();

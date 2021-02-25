@@ -14,8 +14,7 @@ namespace JsonApiDotNetCore.Errors
             : base(new Error(HttpStatusCode.Conflict)
             {
                 Title = "Resource ID mismatch between request body and endpoint URL.",
-                Detail = $"Expected resource ID '{endpointId}' in PATCH request body " +
-                    $"at endpoint '{requestPath}', instead of '{bodyId}'."
+                Detail = $"Expected resource ID '{endpointId}' in PATCH request body " + $"at endpoint '{requestPath}', instead of '{bodyId}'."
             })
         {
         }

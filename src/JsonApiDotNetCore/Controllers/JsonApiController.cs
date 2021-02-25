@@ -10,39 +10,35 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// The base class to derive resource-specific controllers from.
-    /// This class delegates all work to <see cref="BaseJsonApiController{TResource, TId}"/> but adds attributes for routing templates.
-    /// If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.
+    /// The base class to derive resource-specific controllers from. This class delegates all work to <see cref="BaseJsonApiController{TResource, TId}" />
+    /// but adds attributes for routing templates. If you want to provide routing templates yourself, you should derive from BaseJsonApiController directly.
     /// </summary>
-    /// <typeparam name="TResource">The resource type.</typeparam>
-    /// <typeparam name="TId">The resource identifier type.</typeparam>
-    public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId> where TResource : class, IIdentifiable<TId>
+    /// <typeparam name="TResource">
+    /// The resource type.
+    /// </typeparam>
+    /// <typeparam name="TId">
+    /// The resource identifier type.
+    /// </typeparam>
+    public abstract class JsonApiController<TResource, TId> : BaseJsonApiController<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     {
         /// <inheritdoc />
-        protected JsonApiController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService<TResource, TId> resourceService)
+        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
             : base(options, loggerFactory, resourceService)
-        { }
+        {
+        }
 
         /// <inheritdoc />
-        protected JsonApiController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IGetAllService<TResource, TId> getAll = null,
-            IGetByIdService<TResource, TId> getById = null,
-            IGetSecondaryService<TResource, TId> getSecondary = null,
-            IGetRelationshipService<TResource, TId> getRelationship = null,
-            ICreateService<TResource, TId> create = null,
-            IAddToRelationshipService<TResource, TId> addToRelationship = null,
-            IUpdateService<TResource, TId> update = null,
-            ISetRelationshipService<TResource, TId> setRelationship = null,
-            IDeleteService<TResource, TId> delete = null,
+        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, TId> getAll = null,
+            IGetByIdService<TResource, TId> getById = null, IGetSecondaryService<TResource, TId> getSecondary = null,
+            IGetRelationshipService<TResource, TId> getRelationship = null, ICreateService<TResource, TId> create = null,
+            IAddToRelationshipService<TResource, TId> addToRelationship = null, IUpdateService<TResource, TId> update = null,
+            ISetRelationshipService<TResource, TId> setRelationship = null, IDeleteService<TResource, TId> delete = null,
             IRemoveFromRelationshipService<TResource, TId> removeFromRelationship = null)
-            : base(options, loggerFactory,getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
-                setRelationship, delete, removeFromRelationship)
-        { }
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
+                removeFromRelationship)
+        {
+        }
 
         /// <inheritdoc />
         [HttpGet]
@@ -81,8 +77,8 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPost("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PostRelationshipAsync(
-            TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public override async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             return await base.PostRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
         }
@@ -96,8 +92,8 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(
-            TId id, string relationshipName, [FromBody] object secondaryResourceIds, CancellationToken cancellationToken)
+        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             return await base.PatchRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
         }
@@ -111,39 +107,33 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             return await base.DeleteRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
         }
     }
 
     /// <inheritdoc />
-    public abstract class JsonApiController<TResource> : JsonApiController<TResource, int> where TResource : class, IIdentifiable<int>
+    public abstract class JsonApiController<TResource> : JsonApiController<TResource, int>
+        where TResource : class, IIdentifiable<int>
     {
         /// <inheritdoc />
-        protected JsonApiController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IResourceService<TResource, int> resourceService)
+        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, int> resourceService)
             : base(options, loggerFactory, resourceService)
-        { }
+        {
+        }
 
         /// <inheritdoc />
-        protected JsonApiController(
-            IJsonApiOptions options,
-            ILoggerFactory loggerFactory,
-            IGetAllService<TResource, int> getAll = null,
-            IGetByIdService<TResource, int> getById = null,
-            IGetSecondaryService<TResource, int> getSecondary = null,
-            IGetRelationshipService<TResource, int> getRelationship = null,
-            ICreateService<TResource, int> create = null,
-            IAddToRelationshipService<TResource, int> addToRelationship = null,
-            IUpdateService<TResource, int> update = null,
-            ISetRelationshipService<TResource, int> setRelationship = null,
-            IDeleteService<TResource, int> delete = null,
+        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, int> getAll = null,
+            IGetByIdService<TResource, int> getById = null, IGetSecondaryService<TResource, int> getSecondary = null,
+            IGetRelationshipService<TResource, int> getRelationship = null, ICreateService<TResource, int> create = null,
+            IAddToRelationshipService<TResource, int> addToRelationship = null, IUpdateService<TResource, int> update = null,
+            ISetRelationshipService<TResource, int> setRelationship = null, IDeleteService<TResource, int> delete = null,
             IRemoveFromRelationshipService<TResource, int> removeFromRelationship = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
-                setRelationship, delete, removeFromRelationship)
-        { }
+            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
+                removeFromRelationship)
+        {
+        }
     }
 }

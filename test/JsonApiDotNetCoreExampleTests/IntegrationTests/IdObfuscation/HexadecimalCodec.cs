@@ -32,15 +32,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 
         private static string FromHexString(string hexString)
         {
-            List<byte> bytes = new List<byte>(hexString.Length / 2);
+            var bytes = new List<byte>(hexString.Length / 2);
+
             for (int index = 0; index < hexString.Length; index += 2)
             {
-                var hexChar = hexString.Substring(index, 2);
+                string hexChar = hexString.Substring(index, 2);
                 byte bt = byte.Parse(hexChar, NumberStyles.HexNumber);
                 bytes.Add(bt);
             }
 
-            var chars = Encoding.ASCII.GetChars(bytes.ToArray());
+            char[] chars = Encoding.ASCII.GetChars(bytes.ToArray());
             return new string(chars);
         }
 

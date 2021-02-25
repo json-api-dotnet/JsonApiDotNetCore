@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackMetaDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
     {
-        public MusicTrackMetaDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public MusicTrackMetaDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 

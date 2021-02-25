@@ -29,9 +29,9 @@ namespace Benchmarks.Serialization
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             IFieldsToSerialize fieldsToSerialize = CreateFieldsToSerialize(resourceGraph);
 
-            var metaBuilder = new Mock<IMetaBuilder>().Object;
-            var linkBuilder = new Mock<ILinkBuilder>().Object;
-            var includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
+            IMetaBuilder metaBuilder = new Mock<IMetaBuilder>().Object;
+            ILinkBuilder linkBuilder = new Mock<ILinkBuilder>().Object;
+            IIncludedResourceObjectBuilder includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
 
             var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
 
@@ -48,12 +48,15 @@ namespace Benchmarks.Serialization
                 new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
             };
 
-            var accessor = new Mock<IResourceDefinitionAccessor>().Object;
+            IResourceDefinitionAccessor accessor = new Mock<IResourceDefinitionAccessor>().Object;
 
             return new FieldsToSerialize(resourceGraph, constraintProviders, accessor, request);
         }
 
         [Benchmark]
-        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
+        public object SerializeSimpleObject()
+        {
+            return _jsonApiSerializer.Serialize(Content);
+        }
     }
 }

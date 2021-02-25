@@ -10,8 +10,8 @@ namespace JsonApiDotNetCore.Serialization.Building
     public interface IMetaBuilder
     {
         /// <summary>
-        /// Merges the specified dictionary with existing key/value pairs. In the event of a key collision,
-        /// the value from the specified dictionary will overwrite the existing one.
+        /// Merges the specified dictionary with existing key/value pairs. In the event of a key collision, the value from the specified dictionary will
+        /// overwrite the existing one.
         /// </summary>
         void Add(IReadOnlyDictionary<string, object> values);
 

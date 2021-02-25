@@ -31,11 +31,10 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<ResourceWithoutConstructor>()
-                .Build();
+            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithoutConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+                _requestMock.Object, options);
 
             var body = new
             {
@@ -62,11 +61,10 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<ResourceWithThrowingConstructor>()
-                .Build();
+            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithThrowingConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+                _requestMock.Object, options);
 
             var body = new
             {
@@ -84,8 +82,8 @@ namespace UnitTests.Models
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(
-                "Failed to create an instance of 'UnitTests.Models.ResourceWithThrowingConstructor' using its default constructor.",
+
+            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ResourceWithThrowingConstructor' using its default constructor.",
                 exception.Message);
         }
 
@@ -95,11 +93,10 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            var graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance)
-                .Add<ResourceWithStringConstructor>()
-                .Build();
+            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithStringConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object, _requestMock.Object, options);
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+                _requestMock.Object, options);
 
             var body = new
             {
@@ -117,8 +114,8 @@ namespace UnitTests.Models
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(
-                "Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor' using injected constructor parameters.",
+
+            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor' using injected constructor parameters.",
                 exception.Message);
         }
     }

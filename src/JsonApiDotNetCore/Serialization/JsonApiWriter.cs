@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -8,6 +9,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -16,8 +18,8 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0).
-    /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
+    /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0). It was intended to
+    /// have as little dependencies as possible in formatting layer for greater extensibility.
     /// </summary>
     [PublicAPI]
     public class JsonApiWriter : IJsonApiWriter
@@ -41,24 +43,25 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(context, nameof(context));
 
-            var response = context.HttpContext.Response;
+            HttpResponse response = context.HttpContext.Response;
             response.ContentType = _serializer.ContentType;
 
-            await using var writer = context.WriterFactory(response.Body, Encoding.UTF8);
+            await using TextWriter writer = context.WriterFactory(response.Body, Encoding.UTF8);
             string responseContent;
+
             try
             {
-                responseContent = SerializeResponse(context.Object, (HttpStatusCode) response.StatusCode);
+                responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);
             }
             catch (Exception exception)
             {
-                var errorDocument = _exceptionHandler.HandleException(exception);
+                ErrorDocument errorDocument = _exceptionHandler.HandleException(exception);
                 responseContent = _serializer.Serialize(errorDocument);
 
-                response.StatusCode = (int) errorDocument.GetErrorStatusCode();
+                response.StatusCode = (int)errorDocument.GetErrorStatusCode();
             }
 
-            var url = context.HttpContext.Request.GetEncodedUrl();
+            string url = context.HttpContext.Request.GetEncodedUrl();
             _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
@@ -79,8 +82,7 @@ namespace JsonApiDotNetCore.Serialization
                     throw new UnsuccessfulActionResultException(statusCode);
                 }
 
-                if (statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.ResetContent ||
-                    statusCode == HttpStatusCode.NotModified)
+                if (statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.ResetContent || statusCode == HttpStatusCode.NotModified)
                 {
                     // Prevent exception from Kestrel server, caused by writing data:null json response.
                     return null;

@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (SparseFieldSetExpression) obj;
+            var other = (SparseFieldSetExpression)obj;
 
             return Fields.SequenceEqual(other.Fields);
         }
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var field in Fields)
+            foreach (ResourceFieldAttribute field in Fields)
             {
                 hashCode.Add(field);
             }

@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Middleware
     public sealed class AsyncQueryStringActionFilter : IAsyncQueryStringActionFilter
     {
         private readonly IQueryStringReader _queryStringReader;
-    
+
         public AsyncQueryStringActionFilter(IQueryStringReader queryStringReader)
         {
             ArgumentGuard.NotNull(queryStringReader, nameof(queryStringReader));
