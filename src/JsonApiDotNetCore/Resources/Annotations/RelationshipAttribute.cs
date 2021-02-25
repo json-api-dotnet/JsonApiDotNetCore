@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 
+// ReSharper disable NonReadonlyMemberInGetHashCode
+
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
