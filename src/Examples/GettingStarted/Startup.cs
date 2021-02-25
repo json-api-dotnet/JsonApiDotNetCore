@@ -1,5 +1,6 @@
 using GettingStarted.Data;
 using GettingStarted.Models;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace GettingStarted
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [UsedImplicitly]
         public void Configure(IApplicationBuilder app, SampleDbContext context)
         {
             context.Database.EnsureDeleted();

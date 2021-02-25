@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
@@ -11,10 +10,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
     public sealed class KebabCasingConventionStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public KebabCasingConventionStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
-
         protected override void SetJsonApiOptions(JsonApiOptions options)
         {
             base.SetJsonApiOptions(options);

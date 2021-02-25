@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExample.Startups
@@ -11,10 +10,6 @@ namespace JsonApiDotNetCoreExample.Startups
     /// </summary>
     public abstract class EmptyStartup
     {
-        protected EmptyStartup(IConfiguration configuration)
-        {
-        }
-
         public virtual void ConfigureServices(IServiceCollection services)
         {
         }

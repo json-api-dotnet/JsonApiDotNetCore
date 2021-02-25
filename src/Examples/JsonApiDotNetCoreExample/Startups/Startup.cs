@@ -18,7 +18,6 @@ namespace JsonApiDotNetCoreExample.Startups
         private readonly string _connectionString;
 
         public Startup(IConfiguration configuration)
-            : base(configuration)
         {
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
