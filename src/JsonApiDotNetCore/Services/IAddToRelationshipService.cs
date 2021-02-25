@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Services
     { }
 
     /// <summary />
+    [PublicAPI]
     public interface IAddToRelationshipService<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {

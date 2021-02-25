@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Contains details on a lambda expression, such as the name of the selector "x" in "x => x.Name".
     /// </summary>
+    [PublicAPI]
     public sealed class LambdaScope : IDisposable
     {
         private readonly LambdaParameterNameScope _parameterNameScope;

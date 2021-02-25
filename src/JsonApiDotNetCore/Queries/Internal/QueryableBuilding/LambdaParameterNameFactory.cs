@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using Humanizer;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
     /// Produces unique names for lambda parameters.
     /// </summary>
+    [PublicAPI]
     public sealed class LambdaParameterNameFactory
     {
         private readonly HashSet<string> _namesInScope = new HashSet<string>();

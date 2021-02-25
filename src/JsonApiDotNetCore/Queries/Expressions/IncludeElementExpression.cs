@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents an element in <see cref="IncludeExpression"/>.
     /// </summary>
+    [PublicAPI]
     public class IncludeElementExpression : QueryExpression
     {
         public RelationshipAttribute Relationship { get; }

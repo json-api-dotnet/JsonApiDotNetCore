@@ -1,7 +1,9 @@
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Middleware
 {
+    [PublicAPI]
     public static class HttpContextExtensions
     {
         private const string IsJsonApiRequestKey = "JsonApiDotNetCore_IsJsonApiRequest";

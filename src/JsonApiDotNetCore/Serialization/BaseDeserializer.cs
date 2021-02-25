@@ -17,6 +17,7 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
     /// and constructs instances of the resource(s) in the document body.
     /// </summary>
+    [PublicAPI]
     public abstract class BaseDeserializer
     {
         protected IResourceContextProvider ResourceContextProvider { get; }

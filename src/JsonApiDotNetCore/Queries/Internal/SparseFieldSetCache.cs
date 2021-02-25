@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal
     /// <summary>
     /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider"/>s and invokes <see cref="IResourceDefinition{TResource, TId}.OnApplySparseFieldSet"/> on them.
     /// </summary>
+    [PublicAPI]
     public sealed class SparseFieldSetCache
     {
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;

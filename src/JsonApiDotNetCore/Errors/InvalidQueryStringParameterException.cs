@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when processing the request fails due to an error in the request query string.
     /// </summary>
+    [PublicAPI]
     public sealed class InvalidQueryStringParameterException : JsonApiException
     {
         public string QueryParameterName { get; }

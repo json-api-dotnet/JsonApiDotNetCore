@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;

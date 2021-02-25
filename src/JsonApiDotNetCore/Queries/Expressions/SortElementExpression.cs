@@ -1,11 +1,13 @@
 using System;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents an element in <see cref="SortExpression"/>.
     /// </summary>
+    [PublicAPI]
     public class SortElementExpression : QueryExpression
     {
         public ResourceFieldChainExpression TargetAttribute { get; }

@@ -1,4 +1,5 @@
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when the resource ID in the request body does not match the ID in the current endpoint URL.
     /// </summary>
+    [PublicAPI]
     public sealed class ResourceIdMismatchException : JsonApiException
     {
         public ResourceIdMismatchException(string bodyId, string endpointId, string requestPath)

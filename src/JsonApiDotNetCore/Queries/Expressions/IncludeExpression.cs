@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents an inclusion tree, resulting from text such as: owner,articles.revisions
     /// </summary>
+    [PublicAPI]
     public class IncludeExpression : QueryExpression
     {
         public IReadOnlyCollection<IncludeElementExpression> Elements { get; }

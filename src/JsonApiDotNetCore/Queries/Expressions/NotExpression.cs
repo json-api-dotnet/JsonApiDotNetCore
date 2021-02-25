@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -5,6 +6,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents the "not" filter function, resulting from text such as: not(equals(title,'Work'))
     /// </summary>
+    [PublicAPI]
     public class NotExpression : FilterExpression
     {
         public QueryExpression Child { get; }

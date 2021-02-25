@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource,bool}})"/> calls.
     /// </summary>
+    [PublicAPI]
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
         private static readonly ConstantExpression NullConstant = Expression.Constant(null);

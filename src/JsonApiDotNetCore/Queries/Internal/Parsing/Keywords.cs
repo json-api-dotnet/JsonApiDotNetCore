@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public static class Keywords
     {
         public const string Null = "null";

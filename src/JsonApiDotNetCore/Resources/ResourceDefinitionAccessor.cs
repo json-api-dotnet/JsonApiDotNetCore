@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Resources
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;

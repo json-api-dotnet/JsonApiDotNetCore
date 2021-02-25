@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class OperationProcessorAccessor : IOperationProcessorAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;

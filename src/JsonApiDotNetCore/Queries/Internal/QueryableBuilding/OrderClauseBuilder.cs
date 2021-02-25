@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Transforms <see cref="SortExpression"/> into <see cref="Queryable.OrderBy{TSource, TKey}(IQueryable{TSource}, Expression{Func{TSource,TKey}})"/> calls.
     /// </summary>
+    [PublicAPI]
     public class OrderClauseBuilder : QueryClauseBuilder<Expression>
     {
         private readonly Expression _source;

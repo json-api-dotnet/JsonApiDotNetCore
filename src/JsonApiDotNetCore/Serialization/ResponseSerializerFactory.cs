@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Serialization
     /// A factory class to abstract away the initialization of the serializer from the
     /// ASP.NET Core formatter pipeline.
     /// </summary>
+    [PublicAPI]
     public class ResponseSerializerFactory : IJsonApiSerializerFactory
     {
         private readonly IServiceProvider _provider;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class SortQueryStringParameterReader : QueryStringParameterReader, ISortQueryStringParameterReader
     {
         private readonly QueryStringParameterScopeParser _scopeParser;

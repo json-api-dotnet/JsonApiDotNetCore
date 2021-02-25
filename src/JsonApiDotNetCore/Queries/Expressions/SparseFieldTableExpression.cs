@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents a lookup table of sparse fieldsets per resource type.
     /// </summary>
+    [PublicAPI]
     public class SparseFieldTableExpression : QueryExpression
     {
         public IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> Table { get; }

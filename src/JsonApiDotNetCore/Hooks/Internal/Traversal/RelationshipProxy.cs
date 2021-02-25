@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
         public bool IsContextRelation { get; }
 
-        public RelationshipAttribute Attribute { get; set; }
+        public RelationshipAttribute Attribute { get; }
 
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -12,6 +13,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class OperationsProcessor : IOperationsProcessor
     {
         private readonly IOperationProcessorAccessor _operationProcessorAccessor;

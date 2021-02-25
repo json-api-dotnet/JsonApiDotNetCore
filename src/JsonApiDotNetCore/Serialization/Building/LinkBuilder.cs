@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
+    [PublicAPI]
     public class LinkBuilder : ILinkBuilder
     {
         private const string PageSizeParameterName = "page[size]";

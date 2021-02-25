@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
@@ -7,6 +8,7 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class CreateProcessor<TResource, TId> : ICreateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {

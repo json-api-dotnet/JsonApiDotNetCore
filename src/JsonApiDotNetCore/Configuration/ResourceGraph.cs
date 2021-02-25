@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ResourceGraph : IResourceGraph
     {
         private readonly IReadOnlyCollection<ResourceContext> _resources;

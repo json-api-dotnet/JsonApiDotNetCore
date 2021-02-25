@@ -1,7 +1,9 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
+    [PublicAPI]
     public sealed class LambdaParameterNameScope : IDisposable
     {
         private readonly LambdaParameterNameFactory _owner;

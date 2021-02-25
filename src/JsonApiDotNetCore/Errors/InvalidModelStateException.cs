@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -14,6 +15,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when model state validation fails.
     /// </summary>
+    [PublicAPI]
     public class InvalidModelStateException : JsonApiException
     {
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,

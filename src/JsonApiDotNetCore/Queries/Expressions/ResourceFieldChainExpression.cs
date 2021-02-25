@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents a chain of fields (relationships and attributes), resulting from text such as: articles.revisions.author
     /// </summary>
+    [PublicAPI]
     public class ResourceFieldChainExpression : IdentifierExpression
     {
         public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -13,6 +14,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     /// Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions.
     /// Implementations should throw <see cref="QueryParseException"/> on invalid input.
     /// </remarks>
+    [PublicAPI]
     public abstract class QueryExpressionParser
     {
         private protected ResourceFieldChainResolver ChainResolver { get; }

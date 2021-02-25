@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCore.Repositories
     /// Entity Framework Core change tracker so they can be used in relationship updates without fetching the resource.
     /// On disposal, the created placeholders are detached, leaving the change tracker in a clean state for reuse.
     /// </summary>
+    [PublicAPI]
     public sealed class PlaceholderResourceCollector : IDisposable
     {
         private readonly IResourceFactory _resourceFactory;

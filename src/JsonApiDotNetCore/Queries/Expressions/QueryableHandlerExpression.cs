@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Holds an <see cref="IQueryable{T}"/> expression, used for custom query string handlers from <see cref="IResourceDefinition{TResource, TId}"/>s.
     /// </summary>
+    [PublicAPI]
     public class QueryableHandlerExpression : QueryExpression
     {
         private readonly object _queryableHandler;

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Transforms <see cref="IncludeExpression"/> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}"/> calls.
     /// </summary>
+    [PublicAPI]
     public class IncludeClauseBuilder : QueryClauseBuilder<object>
     {
         private readonly Expression _source;

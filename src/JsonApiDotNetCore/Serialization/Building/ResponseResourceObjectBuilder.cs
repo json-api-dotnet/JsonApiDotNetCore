@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -11,6 +12,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
+    [PublicAPI]
     public class ResponseResourceObjectBuilder : ResourceObjectBuilder
     {
         private readonly IIncludedResourceObjectBuilder _includedBuilder;

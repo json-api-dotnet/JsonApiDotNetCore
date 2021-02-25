@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ResourceDefinitionQueryableParameterReader : IResourceDefinitionQueryableParameterReader
     {
         private readonly IJsonApiRequest _request;

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ExceptionHandler : IExceptionHandler
     {
         private readonly IJsonApiOptions _options;

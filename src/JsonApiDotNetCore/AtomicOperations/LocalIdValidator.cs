@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Validates declaration, assignment and reference of local IDs within a list of operations.
     /// </summary>
+    [PublicAPI]
     public sealed class LocalIdValidator
     {
         private readonly ILocalIdTracker _localIdTracker;

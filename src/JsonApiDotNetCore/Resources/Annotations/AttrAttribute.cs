@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
     /// Used to expose a property on a resource class as a JSON:API attribute (https://jsonapi.org/format/#document-resource-object-attributes).
     /// </summary>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class AttrAttribute : ResourceFieldAttribute
     {

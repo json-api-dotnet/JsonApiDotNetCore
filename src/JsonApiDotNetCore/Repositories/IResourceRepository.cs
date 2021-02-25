@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Repositories
     /// Represents the foundational Resource Repository layer in the JsonApiDotNetCore architecture that provides data access to an underlying store.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
+    [PublicAPI]
     public interface IResourceRepository<TResource>
         : IResourceRepository<TResource, int>, IResourceReadRepository<TResource>, IResourceWriteRepository<TResource>
         where TResource : class, IIdentifiable<int>

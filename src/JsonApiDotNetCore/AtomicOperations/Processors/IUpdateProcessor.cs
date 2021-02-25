@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
+    [PublicAPI]
     public interface IUpdateProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
 
@@ -17,6 +18,7 @@ namespace JsonApiDotNetCore.Repositories
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
+    [PublicAPI]
     public interface IResourceWriteRepository<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {

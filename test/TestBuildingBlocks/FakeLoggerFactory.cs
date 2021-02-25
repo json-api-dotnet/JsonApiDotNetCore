@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 
 namespace TestBuildingBlocks
 {
+    [PublicAPI]
     public sealed class FakeLoggerFactory : ILoggerFactory, ILoggerProvider
     {
         public FakeLogger Logger { get; }

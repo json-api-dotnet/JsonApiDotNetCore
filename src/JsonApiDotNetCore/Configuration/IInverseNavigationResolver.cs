@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Configuration
     /// that depend on the inverse navigation property (BeforeImplicitUpdateRelationship),
     /// you will need to override this service, or set <see cref="RelationshipAttribute.InverseNavigationProperty"/> explicitly.
     /// </summary>
+    [PublicAPI]
     public interface IInverseNavigationResolver
     {
         /// <summary>

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    [PublicAPI]
     public sealed class ErrorDocument
     {
         public IReadOnlyList<Error> Errors { get; }

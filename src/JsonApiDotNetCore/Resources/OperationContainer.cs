@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
 
 namespace JsonApiDotNetCore.Resources
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Resources
     /// <summary>
     /// Represents a write operation on a JSON:API resource.
     /// </summary>
+    [PublicAPI]
     public sealed class OperationContainer
     {
         public OperationKind Kind { get; }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents the "any" filter function, resulting from text such as: any(name,'Jack','Joe')
     /// </summary>
+    [PublicAPI]
     public class EqualsAnyOfExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetAttribute { get; }

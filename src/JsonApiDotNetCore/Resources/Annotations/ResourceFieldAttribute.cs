@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using JetBrains.Annotations;
 
 // ReSharper disable NonReadonlyMemberInGetHashCode
 
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// Used to expose a property on a resource class as a JSON:API field (attribute or relationship).
     /// See https://jsonapi.org/format/#document-resource-object-fields.
     /// </summary>
+    [PublicAPI]
     public abstract class ResourceFieldAttribute : Attribute
     {
         private string _publicName;

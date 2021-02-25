@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -9,6 +10,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class QueryLayerComposer : IQueryLayerComposer
     {
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;

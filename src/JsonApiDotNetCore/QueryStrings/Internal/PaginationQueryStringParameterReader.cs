@@ -13,6 +13,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
     {
         private const string PageSizeParameterName = "page[size]";

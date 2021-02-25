@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    [PublicAPI]
     public abstract class ExposableData<TResource> where TResource : class
     {
         /// <summary>

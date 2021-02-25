@@ -1,11 +1,13 @@
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class AddToRelationshipProcessor<TResource, TId> : IAddToRelationshipProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {

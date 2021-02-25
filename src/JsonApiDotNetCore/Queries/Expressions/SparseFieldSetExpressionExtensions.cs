@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
+    [PublicAPI]
     public static class SparseFieldSetExpressionExtensions
     {
         public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,

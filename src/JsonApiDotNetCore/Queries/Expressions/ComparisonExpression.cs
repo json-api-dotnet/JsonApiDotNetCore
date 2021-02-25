@@ -1,11 +1,13 @@
 using System;
 using Humanizer;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents a comparison filter function, resulting from text such as: equals(name,'Joe')
     /// </summary>
+    [PublicAPI]
     public class ComparisonExpression : FilterExpression
     {
         public ComparisonOperator Operator { get; }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -11,6 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IResourceContextProvider _resourceContextProvider;

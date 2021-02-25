@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class InverseNavigationResolver : IInverseNavigationResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;

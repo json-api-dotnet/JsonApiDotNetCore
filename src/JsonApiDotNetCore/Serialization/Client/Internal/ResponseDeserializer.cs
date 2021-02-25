@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// <summary>
     /// Client deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
+    [PublicAPI]
     public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
         public ResponseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory) : base(resourceContextProvider, resourceFactory) { }

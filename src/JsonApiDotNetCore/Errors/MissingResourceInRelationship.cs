@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Errors
 {
+    [PublicAPI]
     public sealed class MissingResourceInRelationship
     {
         public string RelationshipName { get; }

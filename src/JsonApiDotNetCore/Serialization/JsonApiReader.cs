@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;

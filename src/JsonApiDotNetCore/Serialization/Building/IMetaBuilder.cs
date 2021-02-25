@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <summary>
     /// Builds the top-level meta object.
     /// </summary>
+    [PublicAPI]
     public interface IMetaBuilder
     {
         /// <summary>

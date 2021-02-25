@@ -1,4 +1,5 @@
 using System.Data;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -6,6 +7,7 @@ using Newtonsoft.Json.Serialization;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
+    [PublicAPI]
     public sealed class JsonApiOptions : IJsonApiOptions
     {
         internal static readonly NamingStrategy DefaultNamingStrategy = new CamelCaseNamingStrategy();

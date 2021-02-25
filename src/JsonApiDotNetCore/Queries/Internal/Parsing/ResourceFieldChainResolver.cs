@@ -192,7 +192,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return chain;
         }
 
-        public RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
         {
             var relationship = resourceContext.Relationships.FirstOrDefault(r => r.PublicName == publicName);
 
@@ -206,7 +206,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return relationship;
         }
 
-        public RelationshipAttribute GetToManyRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetToManyRelationship(string publicName, ResourceContext resourceContext, string path)
         {
             var relationship = GetRelationship(publicName, resourceContext, path);
 
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return relationship;
         }
 
-        public RelationshipAttribute GetToOneRelationship(string publicName, ResourceContext resourceContext, string path)
+        private RelationshipAttribute GetToOneRelationship(string publicName, ResourceContext resourceContext, string path)
         {
             var relationship = GetRelationship(publicName, resourceContext, path);
 

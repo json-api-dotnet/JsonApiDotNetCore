@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -22,6 +23,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
+    [PublicAPI]
     public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
         where TResource : class, IIdentifiable<TId>
     {
@@ -159,7 +161,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             var dbSet = _dbContext.Set<TResource>();
-            dbSet.Add(resourceForDatabase);
+            await dbSet.AddAsync(resourceForDatabase, cancellationToken);
 
             await SaveChangesAsync(cancellationToken);
         }
@@ -432,6 +434,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
+    [PublicAPI]
     public class EntityFrameworkCoreRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {

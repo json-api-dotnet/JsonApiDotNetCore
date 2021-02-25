@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     /// Provides additional information about a problem encountered while performing an operation.
     /// Error objects MUST be returned as an array keyed by errors in the top level of a JSON:API document.
     /// </summary>
+    [PublicAPI]
     public sealed class Error
     {
         public Error(HttpStatusCode statusCode)

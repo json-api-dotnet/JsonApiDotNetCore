@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JsonApiDotNetCore.Controllers
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Controllers
     /// <summary>
     /// Represents the violation of a model state validation rule.
     /// </summary>
+    [PublicAPI]
     public sealed class ModelStateViolation
     {
         public string Prefix { get; }

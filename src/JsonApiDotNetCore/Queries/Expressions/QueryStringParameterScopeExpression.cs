@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents the scope of a query string parameter, resulting from text such as: ?filter[articles]=...
     /// </summary>
+    [PublicAPI]
     public class QueryStringParameterScopeExpression : QueryExpression
     {
         public LiteralConstantExpression ParameterName { get; }

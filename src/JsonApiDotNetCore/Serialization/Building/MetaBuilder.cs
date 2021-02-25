@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class MetaBuilder : IMetaBuilder
     {
         private readonly IPaginationContext _paginationContext;

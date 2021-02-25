@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
     /// The error that is thrown when (de)serialization of a JSON:API body fails.
     /// </summary>
+    [PublicAPI]
     public class JsonApiSerializationException : Exception
     {
         public string GenericMessage { get; }

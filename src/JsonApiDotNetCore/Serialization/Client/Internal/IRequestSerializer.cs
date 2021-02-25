@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// Interface for client serializer that can be used to register with the DI container, for usage in
     /// custom services or repositories.
     /// </summary>
+    [PublicAPI]
     public interface IRequestSerializer
     {
         /// <summary>

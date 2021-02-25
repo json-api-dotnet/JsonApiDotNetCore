@@ -2,11 +2,13 @@ using System;
 using FluentAssertions;
 using FluentAssertions.Numeric;
 using FluentAssertions.Primitives;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace TestBuildingBlocks
 {
+    [PublicAPI]
     public static class ObjectAssertionsExtensions
     {
         private const decimal NumericPrecision = 0.00000000001M;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -13,6 +14,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Drives conversion from <see cref="QueryLayer"/> into system <see cref="Expression"/> trees.
     /// </summary>
+    [PublicAPI]
     public class QueryableBuilder
     {
         private readonly Expression _source;

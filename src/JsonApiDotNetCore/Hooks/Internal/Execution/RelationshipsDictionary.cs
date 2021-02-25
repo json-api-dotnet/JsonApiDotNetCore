@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -14,6 +15,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary
     /// with the two helper methods defined on IAffectedRelationships{TRightResource}.
     /// </summary>
+    [PublicAPI]
     public class RelationshipsDictionary<TResource> :
         Dictionary<RelationshipAttribute, HashSet<TResource>>,
         IRelationshipsDictionary<TResource> where TResource : class, IIdentifiable

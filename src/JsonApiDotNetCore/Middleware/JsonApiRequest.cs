@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Middleware
 {
     /// <inheritdoc />
+    [PublicAPI]
     public sealed class JsonApiRequest : IJsonApiRequest
     {
         /// <inheritdoc />

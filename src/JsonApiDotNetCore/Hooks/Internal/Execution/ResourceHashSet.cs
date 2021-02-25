@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// Also contains information about updated relationships through 
     /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
+    [PublicAPI]
     public class ResourceHashSet<TResource> : HashSet<TResource>, IResourceHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <inheritdoc />

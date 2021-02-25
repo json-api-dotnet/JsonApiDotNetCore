@@ -1,4 +1,5 @@
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when a required relationship is cleared.
     /// </summary>
+    [PublicAPI]
     public sealed class CannotClearRequiredRelationshipException : JsonApiException
     {
         public CannotClearRequiredRelationshipException(string relationshipName, string resourceId,

@@ -1,8 +1,11 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents a non-null constant value, resulting from text such as: equals(firstName,'Jack')
     /// </summary>
+    [PublicAPI]
     public class LiteralConstantExpression : IdentifierExpression
     {
         public string Value { get; }

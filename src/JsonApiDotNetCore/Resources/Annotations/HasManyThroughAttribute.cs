@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 // ReSharper disable NonReadonlyMemberInGetHashCode
 
@@ -42,6 +43,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// }
     /// ]]></code>
     /// </example>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {

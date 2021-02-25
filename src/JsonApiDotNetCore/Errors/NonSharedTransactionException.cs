@@ -1,4 +1,5 @@
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Errors
     /// The error that is thrown when a repository does not participate in the overarching transaction
     /// during an atomic:operations request.
     /// </summary>
+    [PublicAPI]
     public sealed class NonSharedTransactionException : JsonApiException
     {
         public NonSharedTransactionException()

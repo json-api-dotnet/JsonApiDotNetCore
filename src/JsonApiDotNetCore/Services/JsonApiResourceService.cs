@@ -20,6 +20,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class JsonApiResourceService<TResource, TId> :
         IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
@@ -470,6 +471,7 @@ namespace JsonApiDotNetCore.Services
     /// Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
+    [PublicAPI]
     public class JsonApiResourceService<TResource> : JsonApiResourceService<TResource, int>,
         IResourceService<TResource>
         where TResource : class, IIdentifiable<int>

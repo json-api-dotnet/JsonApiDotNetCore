@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents a pagination, produced from <see cref="PaginationQueryStringValueExpression"/>.
     /// </summary>
+    [PublicAPI]
     public class PaginationExpression : QueryExpression
     {
         public PageNumber PageNumber { get; }

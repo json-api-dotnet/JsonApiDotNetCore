@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -18,6 +19,7 @@ namespace JsonApiDotNetCore.Serialization
     /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0).
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
     /// </summary>
+    [PublicAPI]
     public class JsonApiWriter : IJsonApiWriter
     {
         private readonly IJsonApiSerializer _serializer;

@@ -1,4 +1,5 @@
 using System.Threading;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// is called from <see cref="JsonApiResourceService{TResource,TId}.GetAsync(TId, CancellationToken)"/>, it will be called
     /// with parameter pipeline = ResourceAction.GetSingle.
     /// </summary>
+    [PublicAPI]
     public enum ResourcePipeline
     {
         None,

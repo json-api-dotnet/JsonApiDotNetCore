@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.
     /// </summary>
+    [PublicAPI]
     public class ServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {

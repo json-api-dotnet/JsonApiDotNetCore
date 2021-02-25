@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
     /// <summary>
     /// The default implementation for IHooksDiscovery
     /// </summary>
+    [PublicAPI]
     public class HooksDiscovery<TResource> : IHooksDiscovery<TResource> where TResource : class, IIdentifiable
     {
         private readonly Type _boundResourceDefinitionType = typeof(ResourceHooksDefinition<TResource>);

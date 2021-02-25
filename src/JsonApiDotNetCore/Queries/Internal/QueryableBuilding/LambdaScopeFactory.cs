@@ -1,9 +1,11 @@
 using System;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
+    [PublicAPI]
     public sealed class LambdaScopeFactory
     {
         private readonly LambdaParameterNameFactory _nameFactory;

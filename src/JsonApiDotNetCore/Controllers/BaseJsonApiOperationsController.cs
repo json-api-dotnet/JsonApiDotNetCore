@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Controllers
     /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
     /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor"/>.
     /// </summary>
+    [PublicAPI]
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;

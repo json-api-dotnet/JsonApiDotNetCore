@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -5,6 +6,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents the "has" filter function, resulting from text such as: has(articles)
     /// </summary>
+    [PublicAPI]
     public class CollectionNotEmptyExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetCollection { get; }

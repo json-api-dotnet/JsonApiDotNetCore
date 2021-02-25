@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class QueryStringReader : IQueryStringReader
     {
         private readonly IJsonApiOptions _options;

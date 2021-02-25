@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
@@ -8,6 +9,7 @@ using JsonApiDotNetCore.Services;
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {

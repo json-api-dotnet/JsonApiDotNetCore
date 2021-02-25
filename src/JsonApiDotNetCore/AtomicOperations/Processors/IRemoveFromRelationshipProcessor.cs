@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
     /// <typeparam name="TId"></typeparam>
+    [PublicAPI]
     public interface IRemoveFromRelationshipProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {

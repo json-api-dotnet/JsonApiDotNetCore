@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents pagination in a query string, resulting from text such as: 1,articles:2
     /// </summary>
+    [PublicAPI]
     public class PaginationQueryStringValueExpression : QueryExpression
     {
         public IReadOnlyCollection<PaginationElementQueryStringValueExpression> Elements { get; }

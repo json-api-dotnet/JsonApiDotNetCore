@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -21,6 +22,7 @@ namespace JsonApiDotNetCore.Serialization
     /// </remarks>
     /// <typeparam name="TResource">Type of the resource associated with the scope of the request
     /// for which this serializer is used.</typeparam>
+    [PublicAPI]
     public class ResponseSerializer<TResource> : BaseSerializer, IJsonApiSerializer
         where TResource : class, IIdentifiable
     {

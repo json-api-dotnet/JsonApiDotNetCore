@@ -1,4 +1,5 @@
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when an <see cref="IActionResult"/> with non-success status is returned from a controller method.
     /// </summary>
+    [PublicAPI]
     public sealed class UnsuccessfulActionResultException : JsonApiException
     {
         public UnsuccessfulActionResultException(HttpStatusCode status) 

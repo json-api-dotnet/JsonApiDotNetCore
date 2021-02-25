@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents a sorting, resulting from text such as: lastName,-lastModifiedAt
     /// </summary>
+    [PublicAPI]
     public class SortExpression : QueryExpression
     {
         public IReadOnlyCollection<SortElementExpression> Elements { get; }

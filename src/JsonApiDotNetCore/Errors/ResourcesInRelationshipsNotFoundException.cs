@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when referencing one or more non-existing resources in one or more relationships.
     /// </summary>
+    [PublicAPI]
     public sealed class ResourcesInRelationshipsNotFoundException : JsonApiException
     {
         public ResourcesInRelationshipsNotFoundException(IEnumerable<MissingResourceInRelationship> missingResources)

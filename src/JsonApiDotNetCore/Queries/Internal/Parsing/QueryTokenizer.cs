@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public sealed class QueryTokenizer
     {
         public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds =

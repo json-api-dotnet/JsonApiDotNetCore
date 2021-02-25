@@ -1,7 +1,9 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    [PublicAPI]
     public sealed class PageNumber : IEquatable<PageNumber>
     {
         public static readonly PageNumber ValueOne = new PageNumber(1);

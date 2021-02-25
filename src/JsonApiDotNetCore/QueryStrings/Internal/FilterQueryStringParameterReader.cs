@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class FilterQueryStringParameterReader : QueryStringParameterReader, IFilterQueryStringParameterReader
     {
         private static readonly LegacyFilterNotationConverter LegacyConverter = new LegacyFilterNotationConverter();

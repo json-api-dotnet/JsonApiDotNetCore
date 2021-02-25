@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Resources.Annotations
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// <summary>
     /// When put on a resource class, overrides global configuration for which links to render.
     /// </summary>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class ResourceLinksAttribute : Attribute
     {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <inheritdoc /> 
+    [PublicAPI]
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         protected IResourceContextProvider ResourceContextProvider { get; }

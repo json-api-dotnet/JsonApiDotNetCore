@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Queries
     /// <summary>
     /// A nested data structure that contains <see cref="QueryExpression"/> constraints per resource type.
     /// </summary>
+    [PublicAPI]
     public sealed class QueryLayer
     {
         public ResourceContext ResourceContext { get; }

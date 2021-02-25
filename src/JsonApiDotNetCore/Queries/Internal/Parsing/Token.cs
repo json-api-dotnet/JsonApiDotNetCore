@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public sealed class Token
     {
         public TokenKind Kind { get; }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Building block for rewriting <see cref="QueryExpression" /> trees. It walks through nested expressions and updates parent on changes.
     /// </summary>
+    [PublicAPI]
     public class QueryExpressionRewriter<TArgument> : QueryExpressionVisitor<TArgument, QueryExpression>
     {
         public override QueryExpression Visit(QueryExpression expression, TArgument argument)

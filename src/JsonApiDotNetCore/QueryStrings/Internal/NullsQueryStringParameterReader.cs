@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -7,6 +8,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class NullsQueryStringParameterReader : INullsQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;

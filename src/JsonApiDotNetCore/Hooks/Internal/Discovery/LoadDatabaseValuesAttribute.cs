@@ -1,7 +1,9 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 {
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class LoadDatabaseValuesAttribute : Attribute
     {

@@ -17,6 +17,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Server deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
+    [PublicAPI]
     public class RequestDeserializer : BaseDeserializer, IJsonApiDeserializer
     {
         private readonly ITargetedFields _targetedFields;

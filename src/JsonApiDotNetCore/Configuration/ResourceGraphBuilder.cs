@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Builds and configures the <see cref="ResourceGraph"/>.
     /// </summary>
+    [PublicAPI]
     public class ResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;

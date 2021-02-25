@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -21,6 +22,7 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for JSON:API requests.
     /// </summary>
+    [PublicAPI]
     public sealed class JsonApiMiddleware
     {
         private static readonly MediaTypeHeaderValue MediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);

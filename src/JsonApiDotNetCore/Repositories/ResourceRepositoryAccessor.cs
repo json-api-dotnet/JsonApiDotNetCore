@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     {
         private readonly IServiceProvider _serviceProvider;

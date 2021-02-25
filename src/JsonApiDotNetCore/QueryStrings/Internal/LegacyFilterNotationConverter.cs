@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public sealed class LegacyFilterNotationConverter
     {
         private const string ParameterNamePrefix = "filter[";

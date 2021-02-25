@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Server serializer implementation of <see cref="BaseSerializer"/> for atomic:operations responses.
     /// </summary>
+    [PublicAPI]
     public sealed class AtomicOperationsResponseSerializer : BaseSerializer, IJsonApiSerializer
     {
         private readonly IMetaBuilder _metaBuilder;
