@@ -1,6 +1,8 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
+// ReSharper disable UnusedTypeParameter
+
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <summary>

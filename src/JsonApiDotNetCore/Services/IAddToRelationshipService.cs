@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
+// ReSharper disable UnusedTypeParameter
+
 namespace JsonApiDotNetCore.Services
 {
     /// <inheritdoc />
