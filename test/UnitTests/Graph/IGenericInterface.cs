@@ -1,4 +1,6 @@
+// ReSharper disable UnusedTypeParameter
+
 namespace UnitTests.Graph
 {
-    public interface IGenericInterface<T> { }
+    internal interface IGenericInterface<T> { }
 }

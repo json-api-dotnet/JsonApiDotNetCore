@@ -37,11 +37,8 @@ namespace UnitTests.Serialization.Common
         [Fact]
         public void ResourceToDocument_EmptyList_CanBuild()
         {
-            // Arrange
-            var resources = new List<TestResource>();
-
             // Act
-            var document = _builder.Build(resources);
+            var document = _builder.Build(new List<TestResource>());
 
             // Assert
             Assert.NotNull(document.Data);
@@ -77,7 +74,7 @@ namespace UnitTests.Serialization.Common
             Assert.Equal(2, data.Count);
         }
 
-        public sealed class DummyResource : Identifiable
+        private sealed class DummyResource : Identifiable
         {
         }
     }

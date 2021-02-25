@@ -1,4 +1,6 @@
+// ReSharper disable UnusedTypeParameter
+
 namespace UnitTests.Graph
 {
-    public class BaseType<T> { }
+    internal class BaseType<T> { }
 }

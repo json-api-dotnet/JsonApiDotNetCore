@@ -283,7 +283,7 @@ namespace UnitTests.ResourceHooks
             return parsedChains;
         }
 
-        protected List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
             var resourceContext = ResourceGraph.GetResourceContext<TodoItem>();

@@ -19,7 +19,8 @@ namespace UnitTests.Serialization
         protected readonly TopLevelLinks DummyTopLevelLinks;
         protected readonly ResourceLinks DummyResourceLinks;
         protected readonly RelationshipLinks DummyRelationshipLinks;
-        public SerializerTestsSetup()
+
+        protected SerializerTestsSetup()
         {
             DummyTopLevelLinks = new TopLevelLinks
             {
@@ -71,13 +72,13 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IResourceDefinitionAccessor GetResourceDefinitionAccessor()
+        private IResourceDefinitionAccessor GetResourceDefinitionAccessor()
         {
             var mock = new Mock<IResourceDefinitionAccessor>();
             return mock.Object;
         }
 
-        protected IMetaBuilder GetMetaBuilder(Dictionary<string, object> meta = null)
+        private IMetaBuilder GetMetaBuilder(Dictionary<string, object> meta = null)
         {
             var mock = new Mock<IMetaBuilder>();
             mock.Setup(m => m.Build()).Returns(meta);
@@ -101,7 +102,7 @@ namespace UnitTests.Serialization
             return mock.Object;
         }
 
-        protected IEnumerable<IQueryConstraintProvider> GetIncludeConstraints(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null)
+        private IEnumerable<IQueryConstraintProvider> GetIncludeConstraints(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null)
         {
             var expressionsInScope = new List<ExpressionInScope>();
 

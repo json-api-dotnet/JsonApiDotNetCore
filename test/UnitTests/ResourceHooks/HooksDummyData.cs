@@ -21,10 +21,10 @@ namespace UnitTests.ResourceHooks
         protected readonly Faker<Article> ArticleFaker;
         protected readonly Faker<Tag> TagFaker;
         protected readonly Faker<ArticleTag> ArticleTagFaker;
-        protected readonly Faker<IdentifiableArticleTag> IdentifiableArticleTagFaker;
+        private readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<Passport> PassportFaker;
 
-        public HooksDummyData()
+        protected HooksDummyData()
         {
             ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
                 .Add<TodoItem>()
@@ -52,7 +52,7 @@ namespace UnitTests.ResourceHooks
 
             ArticleTagFaker = new Faker<ArticleTag>();
 
-            IdentifiableArticleTagFaker = new Faker<IdentifiableArticleTag>()
+            _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>()
                 .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
 
             PassportFaker = new Faker<Passport>()
@@ -113,7 +113,7 @@ namespace UnitTests.ResourceHooks
         protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
         {
             var tagsSubset = TagFaker.Generate(3);
-            var joinsSubSet = IdentifiableArticleTagFaker.Generate(3);
+            var joinsSubSet = _identifiableArticleTagFaker.Generate(3);
             var articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.IdentifiableArticleTags = joinsSubSet.ToHashSet();
             for (int i = 0; i < 3; i++)
@@ -122,7 +122,7 @@ namespace UnitTests.ResourceHooks
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
             var allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
-            var completeJoin = IdentifiableArticleTagFaker.Generate(6);
+            var completeJoin = _identifiableArticleTagFaker.Generate(6);
 
             var articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.IdentifiableArticleTags = joinsSubSet.ToHashSet();

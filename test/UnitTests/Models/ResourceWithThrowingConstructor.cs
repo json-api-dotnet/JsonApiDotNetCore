@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 namespace UnitTests.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceWithThrowingConstructor : Identifiable
+    internal sealed class ResourceWithThrowingConstructor : Identifiable
     {
         public ResourceWithThrowingConstructor()
         {

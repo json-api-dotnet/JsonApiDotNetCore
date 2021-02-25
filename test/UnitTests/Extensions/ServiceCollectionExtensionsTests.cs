@@ -187,8 +187,10 @@ namespace UnitTests.Extensions
             Assert.Equal("intResources", resource.PublicName);
         }
 
-        public sealed class IntResource : Identifiable { }
-        public sealed class GuidResource : Identifiable<Guid> { }
+        private sealed class IntResource : Identifiable { }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class GuidResource : Identifiable<Guid> { }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceService : IResourceService<IntResource>
@@ -251,7 +253,7 @@ namespace UnitTests.Extensions
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public class TestContext : DbContext
+        private sealed class TestContext : DbContext
         {
             public TestContext(DbContextOptions<TestContext> options) : base(options)
             {

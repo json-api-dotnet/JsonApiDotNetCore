@@ -1,7 +1,7 @@
-﻿namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExample.Models
 {
     public interface IIsLockable
     {
-        bool IsLocked { get; set; }
+        bool IsLocked { get; }
     }
 }

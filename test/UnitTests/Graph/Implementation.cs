@@ -1,4 +1,4 @@
 namespace UnitTests.Graph
 {
-    public sealed class Implementation : IGenericInterface<int> { }
+    internal sealed class Implementation : IGenericInterface<int> { }
 }

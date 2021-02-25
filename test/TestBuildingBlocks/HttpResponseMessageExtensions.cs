@@ -27,6 +27,7 @@ namespace TestBuildingBlocks
                 Subject = instance;
             }
 
+            // ReSharper disable once UnusedMethodReturnValue.Global
             public AndConstraint<HttpResponseMessageAssertions> HaveStatusCode(HttpStatusCode statusCode)
             {
                 if (Subject.StatusCode != statusCode)

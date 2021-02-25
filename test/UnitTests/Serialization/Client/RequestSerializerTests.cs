@@ -223,11 +223,10 @@ namespace UnitTests.Serialization.Client
         public void SerializeMany_EmptyList_CanBuild()
         {
             // Arrange
-            var resources = new List<TestResource>();
             _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
-            string serialized = _serializer.Serialize(resources);
+            string serialized = _serializer.Serialize(new List<TestResource>());
 
             // Assert
             const string expectedFormatted = @"{

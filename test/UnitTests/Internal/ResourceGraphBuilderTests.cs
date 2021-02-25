@@ -76,6 +76,7 @@ namespace UnitTests.Internal
             Assert.Equal(typeof(Bar), result.ResourceType);
         }
 
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class Foo { }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -84,8 +85,8 @@ namespace UnitTests.Internal
             public DbSet<Foo> Foos { get; set; }
         }
 
+        // ReSharper disable once ClassCanBeSealed.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public class Bar : Identifiable { }
-
     }
-
 }

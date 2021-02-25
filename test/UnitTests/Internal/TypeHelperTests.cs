@@ -50,10 +50,7 @@ namespace UnitTests.Internal
         public void ConvertType_Returns_Value_If_Type_Is_Same()
         {
             // Arrange
-            var val = new ComplexType
-            {
-                Property = 1
-            };
+            var val = new ComplexType();
 
             var type = val.GetType();
 
@@ -68,10 +65,7 @@ namespace UnitTests.Internal
         public void ConvertType_Returns_Value_If_Type_Is_Assignable()
         {
             // Arrange
-            var val = new ComplexType
-            {
-                Property = 1
-            };
+            var val = new ComplexType();
 
             var baseType = typeof(BaseType);
             var iType = typeof(IType);
@@ -179,7 +173,6 @@ namespace UnitTests.Internal
 
         private sealed class ComplexType : BaseType
         {
-            public int Property { get; set; }
         }
 
         private class BaseType : IType

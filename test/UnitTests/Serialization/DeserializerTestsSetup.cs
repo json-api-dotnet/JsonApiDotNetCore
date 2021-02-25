@@ -14,7 +14,7 @@ namespace UnitTests.Serialization
     {
         protected Mock<IHttpContextAccessor> MockHttpContextAccessor { get; }
 
-        public DeserializerTestsSetup()
+        protected DeserializerTestsSetup()
         {
             MockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             MockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());

@@ -15,7 +15,7 @@ namespace UnitTests.Serialization
         protected Faker<Blog> BlogFaker { get; }
         protected Faker<Person> PersonFaker { get; }
 
-        public SerializationTestsSetupBase()
+        protected SerializationTestsSetupBase()
         {
             ResourceGraph = BuildGraph();
 
@@ -46,7 +46,7 @@ namespace UnitTests.Serialization
             // @formatter:keep_existing_linebreaks restore
         }
 
-        protected IResourceGraph BuildGraph()
+        private IResourceGraph BuildGraph()
         {
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             resourceGraphBuilder.Add<TestResource>("testResource");

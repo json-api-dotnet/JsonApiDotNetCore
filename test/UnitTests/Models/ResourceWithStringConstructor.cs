@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 namespace UnitTests.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ResourceWithStringConstructor : Identifiable
+    internal sealed class ResourceWithStringConstructor : Identifiable
     {
         public string Text { get; }
 
