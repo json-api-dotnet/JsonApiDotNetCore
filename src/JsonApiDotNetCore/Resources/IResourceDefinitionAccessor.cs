@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Retrieves a <see cref="IResourceDefinition{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
+    /// Retrieves an <see cref="IResourceDefinition{TResource,TId}"/> instance from the D/I container and invokes a callback on it.
     /// </summary>
     public interface IResourceDefinitionAccessor
     {

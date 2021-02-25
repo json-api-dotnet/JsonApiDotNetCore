@@ -3,7 +3,7 @@ using System;
 namespace JsonApiDotNetCore.Repositories
 {
     /// <summary>
-    /// Used to indicate that a <see cref="IResourceRepository{TResource}"/> supports execution inside a transaction.
+    /// Used to indicate that an <see cref="IResourceRepository{TResource}"/> supports execution inside a transaction.
     /// </summary>
     public interface IRepositorySupportsTransaction
     {
