@@ -31,11 +31,7 @@ namespace UnitTests.ResourceHooks
             var constraintsMock = new Mock<IEnumerable<IQueryConstraintProvider>>();
             constraintsMock.Setup(x => x.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
 
-            var optionsMock = new JsonApiOptions
-            {
-                LoadDatabaseValues = false
-            };
-
+            var optionsMock = new JsonApiOptions { LoadDatabaseValues = false };
             return (ufMock, constraintsMock, pfMock, optionsMock);
         }
 

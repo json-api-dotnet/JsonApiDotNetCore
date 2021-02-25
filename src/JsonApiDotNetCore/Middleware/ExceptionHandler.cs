@@ -74,13 +74,10 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(exception, nameof(exception));
 
             IReadOnlyList<Error> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
-                exception is OperationCanceledException ? new Error((HttpStatusCode)499)
+                exception is OperationCanceledException ? new Error((HttpStatusCode)499) { Title = "Request execution was canceled." }.AsArray() :
+                new Error(HttpStatusCode.InternalServerError)
                 {
-                    Title = "Request execution was canceled."
-                }.AsArray() : new Error(HttpStatusCode.InternalServerError)
-                {
-                    Title = "An unhandled error occurred while processing this request.",
-                    Detail = exception.Message
+                    Title = "An unhandled error occurred while processing this request.", Detail = exception.Message
                 }.AsArray();
 
             foreach (Error error in errors)

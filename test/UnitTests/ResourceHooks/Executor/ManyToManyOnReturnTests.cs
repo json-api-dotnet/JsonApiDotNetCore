@@ -12,10 +12,7 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class ManyToManyOnReturnTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.OnReturn
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
         [Fact]
         public void OnReturn()

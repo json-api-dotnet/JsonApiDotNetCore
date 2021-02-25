@@ -16,8 +16,7 @@ namespace JsonApiDotNetCore.Errors
         public RequestMethodNotAllowedException(HttpMethod method)
             : base(new Error(HttpStatusCode.MethodNotAllowed)
             {
-                Title = "The request method is not allowed.",
-                Detail = $"Resource does not support {method} requests."
+                Title = "The request method is not allowed.", Detail = $"Resource does not support {method} requests."
             })
         {
             Method = method;

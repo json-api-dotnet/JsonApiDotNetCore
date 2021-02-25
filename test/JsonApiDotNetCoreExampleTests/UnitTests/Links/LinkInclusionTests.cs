@@ -57,9 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
             // Arrange
             var exampleResourceContext = new ResourceContext
             {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                TopLevelLinks = linksInResourceContext
+                PublicName = nameof(ExampleResource), ResourceType = typeof(ExampleResource), TopLevelLinks = linksInResourceContext
             };
 
             var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
@@ -73,19 +71,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 Relationship = new HasOneAttribute()
             };
 
-            var paginationContext = new PaginationContext
-            {
-                PageSize = new PageSize(1),
-                PageNumber = new PageNumber(2),
-                TotalResourceCount = 10
-            };
+            var paginationContext = new PaginationContext { PageSize = new PageSize(1), PageNumber = new PageNumber(2), TotalResourceCount = 10 };
 
             var queryStringAccessor = new EmptyRequestQueryStringAccessor();
 
-            var options = new JsonApiOptions
-            {
-                TopLevelLinks = linksInOptions
-            };
+            var options = new JsonApiOptions { TopLevelLinks = linksInOptions };
 
             var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
 
@@ -156,9 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
             // Arrange
             var exampleResourceContext = new ResourceContext
             {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                ResourceLinks = linksInResourceContext
+                PublicName = nameof(ExampleResource), ResourceType = typeof(ExampleResource), ResourceLinks = linksInResourceContext
             };
 
             var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
@@ -169,10 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
 
             var queryStringAccessor = new EmptyRequestQueryStringAccessor();
 
-            var options = new JsonApiOptions
-            {
-                ResourceLinks = linksInOptions
-            };
+            var options = new JsonApiOptions { ResourceLinks = linksInOptions };
 
             var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
 
@@ -322,9 +307,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
             // Arrange
             var exampleResourceContext = new ResourceContext
             {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                RelationshipLinks = linksInResourceContext
+                PublicName = nameof(ExampleResource), ResourceType = typeof(ExampleResource), RelationshipLinks = linksInResourceContext
             };
 
             var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
@@ -335,17 +318,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
 
             var queryStringAccessor = new EmptyRequestQueryStringAccessor();
 
-            var options = new JsonApiOptions
-            {
-                RelationshipLinks = linksInOptions
-            };
+            var options = new JsonApiOptions { RelationshipLinks = linksInOptions };
 
             var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
 
-            var relationship = new HasOneAttribute
-            {
-                Links = linksInRelationshipAttribute
-            };
+            var relationship = new HasOneAttribute { Links = linksInRelationshipAttribute };
 
             // Act
             RelationshipLinks relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, new ExampleResource());

@@ -378,14 +378,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             store.Clear();
 
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

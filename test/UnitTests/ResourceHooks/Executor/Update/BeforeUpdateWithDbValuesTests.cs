@@ -20,17 +20,10 @@ namespace UnitTests.ResourceHooks.Executor.Update
 
         private readonly ResourceHook[] _targetHooks =
         {
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeImplicitUpdateRelationship,
-            ResourceHook.BeforeUpdateRelationship
+            ResourceHook.BeforeUpdate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship
         };
 
-        private readonly ResourceHook[] _targetHooksNoImplicit =
-        {
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeUpdateRelationship
-        };
-
+        private readonly ResourceHook[] _targetHooksNoImplicit = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
         private readonly string _personId;
         private readonly List<TodoItem> _todoList;
         private readonly DbContextOptions<AppDbContext> _options;
@@ -46,26 +39,14 @@ namespace UnitTests.ResourceHooks.Executor.Update
 
             TodoItem implicitTodo = TodoFaker.Generate();
             implicitTodo.Id += 1000;
-
-            implicitTodo.OneToOnePerson = new Person
-            {
-                Id = personId,
-                LastName = LastName
-            };
-
+            implicitTodo.OneToOnePerson = new Person { Id = personId, LastName = LastName };
             implicitTodo.Description = Description + Description;
 
             _options = InitInMemoryDb(context =>
             {
                 context.Set<TodoItem>().Add(new TodoItem
                 {
-                    Id = todoId,
-                    OneToOnePerson = new Person
-                    {
-                        Id = implicitPersonId,
-                        LastName = LastName + LastName
-                    },
-                    Description = Description
+                    Id = todoId, OneToOnePerson = new Person { Id = implicitPersonId, LastName = LastName + LastName }, Description = Description
                 });
 
                 context.Set<TodoItem>().Add(implicitTodo);
@@ -119,14 +100,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             ufMock.Setup(c => c.Relationships).Returns(ResourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson).ToHashSet);
 
             // Act
-            var todoList = new List<TodoItem>
-            {
-                new TodoItem
-                {
-                    Id = _todoList[0].Id
-                }
-            };
-
+            var todoList = new List<TodoItem> { new TodoItem { Id = _todoList[0].Id } };
             hookExecutor.BeforeUpdate(todoList, ResourcePipeline.Patch);
 
             // Assert

@@ -36,11 +36,7 @@ namespace NoEntityFrameworkExample.Services
         public async Task<WorkItem> GetAsync(int id, CancellationToken cancellationToken)
         {
             const string commandText = @"select * from ""WorkItems"" where ""Id""=@id";
-
-            var commandDefinition = new CommandDefinition(commandText, new
-            {
-                id
-            }, cancellationToken: cancellationToken);
+            var commandDefinition = new CommandDefinition(commandText, new { id }, cancellationToken: cancellationToken);
 
             IReadOnlyCollection<WorkItem> workItems = await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(commandDefinition));
             return workItems.Single();
@@ -61,13 +57,9 @@ namespace NoEntityFrameworkExample.Services
             const string commandText = @"insert into ""WorkItems"" (""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId"") values " +
                 @"(@title, @isBlocked, @durationInHours, @projectId) returning ""Id"", ""Title"", ""IsBlocked"", ""DurationInHours"", ""ProjectId""";
 
-            var commandDefinition = new CommandDefinition(commandText, new
-            {
-                title = resource.Title,
-                isBlocked = resource.IsBlocked,
-                durationInHours = resource.DurationInHours,
-                projectId = resource.ProjectId
-            }, cancellationToken: cancellationToken);
+            var commandDefinition = new CommandDefinition(commandText,
+                new { title = resource.Title, isBlocked = resource.IsBlocked, durationInHours = resource.DurationInHours, projectId = resource.ProjectId },
+                cancellationToken: cancellationToken);
 
             IReadOnlyCollection<WorkItem> workItems = await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(commandDefinition));
             return workItems.Single();
@@ -93,10 +85,8 @@ namespace NoEntityFrameworkExample.Services
         {
             const string commandText = @"delete from ""WorkItems"" where ""Id""=@id";
 
-            await QueryAsync(async connection => await connection.QueryAsync<WorkItem>(new CommandDefinition(commandText, new
-            {
-                id
-            }, cancellationToken: cancellationToken)));
+            await QueryAsync(async connection =>
+                await connection.QueryAsync<WorkItem>(new CommandDefinition(commandText, new { id }, cancellationToken: cancellationToken)));
         }
 
         public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,

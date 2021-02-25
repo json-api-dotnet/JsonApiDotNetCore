@@ -45,10 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool allowOverride, bool expectIsEnabled)
         {
             // Arrange
-            var options = new JsonApiOptions
-            {
-                AllowQueryStringOverrideForSerializerDefaultValueHandling = allowOverride
-            };
+            var options = new JsonApiOptions { AllowQueryStringOverrideForSerializerDefaultValueHandling = allowOverride };
 
             var reader = new DefaultsQueryStringParameterReader(options);
 
@@ -113,10 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             // Arrange
             var options = new JsonApiOptions
             {
-                SerializerSettings =
-                {
-                    DefaultValueHandling = optionsDefaultValue
-                },
+                SerializerSettings = { DefaultValueHandling = optionsDefaultValue },
                 AllowQueryStringOverrideForSerializerDefaultValueHandling = optionsAllowOverride
             };
 

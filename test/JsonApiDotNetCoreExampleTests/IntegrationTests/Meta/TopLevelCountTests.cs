@@ -82,17 +82,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             // Arrange
             string newDescription = _fakers.SupportTicket.Generate().Description;
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "supportTickets",
-                    attributes = new
-                    {
-                        description = newDescription
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "supportTickets", attributes = new { description = newDescription } } };
 
             const string route = "/supportTickets";
 
@@ -119,18 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "supportTickets",
-                    id = existingTicket.StringId,
-                    attributes = new
-                    {
-                        description = newDescription
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "supportTickets", id = existingTicket.StringId, attributes = new { description = newDescription } } };
 
             string route = "/supportTickets/" + existingTicket.StringId;
 

@@ -87,10 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
             foreach (string carStringId in carStringIds)
             {
-                var tempCar = new Car
-                {
-                    StringId = carStringId
-                };
+                var tempCar = new Car { StringId = carStringId };
 
                 QueryExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate);
                 outerTerms.Add(keyComparison);
@@ -112,11 +109,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals, licensePlateChain,
                 new LiteralConstantExpression(licensePlateValue));
 
-            return new LogicalExpression(LogicalOperator.And, new[]
-            {
-                regionIdComparison,
-                licensePlateComparison
-            });
+            return new LogicalExpression(LogicalOperator.And, new[] { regionIdComparison, licensePlateComparison });
         }
 
         public override QueryExpression VisitSort(SortExpression expression, object argument)

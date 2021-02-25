@@ -46,17 +46,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "ownedBy"
-                        },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingTrack.OwnedBy.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "ownedBy" },
+                        data = new { type = "recordCompanies", id = existingTrack.OwnedBy.StringId }
                     }
                 }
             };
@@ -98,38 +89,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                id = existingTrack.Performers[0].StringId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "performers", id = existingTrack.Performers[0].StringId } }
                     },
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                id = existingTrack.Performers[2].StringId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "performers", id = existingTrack.Performers[2].StringId } }
                     }
                 }
             };
@@ -164,18 +131,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
             {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
+                new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() },
+                new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() },
+                new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -192,38 +150,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[0].MusicTrack.StringId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingPlaylist.PlaylistMusicTracks[0].MusicTrack.StringId } }
                     },
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[2].MusicTrack.StringId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingPlaylist.PlaylistMusicTracks[2].MusicTrack.StringId } }
                     }
                 }
             };
@@ -263,17 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_remove_for_href_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        href = "/api/v1/musicTracks/1/relationships/performers"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", href = "/api/v1/musicTracks/1/relationships/performers" } } };
 
             const string route = "/operations";
 
@@ -296,21 +220,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_remove_for_missing_type_in_ref()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            id = 99999999,
-                            relationship = "tracks"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { id = 99999999, relationship = "tracks" } } } };
 
             const string route = "/operations";
 
@@ -335,19 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "doesNotExist",
-                            id = 99999999,
-                            relationship = "tracks"
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "remove", @ref = new { type = "doesNotExist", id = 99999999, relationship = "tracks" } } }
             };
 
             const string route = "/operations";
@@ -371,21 +269,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_remove_for_missing_ID_in_ref()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            relationship = "performers"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "musicTracks", relationship = "performers" } } } };
 
             const string route = "/operations";
 
@@ -423,20 +307,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "recordCompanies",
-                            id = 9999,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingTrack.StringId
-                            }
-                        }
+                        @ref = new { type = "recordCompanies", id = 9999, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingTrack.StringId } }
                     }
                 }
             };
@@ -469,13 +341,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            lid = "local-1",
-                            relationship = "performers"
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), lid = "local-1", relationship = "performers" }
                     }
                 }
             };
@@ -503,19 +369,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 99999999,
-                            relationship = "doesNotExist"
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "remove", @ref = new { type = "performers", id = 99999999, relationship = "doesNotExist" } } }
             };
 
             const string route = "/operations";
@@ -554,12 +408,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
                         data = (object)null
                     }
                 }
@@ -593,19 +442,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = 99999999,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                id = Guid.NewGuid().ToString()
-                            }
-                        }
+                        @ref = new { type = "playlists", id = 99999999, relationship = "tracks" },
+                        data = new[] { new { id = Guid.NewGuid().ToString() } }
                     }
                 }
             };
@@ -638,20 +476,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "doesNotExist",
-                                id = 99999999
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "performers" },
+                        data = new[] { new { type = "doesNotExist", id = 99999999 } }
                     }
                 }
             };
@@ -684,19 +510,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers"
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "performers" },
+                        data = new[] { new { type = "performers" } }
                     }
                 }
             };
@@ -729,21 +544,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                id = 99999999,
-                                lid = "local-1"
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "performers" },
+                        data = new[] { new { type = "performers", id = 99999999, lid = "local-1" } }
                     }
                 }
             };
@@ -785,24 +587,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId,
-                            relationship = "tracks"
-                        },
+                        @ref = new { type = "recordCompanies", id = existingCompany.StringId, relationship = "tracks" },
                         data = new[]
                         {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = trackIds[0].ToString()
-                            },
-                            new
-                            {
-                                type = "musicTracks",
-                                id = trackIds[1].ToString()
-                            }
+                            new { type = "musicTracks", id = trackIds[0].ToString() }, new { type = "musicTracks", id = trackIds[1].ToString() }
                         }
                     }
                 }
@@ -850,20 +638,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "playlists",
-                                id = 88888888
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "playlists", id = 88888888 } }
                     }
                 }
             };
@@ -906,12 +682,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
                         data = new object[0]
                     }
                 }

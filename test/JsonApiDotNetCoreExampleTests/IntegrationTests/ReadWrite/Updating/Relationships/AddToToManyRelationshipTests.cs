@@ -35,14 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = existingUserAccount.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = existingUserAccount.StringId } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -79,16 +72,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 data = new[]
                 {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingWorkItem.Subscribers.ElementAt(1).StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
+                    new { type = "userAccounts", id = existingWorkItem.Subscribers.ElementAt(1).StringId },
+                    new { type = "userAccounts", id = existingSubscriber.StringId }
                 }
             };
 
@@ -118,22 +103,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         {
             // Arrange
             List<WorkItem> existingWorkItems = _fakers.WorkItem.Generate(2);
-
-            existingWorkItems[0].WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
-
-            existingWorkItems[1].WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItems[0].WorkItemTags = new[] { new WorkItemTag { Tag = _fakers.WorkTag.Generate() } };
+            existingWorkItems[1].WorkItemTags = new[] { new WorkItemTag { Tag = _fakers.WorkTag.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -145,16 +116,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 data = new[]
                 {
-                    new
-                    {
-                        type = "workTags",
-                        id = existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.StringId
-                    },
-                    new
-                    {
-                        type = "workTags",
-                        id = existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.StringId
-                    }
+                    new { type = "workTags", id = existingWorkItems[0].WorkItemTags.ElementAt(0).Tag.StringId },
+                    new { type = "workTags", id = existingWorkItems[1].WorkItemTags.ElementAt(0).Tag.StringId }
                 }
             };
 
@@ -239,16 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        id = 99999999
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { id = 99999999 } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -278,17 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "doesNotExist",
-                        id = 99999999
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "doesNotExist", id = 99999999 } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -318,16 +262,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts" } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -357,22 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = 88888888
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = 99999999
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = 88888888 }, new { type = "userAccounts", id = 99999999 } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -407,22 +327,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workTags",
-                        id = 88888888
-                    },
-                    new
-                    {
-                        type = "workTags",
-                        id = 99999999
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "workTags", id = 88888888 }, new { type = "workTags", id = 99999999 } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
@@ -458,17 +363,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = existingSubscriber.StringId } } };
 
             string route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -493,17 +388,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = existingSubscriber.StringId } } };
 
             const string route = "/workItems/99999999/relationships/subscribers";
 
@@ -533,17 +418,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = 99999999
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = 99999999 } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
 
@@ -574,17 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = existingSubscriber.StringId } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
@@ -621,16 +486,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             {
                 data = new[]
                 {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    },
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingSubscriber.StringId
-                    }
+                    new { type = "userAccounts", id = existingSubscriber.StringId }, new { type = "userAccounts", id = existingSubscriber.StringId }
                 }
             };
 
@@ -665,10 +521,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -700,10 +553,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
@@ -733,10 +583,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
@@ -767,17 +614,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workItems",
-                        id = existingWorkItem.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "workItems", id = existingWorkItem.StringId } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/children";
 
@@ -804,14 +641,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
-            {
-                new WorkItemToWorkItem
-                {
-                    ToItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem> { new WorkItemToWorkItem { ToItem = _fakers.WorkItem.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -819,17 +649,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "workItems",
-                        id = existingWorkItem.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "workItems", id = existingWorkItem.StringId } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/relatedTo";
 

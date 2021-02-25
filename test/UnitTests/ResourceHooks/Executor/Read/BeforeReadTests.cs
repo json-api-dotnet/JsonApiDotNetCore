@@ -12,10 +12,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 {
     public sealed class BeforeReadTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.BeforeRead
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeRead };
 
         [Fact]
         public void BeforeRead()

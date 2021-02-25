@@ -21,8 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
-                    Title = "Invalid ID value.",
-                    Detail = $"The value '{value}' is not a valid hexadecimal value."
+                    Title = "Invalid ID value.", Detail = $"The value '{value}' is not a valid hexadecimal value."
                 });
             }
 

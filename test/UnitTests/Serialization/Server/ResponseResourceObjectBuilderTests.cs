@@ -16,21 +16,14 @@ namespace UnitTests.Serialization.Server
 
         public ResponseResourceObjectBuilderTests()
         {
-            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(e => new
-            {
-                e.Dependents
-            }).ToList();
+            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
         }
 
         [Fact]
         public void Build_RelationshipNotIncludedAndLinksEnabled_RelationshipEntryWithLinks()
         {
             // Arrange
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10
-            };
-
+            var resource = new OneToManyPrincipal { Id = 10 };
             ResponseResourceObjectBuilder builder = GetResponseResourceObjectBuilder(relationshipLinks: DummyRelationshipLinks);
 
             // Act
@@ -47,11 +40,7 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipNotIncludedAndLinksDisabled_NoRelationshipObject()
         {
             // Arrange
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10
-            };
-
+            var resource = new OneToManyPrincipal { Id = 10 };
             ResponseResourceObjectBuilder builder = GetResponseResourceObjectBuilder();
 
             // Act
@@ -65,18 +54,7 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksDisabled_RelationshipEntryWithData()
         {
             // Arrange
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10,
-                Dependents = new HashSet<OneToManyDependent>
-                {
-                    new OneToManyDependent
-                    {
-                        Id = 20
-                    }
-                }
-            };
-
+            var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
             ResponseResourceObjectBuilder builder = GetResponseResourceObjectBuilder(_relationshipsForBuild.AsEnumerable());
 
             // Act
@@ -93,17 +71,7 @@ namespace UnitTests.Serialization.Server
         public void Build_RelationshipIncludedAndLinksEnabled_RelationshipEntryWithDataAndLinks()
         {
             // Arrange
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10,
-                Dependents = new HashSet<OneToManyDependent>
-                {
-                    new OneToManyDependent
-                    {
-                        Id = 20
-                    }
-                }
-            };
+            var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
 
             ResponseResourceObjectBuilder builder =
                 GetResponseResourceObjectBuilder(_relationshipsForBuild.AsEnumerable(), relationshipLinks: DummyRelationshipLinks);

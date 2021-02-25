@@ -33,10 +33,7 @@ namespace UnitTests.Middleware
             bool expectIsReadOnly)
         {
             // Arrange
-            var options = new JsonApiOptions
-            {
-                UseRelativeLinks = true
-            };
+            var options = new JsonApiOptions { UseRelativeLinks = true };
 
             var graphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             graphBuilder.Add<Article>();
@@ -71,14 +68,7 @@ namespace UnitTests.Middleware
         {
             httpContext.Request.Method = requestMethod;
 
-            var feature = new RouteValuesFeature
-            {
-                RouteValues =
-                {
-                    ["controller"] = "theController",
-                    ["action"] = "theAction"
-                }
-            };
+            var feature = new RouteValuesFeature { RouteValues = { ["controller"] = "theController", ["action"] = "theAction" } };
 
             string[] pathSegments = requestPath.Split("/", StringSplitOptions.RemoveEmptyEntries);
 

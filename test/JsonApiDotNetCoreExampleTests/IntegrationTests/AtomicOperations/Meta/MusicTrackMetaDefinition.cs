@@ -16,10 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
         public override IDictionary<string, object> GetMeta(MusicTrack resource)
         {
-            return new Dictionary<string, object>
-            {
-                ["Copyright"] = $"(C) {resource.ReleasedAt.Year}. All rights reserved."
-            };
+            return new Dictionary<string, object> { ["Copyright"] = $"(C) {resource.ReleasedAt.Year}. All rights reserved." };
         }
     }
 }

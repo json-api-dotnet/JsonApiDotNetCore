@@ -19,10 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             options.IncludeTotalResourceCount = true;
             options.ValidateModelState = true;
 
-            options.SerializerSettings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new KebabCaseNamingStrategy()
-            };
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver { NamingStrategy = new KebabCaseNamingStrategy() };
         }
     }
 }

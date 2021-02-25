@@ -31,17 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Arrange
             Order order = _fakers.Orders.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "orders",
-                    attributes = new
-                    {
-                        order = order.Amount
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "orders", attributes = new { order = order.Amount } } };
 
             const string route = "/orders";
 
@@ -65,17 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Arrange
             Shipment shipment = _fakers.Shipments.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "shipments",
-                    attributes = new
-                    {
-                        trackAndTraceCode = shipment.TrackAndTraceCode
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "shipments", attributes = new { trackAndTraceCode = shipment.TrackAndTraceCode } } };
 
             const string route = "/shipments";
 
@@ -177,21 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    id = existingOrder.Id,
-                    type = "orders",
-                    relationships = new
-                    {
-                        customer = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { id = existingOrder.Id, type = "orders", relationships = new { customer = new { data = (object)null } } } };
 
             string route = $"/orders/{existingOrder.Id}";
 
@@ -225,10 +191,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/orders/{existingOrder.Id}/relationships/customer";
 
@@ -264,18 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             var requestBody = new
             {
-                data = new
-                {
-                    id = existingOrder.Customer.Id,
-                    type = "customers",
-                    relationships = new
-                    {
-                        orders = new
-                        {
-                            data = new object[0]
-                        }
-                    }
-                }
+                data = new { id = existingOrder.Customer.Id, type = "customers", relationships = new { orders = new { data = new object[0] } } }
             };
 
             string route = $"/customers/{existingOrder.Customer.Id}";
@@ -310,10 +262,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
 
@@ -347,17 +296,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[]
-                {
-                    new
-                    {
-                        type = "orders",
-                        id = existingOrder.Id
-                    }
-                }
-            };
+            var requestBody = new { data = new object[] { new { type = "orders", id = existingOrder.Id } } };
 
             string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
 
@@ -400,17 +339,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 {
                     id = orderWithoutShipment.Id,
                     type = "orders",
-                    relationships = new
-                    {
-                        shipment = new
-                        {
-                            data = new
-                            {
-                                id = orderWithShipment.Shipment.Id,
-                                type = "shipments"
-                            }
-                        }
-                    }
+                    relationships = new { shipment = new { data = new { id = orderWithShipment.Shipment.Id, type = "shipments" } } }
                 }
             };
 
@@ -447,14 +376,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    id = orderWithShipment.Shipment.Id,
-                    type = "shipments"
-                }
-            };
+            var requestBody = new { data = new { id = orderWithShipment.Shipment.Id, type = "shipments" } };
 
             string route = $"/orders/{orderWithoutShipment.Id}/relationships/shipment";
 

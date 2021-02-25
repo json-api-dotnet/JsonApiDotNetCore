@@ -36,14 +36,7 @@ namespace UnitTests.Models
             var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
-            var body = new
-            {
-                data = new
-                {
-                    id = "1",
-                    type = "resourceWithoutConstructors"
-                }
-            };
+            var body = new { data = new { id = "1", type = "resourceWithoutConstructors" } };
 
             string content = JsonConvert.SerializeObject(body);
 
@@ -66,14 +59,7 @@ namespace UnitTests.Models
             var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
-            var body = new
-            {
-                data = new
-                {
-                    id = "1",
-                    type = "resourceWithThrowingConstructors"
-                }
-            };
+            var body = new { data = new { id = "1", type = "resourceWithThrowingConstructors" } };
 
             string content = JsonConvert.SerializeObject(body);
 
@@ -98,14 +84,7 @@ namespace UnitTests.Models
             var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
-            var body = new
-            {
-                data = new
-                {
-                    id = "1",
-                    type = "resourceWithStringConstructors"
-                }
-            };
+            var body = new { data = new { id = "1", type = "resourceWithStringConstructors" } };
 
             string content = JsonConvert.SerializeObject(body);
 

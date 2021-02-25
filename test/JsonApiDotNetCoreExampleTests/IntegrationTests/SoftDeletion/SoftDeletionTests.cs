@@ -32,18 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Can_get_primary_resources()
         {
             // Arrange
-            var departments = new List<Department>
-            {
-                new Department
-                {
-                    Name = "Sales",
-                    IsSoftDeleted = true
-                },
-                new Department
-                {
-                    Name = "Marketing"
-                }
-            };
+            var departments = new List<Department> { new Department { Name = "Sales", IsSoftDeleted = true }, new Department { Name = "Marketing" } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -70,19 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var departments = new List<Department>
             {
-                new Department
-                {
-                    Name = "Support"
-                },
-                new Department
-                {
-                    Name = "Sales",
-                    IsSoftDeleted = true
-                },
-                new Department
-                {
-                    Name = "Marketing"
-                }
+                new Department { Name = "Support" }, new Department { Name = "Sales", IsSoftDeleted = true }, new Department { Name = "Marketing" }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -108,11 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Cannot_get_deleted_primary_resource_by_ID()
         {
             // Arrange
-            var department = new Department
-            {
-                Name = "Sales",
-                IsSoftDeleted = true
-            };
+            var department = new Department { Name = "Sales", IsSoftDeleted = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -143,18 +116,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var company = new Company
             {
-                Departments = new List<Department>
-                {
-                    new Department
-                    {
-                        Name = "Sales",
-                        IsSoftDeleted = true
-                    },
-                    new Department
-                    {
-                        Name = "Marketing"
-                    }
-                }
+                Departments = new List<Department> { new Department { Name = "Sales", IsSoftDeleted = true }, new Department { Name = "Marketing" } }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -179,17 +141,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Cannot_get_secondary_resources_for_deleted_parent()
         {
             // Arrange
-            var company = new Company
-            {
-                IsSoftDeleted = true,
-                Departments = new List<Department>
-                {
-                    new Department
-                    {
-                        Name = "Marketing"
-                    }
-                }
-            };
+            var company = new Company { IsSoftDeleted = true, Departments = new List<Department> { new Department { Name = "Marketing" } } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -222,30 +174,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 new Company
                 {
-                    Name = "Acme Corporation",
-                    IsSoftDeleted = true,
-                    Departments = new List<Department>
-                    {
-                        new Department
-                        {
-                            Name = "Recruitment"
-                        }
-                    }
+                    Name = "Acme Corporation", IsSoftDeleted = true, Departments = new List<Department> { new Department { Name = "Recruitment" } }
                 },
                 new Company
                 {
                     Name = "AdventureWorks",
                     Departments = new List<Department>
                     {
-                        new Department
-                        {
-                            Name = "Reception"
-                        },
-                        new Department
-                        {
-                            Name = "Sales",
-                            IsSoftDeleted = true
-                        }
+                        new Department { Name = "Reception" }, new Department { Name = "Sales", IsSoftDeleted = true }
                     }
                 }
             };
@@ -280,18 +216,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var company = new Company
             {
-                Departments = new List<Department>
-                {
-                    new Department
-                    {
-                        Name = "Sales",
-                        IsSoftDeleted = true
-                    },
-                    new Department
-                    {
-                        Name = "Marketing"
-                    }
-                }
+                Departments = new List<Department> { new Department { Name = "Sales", IsSoftDeleted = true }, new Department { Name = "Marketing" } }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -316,17 +241,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Cannot_get_relationship_for_deleted_parent()
         {
             // Arrange
-            var company = new Company
-            {
-                IsSoftDeleted = true,
-                Departments = new List<Department>
-                {
-                    new Department
-                    {
-                        Name = "Marketing"
-                    }
-                }
-            };
+            var company = new Company { IsSoftDeleted = true, Departments = new List<Department> { new Department { Name = "Marketing" } } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -355,10 +270,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Cannot_update_deleted_resource()
         {
             // Arrange
-            var company = new Company
-            {
-                IsSoftDeleted = true
-            };
+            var company = new Company { IsSoftDeleted = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -366,18 +278,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "companies",
-                    id = company.StringId,
-                    attributes = new
-                    {
-                        name = "Umbrella Corporation"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "companies", id = company.StringId, attributes = new { name = "Umbrella Corporation" } } };
 
             string route = "/companies/" + company.StringId;
 
@@ -400,17 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         public async Task Cannot_update_relationship_for_deleted_parent()
         {
             // Arrange
-            var company = new Company
-            {
-                IsSoftDeleted = true,
-                Departments = new List<Department>
-                {
-                    new Department
-                    {
-                        Name = "Marketing"
-                    }
-                }
-            };
+            var company = new Company { IsSoftDeleted = true, Departments = new List<Department> { new Department { Name = "Marketing" } } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -420,10 +311,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             string route = $"/companies/{company.StringId}/relationships/departments";
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);

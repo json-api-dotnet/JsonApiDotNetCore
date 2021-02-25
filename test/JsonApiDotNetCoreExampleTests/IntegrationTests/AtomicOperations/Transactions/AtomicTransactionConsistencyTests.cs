@@ -41,23 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
         public async Task Cannot_use_non_transactional_repository()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "performers", attributes = new { } } } } };
 
             const string route = "/operations";
 
@@ -80,23 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
         public async Task Cannot_use_transactional_repository_without_active_transaction()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "musicTracks", attributes = new { } } } } };
 
             const string route = "/operations";
 
@@ -119,23 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
         public async Task Cannot_use_distributed_transaction()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "lyrics", attributes = new { } } } } };
 
             const string route = "/operations";
 

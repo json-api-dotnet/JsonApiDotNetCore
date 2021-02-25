@@ -53,10 +53,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Self))
             {
-                topLevelLinks = new TopLevelLinks
-                {
-                    Self = GetSelfTopLevelLink(resourceContext, null)
-                };
+                topLevelLinks = new TopLevelLinks { Self = GetSelfTopLevelLink(resourceContext, null) };
             }
 
             if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Related) && _request.Kind == EndpointKind.Relationship)
@@ -241,10 +238,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
             {
-                return new ResourceLinks
-                {
-                    Self = GetSelfResourceLink(resourceName, id)
-                };
+                return new ResourceLinks { Self = GetSelfResourceLink(resourceName, id) };
             }
 
             return null;
@@ -262,10 +256,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Related))
             {
-                links = new RelationshipLinks
-                {
-                    Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation)
-                };
+                links = new RelationshipLinks { Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation) };
             }
 
             if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Self))

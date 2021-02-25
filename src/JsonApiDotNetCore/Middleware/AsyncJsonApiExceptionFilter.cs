@@ -28,10 +28,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 ErrorDocument errorDocument = _exceptionHandler.HandleException(context.Exception);
 
-                context.Result = new ObjectResult(errorDocument)
-                {
-                    StatusCode = (int)errorDocument.GetErrorStatusCode()
-                };
+                context.Result = new ObjectResult(errorDocument) { StatusCode = (int)errorDocument.GetErrorStatusCode() };
             }
 
             return Task.CompletedTask;

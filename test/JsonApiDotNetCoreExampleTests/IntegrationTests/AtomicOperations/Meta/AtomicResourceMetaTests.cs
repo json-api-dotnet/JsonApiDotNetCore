@@ -42,32 +42,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle1,
-                                releasedAt = 1.January(2018)
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle2,
-                                releasedAt = 23.August(1994)
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", attributes = new { title = newTitle1, releasedAt = 1.January(2018) } } },
+                    new { op = "add", data = new { type = "musicTracks", attributes = new { title = newTitle2, releasedAt = 23.August(1994) } } }
                 }
             };
 
@@ -105,18 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = existingLanguage.StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "textLanguages", id = existingLanguage.StringId, attributes = new { } } }
                 }
             };
 

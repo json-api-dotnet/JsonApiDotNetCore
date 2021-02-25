@@ -48,10 +48,7 @@ namespace JsonApiDotNetCore.Serialization
                 return new Document();
             }
 
-            return new Document
-            {
-                Data = ResourceObjectBuilder.Build(resource, attributes, relationships)
-            };
+            return new Document { Data = ResourceObjectBuilder.Build(resource, attributes, relationships) };
         }
 
         /// <summary>
@@ -82,10 +79,7 @@ namespace JsonApiDotNetCore.Serialization
                 data.Add(ResourceObjectBuilder.Build(resource, attributes, relationships));
             }
 
-            return new Document
-            {
-                Data = data
-            };
+            return new Document { Data = data };
         }
 
         protected string SerializeObject(object value, JsonSerializerSettings defaultSettings, Action<JsonSerializer> changeSerializer = null)

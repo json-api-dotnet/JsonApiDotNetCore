@@ -139,10 +139,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
                 if (!parentLayer.Projection.ContainsKey(includeElement.Relationship))
                 {
-                    var relationshipChain = new List<RelationshipAttribute>(parentRelationshipChain)
-                    {
-                        includeElement.Relationship
-                    };
+                    var relationshipChain = new List<RelationshipAttribute>(parentRelationshipChain) { includeElement.Relationship };
 
                     // @formatter:wrap_chained_method_calls chop_always
                     // @formatter:keep_existing_linebreaks true
@@ -162,7 +159,8 @@ namespace JsonApiDotNetCore.Queries.Internal
                     {
                         Filter = GetFilter(expressionsInCurrentScope, resourceContext),
                         Sort = GetSort(expressionsInCurrentScope, resourceContext),
-                        Pagination = ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext),
+                        Pagination =
+                            ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext),
                         Projection = GetProjectionForSparseAttributeSet(resourceContext)
                     };
 
@@ -212,10 +210,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
-                queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-                {
-                    [idAttribute] = null
-                };
+                queryLayer.Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> { [idAttribute] = null };
             }
             else if (fieldSelection == TopFieldSelection.WithAllAttributes && queryLayer.Projection != null)
             {
@@ -370,10 +365,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             {
                 Include = IncludeExpression.Empty,
                 Filter = filter,
-                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-                {
-                    [rightIdAttribute] = null
-                }
+                Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> { [rightIdAttribute] = null }
             };
         }
 
@@ -401,11 +393,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 {
                     [hasManyRelationship] = new QueryLayer(rightResourceContext)
                     {
-                        Filter = rightFilter,
-                        Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
-                        {
-                            [rightIdAttribute] = null
-                        }
+                        Filter = rightFilter, Projection = new Dictionary<ResourceFieldAttribute, QueryLayer> { [rightIdAttribute] = null }
                     },
                     [leftIdAttribute] = null
                 }

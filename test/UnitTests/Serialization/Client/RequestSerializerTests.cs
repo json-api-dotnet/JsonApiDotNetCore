@@ -22,12 +22,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanBuild()
         {
             // Arrange
-            var resource = new TestResource
-            {
-                Id = 1,
-                StringField = "value",
-                NullableIntField = 123
-            };
+            var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
 
             // Act
             string serialized = _serializer.Serialize(resource);
@@ -57,13 +52,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var resource = new TestResource
-            {
-                Id = 1,
-                StringField = "value",
-                NullableIntField = 123
-            };
-
+            var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -88,13 +77,7 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_NoIdWithTargetedSetAttributes_CanBuild()
         {
             // Arrange
-            var resourceNoId = new TestResource
-            {
-                Id = 0,
-                StringField = "value",
-                NullableIntField = 123
-            };
-
+            var resourceNoId = new TestResource { Id = 0, StringField = "value", NullableIntField = 123 };
             _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => tr.StringField);
 
             // Act
@@ -118,16 +101,8 @@ namespace UnitTests.Serialization.Client
         public void SerializeSingle_ResourceWithoutTargetedAttributes_CanBuild()
         {
             // Arrange
-            var resource = new TestResource
-            {
-                Id = 1,
-                StringField = "value",
-                NullableIntField = 123
-            };
-
-            _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => new
-            {
-            });
+            var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
+            _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => new { });
 
             // Act
             string serialized = _serializer.Serialize(resource);
@@ -150,26 +125,13 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var resourceWithRelationships = new MultipleRelationshipsPrincipalPart
             {
-                PopulatedToOne = new OneToOneDependent
-                {
-                    Id = 10
-                },
-                PopulatedToManies = new HashSet<OneToManyDependent>
-                {
-                    new OneToManyDependent
-                    {
-                        Id = 20
-                    }
-                }
+                PopulatedToOne = new OneToOneDependent { Id = 10 },
+                PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
 
-            _serializer.RelationshipsToSerialize = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr => new
-            {
-                tr.EmptyToOne,
-                tr.EmptyToManies,
-                tr.PopulatedToOne,
-                tr.PopulatedToManies
-            });
+            _serializer.RelationshipsToSerialize =
+                ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>(tr =>
+                    new { tr.EmptyToOne, tr.EmptyToManies, tr.PopulatedToOne, tr.PopulatedToManies });
 
             // Act
             string serialized = _serializer.Serialize(resourceWithRelationships);
@@ -216,18 +178,8 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var resources = new List<TestResource>
             {
-                new TestResource
-                {
-                    Id = 1,
-                    StringField = "value1",
-                    NullableIntField = 123
-                },
-                new TestResource
-                {
-                    Id = 2,
-                    StringField = "value2",
-                    NullableIntField = 123
-                }
+                new TestResource { Id = 1, StringField = "value1", NullableIntField = 123 },
+                new TestResource { Id = 2, StringField = "value2", NullableIntField = 123 }
             };
 
             _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => tr.StringField);

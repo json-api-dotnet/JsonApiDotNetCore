@@ -29,21 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                lengthInSeconds = -1
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "add", data = new { type = "musicTracks", attributes = new { lengthInSeconds = -1 } } } }
             };
 
             const string route = "/operations";
@@ -92,24 +78,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                         data = new
                         {
                             type = "playlists",
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            },
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTrack.StringId
-                                        }
-                                    }
-                                }
-                            }
+                            attributes = new { name = newPlaylistName },
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", id = existingTrack.StringId } } } }
                         }
                     }
                 }
@@ -167,13 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                                title = (string)null,
-                                lengthInSeconds = -1
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, attributes = new { title = (string)null, lengthInSeconds = -1 }
                         }
                     }
                 }
@@ -219,19 +183,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                                genre = newTrackGenre
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "musicTracks", id = existingTrack.StringId, attributes = new { genre = newTrackGenre } } }
                 }
             };
 
@@ -278,20 +230,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                         {
                             type = "playlists",
                             id = existingPlaylist.StringId,
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTrack.StringId
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", id = existingTrack.StringId } } } }
                         }
                     }
                 }
@@ -345,17 +284,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "ownedBy"
-                        },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "ownedBy" },
+                        data = new { type = "recordCompanies", id = existingCompany.StringId }
                     }
                 }
             };
@@ -399,20 +329,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingTrack.StringId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingTrack.StringId } }
                     }
                 }
             };
@@ -453,31 +371,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelS
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "playlists",
-                            id = 99999999,
-                            attributes = new
-                            {
-                                name = (string)null
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                lengthInSeconds = -1
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "playlists", id = 99999999, attributes = new { name = (string)null } } },
+                    new { op = "add", data = new { type = "musicTracks", attributes = new { lengthInSeconds = -1 } } }
                 }
             };
 

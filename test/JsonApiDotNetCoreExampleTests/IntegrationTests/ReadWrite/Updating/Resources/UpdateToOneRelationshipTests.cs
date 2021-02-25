@@ -37,18 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { assignee = new { data = (object)null } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -90,17 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItemGroups",
                     id = existingGroup.StringId,
-                    relationships = new
-                    {
-                        color = new
-                        {
-                            data = new
-                            {
-                                type = "rgbColors",
-                                id = existingColor.StringId
-                            }
-                        }
-                    }
+                    relationships = new { color = new { data = new { type = "rgbColors", id = existingColor.StringId } } }
                 }
             };
 
@@ -146,17 +125,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "rgbColors",
                     id = existingGroups[0].Color.StringId,
-                    relationships = new
-                    {
-                        group = new
-                        {
-                            data = new
-                            {
-                                type = "workItemGroups",
-                                id = existingGroups[1].StringId
-                            }
-                        }
-                    }
+                    relationships = new { group = new { data = new { type = "workItemGroups", id = existingGroups[1].StringId } } }
                 }
             };
 
@@ -208,18 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = existingColor.StringId,
-                    relationships = new
-                    {
-                        group = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
+                data = new { type = "rgbColors", id = existingColor.StringId, relationships = new { group = new { data = (object)null } } }
             };
 
             string route = "/rgbColors/" + existingColor.StringId;
@@ -259,17 +217,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingUserAccounts[0].AssignedItems.ElementAt(1).StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccounts[1].StringId
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "userAccounts", id = existingUserAccounts[1].StringId } } }
                 }
             };
 
@@ -312,17 +260,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccount.StringId
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "userAccounts", id = existingUserAccount.StringId } } }
                 }
             };
 
@@ -377,17 +315,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccount.StringId
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "userAccounts", id = existingUserAccount.StringId } } }
                 }
             };
 
@@ -437,21 +365,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                id = 99999999
-                            }
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { assignee = new { data = new { id = 99999999 } } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -488,17 +402,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "doesNotExist",
-                                id = 99999999
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "doesNotExist", id = 99999999 } } }
                 }
             };
 
@@ -534,18 +438,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             {
                 data = new
                 {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts"
-                            }
-                        }
-                    }
+                    type = "workItems", id = existingWorkItem.StringId, relationships = new { assignee = new { data = new { type = "userAccounts" } } }
                 }
             };
 
@@ -583,17 +476,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = 99999999
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "userAccounts", id = 99999999 } } }
                 }
             };
 
@@ -631,17 +514,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "rgbColors",
-                                id = "0A0B0C"
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new { type = "rgbColors", id = "0A0B0C" } } }
                 }
             };
 
@@ -680,20 +553,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { assignee = new { data = new[] { new { type = "userAccounts", id = existingUserAccount.StringId } } } }
                 }
             };
 
@@ -730,18 +590,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        parent = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { parent = new { data = (object)null } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -780,17 +629,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        parent = new
-                        {
-                            data = new
-                            {
-                                type = "workItems",
-                                id = existingWorkItem.StringId
-                            }
-                        }
-                    }
+                    relationships = new { parent = new { data = new { type = "workItems", id = existingWorkItem.StringId } } }
                 }
             };
 

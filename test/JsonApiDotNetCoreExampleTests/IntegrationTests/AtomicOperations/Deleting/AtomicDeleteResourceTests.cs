@@ -37,21 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = existingPerformer.StringId
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "performers", id = existingPerformer.StringId } } } };
 
             const string route = "/operations";
 
@@ -90,21 +76,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             for (int index = 0; index < elementCount; index++)
             {
-                operationElements.Add(new
-                {
-                    op = "remove",
-                    @ref = new
-                    {
-                        type = "musicTracks",
-                        id = existingTracks[index].StringId
-                    }
-                });
+                operationElements.Add(new { op = "remove", @ref = new { type = "musicTracks", id = existingTracks[index].StringId } });
             }
 
-            var requestBody = new
-            {
-                atomic__operations = operationElements
-            };
+            var requestBody = new { atomic__operations = operationElements };
 
             const string route = "/operations";
 
@@ -137,21 +112,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "lyrics", id = existingLyric.StringId } } } };
 
             const string route = "/operations";
 
@@ -188,21 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "musicTracks", id = existingTrack.StringId } } } };
 
             const string route = "/operations";
 
@@ -239,21 +186,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "musicTracks", id = existingTrack.StringId } } } };
 
             const string route = "/operations";
 
@@ -282,11 +215,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Can_delete_existing_resource_with_HasManyThrough_relationship()
         {
             // Arrange
-            var existingPlaylistMusicTrack = new PlaylistMusicTrack
-            {
-                Playlist = _fakers.Playlist.Generate(),
-                MusicTrack = _fakers.MusicTrack.Generate()
-            };
+            var existingPlaylistMusicTrack = new PlaylistMusicTrack { Playlist = _fakers.Playlist.Generate(), MusicTrack = _fakers.MusicTrack.Generate() };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -296,18 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylistMusicTrack.Playlist.StringId
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "remove", @ref = new { type = "playlists", id = existingPlaylistMusicTrack.Playlist.StringId } } }
             };
 
             const string route = "/operations";
@@ -337,17 +255,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_href_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        href = "/api/v1/musicTracks/1"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", href = "/api/v1/musicTracks/1" } } };
 
             const string route = "/operations";
 
@@ -370,16 +278,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_missing_ref_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove" } } };
 
             const string route = "/operations";
 
@@ -402,20 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_missing_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            id = 99999999
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { id = 99999999 } } } };
 
             const string route = "/operations";
 
@@ -438,21 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_unknown_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "doesNotExist",
-                            id = 99999999
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "doesNotExist", id = 99999999 } } } };
 
             const string route = "/operations";
 
@@ -475,20 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_missing_ID()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "musicTracks" } } } };
 
             const string route = "/operations";
 
@@ -511,21 +370,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         public async Task Cannot_delete_resource_for_unknown_ID()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 99999999
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "performers", id = 99999999 } } } };
 
             const string route = "/operations";
 
@@ -550,21 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             // Arrange
             string guid = Guid.NewGuid().ToString();
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = guid
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "remove", @ref = new { type = "playlists", id = guid } } } };
 
             const string route = "/operations";
 
@@ -589,19 +420,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            lid = "local-1"
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "remove", @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), lid = "local-1" } } }
             };
 
             const string route = "/operations";

@@ -46,16 +46,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[0].StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
+                                new { type = "userAccounts", id = existingUserAccounts[0].StringId },
+                                new { type = "userAccounts", id = existingUserAccounts[1].StringId }
                             }
                         }
                     }
@@ -110,16 +102,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[0].StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
+                                new { type = "userAccounts", id = existingUserAccounts[0].StringId },
+                                new { type = "userAccounts", id = existingUserAccounts[1].StringId }
                             }
                         }
                     }
@@ -181,16 +165,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[0].StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
+                                new { type = "userAccounts", id = existingUserAccounts[0].StringId },
+                                new { type = "userAccounts", id = existingUserAccounts[1].StringId }
                             }
                         }
                     }
@@ -247,32 +223,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 data = new
                 {
                     type = "workItems",
-                    attributes = new
-                    {
-                        description = workItemToCreate.Description,
-                        priority = workItemToCreate.Priority
-                    },
+                    attributes = new { description = workItemToCreate.Description, priority = workItemToCreate.Priority },
                     relationships = new
                     {
                         tags = new
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[0].StringId
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[1].StringId
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[2].StringId
-                                }
+                                new { type = "workTags", id = existingTags[0].StringId },
+                                new { type = "workTags", id = existingTags[1].StringId },
+                                new { type = "workTags", id = existingTags[2].StringId }
                             }
                         }
                     }
@@ -331,26 +291,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_for_missing_relationship_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    id = 12345678
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", relationships = new { subscribers = new { data = new[] { new { id = 12345678 } } } } } };
 
             const string route = "/workItems";
 
@@ -376,21 +317,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             {
                 data = new
                 {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "doesNotExist",
-                                    id = 12345678
-                                }
-                            }
-                        }
-                    }
+                    type = "workItems", relationships = new { subscribers = new { data = new[] { new { type = "doesNotExist", id = 12345678 } } } }
                 }
             };
 
@@ -416,23 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts"
-                                }
-                            }
-                        }
-                    }
-                }
+                data = new { type = "workItems", relationships = new { subscribers = new { data = new[] { new { type = "userAccounts" } } } } }
             };
 
             const string route = "/workItems";
@@ -464,19 +375,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                     {
                         assignedItems = new
                         {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workItems",
-                                    id = 12345678
-                                },
-                                new
-                                {
-                                    type = "workItems",
-                                    id = 87654321
-                                }
-                            }
+                            data = new[] { new { type = "workItems", id = 12345678 }, new { type = "workItems", id = 87654321 } }
                         }
                     }
                 }
@@ -509,24 +408,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "rgbColors",
-                                    id = "0A0B0C"
-                                }
-                            }
-                        }
-                    }
-                }
+                data = new { type = "workItems", relationships = new { subscribers = new { data = new[] { new { type = "rgbColors", id = "0A0B0C" } } } } }
             };
 
             const string route = "/workItems";
@@ -568,16 +450,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                }
+                                new { type = "userAccounts", id = existingUserAccount.StringId },
+                                new { type = "userAccounts", id = existingUserAccount.StringId }
                             }
                         }
                     }
@@ -615,20 +489,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_with_null_data_in_HasMany_relationship()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", relationships = new { subscribers = new { data = (object)null } } } };
 
             const string route = "/workItems";
 
@@ -650,20 +511,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_with_null_data_in_HasManyThrough_relationship()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", relationships = new { tags = new { data = (object)null } } } };
 
             const string route = "/workItems";
 
@@ -693,20 +541,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 {
                     type = "workItems",
                     lid = workItemLocalId,
-                    relationships = new
-                    {
-                        children = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workItems",
-                                    lid = workItemLocalId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { children = new { data = new[] { new { type = "workItems", lid = workItemLocalId } } } }
                 }
             };
 

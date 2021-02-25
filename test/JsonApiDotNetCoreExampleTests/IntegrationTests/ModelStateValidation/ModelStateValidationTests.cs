@@ -24,17 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_create_resource_with_omitted_required_attribute()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        isCaseSensitive = true
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { isCaseSensitive = true } } };
 
             const string route = "/systemDirectories";
 
@@ -57,18 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_create_resource_with_null_for_required_attribute_value()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        name = (string)null,
-                        isCaseSensitive = true
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { name = (string)null, isCaseSensitive = true } } };
 
             const string route = "/systemDirectories";
 
@@ -91,18 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_create_resource_with_invalid_attribute_value()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        name = "!@#$%^&*().-",
-                        isCaseSensitive = true
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { name = "!@#$%^&*().-", isCaseSensitive = true } } };
 
             const string route = "/systemDirectories";
 
@@ -125,18 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_create_resource_with_valid_attribute_value()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        name = "Projects",
-                        isCaseSensitive = true
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { name = "Projects", isCaseSensitive = true } } };
 
             const string route = "/systemDirectories";
 
@@ -155,17 +112,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_create_resource_with_multiple_violations()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        sizeInBytes = -1
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { sizeInBytes = -1 } } };
 
             const string route = "/systemDirectories";
 
@@ -200,23 +147,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_create_resource_with_annotated_relationships()
         {
             // Arrange
-            var parentDirectory = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = true
-            };
+            var parentDirectory = new SystemDirectory { Name = "Shared", IsCaseSensitive = true };
 
-            var subdirectory = new SystemDirectory
-            {
-                Name = "Open Source",
-                IsCaseSensitive = true
-            };
+            var subdirectory = new SystemDirectory { Name = "Open Source", IsCaseSensitive = true };
 
-            var file = new SystemFile
-            {
-                FileName = "Main.cs",
-                SizeInBytes = 100
-            };
+            var file = new SystemFile { FileName = "Main.cs", SizeInBytes = 100 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -230,43 +165,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 data = new
                 {
                     type = "systemDirectories",
-                    attributes = new
-                    {
-                        name = "Projects",
-                        isCaseSensitive = true
-                    },
+                    attributes = new { name = "Projects", isCaseSensitive = true },
                     relationships = new
                     {
-                        subdirectories = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemDirectories",
-                                    id = subdirectory.StringId
-                                }
-                            }
-                        },
-                        files = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemFiles",
-                                    id = file.StringId
-                                }
-                            }
-                        },
-                        parent = new
-                        {
-                            data = new
-                            {
-                                type = "systemDirectories",
-                                id = parentDirectory.StringId
-                            }
-                        }
+                        subdirectories = new { data = new[] { new { type = "systemDirectories", id = subdirectory.StringId } } },
+                        files = new { data = new[] { new { type = "systemFiles", id = file.StringId } } },
+                        parent = new { data = new { type = "systemDirectories", id = parentDirectory.StringId } }
                     }
                 }
             };
@@ -288,17 +192,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_add_to_annotated_ToMany_relationship()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
-            var file = new SystemFile
-            {
-                FileName = "Main.cs",
-                SizeInBytes = 100
-            };
+            var file = new SystemFile { FileName = "Main.cs", SizeInBytes = 100 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -306,17 +202,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "systemFiles",
-                        id = file.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "systemFiles", id = file.StringId } } };
 
             string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 
@@ -333,11 +219,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_update_resource_with_omitted_required_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -345,18 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        sizeInBytes = 100
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = directory.StringId, attributes = new { sizeInBytes = 100 } } };
 
             string route = "/systemDirectories/" + directory.StringId;
 
@@ -373,11 +244,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_update_resource_with_null_for_required_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -385,18 +252,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        name = (string)null
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = directory.StringId, attributes = new { name = (string)null } } };
 
             string route = "/systemDirectories/" + directory.StringId;
 
@@ -419,11 +275,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_update_resource_with_invalid_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -431,18 +283,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "!@#$%^&*().-"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = directory.StringId, attributes = new { name = "!@#$%^&*().-" } } };
 
             string route = "/systemDirectories/" + directory.StringId;
 
@@ -465,11 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Cannot_update_resource_with_invalid_ID()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -483,24 +320,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = -1,
-                    attributes = new
-                    {
-                        name = "Repositories"
-                    },
-                    relationships = new
-                    {
-                        subdirectories = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemDirectories",
-                                    id = -1
-                                }
-                            }
-                        }
-                    }
+                    attributes = new { name = "Repositories" },
+                    relationships = new { subdirectories = new { data = new[] { new { type = "systemDirectories", id = -1 } } } }
                 }
             };
 
@@ -531,11 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_update_resource_with_valid_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -543,18 +360,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "Repositories"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = directory.StringId, attributes = new { name = "Repositories" } } };
 
             string route = "/systemDirectories/" + directory.StringId;
 
@@ -575,44 +381,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 Name = "Projects",
                 IsCaseSensitive = false,
-                Subdirectories = new List<SystemDirectory>
-                {
-                    new SystemDirectory
-                    {
-                        Name = "C#",
-                        IsCaseSensitive = false
-                    }
-                },
-                Files = new List<SystemFile>
-                {
-                    new SystemFile
-                    {
-                        FileName = "readme.txt"
-                    }
-                },
-                Parent = new SystemDirectory
-                {
-                    Name = "Data",
-                    IsCaseSensitive = false
-                }
+                Subdirectories = new List<SystemDirectory> { new SystemDirectory { Name = "C#", IsCaseSensitive = false } },
+                Files = new List<SystemFile> { new SystemFile { FileName = "readme.txt" } },
+                Parent = new SystemDirectory { Name = "Data", IsCaseSensitive = false }
             };
 
-            var otherParent = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = false
-            };
+            var otherParent = new SystemDirectory { Name = "Shared", IsCaseSensitive = false };
 
-            var otherSubdirectory = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = false
-            };
+            var otherSubdirectory = new SystemDirectory { Name = "Shared", IsCaseSensitive = false };
 
-            var otherFile = new SystemFile
-            {
-                FileName = "readme.md"
-            };
+            var otherFile = new SystemFile { FileName = "readme.md" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -627,42 +405,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "Project Files"
-                    },
+                    attributes = new { name = "Project Files" },
                     relationships = new
                     {
-                        subdirectories = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemDirectories",
-                                    id = otherSubdirectory.StringId
-                                }
-                            }
-                        },
-                        files = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemFiles",
-                                    id = otherFile.StringId
-                                }
-                            }
-                        },
-                        parent = new
-                        {
-                            data = new
-                            {
-                                type = "systemDirectories",
-                                id = otherParent.StringId
-                            }
-                        }
+                        subdirectories = new { data = new[] { new { type = "systemDirectories", id = otherSubdirectory.StringId } } },
+                        files = new { data = new[] { new { type = "systemFiles", id = otherFile.StringId } } },
+                        parent = new { data = new { type = "systemDirectories", id = otherParent.StringId } }
                     }
                 }
             };
@@ -682,11 +430,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_update_resource_with_multiple_self_references()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = false };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -700,28 +444,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "Project files"
-                    },
+                    attributes = new { name = "Project files" },
                     relationships = new
                     {
-                        self = new
-                        {
-                            data = new
-                            {
-                                type = "systemDirectories",
-                                id = directory.StringId
-                            }
-                        },
-                        alsoSelf = new
-                        {
-                            data = new
-                            {
-                                type = "systemDirectories",
-                                id = directory.StringId
-                            }
-                        }
+                        self = new { data = new { type = "systemDirectories", id = directory.StringId } },
+                        alsoSelf = new { data = new { type = "systemDirectories", id = directory.StringId } }
                     }
                 }
             };
@@ -741,11 +468,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_update_resource_with_collection_of_self_references()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = false };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -759,24 +482,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 {
                     type = "systemDirectories",
                     id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "Project files"
-                    },
-                    relationships = new
-                    {
-                        subdirectories = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "systemDirectories",
-                                    id = directory.StringId
-                                }
-                            }
-                        }
-                    }
+                    attributes = new { name = "Project files" },
+                    relationships = new { subdirectories = new { data = new[] { new { type = "systemDirectories", id = directory.StringId } } } }
                 }
             };
 
@@ -797,20 +504,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Arrange
             var directory = new SystemDirectory
             {
-                Name = "Projects",
-                IsCaseSensitive = true,
-                Parent = new SystemDirectory
-                {
-                    Name = "Data",
-                    IsCaseSensitive = true
-                }
+                Name = "Projects", IsCaseSensitive = true, Parent = new SystemDirectory { Name = "Data", IsCaseSensitive = true }
             };
 
-            var otherParent = new SystemDirectory
-            {
-                Name = "Data files",
-                IsCaseSensitive = true
-            };
+            var otherParent = new SystemDirectory { Name = "Data files", IsCaseSensitive = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -818,14 +515,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = otherParent.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = otherParent.StringId } };
 
             string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
 
@@ -846,23 +536,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             {
                 Name = "Projects",
                 IsCaseSensitive = true,
-                Files = new List<SystemFile>
-                {
-                    new SystemFile
-                    {
-                        FileName = "Main.cs"
-                    },
-                    new SystemFile
-                    {
-                        FileName = "Program.cs"
-                    }
-                }
+                Files = new List<SystemFile> { new SystemFile { FileName = "Main.cs" }, new SystemFile { FileName = "Program.cs" } }
             };
 
-            var otherFile = new SystemFile
-            {
-                FileName = "EntryPoint.cs"
-            };
+            var otherFile = new SystemFile { FileName = "EntryPoint.cs" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -871,17 +548,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "systemFiles",
-                        id = otherFile.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "systemFiles", id = otherFile.StringId } } };
 
             string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
 
@@ -900,16 +567,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
             // Arrange
             var directory = new SystemDirectory
             {
-                Name = "Projects",
-                IsCaseSensitive = true,
-                Files = new List<SystemFile>
-                {
-                    new SystemFile
-                    {
-                        FileName = "Main.cs",
-                        SizeInBytes = 100
-                    }
-                }
+                Name = "Projects", IsCaseSensitive = true, Files = new List<SystemFile> { new SystemFile { FileName = "Main.cs", SizeInBytes = 100 } }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -918,10 +576,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 

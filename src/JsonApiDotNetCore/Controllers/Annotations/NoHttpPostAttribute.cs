@@ -14,9 +14,6 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     [PublicAPI]
     public sealed class NoHttpPostAttribute : HttpRestrictAttribute
     {
-        protected override string[] Methods { get; } =
-        {
-            "POST"
-        };
+        protected override string[] Methods { get; } = { "POST" };
     }
 }

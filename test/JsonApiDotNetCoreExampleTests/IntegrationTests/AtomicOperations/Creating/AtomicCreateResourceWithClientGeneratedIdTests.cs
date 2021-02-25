@@ -43,15 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = newLanguage.StringId,
-                            attributes = new
-                            {
-                                isoCode = newLanguage.IsoCode
-                            }
-                        }
+                        data = new { type = "textLanguages", id = newLanguage.StringId, attributes = new { isoCode = newLanguage.IsoCode } }
                     }
                 }
             };
@@ -98,11 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         {
                             type = "musicTracks",
                             id = newTrack.StringId,
-                            attributes = new
-                            {
-                                title = newTrack.Title,
-                                lengthInSeconds = newTrack.LengthInSeconds
-                            }
+                            attributes = new { title = newTrack.Title, lengthInSeconds = newTrack.LengthInSeconds }
                         }
                     }
                 }
@@ -152,12 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         op = "add",
                         data = new
                         {
-                            type = "textLanguages",
-                            id = languageToCreate.StringId,
-                            attributes = new
-                            {
-                                isoCode = languageToCreate.IsoCode
-                            }
+                            type = "textLanguages", id = languageToCreate.StringId, attributes = new { isoCode = languageToCreate.IsoCode }
                         }
                     }
                 }
@@ -186,24 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // Arrange
             string guid = Guid.NewGuid().ToString();
 
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            id = guid,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "performers", id = guid, attributes = new { } } } } };
 
             const string route = "/operations";
 
@@ -226,22 +192,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_ID_and_local_ID()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = 12345678,
-                            lid = "local-1"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "lyrics", id = 12345678, lid = "local-1" } } } };
 
             const string route = "/operations";
 

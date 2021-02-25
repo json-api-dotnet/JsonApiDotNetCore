@@ -22,18 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_create_resource_with_invalid_attribute_value()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    attributes = new
-                    {
-                        name = "!@#$%^&*().-",
-                        isCaseSensitive = "false"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", attributes = new { name = "!@#$%^&*().-", isCaseSensitive = "false" } } };
 
             const string route = "/systemDirectories";
 
@@ -51,11 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public async Task Can_update_resource_with_invalid_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false
-            };
+            var directory = new SystemDirectory { Name = "Projects", IsCaseSensitive = false };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -63,18 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        name = "!@#$%^&*().-"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "systemDirectories", id = directory.StringId, attributes = new { name = "!@#$%^&*().-" } } };
 
             string route = "/systemDirectories/" + directory.StringId;
 

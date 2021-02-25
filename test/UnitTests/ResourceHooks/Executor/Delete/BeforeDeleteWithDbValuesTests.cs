@@ -17,9 +17,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
     {
         private readonly ResourceHook[] _targetHooks =
         {
-            ResourceHook.BeforeDelete,
-            ResourceHook.BeforeImplicitUpdateRelationship,
-            ResourceHook.BeforeUpdateRelationship
+            ResourceHook.BeforeDelete, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship
         };
 
         private readonly DbContextOptions<AppDbContext> _options;
@@ -33,12 +31,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             Passport passport = PassportFaker.Generate();
 
             _person.Passport = passport;
-
-            _person.TodoItems = new HashSet<TodoItem>
-            {
-                todo1
-            };
-
+            _person.TodoItems = new HashSet<TodoItem> { todo1 };
             _person.StakeHolderTodoItem = todo2;
 
             _options = InitInMemoryDb(context =>

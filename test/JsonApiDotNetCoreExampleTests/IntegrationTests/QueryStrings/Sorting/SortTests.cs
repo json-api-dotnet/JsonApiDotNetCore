@@ -173,25 +173,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[0].BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
+                new BlogPostLabel { Label = _fakers.Label.Generate() }, new BlogPostLabel { Label = _fakers.Label.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -289,18 +275,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
+                new BlogPostLabel { Label = _fakers.Label.Generate() },
+                new BlogPostLabel { Label = _fakers.Label.Generate() },
+                new BlogPostLabel { Label = _fakers.Label.Generate() }
             };
 
             post.BlogPostLabels.ElementAt(0).Label.Name = "B";

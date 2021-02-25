@@ -177,10 +177,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new RelationshipEntry
-            {
-                Links = _linkBuilder.GetRelationshipLinks(relationship, resource)
-            };
+            return new RelationshipEntry { Links = _linkBuilder.GetRelationshipLinks(relationship, resource) };
         }
 
         /// <summary>

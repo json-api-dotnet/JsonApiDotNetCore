@@ -99,18 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.ClearTableAsync<Map>();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "maps",
-                    id = "00000000-0000-0000-0000-000000000000",
-                    attributes = new
-                    {
-                        name = newName
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "maps", id = "00000000-0000-0000-0000-000000000000", attributes = new { name = newName } } };
 
             const string route = "/maps";
 
@@ -149,18 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "maps",
-                    id = Guid.Empty,
-                    attributes = new
-                    {
-                        name = newName
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "maps", id = Guid.Empty, attributes = new { name = newName } } };
 
             const string route = "/maps/00000000-0000-0000-0000-000000000000";
 
@@ -196,10 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
@@ -236,14 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "maps",
-                    id = Guid.Empty
-                }
-            };
+            var requestBody = new { data = new { type = "maps", id = Guid.Empty } };
 
             string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
@@ -281,14 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "maps",
-                    id = Guid.Empty
-                }
-            };
+            var requestBody = new { data = new { type = "maps", id = Guid.Empty } };
 
             string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
@@ -324,10 +285,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";
 
@@ -364,17 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "maps",
-                        id = "00000000-0000-0000-0000-000000000000"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "maps", id = "00000000-0000-0000-0000-000000000000" } } };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";
 
@@ -413,17 +361,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "maps",
-                        id = "00000000-0000-0000-0000-000000000000"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "maps", id = "00000000-0000-0000-0000-000000000000" } } };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";
 
@@ -462,17 +400,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "maps",
-                        id = "00000000-0000-0000-0000-000000000000"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "maps", id = "00000000-0000-0000-0000-000000000000" } } };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";
 
@@ -509,17 +437,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "maps",
-                        id = "00000000-0000-0000-0000-000000000000"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "maps", id = "00000000-0000-0000-0000-000000000000" } } };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";
 

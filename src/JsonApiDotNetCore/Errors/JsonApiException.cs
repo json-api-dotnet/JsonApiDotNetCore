@@ -15,8 +15,7 @@ namespace JsonApiDotNetCore.Errors
     {
         private static readonly JsonSerializerSettings ErrorSerializerSettings = new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            Formatting = Formatting.Indented
+            NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented
         };
 
         public IReadOnlyList<Error> Errors { get; }

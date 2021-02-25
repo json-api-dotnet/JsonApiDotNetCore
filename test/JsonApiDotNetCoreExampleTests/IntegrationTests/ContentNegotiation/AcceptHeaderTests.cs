@@ -41,24 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_no_Accept_headers_at_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
@@ -80,8 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 
             MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html"),
-                MediaTypeWithQualityHeaderValue.Parse("*/*")
+                MediaTypeWithQualityHeaderValue.Parse("text/html"), MediaTypeWithQualityHeaderValue.Parse("*/*")
             };
 
             // Act
@@ -99,8 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 
             MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html;q=0.8"),
-                MediaTypeWithQualityHeaderValue.Parse("application/*;q=0.2")
+                MediaTypeWithQualityHeaderValue.Parse("text/html;q=0.8"), MediaTypeWithQualityHeaderValue.Parse("application/*;q=0.2")
             };
 
             // Act
@@ -136,24 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_JsonApi_with_AtomicOperations_extension_in_Accept_headers_at_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
@@ -207,32 +171,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_in_Accept_headers_at_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
-            {
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType)
-            };
+            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[] { MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType) };
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =

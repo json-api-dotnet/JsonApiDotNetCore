@@ -183,11 +183,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         public async Task Can_delete_resource_with_HasManyThrough_relationship()
         {
             // Arrange
-            var existingWorkItemTag = new WorkItemTag
-            {
-                Item = _fakers.WorkItem.Generate(),
-                Tag = _fakers.WorkTag.Generate()
-            };
+            var existingWorkItemTag = new WorkItemTag { Item = _fakers.WorkItem.Generate(), Tag = _fakers.WorkTag.Generate() };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

@@ -204,14 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[1].BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -297,22 +290,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
-
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[0].BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
+            posts[1].BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             posts[0].BlogPostLabels.Single().Label.Name = "Cold";
             posts[1].BlogPostLabels.Single().Label.Name = "Hot";

@@ -30,28 +30,13 @@ namespace UnitTests.Serialization
 
         protected Document CreateDocumentWithRelationships(string primaryType)
         {
-            return new Document
-            {
-                Data = new ResourceObject
-                {
-                    Id = "1",
-                    Type = primaryType,
-                    Relationships = new Dictionary<string, RelationshipEntry>()
-                }
-            };
+            return new Document { Data = new ResourceObject { Id = "1", Type = primaryType, Relationships = new Dictionary<string, RelationshipEntry>() } };
         }
 
         protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
             var entry = new RelationshipEntry();
-
-            ResourceIdentifierObject rio = relatedType == null
-                ? null
-                : new ResourceIdentifierObject
-                {
-                    Id = id,
-                    Type = relatedType
-                };
+            ResourceIdentifierObject rio = relatedType == null ? null : new ResourceIdentifierObject { Id = id, Type = relatedType };
 
             if (isToManyData)
             {

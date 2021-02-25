@@ -38,18 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new object[0]
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { subscribers = new { data = new object[0] } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -75,14 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.WorkItemTags = new[] { new WorkItemTag { Tag = _fakers.WorkTag.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -92,18 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new object[0]
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { tags = new { data = new object[0] } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -160,16 +131,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingWorkItem.Subscribers.ElementAt(1).StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingSubscriber.StringId
-                                }
+                                new { type = "userAccounts", id = existingWorkItem.Subscribers.ElementAt(1).StringId },
+                                new { type = "userAccounts", id = existingSubscriber.StringId }
                             }
                         }
                     }
@@ -204,14 +167,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             existingWorkItem.WorkItemTags = new[]
             {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
+                new WorkItemTag { Tag = _fakers.WorkTag.Generate() }, new WorkItemTag { Tag = _fakers.WorkTag.Generate() }
             };
 
             List<WorkTag> existingTags = _fakers.WorkTag.Generate(2);
@@ -235,21 +191,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[0].StringId
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTags[1].StringId
-                                }
+                                new { type = "workTags", id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId },
+                                new { type = "workTags", id = existingTags[0].StringId },
+                                new { type = "workTags", id = existingTags[1].StringId }
                             }
                         }
                     }
@@ -305,20 +249,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { subscribers = new { data = new[] { new { type = "userAccounts", id = existingUserAccount.StringId } } } }
                 }
             };
 
@@ -371,20 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTag.StringId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { tags = new { data = new[] { new { type = "workTags", id = existingTag.StringId } } } }
                 }
             };
 
@@ -450,19 +368,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    id = 99999999
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { subscribers = new { data = new[] { new { id = 99999999 } } } }
                 }
             };
 
@@ -500,20 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "doesNotExist",
-                                    id = 99999999
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { subscribers = new { data = new[] { new { type = "doesNotExist", id = 99999999 } } } }
                 }
             };
 
@@ -551,19 +444,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts"
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { subscribers = new { data = new[] { new { type = "userAccounts" } } } }
                 }
             };
 
@@ -605,36 +486,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     {
                         subscribers = new
                         {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = 88888888
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = 99999999
-                                }
-                            }
+                            data = new[] { new { type = "userAccounts", id = 88888888 }, new { type = "userAccounts", id = 99999999 } }
                         },
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = 88888888
-                                },
-                                new
-                                {
-                                    type = "workTags",
-                                    id = 99999999
-                                }
-                            }
-                        }
+                        tags = new { data = new[] { new { type = "workTags", id = 88888888 }, new { type = "workTags", id = 99999999 } } }
                     }
                 }
             };
@@ -688,20 +542,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "rgbColors",
-                                    id = "0A0B0C"
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { subscribers = new { data = new[] { new { type = "rgbColors", id = "0A0B0C" } } } }
                 }
             };
 
@@ -748,16 +589,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingSubscriber.StringId
-                                },
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingSubscriber.StringId
-                                }
+                                new { type = "userAccounts", id = existingSubscriber.StringId },
+                                new { type = "userAccounts", id = existingSubscriber.StringId }
                             }
                         }
                     }
@@ -797,18 +630,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        subscribers = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { subscribers = new { data = (object)null } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -841,18 +663,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        tags = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { tags = new { data = (object)null } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -888,18 +699,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        children = new
-                        {
-                            data = new object[0]
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { children = new { data = new object[0] } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -931,31 +731,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-                {
-                    new WorkItemToWorkItem
-                    {
-                        FromItem = existingWorkItem
-                    }
-                };
-
+                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem> { new WorkItemToWorkItem { FromItem = existingWorkItem } };
                 await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        relatedFrom = new
-                        {
-                            data = new object[0]
-                        }
-                    }
-                }
+                data = new { type = "workItems", id = existingWorkItem.StringId, relationships = new { relatedFrom = new { data = new object[0] } } }
             };
 
             string route = "/workItems/" + existingWorkItem.StringId;
@@ -1003,20 +785,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        children = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workItems",
-                                    id = existingWorkItem.StringId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { children = new { data = new[] { new { type = "workItems", id = existingWorkItem.StringId } } } }
                 }
             };
 
@@ -1057,20 +826,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 {
                     type = "workItems",
                     id = existingWorkItem.StringId,
-                    relationships = new
-                    {
-                        relatedTo = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workItems",
-                                    id = existingWorkItem.StringId
-                                }
-                            }
-                        }
-                    }
+                    relationships = new { relatedTo = new { data = new[] { new { type = "workItems", id = existingWorkItem.StringId } } } }
                 }
             };
 

@@ -12,15 +12,7 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-
-            var relationships = new List<ResourceIdentifierObject>
-            {
-                new ResourceIdentifierObject
-                {
-                    Id = "9",
-                    Type = "authors"
-                }
-            };
+            var relationships = new List<ResourceIdentifierObject> { new ResourceIdentifierObject { Id = "9", Type = "authors" } };
 
             // Act 
             relationshipData.Data = relationships;
@@ -62,12 +54,7 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-
-            var relationship = new ResourceIdentifierObject
-            {
-                Id = "9",
-                Type = "authors"
-            };
+            var relationship = new ResourceIdentifierObject { Id = "9", Type = "authors" };
 
             // Act 
             relationshipData.Data = relationship;

@@ -42,31 +42,9 @@ namespace GettingStarted
         {
             // Note: The generate-examples.ps1 script (to create example requests in documentation) depends on these.
 
-            context.Books.AddRange(new Book
-            {
-                Title = "Frankenstein",
-                PublishYear = 1818,
-                Author = new Person
-                {
-                    Name = "Mary Shelley"
-                }
-            }, new Book
-            {
-                Title = "Robinson Crusoe",
-                PublishYear = 1719,
-                Author = new Person
-                {
-                    Name = "Daniel Defoe"
-                }
-            }, new Book
-            {
-                Title = "Gulliver's Travels",
-                PublishYear = 1726,
-                Author = new Person
-                {
-                    Name = "Jonathan Swift"
-                }
-            });
+            context.Books.AddRange(new Book { Title = "Frankenstein", PublishYear = 1818, Author = new Person { Name = "Mary Shelley" } },
+                new Book { Title = "Robinson Crusoe", PublishYear = 1719, Author = new Person { Name = "Daniel Defoe" } },
+                new Book { Title = "Gulliver's Travels", PublishYear = 1726, Author = new Person { Name = "Jonathan Swift" } });
 
             context.SaveChanges();
         }

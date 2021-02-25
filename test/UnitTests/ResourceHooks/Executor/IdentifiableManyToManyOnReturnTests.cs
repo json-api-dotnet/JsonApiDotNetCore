@@ -11,10 +11,7 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class IdentifiableManyToManyOnReturnTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.OnReturn
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
         [Fact]
         public void OnReturn()

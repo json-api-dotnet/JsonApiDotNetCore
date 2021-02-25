@@ -49,15 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new object[0]
-                                }
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, relationships = new { performers = new { data = new object[0] } }
                         }
                     }
                 }
@@ -92,14 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
             {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
+                new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() }, new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -118,15 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new object[0]
-                                }
-                            }
+                            type = "playlists", id = existingPlaylist.StringId, relationships = new { tracks = new { data = new object[0] } }
                         }
                     }
                 }
@@ -196,16 +173,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformers[0].StringId
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformers[1].StringId
-                                        }
+                                        new { type = "performers", id = existingPerformers[0].StringId },
+                                        new { type = "performers", id = existingPerformers[1].StringId }
                                     }
                                 }
                             }
@@ -242,14 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             // Arrange
             Playlist existingPlaylist = _fakers.Playlist.Generate();
-
-            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
-            {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
+            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack> { new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() } };
 
             List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
 
@@ -278,16 +240,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[0].StringId
-                                        },
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[1].StringId
-                                        }
+                                        new { type = "musicTracks", id = existingTracks[0].StringId },
+                                        new { type = "musicTracks", id = existingTracks[1].StringId }
                                     }
                                 }
                             }
@@ -349,15 +303,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = (object)null
-                                }
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, relationships = new { performers = new { data = (object)null } }
                         }
                     }
                 }
@@ -395,19 +341,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "playlists",
                             id = 99999999,
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            id = Guid.NewGuid().ToString()
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { tracks = new { data = new[] { new { id = Guid.NewGuid().ToString() } } } }
                         }
                     }
                 }
@@ -445,20 +379,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "doesNotExist",
-                                            id = 99999999
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { performers = new { data = new[] { new { type = "doesNotExist", id = 99999999 } } } }
                         }
                     }
                 }
@@ -496,19 +417,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers"
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { performers = new { data = new[] { new { type = "performers" } } } }
                         }
                     }
                 }
@@ -548,18 +457,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = Guid.NewGuid().ToString(),
                             relationships = new
                             {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = 99999999,
-                                            lid = "local-1"
-                                        }
-                                    }
-                                }
+                                performers = new { data = new[] { new { type = "performers", id = 99999999, lid = "local-1" } } }
                             }
                         }
                     }
@@ -613,16 +511,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = trackIds[0].ToString()
-                                        },
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = trackIds[1].ToString()
-                                        }
+                                        new { type = "musicTracks", id = trackIds[0].ToString() },
+                                        new { type = "musicTracks", id = trackIds[1].ToString() }
                                     }
                                 }
                             }
@@ -677,20 +567,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "playlists",
-                                            id = 88888888
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { performers = new { data = new[] { new { type = "playlists", id = 88888888 } } } }
                         }
                     }
                 }

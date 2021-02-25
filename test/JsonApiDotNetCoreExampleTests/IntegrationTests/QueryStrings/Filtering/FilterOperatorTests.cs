@@ -32,10 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_special_characters()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeString = "This, that & more"
-            };
+            var resource = new FilterableResource { SomeString = "This, that & more" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -60,17 +57,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_two_attributes_of_same_type()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                OtherInt32 = 5
-            };
+            var resource = new FilterableResource { SomeInt32 = 5, OtherInt32 = 5 };
 
-            var otherResource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                OtherInt32 = 10
-            };
+            var otherResource = new FilterableResource { SomeInt32 = 5, OtherInt32 = 10 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -96,17 +85,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_two_attributes_of_same_nullable_type()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeNullableInt32 = 5,
-                OtherNullableInt32 = 5
-            };
+            var resource = new FilterableResource { SomeNullableInt32 = 5, OtherNullableInt32 = 5 };
 
-            var otherResource = new FilterableResource
-            {
-                SomeNullableInt32 = 5,
-                OtherNullableInt32 = 10
-            };
+            var otherResource = new FilterableResource { SomeNullableInt32 = 5, OtherNullableInt32 = 10 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -132,17 +113,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_two_attributes_with_nullable_at_start()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeNullableInt32 = 5
-            };
+            var resource = new FilterableResource { SomeInt32 = 5, SomeNullableInt32 = 5 };
 
-            var otherResource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeNullableInt32 = 10
-            };
+            var otherResource = new FilterableResource { SomeInt32 = 5, SomeNullableInt32 = 10 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -168,17 +141,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_two_attributes_with_nullable_at_end()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeNullableInt32 = 5
-            };
+            var resource = new FilterableResource { SomeInt32 = 5, SomeNullableInt32 = 5 };
 
-            var otherResource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeNullableInt32 = 10
-            };
+            var otherResource = new FilterableResource { SomeInt32 = 5, SomeNullableInt32 = 10 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -204,17 +169,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_two_attributes_of_compatible_types()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeUnsignedInt64 = 5
-            };
+            var resource = new FilterableResource { SomeInt32 = 5, SomeUnsignedInt64 = 5 };
 
-            var otherResource = new FilterableResource
-            {
-                SomeInt32 = 5,
-                SomeUnsignedInt64 = 10
-            };
+            var otherResource = new FilterableResource { SomeInt32 = 5, SomeUnsignedInt64 = 10 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -269,15 +226,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_comparison_on_whole_number(int matchingValue, int nonMatchingValue, ComparisonOperator filterOperator, double filterValue)
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = matchingValue
-            };
+            var resource = new FilterableResource { SomeInt32 = matchingValue };
 
-            var otherResource = new FilterableResource
-            {
-                SomeInt32 = nonMatchingValue
-            };
+            var otherResource = new FilterableResource { SomeInt32 = nonMatchingValue };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -311,15 +262,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             double filterValue)
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeDouble = matchingValue
-            };
+            var resource = new FilterableResource { SomeDouble = matchingValue };
 
-            var otherResource = new FilterableResource
-            {
-                SomeDouble = nonMatchingValue
-            };
+            var otherResource = new FilterableResource { SomeDouble = nonMatchingValue };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -353,15 +298,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             string filterDateTime)
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeDateTime = DateTime.ParseExact(matchingDateTime, "yyyy-MM-dd", null)
-            };
+            var resource = new FilterableResource { SomeDateTime = DateTime.ParseExact(matchingDateTime, "yyyy-MM-dd", null) };
 
-            var otherResource = new FilterableResource
-            {
-                SomeDateTime = DateTime.ParseExact(nonMatchingDateTime, "yyyy-MM-dd", null)
-            };
+            var otherResource = new FilterableResource { SomeDateTime = DateTime.ParseExact(nonMatchingDateTime, "yyyy-MM-dd", null) };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -392,15 +331,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_text_match(string matchingText, string nonMatchingText, TextMatchKind matchKind, string filterText)
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeString = matchingText
-            };
+            var resource = new FilterableResource { SomeString = matchingText };
 
-            var otherResource = new FilterableResource
-            {
-                SomeString = nonMatchingText
-            };
+            var otherResource = new FilterableResource { SomeString = nonMatchingText };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -427,15 +360,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_set(string matchingText, string nonMatchingText, string filterText)
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeString = matchingText
-            };
+            var resource = new FilterableResource { SomeString = matchingText };
 
-            var otherResource = new FilterableResource
-            {
-                SomeString = nonMatchingText
-            };
+            var otherResource = new FilterableResource { SomeString = nonMatchingText };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -460,13 +387,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_has()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                Children = new List<FilterableResource>
-                {
-                    new FilterableResource()
-                }
-            };
+            var resource = new FilterableResource { Children = new List<FilterableResource> { new FilterableResource() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -491,14 +412,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_count()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                Children = new List<FilterableResource>
-                {
-                    new FilterableResource(),
-                    new FilterableResource()
-                }
-            };
+            var resource = new FilterableResource { Children = new List<FilterableResource> { new FilterableResource(), new FilterableResource() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -527,19 +441,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_logical_functions(string filterExpression)
         {
             // Arrange
-            var resource1 = new FilterableResource
-            {
-                SomeString = "ABC",
-                SomeInt32 = 11,
-                SomeEnum = DayOfWeek.Tuesday
-            };
+            var resource1 = new FilterableResource { SomeString = "ABC", SomeInt32 = 11, SomeEnum = DayOfWeek.Tuesday };
 
-            var resource2 = new FilterableResource
-            {
-                SomeString = "XYZ",
-                SomeInt32 = 99,
-                SomeEnum = DayOfWeek.Saturday
-            };
+            var resource2 = new FilterableResource { SomeString = "XYZ", SomeInt32 = 99, SomeEnum = DayOfWeek.Saturday };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

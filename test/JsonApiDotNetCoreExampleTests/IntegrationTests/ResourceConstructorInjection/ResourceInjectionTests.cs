@@ -144,21 +144,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 data = new
                 {
                     type = "giftCertificates",
-                    attributes = new
-                    {
-                        issueDate = newIssueDate
-                    },
-                    relationships = new
-                    {
-                        issuer = new
-                        {
-                            data = new
-                            {
-                                type = "postOffices",
-                                id = existingOffice.StringId
-                            }
-                        }
-                    }
+                    attributes = new { issueDate = newIssueDate },
+                    relationships = new { issuer = new { data = new { type = "postOffices", id = existingOffice.StringId } } }
                 }
             };
 
@@ -218,22 +205,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 {
                     type = "postOffices",
                     id = existingOffice.StringId,
-                    attributes = new
-                    {
-                        address = newAddress
-                    },
+                    attributes = new { address = newAddress },
                     relationships = new
                     {
                         giftCertificates = new
                         {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "giftCertificates",
-                                    id = existingOffice.GiftCertificates[0].StringId
-                                }
-                            }
+                            data = new[] { new { type = "giftCertificates", id = existingOffice.GiftCertificates[0].StringId } }
                         }
                     }
                 }
@@ -325,17 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "giftCertificates",
-                        id = existingCertificate.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "giftCertificates", id = existingCertificate.StringId } } };
 
             string route = $"/postOffices/{existingOffice.StringId}/relationships/giftCertificates";
 

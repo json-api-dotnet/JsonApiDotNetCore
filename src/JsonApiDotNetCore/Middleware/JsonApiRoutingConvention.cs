@@ -94,10 +94,7 @@ namespace JsonApiDotNetCore.Middleware
                     throw new InvalidConfigurationException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
                 }
 
-                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
-                {
-                    Template = template
-                };
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
             }
         }
 

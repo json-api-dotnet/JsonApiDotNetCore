@@ -49,22 +49,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 operationElements.Add(new
                 {
                     op = "update",
-                    data = new
-                    {
-                        type = "musicTracks",
-                        id = existingTracks[index].StringId,
-                        attributes = new
-                        {
-                            title = newTrackTitles[index]
-                        }
-                    }
+                    data = new { type = "musicTracks", id = existingTracks[index].StringId, attributes = new { title = newTrackTitles[index] } }
                 });
             }
 
-            var requestBody = new
-            {
-                atomic__operations = operationElements
-            };
+            var requestBody = new { atomic__operations = operationElements };
 
             const string route = "/operations";
 
@@ -112,17 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        data = new { type = "musicTracks", id = existingTrack.StringId, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -171,13 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                                title = newTitle,
-                                doesNotExist = "Ignored"
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, attributes = new { title = newTitle, doesNotExist = "Ignored" }
                         }
                     }
                 }
@@ -224,17 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                doesNotExist = new
-                                {
-                                    data = new
-                                    {
-                                        type = "doesNotExist",
-                                        id = 12345678
-                                    }
-                                }
-                            }
+                            relationships = new { doesNotExist = new { data = new { type = "doesNotExist", id = 12345678 } } }
                         }
                     }
                 }
@@ -270,19 +233,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                                genre = newGenre
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "musicTracks", id = existingTrack.StringId, attributes = new { genre = newGenre } } }
                 }
             };
 
@@ -341,10 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingTrack.StringId,
                             attributes = new
                             {
-                                title = newTitle,
-                                lengthInSeconds = newLengthInSeconds,
-                                genre = newGenre,
-                                releasedAt = newReleasedAt
+                                title = newTitle, lengthInSeconds = newLengthInSeconds, genre = newGenre, releasedAt = newReleasedAt
                             }
                         }
                     }
@@ -395,15 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = existingLanguage.StringId,
-                            attributes = new
-                            {
-                                isoCode = newIsoCode
-                            }
-                        }
+                        data = new { type = "textLanguages", id = existingLanguage.StringId, attributes = new { isoCode = newIsoCode } }
                     }
                 }
             };
@@ -447,18 +387,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = existingLanguage.StringId
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", data = new { type = "textLanguages", id = existingLanguage.StringId } } }
             };
 
             const string route = "/operations";
@@ -480,17 +409,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_update_resource_for_href_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        href = "/api/v1/musicTracks/1"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "update", href = "/api/v1/musicTracks/1" } } };
 
             const string route = "/operations";
 
@@ -529,20 +448,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = existingPerformer.StringId
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = existingPerformer.StringId,
-                            attributes = new
-                            {
-                                artistName = newArtistName
-                            }
-                        }
+                        @ref = new { type = "performers", id = existingPerformer.StringId },
+                        data = new { type = "performers", id = existingPerformer.StringId, attributes = new { artistName = newArtistName } }
                     }
                 }
             };
@@ -577,21 +484,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            id = 12345678
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { id = 12345678 },
+                        data = new { type = "performers", id = 12345678, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -624,21 +518,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers"
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers" },
+                        data = new { type = "performers", id = 12345678, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -671,23 +552,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 12345678,
-                            lid = "local-1"
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", id = 12345678, lid = "local-1" },
+                        data = new { type = "performers", id = 12345678, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -713,16 +579,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_update_resource_for_missing_data()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "update" } } };
 
             const string route = "/operations";
 
@@ -747,23 +604,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", data = new { id = 12345678, attributes = new { }, relationships = new { } } } }
             };
 
             const string route = "/operations";
@@ -789,23 +630,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", data = new { type = "performers", attributes = new { }, relationships = new { } } } }
             };
 
             const string route = "/operations";
@@ -841,12 +666,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             type = "performers",
                             id = 12345678,
                             lid = "local-1",
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
+                            attributes = new { },
+                            relationships = new { }
                         }
                     }
                 }
@@ -894,10 +715,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             {
                                 type = "performers",
                                 id = existingPerformer.StringId,
-                                attributes = new
-                                {
-                                    artistName = existingPerformer.ArtistName
-                                }
+                                attributes = new { artistName = existingPerformer.ArtistName }
                             }
                         }
                     }
@@ -932,22 +750,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 12345678
-                        },
-                        data = new
-                        {
-                            type = "playlists",
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", id = 12345678 },
+                        data = new { type = "playlists", id = 12345678, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -980,22 +784,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 12345678
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = 87654321,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", id = 12345678 },
+                        data = new { type = "performers", id = 87654321, attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -1028,22 +818,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            lid = "local-1"
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            lid = "local-2",
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", lid = "local-1" },
+                        data = new { type = "performers", lid = "local-2", attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -1076,22 +852,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = "12345678"
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            lid = "local-1",
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", id = "12345678" },
+                        data = new { type = "performers", lid = "local-1", attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -1124,22 +886,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            lid = "local-1"
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = "12345678",
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", lid = "local-1" },
+                        data = new { type = "performers", id = "12345678", attributes = new { }, relationships = new { } }
                     }
                 }
             };
@@ -1169,21 +917,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "doesNotExist",
-                            id = 12345678,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "doesNotExist", id = 12345678, attributes = new { }, relationships = new { } } }
                 }
             };
 
@@ -1212,21 +946,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "performers",
-                            id = 99999999,
-                            attributes = new
-                            {
-                            },
-                            relationships = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "performers", id = 99999999, attributes = new { }, relationships = new { } } }
                 }
             };
 
@@ -1260,19 +980,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = guid
-                        },
-                        data = new
-                        {
-                            type = "performers",
-                            id = guid,
-                            attributes = new
-                            {
-                            }
-                        }
+                        @ref = new { type = "performers", id = guid },
+                        data = new { type = "performers", id = guid, attributes = new { } }
                     }
                 }
             };
@@ -1310,19 +1019,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            attributes = new
-                            {
-                                createdAt = 12.July(1980)
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "lyrics", id = existingLyric.StringId, attributes = new { createdAt = 12.July(1980) } } }
                 }
             };
 
@@ -1359,19 +1056,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            attributes = new
-                            {
-                                isArchived = true
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "playlists", id = existingPlaylist.StringId, attributes = new { isArchived = true } } }
                 }
             };
 
@@ -1415,10 +1100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "recordCompanies",
                             id = existingCompany.StringId,
-                            attributes = new
-                            {
-                                id = (existingCompany.Id + 1).ToString()
-                            }
+                            attributes = new { id = (existingCompany.Id + 1).ToString() }
                         }
                     }
                 }
@@ -1460,15 +1142,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        data = new
-                        {
-                            type = "performers",
-                            id = existingPerformer.StringId,
-                            attributes = new
-                            {
-                                bornAt = "not-a-valid-time"
-                            }
-                        }
+                        data = new { type = "performers", id = existingPerformer.StringId, attributes = new { bornAt = "not-a-valid-time" } }
                     }
                 }
             };
@@ -1522,39 +1196,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            attributes = new
-                            {
-                                genre = newGenre
-                            },
+                            attributes = new { genre = newGenre },
                             relationships = new
                             {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = existingLyric.StringId
-                                    }
-                                },
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                },
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        }
-                                    }
-                                }
+                                lyric = new { data = new { type = "lyrics", id = existingLyric.StringId } },
+                                ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } },
+                                performers = new { data = new[] { new { type = "performers", id = existingPerformer.StringId } } }
                             }
                         }
                     }

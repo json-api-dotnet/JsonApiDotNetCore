@@ -21,13 +21,7 @@ namespace UnitTests.ResourceHooks
         protected readonly Faker<Passport> PassportFaker;
         protected IResourceGraph ResourceGraph { get; }
         protected ResourceHook[] NoHooks { get; } = new ResourceHook[0];
-
-        protected ResourceHook[] EnableDbValues { get; } =
-        {
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeUpdateRelationship
-        };
-
+        protected ResourceHook[] EnableDbValues { get; } = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
         protected ResourceHook[] DisableDbValues { get; } = new ResourceHook[0];
 
         protected HooksDummyData()
@@ -76,12 +70,7 @@ namespace UnitTests.ResourceHooks
         {
             TodoItem todoItem = TodoFaker.Generate();
             Person person = PersonFaker.Generate();
-
-            var todoList = new HashSet<TodoItem>
-            {
-                todoItem
-            };
-
+            var todoList = new HashSet<TodoItem> { todoItem };
             person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;

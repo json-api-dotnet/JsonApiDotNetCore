@@ -11,18 +11,12 @@ namespace JsonApiDotNetCore
 
         public static T[] AsArray<T>(this T element)
         {
-            return new[]
-            {
-                element
-            };
+            return new[] { element };
         }
 
         public static List<T> AsList<T>(this T element)
         {
-            return new List<T>
-            {
-                element
-            };
+            return new List<T> { element };
         }
     }
 }

@@ -35,11 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_filter_on_ID_in_primary_resources()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var car = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -64,11 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_get_primary_resource_by_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var car = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -93,11 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_sort_on_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var car = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -122,11 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_select_ID()
         {
             // Arrange
-            var car = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var car = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -156,18 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.ClearTableAsync<Car>();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "cars",
-                    attributes = new
-                    {
-                        regionId = 123,
-                        licensePlate = "AA-BB-11"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "cars", attributes = new { regionId = 123, licensePlate = "AA-BB-11" } } };
 
             const string route = "/cars";
 
@@ -192,16 +165,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_create_OneToOne_relationship()
         {
             // Arrange
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var existingCar = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
-            var existingEngine = new Engine
-            {
-                SerialCode = "1234567890"
-            };
+            var existingEngine = new Engine { SerialCode = "1234567890" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -216,17 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 {
                     type = "engines",
                     id = existingEngine.StringId,
-                    relationships = new
-                    {
-                        car = new
-                        {
-                            data = new
-                            {
-                                type = "cars",
-                                id = existingCar.StringId
-                            }
-                        }
-                    }
+                    relationships = new { car = new { data = new { type = "cars", id = existingCar.StringId } } }
                 }
             };
 
@@ -253,15 +209,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_clear_OneToOne_relationship()
         {
             // Arrange
-            var existingEngine = new Engine
-            {
-                SerialCode = "1234567890",
-                Car = new Car
-                {
-                    RegionId = 123,
-                    LicensePlate = "AA-BB-11"
-                }
-            };
+            var existingEngine = new Engine { SerialCode = "1234567890", Car = new Car { RegionId = 123, LicensePlate = "AA-BB-11" } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -270,21 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "engines",
-                    id = existingEngine.StringId,
-                    relationships = new
-                    {
-                        car = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "engines", id = existingEngine.StringId, relationships = new { car = new { data = (object)null } } } };
 
             string route = "/engines/" + existingEngine.StringId;
 
@@ -313,16 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
-                    new Car
-                    {
-                        RegionId = 123,
-                        LicensePlate = "AA-BB-11"
-                    },
-                    new Car
-                    {
-                        RegionId = 456,
-                        LicensePlate = "CC-DD-22"
-                    }
+                    new Car { RegionId = 123, LicensePlate = "AA-BB-11" }, new Car { RegionId = 456, LicensePlate = "CC-DD-22" }
                 }
             };
 
@@ -333,17 +258,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "cars",
-                        id = "123:AA-BB-11"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "cars", id = "123:AA-BB-11" } } };
 
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
@@ -369,16 +284,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_add_to_OneToMany_relationship()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
-            };
-
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var existingDealership = new Dealership { Address = "Dam 1, 1012JS Amsterdam, the Netherlands" };
+            var existingCar = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -387,17 +294,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "cars",
-                        id = "123:AA-BB-11"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "cars", id = "123:AA-BB-11" } } };
 
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
@@ -428,24 +325,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
-                    new Car
-                    {
-                        RegionId = 123,
-                        LicensePlate = "AA-BB-11"
-                    },
-                    new Car
-                    {
-                        RegionId = 456,
-                        LicensePlate = "CC-DD-22"
-                    }
+                    new Car { RegionId = 123, LicensePlate = "AA-BB-11" }, new Car { RegionId = 456, LicensePlate = "CC-DD-22" }
                 }
             };
 
-            var existingCar = new Car
-            {
-                RegionId = 789,
-                LicensePlate = "EE-FF-33"
-            };
+            var existingCar = new Car { RegionId = 789, LicensePlate = "EE-FF-33" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -454,22 +338,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "cars",
-                        id = "123:AA-BB-11"
-                    },
-                    new
-                    {
-                        type = "cars",
-                        id = "789:EE-FF-33"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "cars", id = "123:AA-BB-11" }, new { type = "cars", id = "789:EE-FF-33" } } };
 
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
@@ -496,10 +365,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Cannot_remove_from_ManyToOne_relationship_for_unknown_relationship_ID()
         {
             // Arrange
-            var existingDealership = new Dealership
-            {
-                Address = "Dam 1, 1012JS Amsterdam, the Netherlands"
-            };
+            var existingDealership = new Dealership { Address = "Dam 1, 1012JS Amsterdam, the Netherlands" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -508,17 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "cars",
-                        id = "999:XX-YY-22"
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "cars", id = "999:XX-YY-22" } } };
 
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
@@ -540,11 +396,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingCar = new Car
-            {
-                RegionId = 123,
-                LicensePlate = "AA-BB-11"
-            };
+            var existingCar = new Car { RegionId = 123, LicensePlate = "AA-BB-11" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

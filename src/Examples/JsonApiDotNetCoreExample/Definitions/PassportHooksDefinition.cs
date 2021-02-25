@@ -22,10 +22,7 @@ namespace JsonApiDotNetCoreExample.Definitions
         {
             if (pipeline == ResourcePipeline.GetSingle && isIncluded)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
-                {
-                    Title = "You are not allowed to include passports on individual persons."
-                });
+                throw new JsonApiException(new Error(HttpStatusCode.Forbidden) { Title = "You are not allowed to include passports on individual persons." });
             }
         }
 

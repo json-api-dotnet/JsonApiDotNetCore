@@ -101,10 +101,7 @@ namespace UnitTests.Middleware
 
             if (relType != null)
             {
-                request.Relationship = new HasManyAttribute
-                {
-                    RightType = relType
-                };
+                request.Relationship = new HasManyAttribute { RightType = relType };
             }
 
             DefaultHttpContext context = CreateHttpContext(path, relType != null, action, id);
@@ -132,15 +129,7 @@ namespace UnitTests.Middleware
             var context = new DefaultHttpContext();
             context.Request.Path = new PathString(path);
             context.Response.Body = new MemoryStream();
-
-            var feature = new RouteValuesFeature
-            {
-                RouteValues =
-                {
-                    ["controller"] = "fake!",
-                    ["action"] = isRelationship ? "GetRelationship" : action
-                }
-            };
+            var feature = new RouteValuesFeature { RouteValues = { ["controller"] = "fake!", ["action"] = isRelationship ? "GetRelationship" : action } };
 
             if (id != null)
             {
@@ -155,23 +144,12 @@ namespace UnitTests.Middleware
         private Mock<IResourceGraph> CreateMockResourceGraph(string resourceName, bool includeRelationship = false)
         {
             var mockGraph = new Mock<IResourceGraph>();
-
-            var resourceContext = new ResourceContext
-            {
-                PublicName = resourceName,
-                IdentityType = typeof(string)
-            };
-
+            var resourceContext = new ResourceContext { PublicName = resourceName, IdentityType = typeof(string) };
             ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
 
             if (includeRelationship)
             {
-                var relResourceContext = new ResourceContext
-                {
-                    PublicName = "todoItems",
-                    IdentityType = typeof(string)
-                };
-
+                var relResourceContext = new ResourceContext { PublicName = "todoItems", IdentityType = typeof(string) };
                 seq.Returns(relResourceContext);
             }
 

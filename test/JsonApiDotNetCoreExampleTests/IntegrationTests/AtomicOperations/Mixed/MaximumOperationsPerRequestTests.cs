@@ -35,27 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                        }
-                    },
-                    new
-                    {
-                        op = "remove",
-                        data = new
-                        {
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                        }
-                    }
+                    new { op = "add", data = new { } }, new { op = "remove", data = new { } }, new { op = "update", data = new { } }
                 }
             };
 
@@ -87,28 +67,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "performers", attributes = new { } } },
+                    new { op = "add", data = new { type = "performers", attributes = new { } } }
                 }
             };
 
@@ -134,23 +94,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             for (int index = 0; index < elementCount; index++)
             {
-                operationElements.Add(new
-                {
-                    op = "add",
-                    data = new
-                    {
-                        type = "performers",
-                        attributes = new
-                        {
-                        }
-                    }
-                });
+                operationElements.Add(new { op = "add", data = new { type = "performers", attributes = new { } } });
             }
 
-            var requestBody = new
-            {
-                atomic__operations = operationElements
-            };
+            var requestBody = new { atomic__operations = operationElements };
 
             const string route = "/operations";
 

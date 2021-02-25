@@ -36,16 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Cannot_create_resource()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "beds",
-                    attributes = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "beds", attributes = new { } } };
 
             const string route = "/beds";
 
@@ -75,17 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "beds",
-                    id = existingBed.StringId,
-                    attributes = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "beds", id = existingBed.StringId, attributes = new { } } };
 
             string route = "/beds/" + existingBed.StringId;
 

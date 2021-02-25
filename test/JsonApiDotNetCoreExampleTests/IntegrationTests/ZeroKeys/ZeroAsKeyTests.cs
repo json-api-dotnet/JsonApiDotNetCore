@@ -97,18 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.ClearTableAsync<Game>();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "games",
-                    id = "0",
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "games", id = "0", attributes = new { title = newTitle } } };
 
             const string route = "/games";
 
@@ -148,18 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "games",
-                    id = "0",
-                    attributes = new
-                    {
-                        title = newTitle
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "games", id = "0", attributes = new { title = newTitle } } };
 
             const string route = "/games/0";
 
@@ -197,10 +175,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
 
@@ -237,14 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "games",
-                    id = 0
-                }
-            };
+            var requestBody = new { data = new { type = "games", id = 0 } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
 
@@ -282,14 +250,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "games",
-                    id = "0"
-                }
-            };
+            var requestBody = new { data = new { type = "games", id = "0" } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
 
@@ -325,10 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new object[0]
-            };
+            var requestBody = new { data = new object[0] };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
@@ -365,17 +323,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = 0
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "games", id = 0 } } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
@@ -414,17 +362,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = 0
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "games", id = 0 } } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
@@ -463,17 +401,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = 0
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "games", id = 0 } } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 
@@ -510,17 +438,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "games",
-                        id = 0
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "games", id = 0 } } };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/recentlyPlayed";
 

@@ -10,10 +10,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class AfterDeleteTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.AfterDelete
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterDelete };
 
         [Fact]
         public void AfterDelete()

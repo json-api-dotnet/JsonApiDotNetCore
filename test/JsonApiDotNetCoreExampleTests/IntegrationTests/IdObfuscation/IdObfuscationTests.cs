@@ -214,22 +214,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 data = new
                 {
                     type = "debitCards",
-                    attributes = new
-                    {
-                        ownerName = newCard.OwnerName,
-                        pinCode = newCard.PinCode
-                    },
-                    relationships = new
-                    {
-                        account = new
-                        {
-                            data = new
-                            {
-                                type = "bankAccounts",
-                                id = existingAccount.StringId
-                            }
-                        }
-                    }
+                    attributes = new { ownerName = newCard.OwnerName, pinCode = newCard.PinCode },
+                    relationships = new { account = new { data = new { type = "bankAccounts", id = existingAccount.StringId } } }
                 }
             };
 
@@ -282,24 +268,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 {
                     type = "bankAccounts",
                     id = existingAccount.StringId,
-                    attributes = new
-                    {
-                        iban = newIban
-                    },
-                    relationships = new
-                    {
-                        cards = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "debitCards",
-                                    id = existingCard.StringId
-                                }
-                            }
-                        }
-                    }
+                    attributes = new { iban = newIban },
+                    relationships = new { cards = new { data = new[] { new { type = "debitCards", id = existingCard.StringId } } } }
                 }
             };
 
@@ -340,17 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "debitCards",
-                        id = existingDebitCard.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "debitCards", id = existingDebitCard.StringId } } };
 
             string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 
@@ -383,17 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "debitCards",
-                        id = existingAccount.Cards[0].StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "debitCards", id = existingAccount.Cards[0].StringId } } };
 
             string route = $"/bankAccounts/{existingAccount.StringId}/relationships/cards";
 

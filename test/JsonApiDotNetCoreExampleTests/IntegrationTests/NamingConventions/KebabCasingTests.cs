@@ -93,17 +93,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             // Arrange
             SwimmingPool newPool = _fakers.SwimmingPool.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "swimming-pools",
-                    attributes = new Dictionary<string, object>
-                    {
-                        ["is-indoor"] = newPool.IsIndoor
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "swimming-pools", attributes = new Dictionary<string, object> { ["is-indoor"] = newPool.IsIndoor } } };
 
             const string route = "/public-api/swimming-pools";
 
@@ -172,12 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             {
                 data = new
                 {
-                    type = "diving-boards",
-                    id = existingBoard.StringId,
-                    attributes = new Dictionary<string, object>
-                    {
-                        ["height-in-meters"] = -1
-                    }
+                    type = "diving-boards", id = existingBoard.StringId, attributes = new Dictionary<string, object> { ["height-in-meters"] = -1 }
                 }
             };
 

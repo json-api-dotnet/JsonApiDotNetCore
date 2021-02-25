@@ -26,18 +26,11 @@ namespace Benchmarks.Query
 
         public QueryParserBenchmarks()
         {
-            IJsonApiOptions options = new JsonApiOptions
-            {
-                EnableLegacyFilterNotation = true
-            };
+            IJsonApiOptions options = new JsonApiOptions { EnableLegacyFilterNotation = true };
 
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
 
-            var request = new JsonApiRequest
-            {
-                PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource)),
-                IsCollection = true
-            };
+            var request = new JsonApiRequest { PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource)), IsCollection = true };
 
             _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, request, options, _queryStringAccessor);
             _queryStringReaderForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, request, options, _queryStringAccessor);

@@ -11,10 +11,7 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class SameResourceTypeTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.OnReturn
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
 
         [Fact]
         public void Resource_Has_Multiple_Relations_To_Same_Type()
@@ -27,32 +24,11 @@ namespace UnitTests.ResourceHooks.Executor
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
             var person1 = new Person();
-
-            var todo = new TodoItem
-            {
-                Owner = person1
-            };
-
-            var person2 = new Person
-            {
-                AssignedTodoItems = new HashSet<TodoItem>
-                {
-                    todo
-                }
-            };
-
+            var todo = new TodoItem { Owner = person1 };
+            var person2 = new Person { AssignedTodoItems = new HashSet<TodoItem> { todo } };
             todo.Assignee = person2;
-
-            var person3 = new Person
-            {
-                StakeHolderTodoItem = todo
-            };
-
-            todo.StakeHolders = new HashSet<Person>
-            {
-                person3
-            };
-
+            var person3 = new Person { StakeHolderTodoItem = todo };
+            todo.StakeHolders = new HashSet<Person> { person3 };
             List<TodoItem> todoList = todo.AsList();
 
             // Act
@@ -89,34 +65,12 @@ namespace UnitTests.ResourceHooks.Executor
             // Arrange
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             (ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
-
-            var rootTodo = new TodoItem
-            {
-                Id = 1
-            };
-
-            var child = new TodoItem
-            {
-                ParentTodo = rootTodo,
-                Id = 2
-            };
-
+            var rootTodo = new TodoItem { Id = 1 };
+            var child = new TodoItem { ParentTodo = rootTodo, Id = 2 };
             rootTodo.ChildTodoItems = child.AsList();
-
-            var grandChild = new TodoItem
-            {
-                ParentTodo = child,
-                Id = 3
-            };
-
+            var grandChild = new TodoItem { ParentTodo = child, Id = 3 };
             child.ChildTodoItems = grandChild.AsList();
-
-            var greatGrandChild = new TodoItem
-            {
-                ParentTodo = grandChild,
-                Id = 4
-            };
-
+            var greatGrandChild = new TodoItem { ParentTodo = grandChild, Id = 4 };
             grandChild.ChildTodoItems = greatGrandChild.AsList();
             greatGrandChild.ChildTodoItems = rootTodo.AsList();
             List<TodoItem> todoList = rootTodo.AsList();

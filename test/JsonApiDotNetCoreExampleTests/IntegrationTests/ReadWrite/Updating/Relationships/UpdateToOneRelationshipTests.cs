@@ -35,10 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -71,10 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/workItemGroups/{existingGroup.StringId}/relationships/color";
 
@@ -109,14 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItemGroups",
-                    id = existingGroup.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "workItemGroups", id = existingGroup.StringId } };
 
             string route = $"/rgbColors/{existingColor.StringId}/relationships/group";
 
@@ -155,14 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = existingGroups[0].Color.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = existingGroups[0].Color.StringId } };
 
             string route = $"/workItemGroups/{existingGroups[1].StringId}/relationships/color";
 
@@ -209,14 +189,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = existingUserAccounts[1].StringId
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = existingUserAccounts[1].StringId } };
 
             string route = $"/workItems/{existingUserAccounts[0].AssignedItems.ElementAt(1).StringId}/relationships/assignee";
 
@@ -280,13 +253,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    id = 99999999
-                }
-            };
+            var requestBody = new { data = new { id = 99999999 } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -316,14 +283,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "doesNotExist",
-                    id = 99999999
-                }
-            };
+            var requestBody = new { data = new { type = "doesNotExist", id = 99999999 } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -353,13 +313,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts"
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts" } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -389,14 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = 99999999
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = 99999999 } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -427,14 +374,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = existingUserAccount.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = existingUserAccount.StringId } };
 
             string route = $"/doesNotExist/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -459,14 +399,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = existingUserAccount.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = existingUserAccount.StringId } };
 
             const string route = "/workItems/99999999/relationships/assignee";
 
@@ -496,14 +429,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "userAccounts",
-                    id = 99999999
-                }
-            };
+            var requestBody = new { data = new { type = "userAccounts", id = 99999999 } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/doesNotExist";
 
@@ -534,14 +460,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = existingColor.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = existingColor.StringId } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -574,17 +493,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "userAccounts",
-                        id = existingUserAccount.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "userAccounts", id = existingUserAccount.StringId } } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/assignee";
 
@@ -617,10 +526,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = (object)null
-            };
+            var requestBody = new { data = (object)null };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/parent";
 
@@ -652,14 +558,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    id = existingWorkItem.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", id = existingWorkItem.StringId } };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/parent";
 

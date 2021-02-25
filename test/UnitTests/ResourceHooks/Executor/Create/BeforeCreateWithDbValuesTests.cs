@@ -18,17 +18,10 @@ namespace UnitTests.ResourceHooks.Executor.Create
 
         private readonly ResourceHook[] _targetHooks =
         {
-            ResourceHook.BeforeCreate,
-            ResourceHook.BeforeImplicitUpdateRelationship,
-            ResourceHook.BeforeUpdateRelationship
+            ResourceHook.BeforeCreate, ResourceHook.BeforeImplicitUpdateRelationship, ResourceHook.BeforeUpdateRelationship
         };
 
-        private readonly ResourceHook[] _targetHooksNoImplicit =
-        {
-            ResourceHook.BeforeCreate,
-            ResourceHook.BeforeUpdateRelationship
-        };
-
+        private readonly ResourceHook[] _targetHooksNoImplicit = { ResourceHook.BeforeCreate, ResourceHook.BeforeUpdateRelationship };
         private readonly string _personId;
         private readonly List<TodoItem> _todoList;
         private readonly DbContextOptions<AppDbContext> _options;

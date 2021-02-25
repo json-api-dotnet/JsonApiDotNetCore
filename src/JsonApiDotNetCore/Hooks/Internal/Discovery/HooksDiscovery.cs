@@ -22,9 +22,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 
         private readonly ResourceHook[] _databaseValuesAttributeAllowed =
         {
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeUpdateRelationship,
-            ResourceHook.BeforeDelete
+            ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship, ResourceHook.BeforeDelete
         };
 
         /// <inheritdoc />

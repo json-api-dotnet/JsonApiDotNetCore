@@ -35,23 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
         public async Task Returns_top_level_meta_in_create_resource_with_side_effects()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "performers", attributes = new { } } } } };
 
             const string route = "/operations";
 
@@ -91,18 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = existingLanguage.StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "textLanguages", id = existingLanguage.StringId, attributes = new { } } }
                 }
             };
 

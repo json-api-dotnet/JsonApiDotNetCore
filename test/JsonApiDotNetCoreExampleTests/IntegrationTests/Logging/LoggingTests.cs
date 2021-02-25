@@ -50,18 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 
             AuditEntry newEntry = _fakers.AuditEntry.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "auditEntries",
-                    attributes = new
-                    {
-                        userName = newEntry.UserName,
-                        createdAt = newEntry.CreatedAt
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "auditEntries", attributes = new { userName = newEntry.UserName, createdAt = newEntry.CreatedAt } } };
 
             // Arrange
             const string route = "/auditEntries";

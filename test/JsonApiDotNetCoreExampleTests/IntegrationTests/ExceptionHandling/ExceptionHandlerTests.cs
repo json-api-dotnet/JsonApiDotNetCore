@@ -57,10 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
             var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
             loggerFactory.Logger.Clear();
 
-            var consumerArticle = new ConsumerArticle
-            {
-                Code = ConsumerArticleService.UnavailableArticlePrefix + "123"
-            };
+            var consumerArticle = new ConsumerArticle { Code = ConsumerArticleService.UnavailableArticlePrefix + "123" };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

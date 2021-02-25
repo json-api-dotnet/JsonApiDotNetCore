@@ -30,11 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             // @formatter:wrap_chained_method_calls restore
             // @formatter:keep_existing_linebreaks restore
 
-            Request = new JsonApiRequest
-            {
-                PrimaryResource = ResourceGraph.GetResourceContext<Blog>(),
-                IsCollection = true
-            };
+            Request = new JsonApiRequest { PrimaryResource = ResourceGraph.GetResourceContext<Blog>(), IsCollection = true };
         }
     }
 }

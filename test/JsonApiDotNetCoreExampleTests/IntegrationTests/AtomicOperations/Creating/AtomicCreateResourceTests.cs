@@ -37,19 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                                artistName = newArtistName,
-                                bornAt = newBornAt
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "performers", attributes = new { artistName = newArtistName, bornAt = newBornAt } } }
                 }
             };
 
@@ -109,10 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 });
             }
 
-            var requestBody = new
-            {
-                atomic__operations = operationElements
-            };
+            var requestBody = new { atomic__operations = operationElements };
 
             const string route = "/operations";
 
@@ -165,23 +150,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            },
-                            relationship = new
-                            {
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "add", data = new { type = "performers", attributes = new { }, relationship = new { } } } }
             };
 
             const string route = "/operations";
@@ -221,19 +190,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            attributes = new
-                            {
-                                doesNotExist = "ignored",
-                                name = newName
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "playlists", attributes = new { doesNotExist = "ignored", name = newName } } }
                 }
             };
 
@@ -275,18 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         op = "add",
                         data = new
                         {
-                            type = "lyrics",
-                            relationships = new
-                            {
-                                doesNotExist = new
-                                {
-                                    data = new
-                                    {
-                                        type = "doesNotExist",
-                                        id = 12345678
-                                    }
-                                }
-                            }
+                            type = "lyrics", relationships = new { doesNotExist = new { data = new { type = "doesNotExist", id = 12345678 } } }
                         }
                     }
                 }
@@ -327,19 +273,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            attributes = new
-                            {
-                                title = newTitle
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", id = Guid.NewGuid().ToString(), attributes = new { title = newTitle } } }
                 }
             };
 
@@ -364,17 +298,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_href_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        href = "/api/v1/musicTracks"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", href = "/api/v1/musicTracks" } } };
 
             const string route = "/operations";
 
@@ -397,20 +321,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_ref_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", @ref = new { type = "musicTracks" } } } };
 
             const string route = "/operations";
 
@@ -433,16 +344,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_missing_data()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add" } } };
 
             const string route = "/operations";
 
@@ -465,22 +367,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_missing_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { attributes = new { } } } } };
 
             const string route = "/operations";
 
@@ -503,20 +390,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Cannot_create_resource_for_unknown_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "doesNotExist"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "doesNotExist" } } } };
 
             const string route = "/operations";
 
@@ -545,21 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                attributes = new
-                                {
-                                    artistName = newArtistName
-                                }
-                            }
-                        }
-                    }
+                    new { op = "add", data = new[] { new { type = "performers", attributes = new { artistName = newArtistName } } } }
                 }
             };
 
@@ -586,21 +446,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                                createdAt = 12.July(1980)
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "add", data = new { type = "lyrics", attributes = new { createdAt = 12.July(1980) } } } }
             };
 
             const string route = "/operations";
@@ -630,19 +476,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            attributes = new
-                            {
-                                name = newPlaylistName,
-                                isArchived = true
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "playlists", attributes = new { name = newPlaylistName, isArchived = true } } }
                 }
             };
 
@@ -669,21 +503,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                                bornAt = "not-a-valid-time"
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "add", data = new { type = "performers", attributes = new { bornAt = "not-a-valid-time" } } } }
             };
 
             const string route = "/operations";
@@ -729,39 +549,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle
-                            },
+                            attributes = new { title = newTitle },
                             relationships = new
                             {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = existingLyric.StringId
-                                    }
-                                },
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                },
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        }
-                                    }
-                                }
+                                lyric = new { data = new { type = "lyrics", id = existingLyric.StringId } },
+                                ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } },
+                                performers = new { data = new[] { new { type = "performers", id = existingPerformer.StringId } } }
                             }
                         }
                     }

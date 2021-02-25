@@ -40,11 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             var userRolesService = (FakeUserRolesService)_testContext.Factory.Services.GetRequiredService<IUserRolesService>();
             userRolesService.AllowIncludeOwner = false;
 
-            var resource = new CallableResource
-            {
-                Label = "A",
-                IsDeleted = false
-            };
+            var resource = new CallableResource { Label = "A", IsDeleted = false };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -75,26 +71,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    IsDeleted = true
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    IsDeleted = false
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    IsDeleted = true
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    IsDeleted = false
-                }
+                new CallableResource { Label = "A", IsDeleted = true },
+                new CallableResource { Label = "A", IsDeleted = false },
+                new CallableResource { Label = "B", IsDeleted = true },
+                new CallableResource { Label = "B", IsDeleted = false }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -125,26 +105,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    IsDeleted = true
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    IsDeleted = false
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    IsDeleted = true
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    IsDeleted = false
-                }
+                new CallableResource { Label = "A", IsDeleted = true },
+                new CallableResource { Label = "A", IsDeleted = false },
+                new CallableResource { Label = "B", IsDeleted = true },
+                new CallableResource { Label = "B", IsDeleted = false }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -174,24 +138,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    CreatedAt = 1.January(2001),
-                    ModifiedAt = 15.January(2001)
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    CreatedAt = 1.January(2001),
-                    ModifiedAt = 15.December(2001)
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    CreatedAt = 1.February(2001),
-                    ModifiedAt = 15.January(2001)
-                }
+                new CallableResource { Label = "A", CreatedAt = 1.January(2001), ModifiedAt = 15.January(2001) },
+                new CallableResource { Label = "A", CreatedAt = 1.January(2001), ModifiedAt = 15.December(2001) },
+                new CallableResource { Label = "B", CreatedAt = 1.February(2001), ModifiedAt = 15.January(2001) }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -221,24 +170,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    CreatedAt = 1.January(2001),
-                    ModifiedAt = 15.January(2001)
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    CreatedAt = 1.January(2001),
-                    ModifiedAt = 15.December(2001)
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    CreatedAt = 1.February(2001),
-                    ModifiedAt = 15.January(2001)
-                }
+                new CallableResource { Label = "A", CreatedAt = 1.January(2001), ModifiedAt = 15.January(2001) },
+                new CallableResource { Label = "A", CreatedAt = 1.January(2001), ModifiedAt = 15.December(2001) },
+                new CallableResource { Label = "B", CreatedAt = 1.February(2001), ModifiedAt = 15.January(2001) }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -295,11 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         public async Task Attribute_inclusion_from_resource_definition_is_applied_for_empty_query_string()
         {
             // Arrange
-            var resource = new CallableResource
-            {
-                Label = "X",
-                PercentageComplete = 5
-            };
+            var resource = new CallableResource { Label = "X", PercentageComplete = 5 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -325,11 +255,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         public async Task Attribute_inclusion_from_resource_definition_is_applied_for_non_empty_query_string()
         {
             // Arrange
-            var resource = new CallableResource
-            {
-                Label = "X",
-                PercentageComplete = 5
-            };
+            var resource = new CallableResource { Label = "X", PercentageComplete = 5 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -357,11 +283,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         public async Task Attribute_exclusion_from_resource_definition_is_applied_for_empty_query_string()
         {
             // Arrange
-            var resource = new CallableResource
-            {
-                Label = "X",
-                RiskLevel = 3
-            };
+            var resource = new CallableResource { Label = "X", RiskLevel = 3 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -387,11 +309,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         public async Task Attribute_exclusion_from_resource_definition_is_applied_for_non_empty_query_string()
         {
             // Arrange
-            var resource = new CallableResource
-            {
-                Label = "X",
-                RiskLevel = 3
-            };
+            var resource = new CallableResource { Label = "X", RiskLevel = 3 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -420,26 +338,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    RiskLevel = 3
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    RiskLevel = 8
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    RiskLevel = 3
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    RiskLevel = 8
-                }
+                new CallableResource { Label = "A", RiskLevel = 3 },
+                new CallableResource { Label = "A", RiskLevel = 8 },
+                new CallableResource { Label = "B", RiskLevel = 3 },
+                new CallableResource { Label = "B", RiskLevel = 8 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -468,26 +370,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
-                {
-                    Label = "A",
-                    RiskLevel = 3
-                },
-                new CallableResource
-                {
-                    Label = "A",
-                    RiskLevel = 8
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    RiskLevel = 3
-                },
-                new CallableResource
-                {
-                    Label = "B",
-                    RiskLevel = 8
-                }
+                new CallableResource { Label = "A", RiskLevel = 3 },
+                new CallableResource { Label = "A", RiskLevel = 8 },
+                new CallableResource { Label = "B", RiskLevel = 3 },
+                new CallableResource { Label = "B", RiskLevel = 8 }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -515,18 +401,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resource = new CallableResource
             {
-                RiskLevel = 3,
-                Children = new List<CallableResource>
-                {
-                    new CallableResource
-                    {
-                        RiskLevel = 3
-                    },
-                    new CallableResource
-                    {
-                        RiskLevel = 8
-                    }
-                }
+                RiskLevel = 3, Children = new List<CallableResource> { new CallableResource { RiskLevel = 3 }, new CallableResource { RiskLevel = 8 } }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

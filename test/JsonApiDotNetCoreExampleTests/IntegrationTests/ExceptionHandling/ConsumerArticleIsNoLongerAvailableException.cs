@@ -11,8 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
         public ConsumerArticleIsNoLongerAvailableException(string articleCode, string supportEmailAddress)
             : base(new Error(HttpStatusCode.Gone)
             {
-                Title = "The requested article is no longer available.",
-                Detail = $"Article with code '{articleCode}' is no longer available."
+                Title = "The requested article is no longer available.", Detail = $"Article with code '{articleCode}' is no longer available."
             })
         {
             SupportEmailAddress = supportEmailAddress;

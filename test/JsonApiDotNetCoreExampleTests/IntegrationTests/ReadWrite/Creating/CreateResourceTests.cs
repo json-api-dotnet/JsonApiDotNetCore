@@ -37,17 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             WorkItem newWorkItem = _fakers.WorkItem.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                        description = newWorkItem.Description
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { description = newWorkItem.Description } } };
 
             const string route = "/workItems";
 
@@ -74,17 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             WorkItem newWorkItem = _fakers.WorkItem.Generate();
             newWorkItem.DueAt = null;
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                        description = newWorkItem.Description
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { description = newWorkItem.Description } } };
 
             const string route = "/workItems";
 
@@ -122,15 +102,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "userAccounts",
-                    attributes = new
-                    {
-                        firstName = newUserAccount.FirstName,
-                        lastName = newUserAccount.LastName
-                    }
-                }
+                data = new { type = "userAccounts", attributes = new { firstName = newUserAccount.FirstName, lastName = newUserAccount.LastName } }
             };
 
             const string route = "/userAccounts";
@@ -167,17 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItemGroups",
-                    attributes = new
-                    {
-                        name = newGroup.Name
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItemGroups", attributes = new { name = newGroup.Name } } };
 
             const string route = "/workItemGroups";
 
@@ -209,19 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Can_create_resource_without_attributes_or_relationships()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                    },
-                    relationship = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { }, relationship = new { } } };
 
             const string route = "/workItems";
 
@@ -254,18 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             WorkItem newWorkItem = _fakers.WorkItem.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                        doesNotExist = "ignored",
-                        description = newWorkItem.Description
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { doesNotExist = "ignored", description = newWorkItem.Description } } };
 
             const string route = "/workItems";
 
@@ -296,21 +235,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             var requestBody = new
             {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        doesNotExist = new
-                        {
-                            data = new
-                            {
-                                type = "doesNotExist",
-                                id = 12345678
-                            }
-                        }
-                    }
-                }
+                data = new { type = "workItems", relationships = new { doesNotExist = new { data = new { type = "doesNotExist", id = 12345678 } } } }
             };
 
             const string route = "/workItems";
@@ -340,18 +265,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = "0A0B0C",
-                    attributes = new
-                    {
-                        name = "Black"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = "0A0B0C", attributes = new { name = "Black" } } };
 
             const string route = "/rgbColors";
 
@@ -396,15 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_for_missing_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    attributes = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { attributes = new { } } };
 
             const string route = "/workItems";
 
@@ -426,16 +332,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_for_unknown_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "doesNotExist",
-                    attributes = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "doesNotExist", attributes = new { } } };
 
             const string route = "/workItems";
 
@@ -457,16 +354,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_on_unknown_resource_type_in_url()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { } } };
 
             const string route = "/doesNotExist";
 
@@ -483,14 +371,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_on_resource_type_mismatch_between_url_and_body()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = "0A0B0C"
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = "0A0B0C" } };
 
             const string route = "/workItems";
 
@@ -512,17 +393,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_attribute_with_blocked_capability()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E" } } };
 
             const string route = "/workItems";
 
@@ -544,17 +415,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_with_readonly_attribute()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItemGroups",
-                    attributes = new
-                    {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItemGroups", attributes = new { concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E" } } };
 
             const string route = "/workItemGroups";
 
@@ -598,17 +459,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_resource_with_incompatible_attribute_value()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    attributes = new
-                    {
-                        dueAt = "not-a-valid-time"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItems", attributes = new { dueAt = "not-a-valid-time" } } };
 
             const string route = "/workItems";
 
@@ -647,42 +498,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 data = new
                 {
                     type = "workItems",
-                    attributes = new
-                    {
-                        description = newDescription
-                    },
+                    attributes = new { description = newDescription },
                     relationships = new
                     {
-                        assignee = new
-                        {
-                            data = new
-                            {
-                                type = "userAccounts",
-                                id = existingUserAccounts[0].StringId
-                            }
-                        },
-                        subscribers = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccounts[1].StringId
-                                }
-                            }
-                        },
-                        tags = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "workTags",
-                                    id = existingTag.StringId
-                                }
-                            }
-                        }
+                        assignee = new { data = new { type = "userAccounts", id = existingUserAccounts[0].StringId } },
+                        subscribers = new { data = new[] { new { type = "userAccounts", id = existingUserAccounts[1].StringId } } },
+                        tags = new { data = new[] { new { type = "workTags", id = existingTag.StringId } } }
                     }
                 }
             };

@@ -39,24 +39,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Returns_JsonApi_ContentType_header_with_AtomicOperations_extension()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
 
@@ -72,17 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_unknown_ContentType_header()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = "text/html";
@@ -106,17 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_JsonApi_ContentType_header()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.MediaType;
@@ -133,24 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Permits_JsonApi_ContentType_header_with_AtomicOperations_extension_at_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
@@ -166,17 +112,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_with_profile()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.MediaType + "; profile=something";
@@ -200,17 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_with_extension()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.MediaType + "; ext=something";
@@ -234,17 +160,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_with_AtomicOperations_extension_at_resource_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
@@ -268,17 +184,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_with_CharSet()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.MediaType + "; charset=ISO-8859-4";
@@ -302,17 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_with_unknown_parameter()
         {
             // Arrange
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "policies",
-                    attributes = new
-                    {
-                        name = "some"
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "policies", attributes = new { name = "some" } } };
 
             const string route = "/policies";
             const string contentType = HeaderConstants.MediaType + "; unknown=unexpected";
@@ -336,24 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public async Task Denies_JsonApi_ContentType_header_at_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "policies",
-                            attributes = new
-                            {
-                                name = "some"
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "policies", attributes = new { name = "some" } } } } };
 
             const string route = "/operations";
             const string contentType = HeaderConstants.MediaType;

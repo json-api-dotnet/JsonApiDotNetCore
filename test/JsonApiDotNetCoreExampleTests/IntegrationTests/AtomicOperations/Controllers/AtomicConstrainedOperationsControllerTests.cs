@@ -33,30 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle1
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle2
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", attributes = new { title = newTitle1 } } },
+                    new { op = "add", data = new { type = "musicTracks", attributes = new { title = newTitle2 } } }
                 }
             };
 
@@ -76,23 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         public async Task Cannot_create_resource_for_mismatching_resource_type()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "add", data = new { type = "performers", attributes = new { } } } } };
 
             const string route = "/operations/musicTracks/create";
 
@@ -125,21 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
 
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", data = new { type = "musicTracks", id = existingTrack.StringId, attributes = new { } } } }
             };
 
             const string route = "/operations/musicTracks/create";
@@ -179,20 +127,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                     new
                     {
                         op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                id = existingPerformer.StringId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "performers", id = existingPerformer.StringId } }
                     }
                 }
             };

@@ -47,30 +47,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "textLanguages",
-                            id = existingLanguage.StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "textLanguages", id = existingLanguage.StringId, attributes = new { } } },
+                    new { op = "update", data = new { type = "recordCompanies", id = existingCompany.StringId, attributes = new { } } }
                 }
             };
 

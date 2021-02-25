@@ -31,15 +31,11 @@ namespace UnitTests.Serialization
                 Last = "http://www.dummy.com/dummy-last-link"
             };
 
-            DummyResourceLinks = new ResourceLinks
-            {
-                Self = "http://www.dummy.com/dummy-resource-self-link"
-            };
+            DummyResourceLinks = new ResourceLinks { Self = "http://www.dummy.com/dummy-resource-self-link" };
 
             DummyRelationshipLinks = new RelationshipLinks
             {
-                Related = "http://www.dummy.com/dummy-relationship-related-link",
-                Self = "http://www.dummy.com/dummy-relationship-self-link"
+                Related = "http://www.dummy.com/dummy-relationship-related-link", Self = "http://www.dummy.com/dummy-relationship-self-link"
             };
         }
 

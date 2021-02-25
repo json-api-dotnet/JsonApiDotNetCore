@@ -26,25 +26,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_inherited_attributes()
         {
             // Arrange
-            var newMan = new Man
-            {
-                FamilyName = "Smith",
-                IsRetired = true,
-                HasBeard = true
-            };
+            var newMan = new Man { FamilyName = "Smith", IsRetired = true, HasBeard = true };
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "men",
-                    attributes = new
-                    {
-                        familyName = newMan.FamilyName,
-                        isRetired = newMan.IsRetired,
-                        hasBeard = newMan.HasBeard
-                    }
-                }
+                data = new { type = "men", attributes = new { familyName = newMan.FamilyName, isRetired = newMan.IsRetired, hasBeard = newMan.HasBeard } }
             };
 
             const string route = "/men";
@@ -91,17 +77,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 data = new
                 {
                     type = "men",
-                    relationships = new
-                    {
-                        healthInsurance = new
-                        {
-                            data = new
-                            {
-                                type = "companyHealthInsurances",
-                                id = existingInsurance.StringId
-                            }
-                        }
-                    }
+                    relationships = new { healthInsurance = new { data = new { type = "companyHealthInsurances", id = existingInsurance.StringId } } }
                 }
             };
 
@@ -129,19 +105,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public async Task Can_update_resource_through_primary_endpoint()
         {
             // Arrange
-            var existingMan = new Man
-            {
-                FamilyName = "Smith",
-                IsRetired = false,
-                HasBeard = true
-            };
+            var existingMan = new Man { FamilyName = "Smith", IsRetired = false, HasBeard = true };
 
-            var newMan = new Man
-            {
-                FamilyName = "Jackson",
-                IsRetired = true,
-                HasBeard = false
-            };
+            var newMan = new Man { FamilyName = "Jackson", IsRetired = true, HasBeard = false };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -155,12 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 {
                     type = "men",
                     id = existingMan.StringId,
-                    attributes = new
-                    {
-                        familyName = newMan.FamilyName,
-                        isRetired = newMan.IsRetired,
-                        hasBeard = newMan.HasBeard
-                    }
+                    attributes = new { familyName = newMan.FamilyName, isRetired = newMan.IsRetired, hasBeard = newMan.HasBeard }
                 }
             };
 
@@ -198,14 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "companyHealthInsurances",
-                    id = existingInsurance.StringId
-                }
-            };
+            var requestBody = new { data = new { type = "companyHealthInsurances", id = existingInsurance.StringId } };
 
             string route = $"/men/{existingMan.StringId}/relationships/healthInsurance";
 
@@ -251,16 +205,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "men",
-                                    id = existingFather.StringId
-                                },
-                                new
-                                {
-                                    type = "women",
-                                    id = existingMother.StringId
-                                }
+                                new { type = "men", id = existingFather.StringId }, new { type = "women", id = existingMother.StringId }
                             }
                         }
                     }
@@ -303,22 +248,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "men",
-                        id = existingFather.StringId
-                    },
-                    new
-                    {
-                        type = "women",
-                        id = existingMother.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "men", id = existingFather.StringId }, new { type = "women", id = existingMother.StringId } } };
 
             string route = $"/men/{existingChild.StringId}/relationships/parents";
 
@@ -365,16 +295,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "books",
-                                    id = existingBook.StringId
-                                },
-                                new
-                                {
-                                    type = "videos",
-                                    id = existingVideo.StringId
-                                }
+                                new { type = "books", id = existingBook.StringId }, new { type = "videos", id = existingVideo.StringId }
                             }
                         }
                     }
@@ -426,22 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new[]
-                {
-                    new
-                    {
-                        type = "books",
-                        id = existingBook.StringId
-                    },
-                    new
-                    {
-                        type = "videos",
-                        id = existingVideo.StringId
-                    }
-                }
-            };
+            var requestBody = new { data = new[] { new { type = "books", id = existingBook.StringId }, new { type = "videos", id = existingVideo.StringId } } };
 
             string route = $"/men/{existingMan.StringId}/relationships/favoriteContent";
 

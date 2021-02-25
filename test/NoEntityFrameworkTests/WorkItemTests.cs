@@ -72,13 +72,7 @@ namespace NoEntityFrameworkTests
         public async Task Can_create_WorkItem()
         {
             // Arrange
-            var newWorkItem = new WorkItem
-            {
-                IsBlocked = true,
-                Title = "Some",
-                DurationInHours = 2,
-                ProjectId = Guid.NewGuid()
-            };
+            var newWorkItem = new WorkItem { IsBlocked = true, Title = "Some", DurationInHours = 2, ProjectId = Guid.NewGuid() };
 
             var requestBody = new
             {

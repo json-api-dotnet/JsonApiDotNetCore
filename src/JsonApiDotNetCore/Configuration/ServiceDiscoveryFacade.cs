@@ -59,11 +59,8 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
-        internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new HashSet<Type>
-        {
-            typeof(IResourceDefinition<>),
-            typeof(IResourceDefinition<,>)
-        };
+        internal static readonly HashSet<Type> ResourceDefinitionInterfaces =
+            new HashSet<Type> { typeof(IResourceDefinition<>), typeof(IResourceDefinition<,>) };
 
         private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;

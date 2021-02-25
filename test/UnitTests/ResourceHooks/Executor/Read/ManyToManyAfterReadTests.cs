@@ -11,10 +11,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 {
     public sealed class ManyToManyAfterReadTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.AfterRead
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterRead };
 
         [Fact]
         public void AfterRead()

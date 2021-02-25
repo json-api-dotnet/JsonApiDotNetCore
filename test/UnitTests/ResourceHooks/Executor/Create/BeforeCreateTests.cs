@@ -10,11 +10,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
 {
     public sealed class BeforeCreateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.BeforeCreate,
-            ResourceHook.BeforeUpdateRelationship
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeCreate, ResourceHook.BeforeUpdateRelationship };
 
         [Fact]
         public void BeforeCreate()

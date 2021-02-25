@@ -49,26 +49,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle
-                            },
+                            attributes = new { title = newTitle },
                             relationships = new
                             {
                                 performers = new
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformers[0].StringId
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformers[1].StringId
-                                        }
+                                        new { type = "performers", id = existingPerformers[0].StringId },
+                                        new { type = "performers", id = existingPerformers[1].StringId }
                                     }
                                 }
                             }
@@ -127,31 +116,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "playlists",
-                            attributes = new
-                            {
-                                name = newName
-                            },
+                            attributes = new { name = newName },
                             relationships = new
                             {
                                 tracks = new
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[0].StringId
-                                        },
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[1].StringId
-                                        },
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[2].StringId
-                                        }
+                                        new { type = "musicTracks", id = existingTracks[0].StringId },
+                                        new { type = "musicTracks", id = existingTracks[1].StringId },
+                                        new { type = "musicTracks", id = existingTracks[2].StringId }
                                     }
                                 }
                             }
@@ -208,23 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            id = 12345678
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        data = new { type = "musicTracks", relationships = new { performers = new { data = new[] { new { id = 12345678 } } } } }
                     }
                 }
             };
@@ -260,20 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "doesNotExist",
-                                            id = 12345678
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { performers = new { data = new[] { new { type = "doesNotExist", id = 12345678 } } } }
                         }
                     }
                 }
@@ -309,20 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         op = "add",
                         data = new
                         {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers"
-                                        }
-                                    }
-                                }
-                            }
+                            type = "musicTracks", relationships = new { performers = new { data = new[] { new { type = "performers" } } } }
                         }
                     }
                 }
@@ -361,26 +293,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle
-                            },
+                            attributes = new { title = newTitle },
                             relationships = new
                             {
                                 performers = new
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = 12345678
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = 87654321
-                                        }
+                                        new { type = "performers", id = 12345678 }, new { type = "performers", id = 87654321 }
                                     }
                                 }
                             }
@@ -426,20 +346,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "playlists",
-                                            id = 12345678
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { performers = new { data = new[] { new { type = "playlists", id = 12345678 } } } }
                         }
                     }
                 }
@@ -485,26 +392,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle
-                            },
+                            attributes = new { title = newTitle },
                             relationships = new
                             {
                                 performers = new
                                 {
                                     data = new[]
                                     {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        }
+                                        new { type = "performers", id = existingPerformer.StringId },
+                                        new { type = "performers", id = existingPerformer.StringId }
                                     }
                                 }
                             }
@@ -547,21 +443,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = (object)null
-                                }
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", relationships = new { performers = new { data = (object)null } } } }
                 }
             };
 
@@ -590,21 +472,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = (object)null
-                                }
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "playlists", relationships = new { tracks = new { data = (object)null } } } }
                 }
             };
 

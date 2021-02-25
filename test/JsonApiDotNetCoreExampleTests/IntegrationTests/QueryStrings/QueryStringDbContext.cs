@@ -25,11 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<BlogPostLabel>()
-                .HasKey(blogPostLabel => new
-                {
-                    blogPostLabel.BlogPostId,
-                    blogPostLabel.LabelId
-                });
+                .HasKey(blogPostLabel => new { blogPostLabel.BlogPostId, blogPostLabel.LabelId });
 
             builder.Entity<WebAccount>()
                 .HasMany(webAccount => webAccount.Posts)

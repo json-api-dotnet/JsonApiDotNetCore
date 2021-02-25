@@ -51,12 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             User newUser = _fakers.User.Generate();
 
-            IRequestSerializer serializer = GetRequestSerializer<User>(p => new
-            {
-                p.Password,
-                p.UserName
-            });
-
+            IRequestSerializer serializer = GetRequestSerializer<User>(p => new { p.Password, p.UserName });
             string requestBody = serializer.Serialize(newUser);
 
             const string route = "/api/v1/users";
@@ -96,11 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             existingUser.Password = _fakers.User.Generate().Password;
 
-            IRequestSerializer serializer = GetRequestSerializer<User>(p => new
-            {
-                p.Password
-            });
-
+            IRequestSerializer serializer = GetRequestSerializer<User>(p => new { p.Password });
             string requestBody = serializer.Serialize(existingUser);
 
             string route = $"/api/v1/users/{existingUser.Id}";
@@ -221,11 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             Person person = _fakers.Person.Generate();
-
-            person.Passport = new Passport
-            {
-                IsLocked = true
-            };
+            person.Passport = new Passport { IsLocked = true };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -308,18 +295,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             tags[0].Name = toBeExcluded;
 
             Article article = _fakers.Article.Generate();
-
-            article.ArticleTags = new HashSet<ArticleTag>
-            {
-                new ArticleTag
-                {
-                    Tag = tags[0]
-                },
-                new ArticleTag
-                {
-                    Tag = tags[1]
-                }
-            };
+            article.ArticleTags = new HashSet<ArticleTag> { new ArticleTag { Tag = tags[0] }, new ArticleTag { Tag = tags[1] } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -361,18 +337,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             {
                 data = new
                 {
-                    type = "people",
-                    relationships = new
-                    {
-                        passport = new
-                        {
-                            data = new
-                            {
-                                type = "passports",
-                                id = lockedPerson.Passport.StringId
-                            }
-                        }
-                    }
+                    type = "people", relationships = new { passport = new { data = new { type = "passports", id = lockedPerson.Passport.StringId } } }
                 }
             };
 
@@ -397,11 +362,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             Person person = _fakers.Person.Generate();
-
-            person.Passport = new Passport
-            {
-                IsLocked = true
-            };
+            person.Passport = new Passport { IsLocked = true };
 
             var newPassport = new Passport();
 
@@ -417,17 +378,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 {
                     type = "people",
                     id = person.Id,
-                    relationships = new
-                    {
-                        passport = new
-                        {
-                            data = new
-                            {
-                                type = "passports",
-                                id = newPassport.StringId
-                            }
-                        }
-                    }
+                    relationships = new { passport = new { data = new { type = "passports", id = newPassport.StringId } } }
                 }
             };
 
@@ -452,11 +403,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             // Arrange
             Person person = _fakers.Person.Generate();
-
-            person.Passport = new Passport
-            {
-                IsLocked = true
-            };
+            person.Passport = new Passport { IsLocked = true };
 
             var newPassport = new Passport();
 
@@ -466,21 +413,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 await dbContext.SaveChangesAsync();
             });
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "people",
-                    id = person.Id,
-                    relationships = new
-                    {
-                        passport = new
-                        {
-                            data = (object)null
-                        }
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "people", id = person.Id, relationships = new { passport = new { data = (object)null } } } };
 
             string route = $"/api/v1/people/{person.Id}";
 
@@ -554,16 +487,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "people",
-                                    id = persons[0].StringId
-                                },
-                                new
-                                {
-                                    type = "people",
-                                    id = persons[1].StringId
-                                }
+                                new { type = "people", id = persons[0].StringId }, new { type = "people", id = persons[1].StringId }
                             }
                         }
                     }
@@ -616,16 +540,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                         {
                             data = new[]
                             {
-                                new
-                                {
-                                    type = "people",
-                                    id = persons[0].StringId
-                                },
-                                new
-                                {
-                                    type = "people",
-                                    id = persons[1].StringId
-                                }
+                                new { type = "people", id = persons[0].StringId }, new { type = "people", id = persons[1].StringId }
                             }
                         }
                     }

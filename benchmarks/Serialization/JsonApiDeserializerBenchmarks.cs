@@ -20,12 +20,7 @@ namespace Benchmarks.Serialization
         {
             Data = new ResourceObject
             {
-                Type = BenchmarkResourcePublicNames.Type,
-                Id = "1",
-                Attributes = new Dictionary<string, object>
-                {
-                    ["name"] = Guid.NewGuid().ToString()
-                }
+                Type = BenchmarkResourcePublicNames.Type, Id = "1", Attributes = new Dictionary<string, object> { ["name"] = Guid.NewGuid().ToString() }
             }
         });
 

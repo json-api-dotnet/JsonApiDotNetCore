@@ -86,15 +86,13 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (Exception exception)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
-                {
-                    Title = "An unhandled error occurred while processing an operation in this request.",
-                    Detail = exception.Message,
-                    Source =
+                throw new JsonApiException(
+                    new Error(HttpStatusCode.InternalServerError)
                     {
-                        Pointer = $"/atomic:operations[{results.Count}]"
-                    }
-                }, exception);
+                        Title = "An unhandled error occurred while processing an operation in this request.",
+                        Detail = exception.Message,
+                        Source = { Pointer = $"/atomic:operations[{results.Count}]" }
+                    }, exception);
             }
 
             return results;

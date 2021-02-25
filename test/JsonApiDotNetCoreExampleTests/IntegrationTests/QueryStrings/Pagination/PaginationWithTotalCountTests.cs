@@ -270,26 +270,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
+                new BlogPostLabel { Label = _fakers.Label.Generate() }, new BlogPostLabel { Label = _fakers.Label.Generate() }
             };
 
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
+                new BlogPostLabel { Label = _fakers.Label.Generate() }, new BlogPostLabel { Label = _fakers.Label.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -334,14 +320,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
+                new BlogPostLabel { Label = _fakers.Label.Generate() }, new BlogPostLabel { Label = _fakers.Label.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

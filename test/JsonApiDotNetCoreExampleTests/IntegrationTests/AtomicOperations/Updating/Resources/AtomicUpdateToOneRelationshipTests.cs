@@ -46,18 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            relationships = new
-                            {
-                                track = new
-                                {
-                                    data = (object)null
-                                }
-                            }
-                        }
+                        data = new { type = "lyrics", id = existingLyric.StringId, relationships = new { track = new { data = (object)null } } }
                     }
                 }
             };
@@ -106,15 +95,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = (object)null
-                                }
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, relationships = new { lyric = new { data = (object)null } }
                         }
                     }
                 }
@@ -164,15 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         op = "update",
                         data = new
                         {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = (object)null
-                                }
-                            }
+                            type = "musicTracks", id = existingTrack.StringId, relationships = new { ownedBy = new { data = (object)null } }
                         }
                     }
                 }
@@ -223,17 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "lyrics",
                             id = existingLyric.StringId,
-                            relationships = new
-                            {
-                                track = new
-                                {
-                                    data = new
-                                    {
-                                        type = "musicTracks",
-                                        id = existingTrack.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { track = new { data = new { type = "musicTracks", id = existingTrack.StringId } } }
                         }
                     }
                 }
@@ -281,17 +244,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = existingLyric.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "lyrics", id = existingLyric.StringId } } }
                         }
                     }
                 }
@@ -339,17 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } } }
                         }
                     }
                 }
@@ -400,17 +343,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "lyrics",
                             id = existingLyric.StringId,
-                            relationships = new
-                            {
-                                track = new
-                                {
-                                    data = new
-                                    {
-                                        type = "musicTracks",
-                                        id = existingTrack.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { track = new { data = new { type = "musicTracks", id = existingTrack.StringId } } }
                         }
                     }
                 }
@@ -464,17 +397,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = existingLyric.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "lyrics", id = existingLyric.StringId } } }
                         }
                     }
                 }
@@ -528,17 +451,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } } }
                         }
                     }
                 }
@@ -588,20 +501,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "lyrics",
-                                            id = 99999999
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new[] { new { type = "lyrics", id = 99999999 } } } }
                         }
                     }
                 }
@@ -639,16 +539,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "lyrics",
                             id = 99999999,
-                            relationships = new
-                            {
-                                track = new
-                                {
-                                    data = new
-                                    {
-                                        id = Guid.NewGuid().ToString()
-                                    }
-                                }
-                            }
+                            relationships = new { track = new { data = new { id = Guid.NewGuid().ToString() } } }
                         }
                     }
                 }
@@ -686,17 +577,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "doesNotExist",
-                                        id = 99999999
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "doesNotExist", id = 99999999 } } }
                         }
                     }
                 }
@@ -734,16 +615,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics"
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "lyrics" } } }
                         }
                     }
                 }
@@ -781,18 +653,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = Guid.NewGuid().ToString(),
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = 99999999,
-                                        lid = "local-1"
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "lyrics", id = 99999999, lid = "local-1" } } }
                         }
                     }
                 }
@@ -838,17 +699,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = 99999999
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "lyrics", id = 99999999 } } }
                         }
                     }
                 }
@@ -894,17 +745,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                         {
                             type = "musicTracks",
                             id = existingTrack.StringId,
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "playlists",
-                                        id = 99999999
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new { type = "playlists", id = 99999999 } } }
                         }
                     }
                 }

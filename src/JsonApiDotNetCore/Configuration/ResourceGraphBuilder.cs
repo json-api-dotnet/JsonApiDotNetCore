@@ -150,9 +150,7 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     var idAttr = new AttrAttribute
                     {
-                        PublicName = FormatPropertyName(property),
-                        Property = property,
-                        Capabilities = _options.DefaultAttrCapabilities
+                        PublicName = FormatPropertyName(property), Property = property, Capabilities = _options.DefaultAttrCapabilities
                     };
 
                     attributes.Add(idAttr);

@@ -13,11 +13,7 @@ namespace JsonApiDotNetCore
     {
         private static readonly Type[] HashSetCompatibleCollectionTypes =
         {
-            typeof(HashSet<>),
-            typeof(ICollection<>),
-            typeof(ISet<>),
-            typeof(IEnumerable<>),
-            typeof(IReadOnlyCollection<>)
+            typeof(HashSet<>), typeof(ICollection<>), typeof(ISet<>), typeof(IEnumerable<>), typeof(IReadOnlyCollection<>)
         };
 
         public static object ConvertType(object value, Type type)
@@ -212,10 +208,7 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            Type[] parameters =
-            {
-                parameter
-            };
+            Type[] parameters = { parameter };
 
             if (!hasInternalConstructor)
             {

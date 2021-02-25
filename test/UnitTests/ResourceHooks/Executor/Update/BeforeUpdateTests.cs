@@ -10,11 +10,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
 {
     public sealed class BeforeUpdateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.BeforeUpdate,
-            ResourceHook.BeforeUpdateRelationship
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
 
         [Fact]
         public void BeforeUpdate()

@@ -105,10 +105,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </example>
         public virtual async Task<IActionResult> PostOperationsAsync([FromBody] IList<OperationContainer> operations, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                operations
-            });
+            _traceWriter.LogMethodStart(new { operations });
 
             ArgumentGuard.NotNull(operations, nameof(operations));
 

@@ -177,10 +177,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
             FilterExpression filterExpression = CreateFilterByIds(ids, resourceContext);
 
-            var queryLayer = new QueryLayer(resourceContext)
-            {
-                Filter = filterExpression
-            };
+            var queryLayer = new QueryLayer(resourceContext) { Filter = filterExpression };
 
             List<ResourceFieldChainExpression> chains = relationshipsToNextLayer.Select(relationship => new ResourceFieldChainExpression(relationship))
                 .ToList();

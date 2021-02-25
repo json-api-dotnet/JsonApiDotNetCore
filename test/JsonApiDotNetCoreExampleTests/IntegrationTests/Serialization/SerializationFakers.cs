@@ -11,10 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
     {
         private static readonly TimeSpan[] MeetingDurations =
         {
-            TimeSpan.FromMinutes(15),
-            TimeSpan.FromMinutes(30),
-            TimeSpan.FromMinutes(45),
-            TimeSpan.FromMinutes(60)
+            TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(45), TimeSpan.FromMinutes(60)
         };
 
         private readonly Lazy<Faker<Meeting>> _lazyMeetingFaker = new Lazy<Faker<Meeting>>(() =>

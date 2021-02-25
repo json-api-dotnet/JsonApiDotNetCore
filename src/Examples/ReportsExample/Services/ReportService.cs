@@ -31,15 +31,7 @@ namespace ReportsExample.Services
         {
             return new List<Report>
             {
-                new Report
-                {
-                    Title = "Status Report",
-                    Statistics = new ReportStatistics
-                    {
-                        ProgressIndication = "Almost done",
-                        HoursSpent = 24
-                    }
-                }
+                new Report { Title = "Status Report", Statistics = new ReportStatistics { ProgressIndication = "Almost done", HoursSpent = 24 } }
             };
         }
     }

@@ -193,10 +193,7 @@ namespace JsonApiDotNetCore.Serialization
 
             var request = new JsonApiRequest
             {
-                Kind = EndpointKind.AtomicOperations,
-                BasePath = _request.BasePath,
-                PrimaryResource = primaryResourceContext,
-                OperationKind = kind
+                Kind = EndpointKind.AtomicOperations, BasePath = _request.BasePath, PrimaryResource = primaryResourceContext, OperationKind = kind
             };
 
             _request.CopyFrom(request);
@@ -208,8 +205,7 @@ namespace JsonApiDotNetCore.Serialization
 
             var targetedFields = new TargetedFields
             {
-                Attributes = _targetedFields.Attributes.ToHashSet(),
-                Relationships = _targetedFields.Relationships.ToHashSet()
+                Attributes = _targetedFields.Attributes.ToHashSet(), Relationships = _targetedFields.Relationships.ToHashSet()
             };
 
             AssertResourceIdIsNotTargeted(targetedFields);
@@ -368,8 +364,7 @@ namespace JsonApiDotNetCore.Serialization
 
             var targetedFields = new TargetedFields
             {
-                Attributes = _targetedFields.Attributes.ToHashSet(),
-                Relationships = _targetedFields.Relationships.ToHashSet()
+                Attributes = _targetedFields.Attributes.ToHashSet(), Relationships = _targetedFields.Relationships.ToHashSet()
             };
 
             return new OperationContainer(kind, primaryResource, targetedFields, request);

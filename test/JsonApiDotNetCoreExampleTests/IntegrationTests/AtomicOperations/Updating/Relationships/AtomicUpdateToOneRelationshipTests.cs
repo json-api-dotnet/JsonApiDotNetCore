@@ -43,17 +43,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            relationship = "track"
-                        },
-                        data = (object)null
-                    }
+                    new { op = "update", @ref = new { type = "lyrics", id = existingLyric.StringId, relationship = "track" }, data = (object)null }
                 }
             };
 
@@ -96,17 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = (object)null
-                    }
+                    new { op = "update", @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" }, data = (object)null }
                 }
             };
 
@@ -152,12 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "ownedBy"
-                        },
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "ownedBy" },
                         data = (object)null
                     }
                 }
@@ -204,17 +179,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            relationship = "track"
-                        },
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId
-                        }
+                        @ref = new { type = "lyrics", id = existingLyric.StringId, relationship = "track" },
+                        data = new { type = "musicTracks", id = existingTrack.StringId }
                     }
                 }
             };
@@ -257,17 +223,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" },
+                        data = new { type = "lyrics", id = existingLyric.StringId }
                     }
                 }
             };
@@ -310,17 +267,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "ownedBy"
-                        },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "ownedBy" },
+                        data = new { type = "recordCompanies", id = existingCompany.StringId }
                     }
                 }
             };
@@ -366,17 +314,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            relationship = "track"
-                        },
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId
-                        }
+                        @ref = new { type = "lyrics", id = existingLyric.StringId, relationship = "track" },
+                        data = new { type = "musicTracks", id = existingTrack.StringId }
                     }
                 }
             };
@@ -425,17 +364,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" },
+                        data = new { type = "lyrics", id = existingLyric.StringId }
                     }
                 }
             };
@@ -484,17 +414,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "ownedBy"
-                        },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            id = existingCompany.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "ownedBy" },
+                        data = new { type = "recordCompanies", id = existingCompany.StringId }
                     }
                 }
             };
@@ -524,17 +445,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_create_for_href_element()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        href = "/api/v1/musicTracks/1/relationships/ownedBy"
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "update", href = "/api/v1/musicTracks/1/relationships/ownedBy" } } };
 
             const string route = "/operations";
 
@@ -557,21 +468,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_create_for_missing_type_in_ref()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            id = 99999999,
-                            relationship = "track"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "update", @ref = new { id = 99999999, relationship = "track" } } } };
 
             const string route = "/operations";
 
@@ -596,19 +493,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "doesNotExist",
-                            id = 99999999,
-                            relationship = "ownedBy"
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", @ref = new { type = "doesNotExist", id = 99999999, relationship = "ownedBy" } } }
             };
 
             const string route = "/operations";
@@ -632,21 +517,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         public async Task Cannot_create_for_missing_ID_in_ref()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            relationship = "ownedBy"
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new[] { new { op = "update", @ref = new { type = "musicTracks", relationship = "ownedBy" } } } };
 
             const string route = "/operations";
 
@@ -686,17 +557,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = missingTrackId,
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = missingTrackId, relationship = "lyric" },
+                        data = new { type = "lyrics", id = existingLyric.StringId }
                     }
                 }
             };
@@ -737,17 +599,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = "invalid-guid",
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId
-                        }
+                        @ref = new { type = "musicTracks", id = "invalid-guid", relationship = "lyric" },
+                        data = new { type = "lyrics", id = existingLyric.StringId }
                     }
                 }
             };
@@ -780,13 +633,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            lid = "local-1",
-                            relationship = "ownedBy"
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), lid = "local-1", relationship = "ownedBy" }
                     }
                 }
             };
@@ -814,19 +661,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        @ref = new
-                        {
-                            type = "performers",
-                            id = 99999999,
-                            relationship = "doesNotExist"
-                        }
-                    }
-                }
+                atomic__operations = new[] { new { op = "update", @ref = new { type = "performers", id = 99999999, relationship = "doesNotExist" } } }
             };
 
             const string route = "/operations";
@@ -865,20 +700,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "lyrics",
-                                id = 99999999
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" },
+                        data = new[] { new { type = "lyrics", id = 99999999 } }
                     }
                 }
             };
@@ -911,16 +734,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999,
-                            relationship = "track"
-                        },
-                        data = new
-                        {
-                            id = Guid.NewGuid().ToString()
-                        }
+                        @ref = new { type = "lyrics", id = 99999999, relationship = "track" },
+                        data = new { id = Guid.NewGuid().ToString() }
                     }
                 }
             };
@@ -953,17 +768,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "doesNotExist",
-                            id = 99999999
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "lyric" },
+                        data = new { type = "doesNotExist", id = 99999999 }
                     }
                 }
             };
@@ -996,16 +802,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics"
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "lyric" },
+                        data = new { type = "lyrics" }
                     }
                 }
             };
@@ -1038,18 +836,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = 99999999,
-                            lid = "local-1"
-                        }
+                        @ref = new { type = "musicTracks", id = Guid.NewGuid().ToString(), relationship = "lyric" },
+                        data = new { type = "lyrics", id = 99999999, lid = "local-1" }
                     }
                 }
             };
@@ -1090,17 +878,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" },
+                        data = new { type = "lyrics", id = 99999999 }
                     }
                 }
             };
@@ -1141,17 +920,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = existingLyric.StringId,
-                            relationship = "track"
-                        },
-                        data = new
-                        {
-                            type = "musicTracks",
-                            id = "invalid-guid"
-                        }
+                        @ref = new { type = "lyrics", id = existingLyric.StringId, relationship = "track" },
+                        data = new { type = "musicTracks", id = "invalid-guid" }
                     }
                 }
             };
@@ -1192,17 +962,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "lyric"
-                        },
-                        data = new
-                        {
-                            type = "playlists",
-                            id = 99999999
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "lyric" },
+                        data = new { type = "playlists", id = 99999999 }
                     }
                 }
             };

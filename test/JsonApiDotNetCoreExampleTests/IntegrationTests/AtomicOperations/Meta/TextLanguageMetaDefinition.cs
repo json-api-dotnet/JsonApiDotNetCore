@@ -18,10 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
         public override IDictionary<string, object> GetMeta(TextLanguage resource)
         {
-            return new Dictionary<string, object>
-            {
-                ["Notice"] = NoticeText
-            };
+            return new Dictionary<string, object> { ["Notice"] = NoticeText };
         }
     }
 }

@@ -18,10 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         {
             if (resource.Description != null && resource.Description.StartsWith("Critical:", StringComparison.Ordinal))
             {
-                return new Dictionary<string, object>
-                {
-                    ["hasHighPriority"] = true
-                };
+                return new Dictionary<string, object> { ["hasHighPriority"] = true };
             }
 
             return base.GetMeta(resource);

@@ -13,10 +13,7 @@ namespace TestBuildingBlocks
     {
         private const decimal NumericPrecision = 0.00000000001M;
 
-        private static readonly JsonSerializerSettings DeserializationSettings = new JsonSerializerSettings
-        {
-            Formatting = Formatting.Indented
-        };
+        private static readonly JsonSerializerSettings DeserializationSettings = new JsonSerializerSettings { Formatting = Formatting.Indented };
 
         /// <summary>
         /// Used to assert on a (nullable) <see cref="DateTime" /> or <see cref="DateTimeOffset" /> property, whose value is returned as <see cref="string" /> in

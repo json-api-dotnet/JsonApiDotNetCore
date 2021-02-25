@@ -44,11 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "recordCompanies",
                             lid = companyLocalId,
-                            attributes = new
-                            {
-                                name = newCompany.Name,
-                                countryOfResidence = newCompany.CountryOfResidence
-                            }
+                            attributes = new { name = newCompany.Name, countryOfResidence = newCompany.CountryOfResidence }
                         }
                     },
                     new
@@ -57,21 +53,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = companyLocalId
-                                    }
-                                }
-                            }
+                            attributes = new { title = newTrackTitle },
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", lid = companyLocalId } } }
                         }
                     }
                 }
@@ -135,11 +118,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "performers",
                             lid = performerLocalId,
-                            attributes = new
-                            {
-                                artistName = newPerformer.ArtistName,
-                                bornAt = newPerformer.BornAt
-                            }
+                            attributes = new { artistName = newPerformer.ArtistName, bornAt = newPerformer.BornAt }
                         }
                     },
                     new
@@ -148,24 +127,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            lid = performerLocalId
-                                        }
-                                    }
-                                }
-                            }
+                            attributes = new { title = newTrackTitle },
+                            relationships = new { performers = new { data = new[] { new { type = "performers", lid = performerLocalId } } } }
                         }
                     }
                 }
@@ -222,43 +185,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "playlists",
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            },
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            lid = trackLocalId
-                                        }
-                                    }
-                                }
-                            }
+                            attributes = new { name = newPlaylistName },
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", lid = trackLocalId } } } }
                         }
                     }
                 }
@@ -319,15 +254,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
                     new
                     {
                         op = "add",
@@ -335,17 +262,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "recordCompanies",
                             lid = companyLocalId,
-                            relationships = new
-                            {
-                                parent = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = companyLocalId
-                                    }
-                                }
-                            }
+                            relationships = new { parent = new { data = new { type = "recordCompanies", lid = companyLocalId } } }
                         }
                     }
                 }
@@ -379,41 +296,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            }
-                        }
-                    }
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "playlists", lid = playlistLocalId, attributes = new { name = newPlaylistName } } },
+                    new { op = "add", data = new { type = "playlists", lid = playlistLocalId, attributes = new { name = newPlaylistName } } }
                 }
             };
 
@@ -447,32 +332,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                genre = newTrackGenre
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new { op = "update", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { genre = newTrackGenre } } }
                 }
             };
 
@@ -522,45 +383,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId,
-                            attributes = new
-                            {
-                                artistName = newArtistName
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            lid = companyLocalId,
-                            attributes = new
-                            {
-                                name = newCompanyName
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId, attributes = new { artistName = newArtistName } } },
+                    new { op = "add", data = new { type = "recordCompanies", lid = companyLocalId, attributes = new { name = newCompanyName } } },
                     new
                     {
                         op = "update",
@@ -570,25 +395,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                             lid = trackLocalId,
                             relationships = new
                             {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = companyLocalId
-                                    }
-                                },
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            lid = performerLocalId
-                                        }
-                                    }
-                                }
+                                ownedBy = new { data = new { type = "recordCompanies", lid = companyLocalId } },
+                                performers = new { data = new[] { new { type = "performers", lid = performerLocalId } } }
                             }
                         }
                     }
@@ -665,46 +473,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            lid = companyLocalId,
-                            attributes = new
-                            {
-                                name = newCompanyName
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new { op = "add", data = new { type = "recordCompanies", lid = companyLocalId, attributes = new { name = newCompanyName } } },
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            relationship = "ownedBy"
-                        },
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            lid = companyLocalId
-                        }
+                        @ref = new { type = "musicTracks", lid = trackLocalId, relationship = "ownedBy" },
+                        data = new { type = "recordCompanies", lid = companyLocalId }
                     }
                 }
             };
@@ -761,49 +536,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId,
-                            attributes = new
-                            {
-                                artistName = newArtistName
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId, attributes = new { artistName = newArtistName } } },
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = performerLocalId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", lid = trackLocalId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = performerLocalId } }
                     }
                 }
             };
@@ -860,49 +599,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "playlists", lid = playlistLocalId, attributes = new { name = newPlaylistName } } },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                lid = trackLocalId
-                            }
-                        }
+                        @ref = new { type = "playlists", lid = playlistLocalId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", lid = trackLocalId } }
                     }
                 }
             };
@@ -983,56 +686,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "musicTracks",
                             lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
+                            attributes = new { title = newTrackTitle },
                             relationships = new
                             {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        }
-                                    }
-                                }
+                                performers = new { data = new[] { new { type = "performers", id = existingPerformer.StringId } } }
                             }
                         }
                     },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId,
-                            attributes = new
-                            {
-                                artistName = newArtistName
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId, attributes = new { artistName = newArtistName } } },
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = performerLocalId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", lid = trackLocalId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = performerLocalId } }
                     }
                 }
             };
@@ -1104,56 +770,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "playlists",
                             lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            },
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTrack.StringId
-                                        }
-                                    }
-                                }
-                            }
+                            attributes = new { name = newPlaylistName },
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", id = existingTrack.StringId } } } }
                         }
                     },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
                     new
                     {
                         op = "update",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                lid = trackLocalId
-                            }
-                        }
+                        @ref = new { type = "playlists", lid = playlistLocalId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", lid = trackLocalId } }
                     }
                 }
             };
@@ -1234,56 +860,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "musicTracks",
                             lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
+                            attributes = new { title = newTrackTitle },
                             relationships = new
                             {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        }
-                                    }
-                                }
+                                performers = new { data = new[] { new { type = "performers", id = existingPerformer.StringId } } }
                             }
                         }
                     },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId, attributes = new { artistName = newArtistName } } },
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId,
-                            attributes = new
-                            {
-                                artistName = newArtistName
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = performerLocalId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", lid = trackLocalId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = performerLocalId } }
                     }
                 }
             };
@@ -1359,74 +948,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "playlists",
                             lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            },
+                            attributes = new { name = newPlaylistName },
                             relationships = new
                             {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            id = existingTracks[0].StringId
-                                        }
-                                    }
-                                }
+                                tracks = new { data = new[] { new { type = "musicTracks", id = existingTracks[0].StringId } } }
                             }
                         }
+                    },
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new
+                    {
+                        op = "add",
+                        @ref = new { type = "playlists", lid = playlistLocalId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", lid = trackLocalId } }
                     },
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                lid = trackLocalId
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingTracks[1].StringId
-                            }
-                        }
+                        @ref = new { type = "playlists", lid = playlistLocalId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingTracks[1].StringId } }
                     }
                 }
             };
@@ -1505,32 +1045,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId1,
-                            attributes = new
-                            {
-                                artistName = newArtistName1
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId2,
-                            attributes = new
-                            {
-                                artistName = newArtistName2
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId1, attributes = new { artistName = newArtistName1 } } },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId2, attributes = new { artistName = newArtistName2 } } },
                     new
                     {
                         op = "add",
@@ -1538,31 +1054,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "musicTracks",
                             lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
+                            attributes = new { title = newTrackTitle },
                             relationships = new
                             {
                                 performers = new
                                 {
                                     data = new object[]
                                     {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = existingPerformer.StringId
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            lid = performerLocalId1
-                                        },
-                                        new
-                                        {
-                                            type = "performers",
-                                            lid = performerLocalId2
-                                        }
+                                        new { type = "performers", id = existingPerformer.StringId },
+                                        new { type = "performers", lid = performerLocalId1 },
+                                        new { type = "performers", lid = performerLocalId2 }
                                     }
                                 }
                             }
@@ -1571,25 +1072,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = performerLocalId1
-                            },
-                            new
-                            {
-                                type = "performers",
-                                lid = performerLocalId2
-                            }
-                        }
+                        @ref = new { type = "musicTracks", lid = trackLocalId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = performerLocalId1 }, new { type = "performers", lid = performerLocalId2 } }
                     }
                 }
             };
@@ -1644,14 +1128,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             existingPlaylist.PlaylistMusicTracks = new[]
             {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
+                new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() }, new PlaylistMusicTrack { MusicTrack = _fakers.MusicTrack.Generate() }
             };
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
@@ -1668,72 +1145,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                lid = trackLocalId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", lid = trackLocalId } }
                     },
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[1].MusicTrack.StringId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", id = existingPlaylist.PlaylistMusicTracks[1].MusicTrack.StringId } }
                     },
                     new
                     {
                         op = "remove",
-                        @ref = new
-                        {
-                            type = "playlists",
-                            id = existingPlaylist.StringId,
-                            relationship = "tracks"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "musicTracks",
-                                lid = trackLocalId
-                            }
-                        }
+                        @ref = new { type = "playlists", id = existingPlaylist.StringId, relationship = "tracks" },
+                        data = new[] { new { type = "musicTracks", lid = trackLocalId } }
                     }
                 }
             };
@@ -1790,28 +1219,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId,
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = trackLocalId
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", lid = trackLocalId, attributes = new { title = newTrackTitle } } },
+                    new { op = "remove", @ref = new { type = "musicTracks", lid = trackLocalId } }
                 }
             };
 
@@ -1851,24 +1260,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = "doesNotExist"
-                        }
-                    }
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "remove", @ref = new { type = "musicTracks", lid = "doesNotExist" } }
                 }
             };
 
@@ -1897,27 +1290,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            lid = "doesNotExist",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "update", data = new { type = "musicTracks", lid = "doesNotExist", attributes = new { } } }
                 }
             };
 
@@ -1954,32 +1328,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
                     new
                     {
                         op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = "doesNotExist"
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = "doesNotExist" } }
                     }
                 }
             };
@@ -2009,32 +1363,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "musicTracks",
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = "doesNotExist"
-                                    }
-                                }
-                            }
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", lid = "doesNotExist" } } }
                         }
                     }
                 }
@@ -2065,35 +1401,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "playlists",
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            lid = "doesNotExist"
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", lid = "doesNotExist" } } } }
                         }
                     }
                 }
@@ -2126,15 +1441,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
                     new
                     {
                         op = "add",
@@ -2142,17 +1449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                         {
                             type = "musicTracks",
                             lid = trackLocalId,
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = trackLocalId
-                                    }
-                                }
-                            }
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", lid = trackLocalId } } }
                         }
                     }
                 }
@@ -2185,33 +1482,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            lid = companyLocalId
-                        }
-                    },
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            lid = companyLocalId
-                        }
-                    }
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "recordCompanies", lid = companyLocalId } },
+                    new { op = "remove", @ref = new { type = "musicTracks", lid = companyLocalId } }
                 }
             };
 
@@ -2242,36 +1515,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "playlists",
-                            lid = performerLocalId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId } },
+                    new { op = "update", data = new { type = "playlists", lid = performerLocalId, attributes = new { } } }
                 }
             };
 
@@ -2310,41 +1556,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "recordCompanies", lid = companyLocalId } },
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            lid = companyLocalId
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        @ref = new
-                        {
-                            type = "musicTracks",
-                            id = existingTrack.StringId,
-                            relationship = "performers"
-                        },
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                lid = companyLocalId
-                            }
-                        }
+                        @ref = new { type = "musicTracks", id = existingTrack.StringId, relationship = "performers" },
+                        data = new[] { new { type = "performers", lid = companyLocalId } }
                     }
                 }
             };
@@ -2378,45 +1596,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "playlists",
-                            lid = playlistLocalId,
-                            attributes = new
-                            {
-                                name = newPlaylistName
-                            }
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "playlists", lid = playlistLocalId, attributes = new { name = newPlaylistName } } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "musicTracks",
-                            relationships = new
-                            {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        lid = playlistLocalId
-                                    }
-                                }
-                            }
+                            relationships = new { ownedBy = new { data = new { type = "recordCompanies", lid = playlistLocalId } } }
                         }
                     }
                 }
@@ -2449,44 +1637,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "remove",
-                        @ref = new
-                        {
-                            type = "lyrics",
-                            id = 99999999
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            lid = performerLocalId
-                        }
-                    },
+                    new { op = "remove", @ref = new { type = "lyrics", id = 99999999 } },
+                    new { op = "add", data = new { type = "performers", lid = performerLocalId } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "playlists",
-                            relationships = new
-                            {
-                                tracks = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "musicTracks",
-                                            lid = performerLocalId
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { tracks = new { data = new[] { new { type = "musicTracks", lid = performerLocalId } } } }
                         }
                     }
                 }

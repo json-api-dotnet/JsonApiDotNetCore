@@ -84,12 +84,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 Title = "Input validation failed.",
                 Detail = modelError.ErrorMessage,
-                Source = attributePath == null
-                    ? null
-                    : new ErrorSource
-                    {
-                        Pointer = attributePath
-                    }
+                Source = attributePath == null ? null : new ErrorSource { Pointer = attributePath }
             };
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)

@@ -46,32 +46,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                                format = newLyrics[0].Format,
-                                text = newLyrics[0].Text
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "lyrics",
-                            attributes = new
-                            {
-                                format = newLyrics[1].Format,
-                                text = newLyrics[1].Text
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "lyrics", attributes = new { format = newLyrics[0].Format, text = newLyrics[0].Text } } },
+                    new { op = "add", data = new { type = "lyrics", attributes = new { format = newLyrics[1].Format, text = newLyrics[1].Text } } }
                 }
             };
 
@@ -115,30 +91,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyrics[0].StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    },
-                    new
-                    {
-                        op = "update",
-                        data = new
-                        {
-                            type = "lyrics",
-                            id = existingLyrics[1].StringId,
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
+                    new { op = "update", data = new { type = "lyrics", id = existingLyrics[0].StringId, attributes = new { } } },
+                    new { op = "update", data = new { type = "lyrics", id = existingLyrics[1].StringId, attributes = new { } } }
                 }
             };
 

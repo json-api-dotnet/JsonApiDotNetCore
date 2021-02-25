@@ -18,13 +18,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var resource = new TestResource
-            {
-                Id = 1,
-                StringField = "value",
-                NullableIntField = 123
-            };
-
+            var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             ResponseSerializer<TestResource> serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -56,13 +50,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeMany_ResourceWithDefaultTargetFields_CanSerialize()
         {
             // Arrange
-            var resource = new TestResource
-            {
-                Id = 1,
-                StringField = "value",
-                NullableIntField = 123
-            };
-
+            var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
             ResponseSerializer<TestResource> serializer = GetResponseSerializer<TestResource>();
 
             // Act
@@ -96,17 +84,8 @@ namespace UnitTests.Serialization.Server
             var resource = new MultipleRelationshipsPrincipalPart
             {
                 Id = 1,
-                PopulatedToOne = new OneToOneDependent
-                {
-                    Id = 10
-                },
-                PopulatedToManies = new HashSet<OneToManyDependent>
-                {
-                    new OneToManyDependent
-                    {
-                        Id = 20
-                    }
-                }
+                PopulatedToOne = new OneToOneDependent { Id = 10 },
+                PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
 
             List<IEnumerable<RelationshipAttribute>> chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => r.AsEnumerable())
@@ -165,26 +144,9 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithDeeplyIncludedRelationships_CanSerialize()
         {
             // Arrange
-            var deeplyIncludedResource = new OneToManyPrincipal
-            {
-                Id = 30,
-                AttributeMember = "deep"
-            };
-
-            var includedResource = new OneToManyDependent
-            {
-                Id = 20,
-                Principal = deeplyIncludedResource
-            };
-
-            var resource = new MultipleRelationshipsPrincipalPart
-            {
-                Id = 10,
-                PopulatedToManies = new HashSet<OneToManyDependent>
-                {
-                    includedResource
-                }
-            };
+            var deeplyIncludedResource = new OneToManyPrincipal { Id = 30, AttributeMember = "deep" };
+            var includedResource = new OneToManyDependent { Id = 20, Principal = deeplyIncludedResource };
+            var resource = new MultipleRelationshipsPrincipalPart { Id = 10, PopulatedToManies = new HashSet<OneToManyDependent> { includedResource } };
 
             List<List<RelationshipAttribute>> chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r =>
             {
@@ -299,10 +261,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithLinksEnabled_CanSerialize()
         {
             // Arrange
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10
-            };
+            var resource = new OneToManyPrincipal { Id = 10 };
 
             ResponseSerializer<OneToManyPrincipal> serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: DummyTopLevelLinks,
                 relationshipLinks: DummyRelationshipLinks, resourceLinks: DummyResourceLinks);
@@ -347,16 +306,8 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithMeta_IncludesMetaInResult()
         {
             // Arrange
-            var meta = new Dictionary<string, object>
-            {
-                ["test"] = "meta"
-            };
-
-            var resource = new OneToManyPrincipal
-            {
-                Id = 10
-            };
-
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
+            var resource = new OneToManyPrincipal { Id = 10 };
             ResponseSerializer<OneToManyPrincipal> serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta);
 
             // Act
@@ -382,10 +333,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_NullWithLinksAndMeta_StillShowsLinksAndMeta()
         {
             // Arrange
-            var meta = new Dictionary<string, object>
-            {
-                ["test"] = "meta"
-            };
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
 
             ResponseSerializer<OneToManyPrincipal> serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: DummyTopLevelLinks,
                 relationshipLinks: DummyRelationshipLinks, resourceLinks: DummyResourceLinks);
@@ -414,26 +362,12 @@ namespace UnitTests.Serialization.Server
         public void SerializeError_Error_CanSerialize()
         {
             // Arrange
-            var error = new Error(HttpStatusCode.InsufficientStorage)
-            {
-                Title = "title",
-                Detail = "detail"
-            };
-
+            var error = new Error(HttpStatusCode.InsufficientStorage) { Title = "title", Detail = "detail" };
             var errorDocument = new ErrorDocument(error);
 
             string expectedJson = JsonConvert.SerializeObject(new
             {
-                errors = new[]
-                {
-                    new
-                    {
-                        id = error.Id,
-                        status = "507",
-                        title = "title",
-                        detail = "detail"
-                    }
-                }
+                errors = new[] { new { id = error.Id, status = "507", title = "title", detail = "detail" } }
             });
 
             ResponseSerializer<OneToManyPrincipal> serializer = GetResponseSerializer<OneToManyPrincipal>();

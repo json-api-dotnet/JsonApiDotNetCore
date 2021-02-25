@@ -10,10 +10,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class BeforeDeleteTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.BeforeDelete
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.BeforeDelete };
 
         [Fact]
         public void BeforeDelete()

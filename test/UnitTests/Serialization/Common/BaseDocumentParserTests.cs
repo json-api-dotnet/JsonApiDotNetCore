@@ -25,15 +25,7 @@ namespace UnitTests.Serialization.Common
         public void DeserializeResourceIdentifiers_SingleData_CanDeserialize()
         {
             // Arrange
-            var content = new Document
-            {
-                Data = new ResourceObject
-                {
-                    Type = "testResource",
-                    Id = "1"
-                }
-            };
-
+            var content = new Document { Data = new ResourceObject { Type = "testResource", Id = "1" } };
             string body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -61,18 +53,7 @@ namespace UnitTests.Serialization.Common
         public void DeserializeResourceIdentifiers_ArrayData_CanDeserialize()
         {
             // Arrange
-            var content = new Document
-            {
-                Data = new List<ResourceObject>
-                {
-                    new ResourceObject
-                    {
-                        Type = "testResource",
-                        Id = "1"
-                    }
-                }
-            };
-
+            var content = new Document { Data = new List<ResourceObject> { new ResourceObject { Type = "testResource", Id = "1" } } };
             string body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -85,11 +66,7 @@ namespace UnitTests.Serialization.Common
         [Fact]
         public void DeserializeResourceIdentifiers_EmptyArrayData_CanDeserialize()
         {
-            var content = new Document
-            {
-                Data = new List<ResourceObject>()
-            };
-
+            var content = new Document { Data = new List<ResourceObject>() };
             string body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -117,15 +94,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new ResourceObject
-                {
-                    Type = "testResource",
-                    Id = "1",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        [member] = value
-                    }
-                }
+                Data = new ResourceObject { Type = "testResource", Id = "1", Attributes = new Dictionary<string, object> { [member] = value } }
             };
 
             string body = JsonConvert.SerializeObject(content);
@@ -180,13 +149,7 @@ namespace UnitTests.Serialization.Common
                 {
                     Type = "testResource",
                     Id = "1",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["complexField"] = new Dictionary<string, object>
-                        {
-                            ["compoundName"] = "testName"
-                        }
-                    }
+                    Attributes = new Dictionary<string, object> { ["complexField"] = new Dictionary<string, object> { ["compoundName"] = "testName" } }
                 }
             };
 
@@ -212,13 +175,7 @@ namespace UnitTests.Serialization.Common
                     Id = "1",
                     Attributes = new Dictionary<string, object>
                     {
-                        ["complexFields"] = new[]
-                        {
-                            new Dictionary<string, object>
-                            {
-                                ["compoundName"] = "testName"
-                            }
-                        }
+                        ["complexFields"] = new[] { new Dictionary<string, object> { ["compoundName"] = "testName" } }
                     }
                 }
             };
@@ -239,16 +196,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
-
-            content.SingleData.Relationships["dependents"] = new RelationshipEntry
-            {
-                Data = new ResourceIdentifierObject
-                {
-                    Type = "Dependents",
-                    Id = "1"
-                }
-            };
-
+            content.SingleData.Relationships["dependents"] = new RelationshipEntry { Data = new ResourceIdentifierObject { Type = "Dependents", Id = "1" } };
             string body = JsonConvert.SerializeObject(content);
 
             // Act, assert
@@ -263,14 +211,7 @@ namespace UnitTests.Serialization.Common
 
             content.SingleData.Relationships["dependent"] = new RelationshipEntry
             {
-                Data = new List<ResourceIdentifierObject>
-                {
-                    new ResourceIdentifierObject
-                    {
-                        Type = "Dependent",
-                        Id = "1"
-                    }
-                }
+                Data = new List<ResourceIdentifierObject> { new ResourceIdentifierObject { Type = "Dependent", Id = "1" } }
             };
 
             string body = JsonConvert.SerializeObject(content);

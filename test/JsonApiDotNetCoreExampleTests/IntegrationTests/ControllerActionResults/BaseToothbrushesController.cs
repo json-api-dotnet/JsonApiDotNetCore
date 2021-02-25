@@ -32,10 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 
             if (id == ActionResultWithErrorObjectId)
             {
-                return NotFound(new Error(HttpStatusCode.NotFound)
-                {
-                    Title = "No toothbrush with that ID exists."
-                });
+                return NotFound(new Error(HttpStatusCode.NotFound) { Title = "No toothbrush with that ID exists." });
             }
 
             if (id == ActionResultWithStringParameter)
@@ -54,10 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
                 {
                     new Error(HttpStatusCode.PreconditionFailed),
                     new Error(HttpStatusCode.Unauthorized),
-                    new Error(HttpStatusCode.ExpectationFailed)
-                    {
-                        Title = "This is not a very great request."
-                    }
+                    new Error(HttpStatusCode.ExpectationFailed) { Title = "This is not a very great request." }
                 };
 
                 return Error(errors);

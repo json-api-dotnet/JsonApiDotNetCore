@@ -226,14 +226,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -264,14 +257,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new BlogPostLabel
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.BlogPostLabels = new HashSet<BlogPostLabel> { new BlogPostLabel { Label = _fakers.Label.Generate() } };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

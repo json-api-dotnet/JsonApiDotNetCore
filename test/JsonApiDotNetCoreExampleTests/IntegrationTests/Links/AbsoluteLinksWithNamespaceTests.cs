@@ -265,21 +265,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             {
                 data = new
                 {
-                    type = "photoAlbums",
-                    relationships = new
-                    {
-                        photos = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "photos",
-                                    id = existingPhoto.StringId
-                                }
-                            }
-                        }
-                    }
+                    type = "photoAlbums", relationships = new { photos = new { data = new[] { new { type = "photos", id = existingPhoto.StringId } } } }
                 }
             };
 
@@ -331,17 +317,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
                 {
                     type = "photos",
                     id = existingPhoto.StringId,
-                    relationships = new
-                    {
-                        album = new
-                        {
-                            data = new
-                            {
-                                type = "photoAlbums",
-                                id = existingAlbum.StringId
-                            }
-                        }
-                    }
+                    relationships = new { album = new { data = new { type = "photoAlbums", id = existingAlbum.StringId } } }
                 }
             };
 

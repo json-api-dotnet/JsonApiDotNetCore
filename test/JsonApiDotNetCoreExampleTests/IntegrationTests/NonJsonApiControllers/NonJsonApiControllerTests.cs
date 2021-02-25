@@ -44,13 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi")
             {
-                Content = new StringContent("Jack")
-                {
-                    Headers =
-                    {
-                        ContentType = new MediaTypeHeaderValue("text/plain")
-                    }
-                }
+                Content = new StringContent("Jack") { Headers = { ContentType = new MediaTypeHeaderValue("text/plain") } }
             };
 
             HttpClient client = _factory.CreateClient();
@@ -91,13 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Put, "/NonJsonApi")
             {
-                Content = new StringContent("\"Jane\"")
-                {
-                    Headers =
-                    {
-                        ContentType = new MediaTypeHeaderValue("application/json")
-                    }
-                }
+                Content = new StringContent("\"Jane\"") { Headers = { ContentType = new MediaTypeHeaderValue("application/json") } }
             };
 
             HttpClient client = _factory.CreateClient();

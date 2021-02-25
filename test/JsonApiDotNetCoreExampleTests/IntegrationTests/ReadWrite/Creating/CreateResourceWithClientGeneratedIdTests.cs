@@ -35,18 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
             newGroup.Id = Guid.NewGuid();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItemGroups",
-                    id = newGroup.StringId,
-                    attributes = new
-                    {
-                        name = newGroup.Name
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItemGroups", id = newGroup.StringId, attributes = new { name = newGroup.Name } } };
 
             const string route = "/workItemGroups";
 
@@ -80,18 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             WorkItemGroup newGroup = _fakers.WorkItemGroup.Generate();
             newGroup.Id = Guid.NewGuid();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItemGroups",
-                    id = newGroup.StringId,
-                    attributes = new
-                    {
-                        name = newGroup.Name
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "workItemGroups", id = newGroup.StringId, attributes = new { name = newGroup.Name } } };
 
             const string route = "/workItemGroups?fields[workItemGroups]=name";
 
@@ -125,18 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             RgbColor newColor = _fakers.RgbColor.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = newColor.StringId,
-                    attributes = new
-                    {
-                        displayName = newColor.DisplayName
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = newColor.StringId, attributes = new { displayName = newColor.DisplayName } } };
 
             const string route = "/rgbColors";
 
@@ -165,18 +132,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             // Arrange
             RgbColor newColor = _fakers.RgbColor.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = newColor.StringId,
-                    attributes = new
-                    {
-                        displayName = newColor.DisplayName
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "rgbColors", id = newColor.StringId, attributes = new { displayName = newColor.DisplayName } } };
 
             const string route = "/rgbColors?fields[rgbColors]=id";
 
@@ -216,15 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "rgbColors",
-                    id = colorToCreate.StringId,
-                    attributes = new
-                    {
-                        displayName = colorToCreate.DisplayName
-                    }
-                }
+                data = new { type = "rgbColors", id = colorToCreate.StringId, attributes = new { displayName = colorToCreate.DisplayName } }
             };
 
             const string route = "/rgbColors";

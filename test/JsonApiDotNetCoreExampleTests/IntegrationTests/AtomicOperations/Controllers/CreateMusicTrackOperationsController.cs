@@ -44,10 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                     {
                         Title = "Unsupported combination of operation code and resource type at this endpoint.",
                         Detail = "This endpoint can only be used to create resources of type 'musicTracks'.",
-                        Source =
-                        {
-                            Pointer = $"/atomic:operations[{index}]"
-                        }
+                        Source = { Pointer = $"/atomic:operations[{index}]" }
                     });
                 }
 

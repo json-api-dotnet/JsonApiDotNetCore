@@ -267,12 +267,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
                     if (container != null)
                     {
-                        CallHook(container, ResourceHook.BeforeRead, new object[]
-                        {
-                            pipeline,
-                            true,
-                            null
-                        });
+                        CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
                     }
                 }
 

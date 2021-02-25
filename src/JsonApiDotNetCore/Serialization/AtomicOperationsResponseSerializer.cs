@@ -61,11 +61,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private string SerializeOperationsDocument(IEnumerable<OperationContainer> operations)
         {
-            var document = new AtomicOperationsDocument
-            {
-                Results = operations.Select(SerializeOperation).ToList(),
-                Meta = _metaBuilder.Build()
-            };
+            var document = new AtomicOperationsDocument { Results = operations.Select(SerializeOperation).ToList(), Meta = _metaBuilder.Build() };
 
             return SerializeObject(document, _options.SerializerSettings);
         }
@@ -91,10 +87,7 @@ namespace JsonApiDotNetCore.Serialization
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
             }
 
-            return new AtomicResultObject
-            {
-                Data = resourceObject
-            };
+            return new AtomicResultObject { Data = resourceObject };
         }
 
         private string SerializeErrorDocument(ErrorDocument errorDocument)

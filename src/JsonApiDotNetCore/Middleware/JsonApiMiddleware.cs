@@ -102,11 +102,12 @@ namespace JsonApiDotNetCore.Middleware
 
             if (contentType != null && contentType != allowedContentType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
-                {
-                    Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' " + "for the Content-Type header value."
-                });
+                await FlushResponseAsync(httpContext.Response, serializerSettings,
+                    new Error(HttpStatusCode.UnsupportedMediaType)
+                    {
+                        Title = "The specified Content-Type header value is not supported.",
+                        Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' " + "for the Content-Type header value."
+                    });
 
                 return false;
             }
@@ -148,11 +149,12 @@ namespace JsonApiDotNetCore.Middleware
 
             if (!seenCompatibleMediaType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
-                {
-                    Title = "The specified Accept header value does not contain any supported media types.",
-                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
-                });
+                await FlushResponseAsync(httpContext.Response, serializerSettings,
+                    new Error(HttpStatusCode.NotAcceptable)
+                    {
+                        Title = "The specified Accept header value does not contain any supported media types.",
+                        Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
+                    });
 
                 return false;
             }

@@ -79,10 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Cannot_process_empty_operations_array()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[0]
-            };
+            var requestBody = new { atomic__operations = new object[0] };
 
             const string route = "/operations";
 
@@ -114,23 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Cannot_process_for_unknown_operation_code()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "merge",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "merge", data = new { type = "performers", attributes = new { } } } } };
 
             const string route = "/operations";
 

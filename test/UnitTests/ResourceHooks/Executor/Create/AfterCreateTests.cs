@@ -10,11 +10,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
 {
     public sealed class AfterCreateTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks =
-        {
-            ResourceHook.AfterCreate,
-            ResourceHook.AfterUpdateRelationship
-        };
+        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterCreate, ResourceHook.AfterUpdateRelationship };
 
         [Fact]
         public void AfterCreate()

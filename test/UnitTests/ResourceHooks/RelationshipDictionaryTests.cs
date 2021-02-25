@@ -15,71 +15,10 @@ namespace UnitTests.ResourceHooks
         private readonly HasManyAttribute _toManyAttr;
 
         private readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> _relationships = new Dictionary<RelationshipAttribute, HashSet<Dummy>>();
-
-        private readonly HashSet<Dummy> _firstToOnesResources = new HashSet<Dummy>
-        {
-            new Dummy
-            {
-                Id = 1
-            },
-            new Dummy
-            {
-                Id = 2
-            },
-            new Dummy
-            {
-                Id = 3
-            }
-        };
-
-        private readonly HashSet<Dummy> _secondToOnesResources = new HashSet<Dummy>
-        {
-            new Dummy
-            {
-                Id = 4
-            },
-            new Dummy
-            {
-                Id = 5
-            },
-            new Dummy
-            {
-                Id = 6
-            }
-        };
-
-        private readonly HashSet<Dummy> _toManiesResources = new HashSet<Dummy>
-        {
-            new Dummy
-            {
-                Id = 7
-            },
-            new Dummy
-            {
-                Id = 8
-            },
-            new Dummy
-            {
-                Id = 9
-            }
-        };
-
-        private readonly HashSet<Dummy> _noRelationshipsResources = new HashSet<Dummy>
-        {
-            new Dummy
-            {
-                Id = 10
-            },
-            new Dummy
-            {
-                Id = 11
-            },
-            new Dummy
-            {
-                Id = 12
-            }
-        };
-
+        private readonly HashSet<Dummy> _firstToOnesResources = new HashSet<Dummy> { new Dummy { Id = 1 }, new Dummy { Id = 2 }, new Dummy { Id = 3 } };
+        private readonly HashSet<Dummy> _secondToOnesResources = new HashSet<Dummy> { new Dummy { Id = 4 }, new Dummy { Id = 5 }, new Dummy { Id = 6 } };
+        private readonly HashSet<Dummy> _toManiesResources = new HashSet<Dummy> { new Dummy { Id = 7 }, new Dummy { Id = 8 }, new Dummy { Id = 9 } };
+        private readonly HashSet<Dummy> _noRelationshipsResources = new HashSet<Dummy> { new Dummy { Id = 10 }, new Dummy { Id = 11 }, new Dummy { Id = 12 } };
         private readonly HashSet<Dummy> _allResources;
 
         public RelationshipDictionaryTests()
@@ -102,10 +41,7 @@ namespace UnitTests.ResourceHooks
 
             _toManyAttr = new HasManyAttribute
             {
-                PublicName = "toManies",
-                LeftType = typeof(Dummy),
-                RightType = typeof(ToMany),
-                Property = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
+                PublicName = "toManies", LeftType = typeof(Dummy), RightType = typeof(ToMany), Property = typeof(Dummy).GetProperty(nameof(Dummy.ToManies))
             };
 
             _relationships.Add(_firstToOneAttr, _firstToOnesResources);
@@ -172,11 +108,7 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetByRelationships()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
-            {
-                Id = e.Id
-            }).ToList());
-
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }).ToList());
             var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Act
@@ -213,11 +145,7 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_Loops_Over_Diffs()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
-            {
-                Id = e.Id
-            }));
-
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
             var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Assert & act
@@ -234,11 +162,7 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetAffected_Relationships()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
-            {
-                Id = e.Id
-            }));
-
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
             var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Act
@@ -256,10 +180,7 @@ namespace UnitTests.ResourceHooks
         public void ResourceDiff_GetAffected_Attributes()
         {
             // Arrange
-            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy
-            {
-                Id = e.Id
-            }));
+            var dbResources = new HashSet<Dummy>(_allResources.Select(e => new Dummy { Id = e.Id }));
 
             var updatedAttributes = new Dictionary<PropertyInfo, HashSet<Dummy>>
             {

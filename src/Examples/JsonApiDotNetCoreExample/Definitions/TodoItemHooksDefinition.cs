@@ -22,10 +22,7 @@ namespace JsonApiDotNetCoreExample.Definitions
         {
             if (stringId == "1337")
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
-                {
-                    Title = "You are not allowed to update the author of todo items."
-                });
+                throw new JsonApiException(new Error(HttpStatusCode.Forbidden) { Title = "You are not allowed to update the author of todo items." });
             }
         }
 

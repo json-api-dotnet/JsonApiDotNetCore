@@ -22,10 +22,7 @@ namespace JsonApiDotNetCore.Controllers
 
             var document = new ErrorDocument(errors);
 
-            return new ObjectResult(document)
-            {
-                StatusCode = (int)document.GetErrorStatusCode()
-            };
+            return new ObjectResult(document) { StatusCode = (int)document.GetErrorStatusCode() };
         }
     }
 }

@@ -135,14 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 
             workItem.WorkItemTags = new List<WorkItemTag>
             {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
+                new WorkItemTag { Tag = _fakers.WorkTag.Generate() }, new WorkItemTag { Tag = _fakers.WorkTag.Generate() }
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

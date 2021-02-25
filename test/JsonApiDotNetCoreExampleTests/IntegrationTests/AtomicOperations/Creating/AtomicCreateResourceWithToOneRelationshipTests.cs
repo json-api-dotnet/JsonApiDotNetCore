@@ -50,17 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "lyrics",
-                            relationships = new
-                            {
-                                track = new
-                                {
-                                    data = new
-                                    {
-                                        type = "musicTracks",
-                                        id = existingTrack.StringId
-                                    }
-                                }
-                            }
+                            relationships = new { track = new { data = new { type = "musicTracks", id = existingTrack.StringId } } }
                         }
                     }
                 }
@@ -115,21 +105,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = existingLyric.StringId
-                                    }
-                                }
-                            }
+                            attributes = new { title = newTrackTitle },
+                            relationships = new { lyric = new { data = new { type = "lyrics", id = existingLyric.StringId } } }
                         }
                     }
                 }
@@ -186,29 +163,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     data = new
                     {
                         type = "musicTracks",
-                        attributes = new
-                        {
-                            title = newTrackTitles[index]
-                        },
-                        relationships = new
-                        {
-                            ownedBy = new
-                            {
-                                data = new
-                                {
-                                    type = "recordCompanies",
-                                    id = existingCompany.StringId
-                                }
-                            }
-                        }
+                        attributes = new { title = newTrackTitles[index] },
+                        relationships = new { ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } } }
                     }
                 });
             }
 
-            var requestBody = new
-            {
-                atomic__operations = operationElements
-            };
+            var requestBody = new { atomic__operations = operationElements };
 
             const string route = "/operations";
 
@@ -266,24 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        id = 12345678
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", relationships = new { lyric = new { data = new { id = 12345678 } } } } }
                 }
             };
 
@@ -317,18 +261,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         op = "add",
                         data = new
                         {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "doesNotExist",
-                                        id = 12345678
-                                    }
-                                }
-                            }
+                            type = "musicTracks", relationships = new { lyric = new { data = new { type = "doesNotExist", id = 12345678 } } }
                         }
                     }
                 }
@@ -359,24 +292,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             {
                 atomic__operations = new[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics"
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    new { op = "add", data = new { type = "musicTracks", relationships = new { lyric = new { data = new { type = "lyrics" } } } } }
                 }
             };
 
@@ -408,21 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "lyrics",
-                                        id = 12345678
-                                    }
-                                }
-                            }
-                        }
+                        data = new { type = "musicTracks", relationships = new { lyric = new { data = new { type = "lyrics", id = 12345678 } } } }
                     }
                 }
             };
@@ -457,18 +359,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         op = "add",
                         data = new
                         {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new
-                                    {
-                                        type = "playlists",
-                                        id = 12345678
-                                    }
-                                }
-                            }
+                            type = "musicTracks", relationships = new { lyric = new { data = new { type = "playlists", id = 12345678 } } }
                         }
                     }
                 }
@@ -514,28 +405,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            },
+                            attributes = new { title = newTrackTitle },
                             relationships = new
                             {
-                                ownedBy = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                },
-                                ownedBy_duplicate = new
-                                {
-                                    data = new
-                                    {
-                                        type = "recordCompanies",
-                                        id = existingCompany.StringId
-                                    }
-                                }
+                                ownedBy = new { data = new { type = "recordCompanies", id = existingCompany.StringId } },
+                                ownedBy_duplicate = new { data = new { type = "recordCompanies", id = existingCompany.StringId } }
                             }
                         }
                     }
@@ -584,20 +458,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                         data = new
                         {
                             type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "lyrics",
-                                            id = 12345678
-                                        }
-                                    }
-                                }
-                            }
+                            relationships = new { lyric = new { data = new[] { new { type = "lyrics", id = 12345678 } } } }
                         }
                     }
                 }

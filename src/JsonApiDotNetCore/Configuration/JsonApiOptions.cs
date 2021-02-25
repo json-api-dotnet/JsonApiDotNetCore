@@ -85,10 +85,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public JsonSerializerSettings SerializerSettings { get; } = new JsonSerializerSettings
         {
-            ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = DefaultNamingStrategy
-            }
+            ContractResolver = new DefaultContractResolver { NamingStrategy = DefaultNamingStrategy }
         };
     }
 }

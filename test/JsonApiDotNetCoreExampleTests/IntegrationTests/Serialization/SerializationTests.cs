@@ -449,11 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
                         title = newMeeting.Title,
                         startTime = newMeeting.StartTime,
                         duration = newMeeting.Duration,
-                        location = new
-                        {
-                            lat = newMeeting.Latitude,
-                            lng = newMeeting.Longitude
-                        }
+                        location = new { lat = newMeeting.Latitude, lng = newMeeting.Longitude }
                     }
                 }
             };
@@ -511,15 +507,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 
             var requestBody = new
             {
-                data = new
-                {
-                    type = "meetingAttendees",
-                    id = existingAttendee.StringId,
-                    attributes = new
-                    {
-                        displayName = existingAttendee.DisplayName
-                    }
-                }
+                data = new { type = "meetingAttendees", id = existingAttendee.StringId, attributes = new { displayName = existingAttendee.DisplayName } }
             };
 
             string route = "/meetingAttendees/" + existingAttendee.StringId;

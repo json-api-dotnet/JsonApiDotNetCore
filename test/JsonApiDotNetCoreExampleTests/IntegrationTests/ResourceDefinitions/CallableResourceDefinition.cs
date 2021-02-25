@@ -35,10 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             if (!_userRolesService.AllowIncludeOwner && existingIncludes.Any(x => x.Relationship.Property.Name == nameof(CallableResource.Owner)))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Including owner is not permitted."
-                });
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest) { Title = "Including owner is not permitted." });
             }
 
             return existingIncludes;
@@ -70,8 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             return CreateSortExpressionFromLambda(new PropertySortOrder
             {
-                (resource => resource.Label, ListSortDirection.Ascending),
-                (resource => resource.ModifiedAt, ListSortDirection.Descending)
+                (resource => resource.Label, ListSortDirection.Ascending), (resource => resource.ModifiedAt, ListSortDirection.Descending)
             });
         }
 
@@ -105,10 +101,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: 'isHighRisk' query string parameter can be used to add extra filter on IQueryable<TResource>.
 
-            return new QueryStringParameterHandlers<CallableResource>
-            {
-                ["isHighRisk"] = FilterByHighRisk
-            };
+            return new QueryStringParameterHandlers<CallableResource> { ["isHighRisk"] = FilterByHighRisk };
         }
 
         private static IQueryable<CallableResource> FilterByHighRisk(IQueryable<CallableResource> source, StringValues parameterValue)

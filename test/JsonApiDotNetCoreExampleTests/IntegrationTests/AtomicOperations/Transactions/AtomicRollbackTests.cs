@@ -41,43 +41,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             {
                 atomic__operations = new object[]
                 {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "performers",
-                            attributes = new
-                            {
-                                artistName = newArtistName,
-                                bornAt = newBornAt
-                            }
-                        }
-                    },
+                    new { op = "add", data = new { type = "performers", attributes = new { artistName = newArtistName, bornAt = newBornAt } } },
                     new
                     {
                         op = "add",
                         data = new
                         {
                             type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTitle
-                            },
-                            relationships = new
-                            {
-                                performers = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "performers",
-                                            id = 99999999
-                                        }
-                                    }
-                                }
-                            }
+                            attributes = new { title = newTitle },
+                            relationships = new { performers = new { data = new[] { new { type = "performers", id = 99999999 } } } }
                         }
                     }
                 }

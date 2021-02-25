@@ -27,14 +27,7 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_EmptyResponseWithMeta_CanDeserialize()
         {
             // Arrange
-            var content = new Document
-            {
-                Meta = new Dictionary<string, object>
-                {
-                    ["foo"] = "bar"
-                }
-            };
-
+            var content = new Document { Meta = new Dictionary<string, object> { ["foo"] = "bar" } };
             string body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -50,16 +43,7 @@ namespace UnitTests.Serialization.Client
         public void DeserializeSingle_EmptyResponseWithTopLevelLinks_CanDeserialize()
         {
             // Arrange
-            var content = new Document
-            {
-                Links = new TopLevelLinks
-                {
-                    Self = _linkValues["self"],
-                    Next = _linkValues["next"],
-                    Last = _linkValues["last"]
-                }
-            };
-
+            var content = new Document { Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] } };
             string body = JsonConvert.SerializeObject(content);
 
             // Act
@@ -80,12 +64,7 @@ namespace UnitTests.Serialization.Client
             // Arrange
             var content = new Document
             {
-                Links = new TopLevelLinks
-                {
-                    Self = _linkValues["self"],
-                    Next = _linkValues["next"],
-                    Last = _linkValues["last"]
-                },
+                Links = new TopLevelLinks { Self = _linkValues["self"], Next = _linkValues["next"], Last = _linkValues["last"] },
                 Data = new List<ResourceObject>()
             };
 
@@ -137,21 +116,11 @@ namespace UnitTests.Serialization.Client
             {
                 new ResourceObject
                 {
-                    Type = "oneToOneDependents",
-                    Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = toOneAttributeValue
-                    }
+                    Type = "oneToOneDependents", Id = "10", Attributes = new Dictionary<string, object> { ["attributeMember"] = toOneAttributeValue }
                 },
                 new ResourceObject
                 {
-                    Type = "oneToManyDependents",
-                    Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = toManyAttributeValue
-                    }
+                    Type = "oneToManyDependents", Id = "10", Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue }
                 }
             };
 
@@ -188,21 +157,11 @@ namespace UnitTests.Serialization.Client
             {
                 new ResourceObject
                 {
-                    Type = "oneToOnePrincipals",
-                    Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = toOneAttributeValue
-                    }
+                    Type = "oneToOnePrincipals", Id = "10", Attributes = new Dictionary<string, object> { ["attributeMember"] = toOneAttributeValue }
                 },
                 new ResourceObject
                 {
-                    Type = "oneToManyPrincipals",
-                    Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = toManyAttributeValue
-                    }
+                    Type = "oneToManyPrincipals", Id = "10", Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue }
                 }
             };
 
@@ -237,23 +196,14 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = toManyAttributeValue
-                    },
-                    Relationships = new Dictionary<string, RelationshipEntry>
-                    {
-                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = toManyAttributeValue },
+                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = nestedIncludeAttributeValue
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludeAttributeValue }
                 }
             };
 
@@ -291,10 +241,7 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "multiPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = includedAttributeValue
-                    },
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = includedAttributeValue },
                     Relationships = new Dictionary<string, RelationshipEntry>
                     {
                         ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", true)
@@ -304,23 +251,14 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = nestedIncludedAttributeValue
-                    },
-                    Relationships = new Dictionary<string, RelationshipEntry>
-                    {
-                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludedAttributeValue },
+                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = deeplyNestedIncludedAttributeValue
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = deeplyNestedIncludedAttributeValue }
                 }
             };
 
@@ -347,14 +285,7 @@ namespace UnitTests.Serialization.Client
         public void DeserializeList_DeeplyNestedIncluded_CanDeserialize()
         {
             // Arrange
-            var content = new Document
-            {
-                Data = new List<ResourceObject>
-                {
-                    CreateDocumentWithRelationships("multiPrincipals").SingleData
-                }
-            };
-
+            var content = new Document { Data = new List<ResourceObject> { CreateDocumentWithRelationships("multiPrincipals").SingleData } };
             content.ManyData[0].Relationships.Add("multi", CreateRelationshipData("multiPrincipals"));
             const string includedAttributeValue = "multi member content";
             const string nestedIncludedAttributeValue = "nested include member content";
@@ -366,10 +297,7 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "multiPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = includedAttributeValue
-                    },
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = includedAttributeValue },
                     Relationships = new Dictionary<string, RelationshipEntry>
                     {
                         ["populatedToManies"] = CreateRelationshipData("oneToManyDependents", true)
@@ -379,23 +307,14 @@ namespace UnitTests.Serialization.Client
                 {
                     Type = "oneToManyDependents",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = nestedIncludedAttributeValue
-                    },
-                    Relationships = new Dictionary<string, RelationshipEntry>
-                    {
-                        ["principal"] = CreateRelationshipData("oneToManyPrincipals")
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = nestedIncludedAttributeValue },
+                    Relationships = new Dictionary<string, RelationshipEntry> { ["principal"] = CreateRelationshipData("oneToManyPrincipals") }
                 },
                 new ResourceObject
                 {
                     Type = "oneToManyPrincipals",
                     Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["attributeMember"] = deeplyNestedIncludedAttributeValue
-                    }
+                    Attributes = new Dictionary<string, object> { ["attributeMember"] = deeplyNestedIncludedAttributeValue }
                 }
             };
 
@@ -429,33 +348,12 @@ namespace UnitTests.Serialization.Client
 
             content.Included = new List<ResourceObject>
             {
+                new ResourceObject { Type = "firstDerivedModels", Id = "10", Attributes = new Dictionary<string, object> { ["firstProperty"] = "true" } },
                 new ResourceObject
                 {
-                    Type = "firstDerivedModels",
-                    Id = "10",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["firstProperty"] = "true"
-                    }
+                    Type = "secondDerivedModels", Id = "11", Attributes = new Dictionary<string, object> { ["secondProperty"] = "false" }
                 },
-                new ResourceObject
-                {
-                    Type = "secondDerivedModels",
-                    Id = "11",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["secondProperty"] = "false"
-                    }
-                },
-                new ResourceObject
-                {
-                    Type = "firstDerivedModels",
-                    Id = "20",
-                    Attributes = new Dictionary<string, object>
-                    {
-                        ["firstProperty"] = "true"
-                    }
-                }
+                new ResourceObject { Type = "firstDerivedModels", Id = "20", Attributes = new Dictionary<string, object> { ["firstProperty"] = "true" } }
             };
 
             string body = JsonConvert.SerializeObject(content);

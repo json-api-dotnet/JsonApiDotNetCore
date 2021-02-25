@@ -23,10 +23,7 @@ namespace JsonApiDotNetCoreExample.Definitions
         {
             if (pipeline == ResourcePipeline.GetSingle && resources.Any(r => r.Caption == "Classified"))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
-                {
-                    Title = "You are not allowed to see this article."
-                });
+                throw new JsonApiException(new Error(HttpStatusCode.Forbidden) { Title = "You are not allowed to see this article." });
             }
 
             return resources.Where(t => t.Caption != "This should not be included");

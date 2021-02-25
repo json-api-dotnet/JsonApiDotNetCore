@@ -104,10 +104,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id
-            });
+            _traceWriter.LogMethodStart(new { id });
 
             if (_getById == null)
             {
@@ -124,11 +121,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                relationshipName
-            });
+            _traceWriter.LogMethodStart(new { id, relationshipName });
 
             ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
 
@@ -147,11 +140,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                relationshipName
-            });
+            _traceWriter.LogMethodStart(new { id, relationshipName });
 
             ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
 
@@ -170,10 +159,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> PostAsync([FromBody] TResource resource, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                resource
-            });
+            _traceWriter.LogMethodStart(new { resource });
 
             ArgumentGuard.NotNull(resource, nameof(resource));
 
@@ -225,12 +211,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
             CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                relationshipName,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { id, relationshipName, secondaryResourceIds });
 
             ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
@@ -251,11 +232,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> PatchAsync(TId id, [FromBody] TResource resource, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                resource
-            });
+            _traceWriter.LogMethodStart(new { id, resource });
 
             ArgumentGuard.NotNull(resource, nameof(resource));
 
@@ -293,12 +270,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds,
             CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                relationshipName,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { id, relationshipName, secondaryResourceIds });
 
             ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
 
@@ -317,10 +289,7 @@ namespace JsonApiDotNetCore.Controllers
         /// </summary>
         public virtual async Task<IActionResult> DeleteAsync(TId id, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id
-            });
+            _traceWriter.LogMethodStart(new { id });
 
             if (_delete == null)
             {
@@ -350,12 +319,7 @@ namespace JsonApiDotNetCore.Controllers
         public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
             CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id,
-                relationshipName,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { id, relationshipName, secondaryResourceIds });
 
             ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));

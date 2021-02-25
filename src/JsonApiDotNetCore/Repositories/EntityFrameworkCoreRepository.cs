@@ -59,10 +59,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                layer
-            });
+            _traceWriter.LogMethodStart(new { layer });
 
             ArgumentGuard.NotNull(layer, nameof(layer));
 
@@ -73,17 +70,10 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                topFilter
-            });
+            _traceWriter.LogMethodStart(new { topFilter });
 
             ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-
-            var layer = new QueryLayer(resourceContext)
-            {
-                Filter = topFilter
-            };
+            var layer = new QueryLayer(resourceContext) { Filter = topFilter };
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
             return await query.CountAsync(cancellationToken);
@@ -91,10 +81,7 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                layer
-            });
+            _traceWriter.LogMethodStart(new { layer });
 
             ArgumentGuard.NotNull(layer, nameof(layer));
 
@@ -150,11 +137,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                resourceFromRequest,
-                resourceForDatabase
-            });
+            _traceWriter.LogMethodStart(new { resourceFromRequest, resourceForDatabase });
 
             ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
             ArgumentGuard.NotNull(resourceForDatabase, nameof(resourceForDatabase));
@@ -188,11 +171,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                resourceFromRequest,
-                resourceFromDatabase
-            });
+            _traceWriter.LogMethodStart(new { resourceFromRequest, resourceFromDatabase });
 
             ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
             ArgumentGuard.NotNull(resourceFromDatabase, nameof(resourceFromDatabase));
@@ -252,10 +231,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task DeleteAsync(TId id, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                id
-            });
+            _traceWriter.LogMethodStart(new { id });
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
             TResource resource = collector.CreateForId<TResource, TId>(id);
@@ -327,11 +303,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                primaryResource,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { primaryResource, secondaryResourceIds });
 
             RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
@@ -346,11 +318,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                primaryId,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { primaryId, secondaryResourceIds });
 
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
@@ -371,11 +339,7 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
             CancellationToken cancellationToken)
         {
-            _traceWriter.LogMethodStart(new
-            {
-                primaryResource,
-                secondaryResourceIds
-            });
+            _traceWriter.LogMethodStart(new { primaryResource, secondaryResourceIds });
 
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 

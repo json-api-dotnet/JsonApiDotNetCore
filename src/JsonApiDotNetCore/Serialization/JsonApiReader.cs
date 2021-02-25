@@ -142,10 +142,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (model == null && string.IsNullOrWhiteSpace(body))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
-                {
-                    Title = "Missing request body."
-                });
+                throw new JsonApiException(new Error(HttpStatusCode.BadRequest) { Title = "Missing request body." });
             }
         }
 

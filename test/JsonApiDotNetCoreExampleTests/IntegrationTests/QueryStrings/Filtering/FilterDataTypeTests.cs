@@ -71,10 +71,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_Decimal()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeDecimal = 0.5m
-            };
+            var resource = new FilterableResource { SomeDecimal = 0.5m };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -99,10 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_Guid()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeGuid = Guid.NewGuid()
-            };
+            var resource = new FilterableResource { SomeGuid = Guid.NewGuid() };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -127,10 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_DateTime()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeDateTime = 27.January(2003).At(11, 22, 33, 44)
-            };
+            var resource = new FilterableResource { SomeDateTime = 27.January(2003).At(11, 22, 33, 44) };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -155,10 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_DateTimeOffset()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeDateTimeOffset = 27.January(2003).At(11, 22, 33, 44).ToDateTimeOffset(TimeSpan.FromHours(3))
-            };
+            var resource = new FilterableResource { SomeDateTimeOffset = 27.January(2003).At(11, 22, 33, 44).ToDateTimeOffset(TimeSpan.FromHours(3)) };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -183,10 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_TimeSpan()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeTimeSpan = new TimeSpan(1, 2, 3, 4, 5)
-            };
+            var resource = new FilterableResource { SomeTimeSpan = new TimeSpan(1, 2, 3, 4, 5) };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -211,10 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_equality_on_incompatible_value()
         {
             // Arrange
-            var resource = new FilterableResource
-            {
-                SomeInt32 = 1
-            };
+            var resource = new FilterableResource { SomeInt32 = 1 };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

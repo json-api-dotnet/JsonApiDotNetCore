@@ -25,11 +25,7 @@ namespace MultiDbContextExample
             services.AddJsonApi(options =>
             {
                 options.IncludeExceptionStackTraceInErrors = true;
-            }, dbContextTypes: new[]
-            {
-                typeof(DbContextA),
-                typeof(DbContextB)
-            });
+            }, dbContextTypes: new[] { typeof(DbContextA), typeof(DbContextB) });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,10 +50,7 @@ namespace MultiDbContextExample
             dbContextA.Database.EnsureDeleted();
             dbContextA.Database.EnsureCreated();
 
-            dbContextA.ResourceAs.Add(new ResourceA
-            {
-                NameA = "SampleA"
-            });
+            dbContextA.ResourceAs.Add(new ResourceA { NameA = "SampleA" });
 
             dbContextA.SaveChanges();
         }
@@ -67,10 +60,7 @@ namespace MultiDbContextExample
             dbContextB.Database.EnsureDeleted();
             dbContextB.Database.EnsureCreated();
 
-            dbContextB.ResourceBs.Add(new ResourceB
-            {
-                NameB = "SampleB"
-            });
+            dbContextB.ResourceBs.Add(new ResourceB { NameB = "SampleB" });
 
             dbContextB.SaveChanges();
         }

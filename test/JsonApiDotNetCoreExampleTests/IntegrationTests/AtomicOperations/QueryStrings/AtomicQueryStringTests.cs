@@ -31,11 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             {
                 services.AddControllersFromExampleProject();
 
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock
-                {
-                    UtcNow = FrozenTime
-                });
-
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock { UtcNow = FrozenTime });
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
@@ -48,23 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_include_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?include=recordCompanies";
 
@@ -87,23 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_filter_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?filter=equals(id,'1')";
 
@@ -126,23 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_sort_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?sort=-id";
 
@@ -165,23 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_use_pagination_number_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?page[number]=1";
 
@@ -204,23 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_use_pagination_size_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?page[size]=1";
 
@@ -243,23 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public async Task Cannot_use_sparse_fieldset_on_operations_endpoint()
         {
             // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "recordCompanies",
-                            attributes = new
-                            {
-                            }
-                        }
-                    }
-                }
-            };
+            var requestBody = new { atomic__operations = new object[] { new { op = "add", data = new { type = "recordCompanies", attributes = new { } } } } };
 
             const string route = "/operations?fields[recordCompanies]=id";
 
@@ -314,21 +214,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
 
             var requestBody = new
             {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle
-                            }
-                        }
-                    }
-                }
+                atomic__operations = new object[] { new { op = "add", data = new { type = "musicTracks", attributes = new { title = newTrackTitle } } } }
             };
 
             const string route = "/operations?isRecentlyReleased=true";
@@ -365,15 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle,
-                                lengthInSeconds = newTrackLength
-                            }
-                        }
+                        data = new { type = "musicTracks", attributes = new { title = newTrackTitle, lengthInSeconds = newTrackLength } }
                     }
                 }
             };
@@ -409,15 +287,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle,
-                                lengthInSeconds = newTrackLength
-                            }
-                        }
+                        data = new { type = "musicTracks", attributes = new { title = newTrackTitle, lengthInSeconds = newTrackLength } }
                     }
                 }
             };

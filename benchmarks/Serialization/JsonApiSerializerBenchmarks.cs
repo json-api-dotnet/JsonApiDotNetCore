@@ -15,11 +15,7 @@ namespace Benchmarks.Serialization
     [MarkdownExporter]
     public class JsonApiSerializerBenchmarks
     {
-        private static readonly BenchmarkResource Content = new BenchmarkResource
-        {
-            Id = 123,
-            Name = Guid.NewGuid().ToString()
-        };
+        private static readonly BenchmarkResource Content = new BenchmarkResource { Id = 123, Name = Guid.NewGuid().ToString() };
 
         private readonly IJsonApiSerializer _jsonApiSerializer;
 
@@ -43,10 +39,7 @@ namespace Benchmarks.Serialization
         {
             var request = new JsonApiRequest();
 
-            var constraintProviders = new IQueryConstraintProvider[]
-            {
-                new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
-            };
+            var constraintProviders = new IQueryConstraintProvider[] { new SparseFieldSetQueryStringParameterReader(request, resourceGraph) };
 
             IResourceDefinitionAccessor accessor = new Mock<IResourceDefinitionAccessor>().Object;
 

@@ -12,10 +12,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class UnsuccessfulActionResultException : JsonApiException
     {
         public UnsuccessfulActionResultException(HttpStatusCode status)
-            : base(new Error(status)
-            {
-                Title = status.ToString()
-            })
+            : base(new Error(status) { Title = status.ToString() })
         {
         }
 
@@ -30,11 +27,7 @@ namespace JsonApiDotNetCore.Errors
 
             HttpStatusCode status = problemDetails.Status != null ? (HttpStatusCode)problemDetails.Status.Value : HttpStatusCode.InternalServerError;
 
-            var error = new Error(status)
-            {
-                Title = problemDetails.Title,
-                Detail = problemDetails.Detail
-            };
+            var error = new Error(status) { Title = problemDetails.Title, Detail = problemDetails.Detail };
 
             if (!string.IsNullOrWhiteSpace(problemDetails.Instance))
             {

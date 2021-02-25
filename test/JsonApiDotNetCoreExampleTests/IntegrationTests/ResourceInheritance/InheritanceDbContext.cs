@@ -38,11 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasValue<Book>(2);
 
             builder.Entity<HumanFavoriteContentItem>()
-                .HasKey(item => new
-                {
-                    ContentPersonId = item.ContentItemId,
-                    PersonId = item.HumanId
-                });
+                .HasKey(item => new { ContentPersonId = item.ContentItemId, PersonId = item.HumanId });
         }
     }
 }

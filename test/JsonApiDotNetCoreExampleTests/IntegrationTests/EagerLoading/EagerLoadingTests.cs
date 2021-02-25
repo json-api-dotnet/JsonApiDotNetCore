@@ -212,17 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             // Arrange
             Building newBuilding = _fakers.Building.Generate();
 
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "buildings",
-                    attributes = new
-                    {
-                        number = newBuilding.Number
-                    }
-                }
-            };
+            var requestBody = new { data = new { type = "buildings", attributes = new { number = newBuilding.Number } } };
 
             const string route = "/buildings";
 
@@ -286,11 +276,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 {
                     type = "buildings",
                     id = existingBuilding.StringId,
-                    attributes = new
-                    {
-                        number = newBuildingNumber,
-                        primaryDoorColor = newPrimaryDoorColor
-                    }
+                    attributes = new { number = newBuildingNumber, primaryDoorColor = newPrimaryDoorColor }
                 }
             };
 
