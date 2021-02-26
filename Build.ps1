@@ -21,7 +21,7 @@ function RunCleanupCode {
     # When running in cibuild for a pull request, this reformats only the files changed in the PR and fails if the reformat produces changes.
 
     if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
-        Write-Output "Running in cibuild for pull request"
+        Write-Output "Running code cleanup in cibuild for pull request"
 
         $sourceCommitHash = $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT
         $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
@@ -45,6 +45,7 @@ dotnet build -c Release
 CheckLastExitCode
 
 RunCleanupCode
+CheckLastExitCode
 
 dotnet test -c Release --no-build
 CheckLastExitCode
