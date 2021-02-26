@@ -24,7 +24,7 @@ function RunCleanupCode {
         Write-Output "Running in cibuild for pull request"
 
         $sourceCommitHash = $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT
-        $targetCommitHash = git rev-parse '$env:APPVEYOR_REPO_BRANCH'
+        $targetCommitHash = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
 
         Write-Output "Source commit hash = $sourceCommitHash"
         Write-Output "Target commit hash = $targetCommitHash"
