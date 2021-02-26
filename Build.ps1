@@ -40,6 +40,7 @@ dotnet restore
 CheckLastExitCode
 
 dotnet tool restore
+CheckLastExitCode
 
 dotnet build -c Release
 CheckLastExitCode
