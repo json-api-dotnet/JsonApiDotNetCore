@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            string[] result = new[]
+            string[] result =
             {
                 "Welcome!"
             };

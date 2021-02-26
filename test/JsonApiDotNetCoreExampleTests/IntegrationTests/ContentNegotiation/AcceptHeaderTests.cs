@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html"),
                 MediaTypeWithQualityHeaderValue.Parse("*/*")
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html;q=0.8"),
                 MediaTypeWithQualityHeaderValue.Parse("application/*;q=0.2")
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html"),
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html"),
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse("text/html"),
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders = new[]
+            MediaTypeWithQualityHeaderValue[] acceptHeaders =
             {
                 MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType)
             };

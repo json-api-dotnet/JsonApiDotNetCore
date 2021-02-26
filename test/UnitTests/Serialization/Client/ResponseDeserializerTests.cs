@@ -423,7 +423,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("testResourceWithAbstractRelationships");
-            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", true, "10"));
+            content.SingleData.Relationships.Add("toMany", CreateRelationshipData("firstDerivedModels", true));
             content.SingleData.Relationships["toMany"].ManyData.Add(CreateRelationshipData("secondDerivedModels", id: "11").SingleData);
             content.SingleData.Relationships.Add("toOne", CreateRelationshipData("firstDerivedModels", id: "20"));
 
