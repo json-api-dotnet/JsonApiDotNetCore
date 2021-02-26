@@ -246,7 +246,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                     }
                     else
                     {
-                        foreach (object? item in (IEnumerable)relationshipValue)
+                        foreach (object item in (IEnumerable)relationshipValue)
                         {
                             dbRightResourceList.Add(item);
                         }

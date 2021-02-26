@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private bool HasMissingId(IEnumerable models)
         {
-            foreach (object? model in models)
+            foreach (object model in models)
             {
                 if (TryGetId(model, out string id) && id == null)
                 {

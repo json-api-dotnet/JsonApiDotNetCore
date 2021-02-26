@@ -142,7 +142,7 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
-            object? deserializedValue = pi.GetValue(resource);
+            object deserializedValue = pi.GetValue(resource);
 
             if (member == "intField")
             {

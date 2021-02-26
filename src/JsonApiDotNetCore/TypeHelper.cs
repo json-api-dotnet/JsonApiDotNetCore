@@ -294,7 +294,7 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static Type GetIdType(Type resourceType)
         {
-            PropertyInfo? property = resourceType.GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = resourceType.GetProperty(nameof(Identifiable.Id));
 
             if (property == null)
             {
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCore
             Type concreteCollectionType = ToConcreteCollectionType(collectionType);
             dynamic concreteCollectionInstance = CreateInstance(concreteCollectionType);
 
-            foreach (object? item in source)
+            foreach (object item in source)
             {
                 concreteCollectionInstance.Add((dynamic)item);
             }

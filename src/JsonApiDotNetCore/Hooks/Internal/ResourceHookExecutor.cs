@@ -444,7 +444,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private IEnumerable CallHook(IResourceHookContainer container, ResourceHook hook, object[] arguments)
         {
-            MethodInfo? method = container.GetType().GetMethod(hook.ToString("G"));
+            MethodInfo method = container.GetType().GetMethod(hook.ToString("G"));
             // note that some of the hooks return "void". When these hooks, the 
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.

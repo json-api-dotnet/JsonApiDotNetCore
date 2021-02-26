@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 workItemInDatabase.DueAt.Should().Be(newWorkItem.DueAt);
             });
 
-            PropertyInfo? property = typeof(WorkItem).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(WorkItem).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(int));
         }
 
@@ -157,7 +157,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 userAccountInDatabase.LastName.Should().Be(newUserAccount.LastName);
             });
 
-            PropertyInfo? property = typeof(UserAccount).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(UserAccount).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(long));
         }
 
@@ -201,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
-            PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(Guid));
         }
 

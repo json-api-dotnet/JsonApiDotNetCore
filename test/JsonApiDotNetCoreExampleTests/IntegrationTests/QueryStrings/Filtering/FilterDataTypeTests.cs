@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             var resource = new FilterableResource();
-            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
+            PropertyInfo property = typeof(FilterableResource).GetProperty(propertyName);
             property?.SetValue(resource, value);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -256,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             var resource = new FilterableResource();
-            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
+            PropertyInfo property = typeof(FilterableResource).GetProperty(propertyName);
             property?.SetValue(resource, null);
 
             var otherResource = new FilterableResource
