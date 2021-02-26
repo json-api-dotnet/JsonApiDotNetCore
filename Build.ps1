@@ -31,6 +31,11 @@ CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
 
+
+Write-Output "Source = "$env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH at $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT"
+Write-Output "Target = $env:APPVEYOR_REPO_BRANCH at $env:APPVEYOR_REPO_COMMIT"
+
+
 if ($env:APPVEYOR_REPO_TAG -eq $true) {
     $revision = Get-Version-Suffix-From-Tag
     Write-Output "VERSION-SUFFIX: $revision"
