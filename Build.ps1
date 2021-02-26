@@ -20,6 +20,11 @@ function CheckLastExitCode {
 $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
+
+Write-Output "Source = $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH at $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT"
+Write-Output "Target = $env:APPVEYOR_REPO_BRANCH at $env:APPVEYOR_REPO_COMMIT"
+
+
 dotnet restore
 CheckLastExitCode
 
@@ -30,11 +35,6 @@ dotnet test -c Release --no-build
 CheckLastExitCode
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
-
-
-Write-Output "Source = $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH at $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT"
-Write-Output "Target = $env:APPVEYOR_REPO_BRANCH at $env:APPVEYOR_REPO_COMMIT"
-
 
 if ($env:APPVEYOR_REPO_TAG -eq $true) {
     $revision = Get-Version-Suffix-From-Tag
