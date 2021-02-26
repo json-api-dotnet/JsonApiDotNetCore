@@ -9,7 +9,7 @@ namespace Benchmarks.LinkBuilder
     [SimpleJob(3, 10, 20)]
     [MemoryDiagnoser]
     public class LinkBuilderGetNamespaceFromPathBenchmarks
-    {
+{
         private const string RequestPath = "/api/some-really-long-namespace-path/resources/current/articles/?some";
         private const string ResourceName = "articles";
         private const char PathDelimiter = '/';
