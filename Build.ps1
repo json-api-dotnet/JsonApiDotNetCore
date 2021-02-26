@@ -17,14 +17,34 @@ function CheckLastExitCode {
     }
 }
 
+function RunCleanupCode {
+    # When running in cibuild for a pull request, this reformats only the files changed in the PR and fails if the reformat produces changes.
+
+    if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
+        Write-Output "Running in cibuild for pull request"
+
+        $sourceCommitHash = $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT
+        $targetCommitHash = git rev-parse '$env:APPVEYOR_REPO_BRANCH'
+
+        Write-Output "Source commit hash = $sourceCommitHash"
+        Write-Output "Target commit hash = $targetCommitHash"
+
+        dotnet regitlint -s JsonApiDotNetCore.sln --print-command --jb --profile --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN -f commits -a $sourceCommitHash -b $targetCommitHash --fail-on-diff --print-diff
+    }
+}
+
 $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
 dotnet restore
 CheckLastExitCode
 
+dotnet tool restore
+
 dotnet build -c Release
 CheckLastExitCode
+
+RunCleanupCode
 
 dotnet test -c Release --no-build
 CheckLastExitCode
