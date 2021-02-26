@@ -56,7 +56,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
 
-            (var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
@@ -85,7 +85,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
 
-            (var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
@@ -112,7 +112,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (var _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 

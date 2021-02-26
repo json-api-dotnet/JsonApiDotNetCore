@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            (HttpResponseMessage httpResponse, var _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);

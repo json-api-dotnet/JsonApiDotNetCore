@@ -19,7 +19,7 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DeeplyNestedCircularChainOfSingleData_CanBuild()
         {
             // Arrange
-            (Article article, Person author, var _, Person reviewer, var _) = GetAuthorChainInstances();
+            (Article article, Person author, _, Person reviewer, _) = GetAuthorChainInstances();
             List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             IncludedResourceObjectBuilder builder = GetBuilder();
 
@@ -43,7 +43,7 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_DeeplyNestedCircularChainOfManyData_BuildsWithoutDuplicates()
         {
             // Arrange
-            (Article article, Person author, var _, var _, var _) = GetAuthorChainInstances();
+            (Article article, Person author, _, _, _) = GetAuthorChainInstances();
             Article secondArticle = ArticleFaker.Generate();
             secondArticle.Author = author;
             IncludedResourceObjectBuilder builder = GetBuilder();
@@ -63,7 +63,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
-            (Article article, Person author, var _, Person reviewer, Food reviewerFood) = GetAuthorChainInstances();
+            (Article article, Person author, _, Person reviewer, Food reviewerFood) = GetAuthorChainInstances();
             Blog sharedBlog = author.Blogs.First();
             Person sharedBlogAuthor = reviewer;
             Song authorSong = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);

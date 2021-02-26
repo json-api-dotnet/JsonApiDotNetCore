@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Configuration
 
         internal void DiscoverResources()
         {
-            foreach ((var _, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
+            foreach ((_, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
             {
                 foreach (ResourceDescriptor resourceDescriptor in resourceDescriptors)
                 {

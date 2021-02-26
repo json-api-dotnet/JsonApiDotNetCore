@@ -38,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, var _, IResourceHookExecutor hookExecutor,
+            (Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, _, IResourceHookExecutor hookExecutor,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
                 CreateTestObjects(todoDiscovery, personDiscovery);
 

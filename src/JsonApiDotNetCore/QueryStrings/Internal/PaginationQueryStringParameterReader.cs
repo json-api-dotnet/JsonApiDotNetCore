@@ -168,7 +168,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 ApplyOptionsInEntry(_globalScope, options);
 
-                foreach ((var _, MutablePaginationEntry entry) in _nestedScopes)
+                foreach ((_, MutablePaginationEntry entry) in _nestedScopes)
                 {
                     ApplyOptionsInEntry(entry, options);
                 }
