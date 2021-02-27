@@ -50,19 +50,33 @@ namespace JsonApiDotNetCore.AtomicOperations
             switch (kind)
             {
                 case OperationKind.CreateResource:
+                {
                     return typeof(ICreateProcessor<,>);
+                }
                 case OperationKind.UpdateResource:
+                {
                     return typeof(IUpdateProcessor<,>);
+                }
                 case OperationKind.DeleteResource:
+                {
                     return typeof(IDeleteProcessor<,>);
+                }
                 case OperationKind.SetRelationship:
+                {
                     return typeof(ISetRelationshipProcessor<,>);
+                }
                 case OperationKind.AddToRelationship:
+                {
                     return typeof(IAddToRelationshipProcessor<,>);
+                }
                 case OperationKind.RemoveFromRelationship:
+                {
                     return typeof(IRemoveFromRelationshipProcessor<,>);
+                }
                 default:
+                {
                     throw new NotSupportedException($"Unknown operation kind '{kind}'.");
+                }
             }
         }
     }
