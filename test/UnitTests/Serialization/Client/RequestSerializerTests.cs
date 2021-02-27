@@ -100,7 +100,7 @@ namespace UnitTests.Serialization.Client
         {
             // Arrange
             var resource = new TestResource { Id = 1, StringField = "value", NullableIntField = 123 };
-            _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(tr => new { });
+            _serializer.AttributesToSerialize = ResourceGraph.GetAttributes<TestResource>(_ => new { });
 
             // Act
             string serialized = _serializer.Serialize(resource);

@@ -92,7 +92,7 @@ namespace UnitTests.Middleware
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            var middleware = new JsonApiMiddleware(httpContext =>
+            var middleware = new JsonApiMiddleware(_ =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });

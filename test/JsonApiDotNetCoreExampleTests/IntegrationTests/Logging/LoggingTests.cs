@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
                 options.ClearProviders();
                 options.AddProvider(loggerFactory);
                 options.SetMinimumLevel(LogLevel.Trace);
-                options.AddFilter((category, level) => true);
+                options.AddFilter((_, __) => true);
             });
 
             testContext.ConfigureServicesBeforeStartup(services =>

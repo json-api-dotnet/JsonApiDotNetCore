@@ -250,7 +250,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
 
-            return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
 
         /// <inheritdoc />
@@ -264,7 +264,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             secondaryLayer.Include = null;
 
             var primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
-            var primaryProjection = primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            var primaryProjection = primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
             primaryProjection[secondaryRelationship] = secondaryLayer;
 
             var primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceContext);
@@ -481,7 +481,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var idAttribute = GetIdAttribute(resourceContext);
             attributeSet.Add(idAttribute);
 
-            return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
 
         private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)

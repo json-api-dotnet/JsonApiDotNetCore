@@ -168,29 +168,29 @@ namespace UnitTests.ResourceHooks
         {
             resourceDefinition
                 .Setup(rd => rd.BeforeCreate(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, _) => resources)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeRead(It.IsAny<ResourcePipeline>(), It.IsAny<bool>(), It.IsAny<string>()))
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeUpdate(It.IsAny<IDiffableResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<DiffableResourceHashSet<TModel>, ResourcePipeline>((resources, context) => resources)
+                .Returns<DiffableResourceHashSet<TModel>, ResourcePipeline>((resources, _) => resources)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeDelete(It.IsAny<IResourceHashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, _) => resources)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, context, helper) => ids)
+                .Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, _, __) => ids)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.OnReturn(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))
-                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, context) => resources)
+                .Returns<IEnumerable<TModel>, ResourcePipeline>((resources, _) => resources)
                 .Verifiable();
             resourceDefinition
                 .Setup(rd => rd.AfterCreate(It.IsAny<HashSet<TModel>>(), It.IsAny<ResourcePipeline>()))

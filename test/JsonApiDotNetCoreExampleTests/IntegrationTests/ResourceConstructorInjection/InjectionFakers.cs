@@ -28,13 +28,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             _lazyPostOfficeFaker = new Lazy<Faker<PostOffice>>(() =>
                 new Faker<PostOffice>()
                     .UseSeed(GetFakerSeed())
-                    .CustomInstantiator(f => new PostOffice(ResolveDbContext()))
+                    .CustomInstantiator(_ => new PostOffice(ResolveDbContext()))
                     .RuleFor(postOffice => postOffice.Address, f => f.Address.FullAddress()));
 
             _lazyGiftCertificateFaker = new Lazy<Faker<GiftCertificate>>(() =>
                 new Faker<GiftCertificate>()
                     .UseSeed(GetFakerSeed())
-                    .CustomInstantiator(f => new GiftCertificate(ResolveDbContext()))
+                    .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
                     .RuleFor(giftCertificate => giftCertificate.IssueDate, f => f.Date.PastOffset()));
         }
 
