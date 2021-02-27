@@ -215,14 +215,16 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IResourceNode> action)
         {
+            var nextLayer = currentLayer;
+
             while (true)
             {
-                if (!currentLayer.AnyResources())
+                if (!nextLayer.AnyResources())
                 {
                     return;
                 }
 
-                foreach (IResourceNode node in currentLayer)
+                foreach (IResourceNode node in nextLayer)
                 {
                     var resourceType = node.ResourceType;
                     var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
@@ -235,7 +237,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                     action(hookContainer, node);
                 }
 
-                currentLayer = _traversalHelper.CreateNextLayer(currentLayer.ToList());
+                nextLayer = _traversalHelper.CreateNextLayer(nextLayer.ToList());
             }
         }
 
@@ -448,12 +450,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <returns>The relationship helper.</returns>
         private IRelationshipsDictionary CreateRelationshipHelper(RightType resourceType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
+            var prevLayerRelationshipsWithDbValues = prevLayerRelationships;
+
             if (dbValues != null)
             {
-                prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
+                prevLayerRelationshipsWithDbValues = ReplaceWithDbValues(prevLayerRelationshipsWithDbValues, dbValues.Cast<IIdentifiable>());
             }
 
-            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationships);
+            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationshipsWithDbValues);
         }
 
         /// <summary>

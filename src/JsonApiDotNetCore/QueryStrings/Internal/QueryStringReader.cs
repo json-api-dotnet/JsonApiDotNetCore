@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            disableQueryStringAttribute ??= DisableQueryStringAttribute.Empty;
+            var disableQueryStringAttributeNotNull = disableQueryStringAttribute ?? DisableQueryStringAttribute.Empty;
 
             foreach (var (parameterName, parameterValue) in _queryStringAccessor.Query)
             {
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                     _logger.LogDebug(
                         $"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
 
-                    if (!reader.IsEnabled(disableQueryStringAttribute))
+                    if (!reader.IsEnabled(disableQueryStringAttributeNotNull))
                     {
                         throw new InvalidQueryStringParameterException(parameterName,
                             "Usage of one or more query string parameters is not allowed at the requested endpoint.",

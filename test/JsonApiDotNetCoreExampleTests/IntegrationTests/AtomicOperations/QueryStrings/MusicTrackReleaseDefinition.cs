@@ -32,14 +32,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
 
         private IQueryable<MusicTrack> FilterOnRecentlyReleased(IQueryable<MusicTrack> source, StringValues parameterValue)
         {
+            var tracks = source;
+
             if (bool.Parse(parameterValue))
             {
-                source = source.Where(musicTrack =>
+                tracks = tracks.Where(musicTrack =>
                     musicTrack.ReleasedAt < _systemClock.UtcNow &&
                     musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
             }
 
-            return source;
+            return tracks;
         }
     }
 }

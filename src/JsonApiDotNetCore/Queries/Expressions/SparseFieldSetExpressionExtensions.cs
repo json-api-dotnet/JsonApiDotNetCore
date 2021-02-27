@@ -18,12 +18,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
+            var newSparseFieldSet = sparseFieldSet;
+
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = IncludeField(sparseFieldSet, field);
+                newSparseFieldSet = IncludeField(newSparseFieldSet, field);
             }
 
-            return sparseFieldSet;
+            return newSparseFieldSet;
         }
 
         private static SparseFieldSetExpression IncludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToInclude)
@@ -45,12 +47,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
+            var newSparseFieldSet = sparseFieldSet;
+
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = ExcludeField(sparseFieldSet, field);
+                newSparseFieldSet = ExcludeField(newSparseFieldSet, field);
             }
 
-            return sparseFieldSet;
+            return newSparseFieldSet;
         }
 
         private static SparseFieldSetExpression ExcludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToExclude)

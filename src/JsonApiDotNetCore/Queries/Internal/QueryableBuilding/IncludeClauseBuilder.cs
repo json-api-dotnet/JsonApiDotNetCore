@@ -63,15 +63,17 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string pathPrefix)
         {
+            var result = source;
+
             foreach (var eagerLoad in eagerLoads)
             {
                 string path = pathPrefix != null ? pathPrefix + "." + eagerLoad.Property.Name : eagerLoad.Property.Name;
-                source = IncludeExtensionMethodCall(source, path);
+                result = IncludeExtensionMethodCall(result, path);
 
-                source = ApplyEagerLoads(source, eagerLoad.Children, path);
+                result = ApplyEagerLoads(result, eagerLoad.Children, path);
             }
 
-            return source;
+            return result;
         }
 
         private Expression IncludeExtensionMethodCall(Expression source, string navigationPropertyPath)

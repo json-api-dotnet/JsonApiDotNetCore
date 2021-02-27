@@ -85,19 +85,22 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_resources.All(e => e.ResourceType != resourceType))
+            if (_resources.Any(e => e.ResourceType == resourceType))
             {
-                if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
-                {
-                    publicName ??= FormatResourceName(resourceType);
-                    idType ??= TypeLocator.TryGetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(publicName, resourceType, idType);
-                    _resources.Add(resourceContext);
-                }
-                else
-                {
-                    _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
-                }
+                return this;
+            }
+
+            if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
+            {
+                var effectivePublicName = publicName ?? FormatResourceName(resourceType);
+                var effectiveIdType = idType ?? TypeLocator.TryGetIdType(resourceType);
+                
+                var resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
+                _resources.Add(resourceContext);
+            }
+            else
+            {
+                _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
             }
 
             return this;

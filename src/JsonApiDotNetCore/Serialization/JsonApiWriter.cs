@@ -87,21 +87,21 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            contextObject = WrapErrors(contextObject);
+            var contextObjectWrapped = WrapErrors(contextObject);
 
-            return _serializer.Serialize(contextObject);
+            return _serializer.Serialize(contextObjectWrapped);
         }
 
         private static object WrapErrors(object contextObject)
         {
             if (contextObject is IEnumerable<Error> errors)
             {
-                contextObject = new ErrorDocument(errors);
+                return new ErrorDocument(errors);
             }
 
             if (contextObject is Error error)
             {
-                contextObject = new ErrorDocument(error);
+                return new ErrorDocument(error);
             }
 
             return contextObject;

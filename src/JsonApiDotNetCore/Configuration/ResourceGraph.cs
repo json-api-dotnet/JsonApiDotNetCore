@@ -177,15 +177,17 @@ namespace JsonApiDotNetCore.Configuration
 
         private static Expression RemoveConvert(Expression expression)
         {
+            var innerExpression = expression;
+
             while (true)
             {
-                if (expression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
+                if (innerExpression is UnaryExpression { NodeType: ExpressionType.Convert } unaryExpression)
                 {
-                    expression = unaryExpression.Operand;
+                    innerExpression = unaryExpression.Operand;
                 }
                 else
                 {
-                    return expression;
+                    return innerExpression;
                 }
             }
         }

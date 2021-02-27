@@ -36,9 +36,13 @@ namespace JsonApiDotNetCore.Serialization.Building
             var resourceObject = new ResourceObject { Type = resourceContext.PublicName, Id = resource.StringId };
 
             // populating the top-level "attribute" member of a resource object. never include "id" as an attribute
-            if (attributes != null && (attributes = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray()).Any())
+            if (attributes != null)
             {
-                ProcessAttributes(resource, attributes, resourceObject);
+                var attributesWithoutId = attributes.Where(attr => attr.Property.Name != nameof(Identifiable.Id)).ToArray();
+                if (attributesWithoutId.Any())
+                {
+                    ProcessAttributes(resource, attributesWithoutId, resourceObject);
+                }
             }
 
             // populating the top-level "relationship" member of a resource object.

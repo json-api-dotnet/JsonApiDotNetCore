@@ -99,13 +99,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             try
             {
+                string name = parameterName;
+                string value = parameterValue;
+
                 if (_options.EnableLegacyFilterNotation)
                 {
-                    (parameterName, parameterValue) = LegacyConverter.Convert(parameterName, parameterValue);
+                    (name, value) = LegacyConverter.Convert(name, value);
                 }
 
-                ResourceFieldChainExpression scope = GetScope(parameterName);
-                FilterExpression filter = GetFilter(parameterValue, scope);
+                ResourceFieldChainExpression scope = GetScope(name);
+                FilterExpression filter = GetFilter(value, scope);
 
                 StoreFilterInScope(filter, scope);
             }
