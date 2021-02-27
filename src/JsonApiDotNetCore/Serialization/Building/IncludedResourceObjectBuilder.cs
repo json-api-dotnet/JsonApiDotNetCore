@@ -144,7 +144,8 @@ namespace JsonApiDotNetCore.Serialization.Building
             // add the relationship entry in the relationship object.
             if (!relationshipsObject.TryGetValue(nextRelationshipName, out var relationshipEntry))
             {
-                relationshipsObject[nextRelationshipName] = relationshipEntry = GetRelationshipData(nextRelationship, parent);
+                relationshipEntry = GetRelationshipData(nextRelationship, parent);
+                relationshipsObject[nextRelationshipName] = relationshipEntry;
             }
 
             relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
