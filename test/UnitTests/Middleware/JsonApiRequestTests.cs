@@ -57,7 +57,7 @@ namespace UnitTests.Middleware
             var middleware = new JsonApiMiddleware(_ => Task.CompletedTask);
 
             // Act
-            await middleware.Invoke(httpContext, controllerResourceMappingMock.Object, options, request, resourceGraph);
+            await middleware.InvokeAsync(httpContext, controllerResourceMappingMock.Object, options, request, resourceGraph);
 
             // Assert
             request.IsCollection.Should().Be(expectIsCollection);

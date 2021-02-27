@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
                     await transaction.BeforeProcessOperationAsync(cancellationToken);
 
-                    var result = await ProcessOperation(operation, cancellationToken);
+                    var result = await ProcessOperationAsync(operation, cancellationToken);
                     results.Add(result);
 
                     await transaction.AfterProcessOperationAsync(cancellationToken);
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             return results;
         }
 
-        protected virtual async Task<OperationContainer> ProcessOperation(OperationContainer operation,
+        protected virtual async Task<OperationContainer> ProcessOperationAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

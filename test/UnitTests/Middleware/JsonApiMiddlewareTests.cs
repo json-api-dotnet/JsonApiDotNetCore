@@ -84,7 +84,7 @@ namespace UnitTests.Middleware
             var options = holder.Options.Object;
             var request = holder.Request;
             var resourceGraph = holder.ResourceGraph.Object;
-            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, request, resourceGraph);
+            return holder.MiddleWare.InvokeAsync(context, controllerResourceMapping, options, request, resourceGraph);
         }
         private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
         {

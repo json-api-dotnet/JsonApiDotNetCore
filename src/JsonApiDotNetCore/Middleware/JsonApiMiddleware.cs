@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, 
+        public async Task InvokeAsync(HttpContext httpContext, 
             IControllerResourceMapping controllerResourceMapping, 
             IJsonApiOptions options, 
             IJsonApiRequest request, 

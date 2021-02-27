@@ -278,7 +278,7 @@ namespace JsonApiDotNetCore.Services
                 {
                     // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
                     // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
-                    await RemoveExistingIdsFromSecondarySet(primaryId, secondaryResourceIds, hasManyThrough, cancellationToken);
+                    await RemoveExistingIdsFromSecondarySetAsync(primaryId, secondaryResourceIds, hasManyThrough, cancellationToken);
                 }
 
                 try
@@ -296,7 +296,7 @@ namespace JsonApiDotNetCore.Services
             }
         }
 
-        private async Task RemoveExistingIdsFromSecondarySet(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+        private async Task RemoveExistingIdsFromSecondarySetAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
             HasManyThroughAttribute hasManyThrough, CancellationToken cancellationToken)
         {
             var queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyThrough, primaryId, secondaryResourceIds);
