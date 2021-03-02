@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject"/>s for a HasMany relationship.
         /// </summary>
-        private List<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
+        private IList<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
             var value = relationship.GetValue(resource);
             var relatedResources = TypeHelper.ExtractResources(value);

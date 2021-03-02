@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             resourceObject.Relationships = PruneRelationshipEntries(resourceObject);
         }
 
-        private static Dictionary<string, RelationshipEntry> PruneRelationshipEntries(ResourceObject resourceObject)
+        private static IDictionary<string, RelationshipEntry> PruneRelationshipEntries(ResourceObject resourceObject)
         {
             var pruned = resourceObject.Relationships
                 .Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ProcessChain(related, chainRemainder);
         }
 
-        private void ProcessChain(object related, List<RelationshipAttribute> inclusionChain)
+        private void ProcessChain(object related, IList<RelationshipAttribute> inclusionChain)
         {
             if (related is IEnumerable children)
             {
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             }
         }
 
-        private void ProcessRelationship(IIdentifiable parent, List<RelationshipAttribute> inclusionChain)
+        private void ProcessRelationship(IIdentifiable parent, IList<RelationshipAttribute> inclusionChain)
         {
             // get the resource object for parent.
             var resourceObject = GetOrBuildResourceObject(parent);
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             }
         }
 
-        private List<RelationshipAttribute> ShiftChain(IReadOnlyCollection<RelationshipAttribute> chain)
+        private IList<RelationshipAttribute> ShiftChain(IReadOnlyCollection<RelationshipAttribute> chain)
         {
             var chainRemainder = chain.ToList();
             chainRemainder.RemoveAt(0);
