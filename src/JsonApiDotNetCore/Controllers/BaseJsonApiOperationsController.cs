@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,6 +10,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
@@ -157,14 +159,7 @@ namespace JsonApiDotNetCore.Controllers
 
                     if (!validationContext.ModelState.IsValid)
                     {
-                        foreach (var (key, entry) in validationContext.ModelState)
-                        {
-                            foreach (var error in entry.Errors)
-                            {
-                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, operation.Resource.GetType(), error);
-                                violations.Add(violation);
-                            }
-                        }
+                        AddValidationErrors(validationContext.ModelState, operation.Resource.GetType(), index, violations);
                     }
                 }
 
@@ -174,6 +169,25 @@ namespace JsonApiDotNetCore.Controllers
             if (violations.Any())
             {
                 throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, _options.SerializerNamingStrategy);
+            }
+        }
+
+        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        {
+            foreach (var (propertyName, entry) in modelState)
+            {
+                AddValidationErrors(entry, propertyName, resourceType, operationIndex, violations);
+            }
+        }
+
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        {
+            foreach (var error in entry.Errors)
+            {
+                var prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
+                var violation = new ModelStateViolation(prefix, propertyName, resourceType, error);
+
+                violations.Add(violation);
             }
         }
     }

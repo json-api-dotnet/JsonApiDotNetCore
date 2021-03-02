@@ -40,6 +40,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 .Select(constraint => constraint.Expression)
                 .OfType<SparseFieldTableExpression>()
                 .Select(expression => expression.Table)
+                .SelectMany(table => table)
                 .ToArray();
 
             // @formatter:keep_existing_linebreaks restore
@@ -47,23 +48,26 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             var mergedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
 
-            foreach (var sparseFieldTable in sparseFieldTables)
+            foreach (var (resourceContext, sparseFieldSet) in sparseFieldTables)
             {
-                foreach (var (resourceContext, sparseFieldSet) in sparseFieldTable)
+                if (!mergedTable.ContainsKey(resourceContext))
                 {
-                    if (!mergedTable.ContainsKey(resourceContext))
-                    {
-                        mergedTable[resourceContext] = new HashSet<ResourceFieldAttribute>();
-                    }
-
-                    foreach (var field in sparseFieldSet.Fields)
-                    {
-                        mergedTable[resourceContext].Add(field);
-                    }
+                    mergedTable[resourceContext] = new HashSet<ResourceFieldAttribute>();
                 }
+
+                AddSparseFieldsToSet(sparseFieldSet.Fields, mergedTable[resourceContext]);
             }
 
             return mergedTable;
+        }
+
+        private static void AddSparseFieldsToSet(IReadOnlyCollection<ResourceFieldAttribute> sparseFieldsToAdd,
+            HashSet<ResourceFieldAttribute> sparseFieldSet)
+        {
+            foreach (var field in sparseFieldsToAdd)
+            {
+                sparseFieldSet.Add(field);
+            }
         }
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext)

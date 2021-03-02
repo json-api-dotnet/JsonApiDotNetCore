@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
@@ -47,14 +48,20 @@ namespace JsonApiDotNetCore.Resources
 
             foreach (var relationship in TargetedFields.Relationships)
             {
-                var rightValue = relationship.GetValue(Resource);
-                foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
-                {
-                    secondaryResources.Add(rightResource);
-                }
+                AddSecondaryResources(relationship, secondaryResources);
             }
 
             return secondaryResources;
+        }
+
+        private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
+        {
+            var rightValue = relationship.GetValue(Resource);
+
+            foreach (var rightResource in TypeHelper.ExtractResources(rightValue))
+            {
+                secondaryResources.Add(rightResource);
+            }
         }
     }
 }

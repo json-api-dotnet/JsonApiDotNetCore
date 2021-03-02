@@ -45,20 +45,26 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
             {
-                string path = null;
-
-                foreach (var relationship in chain.Fields.Cast<RelationshipAttribute>())
-                {
-                    path = path == null ? relationship.RelationshipPath : path + "." + relationship.RelationshipPath;
-
-                    var resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
-                    source = ApplyEagerLoads(source, resourceContext.EagerLoads, path);
-                }
-
-                source = IncludeExtensionMethodCall(source, path);
+                source = ProcessRelationshipChain(chain, source);
             }
 
             return source;
+        }
+
+        private Expression ProcessRelationshipChain(ResourceFieldChainExpression chain, Expression source)
+        {
+            string path = null;
+            var result = source;
+
+            foreach (var relationship in chain.Fields.Cast<RelationshipAttribute>())
+            {
+                path = path == null ? relationship.RelationshipPath : path + "." + relationship.RelationshipPath;
+
+                var resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);
+            }
+
+            return IncludeExtensionMethodCall(result, path);
         }
 
         private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string pathPrefix)

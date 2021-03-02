@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using JetBrains.Annotations;
@@ -26,12 +27,26 @@ namespace JsonApiDotNetCore.Errors
 
         private static IEnumerable<ModelStateViolation> FromModelStateDictionary(ModelStateDictionary modelState, Type resourceType)
         {
+            ArgumentGuard.NotNull(modelState, nameof(modelState));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+
+            var violations = new List<ModelStateViolation>();
+
             foreach (var (propertyName, entry) in modelState)
             {
-                foreach (ModelError error in entry.Errors)
-                {
-                    yield return new ModelStateViolation("/data/attributes/", propertyName, resourceType, error);
-                }
+                AddValidationErrors(entry, propertyName, resourceType, violations);
+            }
+
+            return violations;
+        }
+
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType,
+            List<ModelStateViolation> violations)
+        {
+            foreach (ModelError error in entry.Errors)
+            {
+                var violation = new ModelStateViolation("/data/attributes/", propertyName, resourceType, error);
+                violations.Add(violation);
             }
         }
 
@@ -47,22 +62,25 @@ namespace JsonApiDotNetCore.Errors
             ArgumentGuard.NotNull(violations, nameof(violations));
             ArgumentGuard.NotNull(namingStrategy, nameof(namingStrategy));
 
-            foreach (var violation in violations)
-            {
-                if (violation.Error.Exception is JsonApiException jsonApiException)
-                {
-                    foreach (var error in jsonApiException.Errors)
-                    {
-                        yield return error;
-                    }
-                }
-                else
-                {
-                    string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
-                    var attributePath = violation.Prefix + attributeName;
+            return violations.SelectMany(violation => FromModelStateViolation(violation, includeExceptionStackTraceInErrors, namingStrategy));
+        }
 
-                    yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
+        private static IEnumerable<Error> FromModelStateViolation(ModelStateViolation violation, bool includeExceptionStackTraceInErrors,
+            NamingStrategy namingStrategy)
+        {
+            if (violation.Error.Exception is JsonApiException jsonApiException)
+            {
+                foreach (var error in jsonApiException.Errors)
+                {
+                    yield return error;
                 }
+            }
+            else
+            {
+                string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
+                var attributePath = violation.Prefix + attributeName;
+
+                yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
             }
         }
 

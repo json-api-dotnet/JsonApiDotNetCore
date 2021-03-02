@@ -70,18 +70,21 @@ namespace JsonApiDotNetCore.Configuration
                     $"instead of {interfaceGenericTypeArguments.Length}.", nameof(interfaceGenericTypeArguments));
             }
 
-            foreach (var nextType in assembly.GetTypes())
+            return assembly.GetTypes().Select(type => FindGenericInterfaceImplementationForType(type, openGenericInterface, interfaceGenericTypeArguments))
+                .FirstOrDefault(result => result != null);
+        }
+
+        private static (Type implementation, Type registrationInterface)? FindGenericInterfaceImplementationForType(Type nextType, Type openGenericInterface, Type[] interfaceGenericTypeArguments)
+        {
+            foreach (var nextGenericInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
             {
-                foreach (var nextGenericInterface in nextType.GetInterfaces().Where(x => x.IsGenericType))
+                var nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
+                if (nextOpenGenericInterface == openGenericInterface)
                 {
-                    var nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
-                    if (nextOpenGenericInterface == openGenericInterface)
+                    var nextGenericArguments = nextGenericInterface.GetGenericArguments();
+                    if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length && nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
                     {
-                        var nextGenericArguments = nextGenericInterface.GetGenericArguments();
-                        if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length && nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
-                        {
-                            return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));    
-                        }
+                        return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));
                     }
                 }
             }

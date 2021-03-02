@@ -215,48 +215,56 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 // note that we don't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
                 var includedLefts = LoadDbValues(relationship.LeftType, lefts, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
-                foreach (IIdentifiable ip in includedLefts)
-                {
-                    IList dbRightResourceList = TypeHelper.CreateListFor(relationship.RightType);
-                    var relationshipValue = relationship.GetValue(ip);
-                    if (!(relationshipValue is IEnumerable))
-                    {
-                        if (relationshipValue != null)
-                        {
-                            dbRightResourceList.Add(relationshipValue);
-                        }
-                    }
-                    else
-                    {
-                        foreach (var item in (IEnumerable) relationshipValue)
-                        {
-                            dbRightResourceList.Add(item);
-                        }
-                    }
-
-                    var dbRightResourceListCast = dbRightResourceList.Cast<IIdentifiable>().ToList();
-                    if (existingRightResourceList != null)
-                    {
-                        dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResourceList, _comparer).ToList();
-                    }
-
-                    if (dbRightResourceListCast.Any())
-                    {
-                        if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
-                        {
-                            affected = TypeHelper.CreateListFor(relationship.RightType);
-                            implicitlyAffected[relationship] = affected;
-                        }
-
-                        foreach (var item in dbRightResourceListCast)
-                        {
-                            ((IList)affected).Add(item);
-                        }
-                    }
-                }
+                AddToImplicitlyAffected(includedLefts, relationship, existingRightResourceList, implicitlyAffected);
             }
 
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
+        }
+
+        private void AddToImplicitlyAffected(IEnumerable includedLefts, RelationshipAttribute relationship, List<IIdentifiable> existingRightResourceList,
+            Dictionary<RelationshipAttribute, IEnumerable> implicitlyAffected)
+        {
+            foreach (IIdentifiable ip in includedLefts)
+            {
+                IList dbRightResourceList = TypeHelper.CreateListFor(relationship.RightType);
+                var relationshipValue = relationship.GetValue(ip);
+                if (!(relationshipValue is IEnumerable))
+                {
+                    if (relationshipValue != null)
+                    {
+                        dbRightResourceList.Add(relationshipValue);
+                    }
+                }
+                else
+                {
+                    AddToList(dbRightResourceList, (IEnumerable)relationshipValue);
+                }
+
+                var dbRightResourceListCast = dbRightResourceList.Cast<IIdentifiable>().ToList();
+                if (existingRightResourceList != null)
+                {
+                    dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResourceList, _comparer).ToList();
+                }
+
+                if (dbRightResourceListCast.Any())
+                {
+                    if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
+                    {
+                        affected = TypeHelper.CreateListFor(relationship.RightType);
+                        implicitlyAffected[relationship] = affected;
+                    }
+
+                    AddToList((IList)affected, dbRightResourceListCast);
+                }
+            }
+        }
+
+        private static void AddToList(IList list, IEnumerable itemsToAdd)
+        {
+            foreach (var item in itemsToAdd)
+            {
+                list.Add(item);
+            }
         }
 
         private bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,

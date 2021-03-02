@@ -41,14 +41,19 @@ namespace JsonApiDotNetCore.Configuration
                 IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
                 if (entityType != null)
                 {
-                    foreach (var relationship in resourceContext.Relationships)
-                    {
-                        if (!(relationship is HasManyThroughAttribute))
-                        {
-                            INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
-                            relationship.InverseNavigationProperty = inverseNavigation?.PropertyInfo;
-                        }
-                    }
+                    ResolveRelationships(resourceContext.Relationships, entityType);
+                }
+            }
+        }
+
+        private void ResolveRelationships(IReadOnlyCollection<RelationshipAttribute> relationships, IEntityType entityType)
+        {
+            foreach (var relationship in relationships)
+            {
+                if (!(relationship is HasManyThroughAttribute))
+                {
+                    INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.FindInverse();
+                    relationship.InverseNavigationProperty = inverseNavigation?.PropertyInfo;
                 }
             }
         }

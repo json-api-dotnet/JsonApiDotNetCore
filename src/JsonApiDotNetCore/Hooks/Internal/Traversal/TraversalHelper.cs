@@ -131,38 +131,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             {
                 var leftResources = node.UniqueResources;
                 var relationships = node.RelationshipsToNextLayer;
-                foreach (IIdentifiable leftResource in leftResources)
-                {
-                    foreach (var proxy in relationships)
-                    {
-                        var relationshipValue = proxy.GetValue(leftResource);
-                        // skip this relationship if it's not populated
-                        if (!proxy.IsContextRelation && relationshipValue == null)
-                        {
-                            continue;
-                        }
 
-                        if (!(relationshipValue is IEnumerable rightResources))
-                        {
-                            // in the case of a to-one relationship, the assigned value
-                            // will not be a list. We therefore first wrap it in a list.
-                            var list = TypeHelper.CreateListFor(proxy.RightType);
-                            if (relationshipValue != null)
-                            {
-                                list.Add(relationshipValue);
-                            }
-
-                            rightResources = list;
-                        }
-
-                        var uniqueRightResources = UniqueInTree(rightResources.Cast<IIdentifiable>(), proxy.RightType);
-                        if (proxy.IsContextRelation || uniqueRightResources.Any())
-                        {
-                            AddToRelationshipGroup(rightResourcesGrouped, proxy, uniqueRightResources);
-                            AddToRelationshipGroup(leftResourcesGrouped, proxy, leftResource.AsEnumerable());
-                        }
-                    }
-                }
+                ExtractLeftResources(leftResources, relationships, rightResourcesGrouped, leftResourcesGrouped);
             }
 
             var processResourcesMethod = GetType().GetMethod(nameof(ProcessResources), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -174,6 +144,50 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             }
 
             return (leftResourcesGrouped, rightResourcesGrouped);
+        }
+
+        private void ExtractLeftResources(IEnumerable leftResources, RelationshipProxy[] relationships, Dictionary<RelationshipProxy, List<IIdentifiable>> rightResourcesGrouped,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> leftResourcesGrouped)
+        {
+            foreach (IIdentifiable leftResource in leftResources)
+            {
+                ExtractLeftResource(leftResource, relationships, rightResourcesGrouped, leftResourcesGrouped);
+            }
+        }
+
+        private void ExtractLeftResource(IIdentifiable leftResource, RelationshipProxy[] relationships,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> rightResourcesGrouped,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> leftResourcesGrouped)
+        {
+            foreach (var proxy in relationships)
+            {
+                var relationshipValue = proxy.GetValue(leftResource);
+                // skip this relationship if it's not populated
+                if (!proxy.IsContextRelation && relationshipValue == null)
+                {
+                    continue;
+                }
+
+                if (!(relationshipValue is IEnumerable rightResources))
+                {
+                    // in the case of a to-one relationship, the assigned value
+                    // will not be a list. We therefore first wrap it in a list.
+                    var list = TypeHelper.CreateListFor(proxy.RightType);
+                    if (relationshipValue != null)
+                    {
+                        list.Add(relationshipValue);
+                    }
+
+                    rightResources = list;
+                }
+
+                var uniqueRightResources = UniqueInTree(rightResources.Cast<IIdentifiable>(), proxy.RightType);
+                if (proxy.IsContextRelation || uniqueRightResources.Any())
+                {
+                    AddToRelationshipGroup(rightResourcesGrouped, proxy, uniqueRightResources);
+                    AddToRelationshipGroup(leftResourcesGrouped, proxy, leftResource.AsEnumerable());
+                }
+            }
         }
 
         /// <summary>

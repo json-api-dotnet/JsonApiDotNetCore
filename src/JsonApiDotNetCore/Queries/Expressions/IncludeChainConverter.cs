@@ -76,20 +76,25 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
-                MutableIncludeNode currentNode = rootNode;
-
-                foreach (var relationship in chain.Fields.OfType<RelationshipAttribute>())
-                {
-                    if (!currentNode.Children.ContainsKey(relationship))
-                    {
-                        currentNode.Children[relationship] = new MutableIncludeNode(relationship);
-                    }
-
-                    currentNode = currentNode.Children[relationship];
-                }
+                ConvertChainToElement(chain, rootNode);
             }
 
             return rootNode.Children.Values.Select(child => child.ToExpression()).ToArray();
+        }
+
+        private static void ConvertChainToElement(ResourceFieldChainExpression chain, MutableIncludeNode rootNode)
+        {
+            MutableIncludeNode currentNode = rootNode;
+
+            foreach (var relationship in chain.Fields.OfType<RelationshipAttribute>())
+            {
+                if (!currentNode.Children.ContainsKey(relationship))
+                {
+                    currentNode.Children[relationship] = new MutableIncludeNode(relationship);
+                }
+
+                currentNode = currentNode.Children[relationship];
+            }
         }
 
         private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object, object>

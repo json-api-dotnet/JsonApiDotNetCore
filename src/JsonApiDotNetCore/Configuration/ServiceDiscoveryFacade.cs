@@ -101,12 +101,9 @@ namespace JsonApiDotNetCore.Configuration
 
         internal void DiscoverResources()
         {
-            foreach (var (_, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
+            foreach (var resourceDescriptor in _assemblyCache.GetResourceDescriptorsPerAssembly().SelectMany(tuple => tuple.resourceDescriptors))
             {
-                foreach (var resourceDescriptor in resourceDescriptors)
-                {
-                    AddResource(resourceDescriptor);
-                }
+                AddResource(resourceDescriptor);
             }
         }
 
@@ -115,21 +112,25 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var (assembly, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
             {
                 AddDbContextResolvers(assembly);
+                AddInjectables(resourceDescriptors, assembly);
+            }
+        }
 
-                foreach (var resourceDescriptor in resourceDescriptors)
+        private void AddInjectables(IReadOnlyCollection<ResourceDescriptor> resourceDescriptors, Assembly assembly)
+        {
+            foreach (var resourceDescriptor in resourceDescriptors)
+            {
+                AddServices(assembly, resourceDescriptor);
+                AddRepositories(assembly, resourceDescriptor);
+                AddResourceDefinitions(assembly, resourceDescriptor);
+
+                if (_options.EnableResourceHooks)
                 {
-                    AddServices(assembly, resourceDescriptor);
-                    AddRepositories(assembly, resourceDescriptor);
-                    AddResourceDefinitions(assembly, resourceDescriptor);
-
-                    if (_options.EnableResourceHooks)
-                    {
-                        AddResourceHookDefinitions(assembly, resourceDescriptor);
-                    }
+                    AddResourceHookDefinitions(assembly, resourceDescriptor);
                 }
             }
         }
-        
+
         private void AddDbContextResolvers(Assembly assembly)
         {
             var dbContextTypes = TypeLocator.GetDerivedTypes(assembly, typeof(DbContext));

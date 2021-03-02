@@ -224,20 +224,22 @@ namespace JsonApiDotNetCore.Hooks.Internal
                     return;
                 }
 
-                foreach (IResourceNode node in nextLayer)
-                {
-                    var resourceType = node.ResourceType;
-                    var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
-
-                    if (hookContainer == null)
-                    {
-                        continue;
-                    }
-
-                    action(hookContainer, node);
-                }
+                TraverseNextLayer(nextLayer, action, target);
 
                 nextLayer = _traversalHelper.CreateNextLayer(nextLayer.ToList());
+            }
+        }
+
+        private void TraverseNextLayer(NodeLayer nextLayer, Action<IResourceHookContainer, IResourceNode> action, ResourceHook target)
+        {
+            foreach (IResourceNode node in nextLayer)
+            {
+                var hookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, target);
+
+                if (hookContainer != null)
+                {
+                    action(hookContainer, node);
+                }
             }
         }
 

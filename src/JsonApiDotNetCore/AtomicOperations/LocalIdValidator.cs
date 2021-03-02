@@ -37,28 +37,10 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (var operation in operations)
                 {
-                    if (operation.Kind == OperationKind.CreateResource)
-                    {
-                        DeclareLocalId(operation.Resource);
-                    }
-                    else
-                    {
-                        AssertLocalIdIsAssigned(operation.Resource);
-                    }
-
-                    foreach (var secondaryResource in operation.GetSecondaryResources())
-                    {
-                        AssertLocalIdIsAssigned(secondaryResource);
-                    }
-
-                    if (operation.Kind == OperationKind.CreateResource)
-                    {
-                        AssignLocalId(operation);
-                    }
+                    ValidateOperation(operation);
 
                     operationIndex++;
                 }
-
             }
             catch (JsonApiException exception)
             {
@@ -68,6 +50,28 @@ namespace JsonApiDotNetCore.AtomicOperations
                 }
 
                 throw;
+            }
+        }
+
+        private void ValidateOperation(OperationContainer operation)
+        {
+            if (operation.Kind == OperationKind.CreateResource)
+            {
+                DeclareLocalId(operation.Resource);
+            }
+            else
+            {
+                AssertLocalIdIsAssigned(operation.Resource);
+            }
+
+            foreach (var secondaryResource in operation.GetSecondaryResources())
+            {
+                AssertLocalIdIsAssigned(secondaryResource);
+            }
+
+            if (operation.Kind == OperationKind.CreateResource)
+            {
+                AssignLocalId(operation);
             }
         }
 

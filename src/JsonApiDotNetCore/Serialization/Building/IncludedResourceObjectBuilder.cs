@@ -50,31 +50,39 @@ namespace JsonApiDotNetCore.Serialization.Building
                 {
                     if (resourceObject.Relationships != null)
                     {
-                        foreach (var relationshipName in resourceObject.Relationships.Keys.ToArray())
-                        {
-                            var resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
-                            var relationship = resourceContext.Relationships.Single(rel => rel.PublicName == relationshipName);
-
-                            if (!IsRelationshipInSparseFieldSet(relationship))
-                            {
-                                resourceObject.Relationships.Remove(relationshipName);
-                            }
-                        }
-
-                        // removes relationship entries (<see cref="RelationshipEntry"/>s) if they're completely empty.  
-                        var pruned = resourceObject.Relationships.Where(p => p.Value.IsPopulated || p.Value.Links != null).ToDictionary(p => p.Key, p => p.Value);
-                        if (!pruned.Any())
-                        {
-                            pruned = null;
-                        }
-
-                        resourceObject.Relationships = pruned;
+                        UpdateRelationships(resourceObject);
                     }
+
                     resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
                 }
                 return _included.ToArray();
             }
             return null;
+        }
+
+        private void UpdateRelationships(ResourceObject resourceObject)
+        {
+            foreach (var relationshipName in resourceObject.Relationships.Keys.ToArray())
+            {
+                var resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
+                var relationship = resourceContext.Relationships.Single(rel => rel.PublicName == relationshipName);
+
+                if (!IsRelationshipInSparseFieldSet(relationship))
+                {
+                    resourceObject.Relationships.Remove(relationshipName);
+                }
+            }
+
+            resourceObject.Relationships = PruneRelationshipEntries(resourceObject);
+        }
+
+        private static Dictionary<string, RelationshipEntry> PruneRelationshipEntries(ResourceObject resourceObject)
+        {
+            var pruned = resourceObject.Relationships
+                .Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
+            
+            return !pruned.Any() ? null : pruned;
         }
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)
