@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
+        public virtual HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
             return _relationships.GetAffected(navigationAction);
         }

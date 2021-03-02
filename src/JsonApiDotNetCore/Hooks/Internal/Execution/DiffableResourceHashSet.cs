@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
+        public override HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
             ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
 

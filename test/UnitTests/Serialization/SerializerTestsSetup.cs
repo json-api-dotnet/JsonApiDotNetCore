@@ -128,14 +128,14 @@ namespace UnitTests.Serialization
         {
             public TestSerializer(IResourceObjectBuilder resourceObjectBuilder) : base(resourceObjectBuilder) { }
 
-            public new Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public Document PublicBuild(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(resource, attributes, relationships);
+                return Build(resource, attributes, relationships);
             }
 
-            public new Document Build(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
+            public Document PublicBuild(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes = null, IReadOnlyCollection<RelationshipAttribute> relationships = null)
             {
-                return base.Build(resources, attributes, relationships);
+                return Build(resources, attributes, relationships);
             }
         }
     }

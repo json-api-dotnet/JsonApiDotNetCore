@@ -26,7 +26,7 @@ namespace UnitTests.Serialization.Common
         public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
-            var document = _builder.Build((TestResource) null);
+            var document = _builder.PublicBuild((TestResource) null);
 
             // Assert
             Assert.Null(document.Data);
@@ -38,7 +38,7 @@ namespace UnitTests.Serialization.Common
         public void ResourceToDocument_EmptyList_CanBuild()
         {
             // Act
-            var document = _builder.Build(new List<TestResource>());
+            var document = _builder.PublicBuild(new List<TestResource>());
 
             // Assert
             Assert.NotNull(document.Data);
@@ -53,7 +53,7 @@ namespace UnitTests.Serialization.Common
             IIdentifiable dummy = new DummyResource();
 
             // Act
-            var document = _builder.Build(dummy);
+            var document = _builder.PublicBuild(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -67,7 +67,7 @@ namespace UnitTests.Serialization.Common
             var resources = ArrayFactory.Create(new DummyResource(), new DummyResource());
 
             // Act
-            var document = _builder.Build(resources);
+            var document = _builder.PublicBuild(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert
