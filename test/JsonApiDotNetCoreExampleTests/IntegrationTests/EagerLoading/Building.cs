@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
         [EagerLoad]
         public Door PrimaryDoor { get; set; }
-        
+
         [EagerLoad]
         public Door SecondaryDoor { get; set; }
     }

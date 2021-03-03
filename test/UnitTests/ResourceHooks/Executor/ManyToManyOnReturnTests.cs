@@ -1,7 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -10,44 +14,23 @@ namespace UnitTests.ResourceHooks.Executor
 {
     public sealed class ManyToManyOnReturnTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks = { ResourceHook.OnReturn };
-
-        private (List<Article>, List<Tag>) CreateDummyData()
+        private readonly ResourceHook[] _targetHooks =
         {
-            var tagsSubset = TagFaker.Generate(3);
-            var joinsSubSet = ArticleTagFaker.Generate(3);
-            var articleTagsSubset = ArticleFaker.Generate();
-            articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
-            for (int i = 0; i < 3; i++)
-            {
-                joinsSubSet[i].Article = articleTagsSubset;
-                joinsSubSet[i].Tag = tagsSubset[i];
-            }
-
-            var allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
-            var completeJoin = ArticleTagFaker.Generate(6);
-
-            var articleWithAllTags = ArticleFaker.Generate();
-            articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
-
-            for (int i = 0; i < 6; i++)
-            {
-                completeJoin[i].Article = articleWithAllTags;
-                completeJoin[i].Tag = allTags[i];
-            }
-
-            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
-            return (articles, allTags);
-        }
+            ResourceHook.OnReturn
+        };
 
         [Fact]
         public void OnReturn()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
-            var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, tags) = CreateDummyData();
+            IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
+
+            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
+                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
+                CreateTestObjects(articleDiscovery, tagDiscovery);
+
+            (List<Article> articles, List<Tag> tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -62,10 +45,14 @@ namespace UnitTests.ResourceHooks.Executor
         public void OnReturn_Without_Parent_Hook_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
-            var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, tags) = CreateDummyData();
+            IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
+            IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
+
+            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
+                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
+                CreateTestObjects(articleDiscovery, tagDiscovery);
+
+            (List<Article> articles, List<Tag> tags) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -79,10 +66,14 @@ namespace UnitTests.ResourceHooks.Executor
         public void OnReturn_Without_Children_Hooks_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
-            var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
-            var (articles, _) = CreateDummyData();
+            IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
+            IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
+
+            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
+                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
+                CreateTestObjects(articleDiscovery, tagDiscovery);
+
+            (List<Article> articles, List<Tag> _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -96,11 +87,14 @@ namespace UnitTests.ResourceHooks.Executor
         public void OnReturn_Without_Any_Hook_Implemented()
         {
             // Arrange
-            var articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
-            var tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
-            var (_, _, hookExecutor, articleResourceMock, tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
+            IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
+            IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            var (articles, _) = CreateDummyData();
+            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
+                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
+                CreateTestObjects(articleDiscovery, tagDiscovery);
+
+            (List<Article> articles, List<Tag> _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -108,6 +102,34 @@ namespace UnitTests.ResourceHooks.Executor
             // Assert
             VerifyNoOtherCalls(articleResourceMock, tagResourceMock);
         }
+
+        private (List<Article>, List<Tag>) CreateDummyData()
+        {
+            List<Tag> tagsSubset = TagFaker.Generate(3);
+            List<ArticleTag> joinsSubSet = ArticleTagFaker.Generate(3);
+            Article articleTagsSubset = ArticleFaker.Generate();
+            articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
+
+            for (int i = 0; i < 3; i++)
+            {
+                joinsSubSet[i].Article = articleTagsSubset;
+                joinsSubSet[i].Tag = tagsSubset[i];
+            }
+
+            List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
+            List<ArticleTag> completeJoin = ArticleTagFaker.Generate(6);
+
+            Article articleWithAllTags = ArticleFaker.Generate();
+            articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
+
+            for (int i = 0; i < 6; i++)
+            {
+                completeJoin[i].Article = articleWithAllTags;
+                completeJoin[i].Tag = allTags[i];
+            }
+
+            List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
+            return (articles, allTags);
+        }
     }
 }
-

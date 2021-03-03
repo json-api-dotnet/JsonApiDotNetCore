@@ -58,8 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             throw new NotImplementedException();
         }
 
-        public Task RemoveFromToManyRelationshipAsync(Performer primaryResource, ISet<IIdentifiable> secondaryResourceIds,
-            CancellationToken cancellationToken)
+        public Task RemoveFromToManyRelationshipAsync(Performer primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

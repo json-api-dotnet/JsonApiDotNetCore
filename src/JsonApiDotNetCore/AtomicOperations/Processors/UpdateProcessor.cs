@@ -21,13 +21,12 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
-            CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var resource = (TResource) operation.Resource;
-            var updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
+            var resource = (TResource)operation.Resource;
+            TResource updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
 
             return updated == null ? null : operation.WithResource(updated);
         }

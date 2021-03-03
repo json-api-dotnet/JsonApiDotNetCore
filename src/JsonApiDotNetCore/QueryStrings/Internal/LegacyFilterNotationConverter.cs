@@ -31,8 +31,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(parameterValue, nameof(parameterValue));
 
-            if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) ||
-                parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
+            if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) || parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
                 parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
             {
                 yield return parameterValue;
@@ -57,13 +56,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 return (parameterName, expression);
             }
 
-            var attributeName = ExtractAttributeName(parameterName);
+            string attributeName = ExtractAttributeName(parameterName);
 
-            foreach (var (prefix, keyword) in PrefixConversionTable)
+            foreach ((string prefix, string keyword) in PrefixConversionTable)
             {
                 if (parameterValue.StartsWith(prefix, StringComparison.Ordinal))
                 {
-                    var value = parameterValue.Substring(prefix.Length);
+                    string value = parameterValue.Substring(prefix.Length);
                     string escapedValue = EscapeQuotes(value);
                     string expression = $"{keyword}({attributeName},'{escapedValue}')";
 
@@ -73,7 +72,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             if (parameterValue.StartsWith(NotEqualsPrefix, StringComparison.Ordinal))
             {
-                var value = parameterValue.Substring(NotEqualsPrefix.Length);
+                string value = parameterValue.Substring(NotEqualsPrefix.Length);
                 string escapedValue = EscapeQuotes(value);
                 string expression = $"{Keywords.Not}({Keywords.Equals}({attributeName},'{escapedValue}'))";
 
@@ -83,7 +82,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (parameterValue.StartsWith(InPrefix, StringComparison.Ordinal))
             {
                 string[] valueParts = parameterValue.Substring(InPrefix.Length).Split(",");
-                var valueList = "'" + string.Join("','", valueParts) + "'";
+                string valueList = "'" + string.Join("','", valueParts) + "'";
                 string expression = $"{Keywords.Any}({attributeName},{valueList})";
 
                 return (OutputParameterName, expression);
@@ -92,7 +91,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
             {
                 string[] valueParts = parameterValue.Substring(NotInPrefix.Length).Split(",");
-                var valueList = "'" + string.Join("','", valueParts) + "'";
+                string valueList = "'" + string.Join("','", valueParts) + "'";
                 string expression = $"{Keywords.Not}({Keywords.Any}({attributeName},{valueList}))";
 
                 return (OutputParameterName, expression);
@@ -120,7 +119,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private static string ExtractAttributeName(string parameterName)
         {
-            if (parameterName.StartsWith(ParameterNamePrefix, StringComparison.Ordinal) && parameterName.EndsWith(ParameterNameSuffix, StringComparison.Ordinal))
+            if (parameterName.StartsWith(ParameterNamePrefix, StringComparison.Ordinal) &&
+                parameterName.EndsWith(ParameterNameSuffix, StringComparison.Ordinal))
             {
                 string attributeName = parameterName.Substring(ParameterNamePrefix.Length,
                     parameterName.Length - ParameterNamePrefix.Length - ParameterNameSuffix.Length);

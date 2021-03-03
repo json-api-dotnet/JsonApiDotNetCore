@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExample.Definitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
-        public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public PassportHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 

@@ -11,7 +11,10 @@ namespace JsonApiDotNetCoreExample.Definitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class TagHooksDefinition : ResourceHooksDefinition<Tag>
     {
-        public TagHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public TagHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
         public override IEnumerable<Tag> OnReturn(HashSet<Tag> resources, ResourcePipeline pipeline)
         {

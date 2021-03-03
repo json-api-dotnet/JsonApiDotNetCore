@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 namespace JsonApiDotNetCore.Queries
 {
     /// <summary>
-    /// Represents an expression coming from query string. The scope determines at which depth in the <see cref="IResourceGraph"/> to apply its expression.
+    /// Represents an expression coming from query string. The scope determines at which depth in the <see cref="IResourceGraph" /> to apply its expression.
     /// </summary>
     [PublicAPI]
     public class ExpressionInScope

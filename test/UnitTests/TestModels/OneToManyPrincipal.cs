@@ -7,6 +7,7 @@ namespace UnitTests.TestModels
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OneToManyPrincipal : IdentifiableWithAttribute
     {
-        [HasMany] public ISet<OneToManyDependent> Dependents { get; set; }
+        [HasMany]
+        public ISet<OneToManyDependent> Dependents { get; set; }
     }
 }

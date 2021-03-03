@@ -8,6 +8,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Primitives;
 
@@ -16,10 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
-        private readonly IUserRolesService _userRolesService;
         private static readonly PageSize MaxPageSize = new PageSize(5);
+        private readonly IUserRolesService _userRolesService;
 
-        public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService) : base(resourceGraph)
+        public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService)
+            : base(resourceGraph)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
@@ -31,8 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: prevent including owner if user has insufficient permissions.
 
-            if (!_userRolesService.AllowIncludeOwner && 
-                existingIncludes.Any(x => x.Relationship.Property.Name == nameof(CallableResource.Owner)))
+            if (!_userRolesService.AllowIncludeOwner && existingIncludes.Any(x => x.Relationship.Property.Name == nameof(CallableResource.Owner)))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
@@ -47,14 +48,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: automatically exclude deleted resources for all requests.
 
-            var resourceContext = ResourceGraph.GetResourceContext<CallableResource>();
-            var isDeletedAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(CallableResource.IsDeleted));
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext<CallableResource>();
+            AttrAttribute isDeletedAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(CallableResource.IsDeleted));
 
-            var isNotDeleted = new ComparisonExpression(ComparisonOperator.Equals,
-                new ResourceFieldChainExpression(isDeletedAttribute), new LiteralConstantExpression(bool.FalseString));
+            var isNotDeleted = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(isDeletedAttribute),
+                new LiteralConstantExpression(bool.FalseString));
 
             return existingFilter == null
-                ? (FilterExpression) isNotDeleted
+                ? (FilterExpression)isNotDeleted
                 : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotDeleted, existingFilter));
         }
 
@@ -66,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 return existingSort;
             }
-            
+
             return CreateSortExpressionFromLambda(new PropertySortOrder
             {
                 (resource => resource.Label, ListSortDirection.Ascending),
@@ -80,7 +81,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             if (existingPagination != null)
             {
-                var pageSize = existingPagination.PageSize?.Value <= MaxPageSize.Value ? existingPagination.PageSize : MaxPageSize;
+                PageSize pageSize = existingPagination.PageSize?.Value <= MaxPageSize.Value ? existingPagination.PageSize : MaxPageSize;
                 return new PaginationExpression(existingPagination.PageNumber, pageSize);
             }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -41,27 +42,26 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 return false;
             }
 
-            var queryableHandler = GetQueryableHandler(parameterName);
+            object queryableHandler = GetQueryableHandler(parameterName);
             return queryableHandler != null;
         }
 
         /// <inheritdoc />
         public virtual void Read(string parameterName, StringValues parameterValue)
         {
-            var queryableHandler = GetQueryableHandler(parameterName);
+            object queryableHandler = GetQueryableHandler(parameterName);
             var expressionInScope = new ExpressionInScope(null, new QueryableHandlerExpression(queryableHandler, parameterValue));
             _constraints.Add(expressionInScope);
         }
 
         private object GetQueryableHandler(string parameterName)
         {
-            var resourceType = _request.PrimaryResource.ResourceType;
-            var handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+            Type resourceType = _request.PrimaryResource.ResourceType;
+            object handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
 
             if (handler != null && _request.Kind != EndpointKind.Primary)
             {
-                throw new InvalidQueryStringParameterException(parameterName,
-                    "Custom query string parameters cannot be used on nested resource endpoints.",
+                throw new InvalidQueryStringParameterException(parameterName, "Custom query string parameters cannot be used on nested resource endpoints.",
                     $"Query string parameter '{parameterName}' cannot be used on a nested resource endpoint.");
             }
 

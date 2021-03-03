@@ -57,14 +57,14 @@ namespace DiscoveryTests
 
             // Act
             facade.DiscoverResources();
-            
+
             // Assert
-            var resourceGraph = _resourceGraphBuilder.Build();
-            
-            var personResource = resourceGraph.GetResourceContext(typeof(Person));
+            IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
+
+            ResourceContext personResource = resourceGraph.GetResourceContext(typeof(Person));
             personResource.Should().NotBeNull();
 
-            var articleResource = resourceGraph.GetResourceContext(typeof(Article));
+            ResourceContext articleResource = resourceGraph.GetResourceContext(typeof(Article));
             articleResource.Should().NotBeNull();
         }
 
@@ -77,11 +77,11 @@ namespace DiscoveryTests
 
             // Act
             facade.DiscoverResources();
-            
-            // Assert
-            var resourceGraph = _resourceGraphBuilder.Build();
 
-            var resource = resourceGraph.GetResourceContext(typeof(TestResource));
+            // Assert
+            IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
+
+            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
             resource.Should().NotBeNull();
         }
 
@@ -91,12 +91,12 @@ namespace DiscoveryTests
             // Arrange
             var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
             facade.AddCurrentAssembly();
-            
+
             // Act
             facade.DiscoverInjectables();
 
             // Assert
-            var services = _services.BuildServiceProvider();
+            ServiceProvider services = _services.BuildServiceProvider();
 
             var resourceService = services.GetRequiredService<IResourceService<TestResource>>();
             resourceService.Should().BeOfType<TestResourceService>();
@@ -113,7 +113,7 @@ namespace DiscoveryTests
             facade.DiscoverInjectables();
 
             // Assert
-            var services = _services.BuildServiceProvider();
+            ServiceProvider services = _services.BuildServiceProvider();
 
             var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource>>();
             resourceRepository.Should().BeOfType<TestResourceRepository>();
@@ -130,7 +130,7 @@ namespace DiscoveryTests
             facade.DiscoverInjectables();
 
             // Assert
-            var services = _services.BuildServiceProvider();
+            ServiceProvider services = _services.BuildServiceProvider();
 
             var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
             resourceDefinition.Should().BeOfType<TestResourceDefinition>();
@@ -149,29 +149,24 @@ namespace DiscoveryTests
             facade.DiscoverInjectables();
 
             // Assert
-            var services = _services.BuildServiceProvider();
+            ServiceProvider services = _services.BuildServiceProvider();
 
             var resourceHooksDefinition = services.GetRequiredService<ResourceHooksDefinition<TestResource>>();
             resourceHooksDefinition.Should().BeOfType<TestResourceHooksDefinition>();
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class TestResource : Identifiable { }
+        public sealed class TestResource : Identifiable
+        {
+        }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceService : JsonApiResourceService<TestResource>
         {
-            public TestResourceService(
-                IResourceRepositoryAccessor repositoryAccessor,
-                IQueryLayerComposer queryLayerComposer,
-                IPaginationContext paginationContext,
-                IJsonApiOptions options,
-                ILoggerFactory loggerFactory,
-                IJsonApiRequest request,
-                IResourceChangeTracker<TestResource> resourceChangeTracker,
-                IResourceHookExecutorFacade hookExecutor)
-                : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                    resourceChangeTracker, hookExecutor)
+            public TestResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
+                IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
+                IResourceChangeTracker<TestResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
+                : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
             {
             }
         }
@@ -179,27 +174,29 @@ namespace DiscoveryTests
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
         {
-            public TestResourceRepository(
-                ITargetedFields targetedFields,
-                IDbContextResolver contextResolver,
-                IResourceGraph resourceGraph,
-                IResourceFactory resourceFactory,
-                IEnumerable<IQueryConstraintProvider> constraintProviders,
-                ILoggerFactory loggerFactory)
+            public TestResourceRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+                IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
                 : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
-            { }
+            {
+            }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
         {
-            public TestResourceHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            public TestResourceHooksDefinition(IResourceGraph resourceGraph)
+                : base(resourceGraph)
+            {
+            }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         public sealed class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
         {
-            public TestResourceDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+            public TestResourceDefinition(IResourceGraph resourceGraph)
+                : base(resourceGraph)
+            {
+            }
         }
     }
 }

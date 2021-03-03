@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             Tokenize(source);
 
-            var resourceContext = ParseSparseFieldTarget();
+            ResourceContext resourceContext = ParseSparseFieldTarget();
 
             AssertTokenStackIsEmpty();
 
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.OpenBracket);
 
-            var resourceContext = ParseResourceName();
+            ResourceContext resourceContext = ParseResourceName();
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
 
@@ -56,7 +56,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceContext GetResourceContext(string resourceName)
         {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+
             if (resourceContext == null)
             {
                 throw new QueryParseException($"Resource type '{resourceName}' does not exist.");

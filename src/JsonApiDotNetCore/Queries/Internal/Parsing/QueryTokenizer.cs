@@ -8,8 +8,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public sealed class QueryTokenizer
     {
-        public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds =
-            new ReadOnlyDictionary<char, TokenKind>(new Dictionary<char, TokenKind>
+        public static readonly IReadOnlyDictionary<char, TokenKind> SingleCharacterToTokenKinds = new ReadOnlyDictionary<char, TokenKind>(
+            new Dictionary<char, TokenKind>
             {
                 ['('] = TokenKind.OpenParen,
                 [')'] = TokenKind.CloseParen,

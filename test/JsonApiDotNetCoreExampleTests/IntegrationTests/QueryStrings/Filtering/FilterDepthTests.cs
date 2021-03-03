@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
@@ -13,8 +14,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDepthTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
 
             options.DisableTopPagination = false;
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_primary_resources()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
             posts[0].Caption = "One";
             posts[1].Caption = "Two";
 
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogPosts?filter=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_single_primary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -69,17 +69,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}?filter=equals(caption,'Two')";
+            string route = $"/blogPosts/{post.StringId}?filter=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_secondary_resources()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(2);
             blog.Posts[0].Caption = "One";
             blog.Posts[1].Caption = "Two";
@@ -101,10 +101,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts?filter=equals(caption,'Two')";
+            string route = $"/blogs/{blog.StringId}/posts?filter=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_single_secondary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -125,17 +125,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}/author?filter=equals(displayName,'John Smith')";
+            string route = $"/blogPosts/{post.StringId}/author?filter=equals(displayName,'John Smith')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasOne_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
             posts[0].Author = _fakers.WebAccount.Generate();
             posts[0].Author.UserName = "Conner";
             posts[1].Author = _fakers.WebAccount.Generate();
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogPosts?include=author&filter=equals(author.userName,'Smith')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -177,7 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogs?filter=greaterThan(count(posts),'0')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -203,7 +203,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasManyThrough_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -222,7 +223,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogPosts?filter=has(labels)";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -235,7 +236,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(2);
             blog.Posts[0].Caption = "One";
             blog.Posts[1].Caption = "Two";
@@ -250,7 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogs?include=posts&filter[posts]=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -265,7 +266,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Owner = _fakers.WebAccount.Generate();
             blog.Owner.Posts = _fakers.BlogPost.Generate(2);
             blog.Owner.Posts[0].Caption = "One";
@@ -277,10 +278,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/owner?include=posts&filter[posts]=equals(caption,'Two')";
+            string route = $"/blogs/{blog.StringId}/owner?include=posts&filter[posts]=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -295,7 +296,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+
             posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -303,6 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                     Label = _fakers.Label.Generate()
                 }
             };
+
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -322,14 +325,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             });
 
             // Workaround for https://github.com/dotnet/efcore/issues/21026
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = true;
 
             const string route = "/blogPosts?include=labels&filter[labels]=equals(name,'Hot')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -344,7 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_scope_of_relationship_chain()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Owner = _fakers.WebAccount.Generate();
             blog.Owner.Posts = _fakers.BlogPost.Generate(2);
             blog.Owner.Posts[0].Caption = "One";
@@ -360,7 +363,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogs?include=owner.posts&filter[owner.posts]=equals(caption,'Two')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -376,7 +379,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_same_scope_multiple_times()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(3);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(3);
             posts[0].Caption = "One";
             posts[1].Caption = "Two";
             posts[2].Caption = "Three";
@@ -391,7 +394,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogPosts?filter=equals(caption,'One')&filter=equals(caption,'Three')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -405,10 +408,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_same_scope_multiple_times_using_legacy_notation()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = true;
 
-            var posts = _fakers.BlogPost.Generate(3);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(3);
             posts[0].Author = _fakers.WebAccount.Generate();
             posts[1].Author = _fakers.WebAccount.Generate();
             posts[2].Author = _fakers.WebAccount.Generate();
@@ -432,7 +435,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/blogPosts?filter[author.userName]=John&filter[author.displayName]=Smith";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -446,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_in_multiple_scopes()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[1].Title = "Technology";
             blogs[1].Owner = _fakers.WebAccount.Generate();
             blogs[1].Owner.UserName = "Smith";
@@ -474,7 +477,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             // @formatter:keep_existing_linebreaks restore
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

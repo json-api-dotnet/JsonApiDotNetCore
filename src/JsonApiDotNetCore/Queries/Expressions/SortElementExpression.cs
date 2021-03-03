@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Represents an element in <see cref="SortExpression"/>.
+    /// Represents an element in <see cref="SortExpression" />.
     /// </summary>
     [PublicAPI]
     public class SortElementExpression : QueryExpression
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (SortElementExpression) obj;
+            var other = (SortElementExpression)obj;
 
             return Equals(TargetAttribute, other.TargetAttribute) && Equals(Count, other.Count) && IsAscending == other.IsAscending;
         }

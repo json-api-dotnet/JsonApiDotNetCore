@@ -8,8 +8,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
     public sealed class WorkItemGroupsController : JsonApiController<WorkItemGroup, Guid>
     {
-        public WorkItemGroupsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<WorkItemGroup, Guid> resourceService)
+        public WorkItemGroupsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<WorkItemGroup, Guid> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

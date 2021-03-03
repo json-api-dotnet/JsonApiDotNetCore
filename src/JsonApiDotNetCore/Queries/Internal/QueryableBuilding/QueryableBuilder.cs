@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
-    /// Drives conversion from <see cref="QueryLayer"/> into system <see cref="Expression"/> trees.
+    /// Drives conversion from <see cref="QueryLayer" /> into system <see cref="Expression" /> trees.
     /// </summary>
     [PublicAPI]
     public class QueryableBuilder
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected virtual Expression ApplyInclude(Expression source, IncludeExpression include, ResourceContext resourceContext)
         {
-            using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
+            using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
             var builder = new IncludeClauseBuilder(source, lambdaScope, resourceContext, _resourceContextProvider);
             return builder.ApplyInclude(include);
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected virtual Expression ApplyFilter(Expression source, FilterExpression filter)
         {
-            using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
+            using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
             var builder = new WhereClauseBuilder(source, lambdaScope, _extensionType);
             return builder.ApplyWhere(filter);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected virtual Expression ApplySort(Expression source, SortExpression sort)
         {
-            using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
+            using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
             var builder = new OrderClauseBuilder(source, lambdaScope, _extensionType);
             return builder.ApplyOrderBy(sort);
@@ -108,15 +108,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected virtual Expression ApplyPagination(Expression source, PaginationExpression pagination)
         {
-            using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
+            using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
             var builder = new SkipTakeClauseBuilder(source, lambdaScope, _extensionType);
             return builder.ApplySkipTake(pagination);
         }
 
-        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection, ResourceContext resourceContext)
+        protected virtual Expression ApplyProjection(Expression source, IDictionary<ResourceFieldAttribute, QueryLayer> projection,
+            ResourceContext resourceContext)
         {
-            using var lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
+            using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
             var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory, _resourceContextProvider);
             return builder.ApplySelect(projection, resourceContext);

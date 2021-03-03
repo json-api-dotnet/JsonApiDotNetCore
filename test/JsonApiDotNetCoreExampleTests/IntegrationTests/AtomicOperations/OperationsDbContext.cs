@@ -24,7 +24,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<PlaylistMusicTrack>()
-                .HasKey(playlistMusicTrack => new {playlistMusicTrack.PlaylistId, playlistMusicTrack.MusicTrackId});
+                .HasKey(playlistMusicTrack => new
+                {
+                    playlistMusicTrack.PlaylistId,
+                    playlistMusicTrack.MusicTrackId
+                });
 
             builder.Entity<MusicTrack>()
                 .HasOne(musicTrack => musicTrack.Lyric)

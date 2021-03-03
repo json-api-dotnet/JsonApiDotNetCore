@@ -9,8 +9,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
     public sealed class ToothbrushesController : BaseToothbrushesController
     {
-        public ToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Toothbrush> resourceService)
+        public ToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Toothbrush> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

@@ -10,7 +10,11 @@ namespace JsonApiDotNetCoreExample.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var result = new[] {"Welcome!"};
+            string[] result =
+            {
+                "Welcome!"
+            };
+
             return Ok(result);
         }
 
@@ -24,21 +28,21 @@ namespace JsonApiDotNetCoreExample.Controllers
                 return BadRequest("Please send your name.");
             }
 
-            var result = "Hello, " + name;
+            string result = "Hello, " + name;
             return Ok(result);
         }
 
         [HttpPut]
         public IActionResult Put([FromBody] string name)
         {
-            var result = "Hi, " + name;
+            string result = "Hi, " + name;
             return Ok(result);
         }
 
         [HttpPatch]
         public IActionResult Patch(string name)
         {
-            var result = "Good day, " + name;
+            string result = "Good day, " + name;
             return Ok(result);
         }
 

@@ -32,9 +32,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             ArgumentGuard.NotNull(values, nameof(values));
 
-            _meta = values.Keys.Union(_meta.Keys)
-                .ToDictionary(key => key,
-                    key => values.ContainsKey(key) ? values[key] : _meta[key]);
+            _meta = values.Keys.Union(_meta.Keys).ToDictionary(key => key, key => values.ContainsKey(key) ? values[key] : _meta[key]);
         }
 
         /// <inheritdoc />
@@ -47,7 +45,8 @@ namespace JsonApiDotNetCore.Serialization.Building
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }
 
-            var extraMeta = _responseMeta.GetMeta();
+            IReadOnlyDictionary<string, object> extraMeta = _responseMeta.GetMeta();
+
             if (extraMeta != null)
             {
                 Add(extraMeta);

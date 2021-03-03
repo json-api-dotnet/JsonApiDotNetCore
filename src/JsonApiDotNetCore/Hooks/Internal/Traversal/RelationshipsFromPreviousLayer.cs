@@ -6,7 +6,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
-    internal sealed class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>> where TRightResource : class, IIdentifiable
+    internal sealed class RelationshipsFromPreviousLayer<TRightResource> : IRelationshipsFromPreviousLayer, IEnumerable<RelationshipGroup<TRightResource>>
+        where TRightResource : class, IIdentifiable
     {
         private readonly IEnumerable<RelationshipGroup<TRightResource>> _collection;
 

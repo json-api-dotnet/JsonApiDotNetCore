@@ -7,6 +7,7 @@ namespace UnitTests.TestModels
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Food : Identifiable
     {
-        [Attr] public string Dish { get; set; }
+        [Attr]
+        public string Dish { get; set; }
     }
 }

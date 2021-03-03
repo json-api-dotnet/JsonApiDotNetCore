@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            var expression = ParseInclude(maximumDepth);
+            IncludeExpression expression = ParseInclude(maximumDepth);
 
             AssertTokenStackIsEmpty();
 
@@ -38,16 +38,15 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected IncludeExpression ParseInclude(int? maximumDepth)
         {
-            ResourceFieldChainExpression firstChain =
-                ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
+            ResourceFieldChainExpression firstChain = ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
 
-            var chains = firstChain.AsList();
+            List<ResourceFieldChainExpression> chains = firstChain.AsList();
 
             while (TokenStack.Any())
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
-                var nextChain = ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
+                ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
                 chains.Add(nextChain);
             }
 
@@ -60,11 +59,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (maximumDepth != null)
             {
-                foreach (var chain in chains)
+                foreach (ResourceFieldChainExpression chain in chains)
                 {
                     if (chain.Fields.Count > maximumDepth)
                     {
-                        var path = string.Join('.', chain.Fields.Select(field => field.PublicName));
+                        string path = string.Join('.', chain.Fields.Select(field => field.PublicName));
                         throw new QueryParseException($"Including '{path}' exceeds the maximum inclusion depth of {maximumDepth}.");
                     }
                 }

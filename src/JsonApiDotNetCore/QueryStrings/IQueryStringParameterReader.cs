@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.QueryStrings
     public interface IQueryStringParameterReader
     {
         /// <summary>
-        /// Indicates whether usage of this query string parameter is blocked using <see cref="DisableQueryStringAttribute"/> on a controller.
+        /// Indicates whether usage of this query string parameter is blocked using <see cref="DisableQueryStringAttribute" /> on a controller.
         /// </summary>
         bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute);
 

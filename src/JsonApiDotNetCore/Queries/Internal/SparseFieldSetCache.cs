@@ -10,7 +10,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal
 {
     /// <summary>
-    /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider"/>s and invokes <see cref="IResourceDefinition{TResource, TId}.OnApplySparseFieldSet"/> on them.
+    /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider" />s and invokes
+    /// <see cref="IResourceDefinition{TResource,TId}.OnApplySparseFieldSet" /> on them.
     /// </summary>
     [PublicAPI]
     public sealed class SparseFieldSetCache
@@ -34,7 +35,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
 
-            var sparseFieldTables = constraintProviders
+            KeyValuePair<ResourceContext, SparseFieldSetExpression>[] sparseFieldTables = constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             var mergedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
 
-            foreach (var (resourceContext, sparseFieldSet) in sparseFieldTables)
+            foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in sparseFieldTables)
             {
                 if (!mergedTable.ContainsKey(resourceContext))
                 {
@@ -61,10 +62,9 @@ namespace JsonApiDotNetCore.Queries.Internal
             return mergedTable;
         }
 
-        private static void AddSparseFieldsToSet(IReadOnlyCollection<ResourceFieldAttribute> sparseFieldsToAdd,
-            HashSet<ResourceFieldAttribute> sparseFieldSet)
+        private static void AddSparseFieldsToSet(IReadOnlyCollection<ResourceFieldAttribute> sparseFieldsToAdd, HashSet<ResourceFieldAttribute> sparseFieldSet)
         {
-            foreach (var field in sparseFieldsToAdd)
+            foreach (ResourceFieldAttribute field in sparseFieldsToAdd)
             {
                 sparseFieldSet.Add(field);
             }
@@ -76,13 +76,13 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceContext))
             {
-                var inputExpression = _lazySourceTable.Value.ContainsKey(resourceContext)
+                SparseFieldSetExpression inputExpression = _lazySourceTable.Value.ContainsKey(resourceContext)
                     ? new SparseFieldSetExpression(_lazySourceTable.Value[resourceContext])
                     : null;
 
-                var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
+                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
 
-                var outputFields = outputExpression == null
+                HashSet<ResourceFieldAttribute> outputFields = outputExpression == null
                     ? new HashSet<ResourceFieldAttribute>()
                     : outputExpression.Fields.ToHashSet();
 
@@ -96,13 +96,13 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            AttrAttribute idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
             var inputExpression = new SparseFieldSetExpression(idAttribute.AsArray());
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
-            var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
+            SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
 
-            var outputAttributes = outputExpression == null
+            HashSet<AttrAttribute> outputAttributes = outputExpression == null
                 ? new HashSet<AttrAttribute>()
                 : outputExpression.Fields.OfType<AttrAttribute>().ToHashSet();
 
@@ -116,14 +116,15 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceContext))
             {
-                var inputFields = _lazySourceTable.Value.ContainsKey(resourceContext)
+                HashSet<ResourceFieldAttribute> inputFields = _lazySourceTable.Value.ContainsKey(resourceContext)
                     ? _lazySourceTable.Value[resourceContext]
                     : GetResourceFields(resourceContext);
 
                 var inputExpression = new SparseFieldSetExpression(inputFields);
-                var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
+                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
 
                 HashSet<ResourceFieldAttribute> outputFields;
+
                 if (outputExpression == null)
                 {
                     outputFields = GetResourceFields(resourceContext);
@@ -146,12 +147,12 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             var fieldSet = new HashSet<ResourceFieldAttribute>();
 
-            foreach (var attribute in resourceContext.Attributes.Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView)))
+            foreach (AttrAttribute attribute in resourceContext.Attributes.Where(attr => attr.Capabilities.HasFlag(AttrCapabilities.AllowView)))
             {
                 fieldSet.Add(attribute);
             }
 
-            foreach (var relationship in resourceContext.Relationships)
+            foreach (RelationshipAttribute relationship in resourceContext.Relationships)
             {
                 fieldSet.Add(relationship);
             }

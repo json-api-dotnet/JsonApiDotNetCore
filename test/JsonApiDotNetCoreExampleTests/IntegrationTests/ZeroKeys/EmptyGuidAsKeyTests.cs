@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -13,8 +15,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
-    public sealed class EmptyGuidAsKeyTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
+    public sealed class EmptyGuidAsKeyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
         private readonly ZeroKeyFakers _fakers = new ZeroKeyFakers();
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;
             options.AllowClientGeneratedIds = true;
         }
@@ -32,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_filter_by_empty_ID_on_primary_resources()
         {
             // Arrange
-            var maps = _fakers.Map.Generate(2);
+            List<Map> maps = _fakers.Map.Generate(2);
             maps[0].Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -45,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             const string route = "/maps?filter=equals(id,'00000000-0000-0000-0000-000000000000')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_get_primary_resource_by_empty_ID_with_include()
         {
             // Arrange
-            var map = _fakers.Map.Generate();
+            Map map = _fakers.Map.Generate();
             map.Id = Guid.Empty;
             map.Game = _fakers.Game.Generate();
             map.Game.Id = 0;
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             const string route = "/maps/00000000-0000-0000-0000-000000000000?include=game";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -91,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_create_resource_with_empty_ID()
         {
             // Arrange
-            var newName = _fakers.Map.Generate().Name;
+            string newName = _fakers.Map.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             const string route = "/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -125,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
+                Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
                 mapInDatabase.Should().NotBeNull();
                 mapInDatabase.Name.Should().Be(newName);
@@ -136,10 +137,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_update_resource_with_empty_ID()
         {
             // Arrange
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
-            var newName = _fakers.Map.Generate().Name;
+            string newName = _fakers.Map.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -164,7 +165,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             const string route = "/maps/00000000-0000-0000-0000-000000000000";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -173,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
+                Map mapInDatabase = await dbContext.Maps.FirstWithIdAsync((Guid?)Guid.Empty);
 
                 mapInDatabase.Should().NotBeNull();
                 mapInDatabase.Name.Should().Be(newName);
@@ -184,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_clear_ToOne_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.ActiveMap = _fakers.Map.Generate();
             existingGame.ActiveMap.Id = Guid.Empty;
 
@@ -197,13 +198,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             var requestBody = new
             {
-                data = (object) null
+                data = (object)null
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/activeMap";
+            string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -212,9 +213,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.ActiveMap)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.ActiveMap.Should().BeNull();
@@ -225,9 +224,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_assign_ToOne_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
 
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -246,10 +245,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/activeMap";
+            string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -258,9 +257,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.ActiveMap)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
@@ -271,10 +268,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_replace_ToOne_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.ActiveMap = _fakers.Map.Generate();
 
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -293,10 +290,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/activeMap";
+            string route = $"/games/{existingGame.StringId}/relationships/activeMap";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -305,9 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.ActiveMap)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.ActiveMap).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.ActiveMap.Id.Should().Be(Guid.Empty);
@@ -318,7 +313,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_clear_ToMany_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.Maps = _fakers.Map.Generate(2);
             existingGame.Maps.ElementAt(0).Id = Guid.Empty;
 
@@ -334,10 +329,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 data = new object[0]
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/maps";
+            string route = $"/games/{existingGame.StringId}/relationships/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -346,9 +341,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.Maps)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Maps.Should().BeEmpty();
@@ -359,9 +352,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_assign_ToMany_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
 
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -383,10 +376,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/maps";
+            string route = $"/games/{existingGame.StringId}/relationships/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -395,9 +388,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.Maps)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Maps.Should().HaveCount(1);
@@ -409,10 +400,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_replace_ToMany_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.Maps = _fakers.Map.Generate(2);
 
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -434,10 +425,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/maps";
+            string route = $"/games/{existingGame.StringId}/relationships/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -446,9 +437,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.Maps)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Maps.Should().HaveCount(1);
@@ -460,10 +449,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_add_to_ToMany_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.Maps = _fakers.Map.Generate(1);
 
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -485,10 +474,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/maps";
+            string route = $"/games/{existingGame.StringId}/relationships/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -497,9 +486,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.Maps)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Maps.Should().HaveCount(2);
@@ -511,7 +498,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_remove_from_ToMany_relationship_with_empty_ID()
         {
             // Arrange
-            var existingGame = _fakers.Game.Generate();
+            Game existingGame = _fakers.Game.Generate();
             existingGame.Maps = _fakers.Map.Generate(2);
             existingGame.Maps.ElementAt(0).Id = Guid.Empty;
 
@@ -534,10 +521,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
                 }
             };
 
-            var route = $"/games/{existingGame.StringId}/relationships/maps";
+            string route = $"/games/{existingGame.StringId}/relationships/maps";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -546,9 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Games
-                    .Include(game => game.Maps)
-                    .FirstWithIdAsync(existingGame.Id);
+                Game gameInDatabase = await dbContext.Games.Include(game => game.Maps).FirstWithIdAsync(existingGame.Id);
 
                 gameInDatabase.Should().NotBeNull();
                 gameInDatabase.Maps.Should().HaveCount(1);
@@ -560,7 +545,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         public async Task Can_delete_resource_with_empty_ID()
         {
             // Arrange
-            var existingMap = _fakers.Map.Generate();
+            Map existingMap = _fakers.Map.Generate();
             existingMap.Id = Guid.Empty;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -573,7 +558,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
             const string route = "/maps/00000000-0000-0000-0000-000000000000";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -582,7 +567,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
+                Map gameInDatabase = await dbContext.Maps.FirstWithIdOrDefaultAsync(existingMap.Id);
 
                 gameInDatabase.Should().BeNull();
             });

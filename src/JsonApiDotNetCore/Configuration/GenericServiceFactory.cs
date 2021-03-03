@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private TInterface GetInternal<TInterface>(Type openGenericType, params Type[] types)
         {
-            var concreteType = openGenericType.MakeGenericType(types);
+            Type concreteType = openGenericType.MakeGenericType(types);
 
             return (TInterface)_serviceProvider.GetService(concreteType);
         }

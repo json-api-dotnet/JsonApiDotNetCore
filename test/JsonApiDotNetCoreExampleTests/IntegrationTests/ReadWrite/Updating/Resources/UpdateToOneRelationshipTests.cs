@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -10,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
 {
-    public sealed class UpdateToOneRelationshipTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class UpdateToOneRelationshipTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
@@ -25,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_clear_ManyToOne_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Assignee = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -50,10 +51,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -62,9 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Assignee)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Assignee.Should().BeNull();
             });
@@ -74,10 +73,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_create_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingGroup = _fakers.WorkItemGroup.Generate();
+            WorkItemGroup existingGroup = _fakers.WorkItemGroup.Generate();
             existingGroup.Color = _fakers.RgbColor.Generate();
-            
-            var existingColor = _fakers.RgbColor.Generate();
+
+            RgbColor existingColor = _fakers.RgbColor.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -105,10 +104,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItemGroups/" + existingGroup.StringId;
+            string route = "/workItemGroups/" + existingGroup.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
@@ -116,14 +115,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorsInDatabase = await dbContext.RgbColors
-                    .Include(rgbColor => rgbColor.Group)
-                    .ToListAsync();
+                List<RgbColor> colorsInDatabase = await dbContext.RgbColors.Include(rgbColor => rgbColor.Group).ToListAsync();
 
-                var colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroup.Color.Id);
+                RgbColor colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroup.Color.Id);
                 colorInDatabase1.Group.Should().BeNull();
 
-                var colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
+                RgbColor colorInDatabase2 = colorsInDatabase.Single(color => color.Id == existingColor.Id);
                 colorInDatabase2.Group.Should().NotBeNull();
                 colorInDatabase2.Group.Id.Should().Be(existingGroup.Id);
             });
@@ -133,7 +130,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_replace_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
-            var existingGroups = _fakers.WorkItemGroup.Generate(2);
+            List<WorkItemGroup> existingGroups = _fakers.WorkItemGroup.Generate(2);
             existingGroups[0].Color = _fakers.RgbColor.Generate();
             existingGroups[1].Color = _fakers.RgbColor.Generate();
 
@@ -163,10 +160,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/rgbColors/" + existingGroups[0].Color.StringId;
+            string route = "/rgbColors/" + existingGroups[0].Color.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -175,26 +172,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups
-                    .Include(group => group.Color)
-                    .ToListAsync();
+                List<WorkItemGroup> groupsInDatabase = await dbContext.Groups.Include(group => group.Color).ToListAsync();
 
-                var groupInDatabase1 = groupsInDatabase.Single(group => group.Id == existingGroups[0].Id);
+                WorkItemGroup groupInDatabase1 = groupsInDatabase.Single(group => group.Id == existingGroups[0].Id);
                 groupInDatabase1.Color.Should().BeNull();
 
-                var groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
+                WorkItemGroup groupInDatabase2 = groupsInDatabase.Single(group => group.Id == existingGroups[1].Id);
                 groupInDatabase2.Color.Should().NotBeNull();
                 groupInDatabase2.Color.Id.Should().Be(existingGroups[0].Color.Id);
 
-                var colorsInDatabase = await dbContext.RgbColors
-                    .Include(color => color.Group)
-                    .ToListAsync();
+                List<RgbColor> colorsInDatabase = await dbContext.RgbColors.Include(color => color.Group).ToListAsync();
 
-                var colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroups[0].Color.Id);
+                RgbColor colorInDatabase1 = colorsInDatabase.Single(color => color.Id == existingGroups[0].Color.Id);
                 colorInDatabase1.Group.Should().NotBeNull();
                 colorInDatabase1.Group.Id.Should().Be(existingGroups[1].Id);
 
-                var colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color.Id);
+                RgbColor colorInDatabase2 = colorsInDatabase.SingleOrDefault(color => color.Id == existingGroups[1].Color.Id);
                 colorInDatabase2.Should().NotBeNull();
                 colorInDatabase2!.Group.Should().BeNull();
             });
@@ -204,7 +197,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_clear_OneToOne_relationship()
         {
             // Arrange
-            var existingColor = _fakers.RgbColor.Generate();
+            RgbColor existingColor = _fakers.RgbColor.Generate();
             existingColor.Group = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -229,10 +222,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/rgbColors/" + existingColor.StringId;
+            string route = "/rgbColors/" + existingColor.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -241,10 +234,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .Include(color => color.Group)
-                    .FirstWithIdOrDefaultAsync(existingColor.Id);
-                
+                RgbColor colorInDatabase = await dbContext.RgbColors.Include(color => color.Group).FirstWithIdOrDefaultAsync(existingColor.Id);
+
                 colorInDatabase.Group.Should().BeNull();
             });
         }
@@ -253,7 +244,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_replace_ManyToOne_relationship()
         {
             // Arrange
-            var existingUserAccounts = _fakers.UserAccount.Generate(2);
+            List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
             existingUserAccounts[0].AssignedItems = _fakers.WorkItem.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -282,10 +273,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingUserAccounts[0].AssignedItems.ElementAt(1).StringId;
+            string route = "/workItems/" + existingUserAccounts[0].AssignedItems.ElementAt(1).StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
@@ -295,9 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             {
                 int itemId = existingUserAccounts[0].AssignedItems.ElementAt(1).Id;
 
-                var workItemInDatabase2 = await dbContext.WorkItems
-                    .Include(workItem => workItem.Assignee)
-                    .FirstWithIdAsync(itemId);
+                WorkItem workItemInDatabase2 = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(itemId);
 
                 workItemInDatabase2.Assignee.Should().NotBeNull();
                 workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
@@ -308,8 +297,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_create_relationship_with_include()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingUserAccount = _fakers.UserAccount.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -337,10 +326,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}?include=assignee";
+            string route = $"/workItems/{existingWorkItem.StringId}?include=assignee";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -350,7 +339,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            
+
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
@@ -360,9 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Assignee)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
@@ -373,10 +360,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_replace_relationship_with_include_and_fieldsets()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Assignee = _fakers.UserAccount.Generate();
 
-            var existingUserAccount = _fakers.UserAccount.Generate();
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -404,10 +391,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = $"/workItems/{existingWorkItem.StringId}?fields[workItems]=description,assignee&include=assignee&fields[userAccounts]=lastName";
+            string route = $"/workItems/{existingWorkItem.StringId}?fields[workItems]=description,assignee&include=assignee&fields[userAccounts]=lastName";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -419,7 +406,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
-            
+
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
@@ -429,9 +416,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Assignee)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccount.Id);
@@ -442,7 +427,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_for_missing_relationship_type()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -469,17 +454,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'assignee' relationship. - Request body: <<");
@@ -489,7 +474,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_for_unknown_relationship_type()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -517,17 +502,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
@@ -537,7 +522,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_for_missing_relationship_ID()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -564,17 +549,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             error.Detail.Should().StartWith("Expected 'id' element in 'assignee' relationship. - Request body: <<");
@@ -584,7 +569,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_with_unknown_relationship_ID()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -612,17 +597,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be("Related resource of type 'userAccounts' with ID '99999999' in relationship 'assignee' does not exist.");
@@ -632,7 +617,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_on_relationship_type_mismatch()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -660,17 +645,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             error.Detail.Should().StartWith("Relationship 'assignee' contains incompatible resource type 'rgbColors'. - Request body: <<");
@@ -680,8 +665,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Cannot_create_with_data_array_in_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
-            var existingUserAccount = _fakers.UserAccount.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -712,17 +697,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
             error.Detail.Should().StartWith("Expected single data element for 'assignee' relationship. - Request body: <<");
@@ -732,7 +717,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_clear_cyclic_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -759,10 +744,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -771,9 +756,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Parent)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Parent).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Parent.Should().BeNull();
             });
@@ -783,7 +766,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public async Task Can_assign_cyclic_relationship()
         {
             // Arrange
-            var existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -811,10 +794,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 }
             };
 
-            var route = "/workItems/" + existingWorkItem.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -823,9 +806,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.Parent)
-                    .FirstWithIdAsync(existingWorkItem.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Parent).FirstWithIdAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Parent.Should().NotBeNull();
                 workItemInDatabase.Parent.Id.Should().Be(existingWorkItem.Id);

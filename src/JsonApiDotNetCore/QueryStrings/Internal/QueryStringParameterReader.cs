@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -33,8 +34,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 return RequestResource;
             }
 
-            var lastField = scope.Fields.Last();
-            var type = lastField is RelationshipAttribute relationship ? relationship.RightType : lastField.Property.PropertyType;
+            ResourceFieldAttribute lastField = scope.Fields.Last();
+            Type type = lastField is RelationshipAttribute relationship ? relationship.RightType : lastField.Property.PropertyType;
 
             return _resourceContextProvider.GetResourceContext(type);
         }

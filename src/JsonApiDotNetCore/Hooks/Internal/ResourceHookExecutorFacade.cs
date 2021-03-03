@@ -8,8 +8,8 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCore.Hooks.Internal
 {
     /// <summary>
-    /// Facade for hooks that invokes callbacks on <see cref="ResourceHooksDefinition{TResource}"/>,
-    /// which is used when <see cref="IJsonApiOptions.EnableResourceHooks"/> is true.
+    /// Facade for hooks that invokes callbacks on <see cref="ResourceHooksDefinition{TResource}" />, which is used when
+    /// <see cref="IJsonApiOptions.EnableResourceHooks" /> is true.
     /// </summary>
     internal sealed class ResourceHookExecutorFacade : IResourceHookExecutorFacade
     {
@@ -128,7 +128,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             if (resourceOrResources is IIdentifiable)
             {
-                var resources = ObjectExtensions.AsList((dynamic)resourceOrResources);
+                dynamic resources = ObjectExtensions.AsList((dynamic)resourceOrResources);
                 return Enumerable.SingleOrDefault(_resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship));
             }
 

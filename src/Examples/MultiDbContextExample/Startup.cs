@@ -25,13 +25,16 @@ namespace MultiDbContextExample
             services.AddJsonApi(options =>
             {
                 options.IncludeExceptionStackTraceInErrors = true;
-            }, dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
+            }, dbContextTypes: new[]
+            {
+                typeof(DbContextA),
+                typeof(DbContextB)
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [UsedImplicitly]
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbContextA dbContextA,
-            DbContextB dbContextB)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DbContextA dbContextA, DbContextB dbContextB)
         {
             if (env.IsDevelopment())
             {

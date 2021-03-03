@@ -7,8 +7,8 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
-    /// Used to expose a property on a resource class as a JSON:API field (attribute or relationship).
-    /// See https://jsonapi.org/format/#document-resource-object-fields.
+    /// Used to expose a property on a resource class as a JSON:API field (attribute or relationship). See
+    /// https://jsonapi.org/format/#document-resource-object-fields.
     /// </summary>
     [PublicAPI]
     public abstract class ResourceFieldAttribute : Attribute
@@ -16,8 +16,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private string _publicName;
 
         /// <summary>
-        /// The publicly exposed name of this JSON:API field.
-        /// When not explicitly assigned, the configured naming convention is applied on the property name.
+        /// The publicly exposed name of this JSON:API field. When not explicitly assigned, the configured naming convention is applied on the property name.
         /// </summary>
         public string PublicName
         {
@@ -28,6 +27,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 {
                     throw new ArgumentException("Exposed name cannot be null, empty or contain only whitespace.", nameof(value));
                 }
+
                 _publicName = value;
             }
         }
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 return false;
             }
 
-            var other = (ResourceFieldAttribute) obj;
+            var other = (ResourceFieldAttribute)obj;
 
             return PublicName == other.PublicName && Property == other.Property;
         }

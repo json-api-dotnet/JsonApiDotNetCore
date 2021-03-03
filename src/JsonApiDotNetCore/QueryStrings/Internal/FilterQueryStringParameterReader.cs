@@ -25,11 +25,14 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly FilterParser _filterParser;
 
         private readonly List<FilterExpression> _filtersInGlobalScope = new List<FilterExpression>();
-        private readonly Dictionary<ResourceFieldChainExpression, List<FilterExpression>> _filtersPerScope = new Dictionary<ResourceFieldChainExpression, List<FilterExpression>>();
+
+        private readonly Dictionary<ResourceFieldChainExpression, List<FilterExpression>> _filtersPerScope =
+            new Dictionary<ResourceFieldChainExpression, List<FilterExpression>>();
+
         private string _lastParameterName;
 
-        public FilterQueryStringParameterReader(IJsonApiRequest request,
-            IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, IJsonApiOptions options)
+        public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory,
+            IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
             ArgumentGuard.NotNull(options, nameof(options));
@@ -53,8 +56,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
         }
 
         /// <inheritdoc />
@@ -62,7 +64,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(parameterName, nameof(parameterName));
 
-            var isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
+            bool isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "filter" || isNested;
         }
 
@@ -117,7 +119,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            var parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
 
             if (parameterScope.Scope == null)
             {
@@ -160,13 +162,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (_filtersInGlobalScope.Any())
             {
-                var filter = MergeFilters(_filtersInGlobalScope);
+                FilterExpression filter = MergeFilters(_filtersInGlobalScope);
                 yield return new ExpressionInScope(null, filter);
             }
 
-            foreach (var (scope, filters) in _filtersPerScope)
+            foreach ((ResourceFieldChainExpression scope, List<FilterExpression> filters) in _filtersPerScope)
             {
-                var filter = MergeFilters(filters);
+                FilterExpression filter = MergeFilters(filters);
                 yield return new ExpressionInScope(scope, filter);
             }
         }

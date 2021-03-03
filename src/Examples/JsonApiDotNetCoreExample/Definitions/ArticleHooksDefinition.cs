@@ -14,7 +14,10 @@ namespace JsonApiDotNetCoreExample.Definitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ArticleHooksDefinition : ResourceHooksDefinition<Article>
     {
-        public ArticleHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public ArticleHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> resources, ResourcePipeline pipeline)
         {
@@ -30,4 +33,3 @@ namespace JsonApiDotNetCoreExample.Definitions
         }
     }
 }
-

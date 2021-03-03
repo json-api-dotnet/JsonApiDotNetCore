@@ -7,7 +7,7 @@ namespace Benchmarks
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class BenchmarkResource : Identifiable
     {
-        [Attr(PublicName = BenchmarkResourcePublicNames.NameAttr)] 
+        [Attr(PublicName = BenchmarkResourcePublicNames.NameAttr)]
         public string Name { get; set; }
 
         [HasOne]

@@ -1,5 +1,7 @@
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
@@ -14,8 +16,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDataTypeTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
+    public sealed class FilterDataTypeTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             _testContext = testContext;
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
         }
 
@@ -43,7 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             var resource = new FilterableResource();
-            var property = typeof(FilterableResource).GetProperty(propertyName);
+            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
             property?.SetValue(resource, value);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -53,11 +54,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var attributeName = propertyName.Camelize();
-            var route = $"/filterableResources?filter=equals({attributeName},'{value}')";
+            string attributeName = propertyName.Camelize();
+            string route = $"/filterableResources?filter=equals({attributeName},'{value}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -70,7 +71,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_Decimal()
         {
             // Arrange
-            var resource = new FilterableResource {SomeDecimal = 0.5m};
+            var resource = new FilterableResource
+            {
+                SomeDecimal = 0.5m
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -79,10 +83,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal}')";
+            string route = $"/filterableResources?filter=equals(someDecimal,'{resource.SomeDecimal}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -95,7 +99,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_Guid()
         {
             // Arrange
-            var resource = new FilterableResource {SomeGuid = Guid.NewGuid()};
+            var resource = new FilterableResource
+            {
+                SomeGuid = Guid.NewGuid()
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -104,10 +111,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someGuid,'{resource.SomeGuid}')";
+            string route = $"/filterableResources?filter=equals(someGuid,'{resource.SomeGuid}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -120,7 +127,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_DateTime()
         {
             // Arrange
-            var resource = new FilterableResource {SomeDateTime = 27.January(2003).At(11, 22, 33, 44)};
+            var resource = new FilterableResource
+            {
+                SomeDateTime = 27.January(2003).At(11, 22, 33, 44)
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -129,10 +139,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someDateTime,'{resource.SomeDateTime:O}')";
+            string route = $"/filterableResources?filter=equals(someDateTime,'{resource.SomeDateTime:O}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -157,10 +167,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someDateTimeOffset,'{WebUtility.UrlEncode(resource.SomeDateTimeOffset.ToString("O"))}')";
+            string route = $"/filterableResources?filter=equals(someDateTimeOffset,'{WebUtility.UrlEncode(resource.SomeDateTimeOffset.ToString("O"))}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -173,7 +183,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_equality_on_type_TimeSpan()
         {
             // Arrange
-            var resource = new FilterableResource {SomeTimeSpan = new TimeSpan(1, 2, 3, 4, 5)};
+            var resource = new FilterableResource
+            {
+                SomeTimeSpan = new TimeSpan(1, 2, 3, 4, 5)
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -182,10 +195,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan}')";
+            string route = $"/filterableResources?filter=equals(someTimeSpan,'{resource.SomeTimeSpan}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -198,7 +211,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_equality_on_incompatible_value()
         {
             // Arrange
-            var resource = new FilterableResource {SomeInt32 = 1};
+            var resource = new FilterableResource
+            {
+                SomeInt32 = 1
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -210,14 +226,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/filterableResources?filter=equals(someInt32,'ABC')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Query creation failed due to incompatible types.");
             error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
@@ -240,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             var resource = new FilterableResource();
-            var property = typeof(FilterableResource).GetProperty(propertyName);
+            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
             property?.SetValue(resource, null);
 
             var otherResource = new FilterableResource
@@ -265,11 +281,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var attributeName = propertyName.Camelize();
-            var route = $"/filterableResources?filter=equals({attributeName},null)";
+            string attributeName = propertyName.Camelize();
+            string route = $"/filterableResources?filter=equals({attributeName},null)";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -315,11 +331,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var attributeName = propertyName.Camelize();
-            var route = $"/filterableResources?filter=not(equals({attributeName},null))";
+            string attributeName = propertyName.Camelize();
+            string route = $"/filterableResources?filter=not(equals({attributeName},null))";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

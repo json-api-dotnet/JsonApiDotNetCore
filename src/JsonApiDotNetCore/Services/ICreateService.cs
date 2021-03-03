@@ -7,7 +7,8 @@ namespace JsonApiDotNetCore.Services
     /// <inheritdoc />
     public interface ICreateService<TResource> : ICreateService<TResource, int>
         where TResource : class, IIdentifiable<int>
-    { }
+    {
+    }
 
     /// <summary />
     public interface ICreateService<TResource, in TId>

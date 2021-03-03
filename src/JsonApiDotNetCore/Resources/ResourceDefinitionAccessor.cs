@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Resources
             ArgumentGuard.NotNull(parameterName, nameof(parameterName));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-            var handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
+            dynamic handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
 
             return handlers != null && handlers.ContainsKey(parameterName) ? handlers[parameterName] : null;
         }
@@ -86,25 +86,25 @@ namespace JsonApiDotNetCore.Resources
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
-            return resourceDefinition.GetMeta((dynamic) resourceInstance);
+            return resourceDefinition.GetMeta((dynamic)resourceInstance);
         }
 
         protected virtual object ResolveResourceDefinition(Type resourceType)
         {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {
-                var intResourceDefinitionType = typeof(IResourceDefinition<>).MakeGenericType(resourceContext.ResourceType);
-                var intResourceDefinition = _serviceProvider.GetService(intResourceDefinitionType);
-                
+                Type intResourceDefinitionType = typeof(IResourceDefinition<>).MakeGenericType(resourceContext.ResourceType);
+                object intResourceDefinition = _serviceProvider.GetService(intResourceDefinitionType);
+
                 if (intResourceDefinition != null)
                 {
                     return intResourceDefinition;
                 }
             }
 
-            var resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
     }

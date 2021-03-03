@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket>
     {
-        public SupportTicketDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public SupportTicketDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                     ["hasHighPriority"] = true
                 };
             }
-            
+
             return base.GetMeta(resource);
         }
     }

@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (ComparisonExpression) obj;
+            var other = (ComparisonExpression)obj;
 
             return Operator == other.Operator && Left.Equals(other.Left) && Right.Equals(other.Right);
         }

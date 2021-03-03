@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using FluentAssertions;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
@@ -29,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
-            var canParse = _reader.CanRead(parameterName);
+            bool canParse = _reader.CanRead(parameterName);
 
             // Assert
             canParse.Should().Be(expectCanParse);
@@ -43,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
-            var isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+            bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(expectIsEnabled);
@@ -76,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read(parameterName, parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
@@ -96,19 +99,20 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("sort[posts]", "-caption,-author.userName", "posts", "-caption,-author.userName")]
         [InlineData("sort[posts]", "caption,author.userName,-id", "posts", "caption,author.userName,-id")]
         [InlineData("sort[posts.labels]", "id,name", "posts.labels", "id,name")]
-        [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments", "-createdAt,author.displayName,author.preferences.useDarkTheme")]
+        [InlineData("sort[posts.comments]", "-createdAt,author.displayName,author.preferences.useDarkTheme", "posts.comments",
+            "-createdAt,author.displayName,author.preferences.useDarkTheme")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
         {
             // Act
             _reader.Read(parameterName, parameterValue);
 
-            var constraints = _reader.GetConstraints();
+            IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            var scope = constraints.Select(x => x.Scope).Single();
+            ResourceFieldChainExpression scope = constraints.Select(x => x.Scope).Single();
             scope?.ToString().Should().Be(scopeExpected);
 
-            var value = constraints.Select(x => x.Expression).Single();
+            QueryExpression value = constraints.Select(x => x.Expression).Single();
             value.ToString().Should().Be(valueExpected);
         }
     }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -14,8 +16,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ExceptionHandlerTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
+    public sealed class ExceptionHandlerTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 
@@ -67,17 +68,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/consumerArticles/" + consumerArticle.StringId;
+            string route = "/consumerArticles/" + consumerArticle.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
@@ -103,22 +104,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/throwingArticles/" + throwingArticle.StringId;
+            string route = "/throwingArticles/" + throwingArticle.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            var stackTraceLines = ((JArray) error.Meta.Data["stackTrace"]).Select(token => token.Value<string>());
+            IEnumerable<string> stackTraceLines = ((JArray)error.Meta.Data["stackTrace"]).Select(token => token.Value<string>());
             stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);

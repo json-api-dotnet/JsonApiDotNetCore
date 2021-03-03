@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
-    [DisableRoutingConvention, Route("custom/path/to/paintings")]
+    [DisableRoutingConvention]
+    [Route("custom/path/to/paintings")]
     public sealed class PaintingsController : JsonApiController<Painting>
     {
-        public PaintingsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Painting> resourceService)
+        public PaintingsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Painting> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

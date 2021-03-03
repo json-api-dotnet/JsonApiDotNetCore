@@ -14,24 +14,6 @@ namespace UnitTests.ResourceHooks
 {
     public sealed class DiscoveryTests
     {
-        public sealed class Dummy : Identifiable { }
-        
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class DummyResourceDefinition : ResourceHooksDefinition<Dummy>
-        {
-            public DummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build()) { }
-
-            public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> resources, ResourcePipeline pipeline) { return resources; }
-            public override void AfterDelete(HashSet<Dummy> resources, ResourcePipeline pipeline, bool succeeded) { }
-        }
-
-        private IServiceProvider MockProvider<TResource>(object service) where TResource : class, IIdentifiable
-        {
-            var services = new ServiceCollection();
-            services.AddScoped(_ => (ResourceHooksDefinition<TResource>)service);
-            return services.BuildServiceProvider();
-        }
-
         [Fact]
         public void HookDiscovery_StandardResourceDefinition_CanDiscover()
         {
@@ -43,20 +25,6 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        public sealed class AnotherDummy : Identifiable { }
-        public abstract class ResourceDefinitionBase<T> : ResourceHooksDefinition<T> where T : class, IIdentifiable
-        {
-            protected ResourceDefinitionBase(IResourceGraph resourceGraph) : base(resourceGraph) { }
-            public override IEnumerable<T> BeforeDelete(IResourceHashSet<T> resources, ResourcePipeline pipeline) { return resources; }
-            public override void AfterDelete(HashSet<T> resources, ResourcePipeline pipeline, bool succeeded) { }
-        }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
-        {
-            public AnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<AnotherDummy>().Build()) { }
-        }
-
         [Fact]
         public void HookDiscovery_InheritanceSubclass_CanDiscover()
         {
@@ -66,19 +34,6 @@ namespace UnitTests.ResourceHooks
             // Assert
             Assert.Contains(ResourceHook.BeforeDelete, hookConfig.ImplementedHooks);
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
-        }
-
-        public sealed class YetAnotherDummy : Identifiable { }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class YetAnotherDummyResourceDefinition : ResourceHooksDefinition<YetAnotherDummy>
-        {
-            public YetAnotherDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build()) { }
-
-            public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> resources, ResourcePipeline pipeline) { return resources; }
-
-            [LoadDatabaseValues(false)]
-            public override void AfterDelete(HashSet<YetAnotherDummy> resources, ResourcePipeline pipeline, bool succeeded) { }
         }
 
         [Fact]
@@ -102,13 +57,107 @@ namespace UnitTests.ResourceHooks
             Assert.Contains(ResourceHook.AfterDelete, hookConfig.ImplementedHooks);
         }
 
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class GenericDummyResourceDefinition<TResource> : ResourceHooksDefinition<TResource> where TResource : class, IIdentifiable<int>
+        private IServiceProvider MockProvider<TResource>(object service)
+            where TResource : class, IIdentifiable
         {
-            public GenericDummyResourceDefinition() : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TResource>().Build()) { }
+            var services = new ServiceCollection();
+            services.AddScoped(_ => (ResourceHooksDefinition<TResource>)service);
+            return services.BuildServiceProvider();
+        }
 
-            public override IEnumerable<TResource> BeforeDelete(IResourceHashSet<TResource> resources, ResourcePipeline pipeline) { return resources; }
-            public override void AfterDelete(HashSet<TResource> resources, ResourcePipeline pipeline, bool succeeded) { }
+        public sealed class Dummy : Identifiable
+        {
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        public sealed class DummyResourceDefinition : ResourceHooksDefinition<Dummy>
+        {
+            public DummyResourceDefinition()
+                : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<Dummy>().Build())
+            {
+            }
+
+            public override IEnumerable<Dummy> BeforeDelete(IResourceHashSet<Dummy> resources, ResourcePipeline pipeline)
+            {
+                return resources;
+            }
+
+            public override void AfterDelete(HashSet<Dummy> resources, ResourcePipeline pipeline, bool succeeded)
+            {
+            }
+        }
+
+        public sealed class AnotherDummy : Identifiable
+        {
+        }
+
+        public abstract class ResourceDefinitionBase<T> : ResourceHooksDefinition<T>
+            where T : class, IIdentifiable
+        {
+            protected ResourceDefinitionBase(IResourceGraph resourceGraph)
+                : base(resourceGraph)
+            {
+            }
+
+            public override IEnumerable<T> BeforeDelete(IResourceHashSet<T> resources, ResourcePipeline pipeline)
+            {
+                return resources;
+            }
+
+            public override void AfterDelete(HashSet<T> resources, ResourcePipeline pipeline, bool succeeded)
+            {
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        public sealed class AnotherDummyResourceDefinition : ResourceDefinitionBase<AnotherDummy>
+        {
+            public AnotherDummyResourceDefinition()
+                : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<AnotherDummy>().Build())
+            {
+            }
+        }
+
+        public sealed class YetAnotherDummy : Identifiable
+        {
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        public sealed class YetAnotherDummyResourceDefinition : ResourceHooksDefinition<YetAnotherDummy>
+        {
+            public YetAnotherDummyResourceDefinition()
+                : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<YetAnotherDummy>().Build())
+            {
+            }
+
+            public override IEnumerable<YetAnotherDummy> BeforeDelete(IResourceHashSet<YetAnotherDummy> resources, ResourcePipeline pipeline)
+            {
+                return resources;
+            }
+
+            [LoadDatabaseValues(false)]
+            public override void AfterDelete(HashSet<YetAnotherDummy> resources, ResourcePipeline pipeline, bool succeeded)
+            {
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        public sealed class GenericDummyResourceDefinition<TResource> : ResourceHooksDefinition<TResource>
+            where TResource : class, IIdentifiable<int>
+        {
+            public GenericDummyResourceDefinition()
+                : base(new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TResource>().Build())
+            {
+            }
+
+            public override IEnumerable<TResource> BeforeDelete(IResourceHashSet<TResource> resources, ResourcePipeline pipeline)
+            {
+                return resources;
+            }
+
+            public override void AfterDelete(HashSet<TResource> resources, ResourcePipeline pipeline, bool succeeded)
+            {
+            }
         }
     }
 }

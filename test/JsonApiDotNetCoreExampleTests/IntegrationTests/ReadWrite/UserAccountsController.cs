@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
     public sealed class UserAccountsController : JsonApiController<UserAccount, long>
     {
-        public UserAccountsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<UserAccount, long> resourceService)
+        public UserAccountsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<UserAccount, long> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }
