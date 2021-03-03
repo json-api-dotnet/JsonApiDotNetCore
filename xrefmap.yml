@@ -491,19 +491,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessAsync
   nameWithType: OperationsProcessor.ProcessAsync
-- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
-  name: ProcessOperation(OperationContainer, CancellationToken)
-  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperation_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
-  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
-  nameWithType: OperationsProcessor.ProcessOperation(OperationContainer, CancellationToken)
-- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation*
-  name: ProcessOperation
-  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperation_
-  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  name: ProcessOperationAsync(OperationContainer, CancellationToken)
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperationAsync_JsonApiDotNetCore_Resources_OperationContainer_System_Threading_CancellationToken_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync(JsonApiDotNetCore.Resources.OperationContainer,System.Threading.CancellationToken)
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync(JsonApiDotNetCore.Resources.OperationContainer, System.Threading.CancellationToken)
+  nameWithType: OperationsProcessor.ProcessOperationAsync(OperationContainer, CancellationToken)
+- uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync*
+  name: ProcessOperationAsync
+  href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_ProcessOperationAsync_
+  commentId: Overload:JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperation
-  nameWithType: OperationsProcessor.ProcessOperation
+  fullName: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.ProcessOperationAsync
+  nameWithType: OperationsProcessor.ProcessOperationAsync
 - uid: JsonApiDotNetCore.AtomicOperations.OperationsProcessor.TrackLocalIdsForOperation(JsonApiDotNetCore.Resources.OperationContainer)
   name: TrackLocalIdsForOperation(OperationContainer)
   href: api/JsonApiDotNetCore.AtomicOperations.OperationsProcessor.html#JsonApiDotNetCore_AtomicOperations_OperationsProcessor_TrackLocalIdsForOperation_JsonApiDotNetCore_Resources_OperationContainer_
@@ -4250,7 +4250,14 @@ references:
 - uid: JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
   name: Value
   href: api/JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.html#JsonApiDotNetCore_Hooks_Internal_Discovery_LoadDatabaseValuesAttribute_Value
-  commentId: F:JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
+  commentId: P:JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
+  fullName: JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
+  nameWithType: LoadDatabaseValuesAttribute.Value
+- uid: JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value*
+  name: Value
+  href: api/JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.html#JsonApiDotNetCore_Hooks_Internal_Discovery_LoadDatabaseValuesAttribute_Value_
+  commentId: Overload:JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
+  isSpec: "True"
   fullName: JsonApiDotNetCore.Hooks.Internal.Discovery.LoadDatabaseValuesAttribute.Value
   nameWithType: LoadDatabaseValuesAttribute.Value
 - uid: JsonApiDotNetCore.Hooks.Internal.Execution
@@ -6249,19 +6256,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.JsonApiMiddleware
   nameWithType: JsonApiMiddleware.JsonApiMiddleware
-- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  name: Invoke(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_Invoke_Microsoft_AspNetCore_Http_HttpContext_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke(Microsoft.AspNetCore.Http.HttpContext, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  nameWithType: JsonApiMiddleware.Invoke(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, IResourceContextProvider)
-- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke*
-  name: Invoke
-  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_Invoke_
-  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke
+- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  name: InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, IResourceContextProvider)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_Microsoft_AspNetCore_Http_HttpContext_JsonApiDotNetCore_Middleware_IControllerResourceMapping_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Configuration_IResourceContextProvider_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext,JsonApiDotNetCore.Middleware.IControllerResourceMapping,JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync(Microsoft.AspNetCore.Http.HttpContext, JsonApiDotNetCore.Middleware.IControllerResourceMapping, JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  nameWithType: JsonApiMiddleware.InvokeAsync(HttpContext, IControllerResourceMapping, IJsonApiOptions, IJsonApiRequest, IResourceContextProvider)
+- uid: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync*
+  name: InvokeAsync
+  href: api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html#JsonApiDotNetCore_Middleware_JsonApiMiddleware_InvokeAsync_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.Invoke
-  nameWithType: JsonApiMiddleware.Invoke
+  fullName: JsonApiDotNetCore.Middleware.JsonApiMiddleware.InvokeAsync
+  nameWithType: JsonApiMiddleware.InvokeAsync
 - uid: JsonApiDotNetCore.Middleware.JsonApiOutputFormatter
   name: JsonApiOutputFormatter
   href: api/JsonApiDotNetCore.Middleware.JsonApiOutputFormatter.html
@@ -12345,12 +12352,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.Convert
   nameWithType: LegacyFilterNotationConverter.Convert
-- uid: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String,System.String)
-  name: ExtractConditions(String, String)
-  href: api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html#JsonApiDotNetCore_QueryStrings_Internal_LegacyFilterNotationConverter_ExtractConditions_System_String_System_String_
-  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String,System.String)
-  fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String, System.String)
-  nameWithType: LegacyFilterNotationConverter.ExtractConditions(String, String)
+- uid: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String)
+  name: ExtractConditions(String)
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html#JsonApiDotNetCore_QueryStrings_Internal_LegacyFilterNotationConverter_ExtractConditions_System_String_
+  commentId: M:JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String)
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions(System.String)
+  nameWithType: LegacyFilterNotationConverter.ExtractConditions(String)
 - uid: JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.ExtractConditions*
   name: ExtractConditions
   href: api/JsonApiDotNetCore.QueryStrings.Internal.LegacyFilterNotationConverter.html#JsonApiDotNetCore_QueryStrings_Internal_LegacyFilterNotationConverter_ExtractConditions_

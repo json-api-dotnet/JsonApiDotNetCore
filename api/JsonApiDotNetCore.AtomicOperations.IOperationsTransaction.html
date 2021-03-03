@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IOperationsTransaction
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,7 +86,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IOperationsTransaction : IAsyncDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public interface IOperationsTransaction : IAsyncDisposable</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -95,7 +96,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_TransactionId.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L15">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_TransactionId_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId*"></a>
   <h4 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_TransactionId" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.TransactionId">TransactionId</h4>
@@ -128,7 +129,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_AfterProcessOperationAsync_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L25">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_AfterProcessOperationAsync_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync*"></a>
   <h4 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_AfterProcessOperationAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.AfterProcessOperationAsync(System.Threading.CancellationToken)">AfterProcessOperationAsync(CancellationToken)</h4>
@@ -176,7 +177,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_BeforeProcessOperationAsync_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_BeforeProcessOperationAsync_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync*"></a>
   <h4 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_BeforeProcessOperationAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.BeforeProcessOperationAsync(System.Threading.CancellationToken)">BeforeProcessOperationAsync(CancellationToken)</h4>
@@ -224,7 +225,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_CommitAsync_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync(System.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L32">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_CommitAsync_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync*"></a>
   <h4 id="JsonApiDotNetCore_AtomicOperations_IOperationsTransaction_CommitAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.AtomicOperations.IOperationsTransaction.CommitAsync(System.Threading.CancellationToken)">CommitAsync(CancellationToken)</h4>
@@ -278,7 +279,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_IOperationsTransaction.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.IOperationsTransaction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/IOperationsTransaction.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

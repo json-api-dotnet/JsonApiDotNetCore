@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace JsonApiDotNetCore.Middleware
    ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.56.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -79,7 +79,9 @@
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.AsyncConvertEmptyActionResultFilter.html">AsyncConvertEmptyActionResultFilter</a></h4>
       <section><p>Converts action result without parameters into action result with null parameter.
-For example: return NotFound() -&gt; return NotFound(null)
+<example><p>
+<pre><code>return NotFound() -> return NotFound(null)</code></pre>
+<p></example>
 This ensures our formatter is invoked, where we&apos;ll build a JSON:API compliant response.
 For details, see: <a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
 </section>
@@ -118,7 +120,9 @@ resource directly associated, it uses the name of the controller instead of the 
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Middleware.IAsyncConvertEmptyActionResultFilter.html">IAsyncConvertEmptyActionResultFilter</a></h4>
       <section><p>Converts action result without parameters into action result with null parameter.
-For example: return NotFound() -&gt; return NotFound(null)
+<example><p>
+<pre><code>return NotFound() -> return NotFound(null)</code></pre>
+<p></example>
 This ensures our formatter is invoked, where we&apos;ll build a JSON:API compliant response.
 For details, see: <a href="https://github.com/dotnet/aspnetcore/issues/16969">https://github.com/dotnet/aspnetcore/issues/16969</a></p>
 </section>
