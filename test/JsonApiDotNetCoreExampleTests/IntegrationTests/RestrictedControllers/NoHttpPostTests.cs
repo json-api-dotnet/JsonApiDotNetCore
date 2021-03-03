@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/tables";
 
             // Act
-            (HttpResponseMessage httpResponse, string _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             string route = "/tables/" + existingTable.StringId;
 
             // Act
-            (HttpResponseMessage httpResponse, string _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             string route = "/tables/" + existingTable.StringId;
 
             // Act
-            (HttpResponseMessage httpResponse, string _) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);

@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             string route = "/blogs?page[number]=" + pageNumber;
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             string route = "/blogs?page[number]=" + pageNumber;
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             string route = "/blogs?page[size]=" + pageSize;
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             string route = "/blogs?page[size]=" + pageSize;
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

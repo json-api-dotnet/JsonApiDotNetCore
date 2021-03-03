@@ -3,8 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
@@ -66,9 +64,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, EnableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);
@@ -96,9 +93,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, EnableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);
@@ -118,9 +114,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);
@@ -144,9 +139,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooksNoImplicit, ResourceHook.BeforeUpdate);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);
@@ -169,9 +163,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooksNoImplicit, ResourceHook.BeforeUpdateRelationship);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);
@@ -191,9 +184,8 @@ namespace UnitTests.ResourceHooks.Executor.Create
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooksNoImplicit, ResourceHook.BeforeUpdate);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
-                CreateTestObjects(todoDiscovery, personDiscovery, _options);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
+                Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
             // Act
             hookExecutor.BeforeCreate(_todoList, ResourcePipeline.Post);

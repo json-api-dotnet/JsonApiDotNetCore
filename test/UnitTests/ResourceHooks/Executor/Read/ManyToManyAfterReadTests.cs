@@ -3,8 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -25,9 +23,8 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             (List<Article> articles, List<Tag> tags) = CreateManyToManyData();
 
@@ -50,9 +47,8 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             (List<Article> articles, List<Tag> tags) = CreateManyToManyData();
 
@@ -73,11 +69,10 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<Tag> _) = CreateManyToManyData();
+            (List<Article> articles, _) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);
@@ -94,11 +89,10 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<Tag> _) = CreateManyToManyData();
+            (List<Article> articles, _) = CreateManyToManyData();
 
             // Act
             hookExecutor.AfterRead(articles, ResourcePipeline.Get);

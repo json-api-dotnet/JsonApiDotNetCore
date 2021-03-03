@@ -4,7 +4,6 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
@@ -57,7 +56,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
@@ -86,7 +85,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, EnableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(_targetHooks, EnableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
@@ -113,7 +112,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             IHooksDiscovery<Passport> passportDiscovery = SetDiscoverableHooks<Passport>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
                 CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
 

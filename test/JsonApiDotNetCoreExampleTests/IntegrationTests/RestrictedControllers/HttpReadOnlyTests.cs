@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/beds";
 
             // Act
-            (HttpResponseMessage httpResponse, string _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

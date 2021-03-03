@@ -3,7 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -25,7 +24,7 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
@@ -52,7 +51,7 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
@@ -83,7 +82,7 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
@@ -108,11 +107,11 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<IdentifiableArticleTag> _, List<Tag> tags) = CreateIdentifiableManyToManyData();
+            (List<Article> articles, _, List<Tag> tags) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -131,11 +130,11 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<IdentifiableArticleTag> joins, List<Tag> _) = CreateIdentifiableManyToManyData();
+            (List<Article> articles, List<IdentifiableArticleTag> joins, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -157,11 +156,11 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<IdentifiableArticleTag> _, List<Tag> _) = CreateIdentifiableManyToManyData();
+            (List<Article> articles, _, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -179,11 +178,11 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<IdentifiableArticleTag> joinDiscovery = SetDiscoverableHooks<IdentifiableArticleTag>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+            (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
                 CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<IdentifiableArticleTag> _, List<Tag> _) = CreateIdentifiableManyToManyData();
+            (List<Article> articles, _, _) = CreateIdentifiableManyToManyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);

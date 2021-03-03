@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/policies";
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 
             // Act
             // ReSharper disable once RedundantArgumentDefaultValue
-            (HttpResponseMessage httpResponse, ErrorDocument _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

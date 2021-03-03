@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -66,8 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument _) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -86,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -105,7 +104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -127,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -169,8 +168,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument _) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

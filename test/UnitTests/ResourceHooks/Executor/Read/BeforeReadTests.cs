@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -39,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Person> personDiscovery = SetDiscoverableHooks<Person>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
+            (Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, _, IResourceHookExecutor hookExecutor,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
                 CreateTestObjects(todoDiscovery, personDiscovery);
 

@@ -4,8 +4,6 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
@@ -26,9 +24,8 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             (List<Article> articles, List<Tag> tags) = CreateDummyData();
 
@@ -48,9 +45,8 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(_targetHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
             (List<Article> articles, List<Tag> tags) = CreateDummyData();
 
@@ -69,11 +65,10 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(_targetHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<Tag> _) = CreateDummyData();
+            (List<Article> articles, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);
@@ -90,11 +85,10 @@ namespace UnitTests.ResourceHooks.Executor
             IHooksDiscovery<Article> articleDiscovery = SetDiscoverableHooks<Article>(NoHooks, DisableDbValues);
             IHooksDiscovery<Tag> tagDiscovery = SetDiscoverableHooks<Tag>(NoHooks, DisableDbValues);
 
-            (Mock<IEnumerable<IQueryConstraintProvider>> _, Mock<ITargetedFields> _, IResourceHookExecutor hookExecutor,
-                    Mock<IResourceHookContainer<Article>> articleResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, tagDiscovery);
+            (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
+                Mock<IResourceHookContainer<Tag>> tagResourceMock) = CreateTestObjects(articleDiscovery, tagDiscovery);
 
-            (List<Article> articles, List<Tag> _) = CreateDummyData();
+            (List<Article> articles, _) = CreateDummyData();
 
             // Act
             hookExecutor.OnReturn(articles, ResourcePipeline.Get);

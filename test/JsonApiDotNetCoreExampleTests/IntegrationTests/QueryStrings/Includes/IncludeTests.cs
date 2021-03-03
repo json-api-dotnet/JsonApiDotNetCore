@@ -679,7 +679,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             string route = $"/blogs/{blog.StringId}/posts?include=author,comments";
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

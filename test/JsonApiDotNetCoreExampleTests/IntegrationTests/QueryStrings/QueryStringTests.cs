@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             const string route = "/calendars?foo=bar";
 
             // Act
-            (HttpResponseMessage httpResponse, Document _) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
