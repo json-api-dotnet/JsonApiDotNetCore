@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/filterableResources?filter=equals(someInt32,'ABC')";
+            const string route = "/filterableResources?filter=equals(someInt32,'ABC')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -216,10 +216,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Query creation failed due to incompatible types.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
-            responseDocument.Errors[0].Source.Parameter.Should().BeNull();
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Query creation failed due to incompatible types.");
+            error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");
+            error.Source.Parameter.Should().BeNull();
         }
 
         [Theory]

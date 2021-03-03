@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -9,6 +10,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Queries.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class QueryLayerComposer : IQueryLayerComposer
     {
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
@@ -27,13 +29,20 @@ namespace JsonApiDotNetCore.Queries.Internal
             IPaginationContext paginationContext,
             ITargetedFields targetedFields)
         {
-            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+
+            _constraintProviders = constraintProviders;
+            _resourceContextProvider = resourceContextProvider;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
+            _options = options;
+            _paginationContext = paginationContext;
+            _targetedFields = targetedFields;
+            _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
         }
 
         /// <inheritdoc />
@@ -41,11 +50,17 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var filtersInTopScope = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<FilterExpression>()
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             return GetFilter(filtersInTopScope, resourceContext);
         }
@@ -53,7 +68,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeFromConstraints(ResourceContext requestResource)
         {
-            if (requestResource == null) throw new ArgumentNullException(nameof(requestResource));
+            ArgumentGuard.NotNull(requestResource, nameof(requestResource));
 
             var constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
@@ -65,10 +80,16 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private QueryLayer ComposeTopLayer(IEnumerable<ExpressionInScope> constraints, ResourceContext resourceContext)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var expressionsInTopScope = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var topPagination = GetPagination(expressionsInTopScope, resourceContext);
             if (topPagination != null)
@@ -88,11 +109,17 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IncludeExpression ComposeChildren(QueryLayer topLayer, ICollection<ExpressionInScope> constraints)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var include = constraints
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<IncludeExpression>()
                 .FirstOrDefault() ?? IncludeExpression.Empty;
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var includeElements =
                 ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
@@ -105,11 +132,11 @@ namespace JsonApiDotNetCore.Queries.Internal
         private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements,
             QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
         {
-            includeElements = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
+            var includeElementsEvaluated = GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
 
             var updatesInChildren = new Dictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>>();
 
-            foreach (var includeElement in includeElements)
+            foreach (var includeElement in includeElementsEvaluated)
             {
                 parentLayer.Projection ??= new Dictionary<ResourceFieldAttribute, QueryLayer>();
 
@@ -120,11 +147,17 @@ namespace JsonApiDotNetCore.Queries.Internal
                         includeElement.Relationship
                     };
 
+                    // @formatter:wrap_chained_method_calls chop_always
+                    // @formatter:keep_existing_linebreaks true
+
                     var expressionsInCurrentScope = constraints
                         .Where(constraint =>
                             constraint.Scope != null && constraint.Scope.Fields.SequenceEqual(relationshipChain))
                         .Select(constraint => constraint.Expression)
                         .ToArray();
+
+                    // @formatter:keep_existing_linebreaks restore
+                    // @formatter:wrap_chained_method_calls restore
 
                     var resourceContext =
                         _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
@@ -153,13 +186,13 @@ namespace JsonApiDotNetCore.Queries.Internal
                 }
             }
 
-            return !updatesInChildren.Any() ? includeElements : ApplyIncludeElementUpdates(includeElements, updatesInChildren);
+            return !updatesInChildren.Any() ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
         }
 
         private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IEnumerable<IncludeElementExpression> includeElements,
             IDictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>> updatesInChildren)
         {
-            var newIncludeElements = new List<IncludeElementExpression>(includeElements);
+            var newIncludeElements = includeElements.ToList();
 
             foreach (var (existingElement, updatedChildren) in updatesInChildren)
             {
@@ -173,14 +206,14 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForGetById<TId>(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var idAttribute = GetIdAttribute(resourceContext);
 
             var queryLayer = ComposeFromConstraints(resourceContext);
             queryLayer.Sort = null;
             queryLayer.Pagination = null;
-            queryLayer.Filter = CreateFilterByIds(new[] {id}, idAttribute, queryLayer.Filter);
+            queryLayer.Filter = CreateFilterByIds(id.AsArray(), idAttribute, queryLayer.Filter);
 
             if (fieldSelection == TopFieldSelection.OnlyIdAttribute)
             {
@@ -204,7 +237,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)
         {
-            if (secondaryResourceContext == null) throw new ArgumentNullException(nameof(secondaryResourceContext));
+            ArgumentGuard.NotNull(secondaryResourceContext, nameof(secondaryResourceContext));
 
             var secondaryLayer = ComposeFromConstraints(secondaryResourceContext);
             secondaryLayer.Projection = GetProjectionForRelationship(secondaryResourceContext);
@@ -217,21 +250,21 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             var secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
 
-            return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
 
         /// <inheritdoc />
         public QueryLayer WrapLayerForSecondaryEndpoint<TId>(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)
         {
-            if (secondaryLayer == null) throw new ArgumentNullException(nameof(secondaryLayer));
-            if (primaryResourceContext == null) throw new ArgumentNullException(nameof(primaryResourceContext));
-            if (secondaryRelationship == null) throw new ArgumentNullException(nameof(secondaryRelationship));
+            ArgumentGuard.NotNull(secondaryLayer, nameof(secondaryLayer));
+            ArgumentGuard.NotNull(primaryResourceContext, nameof(primaryResourceContext));
+            ArgumentGuard.NotNull(secondaryRelationship, nameof(secondaryRelationship));
 
             var innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
 
             var primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
-            var primaryProjection = primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            var primaryProjection = primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
             primaryProjection[secondaryRelationship] = secondaryLayer;
 
             var primaryFilter = GetFilter(Array.Empty<QueryExpression>(), primaryResourceContext);
@@ -240,7 +273,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new QueryLayer(primaryResourceContext)
             {
                 Include = RewriteIncludeForSecondaryEndpoint(innerInclude, secondaryRelationship),
-                Filter = CreateFilterByIds(new[] {primaryId}, primaryIdAttribute, primaryFilter),
+                Filter = CreateFilterByIds(primaryId.AsArray(), primaryIdAttribute, primaryFilter),
                 Projection = primaryProjection
             };
         }
@@ -251,7 +284,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 ? new IncludeElementExpression(secondaryRelationship, relativeInclude.Elements)
                 : new IncludeElementExpression(secondaryRelationship);
 
-            return new IncludeExpression(new[] {parentElement});
+            return new IncludeExpression(parentElement.AsArray());
         }
 
         private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
@@ -271,17 +304,21 @@ namespace JsonApiDotNetCore.Queries.Internal
                 filter = new EqualsAnyOfExpression(idChain, constants);
             }
 
+            // @formatter:keep_existing_linebreaks true
+
             return filter == null
                 ? existingFilter
                 : existingFilter == null
                     ? filter
-                    : new LogicalExpression(LogicalOperator.And, new[] {filter, existingFilter});
+                    : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(filter, existingFilter));
+
+            // @formatter:keep_existing_linebreaks restore
         }
 
         /// <inheritdoc />
         public QueryLayer ComposeForUpdate<TId>(TId id, ResourceContext primaryResource)
         {
-            if (primaryResource == null) throw new ArgumentNullException(nameof(primaryResource));
+            ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
 
             var includeElements = _targetedFields.Relationships
                 .Select(relationship => new IncludeElementExpression(relationship)).ToArray();
@@ -292,7 +329,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             primaryLayer.Include = includeElements.Any() ? new IncludeExpression(includeElements) : IncludeExpression.Empty;
             primaryLayer.Sort = null;
             primaryLayer.Pagination = null;
-            primaryLayer.Filter = CreateFilterByIds(new[] {id}, primaryIdAttribute, primaryLayer.Filter);
+            primaryLayer.Filter = CreateFilterByIds(id.AsArray(), primaryIdAttribute, primaryLayer.Filter);
             primaryLayer.Projection = null;
 
             return primaryLayer;
@@ -301,6 +338,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public IEnumerable<(QueryLayer, RelationshipAttribute)> ComposeForGetTargetedSecondaryResourceIds(IIdentifiable primaryResource)
         {
+            ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
+
             foreach (var relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(primaryResource);
@@ -317,6 +356,9 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForGetRelationshipRightIds(RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds)
         {
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             var rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
 
@@ -339,6 +381,9 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <inheritdoc />
         public QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds)
         {
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             var leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.LeftType);
             var leftIdAttribute = GetIdAttribute(leftResourceContext);
 
@@ -346,12 +391,12 @@ namespace JsonApiDotNetCore.Queries.Internal
             var rightIdAttribute = GetIdAttribute(rightResourceContext);
             var rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 
-            var leftFilter = CreateFilterByIds(new[] {leftId}, leftIdAttribute, null);
+            var leftFilter = CreateFilterByIds(leftId.AsArray(), leftIdAttribute, null);
             var rightFilter = CreateFilterByIds(rightTypedIds, rightIdAttribute, null);
 
             return new QueryLayer(leftResourceContext)
             {
-                Include = new IncludeExpression(new[] {new IncludeElementExpression(hasManyRelationship)}),
+                Include = new IncludeExpression(new IncludeElementExpression(hasManyRelationship).AsArray()),
                 Filter = leftFilter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
@@ -370,16 +415,15 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements, ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            includeElements = _resourceDefinitionAccessor.OnApplyIncludes(resourceContext.ResourceType, includeElements);
-            return includeElements;
+            return _resourceDefinitionAccessor.OnApplyIncludes(resourceContext.ResourceType, includeElements);
         }
 
         protected virtual FilterExpression GetFilter(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var filters = expressionsInScope.OfType<FilterExpression>().ToArray();
 
@@ -392,8 +436,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual SortExpression GetSort(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var sort = expressionsInScope.OfType<SortExpression>().FirstOrDefault();
 
@@ -402,7 +446,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (sort == null)
             {
                 var idAttribute = GetIdAttribute(resourceContext);
-                sort = new SortExpression(new[] {new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true)});
+                sort = new SortExpression(new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true).AsArray());
             }
 
             return sort;
@@ -410,8 +454,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual PaginationExpression GetPagination(IReadOnlyCollection<QueryExpression> expressionsInScope, ResourceContext resourceContext)
         {
-            if (expressionsInScope == null) throw new ArgumentNullException(nameof(expressionsInScope));
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var pagination = expressionsInScope.OfType<PaginationExpression>().FirstOrDefault();
 
@@ -424,7 +468,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         protected virtual IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForSparseAttributeSet(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
             if (!fieldSet.Any())
@@ -436,7 +480,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var idAttribute = GetIdAttribute(resourceContext);
             attributeSet.Add(idAttribute);
 
-            return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, value => (QueryLayer)null);
+            return attributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
 
         private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)

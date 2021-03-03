@@ -1,9 +1,11 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Photo : Identifiable<Guid>
     {
         [Attr]

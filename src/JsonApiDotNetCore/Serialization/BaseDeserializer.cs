@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Serialization
     /// Abstract base class for deserialization. Deserializes JSON content into <see cref="Objects.Document"/>s
     /// and constructs instances of the resource(s) in the document body.
     /// </summary>
+    [PublicAPI]
     public abstract class BaseDeserializer
     {
         protected IResourceContextProvider ResourceContextProvider { get; }
@@ -26,8 +28,11 @@ namespace JsonApiDotNetCore.Serialization
 
         protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
         {
-            ResourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            ResourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+
+            ResourceContextProvider = resourceContextProvider;
+            ResourceFactory = resourceFactory;
         }
 
         /// <summary>
@@ -46,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected object DeserializeBody(string body)
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
@@ -74,11 +79,13 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">Exposed attributes for <paramref name="resource"/>.</param>
         protected IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(attributes, nameof(attributes));
 
             if (attributeValues == null || attributeValues.Count == 0)
+            {
                 return resource;
+            }
 
             foreach (var attr in attributes)
             {
@@ -107,8 +114,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipAttributes">Exposed relationships for <paramref name="resource"/>.</param>
         protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues, IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (relationshipAttributes == null) throw new ArgumentNullException(nameof(relationshipAttributes));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(relationshipAttributes, nameof(relationshipAttributes));
 
             if (relationshipValues == null || relationshipValues.Count == 0)
             {
@@ -138,14 +145,13 @@ namespace JsonApiDotNetCore.Serialization
 
         protected JToken LoadJToken(string body)
         {
-            JToken jToken;
-            using (JsonReader jsonReader = new JsonTextReader(new StringReader(body)))
+            using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
             {
                 // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/509
-                jsonReader.DateParseHandling = DateParseHandling.None;
-                jToken = JToken.Load(jsonReader);
-            }
-            return jToken;
+                DateParseHandling = DateParseHandling.None
+            };
+
+            return JToken.Load(jsonReader);
         }
 
         /// <summary>
@@ -256,6 +262,7 @@ namespace JsonApiDotNetCore.Serialization
             return null;
         }
 
+        [AssertionMethod]
         private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
         {
             if (resourceIdentifierObject.Type == null)
@@ -296,6 +303,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
+        [AssertionMethod]
         private void AssertHasNoLid(ResourceIdentifierObject resourceIdentifierObject)
         {
             if (resourceIdentifierObject.Lid != null)
@@ -318,8 +326,10 @@ namespace JsonApiDotNetCore.Serialization
         private object ConvertAttrValue(object newValue, Type targetType)
         {
             if (newValue is JContainer jObject)
+            {
                 // the attribute value is a complex type that needs additional deserialization
                 return DeserializeComplexType(jObject, targetType);
+            }
 
             // the attribute value is a native C# type.
             var convertedValue = TypeHelper.ConvertType(newValue, targetType);

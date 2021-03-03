@@ -6,7 +6,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -47,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItemGroups";
+            const string route = "/workItemGroups";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -63,8 +62,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == newGroup.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
@@ -93,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/workItemGroups?fields[workItemGroups]=name";
+            const string route = "/workItemGroups?fields[workItemGroups]=name";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -110,8 +108,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == newGroup.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
@@ -139,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/rgbColors";
+            const string route = "/rgbColors";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -151,8 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == newColor.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync(newColor.Id);
 
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
@@ -180,7 +176,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/rgbColors?fields[rgbColors]=id";
+            const string route = "/rgbColors?fields[rgbColors]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -192,8 +188,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstAsync(color => color.Id == newColor.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdAsync(newColor.Id);
 
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
@@ -214,7 +209,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.RgbColors.Add(existingColor);
-                
                 await dbContext.SaveChangesAsync();
             });
 
@@ -231,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            var route = "/rgbColors";
+            const string route = "/rgbColors";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -240,9 +234,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Conflict);
-            responseDocument.Errors[0].Title.Should().Be("Another resource with the specified ID already exists.");
-            responseDocument.Errors[0].Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Another resource with the specified ID already exists.");
+            error.Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");
         }
     }
 }

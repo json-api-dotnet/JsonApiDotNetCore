@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using UnitTests.TestModels;
@@ -23,7 +23,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -52,10 +52,10 @@ namespace UnitTests.Serialization.Server
             var serializer = GetResponseSerializer<TestResource>();
 
             // Act
-            string serialized = serializer.SerializeMany(new List<TestResource> { resource });
+            string serialized = serializer.SerializeMany(resource.AsArray());
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":[{
                   ""type"":""testResource"",
                   ""id"":""1"",
@@ -85,14 +85,14 @@ namespace UnitTests.Serialization.Server
                 PopulatedToOne = new OneToOneDependent { Id = 10 },
                 PopulatedToManies = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } }
             };
-            var chain = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => new List<RelationshipAttribute> { r }).ToList();
+            var chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => r.AsEnumerable()).ToList();
             var serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(inclusionChains: chain);
 
             // Act
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{
                   ""type"":""multiPrincipals"",
                   ""id"":""1"",
@@ -147,13 +147,16 @@ namespace UnitTests.Serialization.Server
                 PopulatedToManies = new HashSet<OneToManyDependent> { includedResource }
             };
 
-            var chains = _resourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
+            var chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
                 .Select(r =>
                 {
-                    var chain = new List<RelationshipAttribute> {r};
+                    var chain = r.AsList();
                     if (r.PublicName != "populatedToManies")
-                        return new List<RelationshipAttribute> {r};
-                    chain.AddRange(_resourceGraph.GetRelationships<OneToManyDependent>());
+                    {
+                        return chain;
+                    }
+
+                    chain.AddRange(ResourceGraph.GetRelationships<OneToManyDependent>());
                     return chain;
                 }).ToList();
 
@@ -163,7 +166,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""data"":{ 
                   ""type"":""multiPrincipals"",
                   ""id"":""10"",
@@ -233,7 +236,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(null);
 
             // Assert
-            var expectedFormatted = @"{ ""data"": null }";
+            const string expectedFormatted = @"{ ""data"": null }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -243,11 +246,12 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var serializer = GetResponseSerializer<TestResource>();
+
             // Act
             string serialized = serializer.SerializeMany(new List<TestResource>());
 
             // Assert
-            var expectedFormatted = @"{ ""data"": [] }";
+            const string expectedFormatted = @"{ ""data"": [] }";
             var expected = Regex.Replace(expectedFormatted, @"\s+", "");
             Assert.Equal(expected, serialized);
         }
@@ -257,13 +261,13 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10 };
-            var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(topLinks: DummyTopLevelLinks, relationshipLinks: DummyRelationshipLinks, resourceLinks: DummyResourceLinks);
 
             // Act
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                ""links"":{
                   ""self"":""http://www.dummy.com/dummy-self-link"",
                   ""first"":""http://www.dummy.com/dummy-first-link"",
@@ -299,7 +303,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_ResourceWithMeta_IncludesMetaInResult()
         {
             // Arrange
-            var meta = new Dictionary<string, object> { { "test", "meta" } };
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
             var resource = new OneToManyPrincipal { Id = 10 };
             var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta);
 
@@ -307,7 +311,7 @@ namespace UnitTests.Serialization.Server
             string serialized = serializer.SerializeSingle(resource);
 
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""data"":{
                     ""type"":""oneToManyPrincipals"",
@@ -326,14 +330,14 @@ namespace UnitTests.Serialization.Server
         public void SerializeSingle_NullWithLinksAndMeta_StillShowsLinksAndMeta()
         {
             // Arrange
-            var meta = new Dictionary<string, object> { { "test", "meta" } };
-            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: _dummyTopLevelLinks, relationshipLinks: _dummyRelationshipLinks, resourceLinks: _dummyResourceLinks);
+            var meta = new Dictionary<string, object> { ["test"] = "meta" };
+            var serializer = GetResponseSerializer<OneToManyPrincipal>(metaDict: meta, topLinks: DummyTopLevelLinks, relationshipLinks: DummyRelationshipLinks, resourceLinks: DummyResourceLinks);
             
             // Act
             string serialized = serializer.SerializeSingle(null);
             
             // Assert
-            var expectedFormatted = @"{
+            const string expectedFormatted = @"{
                 ""meta"":{ ""test"": ""meta"" },
                 ""links"":{
                     ""self"":""http://www.dummy.com/dummy-self-link"",

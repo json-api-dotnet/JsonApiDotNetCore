@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
+
+// ReSharper disable NonReadonlyMemberInGetHashCode
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
@@ -40,6 +43,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// }
     /// ]]></code>
     /// </example>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
@@ -123,7 +127,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <param name="throughPropertyName">The name of the navigation property that will be used to access the join relationship.</param>
         public HasManyThroughAttribute(string throughPropertyName)
         {
-            ThroughPropertyName = throughPropertyName ?? throw new ArgumentNullException(nameof(throughPropertyName));
+            ArgumentGuard.NotNull(throughPropertyName, nameof(throughPropertyName));
+
+            ThroughPropertyName = throughPropertyName;
         }
 
         /// <summary>
@@ -132,7 +138,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override object GetValue(object resource)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var throughEntity = ThroughProperty.GetValue(resource);
             if (throughEntity == null)
@@ -153,7 +159,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public override void SetValue(object resource, object newValue)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             base.SetValue(resource, newValue);
 

@@ -1,8 +1,10 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace ReportsExample.Models
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Report : Identifiable
     {
         [Attr]

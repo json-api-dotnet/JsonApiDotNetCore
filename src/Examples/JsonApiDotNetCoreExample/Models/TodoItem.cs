@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class TodoItem : Identifiable, IIsLockable
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class TodoItem : Identifiable, IIsLockable
     {
         public bool IsLocked { get; set; }
 
@@ -28,6 +30,6 @@ namespace JsonApiDotNetCoreExample.Models
         public TodoItem ParentTodo { get; set; }
 
         [HasMany]
-        public IList<TodoItem> ChildrenTodos { get; set; }
+        public IList<TodoItem> ChildTodoItems { get; set; }
     }
 }

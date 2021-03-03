@@ -1,9 +1,11 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace NoEntityFrameworkExample.Models
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkItem : Identifiable
     {
         [Attr]

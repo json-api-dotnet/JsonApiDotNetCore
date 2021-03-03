@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class TextLanguage : Identifiable<Guid>
     {
         [Attr]
@@ -16,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         public Guid ConcurrencyToken
         {
             get => Guid.NewGuid();
-            set { }
+            set => _ = value;
         }
 
         [HasMany]

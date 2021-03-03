@@ -18,7 +18,7 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_ObfuscatedIdClass_ShouldSetIdCorrectly()
         {
             // Arrange
-            var id = "ABC123ABC";
+            const string id = "ABC123ABC";
             var configuration = GetConfiguration($"/obfuscatedIdModel/{id}", action: "GetAsync", id: id);
             var request = configuration.Request;
 
@@ -33,7 +33,7 @@ namespace UnitTests.Middleware
         public async Task ParseUrlBase_UrlHasPrimaryIdSet_ShouldSetupRequestWithSameId()
         {
             // Arrange
-            var id = "123";
+            const string id = "123";
             var configuration = GetConfiguration($"/users/{id}", id: id);
             var request = configuration.Request;
 
@@ -70,12 +70,12 @@ namespace UnitTests.Middleware
 
         private sealed class InvokeConfiguration
         {
-            public JsonApiMiddleware MiddleWare;
-            public HttpContext HttpContext;
-            public Mock<IControllerResourceMapping> ControllerResourceMapping;
-            public Mock<IJsonApiOptions> Options;
-            public JsonApiRequest Request;
-            public Mock<IResourceGraph> ResourceGraph;
+            public JsonApiMiddleware MiddleWare { get; set; }
+            public HttpContext HttpContext { get; set; }
+            public Mock<IControllerResourceMapping> ControllerResourceMapping { get; set; }
+            public Mock<IJsonApiOptions> Options { get; set; }
+            public JsonApiRequest Request { get; set; }
+            public Mock<IResourceGraph> ResourceGraph { get; set; }
         }
         private Task RunMiddlewareTask(InvokeConfiguration holder)
         {
@@ -84,7 +84,7 @@ namespace UnitTests.Middleware
             var options = holder.Options.Object;
             var request = holder.Request;
             var resourceGraph = holder.ResourceGraph.Object;
-            return holder.MiddleWare.Invoke(context, controllerResourceMapping, options, request, resourceGraph);
+            return holder.MiddleWare.InvokeAsync(context, controllerResourceMapping, options, request, resourceGraph);
         }
         private InvokeConfiguration GetConfiguration(string path, string resourceName = "users", string action = "", string id =null, Type relType = null)
         {
@@ -92,11 +92,11 @@ namespace UnitTests.Middleware
             {
                 throw new ArgumentException("Path should start with a '/'");
             }
-            var middleware = new JsonApiMiddleware(httpContext =>
+            var middleware = new JsonApiMiddleware(_ =>
             {
                 return Task.Run(() => Console.WriteLine("finished"));
             });
-            var forcedNamespace = "api/v1";
+            const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             mockMapping.Setup(x => x.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
 

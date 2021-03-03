@@ -17,7 +17,9 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected QueryClauseBuilder(LambdaScope lambdaScope)
         {
-            LambdaScope = lambdaScope ?? throw new ArgumentNullException(nameof(lambdaScope));
+            ArgumentGuard.NotNull(lambdaScope, nameof(lambdaScope));
+
+            LambdaScope = lambdaScope;
         }
 
         public override Expression VisitCount(CountExpression expression, TArgument argument)
@@ -27,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             var propertyExpression = TryGetCollectionCount(collectionExpression);
             if (propertyExpression == null)
             {
-                throw new Exception($"Field '{expression.TargetCollection}' must be a collection.");
+                throw new InvalidOperationException($"Field '{expression.TargetCollection}' must be a collection.");
             }
 
             return propertyExpression;

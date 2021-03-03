@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCoreExample;
+using JsonApiDotNetCoreExample.Startups;
 using Microsoft.AspNetCore.Mvc.Testing;
 using TestBuildingBlocks;
 using Xunit;
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Get_skips_middleware_and_formatters()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
 
             var client = _factory.CreateClient();
 
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Post_skips_middleware_and_formatters()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi")
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi")
             {
                 Content = new StringContent("Jack")
                 {
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Post_skips_error_handler()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
 
             var client = _factory.CreateClient();
 
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Put_skips_middleware_and_formatters()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Put, "/NonJsonApi")
+            using var request = new HttpRequestMessage(HttpMethod.Put, "/NonJsonApi")
             {
                 Content = new StringContent("\"Jane\"")
                 {
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Patch_skips_middleware_and_formatters()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
+            using var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
 
             var client = _factory.CreateClient();
 
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
         public async Task Delete_skips_middleware_and_formatters()
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
+            using var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
 
             var client = _factory.CreateClient();
 

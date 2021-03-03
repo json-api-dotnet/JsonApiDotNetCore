@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?filter=equals(caption,'Two')";
+            const string route = "/blogPosts?filter=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -78,10 +78,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.Parameter.Should().Be("filter");
         }
 
         [Fact]
@@ -132,10 +134,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified filter is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified filter is invalid.");
+            error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.Parameter.Should().Be("filter");
         }
 
         [Fact]
@@ -155,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?include=author&filter=equals(author.userName,'Smith')";
+            const string route = "/blogPosts?include=author&filter=equals(author.userName,'Smith')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -183,7 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?filter=greaterThan(count(posts),'0')";
+            const string route = "/blogs?filter=greaterThan(count(posts),'0')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -215,7 +219,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?filter=has(labels)";
+            const string route = "/blogPosts?filter=has(labels)";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -243,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=posts&filter[posts]=equals(caption,'Two')";
+            const string route = "/blogs?include=posts&filter[posts]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -322,7 +326,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = true;
 
-            var route = "/blogPosts?include=labels&filter[labels]=equals(name,'Hot')";
+            const string route = "/blogPosts?include=labels&filter[labels]=equals(name,'Hot')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -353,7 +357,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=owner.posts&filter[owner.posts]=equals(caption,'Two')";
+            const string route = "/blogs?include=owner.posts&filter[owner.posts]=equals(caption,'Two')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -384,7 +388,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?filter=equals(caption,'One')&filter=equals(caption,'Three')";
+            const string route = "/blogPosts?filter=equals(caption,'One')&filter=equals(caption,'Three')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -422,11 +426,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?filter[author.userName]=John&filter[author.displayName]=Smith";
+            const string route = "/blogPosts?filter[author.userName]=John&filter[author.displayName]=Smith";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -461,10 +464,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=owner.posts.comments&" +
-                        "filter=and(equals(title,'Technology'),has(owner.posts),equals(owner.userName,'Smith'))&" +
-                        "filter[owner.posts]=equals(caption,'Two')&" +
-                        "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05')";
+            // @formatter:keep_existing_linebreaks true
+
+            const string route = "/blogs?include=owner.posts.comments&" +
+                "filter=and(equals(title,'Technology'),has(owner.posts),equals(owner.userName,'Smith'))&" +
+                "filter[owner.posts]=equals(caption,'Two')&" +
+                "filter[owner.posts.comments]=greaterThan(createdAt,'2005-05-05')";
+
+            // @formatter:keep_existing_linebreaks restore
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

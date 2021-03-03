@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// Also contains information about updated relationships through 
     /// implementation of IRelationshipsDictionary<typeparamref name="TResource"/>>
     /// </summary>
+    [PublicAPI]
     public class ResourceHashSet<TResource> : HashSet<TResource>, IResourceHashSet<TResource> where TResource : class, IIdentifiable
     {
         /// <inheritdoc />
@@ -37,9 +39,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type leftType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type resourceType)
         {
-            return _relationships.GetByRelationship(leftType);
+            return _relationships.GetByRelationship(resourceType);
         }
 
         /// <inheritdoc />
@@ -49,7 +51,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
+        public virtual HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
             return _relationships.GetAffected(navigationAction);
         }

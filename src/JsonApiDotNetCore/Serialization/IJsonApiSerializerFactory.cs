@@ -1,5 +1,8 @@
-﻿namespace JsonApiDotNetCore.Serialization
+using JetBrains.Annotations;
+
+namespace JsonApiDotNetCore.Serialization
 {
+    [PublicAPI]
     public interface IJsonApiSerializerFactory
     {
         /// <summary>

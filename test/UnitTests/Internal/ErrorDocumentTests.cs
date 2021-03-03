@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Xunit;
 
@@ -7,26 +8,23 @@ namespace UnitTests.Internal
 {
     public sealed class ErrorDocumentTests
     {
-        [Fact]
-        public void Can_GetStatusCode()
+        // @formatter:wrap_array_initializer_style wrap_if_long
+        [Theory]
+        [InlineData(new[] { HttpStatusCode.UnprocessableEntity }, HttpStatusCode.UnprocessableEntity)]
+        [InlineData(new[] { HttpStatusCode.UnprocessableEntity, HttpStatusCode.UnprocessableEntity }, HttpStatusCode.UnprocessableEntity)]
+        [InlineData(new[] { HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized }, HttpStatusCode.BadRequest)]
+        [InlineData(new[] { HttpStatusCode.UnprocessableEntity, HttpStatusCode.BadGateway }, HttpStatusCode.InternalServerError)]
+        // @formatter:wrap_array_initializer_style restore
+        public void ErrorDocument_GetErrorStatusCode_IsCorrect(HttpStatusCode[] errorCodes, HttpStatusCode expected)
         {
-            List<Error> errors = new List<Error>();
+            // Arrange
+            var document = new ErrorDocument(errorCodes.Select(code => new Error(code)));
 
-            // Add First 422 error
-            errors.Add(new Error(HttpStatusCode.UnprocessableEntity) {Title = "Something wrong"});
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, new ErrorDocument(errors).GetErrorStatusCode());
+            // Act
+            var status = document.GetErrorStatusCode();
 
-            // Add a second 422 error
-            errors.Add(new Error(HttpStatusCode.UnprocessableEntity) {Title = "Something else wrong"});
-            Assert.Equal(HttpStatusCode.UnprocessableEntity, new ErrorDocument(errors).GetErrorStatusCode());
-
-            // Add 4xx error not 422
-            errors.Add(new Error(HttpStatusCode.Unauthorized) {Title = "Unauthorized"});
-            Assert.Equal(HttpStatusCode.BadRequest, new ErrorDocument(errors).GetErrorStatusCode());
-
-            // Add 5xx error not 4xx
-            errors.Add(new Error(HttpStatusCode.BadGateway) {Title = "Not good"});
-            Assert.Equal(HttpStatusCode.InternalServerError, new ErrorDocument(errors).GetErrorStatusCode());
+            // Assert
+            status.Should().Be(expected);
         }
     }
 }

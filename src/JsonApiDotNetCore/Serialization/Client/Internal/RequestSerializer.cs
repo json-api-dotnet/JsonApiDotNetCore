@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -13,6 +14,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// <summary>
     /// Client serializer implementation of <see cref="BaseSerializer"/>.
     /// </summary>
+    [PublicAPI]
     public class RequestSerializer : BaseSerializer, IRequestSerializer
     {
         private Type _currentTargetedResource;
@@ -23,7 +25,9 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                                 IResourceObjectBuilder resourceObjectBuilder)
             : base(resourceObjectBuilder)
         {
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
+            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />
@@ -45,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public string Serialize(IReadOnlyCollection<IIdentifiable> resources)
         {
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
+            ArgumentGuard.NotNull(resources, nameof(resources));
 
             IIdentifiable firstResource = resources.FirstOrDefault();
 
@@ -67,10 +71,10 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { private get; set; }
+        public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { get; set; }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { private get; set; }
+        public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { get; set; }
 
         /// <summary>
         /// By default, the client serializer includes all attributes in the result,
@@ -81,12 +85,16 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             var currentResourceType = resource.GetType();
             if (_currentTargetedResource != currentResourceType)
+            {
                 // We're dealing with a relationship that is being serialized, for which
                 // we never want to include any attributes in the request body.
                 return new List<AttrAttribute>();
+            }
 
             if (AttributesToSerialize == null)
+            {
                 return _resourceGraph.GetAttributes(currentResourceType);
+            }
 
             return AttributesToSerialize;
         }

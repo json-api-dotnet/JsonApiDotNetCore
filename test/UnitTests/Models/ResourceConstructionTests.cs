@@ -4,7 +4,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -15,9 +14,9 @@ namespace UnitTests.Models
 {
     public sealed class ResourceConstructionTests
     {
-        public Mock<IJsonApiRequest> _requestMock;
-        public Mock<IHttpContextAccessor> _mockHttpContextAccessor;
-        
+        private readonly Mock<IJsonApiRequest> _requestMock;
+        private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+
         public ResourceConstructionTests()
         {
             _mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -121,38 +120,6 @@ namespace UnitTests.Models
             Assert.Equal(
                 "Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor' using injected constructor parameters.",
                 exception.Message);
-        }
-    }
-
-    public class ResourceWithoutConstructor : Identifiable
-    {
-    }
-
-    public class ResourceWithDbContextConstructor : Identifiable
-    {
-        public AppDbContext AppDbContext { get; }
-
-        public ResourceWithDbContextConstructor(AppDbContext appDbContext)
-        {
-            AppDbContext = appDbContext ?? throw new ArgumentNullException(nameof(appDbContext));
-        }
-    }
-
-    public class ResourceWithThrowingConstructor : Identifiable
-    {
-        public ResourceWithThrowingConstructor()
-        {
-            throw new ArgumentException("Failed to initialize.");
-        }
-    }
-
-    public class ResourceWithStringConstructor : Identifiable
-    {
-        public string Text { get; }
-
-        public ResourceWithStringConstructor(string text)
-        {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
         }
     }
 }

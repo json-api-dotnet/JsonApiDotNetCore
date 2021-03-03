@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
         public ResourceHookExecutorFacade(IResourceHookExecutor resourceHookExecutor, IResourceFactory resourceFactory)
         {
-            _resourceHookExecutor =
-                resourceHookExecutor ?? throw new ArgumentNullException(nameof(resourceHookExecutor));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
+            ArgumentGuard.NotNull(resourceHookExecutor, nameof(resourceHookExecutor));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+
+            _resourceHookExecutor = resourceHookExecutor;
+            _resourceFactory = resourceFactory;
         }
 
         public void BeforeReadSingle<TResource, TId>(TId id, ResourcePipeline pipeline)
@@ -36,7 +37,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void AfterReadSingle<TResource>(TResource resource, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.AfterRead(ToList(resource), pipeline);
+            _resourceHookExecutor.AfterRead(resource.AsList(), pipeline);
         }
 
         public void BeforeReadMany<TResource>()
@@ -54,37 +55,37 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void BeforeCreate<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.BeforeCreate(ToList(resource), ResourcePipeline.Post);
+            _resourceHookExecutor.BeforeCreate(resource.AsList(), ResourcePipeline.Post);
         }
 
         public void AfterCreate<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.AfterCreate(ToList(resource), ResourcePipeline.Post);
+            _resourceHookExecutor.AfterCreate(resource.AsList(), ResourcePipeline.Post);
         }
 
         public void BeforeUpdateResource<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.BeforeUpdate(ToList(resource), ResourcePipeline.Patch);
+            _resourceHookExecutor.BeforeUpdate(resource.AsList(), ResourcePipeline.Patch);
         }
 
         public void AfterUpdateResource<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.Patch);
+            _resourceHookExecutor.AfterUpdate(resource.AsList(), ResourcePipeline.Patch);
         }
 
         public void BeforeUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.BeforeUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
+            _resourceHookExecutor.BeforeUpdate(resource.AsList(), ResourcePipeline.PatchRelationship);
         }
 
         public void AfterUpdateRelationship<TResource>(TResource resource)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.AfterUpdate(ToList(resource), ResourcePipeline.PatchRelationship);
+            _resourceHookExecutor.AfterUpdate(resource.AsList(), ResourcePipeline.PatchRelationship);
         }
 
         public void BeforeDelete<TResource, TId>(TId id)
@@ -93,7 +94,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             var temporaryResource = _resourceFactory.CreateInstance<TResource>();
             temporaryResource.Id = id;
 
-            _resourceHookExecutor.BeforeDelete(ToList(temporaryResource), ResourcePipeline.Delete);
+            _resourceHookExecutor.BeforeDelete(temporaryResource.AsList(), ResourcePipeline.Delete);
         }
 
         public void AfterDelete<TResource, TId>(TId id)
@@ -102,13 +103,13 @@ namespace JsonApiDotNetCore.Hooks.Internal
             var temporaryResource = _resourceFactory.CreateInstance<TResource>();
             temporaryResource.Id = id;
 
-            _resourceHookExecutor.AfterDelete(ToList(temporaryResource), ResourcePipeline.Delete, true);
+            _resourceHookExecutor.AfterDelete(temporaryResource.AsList(), ResourcePipeline.Delete, true);
         }
 
         public void OnReturnSingle<TResource>(TResource resource, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            _resourceHookExecutor.OnReturn(ToList(resource), pipeline);
+            _resourceHookExecutor.OnReturn(resource.AsList(), pipeline);
         }
 
         public IReadOnlyCollection<TResource> OnReturnMany<TResource>(IReadOnlyCollection<TResource> resources)
@@ -127,16 +128,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             if (resourceOrResources is IIdentifiable)
             {
-                var resources = ToList((dynamic)resourceOrResources);
+                var resources = ObjectExtensions.AsList((dynamic)resourceOrResources);
                 return Enumerable.SingleOrDefault(_resourceHookExecutor.OnReturn(resources, ResourcePipeline.GetRelationship));
             }
 
             return resourceOrResources;
-        }
-
-        private static List<TResource> ToList<TResource>(TResource resource)
-        {
-            return new List<TResource> {resource};
         }
     }
 }

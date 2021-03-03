@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.QueryStrings;
 
 namespace JsonApiDotNetCore.Controllers.Annotations
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// [DisableQueryString("skipCache")]
     /// public class CustomersController : JsonApiController<Customer> { }
     /// ]]></example>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryStringAttribute : Attribute
     {
@@ -49,7 +51,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         /// </summary>
         public DisableQueryStringAttribute(string parameterNames)
         {
-            if (parameterNames == null) throw new ArgumentNullException(nameof(parameterNames));
+            ArgumentGuard.NotNull(parameterNames, nameof(parameterNames));
 
             ParameterNames = parameterNames.Split(",").ToList();
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using Humanizer;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -16,6 +17,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Server deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
+    [PublicAPI]
     public class RequestDeserializer : BaseDeserializer, IJsonApiDeserializer
     {
         private readonly ITargetedFields _targetedFields;
@@ -32,16 +34,21 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiOptions options)
             : base(resourceContextProvider, resourceFactory)
         {
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _targetedFields = targetedFields;
+            _httpContextAccessor = httpContextAccessor;
+            _request = request;
+            _options = options;
         }
 
         /// <inheritdoc />
         public object Deserialize(string body)
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             if (_request.Kind == EndpointKind.Relationship)
             {
@@ -117,6 +124,7 @@ namespace JsonApiDotNetCore.Serialization
             return ParseForRelationshipOperation(operation, kind, requireToManyRelationship);
         }
 
+        [AssertionMethod]
         private void AssertHasNoHref(AtomicOperationObject operation)
         {
             if (operation.Href != null)
@@ -238,6 +246,7 @@ namespace JsonApiDotNetCore.Serialization
             return operation.SingleData;
         }
 
+        [AssertionMethod]
         private void AssertElementHasType(ResourceIdentifierObject resourceIdentifierObject, string elementPath)
         {
             if (resourceIdentifierObject.Type == null)

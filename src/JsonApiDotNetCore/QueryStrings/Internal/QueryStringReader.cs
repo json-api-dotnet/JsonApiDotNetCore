@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class QueryStringReader : IQueryStringReader
     {
         private readonly IJsonApiOptions _options;
@@ -19,19 +20,21 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public QueryStringReader(IJsonApiOptions options, IRequestQueryStringAccessor queryStringAccessor,
             IEnumerable<IQueryStringParameterReader> parameterReaders, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(parameterReaders, nameof(parameterReaders));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _queryStringAccessor = queryStringAccessor ?? throw new ArgumentNullException(nameof(queryStringAccessor));
-            _parameterReaders = parameterReaders ?? throw new ArgumentNullException(nameof(parameterReaders));
-
+            _options = options;
+            _queryStringAccessor = queryStringAccessor;
+            _parameterReaders = parameterReaders;
             _logger = loggerFactory.CreateLogger<QueryStringReader>();
         }
 
         /// <inheritdoc />
         public virtual void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            disableQueryStringAttribute ??= DisableQueryStringAttribute.Empty;
+            var disableQueryStringAttributeNotNull = disableQueryStringAttribute ?? DisableQueryStringAttribute.Empty;
 
             foreach (var (parameterName, parameterValue) in _queryStringAccessor.Query)
             {
@@ -48,7 +51,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                     _logger.LogDebug(
                         $"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
 
-                    if (!reader.IsEnabled(disableQueryStringAttribute))
+                    if (!reader.IsEnabled(disableQueryStringAttributeNotNull))
                     {
                         throw new InvalidQueryStringParameterException(parameterName,
                             "Usage of one or more query string parameters is not allowed at the requested endpoint.",

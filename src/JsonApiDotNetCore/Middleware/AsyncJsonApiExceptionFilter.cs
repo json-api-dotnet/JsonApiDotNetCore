@@ -1,24 +1,27 @@
-using System;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace JsonApiDotNetCore.Middleware
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
     {
         private readonly IExceptionHandler _exceptionHandler;
 
         public AsyncJsonApiExceptionFilter(IExceptionHandler exceptionHandler)
         {
-            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
+            ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+
+            _exceptionHandler = exceptionHandler;
         }
 
         /// <inheritdoc />
         public Task OnExceptionAsync(ExceptionContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             if (context.HttpContext.IsJsonApiRequest())
             {

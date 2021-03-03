@@ -1,7 +1,11 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+
+// @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class CompositeDbContext : DbContext
     {
         public DbSet<Car> Cars { get; set; }

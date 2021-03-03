@@ -13,10 +13,14 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     internal sealed class ChildNode<TResource> : IResourceNode where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
+        private readonly RelationshipsFromPreviousLayer<TResource> _relationshipsFromPreviousLayer;
+
         /// <inheritdoc />
         public RightType ResourceType { get; }
+
         /// <inheritdoc />
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
+
         /// <inheritdoc />
         public IEnumerable UniqueResources
         {
@@ -29,8 +33,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <inheritdoc />
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => _relationshipsFromPreviousLayer;
 
-        private readonly RelationshipsFromPreviousLayer<TResource> _relationshipsFromPreviousLayer;
-
         public ChildNode(RelationshipProxy[] nextLayerRelationships, RelationshipsFromPreviousLayer<TResource> prevLayerRelationships)
         {
             ResourceType = typeof(TResource);
@@ -39,7 +41,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         }
 
         /// <inheritdoc />
-       public void UpdateUnique(IEnumerable updated)
+        public void UpdateUnique(IEnumerable updated)
         {
             List<TResource> cast = updated.Cast<TResource>().ToList();
             foreach (var group in _relationshipsFromPreviousLayer)
@@ -59,22 +61,28 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 var proxy = group.Proxy;
                 var leftResources = group.LeftResources;
 
-                foreach (IIdentifiable left in leftResources)
-                {
-                    var currentValue = proxy.GetValue(left);
+                Reassign(leftResources, proxy, unique);
+            }
+        }
 
-                    if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
+        private void Reassign(IEnumerable<IIdentifiable> leftResources, RelationshipProxy proxy, HashSet<TResource> unique)
+        {
+            foreach (IIdentifiable left in leftResources)
+            {
+                var currentValue = proxy.GetValue(left);
+
+                if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
+                {
+                    var intersection = relationshipCollection.Intersect(unique, _comparer);
+                    IEnumerable typedCollection =
+                        TypeHelper.CopyToTypedCollection(intersection, relationshipCollection.GetType());
+                    proxy.SetValue(left, typedCollection);
+                }
+                else if (currentValue is IIdentifiable relationshipSingle)
+                {
+                    if (!unique.Intersect(new HashSet<IIdentifiable> {relationshipSingle}, _comparer).Any())
                     {
-                        var intersection = relationshipCollection.Intersect(unique, _comparer);
-                        IEnumerable typedCollection = TypeHelper.CopyToTypedCollection(intersection, relationshipCollection.GetType());
-                        proxy.SetValue(left, typedCollection);
-                    }
-                    else if (currentValue is IIdentifiable relationshipSingle)
-                    {
-                        if (!unique.Intersect(new HashSet<IIdentifiable> { relationshipSingle }, _comparer).Any())
-                        {
-                            proxy.SetValue(left, null);
-                        }
+                        proxy.SetValue(left, null);
                     }
                 }
             }

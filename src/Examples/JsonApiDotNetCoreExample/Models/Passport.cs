@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class Passport : Identifiable, IIsLockable
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class Passport : Identifiable, IIsLockable
     {
         [Attr]
         public bool IsLocked { get; set; }

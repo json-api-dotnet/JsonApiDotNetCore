@@ -49,11 +49,14 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 container = _genericProcessorFactory.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), targetResource);
                 _hookContainers[targetResource] = container;
             }
-            if (container == null) return null;
+            if (container == null)
+            {
+                return null;
+            }
 
             // if there was a container, first check if it implements the hook we 
             // want to use it for.
-            List<ResourceHook> targetHooks;
+            IEnumerable<ResourceHook> targetHooks;
             if (hook == ResourceHook.None)
             {
                 CheckForTargetHookExistence();
@@ -61,12 +64,15 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             }
             else
             {
-                targetHooks = new List<ResourceHook> { hook };
+                targetHooks = hook.AsEnumerable();
             }
 
             foreach (ResourceHook targetHook in targetHooks)
             {
-                if (ShouldExecuteHook(targetResource, targetHook)) return container;
+                if (ShouldExecuteHook(targetResource, targetHook))
+                {
+                    return container;
+                }
             }
             return null;
         }
@@ -81,12 +87,16 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             var idType = TypeHelper.GetIdType(resourceTypeForRepository);
             var parameterizedGetWhere = GetType()
-                    .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)!
                     .MakeGenericMethod(resourceTypeForRepository, idType);
             var cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
             var ids = TypeHelper.CopyToList(cast.Select(i => i.GetTypedId()), idType);
-            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, new object[] { ids, relationshipsToNextLayer });
-            if (values == null) return null;
+            var values = (IEnumerable)parameterizedGetWhere.Invoke(this, ArrayFactory.Create<object>(ids, relationshipsToNextLayer));
+            if (values == null)
+            {
+                return null;
+            }
+
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(resourceTypeForRepository), TypeHelper.CopyToList(values, resourceTypeForRepository));
         }
 
@@ -94,7 +104,11 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             var resourceType = typeof(TResource);
             var dbValues = LoadDbValues(resourceType, resources, hook, relationships)?.Cast<TResource>();
-            if (dbValues == null) return null;
+            if (dbValues == null)
+            {
+                return null;
+            }
+
             return new HashSet<TResource>(dbValues);
         }
 
@@ -102,9 +116,15 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             var discovery = GetHookDiscovery(resourceType);
             if (discovery.DatabaseValuesDisabledHooks.Contains(hook))
+            {
                 return false;
+            }
+
             if (discovery.DatabaseValuesEnabledHooks.Contains(hook))
+            {
                 return true;
+            }
+
             return _options.LoadDatabaseValues;
         }
 
@@ -117,8 +137,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         private void CheckForTargetHookExistence()
         {
             if (!_targetedHooksForRelatedResources.Any())
+            {
                 throw new InvalidOperationException("Something is not right in the breadth first traversal of resource hook: " +
                     "trying to get meta information when no allowed hooks are set");
+            }
         }
 
         private IHooksDiscovery GetHookDiscovery(Type resourceType)
@@ -180,50 +202,69 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
             IEnumerable existingRightResources = null)
         {
+            var existingRightResourceList = existingRightResources?.Cast<IIdentifiable>().ToList();
+
             var implicitlyAffected = new Dictionary<RelationshipAttribute, IEnumerable>();
             foreach (var kvp in leftResourcesByRelation)
             {
-                if (IsHasManyThrough(kvp, out var lefts, out var relationship)) continue;
+                if (IsHasManyThrough(kvp, out var lefts, out var relationship))
+                {
+                    continue;
+                }
 
                 // note that we don't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
                 var includedLefts = LoadDbValues(relationship.LeftType, lefts, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
 
-                foreach (IIdentifiable ip in includedLefts)
-                {
-                    IList dbRightResourceList = TypeHelper.CreateListFor(relationship.RightType);
-                    var relationshipValue = relationship.GetValue(ip);
-                    if (!(relationshipValue is IEnumerable))
-                    {
-                        if (relationshipValue != null) dbRightResourceList.Add(relationshipValue);
-                    }
-                    else
-                    {
-                        foreach (var item in (IEnumerable) relationshipValue)
-                        {
-                            dbRightResourceList.Add(item);
-                        }
-                    }
-
-                    var dbRightResourceListCast = dbRightResourceList.Cast<IIdentifiable>().ToList();
-                    if (existingRightResources != null) dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResources.Cast<IIdentifiable>(), _comparer).ToList();
-
-                    if (dbRightResourceListCast.Any())
-                    {
-                        if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
-                        {
-                            affected = TypeHelper.CreateListFor(relationship.RightType);
-                            implicitlyAffected[relationship] = affected;
-                        }
-
-                        foreach (var item in dbRightResourceListCast)
-                        {
-                            ((IList)affected).Add(item);
-                        }
-                    }
-                }
+                AddToImplicitlyAffected(includedLefts, relationship, existingRightResourceList, implicitlyAffected);
             }
 
             return implicitlyAffected.ToDictionary(kvp => kvp.Key, kvp => TypeHelper.CreateHashSetFor(kvp.Key.RightType, kvp.Value));
+        }
+
+        private void AddToImplicitlyAffected(IEnumerable includedLefts, RelationshipAttribute relationship, List<IIdentifiable> existingRightResourceList,
+            Dictionary<RelationshipAttribute, IEnumerable> implicitlyAffected)
+        {
+            foreach (IIdentifiable ip in includedLefts)
+            {
+                IList dbRightResourceList = TypeHelper.CreateListFor(relationship.RightType);
+                var relationshipValue = relationship.GetValue(ip);
+                if (!(relationshipValue is IEnumerable))
+                {
+                    if (relationshipValue != null)
+                    {
+                        dbRightResourceList.Add(relationshipValue);
+                    }
+                }
+                else
+                {
+                    AddToList(dbRightResourceList, (IEnumerable)relationshipValue);
+                }
+
+                var dbRightResourceListCast = dbRightResourceList.Cast<IIdentifiable>().ToList();
+                if (existingRightResourceList != null)
+                {
+                    dbRightResourceListCast = dbRightResourceListCast.Except(existingRightResourceList, _comparer).ToList();
+                }
+
+                if (dbRightResourceListCast.Any())
+                {
+                    if (!implicitlyAffected.TryGetValue(relationship, out IEnumerable affected))
+                    {
+                        affected = TypeHelper.CreateListFor(relationship.RightType);
+                        implicitlyAffected[relationship] = affected;
+                    }
+
+                    AddToList((IList)affected, dbRightResourceListCast);
+                }
+            }
+        }
+
+        private static void AddToList(IList list, IEnumerable itemsToAdd)
+        {
+            foreach (var item in itemsToAdd)
+            {
+                list.Add(item);
+            }
         }
 
         private bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp,

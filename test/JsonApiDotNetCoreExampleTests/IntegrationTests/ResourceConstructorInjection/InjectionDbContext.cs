@@ -1,9 +1,11 @@
-using System;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InjectionDbContext : DbContext
     {
         public ISystemClock SystemClock { get; }
@@ -14,7 +16,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
             : base(options)
         {
-            SystemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+
+            SystemClock = systemClock;
         }
     }
 }

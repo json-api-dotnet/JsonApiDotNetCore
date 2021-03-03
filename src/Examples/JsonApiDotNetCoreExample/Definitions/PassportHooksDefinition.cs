@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -9,7 +10,8 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public class PassportHooksDefinition : LockableHooksDefinition<Passport>
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    public sealed class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
         public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
         {

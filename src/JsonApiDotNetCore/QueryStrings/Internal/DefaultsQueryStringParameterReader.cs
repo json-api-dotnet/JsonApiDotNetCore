@@ -1,4 +1,4 @@
-using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class DefaultsQueryStringParameterReader : IDefaultsQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
@@ -17,14 +18,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public DefaultsQueryStringParameterReader(IJsonApiOptions options)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             SerializerDefaultValueHandling = options.SerializerSettings.DefaultValueHandling;
         }
 
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return _options.AllowQueryStringOverrideForSerializerDefaultValueHandling &&
                    !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Defaults);

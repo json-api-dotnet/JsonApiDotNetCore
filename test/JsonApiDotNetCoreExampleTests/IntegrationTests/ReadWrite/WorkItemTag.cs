@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkItemTag
     {
         public WorkItem Item { get; set; }

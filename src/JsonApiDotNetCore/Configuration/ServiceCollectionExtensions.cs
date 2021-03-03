@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Serialization.Building;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    [PublicAPI]
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -24,7 +26,7 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null,
             ICollection<Type> dbContextTypes = null)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             SetupApplicationBuilder(services, options, discovery, resources, mvcBuilder,
                 dbContextTypes ?? Array.Empty<Type>());
@@ -42,7 +44,7 @@ namespace JsonApiDotNetCore.Configuration
             IMvcCoreBuilder mvcBuilder = null)
             where TDbContext : DbContext
         {
-            return AddJsonApi(services, options, discovery, resources, mvcBuilder, new[] {typeof(TDbContext)});
+            return AddJsonApi(services, options, discovery, resources, mvcBuilder, typeof(TDbContext).AsArray());
         }
 
         private static void SetupApplicationBuilder(IServiceCollection services, Action<JsonApiOptions> configureOptions,
@@ -66,7 +68,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddClientSerialization(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
             services.AddScoped<IRequestSerializer>(sp =>
@@ -83,7 +85,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             RegisterForConstructedType(services, typeof(TService), ServiceDiscoveryFacade.ServiceInterfaces);
 
@@ -96,7 +98,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentGuard.NotNull(services, nameof(services));
 
             RegisterForConstructedType(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryInterfaces);
 

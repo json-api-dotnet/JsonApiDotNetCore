@@ -1,5 +1,8 @@
-﻿namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
+using JetBrains.Annotations;
+
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Window
     {
         public int Id { get; set; }

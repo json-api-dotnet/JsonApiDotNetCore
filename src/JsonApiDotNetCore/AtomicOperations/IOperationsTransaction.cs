@@ -1,12 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <summary>
     /// Represents the overarching transaction in an atomic:operations request.
     /// </summary>
+    [PublicAPI]
     public interface IOperationsTransaction : IAsyncDisposable
     {
         /// <summary>

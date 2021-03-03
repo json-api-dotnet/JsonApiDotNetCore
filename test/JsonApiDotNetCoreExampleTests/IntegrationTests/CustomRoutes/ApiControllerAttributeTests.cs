@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         public async Task ApiController_attribute_transforms_NotFound_action_result_without_arguments_into_ProblemDetails()
         {
             // Arrange
-            var route = "/world-civilians/missing";
+            const string route = "/world-civilians/missing";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -31,7 +31,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
+
+            var error = responseDocument.Errors[0];
+            error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
         }
     }
 }

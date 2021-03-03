@@ -76,10 +76,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.Gone);
-            responseDocument.Errors[0].Title.Should().Be("The requested article is no longer available.");
-            responseDocument.Errors[0].Detail.Should().Be("Article with code 'X123' is no longer available.");
-            responseDocument.Errors[0].Meta.Data["support"].Should().Be("Please contact us for info about similar articles at company@email.com.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.Gone);
+            error.Title.Should().Be("The requested article is no longer available.");
+            error.Detail.Should().Be("Article with code 'X123' is no longer available.");
+            error.Meta.Data["support"].Should().Be("Please contact us for info about similar articles at company@email.com.");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
@@ -110,13 +112,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            var stackTraceLines =
-                ((JArray) responseDocument.Errors[0].Meta.Data["stackTrace"]).Select(token => token.Value<string>());
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
+            var stackTraceLines = ((JArray) error.Meta.Data["stackTrace"]).Select(token => token.Value<string>());
             stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);

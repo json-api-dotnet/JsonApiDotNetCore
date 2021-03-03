@@ -1,19 +1,15 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ResourceHooksStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public ResourceHooksStartup(IConfiguration configuration)
-            : base(configuration)
-        {
-        }
-
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);

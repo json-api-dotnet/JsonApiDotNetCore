@@ -1,22 +1,20 @@
-using System;
 using System.Collections.Generic;
 using Humanizer;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
     /// <summary>
     /// Produces unique names for lambda parameters.
     /// </summary>
+    [PublicAPI]
     public sealed class LambdaParameterNameFactory
     {
         private readonly HashSet<string> _namesInScope = new HashSet<string>();
 
         public LambdaParameterNameScope Create(string typeName)
         {
-            if (typeName == null)
-            {
-                throw new ArgumentNullException(nameof(typeName));
-            }
+            ArgumentGuard.NotNull(typeName, nameof(typeName));
 
             string parameterName = typeName.Camelize();
             parameterName = EnsureNameIsUnique(parameterName);

@@ -1,8 +1,12 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 
+// @formatter:wrap_chained_method_calls chop_always
+
 namespace JsonApiDotNetCoreExample.Data
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class AppDbContext : DbContext
     {
         public DbSet<TodoItem> TodoItems { get; set; }
@@ -37,7 +41,7 @@ namespace JsonApiDotNetCoreExample.Data
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<TodoItem>()
-                .HasMany(t => t.ChildrenTodos)
+                .HasMany(t => t.ChildTodoItems)
                 .WithOne(t => t.ParentTodo);
 
             builder.Entity<Passport>()

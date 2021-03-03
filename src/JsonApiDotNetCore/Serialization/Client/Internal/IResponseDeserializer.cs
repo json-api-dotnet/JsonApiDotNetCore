@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Serialization.Client.Internal
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// except for in the tests. Exposed publicly to make testing easier or to implement
     /// server-to-server communication.
     /// </summary>
+    [PublicAPI]
     public interface IResponseDeserializer
     {
         /// <summary>

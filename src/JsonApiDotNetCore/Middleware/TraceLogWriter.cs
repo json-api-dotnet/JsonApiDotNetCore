@@ -42,9 +42,9 @@ namespace JsonApiDotNetCore.Middleware
 
             builder.Append("Entering ");
             builder.Append(memberName);
-            builder.Append("(");
+            builder.Append('(');
             WriteProperties(builder, parameters);
-            builder.Append(")");
+            builder.Append(')');
 
             return builder.ToString();
         }
@@ -82,9 +82,9 @@ namespace JsonApiDotNetCore.Middleware
             }
             else if (value is string stringValue)
             {
-                builder.Append("\"");
+                builder.Append('"');
                 builder.Append(stringValue);
-                builder.Append("\"");
+                builder.Append('"');
             }
             else
             {

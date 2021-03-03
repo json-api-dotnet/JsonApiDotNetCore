@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Provides metadata for a resource, such as its attributes and relationships.
     /// </summary>
+    [PublicAPI]
     public class ResourceContext
     {
         /// <summary>

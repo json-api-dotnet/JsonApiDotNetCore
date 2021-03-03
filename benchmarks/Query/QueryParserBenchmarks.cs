@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.QueryStrings;
@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Query
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter, SimpleJob(launchCount: 3, warmupCount: 10, targetCount: 20), MemoryDiagnoser]
     public class QueryParserBenchmarks
     {
@@ -43,11 +44,8 @@ namespace Benchmarks.Query
             JsonApiRequest request, IJsonApiOptions options, FakeRequestQueryStringAccessor queryStringAccessor)
         {
             var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
-            
-            var readers = new List<IQueryStringParameterReader>
-            {
-                sortReader
-            };
+
+            var readers = sortReader.AsEnumerable();
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
@@ -65,10 +63,7 @@ namespace Benchmarks.Query
             var defaultsReader = new DefaultsQueryStringParameterReader(options);
             var nullsReader = new NullsQueryStringParameterReader(options);
 
-            var readers = new List<IQueryStringParameterReader>
-            {
-                includeReader, filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader
-            };
+            var readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader, sparseFieldSetReader, paginationReader, defaultsReader, nullsReader);
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
@@ -94,15 +89,21 @@ namespace Benchmarks.Query
         [Benchmark]
         public void ComplexQuery() => Run(100, () =>
         {
-            var queryString = $"?filter[{BenchmarkResourcePublicNames.NameAttr}]=abc,eq:abc&sort=-{BenchmarkResourcePublicNames.NameAttr}&include=child&page[size]=1&fields[{BenchmarkResourcePublicNames.Type}]={BenchmarkResourcePublicNames.NameAttr}";
+            const string resourceName = BenchmarkResourcePublicNames.Type;
+            const string attrName = BenchmarkResourcePublicNames.NameAttr;
+
+            var queryString = $"?filter[{attrName}]=abc,eq:abc&sort=-{attrName}&include=child&page[size]=1&fields[{resourceName}]={attrName}";
 
             _queryStringAccessor.SetQueryString(queryString);
             _queryStringReaderForAll.ReadAll(null);
         });
 
-        private void Run(int iterations, Action action) { 
+        private void Run(int iterations, Action action)
+        {
             for (int i = 0; i < iterations; i++)
+            {
                 action();
+            }
         }
 
         private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor

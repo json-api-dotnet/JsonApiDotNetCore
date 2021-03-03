@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public class IncludeParser : QueryExpressionParser
     {
         private readonly Action<RelationshipAttribute, ResourceContext, string> _validateSingleRelationshipCallback;
@@ -21,7 +23,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public IncludeExpression Parse(string source, ResourceContext resourceContextInScope, int? maximumDepth)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             var expression = ParseInclude(maximumDepth);
@@ -36,10 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             ResourceFieldChainExpression firstChain =
                 ParseFieldChain(FieldChainRequirements.IsRelationship, "Relationship name expected.");
 
-            var chains = new List<ResourceFieldChainExpression>
-            {
-                firstChain
-            };
+            var chains = firstChain.AsList();
 
             while (TokenStack.Any())
             {

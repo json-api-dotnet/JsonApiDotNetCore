@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public abstract class Human : Identifiable
     {
         [Attr]

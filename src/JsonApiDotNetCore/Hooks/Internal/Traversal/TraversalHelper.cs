@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
         /// <summary>
         /// Creates a root node for breadth-first-traversal. Note that typically, in
-        /// JADNC, the root layer will be homogeneous. Also, because it is the first layer,
+        /// JsonApiDotNetCore, the root layer will be homogeneous. Also, because it is the first layer,
         /// there can be no relationships to previous layers, only to next layers.
         /// </summary>
         /// <returns>The root node.</returns>
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <param name="rootNode">Root node.</param>
         public NodeLayer CreateNextLayer(IResourceNode rootNode)
         {
-            return CreateNextLayer(new[] { rootNode });
+            return CreateNextLayer(rootNode.AsEnumerable());
         }
 
         /// <summary>
@@ -121,37 +121,18 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         private (Dictionary<RelationshipProxy, List<IIdentifiable>>, Dictionary<RelationshipProxy, List<IIdentifiable>>) ExtractResources(IEnumerable<IResourceNode> leftNodes)
         {
-            var leftResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();  // RelationshipAttr_prevLayer->currentLayer  => prevLayerResources
-            var rightResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>(); // RelationshipAttr_prevLayer->currentLayer   => currentLayerResources
+            // RelationshipAttr_prevLayer->currentLayer  => prevLayerResources
+            var leftResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
+
+            // RelationshipAttr_prevLayer->currentLayer  => currentLayerResources
+            var rightResourcesGrouped = new Dictionary<RelationshipProxy, List<IIdentifiable>>();
 
             foreach (var node in leftNodes)
             {
                 var leftResources = node.UniqueResources;
                 var relationships = node.RelationshipsToNextLayer;
-                foreach (IIdentifiable leftResource in leftResources)
-                {
-                    foreach (var proxy in relationships)
-                    {
-                        var relationshipValue = proxy.GetValue(leftResource);
-                        // skip this relationship if it's not populated
-                        if (!proxy.IsContextRelation && relationshipValue == null) continue;
-                        if (!(relationshipValue is IEnumerable rightResources))
-                        {
-                            // in the case of a to-one relationship, the assigned value
-                            // will not be a list. We therefore first wrap it in a list.
-                            var list = TypeHelper.CreateListFor(proxy.RightType);
-                            if (relationshipValue != null) list.Add(relationshipValue);
-                            rightResources = list;
-                        }
 
-                        var uniqueRightResources = UniqueInTree(rightResources.Cast<IIdentifiable>(), proxy.RightType);
-                        if (proxy.IsContextRelation || uniqueRightResources.Any())
-                        {
-                            AddToRelationshipGroup(rightResourcesGrouped, proxy, uniqueRightResources);
-                            AddToRelationshipGroup(leftResourcesGrouped, proxy, new[] { leftResource });
-                        }
-                    }
-                }
+                ExtractLeftResources(leftResources, relationships, rightResourcesGrouped, leftResourcesGrouped);
             }
 
             var processResourcesMethod = GetType().GetMethod(nameof(ProcessResources), BindingFlags.NonPublic | BindingFlags.Instance);
@@ -159,10 +140,54 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             {
                 var type = kvp.Key.RightType;
                 var list = TypeHelper.CopyToList(kvp.Value, type);
-                processResourcesMethod.MakeGenericMethod(type).Invoke(this, new object[] { list });
+                processResourcesMethod!.MakeGenericMethod(type).Invoke(this, ArrayFactory.Create<object>(list));
             }
 
             return (leftResourcesGrouped, rightResourcesGrouped);
+        }
+
+        private void ExtractLeftResources(IEnumerable leftResources, RelationshipProxy[] relationships, Dictionary<RelationshipProxy, List<IIdentifiable>> rightResourcesGrouped,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> leftResourcesGrouped)
+        {
+            foreach (IIdentifiable leftResource in leftResources)
+            {
+                ExtractLeftResource(leftResource, relationships, rightResourcesGrouped, leftResourcesGrouped);
+            }
+        }
+
+        private void ExtractLeftResource(IIdentifiable leftResource, RelationshipProxy[] relationships,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> rightResourcesGrouped,
+            Dictionary<RelationshipProxy, List<IIdentifiable>> leftResourcesGrouped)
+        {
+            foreach (var proxy in relationships)
+            {
+                var relationshipValue = proxy.GetValue(leftResource);
+                // skip this relationship if it's not populated
+                if (!proxy.IsContextRelation && relationshipValue == null)
+                {
+                    continue;
+                }
+
+                if (!(relationshipValue is IEnumerable rightResources))
+                {
+                    // in the case of a to-one relationship, the assigned value
+                    // will not be a list. We therefore first wrap it in a list.
+                    var list = TypeHelper.CreateListFor(proxy.RightType);
+                    if (relationshipValue != null)
+                    {
+                        list.Add(relationshipValue);
+                    }
+
+                    rightResources = list;
+                }
+
+                var uniqueRightResources = UniqueInTree(rightResources.Cast<IIdentifiable>(), proxy.RightType);
+                if (proxy.IsContextRelation || uniqueRightResources.Any())
+                {
+                    AddToRelationshipGroup(rightResourcesGrouped, proxy, uniqueRightResources);
+                    AddToRelationshipGroup(leftResourcesGrouped, proxy, leftResource.AsEnumerable());
+                }
+            }
         }
 
         /// <summary>
@@ -199,13 +224,21 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         {
             foreach (RelationshipAttribute attr in _resourceGraph.GetRelationships(type))
             {
-                if (!attr.CanInclude) continue;
+                if (!attr.CanInclude)
+                {
+                    continue;
+                }
+
                 if (!_relationshipProxies.TryGetValue(attr, out _))
                 {
                     RightType rightType = GetRightTypeFromRelationship(attr);
                     bool isContextRelation = false;
                     var relationshipsToUpdate = _targetedFields.Relationships;
-                    if (relationshipsToUpdate != null) isContextRelation = relationshipsToUpdate.Contains(attr);
+                    if (relationshipsToUpdate != null)
+                    {
+                        isContextRelation = relationshipsToUpdate.Contains(attr);
+                    }
+
                     var proxy = new RelationshipProxy(attr, rightType, isContextRelation);
                     _relationshipProxies[attr] = proxy;
                 }
@@ -290,7 +323,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         private IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
-            var cast = TypeHelper.CopyToList(relationshipsFromPrev, relationshipsFromPrev.First().GetType());
+            var relationshipsFromPrevList = relationshipsFromPrev.ToList();
+            var cast = TypeHelper.CopyToList(relationshipsFromPrevList, relationshipsFromPrevList.First().GetType());
             return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
         }
 

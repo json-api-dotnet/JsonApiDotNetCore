@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace Benchmarks.Serialization
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
     public class JsonApiDeserializerBenchmarks
     {
@@ -23,10 +24,7 @@ namespace Benchmarks.Serialization
                 Id = "1",
                 Attributes = new Dictionary<string, object>
                 {
-                    {
-                        "name",
-                        Guid.NewGuid().ToString()
-                    }
+                    ["name"] = Guid.NewGuid().ToString()
                 }
             }
         });
@@ -39,7 +37,10 @@ namespace Benchmarks.Serialization
             IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
             var targetedFields = new TargetedFields();
             var request = new JsonApiRequest();
-            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, new ResourceFactory(new ServiceContainer()), targetedFields, new HttpContextAccessor(), request, options);
+            var resourceFactory = new ResourceFactory(new ServiceContainer());
+            var httpContextAccessor = new HttpContextAccessor();
+
+            _jsonApiDeserializer = new RequestDeserializer(resourceGraph, resourceFactory, targetedFields, httpContextAccessor, request, options);
         }
 
         [Benchmark]

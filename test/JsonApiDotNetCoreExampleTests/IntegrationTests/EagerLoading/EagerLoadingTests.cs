@@ -224,7 +224,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
                 }
             };
 
-            var route = "/buildings";
+            const string route = "/buildings";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -238,15 +238,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             responseDocument.SingleData.Attributes["primaryDoorColor"].Should().BeNull();
             responseDocument.SingleData.Attributes["secondaryDoorColor"].Should().BeNull();
 
-            var newId = int.Parse(responseDocument.SingleData.Id);
+            var newBuildingId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
-                    .FirstOrDefaultAsync(building => building.Id == newId);
+                    .FirstWithIdOrDefaultAsync(newBuildingId);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuilding.Number);
@@ -300,11 +306,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
                 var buildingInDatabase = await dbContext.Buildings
                     .Include(building => building.PrimaryDoor)
                     .Include(building => building.SecondaryDoor)
                     .Include(building => building.Windows)
-                    .FirstOrDefaultAsync(building => building.Id == existingBuilding.Id);
+                    .FirstWithIdOrDefaultAsync(existingBuilding.Id);
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
                 buildingInDatabase.Should().NotBeNull();
                 buildingInDatabase.Number.Should().Be(newBuildingNumber);
@@ -340,8 +352,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var buildingInDatabase = await dbContext.Buildings
-                    .FirstOrDefaultAsync(building => building.Id == existingBuilding.Id);
+                var buildingInDatabase = await dbContext.Buildings.FirstWithIdOrDefaultAsync(existingBuilding.Id);
 
                 buildingInDatabase.Should().BeNull();
             });

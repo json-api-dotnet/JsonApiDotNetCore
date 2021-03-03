@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIncludeQueryStringParameterReader
     {
         private readonly IJsonApiOptions _options;
@@ -23,7 +24,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);
         }
 
@@ -42,7 +45,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Include);
@@ -82,7 +85,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 ? new ExpressionInScope(null, _includeExpression)
                 : new ExpressionInScope(null, IncludeExpression.Empty);
 
-            return new[] {expressionInScope};
+            return expressionInScope.AsArray();
         }
     }
 }

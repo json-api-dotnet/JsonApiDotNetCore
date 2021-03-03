@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -15,10 +16,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
+    [PublicAPI]
     public class LinkBuilder : ILinkBuilder
     {
-        private const string _pageSizeParameterName = "page[size]";
-        private const string _pageNumberParameterName = "page[number]";
+        private const string PageSizeParameterName = "page[size]";
+        private const string PageNumberParameterName = "page[number]";
 
         private readonly IResourceContextProvider _provider;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
@@ -32,11 +34,17 @@ namespace JsonApiDotNetCore.Serialization.Building
                            IResourceContextProvider provider,
                            IRequestQueryStringAccessor queryStringAccessor)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _paginationContext = paginationContext ?? throw new ArgumentNullException(nameof(paginationContext));
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            _queryStringAccessor = queryStringAccessor ?? throw new ArgumentNullException(nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
+            ArgumentGuard.NotNull(provider, nameof(provider));
+            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+
+            _options = options;
+            _request = request;
+            _paginationContext = paginationContext;
+            _provider = provider;
+            _queryStringAccessor = queryStringAccessor;
         }
 
         /// <inheritdoc />
@@ -106,12 +114,12 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             var builder = new StringBuilder();
             builder.Append(_request.BasePath);
-            builder.Append("/");
+            builder.Append('/');
             builder.Append(resourceContext.PublicName);
 
             if (_request.PrimaryId != null)
             {
-                builder.Append("/");
+                builder.Append('/');
                 builder.Append(_request.PrimaryId);
             }
 
@@ -122,7 +130,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (_request.Relationship != null)
             {
-                builder.Append("/");
+                builder.Append('/');
                 builder.Append(_request.Relationship.PublicName);
             }
 
@@ -150,8 +158,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             return GetSelfTopLevelLink(resourceContext, parameters =>
             {
-                var existingPageSizeParameterValue = parameters.ContainsKey(_pageSizeParameterName)
-                    ? parameters[_pageSizeParameterName]
+                var existingPageSizeParameterValue = parameters.ContainsKey(PageSizeParameterName)
+                    ? parameters[PageSizeParameterName]
                     : null;
 
                 PageSize newTopPageSize = Equals(pageSize, _options.DefaultPageSize) ? null : pageSize;
@@ -159,20 +167,20 @@ namespace JsonApiDotNetCore.Serialization.Building
                 string newPageSizeParameterValue = ChangeTopPageSize(existingPageSizeParameterValue, newTopPageSize);
                 if (newPageSizeParameterValue == null)
                 {
-                    parameters.Remove(_pageSizeParameterName);
+                    parameters.Remove(PageSizeParameterName);
                 }
                 else
                 {
-                    parameters[_pageSizeParameterName] = newPageSizeParameterValue;
+                    parameters[PageSizeParameterName] = newPageSizeParameterValue;
                 }
 
                 if (pageOffset == 1)
                 {
-                    parameters.Remove(_pageNumberParameterName);
+                    parameters.Remove(PageNumberParameterName);
                 }
                 else
                 {
-                    parameters[_pageNumberParameterName] = pageOffset.ToString();
+                    parameters[PageNumberParameterName] = pageOffset.ToString();
                 }
             });
         }
@@ -221,14 +229,14 @@ namespace JsonApiDotNetCore.Serialization.Building
             var parser = new PaginationParser(_provider);
             var paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
-            return new List<PaginationElementQueryStringValueExpression>(paginationExpression.Elements);
+            return paginationExpression.Elements.ToList();
         }
 
         /// <inheritdoc />
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
-            if (resourceName == null) throw new ArgumentNullException(nameof(resourceName));
-            if (id == null) throw new ArgumentNullException(nameof(id));
+            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNull(id, nameof(id));
 
             var resourceContext = _provider.GetResourceContext(resourceName);
             if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
@@ -242,8 +250,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(parent, nameof(parent));
 
             var parentResourceContext = _provider.GetResourceContext(parent.GetType());
             var childNavigation = relationship.PublicName;

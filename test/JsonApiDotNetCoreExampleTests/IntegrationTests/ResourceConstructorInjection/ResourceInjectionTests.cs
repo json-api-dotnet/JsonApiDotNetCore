@@ -161,7 +161,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 }
             };
 
-            var route = "/giftCertificates?include=issuer";
+            const string route = "/giftCertificates?include=issuer";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -184,8 +184,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 var certificateInDatabase = await dbContext.GiftCertificates
-                    .Include(giftCertificate => giftCertificate.Issuer)
-                    .FirstAsync(giftCertificate => giftCertificate.Id == newCertificateId);
+                    .Include(certificate => certificate.Issuer)
+                    .FirstWithIdAsync(newCertificateId);
 
                 certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
@@ -253,7 +253,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             {
                 var officeInDatabase = await dbContext.PostOffice
                     .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstAsync(postOffice => postOffice.Id == existingOffice.Id);
+                    .FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.Address.Should().Be(newAddress);
 
@@ -286,8 +286,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var officeInDatabase = await dbContext.PostOffice
-                    .FirstOrDefaultAsync(postOffice => postOffice.Id == existingOffice.Id);
+                var officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
 
                 officeInDatabase.Should().BeNull();
             });
@@ -297,7 +296,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
-            var route = "/postOffices/99999999";
+            const string route = "/postOffices/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -306,9 +305,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'postOffices' with ID '99999999' does not exist.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("The requested resource does not exist.");
+            error.Detail.Should().Be("Resource of type 'postOffices' with ID '99999999' does not exist.");
         }
 
         [Fact]
@@ -352,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             {
                 var officeInDatabase = await dbContext.PostOffice
                     .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstAsync(postOffice => postOffice.Id == existingOffice.Id);
+                    .FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.GiftCertificates.Should().HaveCount(2);
             });

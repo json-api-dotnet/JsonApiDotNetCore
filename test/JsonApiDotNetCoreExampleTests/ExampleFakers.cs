@@ -4,6 +4,9 @@ using JsonApiDotNetCoreExample.Models;
 using TestBuildingBlocks;
 using Person = JsonApiDotNetCoreExample.Models.Person;
 
+// @formatter:wrap_chained_method_calls chop_always
+// @formatter:keep_existing_linebreaks true
+
 namespace JsonApiDotNetCoreExampleTests
 {
     internal sealed class ExampleFakers : FakerContainer

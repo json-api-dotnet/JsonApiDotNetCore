@@ -15,7 +15,8 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Controllers
 {
-    [DisableRoutingConvention, Route("/operations/musicTracks/create")]
+    [DisableRoutingConvention]
+    [Route("/operations/musicTracks/create")]
     public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController
     {
         public CreateMusicTrackOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,

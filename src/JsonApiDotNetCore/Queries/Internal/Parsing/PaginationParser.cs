@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public class PaginationParser : QueryExpressionParser
     {
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
@@ -21,7 +23,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public PaginationQueryStringValueExpression Parse(string source, ResourceContext resourceContextInScope)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             var expression = ParsePagination();

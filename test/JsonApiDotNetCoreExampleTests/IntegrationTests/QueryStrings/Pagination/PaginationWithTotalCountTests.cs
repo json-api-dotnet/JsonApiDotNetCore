@@ -15,7 +15,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
     public sealed class PaginationWithTotalCountTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
-        private const int _defaultPageSize = 5;
+        private const string HostPrefix = "http://localhost";
+        private const int DefaultPageSize = 5;
 
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
-            options.DefaultPageSize = new PageSize(_defaultPageSize);
+            options.DefaultPageSize = new PageSize(DefaultPageSize);
             options.MaximumPageSize = null;
             options.MaximumPageNumber = null;
             options.AllowUnknownQueryStringParameters = true;
@@ -45,11 +46,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?page[number]=2&page[size]=1";
+            const string route = "/blogPosts?page[number]=2&page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -61,8 +61,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogPosts?page[size]=1");
             responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -89,10 +89,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
@@ -120,11 +122,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1");
+            responseDocument.Links.Next.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1");
         }
 
         [Fact]
@@ -148,10 +150,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Fact]
@@ -169,7 +173,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=posts&page[number]=posts:2&page[size]=2,posts:1";
+            const string route = "/blogs?include=posts&page[number]=posts:2&page[size]=2,posts:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -184,9 +188,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(blogs[1].Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogs?include=posts&page[size]=2,posts:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/blogs?include=posts&page[number]=2&page[size]=2,posts:1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogs?include=posts&page[size]=2,posts:1");
+            responseDocument.Links.Last.Should().Be(HostPrefix + "/blogs?include=posts&page[number]=2&page[size]=2,posts:1");
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
@@ -218,7 +222,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -250,8 +254,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogs/{blog.StringId}/relationships/posts?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/relationships/posts?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -297,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             options.DisableTopPagination = true;
             options.DisableChildrenPagination = false;
 
-            var route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
+            const string route = "/blogPosts?include=labels&page[number]=labels:2&page[size]=labels:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -312,8 +316,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(posts[1].BlogPostLabels.Skip(1).First().Label.StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogPosts?include=labels&page[size]=labels:1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + "/blogPosts?include=labels&page[size]=labels:1");
             responseDocument.Links.Last.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
@@ -340,7 +344,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.Add(post);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -356,8 +359,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(1).Label.StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be($"http://localhost/blogPosts/{post.StringId}/relationships/labels?page[size]=1");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(HostPrefix + $"/blogPosts/{post.StringId}/relationships/labels?page[size]=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
@@ -379,9 +382,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogs?include=owner.posts.comments&" +
-                        "page[size]=1,owner.posts:1,owner.posts.comments:1&" +
-                        "page[number]=2,owner.posts:2,owner.posts.comments:2";
+            const string route = "/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1&" +
+                "page[number]=2,owner.posts:2,owner.posts.comments:2";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -397,10 +399,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
 
+            const string linkPrefix = HostPrefix + "/blogs?include=owner.posts.comments";
+
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
-            responseDocument.Links.First.Should().Be("http://localhost/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1");
-            responseDocument.Links.Last.Should().Be("http://localhost/blogs?include=owner.posts.comments&page[size]=1,owner.posts:1,owner.posts.comments:1&page[number]=2");
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Links.First.Should().Be(linkPrefix + "&page[size]=1,owner.posts:1,owner.posts.comments:1");
+            responseDocument.Links.Last.Should().Be(linkPrefix + "&page[size]=1,owner.posts:1,owner.posts.comments:1&page[number]=2");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
@@ -409,7 +413,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_scope()
         {
             // Arrange
-            var route = "/webAccounts?page[number]=doesNotExist:1";
+            const string route = "/webAccounts?page[number]=doesNotExist:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -418,17 +422,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
         public async Task Cannot_paginate_in_unknown_nested_scope()
         {
             // Arrange
-            var route = "/webAccounts?page[size]=posts.doesNotExist:1";
+            const string route = "/webAccounts?page[size]=posts.doesNotExist:1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -437,10 +443,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified paging is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified paging is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Fact]
@@ -472,11 +480,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData[1].Id.Should().Be(blog.Posts[1].StringId);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().Be($"http://localhost/blogs/{blog.StringId}/posts?page[number]=2");
+            responseDocument.Links.Next.Should().Be(HostPrefix + $"/blogs/{blog.StringId}/posts?page[number]=2");
         }
 
         [Fact]
@@ -506,7 +514,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Should().HaveCount(25);
 
             responseDocument.Links.Should().NotBeNull();
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().BeNull();
@@ -524,7 +532,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             var account = _fakers.WebAccount.Generate();
             account.UserName = "&" + account.UserName;
 
-            const int totalCount = 3 * _defaultPageSize + 3;
+            const int totalCount = 3 * DefaultPageSize + 3;
             var posts = _fakers.BlogPost.Generate(totalCount);
 
             foreach (var post in posts)
@@ -536,7 +544,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -550,11 +557,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Self.Should().Be("http://localhost" + route);
+            responseDocument.Links.Self.Should().Be(HostPrefix + route);
 
             if (firstLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, firstLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, firstLink.Value);
                 responseDocument.Links.First.Should().Be(expected);
             }
             else
@@ -564,7 +571,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (prevLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, prevLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, prevLink.Value);
                 responseDocument.Links.Prev.Should().Be(expected);
             }
             else
@@ -574,7 +581,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (nextLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, nextLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, nextLink.Value);
                 responseDocument.Links.Next.Should().Be(expected);
             }
             else
@@ -584,7 +591,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 
             if (lastLink != null)
             {
-                var expected = "http://localhost" + SetPageNumberInUrl(routePrefix, lastLink.Value);
+                var expected = HostPrefix + SetPageNumberInUrl(routePrefix, lastLink.Value);
                 responseDocument.Links.Last.Should().Be(expected);
             }
             else

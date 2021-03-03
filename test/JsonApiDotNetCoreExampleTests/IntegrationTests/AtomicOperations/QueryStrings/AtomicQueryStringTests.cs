@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
     public sealed class AtomicQueryStringTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private static readonly DateTime _frozenTime = 30.July(2018).At(13, 46, 12);
+        private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
 
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             {
                 services.AddControllersFromExampleProject();
 
-                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = _frozenTime});
+                services.AddSingleton<ISystemClock>(new FrozenSystemClock {UtcNow = FrozenTime});
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
             });
 
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?include=recordCompanies";
+            const string route = "/operations?include=recordCompanies";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -70,10 +70,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'include' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -98,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?filter=equals(id,'1')";
+            const string route = "/operations?filter=equals(id,'1')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -107,10 +109,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("filter");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'filter' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("filter");
         }
 
         [Fact]
@@ -135,7 +139,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?sort=-id";
+            const string route = "/operations?sort=-id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -144,10 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("sort");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'sort' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("sort");
         }
 
         [Fact]
@@ -172,7 +178,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?page[number]=1";
+            const string route = "/operations?page[number]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -181,10 +187,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[number]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'page[number]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("page[number]");
         }
 
         [Fact]
@@ -209,7 +217,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?page[size]=1";
+            const string route = "/operations?page[size]=1";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -218,10 +226,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("page[size]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'page[size]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("page[size]");
         }
 
         [Fact]
@@ -246,7 +256,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?fields[recordCompanies]=id";
+            const string route = "/operations?fields[recordCompanies]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -255,10 +265,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("fields[recordCompanies]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
+            error.Detail.Should().Be("The parameter 'fields[recordCompanies]' cannot be used at this endpoint.");
+            error.Source.Parameter.Should().Be("fields[recordCompanies]");
         }
 
         [Fact]
@@ -266,19 +278,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         {
             // Arrange
             var musicTracks = _fakers.MusicTrack.Generate(3);
-            musicTracks[0].ReleasedAt = _frozenTime.AddMonths(5);
-            musicTracks[1].ReleasedAt = _frozenTime.AddMonths(-5);
-            musicTracks[2].ReleasedAt = _frozenTime.AddMonths(-1);
+            musicTracks[0].ReleasedAt = FrozenTime.AddMonths(5);
+            musicTracks[1].ReleasedAt = FrozenTime.AddMonths(-5);
+            musicTracks[2].ReleasedAt = FrozenTime.AddMonths(-1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<MusicTrack>();
                 dbContext.MusicTracks.AddRange(musicTracks);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/musicTracks?isRecentlyReleased=true";
+            const string route = "/musicTracks?isRecentlyReleased=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -315,7 +326,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?isRecentlyReleased=true";
+            const string route = "/operations?isRecentlyReleased=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -324,10 +335,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Unknown query string parameter.");
-            responseDocument.Errors[0].Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("isRecentlyReleased");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Unknown query string parameter.");
+            error.Detail.Should().Be("Query string parameter 'isRecentlyReleased' is unknown. " +
+                "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
+            error.Source.Parameter.Should().Be("isRecentlyReleased");
         }
 
         [Fact]
@@ -357,7 +371,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?defaults=false";
+            const string route = "/operations?defaults=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -370,7 +384,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
         }
 
         [Fact]
@@ -400,7 +414,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                 }
             };
 
-            var route = "/operations?nulls=false";
+            const string route = "/operations?nulls=false";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -413,7 +427,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
             responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
             responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength, 0.00000000001M);
+            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
         }
     }
 }

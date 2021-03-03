@@ -1,34 +1,31 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
+    [PublicAPI]
     public static class SparseFieldSetExpressionExtensions
     {
         public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,
             Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (fieldSelector == null)
-            {
-                throw new ArgumentNullException(nameof(fieldSelector));
-            }
+            ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            if (resourceGraph == null)
-            {
-                throw new ArgumentNullException(nameof(resourceGraph));
-            }
+            var newSparseFieldSet = sparseFieldSet;
 
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = IncludeField(sparseFieldSet, field);
+                newSparseFieldSet = IncludeField(newSparseFieldSet, field);
             }
 
-            return sparseFieldSet;
+            return newSparseFieldSet;
         }
 
         private static SparseFieldSetExpression IncludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToInclude)
@@ -47,22 +44,17 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
-            if (fieldSelector == null)
-            {
-                throw new ArgumentNullException(nameof(fieldSelector));
-            }
+            ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            if (resourceGraph == null)
-            {
-                throw new ArgumentNullException(nameof(resourceGraph));
-            }
+            var newSparseFieldSet = sparseFieldSet;
 
             foreach (var field in resourceGraph.GetFields(fieldSelector))
             {
-                sparseFieldSet = ExcludeField(sparseFieldSet, field);
+                newSparseFieldSet = ExcludeField(newSparseFieldSet, field);
             }
 
-            return sparseFieldSet;
+            return newSparseFieldSet;
         }
 
         private static SparseFieldSetExpression ExcludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToExclude)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal
     /// <summary>
     /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider"/>s and invokes <see cref="IResourceDefinition{TResource, TId}.OnApplySparseFieldSet"/> on them.
     /// </summary>
+    [PublicAPI]
     public sealed class SparseFieldSetCache
     {
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
@@ -19,47 +21,58 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public SparseFieldSetCache(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
-            if (constraintProviders == null) throw new ArgumentNullException(nameof(constraintProviders));
-            _resourceDefinitionAccessor = resourceDefinitionAccessor ?? throw new ArgumentNullException(nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _lazySourceTable = new Lazy<IDictionary<ResourceContext, HashSet<ResourceFieldAttribute>>>(() => BuildSourceTable(constraintProviders));
             _visitedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
         }
 
         private static IDictionary<ResourceContext, HashSet<ResourceFieldAttribute>> BuildSourceTable(IEnumerable<IQueryConstraintProvider> constraintProviders)
         {
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var sparseFieldTables = constraintProviders
                 .SelectMany(provider => provider.GetConstraints())
                 .Where(constraint => constraint.Scope == null)
                 .Select(constraint => constraint.Expression)
                 .OfType<SparseFieldTableExpression>()
                 .Select(expression => expression.Table)
+                .SelectMany(table => table)
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             var mergedTable = new Dictionary<ResourceContext, HashSet<ResourceFieldAttribute>>();
 
-            foreach (var sparseFieldTable in sparseFieldTables)
+            foreach (var (resourceContext, sparseFieldSet) in sparseFieldTables)
             {
-                foreach (var (resourceContext, sparseFieldSet) in sparseFieldTable)
+                if (!mergedTable.ContainsKey(resourceContext))
                 {
-                    if (!mergedTable.ContainsKey(resourceContext))
-                    {
-                        mergedTable[resourceContext] = new HashSet<ResourceFieldAttribute>();
-                    }
-
-                    foreach (var field in sparseFieldSet.Fields)
-                    {
-                        mergedTable[resourceContext].Add(field);
-                    }
+                    mergedTable[resourceContext] = new HashSet<ResourceFieldAttribute>();
                 }
+
+                AddSparseFieldsToSet(sparseFieldSet.Fields, mergedTable[resourceContext]);
             }
 
             return mergedTable;
         }
 
+        private static void AddSparseFieldsToSet(IReadOnlyCollection<ResourceFieldAttribute> sparseFieldsToAdd,
+            HashSet<ResourceFieldAttribute> sparseFieldSet)
+        {
+            foreach (var field in sparseFieldsToAdd)
+            {
+                sparseFieldSet.Add(field);
+            }
+        }
+
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             if (!_visitedTable.ContainsKey(resourceContext))
             {
@@ -81,10 +94,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
-            var inputExpression = new SparseFieldSetExpression(new []{idAttribute});
+            var inputExpression = new SparseFieldSetExpression(idAttribute.AsArray());
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
             var outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceContext.ResourceType, inputExpression);
@@ -99,6 +112,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         public IReadOnlyCollection<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceContext resourceContext)
         {
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+
             if (!_visitedTable.ContainsKey(resourceContext))
             {
                 var inputFields = _lazySourceTable.Value.ContainsKey(resourceContext)
@@ -127,7 +142,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private HashSet<ResourceFieldAttribute> GetResourceFields(ResourceContext resourceContext)
         {
-            if (resourceContext == null) throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
             var fieldSet = new HashSet<ResourceFieldAttribute>();
 

@@ -2,11 +2,14 @@ using System;
 using Bogus;
 using TestBuildingBlocks;
 
+// @formatter:wrap_chained_method_calls chop_always
+// @formatter:keep_existing_linebreaks true
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 {
     internal sealed class SerializationFakers : FakerContainer
     {
-        private static readonly TimeSpan[] _meetingDurations =
+        private static readonly TimeSpan[] MeetingDurations =
         {
             TimeSpan.FromMinutes(15),
             TimeSpan.FromMinutes(30),
@@ -19,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
                 .UseSeed(GetFakerSeed())
                 .RuleFor(meeting => meeting.Title, f => f.Lorem.Word())
                 .RuleFor(meeting => meeting.StartTime, f => TruncateToWholeMilliseconds(f.Date.FutureOffset()))
-                .RuleFor(meeting => meeting.Duration, f => f.PickRandom(_meetingDurations))
+                .RuleFor(meeting => meeting.Duration, f => f.PickRandom(MeetingDurations))
                 .RuleFor(meeting => meeting.Latitude, f => f.Address.Latitude())
                 .RuleFor(meeting => meeting.Longitude, f => f.Address.Longitude()));
 

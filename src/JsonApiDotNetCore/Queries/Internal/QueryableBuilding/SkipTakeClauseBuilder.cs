@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Transforms <see cref="PaginationExpression"/> into <see cref="Queryable.Skip{TSource}"/> and <see cref="Queryable.Take{TSource}"/> calls.
     /// </summary>
+    [PublicAPI]
     public class SkipTakeClauseBuilder : QueryClauseBuilder<object>
     {
         private readonly Expression _source;
@@ -16,16 +18,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         public SkipTakeClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+
+            _source = source;
+            _extensionType = extensionType;
         }
 
         public Expression ApplySkipTake(PaginationExpression expression)
         {
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
+            ArgumentGuard.NotNull(expression, nameof(expression));
 
             return Visit(expression, null);
         }
@@ -53,10 +55,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression constant = CreateTupleAccessExpressionForConstant(value, typeof(int));
 
-            return Expression.Call(_extensionType, operationName, new[]
-            {
-                LambdaScope.Parameter.Type
-            }, source, constant);
+            return Expression.Call(_extensionType, operationName, LambdaScope.Parameter.Type.AsArray(), source, constant);
         }
     }
 }

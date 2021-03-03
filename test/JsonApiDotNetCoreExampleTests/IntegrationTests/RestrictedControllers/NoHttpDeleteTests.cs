@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Can_get_resources()
         {
             // Arrange
-            var route = "/sofas";
+            const string route = "/sofas";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            var route = "/sofas";
+            const string route = "/sofas";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -110,9 +110,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
-            responseDocument.Errors[0].Title.Should().Be("The request method is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource does not support DELETE requests.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
+            error.Title.Should().Be("The request method is not allowed.");
+            error.Detail.Should().Be("Resource does not support DELETE requests.");
         }
     }
 }

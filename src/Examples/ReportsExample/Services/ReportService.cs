@@ -1,13 +1,14 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 using ReportsExample.Models;
 
 namespace ReportsExample.Services
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public class ReportService : IGetAllService<Report>
     {
         private readonly ILogger<ReportService> _logger;
@@ -21,12 +22,12 @@ namespace ReportsExample.Services
         {
             _logger.LogInformation("GetAsync");
 
-            IReadOnlyCollection<Report> reports = GetReports().ToList();
+            var reports = GetReports();
 
             return Task.FromResult(reports);
         }
 
-        private IEnumerable<Report> GetReports()
+        private IReadOnlyCollection<Report> GetReports()
         {
             return new List<Report>
             {

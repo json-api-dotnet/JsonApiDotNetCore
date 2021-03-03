@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Resources;
@@ -15,11 +15,12 @@ namespace JsonApiDotNetCore.Repositories
     /// Note that by using this workaround, nested filtering, paging and sorting all remain broken in EF Core 3.1 when using injected parameters in resources.
     /// But at least it enables simple top-level queries to succeed without an exception.
     /// </remarks>
+    [PublicAPI]
     public sealed class MemoryLeakDetectionBugRewriter
     {
         public QueryLayer Rewrite(QueryLayer queryLayer)
         {
-            if (queryLayer == null) throw new ArgumentNullException(nameof(queryLayer));
+            ArgumentGuard.NotNull(queryLayer, nameof(queryLayer));
 
             return RewriteLayer(queryLayer);
         }

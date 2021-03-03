@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -12,7 +11,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public bool CanRead(InputFormatterContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             return context.HttpContext.IsJsonApiRequest();
         }
@@ -20,7 +19,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
             return await reader.ReadAsync(context);

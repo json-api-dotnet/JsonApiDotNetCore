@@ -1,12 +1,13 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class UpdateProcessor<TResource, TId> : IUpdateProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
@@ -14,14 +15,16 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
 
         public UpdateProcessor(IUpdateService<TResource, TId> service)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            ArgumentGuard.NotNull(service, nameof(service));
+
+            _service = service;
         }
 
         /// <inheritdoc />
         public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation,
             CancellationToken cancellationToken)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            ArgumentGuard.NotNull(operation, nameof(operation));
 
             var resource = (TResource) operation.Resource;
             var updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);

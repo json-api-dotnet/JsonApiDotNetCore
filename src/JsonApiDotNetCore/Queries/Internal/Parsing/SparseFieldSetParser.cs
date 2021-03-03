@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public class SparseFieldSetParser : QueryExpressionParser
     {
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
@@ -20,7 +22,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public SparseFieldSetExpression Parse(string source, ResourceContext resourceContext)
         {
-            _resourceContext = resourceContext ?? throw new ArgumentNullException(nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+
+            _resourceContext = resourceContext;
+
             Tokenize(source);
 
             var expression = ParseSparseFieldSet();
@@ -56,7 +61,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
 
-            return new[] {field};
+            return field.AsArray();
         }
     }
 }

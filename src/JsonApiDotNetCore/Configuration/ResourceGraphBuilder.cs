@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Builds and configures the <see cref="ResourceGraph"/>.
     /// </summary>
+    [PublicAPI]
     public class ResourceGraphBuilder
     {
         private readonly IJsonApiOptions _options;
@@ -20,9 +22,10 @@ namespace JsonApiDotNetCore.Configuration
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _options = options;
             _logger = loggerFactory.CreateLogger<ResourceGraphBuilder>();
         }
 
@@ -80,21 +83,24 @@ namespace JsonApiDotNetCore.Configuration
         /// </param>
         public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_resources.All(e => e.ResourceType != resourceType))
+            if (_resources.Any(e => e.ResourceType == resourceType))
             {
-                if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
-                {
-                    publicName ??= FormatResourceName(resourceType);
-                    idType ??= TypeLocator.TryGetIdType(resourceType);
-                    var resourceContext = CreateResourceContext(publicName, resourceType, idType);
-                    _resources.Add(resourceContext);
-                }
-                else
-                {
-                    _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
-                }
+                return this;
+            }
+
+            if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
+            {
+                var effectivePublicName = publicName ?? FormatResourceName(resourceType);
+                var effectiveIdType = idType ?? TypeLocator.TryGetIdType(resourceType);
+                
+                var resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
+                _resources.Add(resourceContext);
+            }
+            else
+            {
+                _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
             }
 
             return this;
@@ -112,7 +118,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             var attributes = new List<AttrAttribute>();
 
@@ -136,7 +142,9 @@ namespace JsonApiDotNetCore.Configuration
                 }
 
                 if (attribute == null)
+                {
                     continue;
+                }
 
                 attribute.PublicName ??= FormatPropertyName(property);
                 attribute.Property = property;
@@ -153,14 +161,17 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             var attributes = new List<RelationshipAttribute>();
             var properties = resourceType.GetProperties();
             foreach (var prop in properties)
             {
                 var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
-                if (attribute == null) continue;
+                if (attribute == null)
+                {
+                    continue;
+                }
 
                 attribute.Property = prop;
                 attribute.PublicName ??= FormatPropertyName(prop);
@@ -172,11 +183,17 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     var throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
                     if (throughProperty == null)
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                    {
+                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
+                            $"Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
+                    }
 
                     var throughType = TryGetThroughType(throughProperty);
                     if (throughType == null)
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                    {
+                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
+                            $"Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
+                    }
 
                     // ICollection<ArticleTag>
                     hasManyThroughAttribute.ThroughProperty = throughProperty;
@@ -249,12 +266,13 @@ namespace JsonApiDotNetCore.Configuration
 
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
         {
-            if (relationship == null) throw new ArgumentNullException(nameof(relationship));
-            if (property == null) throw new ArgumentNullException(nameof(property));
+            ArgumentGuard.NotNull(relationship, nameof(relationship));
+            ArgumentGuard.NotNull(property, nameof(property));
 
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
             if (recursionDepth >= 500)
@@ -268,7 +286,10 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var property in properties)
             {
                 var attribute = (EagerLoadAttribute) property.GetCustomAttribute(typeof(EagerLoadAttribute));
-                if (attribute == null) continue;
+                if (attribute == null)
+                {
+                    continue;
+                }
 
                 Type innerType = TypeOrElementType(property.PropertyType);
                 attribute.Children = GetEagerLoads(innerType, recursionDepth + 1);
@@ -290,13 +311,13 @@ namespace JsonApiDotNetCore.Configuration
 
         private string FormatResourceName(Type resourceType)
         {
-            var formatter = new ResourceNameFormatter(_options);
+            var formatter = new ResourceNameFormatter(_options.SerializerNamingStrategy);
             return formatter.FormatResourceName(resourceType);
         }
 
         private string FormatPropertyName(PropertyInfo resourceProperty)
         {
-            return _options.SerializerContractResolver.NamingStrategy.GetPropertyName(resourceProperty.Name, false);
+            return _options.SerializerNamingStrategy.GetPropertyName(resourceProperty.Name, false);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Linq;
 using Castle.DynamicProxy;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -75,15 +76,17 @@ namespace UnitTests.Internal
             Assert.Equal(typeof(Bar), result.ResourceType);
         }
 
-        private class Foo { }
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class Foo { }
 
-        private class TestContext : DbContext
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class TestContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }
         }
 
+        // ReSharper disable once ClassCanBeSealed.Global
+        // ReSharper disable once MemberCanBePrivate.Global
         public class Bar : Identifiable { }
-
     }
-
 }

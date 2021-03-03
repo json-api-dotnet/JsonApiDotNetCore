@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -9,18 +10,21 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents a lookup table of sparse fieldsets per resource type.
     /// </summary>
+    [PublicAPI]
     public class SparseFieldTableExpression : QueryExpression
     {
         public IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> Table { get; }
 
         public SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> table)
         {
-            Table = table ?? throw new ArgumentNullException(nameof(table));
+            ArgumentGuard.NotNull(table, nameof(table));
 
             if (!table.Any())
             {
                 throw new ArgumentException("Must have one or more entries.", nameof(table));
             }
+
+            Table = table;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -36,13 +40,13 @@ namespace JsonApiDotNetCore.Queries.Expressions
             {
                 if (builder.Length > 0)
                 {
-                    builder.Append(",");
+                    builder.Append(',');
                 }
 
                 builder.Append(resource.PublicName);
-                builder.Append("(");
+                builder.Append('(');
                 builder.Append(fields);
-                builder.Append(")");
+                builder.Append(')');
             }
 
             return builder.ToString();

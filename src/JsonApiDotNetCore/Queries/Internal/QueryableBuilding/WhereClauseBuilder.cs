@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,9 +13,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <summary>
     /// Transforms <see cref="FilterExpression"/> into <see cref="Queryable.Where{TSource}(IQueryable{TSource}, Expression{Func{TSource,bool}})"/> calls.
     /// </summary>
+    [PublicAPI]
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
-        private static readonly ConstantExpression _nullConstant = Expression.Constant(null);
+        private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
         private readonly Type _extensionType;
@@ -22,16 +24,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
             : base(lambdaScope)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _extensionType = extensionType ?? throw new ArgumentNullException(nameof(extensionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+
+            _source = source;
+            _extensionType = extensionType;
         }
 
         public Expression ApplyWhere(FilterExpression filter)
         {
-            if (filter == null)
-            {
-                throw new ArgumentNullException(nameof(filter));
-            }
+            ArgumentGuard.NotNull(filter, nameof(filter));
 
             Expression body = Visit(filter, null);
             LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);
@@ -41,10 +43,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression WhereExtensionMethodCall(LambdaExpression predicate)
         {
-            return Expression.Call(_extensionType, "Where", new[]
-            {
-                LambdaScope.Parameter.Type
-            }, _source, predicate);
+            return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
         }
 
         public override Expression VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, Type argument)
@@ -55,7 +54,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (elementType == null)
             {
-                throw new Exception("Expression must be a collection.");
+                throw new InvalidOperationException("Expression must be a collection.");
             }
 
             return AnyExtensionMethodCall(elementType, property);
@@ -63,10 +62,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source)
         {
-            return Expression.Call(typeof(Enumerable), "Any", new[]
-            {
-                elementType
-            }, source);
+            return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
         }
 
         public override Expression VisitMatchText(MatchTextExpression expression, Type argument)
@@ -75,7 +71,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (property.Type != typeof(string))
             {
-                throw new Exception("Expression must be a string.");
+                throw new InvalidOperationException("Expression must be a string.");
             }
 
             Expression text = Visit(expression.TextValue, property.Type);
@@ -102,7 +98,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             foreach (LiteralConstantExpression constant in expression.Constants)
             {
                 object value = ConvertTextToTargetType(constant.Value, property.Type);
-                valueList.Add(value);
+                valueList!.Add(value);
             }
 
             ConstantExpression collection = Expression.Constant(valueList);
@@ -111,10 +107,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static Expression ContainsExtensionMethodCall(Expression collection, Expression value)
         {
-            return Expression.Call(typeof(Enumerable), "Contains", new[]
-            {
-                value.Type
-            }, collection, value);
+            return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
         }
 
         public override Expression VisitLogical(LogicalExpression expression, Type argument)
@@ -252,7 +245,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitNullConstant(NullConstantExpression expression, Type expressionType)
         {
-            return _nullConstant;
+            return NullConstant;
         }
 
         public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type expressionType)
@@ -278,11 +271,14 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
         {
-            var components = chain.Select(field =>
-                // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
-                field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name).ToArray();
-
+            var components = chain.Select(GetPropertyName).ToArray();
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
+        }
+
+        private static string GetPropertyName(ResourceFieldAttribute field)
+        {
+            // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
+            return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
 }

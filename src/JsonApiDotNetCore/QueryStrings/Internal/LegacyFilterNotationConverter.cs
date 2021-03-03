@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public sealed class LegacyFilterNotationConverter
     {
         private const string ParameterNamePrefix = "filter[";
@@ -15,7 +17,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private const string InPrefix = "in:";
         private const string NotInPrefix = "nin:";
 
-        private static readonly Dictionary<string, string> _prefixConversionTable = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> PrefixConversionTable = new Dictionary<string, string>
         {
             ["eq:"] = Keywords.Equals,
             ["lt:"] = Keywords.LessThan,
@@ -25,8 +27,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ["like:"] = Keywords.Contains
         };
 
-        public IEnumerable<string> ExtractConditions(string parameterName, string parameterValue)
+        public IEnumerable<string> ExtractConditions(string parameterValue)
         {
+            ArgumentGuard.NotNull(parameterValue, nameof(parameterValue));
+
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) ||
                 parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
                 parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
@@ -44,8 +48,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
         {
-            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
-            if (parameterValue == null) throw new ArgumentNullException(nameof(parameterValue));
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+            ArgumentGuard.NotNull(parameterValue, nameof(parameterValue));
 
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
             {
@@ -55,7 +59,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             var attributeName = ExtractAttributeName(parameterName);
 
-            foreach (var (prefix, keyword) in _prefixConversionTable)
+            foreach (var (prefix, keyword) in PrefixConversionTable)
             {
                 if (parameterValue.StartsWith(prefix, StringComparison.Ordinal))
                 {

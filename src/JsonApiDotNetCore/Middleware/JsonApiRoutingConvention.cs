@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Controllers.Annotations;
@@ -28,26 +29,28 @@ namespace JsonApiDotNetCore.Middleware
     ///
     /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource
     /// ]]></example>
+    [PublicAPI]
     public class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
-
-        private readonly Dictionary<string, ResourceContext> _registeredResources =
-            new Dictionary<string, ResourceContext>();
+        private readonly Dictionary<string, ResourceContext> _registeredResources = new Dictionary<string, ResourceContext>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _options = options;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         /// <inheritdoc />
         public Type GetResourceTypeForController(string controllerName)
         {
-            if (controllerName == null) throw new ArgumentNullException(nameof(controllerName));
-            
+            ArgumentGuard.NotNull(controllerName, nameof(controllerName));
+
             if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
             {
                 return resourceContext.ResourceType;
@@ -59,7 +62,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void Apply(ApplicationModel application)
         {
-            if (application == null) throw new ArgumentNullException(nameof(application));
+            ArgumentGuard.NotNull(application, nameof(application));
 
             foreach (var controller in application.Controllers)
             {
@@ -79,7 +82,7 @@ namespace JsonApiDotNetCore.Middleware
                     }
                 }
 
-                if (!RoutingConventionDisabled(controller))
+                if (!IsRoutingConventionEnabled(controller))
                 {
                     continue;
                 }
@@ -95,14 +98,10 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        /// <summary>
-        /// Verifies if routing convention should be enabled for this controller.
-        /// </summary>
-        private bool RoutingConventionDisabled(ControllerModel controller)
+        private bool IsRoutingConventionEnabled(ControllerModel controller)
         {
-            var type = controller.ControllerType;
-            var notDisabled = type.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
-            return notDisabled && type.IsSubclassOf(typeof(CoreJsonApiController));
+            return controller.ControllerType.IsSubclassOf(typeof(CoreJsonApiController)) &&
+                controller.ControllerType.GetCustomAttribute<DisableRoutingConventionAttribute>() == null;
         }
 
         /// <summary>
@@ -127,9 +126,7 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private string TemplateFromController(ControllerModel model)
         {
-            string controllerName =
-                _options.SerializerContractResolver.NamingStrategy.GetPropertyName(model.ControllerName, false);
-
+            string controllerName = _options.SerializerNamingStrategy.GetPropertyName(model.ControllerName, false);
             var template = $"{_options.Namespace}/{controllerName}";
 
             if (_registeredTemplates.Add(template))

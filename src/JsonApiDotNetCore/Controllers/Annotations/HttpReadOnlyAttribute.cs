@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
@@ -9,6 +11,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// {
     /// }
     /// ]]></example>
+    [PublicAPI]
     public sealed class HttpReadOnlyAttribute : HttpRestrictAttribute
     {
         protected override string[] Methods { get; } = { "POST", "PATCH", "DELETE" };

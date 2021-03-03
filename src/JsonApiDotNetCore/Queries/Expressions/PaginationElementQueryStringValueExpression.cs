@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents an element in <see cref="PaginationQueryStringValueExpression"/>.
     /// </summary>
+    [PublicAPI]
     public class PaginationElementQueryStringValueExpression : QueryExpression
     {
         public ResourceFieldChainExpression Scope { get; }

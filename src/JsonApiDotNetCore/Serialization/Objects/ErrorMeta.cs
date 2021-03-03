@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -7,6 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     /// <summary>
     /// A meta object containing non-standard meta-information about the error.
     /// </summary>
+    [PublicAPI]
     public sealed class ErrorMeta
     {
         [JsonExtensionData]

@@ -1,12 +1,14 @@
 using System;
 using System.Text;
 using Humanizer;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents a text-matching filter function, resulting from text such as: startsWith(name,'A')
     /// </summary>
+    [PublicAPI]
     public class MatchTextExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetAttribute { get; }
@@ -16,8 +18,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public MatchTextExpression(ResourceFieldChainExpression targetAttribute, LiteralConstantExpression textValue,
             TextMatchKind matchKind)
         {
-            TargetAttribute = targetAttribute ?? throw new ArgumentNullException(nameof(targetAttribute));
-            TextValue = textValue ?? throw new ArgumentNullException(nameof(textValue));
+            ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
+            ArgumentGuard.NotNull(textValue, nameof(textValue));
+
+            TargetAttribute = targetAttribute;
+            TextValue = textValue;
             MatchKind = matchKind;
         }
 

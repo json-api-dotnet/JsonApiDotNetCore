@@ -3,27 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
     /// <summary>
-    /// A helper class that provides insights in which relationships have been updated for which resources.
-    /// </summary>
-    public interface IRelationshipsDictionary<TRightResource> :
-        IRelationshipGetters<TRightResource>,
-        IReadOnlyDictionary<RelationshipAttribute, HashSet<TRightResource>>,
-        IRelationshipsDictionary where TRightResource : class, IIdentifiable
-    { }
-
-
-    /// <summary>
     /// Implementation of IAffectedRelationships{TRightResource}
     /// 
     /// It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary
     /// with the two helper methods defined on IAffectedRelationships{TRightResource}.
     /// </summary>
+    [PublicAPI]
     public class RelationshipsDictionary<TResource> :
         Dictionary<RelationshipAttribute, HashSet<TResource>>,
         IRelationshipsDictionary<TResource> where TResource : class, IIdentifiable
@@ -47,14 +39,16 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type relatedType)
+        public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type resourceType)
         {
-            return this.Where(p => p.Key.RightType == relatedType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(p => p.Key.RightType == resourceType).ToDictionary(p => p.Key, p => p.Value);
         }
 
         /// <inheritdoc />
         public HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
+            ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
+
             var property = TypeHelper.ParseNavigationExpression(navigationAction);
             return this.Where(p => p.Key.Property.Name == property.Name).Select(p => p.Value).SingleOrDefault();
         }

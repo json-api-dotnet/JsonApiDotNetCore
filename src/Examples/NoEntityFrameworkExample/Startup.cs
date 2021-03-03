@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
@@ -11,7 +12,7 @@ using NoEntityFrameworkExample.Services;
 
 namespace NoEntityFrameworkExample
 {
-    public class Startup
+    public sealed class Startup
     {
         private readonly string _connectionString;
 
@@ -39,6 +40,7 @@ namespace NoEntityFrameworkExample
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [UsedImplicitly]
         public void Configure(IApplicationBuilder app, AppDbContext context)
         {
             context.Database.EnsureCreated();

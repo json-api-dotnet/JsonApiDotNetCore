@@ -1,10 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Car : Identifiable<string>
     {
         [NotMapped]

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    [PublicAPI]
     public sealed class ErrorDocument
     {
         public IReadOnlyList<Error> Errors { get; }
@@ -15,13 +17,13 @@ namespace JsonApiDotNetCore.Serialization.Objects
         }
 
         public ErrorDocument(Error error)
-            : this(new[] {error})
+            : this(error.AsEnumerable())
         {
         }
 
         public ErrorDocument(IEnumerable<Error> errors)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            ArgumentGuard.NotNull(errors, nameof(errors));
 
             Errors = errors.ToList();
         }
@@ -34,7 +36,9 @@ namespace JsonApiDotNetCore.Serialization.Objects
                 .ToArray();
 
             if (statusCodes.Length == 1)
+            {
                 return (HttpStatusCode)statusCodes[0];
+            }
 
             var statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
             return (HttpStatusCode)statusCode;

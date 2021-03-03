@@ -1,7 +1,9 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
+    [PublicAPI]
     public sealed class PageSize : IEquatable<PageSize>
     {
         public int Value { get; }

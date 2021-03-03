@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         {
             return _allRelationshipsToNextLayer
                     .GroupBy(proxy => proxy.RightType)
-                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, p => UniqueResources));
+                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, _ => UniqueResources));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         public Dictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
         {
-            return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, p => UniqueResources);
+            return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, _ => UniqueResources);
         }
 
         /// <summary>

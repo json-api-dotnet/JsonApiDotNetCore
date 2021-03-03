@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Controllers
@@ -17,6 +19,7 @@ namespace JsonApiDotNetCore.Controllers
     /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
     /// See https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor"/>.
     /// </summary>
+    [PublicAPI]
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;
@@ -28,12 +31,16 @@ namespace JsonApiDotNetCore.Controllers
         protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(processor, nameof(processor));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
-            _options = options ?? throw new ArgumentNullException(nameof(options));
-            _processor = processor ?? throw new ArgumentNullException(nameof(processor));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
+            _options = options;
+            _processor = processor;
+            _request = request;
+            _targetedFields = targetedFields;
             _traceWriter = new TraceLogWriter<BaseJsonApiOperationsController>(loggerFactory);
         }
 
@@ -99,7 +106,8 @@ namespace JsonApiDotNetCore.Controllers
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {operations});
-            if (operations == null) throw new ArgumentNullException(nameof(operations));
+
+            ArgumentGuard.NotNull(operations, nameof(operations));
 
             ValidateClientGeneratedIds(operations);
 
@@ -151,14 +159,7 @@ namespace JsonApiDotNetCore.Controllers
 
                     if (!validationContext.ModelState.IsValid)
                     {
-                        foreach (var (key, entry) in validationContext.ModelState)
-                        {
-                            foreach (var error in entry.Errors)
-                            {
-                                var violation = new ModelStateViolation($"/atomic:operations[{index}]/data/attributes/", key, operation.Resource.GetType(), error);
-                                violations.Add(violation);
-                            }
-                        }
+                        AddValidationErrors(validationContext.ModelState, operation.Resource.GetType(), index, violations);
                     }
                 }
 
@@ -167,8 +168,26 @@ namespace JsonApiDotNetCore.Controllers
 
             if (violations.Any())
             {
-                var namingStrategy = _options.SerializerContractResolver.NamingStrategy;
-                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, namingStrategy);
+                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, _options.SerializerNamingStrategy);
+            }
+        }
+
+        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        {
+            foreach (var (propertyName, entry) in modelState)
+            {
+                AddValidationErrors(entry, propertyName, resourceType, operationIndex, violations);
+            }
+        }
+
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        {
+            foreach (var error in entry.Errors)
+            {
+                var prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
+                var violation = new ModelStateViolation(prefix, propertyName, resourceType, error);
+
+                violations.Add(violation);
             }
         }
     }

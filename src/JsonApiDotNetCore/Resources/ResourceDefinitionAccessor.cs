@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Resources
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;
@@ -14,14 +16,17 @@ namespace JsonApiDotNetCore.Resources
 
         public ResourceDefinitionAccessor(IResourceContextProvider resourceContextProvider, IServiceProvider serviceProvider)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _resourceContextProvider = resourceContextProvider;
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />
         public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType, IReadOnlyCollection<IncludeElementExpression> existingIncludes)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyIncludes(existingIncludes);
@@ -30,7 +35,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public FilterExpression OnApplyFilter(Type resourceType, FilterExpression existingFilter)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyFilter(existingFilter);
@@ -39,7 +44,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public SortExpression OnApplySort(Type resourceType, SortExpression existingSort)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplySort(existingSort);
@@ -48,7 +53,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public PaginationExpression OnApplyPagination(Type resourceType, PaginationExpression existingPagination)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplyPagination(existingPagination);
@@ -57,7 +62,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public SparseFieldSetExpression OnApplySparseFieldSet(Type resourceType, SparseFieldSetExpression existingSparseFieldSet)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.OnApplySparseFieldSet(existingSparseFieldSet);
@@ -66,8 +71,8 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-            if (parameterName == null) throw new ArgumentNullException(nameof(parameterName));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             var handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
@@ -78,7 +83,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.GetMeta((dynamic) resourceInstance);

@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Controllers.Annotations
 {
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// [DisableRoutingConvention, Route("some/custom/route/to/customers")]
     /// public class CustomersController : JsonApiController<Customer> { }
     /// ]]></example>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableRoutingConventionAttribute : Attribute
     { }

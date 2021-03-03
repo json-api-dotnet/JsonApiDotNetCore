@@ -1,13 +1,15 @@
 using System;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Holds a <see cref="IQueryable{T}"/> expression, used for custom query string handlers from <see cref="IResourceDefinition{TResource, TId}"/>s.
+    /// Holds an <see cref="IQueryable{T}"/> expression, used for custom query string handlers from <see cref="IResourceDefinition{TResource, TId}"/>s.
     /// </summary>
+    [PublicAPI]
     public class QueryableHandlerExpression : QueryExpression
     {
         private readonly object _queryableHandler;
@@ -15,7 +17,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public QueryableHandlerExpression(object queryableHandler, StringValues parameterValue)
         {
-            _queryableHandler = queryableHandler ?? throw new ArgumentNullException(nameof(queryableHandler));
+            ArgumentGuard.NotNull(queryableHandler, nameof(queryableHandler));
+
+            _queryableHandler = queryableHandler;
             _parameterValue = parameterValue;
         }
 

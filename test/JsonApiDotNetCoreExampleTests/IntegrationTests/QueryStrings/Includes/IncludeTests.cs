@@ -37,11 +37,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.Add(post);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "blogPosts?include=author";
+            const string route = "blogPosts?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -101,7 +100,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.Blogs.Add(blog);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -537,11 +535,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             {
                 await dbContext.ClearTableAsync<BlogPost>();
                 dbContext.Posts.AddRange(posts);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?include=author";
+            const string route = "/blogPosts?include=author";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -561,7 +558,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_relationship()
         {
             // Arrange
-            var route = "/webAccounts?include=doesNotExist";
+            const string route = "/webAccounts?include=doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -570,17 +567,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
         public async Task Cannot_include_unknown_nested_relationship()
         {
             // Arrange
-            var route = "/blogs?include=posts.doesNotExist";
+            const string route = "/blogs?include=posts.doesNotExist";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -589,17 +588,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
         public async Task Cannot_include_relationship_with_blocked_capability()
         {
             // Arrange
-            var route = "/blogPosts?include=parent";
+            const string route = "/blogPosts?include=parent";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -608,10 +609,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Including the requested relationship is not allowed.");
-            responseDocument.Errors[0].Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Including the requested relationship is not allowed.");
+            error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
+            error.Source.Parameter.Should().Be("include");
         }
 
         [Fact]
@@ -628,7 +631,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/blogPosts?include=reviewer.preferences";
+            const string route = "/blogPosts?include=reviewer.preferences";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -683,7 +686,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = 1;
 
-            var route = "/blogs/123/owner?include=posts.comments";
+            const string route = "/blogs/123/owner?include=posts.comments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -692,10 +695,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("The specified include is invalid.");
-            responseDocument.Errors[0].Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("include");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("The specified include is invalid.");
+            error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
+            error.Source.Parameter.Should().Be("include");
         }
     }
 }

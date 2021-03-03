@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -18,12 +17,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         protected QueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
 
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _resourceContextProvider = resourceContextProvider;
             _isCollectionRequest = request.IsCollection;
             RequestResource = request.SecondaryResource ?? request.PrimaryResource;
             IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;

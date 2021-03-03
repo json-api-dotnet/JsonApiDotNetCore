@@ -48,11 +48,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?include=owner";
+            const string route = "/callableResources?include=owner";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -61,8 +60,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Including owner is not permitted.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Including owner is not permitted.");
+            error.Detail.Should().BeNull();
         }
 
         [Fact]
@@ -97,11 +99,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources";
+            const string route = "/callableResources";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -148,11 +149,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?filter=equals(label,'B')";
+            const string route = "/callableResources?filter=equals(label,'B')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -196,11 +196,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources";
+            const string route = "/callableResources";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -244,11 +243,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?sort=-createdAt,modifiedAt";
+            const string route = "/callableResources?sort=-createdAt,modifiedAt";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -277,11 +275,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?page[size]=8";
+            const string route = "/callableResources?page[size]=8";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -305,7 +302,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -336,7 +332,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -369,7 +364,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -400,7 +394,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -451,11 +444,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?isHighRisk=true";
+            const string route = "/callableResources?isHighRisk=true";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -500,11 +492,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             {
                 await dbContext.ClearTableAsync<CallableResource>();
                 dbContext.CallableResources.AddRange(resources);
-
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/callableResources?isHighRisk=false&filter=equals(label,'B')";
+            const string route = "/callableResources?isHighRisk=false&filter=equals(label,'B')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -539,7 +530,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.CallableResources.Add(resource);
-
                 await dbContext.SaveChangesAsync();
             });
 
@@ -552,10 +542,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            responseDocument.Errors[0].Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
-            responseDocument.Errors[0].Detail.Should().Be("Query string parameter 'isHighRisk' cannot be used on a nested resource endpoint.");
-            responseDocument.Errors[0].Source.Parameter.Should().Be("isHighRisk");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
+            error.Detail.Should().Be("Query string parameter 'isHighRisk' cannot be used on a nested resource endpoint.");
+            error.Source.Parameter.Should().Be("isHighRisk");
         }
 
         private sealed class FakeUserRolesService : IUserRolesService

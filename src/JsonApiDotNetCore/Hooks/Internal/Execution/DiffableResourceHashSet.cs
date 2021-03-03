@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
+    [PublicAPI]
     public sealed class DiffableResourceHashSet<TResource> : ResourceHashSet<TResource>, IDiffableResourceHashSet<TResource> where TResource : class, IIdentifiable
     {
         private readonly HashSet<TResource> _databaseValues;
@@ -35,14 +37,17 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                   Dictionary<RelationshipAttribute, IEnumerable> relationships,
                   ITargetedFields targetedFields)
             : this((HashSet<TResource>)requestResources, (HashSet<TResource>)databaseResources, TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-              TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
+                targetedFields.Attributes == null ? null : TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
         { }
 
 
         /// <inheritdoc />
         public IEnumerable<ResourceDiffPair<TResource>> GetDiffs()
         {
-            if (!_databaseValuesLoaded) ThrowNoDbValuesError();
+            if (!_databaseValuesLoaded)
+            {
+                ThrowNoDbValuesError();
+            }
 
             foreach (var resource in this)
             {
@@ -52,8 +57,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         }
 
         /// <inheritdoc />
-        public new HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
+        public override HashSet<TResource> GetAffected(Expression<Func<TResource, object>> navigationAction)
         {
+            ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
+
             var propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
             var propertyType = propertyInfo.PropertyType;
             if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IEnumerable)))
@@ -66,11 +73,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary. 
                 return base.GetAffected(navigationAction);
             }
-            else if (_updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources))
-            {
-                return resources;
-            }
-            return new HashSet<TResource>();
+
+            return _updatedAttributes.TryGetValue(propertyInfo, out HashSet<TResource> resources)
+                ? resources
+                : new HashSet<TResource>();
         }
 
         private void ThrowNoDbValuesError()

@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
     /// Used to expose a property on a resource class as a JSON:API attribute (https://jsonapi.org/format/#document-resource-object-attributes).
     /// </summary>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class AttrAttribute : ResourceFieldAttribute
     {
@@ -33,15 +35,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         /// <summary>
         /// Get the value of the attribute for the given object.
-        /// Returns null if the attribute does not belong to the
-        /// provided object.
+        /// Throws if the attribute does not belong to the provided object.
         /// </summary>
         public object GetValue(object resource)
         {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             if (Property.GetMethod == null)
             {
@@ -56,10 +54,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         public void SetValue(object resource, object newValue)
         {
-            if (resource == null)
-            {
-                throw new ArgumentNullException(nameof(resource));
-            }
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             if (Property.SetMethod == null)
             {

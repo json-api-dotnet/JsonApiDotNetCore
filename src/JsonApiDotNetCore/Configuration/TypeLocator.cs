@@ -50,35 +50,41 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public static (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface, params Type[] interfaceGenericTypeArguments)
         {
-            if (assembly == null) throw new ArgumentNullException(nameof(assembly));
-            if (openGenericInterface == null) throw new ArgumentNullException(nameof(openGenericInterface));
-            if (interfaceGenericTypeArguments == null) throw new ArgumentNullException(nameof(interfaceGenericTypeArguments));
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+            ArgumentGuard.NotNull(openGenericInterface, nameof(openGenericInterface));
+            ArgumentGuard.NotNull(interfaceGenericTypeArguments, nameof(interfaceGenericTypeArguments));
 
             if (!openGenericInterface.IsInterface || !openGenericInterface.IsGenericType ||
                 openGenericInterface != openGenericInterface.GetGenericTypeDefinition())
             {
-                throw new ArgumentException($"Specified type '{openGenericInterface.FullName}' is not an open generic interface.", nameof(openGenericInterface));
+                throw new ArgumentException(
+                    $"Specified type '{openGenericInterface.FullName}' " + "is not an open generic interface.",
+                    nameof(openGenericInterface));
             }
 
             if (interfaceGenericTypeArguments.Length != openGenericInterface.GetGenericArguments().Length)
             {
                 throw new ArgumentException(
-                    $"Interface '{openGenericInterface.FullName}' requires {openGenericInterface.GetGenericArguments().Length} type parameters instead of {interfaceGenericTypeArguments.Length}.",
-                    nameof(interfaceGenericTypeArguments));
+                    $"Interface '{openGenericInterface.FullName}' " +
+                    $"requires {openGenericInterface.GetGenericArguments().Length} type parameters " +
+                    $"instead of {interfaceGenericTypeArguments.Length}.", nameof(interfaceGenericTypeArguments));
             }
 
-            foreach (var nextType in assembly.GetTypes())
+            return assembly.GetTypes().Select(type => FindGenericInterfaceImplementationForType(type, openGenericInterface, interfaceGenericTypeArguments))
+                .FirstOrDefault(result => result != null);
+        }
+
+        private static (Type implementation, Type registrationInterface)? FindGenericInterfaceImplementationForType(Type nextType, Type openGenericInterface, Type[] interfaceGenericTypeArguments)
+        {
+            foreach (var nextGenericInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
             {
-                foreach (var nextGenericInterface in nextType.GetInterfaces().Where(x => x.IsGenericType))
+                var nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
+                if (nextOpenGenericInterface == openGenericInterface)
                 {
-                    var nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
-                    if (nextOpenGenericInterface == openGenericInterface)
+                    var nextGenericArguments = nextGenericInterface.GetGenericArguments();
+                    if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length && nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
                     {
-                        var nextGenericArguments = nextGenericInterface.GetGenericArguments();
-                        if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length && nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
-                        {
-                            return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));    
-                        }
+                        return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));
                     }
                 }
             }
@@ -118,7 +124,9 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var type in assembly.GetTypes())
             {
                 if (inheritedType.IsAssignableFrom(type))
+                {
                     yield return type;
+                }
             }
         }
     }

@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            var route = "/orders";
+            const string route = "/orders";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -50,10 +50,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
         }
 
         [Fact]
@@ -74,7 +76,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            var route = "/shipments";
+            const string route = "/shipments";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -82,10 +84,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().Be("Failed to persist changes in the underlying data store.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
         }
 
         [Fact]
@@ -113,10 +117,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingCustomerInDatabase = await dbContext.Customers.FindAsync(existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().BeNull();
 
-                var existingOrderInDatabase = await dbContext.Orders.FindAsync(existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
             });
         }
@@ -147,13 +151,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var existingOrderInDatabase = await dbContext.Orders.FindAsync(existingOrder.Id);
+                var existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
                 existingOrderInDatabase.Should().BeNull();
 
-                var existingShipmentInDatabase = await dbContext.Shipments.FindAsync(existingOrder.Shipment.Id);
+                var existingShipmentInDatabase = await dbContext.Shipments.FirstWithIdOrDefaultAsync(existingOrder.Shipment.Id);
                 existingShipmentInDatabase.Should().BeNull();
 
-                var existingCustomerInDatabase = await dbContext.Customers.FindAsync(existingOrder.Customer.Id);
+                var existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
                 existingCustomerInDatabase.Should().NotBeNull();
             });
         }
@@ -196,10 +200,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' " +
+                "cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -229,10 +236,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'customer' of resource type 'orders' with ID '{existingOrder.StringId}' " +
+                "cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -273,10 +283,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' " +
+                "cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -306,10 +319,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' " +
+                "cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -346,10 +362,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.BadRequest);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("Failed to clear a required relationship.");
-            responseDocument.Errors[0].Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' cannot be cleared because it is a required relationship.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            error.Title.Should().Be("Failed to clear a required relationship.");
+            error.Detail.Should().Be($"The relationship 'orders' of resource type 'customers' with ID '{existingOrder.StringId}' " +
+                "cannot be cleared because it is a required relationship.");
         }
 
         [Fact]
@@ -397,10 +416,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
         }
 
         [Fact]
@@ -437,10 +458,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.GetErrorStatusCode().Should().Be(HttpStatusCode.InternalServerError);
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].Title.Should().Be("An unhandled error occurred while processing this request.");
-            responseDocument.Errors[0].Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+            error.Title.Should().Be("An unhandled error occurred while processing this request.");
+            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
         }
     }
 }

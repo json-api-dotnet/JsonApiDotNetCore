@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Enables retrieving the exposed resource fields (attributes and relationships) of resources registered in the resource graph.
     /// </summary>
+    [PublicAPI]
     public interface IResourceGraph : IResourceContextProvider
     {
         /// <summary>

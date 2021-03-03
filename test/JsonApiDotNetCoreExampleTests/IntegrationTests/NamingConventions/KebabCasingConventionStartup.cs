@@ -1,18 +1,15 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class KebabCasingConventionStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public KebabCasingConventionStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
-
         protected override void SetJsonApiOptions(JsonApiOptions options)
         {
             base.SetJsonApiOptions(options);
@@ -22,8 +19,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             options.IncludeTotalResourceCount = true;
             options.ValidateModelState = true;
 
-            var resolver = (DefaultContractResolver) options.SerializerSettings.ContractResolver;
-            resolver!.NamingStrategy = new KebabCaseNamingStrategy();
+            options.SerializerSettings.ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new KebabCaseNamingStrategy()
+            };
         }
     }
 }

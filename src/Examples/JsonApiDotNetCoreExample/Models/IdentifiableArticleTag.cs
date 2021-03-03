@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExample.Models
 {
-    public class IdentifiableArticleTag : Identifiable
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class IdentifiableArticleTag : Identifiable
     {
         public int ArticleId { get; set; }
         [HasOne]

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +11,14 @@ namespace JsonApiDotNetCore.Controllers
     {
         protected IActionResult Error(Error error)
         {
-            if (error == null) throw new ArgumentNullException(nameof(error));
+            ArgumentGuard.NotNull(error, nameof(error));
 
-            return Error(new[] {error});
+            return Error(error.AsEnumerable());
         }
 
         protected IActionResult Error(IEnumerable<Error> errors)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            ArgumentGuard.NotNull(errors, nameof(errors));
 
             var document = new ErrorDocument(errors);
 

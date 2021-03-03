@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -11,10 +13,11 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
         private readonly IUserRolesService _userRolesService;
-        private static readonly PageSize _maxPageSize = new PageSize(5);
+        private static readonly PageSize MaxPageSize = new PageSize(5);
 
         public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService) : base(resourceGraph)
         {
@@ -52,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             return existingFilter == null
                 ? (FilterExpression) isNotDeleted
-                : new LogicalExpression(LogicalOperator.And, new[] {isNotDeleted, existingFilter});
+                : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotDeleted, existingFilter));
         }
 
         public override SortExpression OnApplySort(SortExpression existingSort)
@@ -77,20 +80,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             if (existingPagination != null)
             {
-                var pageSize = existingPagination.PageSize?.Value <= _maxPageSize.Value ? existingPagination.PageSize : _maxPageSize;
+                var pageSize = existingPagination.PageSize?.Value <= MaxPageSize.Value ? existingPagination.PageSize : MaxPageSize;
                 return new PaginationExpression(existingPagination.PageNumber, pageSize);
             }
 
-            return new PaginationExpression(PageNumber.ValueOne, _maxPageSize);
+            return new PaginationExpression(PageNumber.ValueOne, MaxPageSize);
         }
 
         public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
         {
             // Use case: always retrieve percentageComplete and never include riskLevel in responses.
 
+            // @formatter:keep_existing_linebreaks true
+
             return existingSparseFieldSet
                 .Including<CallableResource>(resource => resource.PercentageComplete, ResourceGraph)
                 .Excluding<CallableResource>(resource => resource.RiskLevel, ResourceGraph);
+
+            // @formatter:keep_existing_linebreaks restore
         }
 
         public override QueryStringParameterHandlers<CallableResource> OnRegisterQueryableHandlersForQueryStringParameters()

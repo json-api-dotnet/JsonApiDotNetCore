@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Hooks.Internal.Traversal;
@@ -12,6 +13,8 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using LeftType = System.Type;
 using RightType = System.Type;
+
+// ReSharper disable PossibleMultipleEnumeration
 
 namespace JsonApiDotNetCore.Hooks.Internal
 {
@@ -43,13 +46,19 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             var hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
-            var calledContainers = new List<LeftType> { typeof(TResource) };
+            var calledContainers = typeof(TResource).AsList();
+
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
 
             var includes = _constraintProviders
-                .SelectMany(p => p.GetConstraints())
+                .SelectMany(provider => provider.GetConstraints())
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<IncludeExpression>()
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             foreach (var chain in includes.SelectMany(IncludeChainConverter.GetRelationshipChains))
             {
@@ -128,7 +137,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
-                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, new object[] { nextNode.UniqueResources, pipeline });
+                var filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline));
                 nextNode.UpdateUnique(filteredUniqueSet);
                 nextNode.Reassign();
             });
@@ -145,7 +154,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
             Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
-                CallHook(nextContainer, ResourceHook.AfterRead, new object[] { nextNode.UniqueResources, pipeline, true });
+                CallHook(nextContainer, ResourceHook.AfterRead, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline, true));
             });
         }
 
@@ -206,16 +215,32 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void Traverse(NodeLayer currentLayer, ResourceHook target, Action<IResourceHookContainer, IResourceNode> action)
         {
-            if (!currentLayer.AnyResources()) return;
-            foreach (IResourceNode node in currentLayer)
-            {
-                var resourceType = node.ResourceType;
-                var hookContainer = _executorHelper.GetResourceHookContainer(resourceType, target);
-                if (hookContainer == null) continue;
-                action(hookContainer, node);
-            }
+            var nextLayer = currentLayer;
 
-            Traverse(_traversalHelper.CreateNextLayer(currentLayer.ToList()), target, action);
+            while (true)
+            {
+                if (!nextLayer.AnyResources())
+                {
+                    return;
+                }
+
+                TraverseNextLayer(nextLayer, action, target);
+
+                nextLayer = _traversalHelper.CreateNextLayer(nextLayer.ToList());
+            }
+        }
+
+        private void TraverseNextLayer(NodeLayer nextLayer, Action<IResourceHookContainer, IResourceNode> action, ResourceHook target)
+        {
+            foreach (IResourceNode node in nextLayer)
+            {
+                var hookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, target);
+
+                if (hookContainer != null)
+                {
+                    action(hookContainer, node);
+                }
+            }
         }
 
         /// <summary>
@@ -225,17 +250,33 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         private void RecursiveBeforeRead(List<RelationshipAttribute> relationshipChain, ResourcePipeline pipeline, List<LeftType> calledContainers)
         {
-            var relationship = relationshipChain.First();
-            if (!calledContainers.Contains(relationship.RightType))
+            while (true)
             {
-                calledContainers.Add(relationship.RightType);
-                var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
-                if (container != null)
-                    CallHook(container, ResourceHook.BeforeRead, new object[] { pipeline, true, null });
+                var relationship = relationshipChain.First();
+
+                if (!calledContainers.Contains(relationship.RightType))
+                {
+                    calledContainers.Add(relationship.RightType);
+                    var container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
+
+                    if (container != null)
+                    {
+                        CallHook(container, ResourceHook.BeforeRead, new object[]
+                        {
+                            pipeline,
+                            true,
+                            null
+                        });
+                    }
+                }
+
+                relationshipChain.RemoveAt(0);
+
+                if (!relationshipChain.Any())
+                {
+                    break;
+                }
             }
-            relationshipChain.RemoveAt(0);
-            if (relationshipChain.Any())
-                RecursiveBeforeRead(relationshipChain, pipeline, calledContainers);
         }
 
         /// <summary>
@@ -277,7 +318,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
 
                         var resourcesByRelationship = CreateRelationshipHelper(resourceType, currentResourcesGroupedInverse, dbValues);
-                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, new object[] { GetIds(uniqueResources), resourcesByRelationship, pipeline }).Cast<string>();
+                        var allowedIds = CallHook(nestedHookContainer, ResourceHook.BeforeUpdateRelationship, ArrayFactory.Create<object>(GetIds(uniqueResources), resourcesByRelationship, pipeline)).Cast<string>();
                         var updated = GetAllowedResources(uniqueResources, allowedIds);
                         node.UpdateUnique(updated);
                         node.Reassign();
@@ -313,7 +354,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                     // RelationshipAttribute from owner to article, which is the
                     // inverse of HasOneAttribute:owner
                     currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
-                    // Note that currently in the JADNC implementation of hooks, 
+                    // Note that currently in the JsonApiDotNetCore implementation of hooks, 
                     // the root layer is ALWAYS homogenous, so we safely assume 
                     // that for every relationship to the previous layer, the 
                     // left type is the same.
@@ -332,7 +373,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // when Article has one Owner (HasOneAttribute:owner) is set, there is no guarantee
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
-            // If it isn't, JADNC currently knows nothing about this relationship pointing back, and it 
+            // If it isn't, JsonApiDotNetCore currently knows nothing about this relationship pointing back, and it 
             // currently cannot fire hooks for resources resolved through inverse relationships.
             var inversableRelationshipAttributes = resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
             return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
@@ -345,12 +386,20 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private void FireForAffectedImplicits(Type resourceTypeToInclude, Dictionary<RelationshipAttribute, IEnumerable> implicitsTarget, ResourcePipeline pipeline, IEnumerable existingImplicitResources = null)
         {
             var container = _executorHelper.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
-            if (container == null) return;
+            if (container == null)
+            {
+                return;
+            }
+
             var implicitAffected = _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
-            if (!implicitAffected.Any()) return;
+            if (!implicitAffected.Any())
+            {
+                return;
+            }
+
             var inverse = implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
             var resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
-            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, new object[] { resourcesByRelationship, pipeline});
+            CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, ArrayFactory.Create<object>(resourcesByRelationship, pipeline));
         }
 
         /// <summary>
@@ -359,12 +408,13 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </summary>
         /// <param name="returnedList"> The collection returned from the hook</param>
         /// <param name="pipeline">The pipeline from which the hook was fired</param>
+        [AssertionMethod]
         private void ValidateHookResponse<T>(IEnumerable<T> returnedList, ResourcePipeline pipeline = 0)
         {
             if (pipeline == ResourcePipeline.GetSingle && returnedList.Count() > 1)
             {
-                throw new ApplicationException("The returned collection from this hook may contain at most one item in the case of the" +
-                    pipeline.ToString("G") + "pipeline");
+                throw new InvalidOperationException("The returned collection from this hook may contain at most one item in the case of the " +
+                    pipeline.ToString("G") + " pipeline");
             }
         }
 
@@ -377,7 +427,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // note that some of the hooks return "void". When these hooks, the 
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
-            return (IEnumerable)ThrowJsonApiExceptionOnError(() => method.Invoke(container, arguments));
+            return (IEnumerable)ThrowJsonApiExceptionOnError(() => method?.Invoke(container, arguments));
         }
 
         /// <summary>
@@ -389,7 +439,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             {
                 return action();
             }
-            catch (TargetInvocationException tie)
+            catch (TargetInvocationException tie) when (tie.InnerException != null)
             {
                 throw tie.InnerException;
             }
@@ -402,8 +452,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <returns>The relationship helper.</returns>
         private IRelationshipsDictionary CreateRelationshipHelper(RightType resourceType, Dictionary<RelationshipAttribute, IEnumerable> prevLayerRelationships, IEnumerable dbValues = null)
         {
-            if (dbValues != null) prevLayerRelationships = ReplaceWithDbValues(prevLayerRelationships, dbValues.Cast<IIdentifiable>());
-            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationships);
+            var prevLayerRelationshipsWithDbValues = prevLayerRelationships;
+
+            if (dbValues != null)
+            {
+                prevLayerRelationshipsWithDbValues = ReplaceWithDbValues(prevLayerRelationshipsWithDbValues, dbValues.Cast<IIdentifiable>());
+            }
+
+            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true, prevLayerRelationshipsWithDbValues);
         }
 
         /// <summary>
@@ -414,7 +470,10 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             foreach (var key in prevLayerRelationships.Keys.ToList())
             {
-                var replaced = TypeHelper.CopyToList(prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource => dbValues.Single(dbResource => dbResource.StringId == resource.StringId)), key.LeftType);
+                var source = prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource =>
+                    dbValues.Single(dbResource => dbResource.StringId == resource.StringId));
+
+                var replaced = TypeHelper.CopyToList(source, key.LeftType);
                 prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
             }
             return prevLayerRelationships;
@@ -443,7 +502,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // We only need to load database values if the target hook of this hook execution
             // cycle is compatible with displaying database values and has this option enabled.
-            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook)) return null;
+            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook))
+            {
+                return null;
+            }
+
             return _executorHelper.LoadDbValues(resourceType, uniqueResources, targetHook, relationshipsToNextLayer);
         }
 
@@ -459,7 +522,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.
             var resourcesByRelationship = CreateRelationshipHelper(node.ResourceType, ReplaceKeysWithInverseRelationships(currentResourcesGrouped));
-            CallHook(container, ResourceHook.AfterUpdateRelationship, new object[] { resourcesByRelationship, pipeline });
+            CallHook(container, ResourceHook.AfterUpdateRelationship, ArrayFactory.Create<object>(resourcesByRelationship, pipeline));
         }
 
         /// <summary>

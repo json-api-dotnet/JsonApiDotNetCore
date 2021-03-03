@@ -1,4 +1,7 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
+
+// ReSharper disable UnusedTypeParameter
 
 namespace JsonApiDotNetCore.AtomicOperations.Processors
 {
@@ -7,6 +10,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
     /// <typeparam name="TId"></typeparam>
+    [PublicAPI]
     public interface IRemoveFromRelationshipProcessor<TResource, TId> : IOperationProcessor
         where TResource : class, IIdentifiable<TId>
     {

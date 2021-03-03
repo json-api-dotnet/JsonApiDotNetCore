@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace JsonApiDotNetCoreExample
+namespace JsonApiDotNetCoreExample.Startups
 {
     /// <summary>
     /// Empty startup class, required for integration tests.
@@ -11,10 +10,6 @@ namespace JsonApiDotNetCoreExample
     /// </summary>
     public abstract class EmptyStartup
     {
-        protected EmptyStartup(IConfiguration configuration)
-        {
-        }
-
         public virtual void ConfigureServices(IServiceCollection services)
         {
         }

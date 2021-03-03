@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/meetings?include=attendees";
+            const string route = "/meetings?include=attendees";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -457,7 +457,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
                 }
             };
 
-            var route = "/meetings";
+            const string route = "/meetings";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);

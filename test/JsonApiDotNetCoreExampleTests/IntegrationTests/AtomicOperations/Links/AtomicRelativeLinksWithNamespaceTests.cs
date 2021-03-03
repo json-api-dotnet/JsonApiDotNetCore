@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
                 }
             };
 
-            var route = "/api/operations";
+            const string route = "/api/operations";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -72,26 +72,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
             responseDocument.Results.Should().HaveCount(2);
 
             responseDocument.Results[0].SingleData.Should().NotBeNull();
-            
-            var newLanguageId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+
+            string languageLink = "/api/textLanguages/" + Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
             responseDocument.Results[0].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Links.Self.Should().Be("/api/textLanguages/" + newLanguageId);
+            responseDocument.Results[0].SingleData.Links.Self.Should().Be(languageLink);
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
             responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Self.Should().Be($"/api/textLanguages/{newLanguageId}/relationships/lyrics");
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Related.Should().Be($"/api/textLanguages/{newLanguageId}/lyrics");
+            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Self.Should().Be(languageLink + "/relationships/lyrics");
+            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Related.Should().Be(languageLink + "/lyrics");
 
             responseDocument.Results[1].SingleData.Should().NotBeNull();
 
-            var newCompanyId = short.Parse(responseDocument.Results[1].SingleData.Id);
+            string companyLink = "/api/recordCompanies/" + short.Parse(responseDocument.Results[1].SingleData.Id);
 
             responseDocument.Results[1].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Links.Self.Should().Be("/api/recordCompanies/" + newCompanyId);
+            responseDocument.Results[1].SingleData.Links.Self.Should().Be(companyLink);
             responseDocument.Results[1].SingleData.Relationships.Should().NotBeEmpty();
             responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Self.Should().Be($"/api/recordCompanies/{newCompanyId}/relationships/tracks");
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Related.Should().Be($"/api/recordCompanies/{newCompanyId}/tracks");
+            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Self.Should().Be(companyLink + "/relationships/tracks");
+            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Related.Should().Be(companyLink + "/tracks");
         }
     }
 }

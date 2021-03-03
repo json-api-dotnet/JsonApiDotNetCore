@@ -3,7 +3,6 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -34,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/public-api/swimming-pools?include=diving-boards";
+            const string route = "/public-api/swimming-pools?include=diving-boards";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -51,7 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("diving-boards");
             responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-            responseDocument.Included[0].Attributes["height-in-meters"].As<decimal>().Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters, 0.00000000001M);
+            responseDocument.Included[0].Attributes["height-in-meters"].As<decimal>().Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters);
             responseDocument.Included[0].Relationships.Should().BeNull();
             responseDocument.Included[0].Links.Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
 
@@ -73,7 +72,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/public-api/swimming-pools/{pool.StringId}/water-slides?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
+            var route = $"/public-api/swimming-pools/{pool.StringId}/water-slides" +
+                "?filter=greaterThan(length-in-meters,'1')&fields[water-slides]=length-in-meters";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -105,7 +105,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
                 }
             };
 
-            var route = "/public-api/swimming-pools";
+            const string route = "/public-api/swimming-pools";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -118,17 +118,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             responseDocument.SingleData.Attributes["is-indoor"].Should().Be(newPool.IsIndoor);
 
             var newPoolId = int.Parse(responseDocument.SingleData.Id);
+            string poolLink = route + $"/{newPoolId}";
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be($"/public-api/swimming-pools/{newPoolId}/relationships/water-slides");
-            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be($"/public-api/swimming-pools/{newPoolId}/water-slides");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be($"/public-api/swimming-pools/{newPoolId}/relationships/diving-boards");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be($"/public-api/swimming-pools/{newPoolId}/diving-boards");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be(poolLink + "/relationships/water-slides");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be(poolLink + "/water-slides");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be(poolLink + "/relationships/diving-boards");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be(poolLink + "/diving-boards");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var poolInDatabase = await dbContext.SwimmingPools
-                    .FirstAsync(pool => pool.Id == newPoolId);
+                var poolInDatabase = await dbContext.SwimmingPools.FirstWithIdAsync(newPoolId);
 
                 poolInDatabase.IsIndoor.Should().Be(newPool.IsIndoor);
             });
@@ -138,9 +138,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         public async Task Applies_casing_convention_on_error_stack_trace()
         {
             // Arrange
-            var requestBody = "{ \"data\": {";
+            const string requestBody = "{ \"data\": {";
 
-            var route = "/public-api/swimming-pools";
+            const string route = "/public-api/swimming-pools";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -149,9 +149,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Failed to deserialize request body.");
-            responseDocument.Errors[0].Meta.Data.Should().ContainKey("stack-trace");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Meta.Data.Should().ContainKey("stack-trace");
         }
 
         [Fact]
@@ -188,10 +190,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Input validation failed.");
-            responseDocument.Errors[0].Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/data/attributes/height-in-meters");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
+            error.Source.Pointer.Should().Be("/data/attributes/height-in-meters");
         }
     }
 }

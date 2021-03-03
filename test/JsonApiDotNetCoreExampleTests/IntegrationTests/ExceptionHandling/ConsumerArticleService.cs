@@ -1,5 +1,7 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
@@ -11,11 +13,12 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ConsumerArticleService : JsonApiResourceService<ConsumerArticle>
     {
-        public const string UnavailableArticlePrefix = "X";
+        internal const string UnavailableArticlePrefix = "X";
 
-        private const string _supportEmailAddress = "company@email.com";
+        private const string SupportEmailAddress = "company@email.com";
 
         public ConsumerArticleService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
@@ -30,9 +33,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
         {
             var consumerArticle = await base.GetAsync(id, cancellationToken);
 
-            if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix))
+            if (consumerArticle.Code.StartsWith(UnavailableArticlePrefix, StringComparison.Ordinal))
             {
-                throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, _supportEmailAddress);
+                throw new ConsumerArticleIsNoLongerAvailableException(consumerArticle.Code, SupportEmailAddress);
             }
 
             return consumerArticle;

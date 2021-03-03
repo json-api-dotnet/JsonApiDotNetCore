@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
@@ -12,13 +12,16 @@ namespace JsonApiDotNetCore.Resources
     /// The goal of this class is to reduce the frequency with which developers have to override the service and repository layers.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
+    [PublicAPI]
     public class ResourceHooksDefinition<TResource> : IResourceHookContainer<TResource> where TResource : class, IIdentifiable
     {
         protected IResourceGraph ResourceGraph { get; }
 
         public ResourceHooksDefinition(IResourceGraph resourceGraph)
         {
-            ResourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
+            ResourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />

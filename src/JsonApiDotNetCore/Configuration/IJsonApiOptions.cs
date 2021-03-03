@@ -187,6 +187,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         JsonSerializerSettings SerializerSettings { get; }
 
-        internal DefaultContractResolver SerializerContractResolver => (DefaultContractResolver) SerializerSettings.ContractResolver;
+        internal NamingStrategy SerializerNamingStrategy
+        {
+            get
+            {
+                var contractResolver = SerializerSettings.ContractResolver as DefaultContractResolver;
+                return contractResolver?.NamingStrategy ?? JsonApiOptions.DefaultNamingStrategy;
+            }
+        }
     }
 }

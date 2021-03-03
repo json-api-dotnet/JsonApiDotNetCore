@@ -60,7 +60,7 @@ namespace TestBuildingBlocks
             ExecuteRequestAsync<TResponseDocument>(HttpMethod method, string requestUrl, object requestBody,
                 string contentType, IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders)
         {
-            var request = new HttpRequestMessage(method, requestUrl);
+            using var request = new HttpRequestMessage(method, requestUrl);
             string requestText = SerializeRequest(requestBody);
 
             if (!string.IsNullOrEmpty(requestText))

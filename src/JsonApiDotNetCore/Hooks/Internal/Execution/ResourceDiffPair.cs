@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// A wrapper that contains a resource that is affected by the request, 
     /// matched to its current database value
     /// </summary>
+    [PublicAPI]
     public sealed class ResourceDiffPair<TResource> where TResource : class, IIdentifiable
     {
         public ResourceDiffPair(TResource resource, TResource databaseValue)

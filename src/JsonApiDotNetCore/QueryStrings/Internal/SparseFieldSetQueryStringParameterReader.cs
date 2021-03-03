@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class SparseFieldSetQueryStringParameterReader : QueryStringParameterReader, ISparseFieldSetQueryStringParameterReader
     {
         private readonly SparseFieldTypeParser _sparseFieldTypeParser;
@@ -39,7 +41,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Fields);
@@ -48,6 +50,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+
             return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
         }
 
@@ -84,10 +88,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
             return _sparseFieldTable.Any()
-                ? new[]
-                {
-                    new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable))
-                }
+                ? new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable)).AsArray()
                 : Array.Empty<ExpressionInScope>();
         }
     }

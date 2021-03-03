@@ -1,19 +1,16 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class HostingStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public HostingStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
-
         protected override void SetJsonApiOptions(JsonApiOptions options)
         {
             base.SetJsonApiOptions(options);

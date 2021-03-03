@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -21,10 +22,11 @@ namespace JsonApiDotNetCore.Middleware
     /// <summary>
     /// Intercepts HTTP requests to populate injected <see cref="IJsonApiRequest"/> instance for JSON:API requests.
     /// </summary>
+    [PublicAPI]
     public sealed class JsonApiMiddleware
     {
-        private static readonly MediaTypeHeaderValue _mediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
-        private static readonly MediaTypeHeaderValue _atomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
+        private static readonly MediaTypeHeaderValue MediaType = MediaTypeHeaderValue.Parse(HeaderConstants.MediaType);
+        private static readonly MediaTypeHeaderValue AtomicOperationsMediaType = MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType);
 
         private readonly RequestDelegate _next;
 
@@ -33,17 +35,17 @@ namespace JsonApiDotNetCore.Middleware
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, 
+        public async Task InvokeAsync(HttpContext httpContext, 
             IControllerResourceMapping controllerResourceMapping, 
             IJsonApiOptions options, 
             IJsonApiRequest request, 
             IResourceContextProvider resourceContextProvider)
         {
-            if (httpContext == null) throw new ArgumentNullException(nameof(httpContext));
-            if (controllerResourceMapping == null) throw new ArgumentNullException(nameof(controllerResourceMapping));
-            if (options == null) throw new ArgumentNullException(nameof(options));
-            if (request == null) throw new ArgumentNullException(nameof(request));
-            if (resourceContextProvider == null) throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(httpContext, nameof(httpContext));
+            ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
+            ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
 
             var routeValues = httpContext.GetRouteData().Values;
 
@@ -51,7 +53,7 @@ namespace JsonApiDotNetCore.Middleware
             if (primaryResourceContext != null)
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(_mediaType, httpContext, options.SerializerSettings))
+                    !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerSettings))
                 {
                     return;
                 }
@@ -63,7 +65,7 @@ namespace JsonApiDotNetCore.Middleware
             else if (IsOperationsRequest(routeValues))
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) || 
-                    !await ValidateAcceptHeaderAsync(_atomicOperationsMediaType, httpContext, options.SerializerSettings))
+                    !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerSettings))
                 {
                     return;
                 }
@@ -100,7 +102,8 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' " +
+                        "for the Content-Type header value."
                 });
                 return false;
             }

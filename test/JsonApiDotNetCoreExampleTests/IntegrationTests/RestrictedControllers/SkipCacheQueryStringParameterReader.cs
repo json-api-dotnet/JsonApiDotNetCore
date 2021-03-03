@@ -1,4 +1,5 @@
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
@@ -8,18 +9,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
     public sealed class SkipCacheQueryStringParameterReader : IQueryStringParameterReader
     {
-        private const string _skipCacheParameterName = "skipCache";
+        private const string SkipCacheParameterName = "skipCache";
 
+        [UsedImplicitly]
         public bool SkipCache { get; private set; }
 
         public bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            return !disableQueryStringAttribute.ParameterNames.Contains(_skipCacheParameterName);
+            return !disableQueryStringAttribute.ParameterNames.Contains(SkipCacheParameterName);
         }
 
         public bool CanRead(string parameterName)
         {
-            return parameterName == _skipCacheParameterName;
+            return parameterName == SkipCacheParameterName;
         }
 
         public void Read(string parameterName, StringValues parameterValue)

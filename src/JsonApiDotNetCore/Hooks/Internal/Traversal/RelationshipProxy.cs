@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     {
         private readonly bool _skipThroughType;
 
+        public Type LeftType => Attribute.LeftType;
+
         /// <summary>
         /// The target type for this relationship attribute. 
         /// For HasOne has HasMany this is trivial: just the right-hand side.
@@ -28,10 +30,11 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// Identifiable) or it is the right-hand side (when the through resource is not identifiable)
         /// </summary>
         public Type RightType { get; }
-        public Type LeftType => Attribute.LeftType;
+
         public bool IsContextRelation { get; }
 
-        public RelationshipAttribute Attribute { get; set; }
+        public RelationshipAttribute Attribute { get; }
+
         public RelationshipProxy(RelationshipAttribute attr, Type relatedType, bool isContextRelation)
         {
             RightType = relatedType;
@@ -60,12 +63,19 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 }
                 var collection = new List<IIdentifiable>();
                 var throughResources = (IEnumerable)hasManyThrough.ThroughProperty.GetValue(resource);
-                if (throughResources == null) return null;
+                if (throughResources == null)
+                {
+                    return null;
+                }
 
                 foreach (var throughResource in throughResources)
                 {
                     var rightResource = (IIdentifiable)hasManyThrough.RightProperty.GetValue(throughResource);
-                    if (rightResource == null) continue;
+                    if (rightResource == null)
+                    {
+                        continue;
+                    }
+
                     collection.Add(rightResource);
                 }
 
@@ -95,7 +105,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
                 var filteredList = new List<object>();
                 var rightResources = TypeHelper.CopyToList((IEnumerable)value, RightType);
-                foreach (var throughResource in throughResources)
+                foreach (var throughResource in throughResources ?? Array.Empty<object>())
                 {
                     if (rightResources.Contains(hasManyThrough.RightProperty.GetValue(throughResource)))
                     {

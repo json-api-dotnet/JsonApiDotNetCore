@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     /// <summary>
     /// Client deserializer implementation of the <see cref="BaseDeserializer"/>.
     /// </summary>
+    [PublicAPI]
     public class ResponseDeserializer : BaseDeserializer, IResponseDeserializer
     {
         public ResponseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory) : base(resourceContextProvider, resourceFactory) { }
@@ -18,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body) where TResource : class, IIdentifiable
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var resource = DeserializeBody(body);
             return new SingleResponse<TResource>
@@ -34,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <inheritdoc />
         public ManyResponse<TResource> DeserializeMany<TResource>(string body) where TResource : class, IIdentifiable
         {
-            if (body == null) throw new ArgumentNullException(nameof(body));
+            ArgumentGuard.NotNull(body, nameof(body));
 
             var resources = DeserializeBody(body);
             return new ManyResponse<TResource>
@@ -57,28 +59,36 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         /// <param name="data">Relationship data for <paramref name="resource"/>. Is null when <paramref name="field"/> is not a <see cref="RelationshipAttribute"/>.</param>
         protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
         {
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
-            if (field == null) throw new ArgumentNullException(nameof(field));
+            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(field, nameof(field));
 
             // Client deserializers do not need additional processing for attributes.
             if (field is AttrAttribute)
+            {
                 return;
+            }
 
             // if the included property is empty or absent, there is no additional data to be parsed.
             if (Document.Included == null || Document.Included.Count == 0)
-                return;
-
-            if (field is HasOneAttribute hasOneAttr)
             {
-                // add attributes and relationships of a parsed HasOne relationship
-                var rio = data.SingleData;
-                hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio));
+                return;
             }
-            else if (field is HasManyAttribute hasManyAttr)
-            {  // add attributes and relationships of a parsed HasMany relationship
-                var items = data.ManyData.Select(rio => ParseIncludedRelationship(rio));
-                var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
-                hasManyAttr.SetValue(resource, values);
+
+            if (data != null)
+            {
+                if (field is HasOneAttribute hasOneAttr)
+                {
+                    // add attributes and relationships of a parsed HasOne relationship
+                    var rio = data.SingleData;
+                    hasOneAttr.SetValue(resource, rio == null ? null : ParseIncludedRelationship(rio));
+                }
+                else if (field is HasManyAttribute hasManyAttr)
+                {
+                    // add attributes and relationships of a parsed HasMany relationship
+                    var items = data.ManyData.Select(ParseIncludedRelationship);
+                    var values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
+                    hasManyAttr.SetValue(resource, values);
+                }
             }
         }
 

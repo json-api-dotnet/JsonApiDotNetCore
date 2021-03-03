@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -11,6 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class FieldsToSerialize : IFieldsToSerialize
     {
         private readonly IResourceContextProvider _resourceContextProvider;
@@ -23,15 +25,18 @@ namespace JsonApiDotNetCore.Serialization
             IResourceDefinitionAccessor resourceDefinitionAccessor,
             IJsonApiRequest request)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(request, nameof(request));
+
+            _resourceContextProvider = resourceContextProvider;
+            _request = request;
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
         /// <inheritdoc />
         public IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             if (_request.Kind == EndpointKind.Relationship)
             {
@@ -53,7 +58,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             if (_request.Kind == EndpointKind.Relationship)
             {

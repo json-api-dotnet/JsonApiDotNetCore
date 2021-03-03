@@ -1,9 +1,11 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
     [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class PhotoLocation : Identifiable
     {
         [Attr]

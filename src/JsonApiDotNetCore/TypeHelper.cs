@@ -11,17 +11,14 @@ namespace JsonApiDotNetCore
 {
     internal static class TypeHelper
     {
-        private static readonly Type[] _hashSetCompatibleCollectionTypes =
+        private static readonly Type[] HashSetCompatibleCollectionTypes =
         {
             typeof(HashSet<>), typeof(ICollection<>), typeof(ISet<>), typeof(IEnumerable<>), typeof(IReadOnlyCollection<>)
         };
 
         public static object ConvertType(object value, Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentGuard.NotNull(type, nameof(type));
 
             if (value == null)
             {
@@ -119,6 +116,8 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> navigationExpression)
         {
+            ArgumentGuard.NotNull(navigationExpression, nameof(navigationExpression));
+
             MemberExpression exp;
 
             //this line is necessary, because sometimes the expression comes in as Convert(originalExpression)
@@ -130,7 +129,7 @@ namespace JsonApiDotNetCore
                 }
                 else
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Invalid expression.", nameof(navigationExpression));
                 }
             }
             else if (navigationExpression.Body is MemberExpression memberExpression)
@@ -139,7 +138,7 @@ namespace JsonApiDotNetCore
             }
             else
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid expression.", nameof(navigationExpression));
             }
 
             return (PropertyInfo)exp.Member;
@@ -171,7 +170,7 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes, HashSet<TValueOut> resources)
         {
-            return attributes?.ToDictionary(attr => attr.Property, attr => resources);
+            return attributes.ToDictionary(attr => attr.Property, _ => resources);
         }
 
         /// <summary>
@@ -183,19 +182,23 @@ namespace JsonApiDotNetCore
         /// <param name="openType">Open generic type</param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
-            return CreateInstanceOfOpenType(openType, new[] {parameter}, constructorArguments);
+            return CreateInstanceOfOpenType(openType, parameter.AsArray(), constructorArguments);
         }
 
         /// <summary>
-        /// Use this overload if you need to instantiate a type that has a internal constructor
+        /// Use this overload if you need to instantiate a type that has an internal constructor
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
             Type[] parameters = {parameter};
-            if (!hasInternalConstructor) return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            if (!hasInternalConstructor)
+            {
+                return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
+            }
+
             var parameterizedType = openType.MakeGenericType(parameters);
             // note that if for whatever reason the constructor of AffectedResource is set from
-            // internal to public, this will throw an error, as it is looking for a no
+            // internal to public, this will throw an error, as it is looking for a non-public one.
             return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
         }
 
@@ -203,18 +206,18 @@ namespace JsonApiDotNetCore
         /// Reflectively instantiates a list of a certain type.
         /// </summary>
         /// <returns>The list of the target type</returns>
-        /// <param name="type">The target type</param>
-        public static IList CreateListFor(Type type)
+        /// <param name="elementType">The target type</param>
+        public static IList CreateListFor(Type elementType)
         {
-            return (IList)CreateInstanceOfOpenType(typeof(List<>), type);
+            return (IList)CreateInstanceOfOpenType(typeof(List<>), elementType);
         }
 
         /// <summary>
         /// Reflectively instantiates a hashset of a certain type. 
         /// </summary>
-        public static IEnumerable CreateHashSetFor(Type type, object elements = null)
+        public static IEnumerable CreateHashSetFor(Type type, object elements)
         {
-            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements ?? new object());
+            return (IEnumerable)CreateInstanceOfOpenType(typeof(HashSet<>), type, elements);
         }
 
         /// <summary>
@@ -250,19 +253,23 @@ namespace JsonApiDotNetCore
             if (collectionType.IsGenericType)
             {
                 var openCollectionType = collectionType.GetGenericTypeDefinition();
-                return _hashSetCompatibleCollectionTypes.Contains(openCollectionType);
+                return HashSetCompatibleCollectionTypes.Contains(openCollectionType);
             }
 
             return false;
         }
 
         /// <summary>
-        /// Gets the type (Guid or int) of the Id of a type that implements IIdentifiable
+        /// Gets the type (such as Guid or int) of the Id property on a type that implements <see cref="IIdentifiable"/>.
         /// </summary>
         public static Type GetIdType(Type resourceType)
         {
             var property = resourceType.GetProperty(nameof(Identifiable.Id));
-            if (property == null) throw new ArgumentException("Type does not have 'Id' property.");
+            if (property == null)
+            {
+                throw new ArgumentException($"Type '{resourceType.Name}' does not have 'Id' property.");
+            }
+
             return property.PropertyType;
         }
 
@@ -280,7 +287,7 @@ namespace JsonApiDotNetCore
 
             if (value is IIdentifiable resource)
             {
-                return new[] {resource};
+                return resource.AsArray();
             }
 
             return Array.Empty<IIdentifiable>();
@@ -288,10 +295,7 @@ namespace JsonApiDotNetCore
 
         public static object CreateInstance(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentGuard.NotNull(type, nameof(type));
 
             try
             {
@@ -331,8 +335,8 @@ namespace JsonApiDotNetCore
         /// <param name="collectionType">Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).</param>
         public static IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (collectionType == null) throw new ArgumentNullException(nameof(collectionType));
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(collectionType, nameof(collectionType));
 
             var concreteCollectionType = ToConcreteCollectionType(collectionType);
             dynamic concreteCollectionInstance = CreateInstance(concreteCollectionType);
@@ -350,10 +354,7 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static bool IsOrImplementsInterface(Type source, Type interfaceType)
         {
-            if (interfaceType == null)
-            {
-                throw new ArgumentNullException(nameof(interfaceType));
-            }
+            ArgumentGuard.NotNull(interfaceType, nameof(interfaceType));
 
             if (source == null)
             {

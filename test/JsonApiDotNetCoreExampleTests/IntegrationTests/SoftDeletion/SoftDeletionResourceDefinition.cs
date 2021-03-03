@@ -1,11 +1,14 @@
 using System.Linq;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public class SoftDeletionResourceDefinition<TResource> : JsonApiResourceDefinition<TResource>
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    public sealed class SoftDeletionResourceDefinition<TResource> : JsonApiResourceDefinition<TResource>
         where TResource : class, IIdentifiable<int>, ISoftDeletable
     {
         private readonly IResourceGraph _resourceGraph;
@@ -26,8 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             return existingFilter == null
                 ? (FilterExpression) isNotSoftDeleted
-                : new LogicalExpression(LogicalOperator.And, new[] {isNotSoftDeleted, existingFilter});
+                : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotSoftDeleted, existingFilter));
         }
-
     }
 }

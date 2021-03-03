@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -6,6 +7,7 @@ namespace JsonApiDotNetCore.Configuration
     /// Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime.
     /// This is only used by resource hooks and subject to be removed in a future version.
     /// </summary>
+    [PublicAPI]
     public interface IGenericServiceFactory
     {
         /// <summary>

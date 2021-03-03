@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents pagination in a query string, resulting from text such as: 1,articles:2
     /// </summary>
+    [PublicAPI]
     public class PaginationQueryStringValueExpression : QueryExpression
     {
         public IReadOnlyCollection<PaginationElementQueryStringValueExpression> Elements { get; }
@@ -14,12 +16,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public PaginationQueryStringValueExpression(
             IReadOnlyCollection<PaginationElementQueryStringValueExpression> elements)
         {
-            Elements = elements ?? throw new ArgumentNullException(nameof(elements));
+            ArgumentGuard.NotNull(elements, nameof(elements));
 
-            if (!Elements.Any())
+            if (!elements.Any())
             {
                 throw new ArgumentException("Must have one or more elements.", nameof(elements));
             }
+
+            Elements = elements;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor,

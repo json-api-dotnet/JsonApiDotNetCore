@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -10,6 +11,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Represents an Entity Framework Core transaction in an atomic:operations request.
     /// </summary>
+    [PublicAPI]
     public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction
     {
         private readonly IDbContextTransaction _transaction;
@@ -20,8 +22,11 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
         {
-            _transaction = transaction ?? throw new ArgumentNullException(nameof(transaction));
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            ArgumentGuard.NotNull(transaction, nameof(transaction));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+
+            _transaction = transaction;
+            _dbContext = dbContext;
         }
 
         /// <summary>

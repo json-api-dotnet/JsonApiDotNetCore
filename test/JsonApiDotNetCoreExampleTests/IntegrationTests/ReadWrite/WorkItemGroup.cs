@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkItemGroup : Identifiable<Guid>
     {
         [Attr]

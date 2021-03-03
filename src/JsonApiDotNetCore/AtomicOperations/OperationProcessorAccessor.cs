@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations.Processors;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.AtomicOperations
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class OperationProcessorAccessor : IOperationProcessorAccessor
     {
         private readonly IResourceContextProvider _resourceContextProvider;
@@ -18,14 +20,17 @@ namespace JsonApiDotNetCore.AtomicOperations
         public OperationProcessorAccessor(IResourceContextProvider resourceContextProvider,
             IServiceProvider serviceProvider)
         {
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _resourceContextProvider = resourceContextProvider;
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />
         public Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
-            if (operation == null) throw new ArgumentNullException(nameof(operation));
+            ArgumentGuard.NotNull(operation, nameof(operation));
 
             var processor = ResolveProcessor(operation);
             return processor.ProcessAsync(operation, cancellationToken);
@@ -45,19 +50,33 @@ namespace JsonApiDotNetCore.AtomicOperations
             switch (kind)
             {
                 case OperationKind.CreateResource:
+                {
                     return typeof(ICreateProcessor<,>);
+                }
                 case OperationKind.UpdateResource:
+                {
                     return typeof(IUpdateProcessor<,>);
+                }
                 case OperationKind.DeleteResource:
+                {
                     return typeof(IDeleteProcessor<,>);
+                }
                 case OperationKind.SetRelationship:
+                {
                     return typeof(ISetRelationshipProcessor<,>);
+                }
                 case OperationKind.AddToRelationship:
+                {
                     return typeof(IAddToRelationshipProcessor<,>);
+                }
                 case OperationKind.RemoveFromRelationship:
+                {
                     return typeof(IRemoveFromRelationshipProcessor<,>);
+                }
                 default:
+                {
                     throw new NotSupportedException($"Unknown operation kind '{kind}'.");
+                }
             }
         }
     }

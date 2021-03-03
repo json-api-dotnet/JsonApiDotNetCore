@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
@@ -11,6 +12,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
     /// <summary>
     /// The default implementation for IHooksDiscovery
     /// </summary>
+    [PublicAPI]
     public class HooksDiscovery<TResource> : IHooksDiscovery<TResource> where TResource : class, IIdentifiable
     {
         private readonly Type _boundResourceDefinitionType = typeof(ResourceHooksDefinition<TResource>);
@@ -56,13 +58,15 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 
             var implementedHooks = new List<ResourceHook>();
             // this hook can only be used with enabled database values
-            var databaseValuesEnabledHooks = new List<ResourceHook> { ResourceHook.BeforeImplicitUpdateRelationship };
+            var databaseValuesEnabledHooks = ResourceHook.BeforeImplicitUpdateRelationship.AsList();
             var databaseValuesDisabledHooks = new List<ResourceHook>();
             foreach (var hook in _allHooks)
             {
                 var method = containerType.GetMethod(hook.ToString("G"));
-                if (method.DeclaringType == _boundResourceDefinitionType)
+                if (method == null || method.DeclaringType == _boundResourceDefinitionType)
+                {
                     continue;
+                }
 
                 implementedHooks.Add(hook);
                 var attr = method.GetCustomAttributes(true).OfType<LoadDatabaseValuesAttribute>().SingleOrDefault();

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,8 +14,8 @@ namespace JsonApiDotNetCore.Controllers.Annotations
             ActionExecutingContext context,
             ActionExecutionDelegate next)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            if (next == null) throw new ArgumentNullException(nameof(next));
+            ArgumentGuard.NotNull(context, nameof(context));
+            ArgumentGuard.NotNull(next, nameof(next));
 
             var method = context.HttpContext.Request.Method;
 

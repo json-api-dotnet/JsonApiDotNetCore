@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -16,6 +15,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// </summary>
         /// <example>
         /// Input tree:
+        /// <code><![CDATA[
         /// Article
         /// {
         ///   Blog,
@@ -24,17 +24,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
         ///     Author
         ///   }
         /// }
-        ///
+        /// ]]></code>
         /// Output chains:
+        /// <code><![CDATA[
         /// Article -> Blog,
         /// Article -> Revisions -> Author
+        /// ]]></code>
         /// </example>
         public static IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
         {
-            if (include == null)
-            {
-                throw new ArgumentNullException(nameof(include));
-            }
+            ArgumentGuard.NotNull(include, nameof(include));
 
             IncludeToChainsConverter converter = new IncludeToChainsConverter();
             converter.Visit(include, null);
@@ -47,10 +46,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// </summary>
         /// <example>
         /// Input chains:
+        /// <code><![CDATA[
         /// Article -> Blog,
         /// Article -> Revisions -> Author
-        ///
+        /// ]]></code>
         /// Output tree:
+        /// <code><![CDATA[
         /// Article
         /// {
         ///   Blog,
@@ -59,13 +60,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         ///     Author
         ///   }
         /// }
+        /// ]]></code>
         /// </example>
         public static IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {
-            if (chains == null)
-            {
-                throw new ArgumentNullException(nameof(chains));
-            }
+            ArgumentGuard.NotNull(chains, nameof(chains));
 
             var elements = ConvertChainsToElements(chains);
             return elements.Any() ? new IncludeExpression(elements) : IncludeExpression.Empty;
@@ -77,20 +76,25 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
-                MutableIncludeNode currentNode = rootNode;
-
-                foreach (var relationship in chain.Fields.OfType<RelationshipAttribute>())
-                {
-                    if (!currentNode.Children.ContainsKey(relationship))
-                    {
-                        currentNode.Children[relationship] = new MutableIncludeNode(relationship);
-                    }
-
-                    currentNode = currentNode.Children[relationship];
-                }
+                ConvertChainToElement(chain, rootNode);
             }
 
             return rootNode.Children.Values.Select(child => child.ToExpression()).ToArray();
+        }
+
+        private static void ConvertChainToElement(ResourceFieldChainExpression chain, MutableIncludeNode rootNode)
+        {
+            MutableIncludeNode currentNode = rootNode;
+
+            foreach (var relationship in chain.Fields.OfType<RelationshipAttribute>())
+            {
+                if (!currentNode.Children.ContainsKey(relationship))
+                {
+                    currentNode.Children[relationship] = new MutableIncludeNode(relationship);
+                }
+
+                currentNode = currentNode.Children[relationship];
+            }
         }
 
         private sealed class IncludeToChainsConverter : QueryExpressionVisitor<object, object>

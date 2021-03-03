@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -18,6 +19,7 @@ namespace JsonApiDotNetCore.Serialization
     /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0).
     /// It was intended to have as little dependencies as possible in formatting layer for greater extensibility.
     /// </summary>
+    [PublicAPI]
     public class JsonApiWriter : IJsonApiWriter
     {
         private readonly IJsonApiSerializer _serializer;
@@ -26,16 +28,18 @@ namespace JsonApiDotNetCore.Serialization
 
         public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(serializer, nameof(serializer));
+            ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
-            _exceptionHandler = exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler));
+            _serializer = serializer;
+            _exceptionHandler = exceptionHandler;
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             var response = context.HttpContext.Response;
             response.ContentType = _serializer.ContentType;
@@ -83,21 +87,21 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            contextObject = WrapErrors(contextObject);
+            var contextObjectWrapped = WrapErrors(contextObject);
 
-            return _serializer.Serialize(contextObject);
+            return _serializer.Serialize(contextObjectWrapped);
         }
 
         private static object WrapErrors(object contextObject)
         {
             if (contextObject is IEnumerable<Error> errors)
             {
-                contextObject = new ErrorDocument(errors);
+                return new ErrorDocument(errors);
             }
 
             if (contextObject is Error error)
             {
-                contextObject = new ErrorDocument(error);
+                return new ErrorDocument(error);
             }
 
             return contextObject;

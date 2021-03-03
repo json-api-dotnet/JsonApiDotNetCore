@@ -1,6 +1,8 @@
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 
+// ReSharper disable UnusedTypeParameter
+
 namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 {
     /// <summary>

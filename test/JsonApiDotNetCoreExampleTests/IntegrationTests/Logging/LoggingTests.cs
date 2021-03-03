@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
                 options.ClearProviders();
                 options.AddProvider(loggerFactory);
                 options.SetMinimumLevel(LogLevel.Trace);
-                options.AddFilter((category, level) => true);
+                options.AddFilter((_, __) => true);
             });
 
             testContext.ConfigureServicesBeforeStartup(services =>
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             };
 
             // Arrange
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -74,7 +75,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-                message.Text.StartsWith("Received request at 'http://localhost/auditEntries' with body: <<"));
+                message.Text.StartsWith("Received request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Clear();
 
             // Arrange
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
@@ -96,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace && 
-                message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<"));
+                message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
         [Fact]
@@ -107,9 +108,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Clear();
 
             // Arrange
-            var requestBody = "{ \"data\" {";
+            const string requestBody = "{ \"data\" {";
 
-            var route = "/auditEntries";
+            const string route = "/auditEntries";
 
             // Act
             var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);

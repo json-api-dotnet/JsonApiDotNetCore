@@ -9,7 +9,8 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
     [ApiController]
-    [DisableRoutingConvention, Route("world-civilians")]
+    [DisableRoutingConvention]
+    [Route("world-civilians")]
     public sealed class CiviliansController : JsonApiController<Civilian>
     {
         public CiviliansController(IJsonApiOptions options, ILoggerFactory loggerFactory,

@@ -59,7 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -101,10 +101,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
+            error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -138,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -147,10 +149,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
+            error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]
@@ -191,7 +195,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
                 }
             };
 
-            var route = "/operations/musicTracks/create";
+            const string route = "/operations/musicTracks/create";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
@@ -200,10 +204,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            responseDocument.Errors[0].Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
-            responseDocument.Errors[0].Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
-            responseDocument.Errors[0].Source.Pointer.Should().Be("/atomic:operations[0]");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
+            error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
     }
 }

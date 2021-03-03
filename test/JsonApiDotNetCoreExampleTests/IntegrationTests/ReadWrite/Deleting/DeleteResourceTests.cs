@@ -45,8 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemsInDatabase.Should().BeNull();
             });
@@ -56,7 +55,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         public async Task Cannot_delete_missing_resource()
         {
             // Arrange
-            var route = "/workItems/99999999";
+            const string route = "/workItems/99999999";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -65,9 +64,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("The requested resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("The requested resource does not exist.");
+            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
         }
 
         [Fact]
@@ -95,13 +96,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var colorsInDatabase = await dbContext.RgbColors
-                    .FirstOrDefaultAsync(color => color.Id == existingColor.Id);
+                var colorsInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingColor.Id);
                 
                 colorsInDatabase.Should().BeNull();
 
-                var groupInDatabase = await dbContext.Groups
-                    .FirstAsync(group => group.Id == existingColor.Group.Id);
+                var groupInDatabase = await dbContext.Groups.FirstWithIdAsync(existingColor.Group.Id);
 
                 groupInDatabase.Color.Should().BeNull();
             });
@@ -132,13 +131,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var groupsInDatabase = await dbContext.Groups
-                    .FirstOrDefaultAsync(group => group.Id == existingGroup.Id);
+                var groupsInDatabase = await dbContext.Groups.FirstWithIdOrDefaultAsync(existingGroup.Id);
 
                 groupsInDatabase.Should().BeNull();
 
-                var colorInDatabase = await dbContext.RgbColors
-                    .FirstOrDefaultAsync(color => color.Id == existingGroup.Color.Id);
+                var colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
                 colorInDatabase.Should().NotBeNull();
                 colorInDatabase.Group.Should().BeNull();
@@ -170,8 +167,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItem.Id);
+                var workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
                 workItemInDatabase.Should().BeNull();
 
@@ -210,8 +206,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var workItemsInDatabase = await dbContext.WorkItems
-                    .FirstOrDefaultAsync(workItem => workItem.Id == existingWorkItemTag.Item.Id);
+                var workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItemTag.Item.Id);
 
                 workItemsInDatabase.Should().BeNull();
 

@@ -12,11 +12,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
     public abstract class BaseToothbrushesController : BaseJsonApiController<Toothbrush>
     {
-        public const int _emptyActionResultId = 11111111;
-        public const int _actionResultWithErrorObjectId = 22222222;
-        public const int _actionResultWithStringParameter = 33333333;
-        public const int _objectResultWithErrorObjectId = 44444444;
-        public const int _objectResultWithErrorCollectionId = 55555555;
+        internal const int EmptyActionResultId = 11111111;
+        internal const int ActionResultWithErrorObjectId = 22222222;
+        internal const int ActionResultWithStringParameter = 33333333;
+        internal const int ObjectResultWithErrorObjectId = 44444444;
+        internal const int ObjectResultWithErrorCollectionId = 55555555;
 
         protected BaseToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
             IResourceService<Toothbrush> resourceService)
@@ -26,12 +26,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 
         public override async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
         {
-            if (id == _emptyActionResultId)
+            if (id == EmptyActionResultId)
             {
                 return NotFound();
             }
 
-            if (id == _actionResultWithErrorObjectId)
+            if (id == ActionResultWithErrorObjectId)
             {
                 return NotFound(new Error(HttpStatusCode.NotFound)
                 {
@@ -39,17 +39,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
                 });
             }
 
-            if (id == _actionResultWithStringParameter)
+            if (id == ActionResultWithStringParameter)
             {
                 return Conflict("Something went wrong.");
             }
 
-            if (id == _objectResultWithErrorObjectId)
+            if (id == ObjectResultWithErrorObjectId)
             {
                 return Error(new Error(HttpStatusCode.BadGateway));
             }
 
-            if (id == _objectResultWithErrorCollectionId)
+            if (id == ObjectResultWithErrorCollectionId)
             {
                 var errors = new[]
                 {

@@ -9,14 +9,16 @@ namespace JsonApiDotNetCore.Configuration
 
         public GenericServiceFactory(IRequestScopedServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />
         public TInterface Get<TInterface>(Type openGenericType, Type resourceType)
         {
-            if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(openGenericType, nameof(openGenericType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             return GetInternal<TInterface>(openGenericType, resourceType);
         }
@@ -24,9 +26,9 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public TInterface Get<TInterface>(Type openGenericType, Type resourceType, Type keyType)
         {
-            if (openGenericType == null) throw new ArgumentNullException(nameof(openGenericType));
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
-            if (keyType == null) throw new ArgumentNullException(nameof(keyType));
+            ArgumentGuard.NotNull(openGenericType, nameof(openGenericType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(keyType, nameof(keyType));
 
             return GetInternal<TInterface>(openGenericType, resourceType, keyType);
         }

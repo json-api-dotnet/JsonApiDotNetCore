@@ -12,7 +12,8 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
         public Dictionary<string, object> Meta { get; set; }
 
-        [JsonProperty("op"), JsonConverter(typeof(StringEnumConverter))]
+        [JsonProperty("op")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public AtomicOperationCode Code { get; set; }
 
         [JsonProperty("ref", NullValueHandling = NullValueHandling.Ignore)]

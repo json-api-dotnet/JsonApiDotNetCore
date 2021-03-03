@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class PaginationQueryStringParameterReader : QueryStringParameterReader, IPaginationQueryStringParameterReader
     {
         private const string PageSizeParameterName = "page[size]";
@@ -26,14 +28,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _paginationParser = new PaginationParser(resourceContextProvider);
         }
 
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Page);
@@ -100,6 +104,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
         }
 
+        [AssertionMethod]
         protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
         {
             if (_options.MaximumPageNumber != null &&

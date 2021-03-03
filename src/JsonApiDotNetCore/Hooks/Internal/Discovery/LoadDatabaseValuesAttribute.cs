@@ -1,15 +1,17 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 {
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class LoadDatabaseValuesAttribute : Attribute
     {
-        public readonly bool Value;
+        public bool Value { get; }
 
-        public LoadDatabaseValuesAttribute(bool mode = true)
+        public LoadDatabaseValuesAttribute(bool value = true)
         {
-            Value = mode;
+            Value = value;
         }
     }
 }

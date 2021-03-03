@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace JsonApiDotNetCore.Repositories
 {
+    [PublicAPI]
     public static class DbContextExtensions
     {
         /// <summary>
@@ -14,8 +16,8 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         public static IIdentifiable GetTrackedOrAttach(this DbContext dbContext, IIdentifiable resource)
         {
-            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
-            if (resource == null) throw new ArgumentNullException(nameof(resource));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+            ArgumentGuard.NotNull(resource, nameof(resource));
 
             var trackedIdentifiable = (IIdentifiable)dbContext.GetTrackedIdentifiable(resource);
             if (trackedIdentifiable == null)
@@ -32,17 +34,21 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         public static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
         {
-            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
-            if (identifiable == null) throw new ArgumentNullException(nameof(identifiable));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+            ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-            var entityType = identifiable.GetType();
-            var entityEntry = dbContext.ChangeTracker
-                .Entries()
-                .FirstOrDefault(entry =>
-                    entry.Entity.GetType() == entityType &&
-                    ((IIdentifiable) entry.Entity).StringId == identifiable.StringId);
+            var resourceType = identifiable.GetType();
+            string stringId = identifiable.StringId;
+
+            var entityEntry = dbContext.ChangeTracker.Entries()
+                .FirstOrDefault(entry => IsResource(entry, resourceType, stringId));
 
             return entityEntry?.Entity;
+        }
+
+        private static bool IsResource(EntityEntry entry, Type resourceType, string stringId)
+        {
+            return entry.Entity.GetType() == resourceType && ((IIdentifiable) entry.Entity).StringId == stringId;
         }
 
         /// <summary>
@@ -50,7 +56,7 @@ namespace JsonApiDotNetCore.Repositories
         /// </summary>
         public static void ResetChangeTracker(this DbContext dbContext)
         {
-            if (dbContext == null) throw new ArgumentNullException(nameof(dbContext));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
 
             List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().ToList();
 

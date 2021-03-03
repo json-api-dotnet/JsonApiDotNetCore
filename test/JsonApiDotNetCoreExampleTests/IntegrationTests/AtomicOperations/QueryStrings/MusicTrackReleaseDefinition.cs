@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Authentication;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<MusicTrack, Guid>
     {
         private readonly ISystemClock _systemClock;
@@ -14,7 +17,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         public MusicTrackReleaseDefinition(IResourceGraph resourceGraph, ISystemClock systemClock)
             : base(resourceGraph)
         {
-            _systemClock = systemClock ?? throw new ArgumentNullException(nameof(systemClock));
+            ArgumentGuard.NotNull(systemClock, nameof(systemClock));
+
+            _systemClock = systemClock;
         }
 
         public override QueryStringParameterHandlers<MusicTrack> OnRegisterQueryableHandlersForQueryStringParameters()
@@ -27,14 +32,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
 
         private IQueryable<MusicTrack> FilterOnRecentlyReleased(IQueryable<MusicTrack> source, StringValues parameterValue)
         {
+            var tracks = source;
+
             if (bool.Parse(parameterValue))
             {
-                source = source.Where(musicTrack =>
+                tracks = tracks.Where(musicTrack =>
                     musicTrack.ReleasedAt < _systemClock.UtcNow &&
                     musicTrack.ReleasedAt > _systemClock.UtcNow.AddMonths(-3));
             }
 
-            return source;
+            return tracks;
         }
     }
 }

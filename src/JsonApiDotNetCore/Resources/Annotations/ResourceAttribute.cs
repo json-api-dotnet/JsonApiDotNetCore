@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
     /// <summary>
     /// When put on a resource class, overrides the convention-based resource name.
     /// </summary>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class ResourceAttribute : Attribute
     {
@@ -16,7 +18,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
         public ResourceAttribute(string publicName)
         {
-            PublicName = publicName ?? throw new ArgumentNullException(nameof(publicName));
+            ArgumentGuard.NotNull(publicName, nameof(publicName));
+
+            PublicName = publicName;
         }
     }
 }

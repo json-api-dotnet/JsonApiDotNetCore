@@ -1,7 +1,11 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+
+// @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class QueryStringDbContext : DbContext
     {
         public DbSet<Blog> Blogs { get; set; }

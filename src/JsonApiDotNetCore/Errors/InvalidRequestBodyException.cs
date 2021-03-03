@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Text;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Errors
@@ -8,6 +9,7 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The error that is thrown when deserializing the request body fails.
     /// </summary>
+    [PublicAPI]
     public sealed class InvalidRequestBodyException : JsonApiException
     {
         public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)

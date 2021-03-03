@@ -14,16 +14,15 @@ namespace JsonApiDotNetCore.Resources
 
         public ResourceFactory(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+
+            _serviceProvider = serviceProvider;
         }
 
         /// <inheritdoc />
         public IIdentifiable CreateInstance(Type resourceType)
         {
-            if (resourceType == null)
-            {
-                throw new ArgumentNullException(nameof(resourceType));
-            }
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             return InnerCreateInstance(resourceType, _serviceProvider);
         }
@@ -57,7 +56,7 @@ namespace JsonApiDotNetCore.Resources
         /// <inheritdoc />
         public NewExpression CreateNewExpression(Type resourceType)
         {
-            if (resourceType == null) throw new ArgumentNullException(nameof(resourceType));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             if (HasSingleConstructorWithoutParameters(resourceType))
             {

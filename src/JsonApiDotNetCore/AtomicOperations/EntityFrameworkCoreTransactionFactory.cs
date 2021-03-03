@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
@@ -17,8 +16,11 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public EntityFrameworkCoreTransactionFactory(IDbContextResolver dbContextResolver, IJsonApiOptions options)
         {
-            _dbContextResolver = dbContextResolver ?? throw new ArgumentNullException(nameof(dbContextResolver));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(dbContextResolver, nameof(dbContextResolver));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _dbContextResolver = dbContextResolver;
+            _options = options;
         }
 
         /// <inheritdoc />

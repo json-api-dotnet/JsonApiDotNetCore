@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -12,6 +13,7 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// Server serializer implementation of <see cref="BaseSerializer"/> for atomic:operations responses.
     /// </summary>
+    [PublicAPI]
     public sealed class AtomicOperationsResponseSerializer : BaseSerializer, IJsonApiSerializer
     {
         private readonly IMetaBuilder _metaBuilder;
@@ -28,11 +30,17 @@ namespace JsonApiDotNetCore.Serialization
             IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
-            _metaBuilder = metaBuilder ?? throw new ArgumentNullException(nameof(metaBuilder));
-            _linkBuilder = linkBuilder ?? throw new ArgumentNullException(nameof(linkBuilder));
-            _fieldsToSerialize = fieldsToSerialize ?? throw new ArgumentNullException(nameof(fieldsToSerialize));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
+            ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
+            ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _metaBuilder = metaBuilder;
+            _linkBuilder = linkBuilder;
+            _fieldsToSerialize = fieldsToSerialize;
+            _request = request;
+            _options = options;
         }
 
         /// <inheritdoc />

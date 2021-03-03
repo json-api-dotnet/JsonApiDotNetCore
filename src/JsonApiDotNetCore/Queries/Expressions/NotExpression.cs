@@ -1,4 +1,4 @@
-using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -6,13 +6,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents the "not" filter function, resulting from text such as: not(equals(title,'Work'))
     /// </summary>
+    [PublicAPI]
     public class NotExpression : FilterExpression
     {
         public QueryExpression Child { get; }
 
         public NotExpression(QueryExpression child)
         {
-            Child = child ?? throw new ArgumentNullException(nameof(child));
+            ArgumentGuard.NotNull(child, nameof(child));
+
+            Child = child;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

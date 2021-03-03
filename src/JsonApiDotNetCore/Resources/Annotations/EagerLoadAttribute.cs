@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
@@ -33,6 +34,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// }
     /// ]]></example>
     /// </remarks>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EagerLoadAttribute : Attribute
     {

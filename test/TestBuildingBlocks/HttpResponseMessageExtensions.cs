@@ -3,11 +3,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Primitives;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace TestBuildingBlocks
 {
+    [PublicAPI]
     public static class HttpResponseMessageExtensions
     {
         public static HttpResponseMessageAssertions Should(this HttpResponseMessage instance)
@@ -25,6 +27,8 @@ namespace TestBuildingBlocks
                 Subject = instance;
             }
 
+            // ReSharper disable once UnusedMethodReturnValue.Global
+            [CustomAssertion]
             public AndConstraint<HttpResponseMessageAssertions> HaveStatusCode(HttpStatusCode statusCode)
             {
                 if (Subject.StatusCode != statusCode)

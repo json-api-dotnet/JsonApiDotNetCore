@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;
@@ -14,9 +15,10 @@ using Microsoft.Extensions.Primitives;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
+    [PublicAPI]
     public class FilterQueryStringParameterReader : QueryStringParameterReader, IFilterQueryStringParameterReader
     {
-        private static readonly LegacyFilterNotationConverter _legacyConverter = new LegacyFilterNotationConverter();
+        private static readonly LegacyFilterNotationConverter LegacyConverter = new LegacyFilterNotationConverter();
 
         private readonly IJsonApiOptions _options;
         private readonly QueryStringParameterScopeParser _scopeParser;
@@ -30,7 +32,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, IJsonApiOptions options)
             : base(request, resourceContextProvider)
         {
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            ArgumentGuard.NotNull(options, nameof(options));
+
+            _options = options;
             _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
             _filterParser = new FilterParser(resourceContextProvider, resourceFactory, ValidateSingleField);
         }
@@ -47,7 +51,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool IsEnabled(DisableQueryStringAttribute disableQueryStringAttribute)
         {
-            if (disableQueryStringAttribute == null) throw new ArgumentNullException(nameof(disableQueryStringAttribute));
+            ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return !IsAtomicOperationsRequest &&
                 !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
@@ -56,36 +60,35 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
+            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+
             var isNested = parameterName.StartsWith("filter[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
             return parameterName == "filter" || isNested;
         }
 
         /// <inheritdoc />
-        public virtual void Read(string parameterName, StringValues parameterValues)
+        public virtual void Read(string parameterName, StringValues parameterValue)
         {
             _lastParameterName = parameterName;
 
-            foreach (string parameterValue in ExtractParameterValues(parameterName, parameterValues))
+            foreach (string value in parameterValue.SelectMany(ExtractParameterValue))
             {
-                ReadSingleValue(parameterName, parameterValue);
+                ReadSingleValue(parameterName, value);
             }
         }
 
-        private IEnumerable<string> ExtractParameterValues(string parameterName, StringValues parameterValues)
+        private IEnumerable<string> ExtractParameterValue(string parameterValue)
         {
-            foreach (string parameterValue in parameterValues)
+            if (_options.EnableLegacyFilterNotation)
             {
-                if (_options.EnableLegacyFilterNotation)
+                foreach (string condition in LegacyConverter.ExtractConditions(parameterValue))
                 {
-                    foreach (string condition in _legacyConverter.ExtractConditions(parameterName, parameterValue))
-                    {
-                        yield return condition;
-                    }
+                    yield return condition;
                 }
-                else
-                {
-                    yield return parameterValue;
-                }
+            }
+            else
+            {
+                yield return parameterValue;
             }
         }
 
@@ -93,13 +96,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             try
             {
+                string name = parameterName;
+                string value = parameterValue;
+
                 if (_options.EnableLegacyFilterNotation)
                 {
-                    (parameterName, parameterValue) = _legacyConverter.Convert(parameterName, parameterValue);
+                    (name, value) = LegacyConverter.Convert(name, value);
                 }
 
-                ResourceFieldChainExpression scope = GetScope(parameterName);
-                FilterExpression filter = GetFilter(parameterValue, scope);
+                ResourceFieldChainExpression scope = GetScope(name);
+                FilterExpression filter = GetFilter(value, scope);
 
                 StoreFilterInScope(filter, scope);
             }

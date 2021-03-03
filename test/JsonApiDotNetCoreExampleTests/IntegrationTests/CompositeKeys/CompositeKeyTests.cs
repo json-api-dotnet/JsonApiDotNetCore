@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?filter=any(id,'123:AA-BB-11','999:XX-YY-22')";
+            const string route = "/cars?filter=any(id,'123:AA-BB-11','999:XX-YY-22')";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?sort=id";
+            const string route = "/cars?sort=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/cars?fields[cars]=id";
+            const string route = "/cars?fields[cars]=id";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            var route = "/cars";
+            const string route = "/cars";
 
             // Act
             var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(engine => engine.Car)
-                    .FirstAsync(engine => engine.Id == existingEngine.Id);
+                    .FirstWithIdAsync(existingEngine.Id);
 
                 engineInDatabase.Car.Should().NotBeNull();
                 engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
@@ -303,7 +303,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var engineInDatabase = await dbContext.Engines
                     .Include(engine => engine.Car)
-                    .FirstAsync(engine => engine.Id == existingEngine.Id);
+                    .FirstWithIdAsync(existingEngine.Id);
 
                 engineInDatabase.Car.Should().BeNull();
             });
@@ -364,7 +364,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
@@ -418,7 +418,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
@@ -491,7 +491,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             {
                 var dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory)
-                    .FirstOrDefaultAsync(dealership => dealership.Id == existingDealership.Id);
+                    .FirstWithIdOrDefaultAsync(existingDealership.Id);
 
                 dealershipInDatabase.Inventory.Should().HaveCount(2);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
@@ -536,9 +536,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
-            responseDocument.Errors[0].StatusCode.Should().Be(HttpStatusCode.NotFound);
-            responseDocument.Errors[0].Title.Should().Be("A related resource does not exist.");
-            responseDocument.Errors[0].Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
+
+            var error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            error.Title.Should().Be("A related resource does not exist.");
+            error.Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
         }
 
         [Fact]

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources.Annotations;
 using UnitTests.TestModels;
 using Xunit;
@@ -9,11 +10,11 @@ namespace UnitTests.Serialization.Server
     public sealed class ResponseResourceObjectBuilderTests : SerializerTestsSetup
     { 
         private readonly List<RelationshipAttribute> _relationshipsForBuild;
-        private const string _relationshipName = "dependents";
+        private const string RelationshipName = "dependents";
 
         public ResponseResourceObjectBuilderTests()
         {
-            _relationshipsForBuild = _resourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
+            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(e => new { e.Dependents }).ToList();
         }
 
         [Fact]
@@ -21,13 +22,13 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10 };
-            var builder = GetResponseResourceObjectBuilder(relationshipLinks: _dummyRelationshipLinks);
+            var builder = GetResponseResourceObjectBuilder(relationshipLinks: DummyRelationshipLinks);
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
             Assert.False(entry.IsPopulated);
@@ -52,13 +53,13 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
-            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild } );
+            var builder = GetResponseResourceObjectBuilder(inclusionChains: _relationshipsForBuild.AsEnumerable());
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Null(entry.Links);
             Assert.True(entry.IsPopulated);
             Assert.Equal("20", entry.ManyData.Single().Id);
@@ -69,13 +70,13 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             var resource = new OneToManyPrincipal { Id = 10, Dependents = new HashSet<OneToManyDependent> { new OneToManyDependent { Id = 20 } } };
-            var builder = GetResponseResourceObjectBuilder(inclusionChains: new List<List<RelationshipAttribute>> { _relationshipsForBuild }, relationshipLinks: _dummyRelationshipLinks);
+            var builder = GetResponseResourceObjectBuilder(inclusionChains: _relationshipsForBuild.AsEnumerable(), relationshipLinks: DummyRelationshipLinks);
 
             // Act
             var resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(_relationshipName, out var entry));
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out var entry));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
             Assert.True(entry.IsPopulated);

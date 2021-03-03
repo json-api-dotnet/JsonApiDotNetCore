@@ -1,7 +1,11 @@
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+
+// @formatter:wrap_chained_method_calls chop_always
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DefaultBehaviorDbContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }

@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public class SortParser : QueryExpressionParser
     {
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
@@ -21,7 +23,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public SortExpression Parse(string source, ResourceContext resourceContextInScope)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             SortExpression expression = ParseSort();
@@ -35,10 +40,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             SortElementExpression firstElement = ParseSortElement();
 
-            var elements = new List<SortElementExpression>
-            {
-                firstElement
-            };
+            var elements = firstElement.AsList();
 
             while (TokenStack.Any())
             {

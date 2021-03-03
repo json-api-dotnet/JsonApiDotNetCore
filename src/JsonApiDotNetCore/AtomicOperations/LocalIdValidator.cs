@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -10,6 +10,7 @@ namespace JsonApiDotNetCore.AtomicOperations
     /// <summary>
     /// Validates declaration, assignment and reference of local IDs within a list of operations.
     /// </summary>
+    [PublicAPI]
     public sealed class LocalIdValidator
     {
         private readonly ILocalIdTracker _localIdTracker;
@@ -17,12 +18,17 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         public LocalIdValidator(ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider)
         {
-            _localIdTracker = localIdTracker ?? throw new ArgumentNullException(nameof(localIdTracker));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+
+            _localIdTracker = localIdTracker;
+            _resourceContextProvider = resourceContextProvider;
         }
 
         public void Validate(IEnumerable<OperationContainer> operations)
         {
+            ArgumentGuard.NotNull(operations, nameof(operations));
+
             _localIdTracker.Reset();
 
             int operationIndex = 0;
@@ -31,28 +37,10 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (var operation in operations)
                 {
-                    if (operation.Kind == OperationKind.CreateResource)
-                    {
-                        DeclareLocalId(operation.Resource);
-                    }
-                    else
-                    {
-                        AssertLocalIdIsAssigned(operation.Resource);
-                    }
-
-                    foreach (var secondaryResource in operation.GetSecondaryResources())
-                    {
-                        AssertLocalIdIsAssigned(secondaryResource);
-                    }
-
-                    if (operation.Kind == OperationKind.CreateResource)
-                    {
-                        AssignLocalId(operation);
-                    }
+                    ValidateOperation(operation);
 
                     operationIndex++;
                 }
-
             }
             catch (JsonApiException exception)
             {
@@ -62,6 +50,28 @@ namespace JsonApiDotNetCore.AtomicOperations
                 }
 
                 throw;
+            }
+        }
+
+        private void ValidateOperation(OperationContainer operation)
+        {
+            if (operation.Kind == OperationKind.CreateResource)
+            {
+                DeclareLocalId(operation.Resource);
+            }
+            else
+            {
+                AssertLocalIdIsAssigned(operation.Resource);
+            }
+
+            foreach (var secondaryResource in operation.GetSecondaryResources())
+            {
+                AssertLocalIdIsAssigned(secondaryResource);
+            }
+
+            if (operation.Kind == OperationKind.CreateResource)
+            {
+                AssignLocalId(operation);
             }
         }
 

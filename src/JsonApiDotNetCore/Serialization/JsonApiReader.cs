@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -20,6 +21,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc />
+    [PublicAPI]
     public class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiDeserializer _deserializer;
@@ -32,18 +34,20 @@ namespace JsonApiDotNetCore.Serialization
             IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(deserializer, nameof(deserializer));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
-            _request = request ?? throw new ArgumentNullException(nameof(request));
-            _resourceContextProvider = resourceContextProvider ?? throw new ArgumentNullException(nameof(resourceContextProvider));
+            _deserializer = deserializer;
+            _request = request;
+            _resourceContextProvider = resourceContextProvider;
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentGuard.NotNull(context, nameof(context));
 
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 
@@ -136,6 +140,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
+        [AssertionMethod]
         private static void AssertHasRequestBody(object model, string body)
         {
             if (model == null && string.IsNullOrWhiteSpace(body))
@@ -183,7 +188,7 @@ namespace JsonApiDotNetCore.Serialization
                 return resourceCollection.Select(r => r.GetType()).Distinct();
             }
 
-            return model == null ? Array.Empty<Type>() : new[] { model.GetType() };
+            return model == null ? Enumerable.Empty<Type>() : model.GetType().AsEnumerable();
         }
 
         private void ValidateRequestIncludesId(object model, string body)
@@ -242,6 +247,7 @@ namespace JsonApiDotNetCore.Serialization
             return false;
         }
 
+        [AssertionMethod]
         private void ValidateForRelationshipType(string requestMethod, object model, string body)
         {
             if (_request.Relationship is HasOneAttribute)

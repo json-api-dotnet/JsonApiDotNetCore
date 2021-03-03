@@ -1,11 +1,13 @@
 using System;
 using System.Text;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
     /// Represents an element in <see cref="SortExpression"/>.
     /// </summary>
+    [PublicAPI]
     public class SortElementExpression : QueryExpression
     {
         public ResourceFieldChainExpression TargetAttribute { get; }
@@ -14,13 +16,17 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public SortElementExpression(ResourceFieldChainExpression targetAttribute, bool isAscending)
         {
-            TargetAttribute = targetAttribute ?? throw new ArgumentNullException(nameof(targetAttribute));
+            ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
+
+            TargetAttribute = targetAttribute;
             IsAscending = isAscending;
         }
 
         public SortElementExpression(CountExpression count, in bool isAscending)
         {
-            Count = count ?? throw new ArgumentNullException(nameof(count));
+            ArgumentGuard.NotNull(count, nameof(count));
+
+            Count = count;
             IsAscending = isAscending;
         }
 

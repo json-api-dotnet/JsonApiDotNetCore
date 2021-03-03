@@ -4,9 +4,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ConsumerArticleIsNoLongerAvailableException : JsonApiException
+    internal sealed class ConsumerArticleIsNoLongerAvailableException : JsonApiException
     {
-        public string ArticleCode { get; }
         public string SupportEmailAddress { get; }
 
         public ConsumerArticleIsNoLongerAvailableException(string articleCode, string supportEmailAddress)
@@ -16,7 +15,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
                 Detail = $"Article with code '{articleCode}' is no longer available."
             })
         {
-            ArticleCode = articleCode;
             SupportEmailAddress = supportEmailAddress;
         }
     }

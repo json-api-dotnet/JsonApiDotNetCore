@@ -19,7 +19,9 @@ namespace JsonApiDotNetCore.Serialization
 
         protected BaseSerializer(IResourceObjectBuilder resourceObjectBuilder)
         {
-            ResourceObjectBuilder = resourceObjectBuilder ?? throw new ArgumentNullException(nameof(resourceObjectBuilder));
+            ArgumentGuard.NotNull(resourceObjectBuilder, nameof(resourceObjectBuilder));
+
+            ResourceObjectBuilder = resourceObjectBuilder;
         }
 
         /// <summary>
@@ -33,7 +35,9 @@ namespace JsonApiDotNetCore.Serialization
         protected Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             if (resource == null)
+            {
                 return new Document();
+            }
 
             return new Document { Data = ResourceObjectBuilder.Build(resource, attributes, relationships) };
         }
@@ -48,28 +52,28 @@ namespace JsonApiDotNetCore.Serialization
         /// <returns>The resource object that was built.</returns>
         protected Document Build(IReadOnlyCollection<IIdentifiable> resources, IReadOnlyCollection<AttrAttribute> attributes, IReadOnlyCollection<RelationshipAttribute> relationships)
         {
-            if (resources == null) throw new ArgumentNullException(nameof(resources));
+            ArgumentGuard.NotNull(resources, nameof(resources));
 
             var data = new List<ResourceObject>();
             foreach (IIdentifiable resource in resources)
+            {
                 data.Add(ResourceObjectBuilder.Build(resource, attributes, relationships));
+            }
 
             return new Document { Data = data };
         }
 
         protected string SerializeObject(object value, JsonSerializerSettings defaultSettings, Action<JsonSerializer> changeSerializer = null)
         {
-            if (defaultSettings == null) throw new ArgumentNullException(nameof(defaultSettings));
+            ArgumentGuard.NotNull(defaultSettings, nameof(defaultSettings));
 
             JsonSerializer serializer = JsonSerializer.CreateDefault(defaultSettings);
             changeSerializer?.Invoke(serializer);
 
             using var stringWriter = new StringWriter();
-            using (var jsonWriter = new JsonTextWriter(stringWriter))
-            {
-                serializer.Serialize(jsonWriter, value);
-            }
+            using var jsonWriter = new JsonTextWriter(stringWriter);
 
+            serializer.Serialize(jsonWriter, value);
             return stringWriter.ToString();
         }
     }

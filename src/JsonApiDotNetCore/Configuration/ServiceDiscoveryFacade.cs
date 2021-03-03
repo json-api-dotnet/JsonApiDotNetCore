@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
@@ -15,6 +16,7 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.
     /// </summary>
+    [PublicAPI]
     public class ServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type> {
@@ -68,15 +70,15 @@ namespace JsonApiDotNetCore.Configuration
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null)
-            {
-                throw new ArgumentNullException(nameof(loggerFactory));
-            }
-            
+            ArgumentGuard.NotNull(services, nameof(services));
+            ArgumentGuard.NotNull(resourceGraphBuilder, nameof(resourceGraphBuilder));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
+
             _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
-            _services = services ?? throw new ArgumentNullException(nameof(services));
-            _resourceGraphBuilder = resourceGraphBuilder ?? throw new ArgumentNullException(nameof(resourceGraphBuilder));
-            _options = options ?? throw new ArgumentNullException(nameof(options));
+            _services = services;
+            _resourceGraphBuilder = resourceGraphBuilder;
+            _options = options;
         }
 
         /// <summary>
@@ -89,11 +91,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ServiceDiscoveryFacade AddAssembly(Assembly assembly)
         {
-            if (assembly == null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-            
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+
             _assemblyCache.RegisterAssembly(assembly);
             _logger.LogDebug($"Registering assembly '{assembly.FullName}' for discovery of resources and injectables.");
 
@@ -102,12 +101,9 @@ namespace JsonApiDotNetCore.Configuration
 
         internal void DiscoverResources()
         {
-            foreach (var (_, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
+            foreach (var resourceDescriptor in _assemblyCache.GetResourceDescriptorsPerAssembly().SelectMany(tuple => tuple.resourceDescriptors))
             {
-                foreach (var resourceDescriptor in resourceDescriptors)
-                {
-                    AddResource(resourceDescriptor);
-                }
+                AddResource(resourceDescriptor);
             }
         }
 
@@ -116,21 +112,25 @@ namespace JsonApiDotNetCore.Configuration
             foreach (var (assembly, resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
             {
                 AddDbContextResolvers(assembly);
+                AddInjectables(resourceDescriptors, assembly);
+            }
+        }
 
-                foreach (var resourceDescriptor in resourceDescriptors)
+        private void AddInjectables(IReadOnlyCollection<ResourceDescriptor> resourceDescriptors, Assembly assembly)
+        {
+            foreach (var resourceDescriptor in resourceDescriptors)
+            {
+                AddServices(assembly, resourceDescriptor);
+                AddRepositories(assembly, resourceDescriptor);
+                AddResourceDefinitions(assembly, resourceDescriptor);
+
+                if (_options.EnableResourceHooks)
                 {
-                    AddServices(assembly, resourceDescriptor);
-                    AddRepositories(assembly, resourceDescriptor);
-                    AddResourceDefinitions(assembly, resourceDescriptor);
-
-                    if (_options.EnableResourceHooks)
-                    {
-                        AddResourceHookDefinitions(assembly, resourceDescriptor);
-                    }
+                    AddResourceHookDefinitions(assembly, resourceDescriptor);
                 }
             }
         }
-        
+
         private void AddDbContextResolvers(Assembly assembly)
         {
             var dbContextTypes = TypeLocator.GetDerivedTypes(assembly, typeof(DbContext));
@@ -190,7 +190,10 @@ namespace JsonApiDotNetCore.Configuration
 
         private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
-            var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2 ? new[] { resourceDescriptor.ResourceType, resourceDescriptor.IdType } : new[] { resourceDescriptor.ResourceType };
+            var genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
+                ? ArrayFactory.Create(resourceDescriptor.ResourceType, resourceDescriptor.IdType)
+                : ArrayFactory.Create(resourceDescriptor.ResourceType);
+
             var result = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
             if (result != null)
             {

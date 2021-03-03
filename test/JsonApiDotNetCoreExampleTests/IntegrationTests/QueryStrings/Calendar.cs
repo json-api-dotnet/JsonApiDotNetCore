@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Calendar : Identifiable
     {
         [Attr]

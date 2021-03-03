@@ -1,4 +1,4 @@
-using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -6,13 +6,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Represents the "count" function, resulting from text such as: count(articles)
     /// </summary>
+    [PublicAPI]
     public class CountExpression : FunctionExpression
     {
         public ResourceFieldChainExpression TargetCollection { get; }
 
         public CountExpression(ResourceFieldChainExpression targetCollection)
         {
-            TargetCollection = targetCollection ?? throw new ArgumentNullException(nameof(targetCollection));
+            ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
+
+            TargetCollection = targetCollection;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)

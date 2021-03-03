@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Middleware
 {
     /// <inheritdoc />
+    [PublicAPI]
     public sealed class JsonApiRequest : IJsonApiRequest
     {
         /// <inheritdoc />
@@ -40,7 +42,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
+            ArgumentGuard.NotNull(other, nameof(other));
 
             Kind = other.Kind;
             BasePath = other.BasePath;

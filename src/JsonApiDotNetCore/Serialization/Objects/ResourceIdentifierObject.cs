@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
                 builder.Append(memberName);
                 builder.Append("=\"");
                 builder.Append(memberValue);
-                builder.Append("\"");
+                builder.Append('"');
             }
         }
     }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
+    [PublicAPI]
     public class QueryStringParameterScopeParser : QueryExpressionParser
     {
         private readonly FieldChainRequirements _chainRequirements;
@@ -22,7 +24,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         public QueryStringParameterScopeExpression Parse(string source, ResourceContext resourceContextInScope)
         {
-            _resourceContextInScope = resourceContextInScope ?? throw new ArgumentNullException(nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+
+            _resourceContextInScope = resourceContextInScope;
+
             Tokenize(source);
 
             var expression = ParseQueryStringParameterScope();

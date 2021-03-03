@@ -10,13 +10,15 @@ namespace JsonApiDotNetCore.Configuration
 
         public RequestScopedServiceProvider(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
+
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc />
         public object GetService(Type serviceType)
         {
-            if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+            ArgumentGuard.NotNull(serviceType, nameof(serviceType));
 
             if (_httpContextAccessor.HttpContext == null)
             {

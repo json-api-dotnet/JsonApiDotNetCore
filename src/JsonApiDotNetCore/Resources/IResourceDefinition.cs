@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Resources
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Resources
     /// The goal here is to reduce the need for overriding the service and repository layers.
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
+    [PublicAPI]
     public interface IResourceDefinition<TResource> : IResourceDefinition<TResource, int>
         where TResource : class, IIdentifiable<int>
     {
@@ -20,6 +22,7 @@ namespace JsonApiDotNetCore.Resources
     /// </summary>
     /// <typeparam name="TResource">The resource type.</typeparam>
     /// <typeparam name="TId">The resource identifier type.</typeparam>
+    [PublicAPI]
     public interface IResourceDefinition<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {

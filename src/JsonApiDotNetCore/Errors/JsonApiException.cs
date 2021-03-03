@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 
@@ -9,9 +10,10 @@ namespace JsonApiDotNetCore.Errors
     /// <summary>
     /// The base class for an <see cref="Exception"/> that represents one or more JSON:API error objects in an unsuccessful response.
     /// </summary>
+    [PublicAPI]
     public class JsonApiException : Exception
     {
-        private static readonly JsonSerializerSettings _errorSerializerSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings ErrorSerializerSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented
@@ -22,15 +24,15 @@ namespace JsonApiDotNetCore.Errors
         public JsonApiException(Error error, Exception innerException = null)
             : base(null, innerException)
         {
-            if (error == null) throw new ArgumentNullException(nameof(error));
+            ArgumentGuard.NotNull(error, nameof(error));
 
-            Errors = new[] {error};
+            Errors = error.AsArray();
         }
 
         public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)
             : base(null, innerException)
         {
-            if (errors == null) throw new ArgumentNullException(nameof(errors));
+            ArgumentGuard.NotNull(errors, nameof(errors));
 
             Errors = errors.ToList();
 
@@ -40,6 +42,6 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, _errorSerializerSettings);
+        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, ErrorSerializerSettings);
     }
 }

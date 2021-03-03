@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -22,6 +23,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
+    [PublicAPI]
     public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
         where TResource : class, IIdentifiable<TId>
     {
@@ -43,14 +45,17 @@ namespace JsonApiDotNetCore.Repositories
             IEnumerable<IQueryConstraintProvider> constraintProviders,
             ILoggerFactory loggerFactory)
         {
-            if (contextResolver == null) throw new ArgumentNullException(nameof(contextResolver));
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            ArgumentGuard.NotNull(contextResolver, nameof(contextResolver));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
 
-            _targetedFields = targetedFields ?? throw new ArgumentNullException(nameof(targetedFields));
-            _resourceGraph = resourceGraph ?? throw new ArgumentNullException(nameof(resourceGraph));
-            _resourceFactory = resourceFactory ?? throw new ArgumentNullException(nameof(resourceFactory));
-            _constraintProviders = constraintProviders ?? throw new ArgumentNullException(nameof(constraintProviders));
-
+            _targetedFields = targetedFields;
+            _resourceGraph = resourceGraph;
+            _resourceFactory = resourceFactory;
+            _constraintProviders = constraintProviders;
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
         }
@@ -59,7 +64,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {layer});
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
+
+            ArgumentGuard.NotNull(layer, nameof(layer));
 
             IQueryable<TResource> query = ApplyQueryLayer(layer);
             return await query.ToListAsync(cancellationToken);
@@ -83,22 +89,30 @@ namespace JsonApiDotNetCore.Repositories
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
         {
             _traceWriter.LogMethodStart(new {layer});
-            if (layer == null) throw new ArgumentNullException(nameof(layer));
 
+            ArgumentGuard.NotNull(layer, nameof(layer));
+
+            QueryLayer rewrittenLayer = layer;
             if (EntityFrameworkCoreSupport.Version.Major < 5)
             {
                 var writer = new MemoryLeakDetectionBugRewriter();
-                layer = writer.Rewrite(layer);
+                rewrittenLayer = writer.Rewrite(layer);
             }
 
             IQueryable<TResource> source = GetAll();
 
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
             var queryableHandlers = _constraintProviders
-                .SelectMany(p => p.GetConstraints())
+                .SelectMany(provider => provider.GetConstraints())
                 .Where(expressionInScope => expressionInScope.Scope == null)
                 .Select(expressionInScope => expressionInScope.Expression)
                 .OfType<QueryableHandlerExpression>()
                 .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
 
             foreach (var queryableHandler in queryableHandlers)
             {
@@ -108,7 +122,7 @@ namespace JsonApiDotNetCore.Repositories
             var nameFactory = new LambdaParameterNameFactory();
             var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph, _dbContext.Model);
 
-            var expression = builder.ApplyQuery(layer);
+            var expression = builder.ApplyQuery(rewrittenLayer);
             return source.Provider.CreateQuery<TResource>(expression);
         }
 
@@ -130,8 +144,9 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task CreateAsync(TResource resourceFromRequest, TResource resourceForDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceForDatabase});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
-            if (resourceForDatabase == null) throw new ArgumentNullException(nameof(resourceForDatabase));
+
+            ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
+            ArgumentGuard.NotNull(resourceForDatabase, nameof(resourceForDatabase));
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -147,7 +162,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             var dbSet = _dbContext.Set<TResource>();
-            dbSet.Add(resourceForDatabase);
+            await dbSet.AddAsync(resourceForDatabase, cancellationToken);
 
             await SaveChangesAsync(cancellationToken);
         }
@@ -163,8 +178,9 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task UpdateAsync(TResource resourceFromRequest, TResource resourceFromDatabase, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {resourceFromRequest, resourceFromDatabase});
-            if (resourceFromRequest == null) throw new ArgumentNullException(nameof(resourceFromRequest));
-            if (resourceFromDatabase == null) throw new ArgumentNullException(nameof(resourceFromDatabase));
+
+            ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
+            ArgumentGuard.NotNull(resourceFromDatabase, nameof(resourceFromDatabase));
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -309,7 +325,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryId, secondaryResourceIds});
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             var relationship = _targetedFields.Relationships.Single();
 
@@ -328,7 +345,8 @@ namespace JsonApiDotNetCore.Repositories
         public virtual async Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new {primaryResource, secondaryResourceIds});
-            if (secondaryResourceIds == null) throw new ArgumentNullException(nameof(secondaryResourceIds));
+
+            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
@@ -417,6 +435,7 @@ namespace JsonApiDotNetCore.Repositories
     /// <summary>
     /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
     /// </summary>
+    [PublicAPI]
     public class EntityFrameworkCoreRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {

@@ -11,10 +11,11 @@ using Moq;
 
 namespace Benchmarks.Serialization
 {
+    // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
     public class JsonApiSerializerBenchmarks
     {
-        private static readonly BenchmarkResource _content = new BenchmarkResource
+        private static readonly BenchmarkResource Content = new BenchmarkResource
         {
             Id = 123,
             Name = Guid.NewGuid().ToString()
@@ -53,6 +54,6 @@ namespace Benchmarks.Serialization
         }
 
         [Benchmark]
-        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(_content);
+        public object SerializeSimpleObject() => _jsonApiSerializer.Serialize(Content);
     }
 }
