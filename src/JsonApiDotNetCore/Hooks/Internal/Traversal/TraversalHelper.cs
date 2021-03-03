@@ -147,7 +147,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 ExtractLeftResources(leftResources, relationships, rightResourcesGrouped, leftResourcesGrouped);
             }
 
-            MethodInfo? processResourcesMethod = GetType().GetMethod(nameof(ProcessResources), BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo processResourcesMethod = GetType().GetMethod(nameof(ProcessResources), BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (KeyValuePair<RelationshipProxy, List<IIdentifiable>> kvp in rightResourcesGrouped)
             {

@@ -280,7 +280,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
         private static void AddToList(IList list, IEnumerable itemsToAdd)
         {
-            foreach (object? item in itemsToAdd)
+            foreach (object item in itemsToAdd)
             {
                 list.Add(item);
             }

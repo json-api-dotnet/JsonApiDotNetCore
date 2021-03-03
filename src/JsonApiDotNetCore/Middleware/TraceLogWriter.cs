@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Middleware
             builder.Append(property.Name);
             builder.Append(": ");
 
-            object? value = property.GetValue(instance);
+            object value = property.GetValue(instance);
 
             if (value == null)
             {
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (type != null)
             {
-                MethodInfo? toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+                MethodInfo toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
 
                 if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
                 {

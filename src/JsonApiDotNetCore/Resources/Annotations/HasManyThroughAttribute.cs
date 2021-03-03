@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            object? throughEntity = ThroughProperty.GetValue(resource);
+            object throughEntity = ThroughProperty.GetValue(resource);
 
             if (throughEntity == null)
             {

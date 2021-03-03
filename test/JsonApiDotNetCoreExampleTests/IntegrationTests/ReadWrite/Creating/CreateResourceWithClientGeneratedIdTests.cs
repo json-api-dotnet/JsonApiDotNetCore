@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
-            PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(Guid));
         }
 
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 groupInDatabase.Name.Should().Be(newGroup.Name);
             });
 
-            PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(Guid));
         }
 
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
 
-            PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(string));
         }
 
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
 
-            PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(string));
         }
 

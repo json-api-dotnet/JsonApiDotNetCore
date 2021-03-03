@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                     return null;
                 }
 
-                foreach (object? throughResource in throughResources)
+                foreach (object throughResource in throughResources)
                 {
                     var rightResource = (IIdentifiable)hasManyThrough.RightProperty.GetValue(throughResource);
 
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 var filteredList = new List<object>();
                 IList rightResources = TypeHelper.CopyToList((IEnumerable)value, RightType);
 
-                foreach (object? throughResource in throughResources ?? Array.Empty<object>())
+                foreach (object throughResource in throughResources ?? Array.Empty<object>())
                 {
                     if (rightResources.Contains(hasManyThrough.RightProperty.GetValue(throughResource)))
                     {

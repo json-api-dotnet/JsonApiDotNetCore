@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Middleware
 
             while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerType)
             {
-                Type? nextBaseType = currentType.BaseType;
+                Type nextBaseType = currentType.BaseType;
 
                 if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
                 {
