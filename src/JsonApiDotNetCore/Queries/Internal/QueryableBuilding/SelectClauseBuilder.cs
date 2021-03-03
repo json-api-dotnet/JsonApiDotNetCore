@@ -167,7 +167,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 return CreateCollectionInitializer(outerLambdaScope, selectorPropertyInfo, bodyElementType, layer, lambdaScopeFactory);
             }
 
-            if (layer.Projection == null || !layer.Projection.Any())
+            if (layer.Projection.IsNullOrEmpty())
             {
                 return propertyAccess;
             }

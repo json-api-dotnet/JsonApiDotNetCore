@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Serialization
             JToken bodyToken = LoadJToken(body);
             var document = bodyToken.ToObject<AtomicOperationsDocument>();
 
-            if (document?.Operations == null || !document.Operations.Any())
+            if ((document?.Operations).IsNullOrEmpty())
             {
                 throw new JsonApiSerializationException("No operations found.", null);
             }
