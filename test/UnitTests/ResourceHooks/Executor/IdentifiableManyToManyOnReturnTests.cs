@@ -3,7 +3,6 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
 using Xunit;
