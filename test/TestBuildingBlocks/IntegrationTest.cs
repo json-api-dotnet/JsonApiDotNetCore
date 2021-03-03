@@ -12,7 +12,7 @@ namespace TestBuildingBlocks
     /// A base class for tests that conveniently enables to execute HTTP requests against json:api endpoints.
     /// </summary>
     public abstract class IntegrationTest
-    {
+{
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
             IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
         {
