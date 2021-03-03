@@ -21,13 +21,13 @@ namespace JsonApiDotNetCore.AtomicOperations
         public Guid TransactionId => _transaction.TransactionId;
 
         public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
-        {
+{
             ArgumentGuard.NotNull(transaction, nameof(transaction));
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
 
             _transaction = transaction;
             _dbContext = dbContext;
-        }
+}
 
         /// <summary>
         /// Detaches all entities from the Entity Framework Core change tracker.
