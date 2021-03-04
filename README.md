@@ -104,9 +104,9 @@ And then to run the tests:
 dotnet test
 ```
 
-### Compiler warnings
+## Contributing
 
-The `Release` build configuration is set to fail on warnings. That means when submitting a PR there shouldn't be any compiler warnings because the CI build it set to `Release`.
+Have a question, found a bug or want to submit code changes? See our [contributing guidelines](./.github/CONTRIBUTING.md).
 
 ## Compatibility
 
