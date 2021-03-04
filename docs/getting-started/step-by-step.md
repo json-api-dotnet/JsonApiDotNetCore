@@ -53,7 +53,9 @@ Nothing special here, just an ordinary `DbContext`
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options) { }
+        : base(options)
+    {
+    }
 
     public DbSet<Person> People { get; set; }
 }
@@ -67,12 +69,11 @@ where `TResource` is the model that inherits from `Identifiable<TId>`
 ```c#
 public class PeopleController : JsonApiController<Person>
 {
-    public PeopleController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public PeopleController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Person> resourceService)
-    : base(options, loggerFactory, resourceService)
-    { }
+        : base(options, loggerFactory, resourceService)
+    {
+    }
 }
 ```
 
@@ -123,6 +124,7 @@ public void Configure(IApplicationBuilder app, AppDbContext context)
         {
             Name = "John Doe"
         });
+
         context.SaveChanges();
     }
 

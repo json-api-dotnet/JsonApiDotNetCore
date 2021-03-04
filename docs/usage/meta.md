@@ -18,7 +18,7 @@ public sealed class CopyrightResponseMeta : IResponseMeta
         return new Dictionary<string, object>
         {
             ["copyright"] = "Copyright (C) 2002 Umbrella Corporation.",
-            ["authors"] = new[] {"Alice", "Red Queen"}
+            ["authors"] = new[] { "Alice", "Red Queen" }
         };
     }
 }
@@ -44,7 +44,8 @@ Resource-specific metadata can be added by implementing `IResourceDefinition<TRe
 ```c#
 public class PersonDefinition : JsonApiResourceDefinition<Person>
 {
-    public PersonDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public PersonDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -54,7 +55,8 @@ public class PersonDefinition : JsonApiResourceDefinition<Person>
         {
             return new Dictionary<string, object>
             {
-                ["notice"] = "Check our intranet at http://www.example.com/employees/" + person.StringId + " for personal details."
+                ["notice"] = "Check our intranet at http://www.example.com/employees/" +
+                    person.StringId + " for personal details."
             };
         }
 

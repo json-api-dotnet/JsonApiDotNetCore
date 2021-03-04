@@ -42,7 +42,7 @@ See [our documentation](https://www.jsonapi.net/) for detailed usage.
 
 ### Models
 
-```csharp
+```c#
 public class Article : Identifiable
 {
     [Attr]
@@ -52,7 +52,7 @@ public class Article : Identifiable
 
 ### Controllers
 
-```csharp
+```c#
 public class ArticlesController : JsonApiController<Article>
 {
     public ArticlesController(IJsonApiOptions options, IResourceService<Article> resourceService,
@@ -65,7 +65,7 @@ public class ArticlesController : JsonApiController<Article>
 
 ### Middleware
 
-```csharp
+```c#
 public class Startup
 {
     public IServiceProvider ConfigureServices(IServiceCollection services)

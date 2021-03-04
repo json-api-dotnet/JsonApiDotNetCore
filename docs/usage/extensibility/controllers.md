@@ -5,12 +5,11 @@ You need to create controllers that inherit from `JsonApiController<TResource>`
 ```c#
 public class ArticlesController : JsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 ```
 
@@ -22,13 +21,12 @@ If your model is using a type other than `int` for the primary key, you must exp
 public class ArticlesController : JsonApiController<Article, Guid>
 //---------------------------------------------------------- ^^^^
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Article, Guid> resourceService)
         //----------------------- ^^^^
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 ```
 
@@ -43,12 +41,11 @@ This approach is ok, but introduces some boilerplate that can easily be avoided.
 ```c#
 public class ArticlesController : BaseJsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 
     [HttpGet]
     public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
@@ -80,12 +77,11 @@ An attempt to use one of the blacklisted methods will result in a HTTP 405 Metho
 [HttpReadOnly]
 public class ArticlesController : BaseJsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Article> resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 ```
 
@@ -100,12 +96,11 @@ For more information about resource injection, see the next section titled Resou
 ```c#
 public class ReportsController : BaseJsonApiController<Report>
 {
-    public ReportsController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService<Report> resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 
     [HttpGet]
     public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)

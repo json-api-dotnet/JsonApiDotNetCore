@@ -13,6 +13,7 @@ On failure, the zero-based index of the failing operation is returned in the `er
 ## Usage
 
 To enable operations, add a controller to your project that inherits from `JsonApiOperationsController` or `BaseJsonApiOperationsController`:
+
 ```c#
 public sealed class OperationsController : JsonApiOperationsController
 {
@@ -26,6 +27,7 @@ public sealed class OperationsController : JsonApiOperationsController
 ```
 
 You'll need to send the next Content-Type in a POST request for operations:
+
 ```
 application/vnd.api+json; ext="https://jsonapi.org/ext/atomic"
 ```
@@ -84,14 +86,17 @@ For example requests, see our suite of tests in JsonApiDotNetCoreExampleTests.In
 ## Configuration
 
 The maximum number of operations per request defaults to 10, which you can change from Startup.cs:
+
 ```c#
 services.AddJsonApi(options => options.MaximumOperationsPerRequest = 250);
 ```
+
 Or, if you want to allow unconstrained, set it to `null` instead.
 
 ### Multiple controllers
 
 You can register multiple operations controllers using custom routes, for example:
+
 ```c#
 [DisableRoutingConvention, Route("/operations/musicTracks/create")]
 public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController

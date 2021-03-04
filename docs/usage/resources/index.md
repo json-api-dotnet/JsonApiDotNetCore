@@ -4,22 +4,25 @@ At a minimum, resources must implement `IIdentifiable<TId>` where `TId` is the t
 
 ```c#
 public class Person : Identifiable<Guid>
-{ }
+{
+}
 ```
 
 You can use the non-generic `Identifiable` if your primary key is an integer.
 
 ```c#
 public class Person : Identifiable
-{ }
+{
+}
 
-// is the same as
+// is the same as:
 
 public class Person : Identifiable<int>
-{ }
+{
+}
 ```
 
-If you need to hang annotations or attributes on the `Id` property,
+If you need to attach annotations or attributes on the `Id` property,
 you can override the virtual property.
 
 ```c#
