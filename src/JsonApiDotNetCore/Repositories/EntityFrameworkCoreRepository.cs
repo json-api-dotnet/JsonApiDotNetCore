@@ -265,7 +265,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (RelationshipAttribute relationship in _resourceGraph.GetRelationships<TResource>())
             {
                 // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
-                // entities into memory is required for successfully executing the selected deletion behavior. 
+                // entities into memory is required for successfully executing the selected deletion behavior.
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
                     NavigationEntry navigation = GetNavigationEntry(resource, relationship);

@@ -315,13 +315,13 @@ namespace JsonApiDotNetCore.Hooks.Internal
                         RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
                         IEnumerable dbValues = LoadDbValues(resourceType, uniqueResources, ResourceHook.BeforeUpdateRelationship, relationships);
 
-                        // these are the resources of the current node grouped by 
+                        // these are the resources of the current node grouped by
                         // RelationshipAttributes that occurred in the previous layer
                         // so it looks like { HasOneAttribute:owner  =>  owner_new }.
-                        // Note that in the BeforeUpdateRelationship hook of Person, 
+                        // Note that in the BeforeUpdateRelationship hook of Person,
                         // we want want inverse relationship attribute:
                         // we now have the one pointing from article -> person, ]
-                        // but we require the the one that points from person -> article             
+                        // but we require the the one that points from person -> article
                         currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
                         currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
 
@@ -342,8 +342,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 if (pipeline != ResourcePipeline.Post)
                 {
                     // To fire a hook for owner_old, we need to first get a reference to it.
-                    // For this, we need to query the database for the  HasOneAttribute:owner 
-                    // relationship of article1, which is referred to as the 
+                    // For this, we need to query the database for the  HasOneAttribute:owner
+                    // relationship of article1, which is referred to as the
                     // left side of the HasOneAttribute:owner relationship.
                     Dictionary<RelationshipAttribute, IEnumerable> leftResources = node.RelationshipsFromPreviousLayer.GetLeftResources();
 
@@ -355,21 +355,21 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 }
 
                 // Fire the BeforeImplicitUpdateRelationship hook for article2
-                // For this, we need to query the database for the current owner 
+                // For this, we need to query the database for the current owner
                 // relationship value of owner_new.
                 currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
 
                 if (currentResourcesGrouped.Any())
                 {
-                    // rightResources is grouped by relationships from previous 
-                    // layer, ie { HasOneAttribute:owner  =>  owner_new }. But 
-                    // to load article2 onto owner_new, we need to have the 
+                    // rightResources is grouped by relationships from previous
+                    // layer, ie { HasOneAttribute:owner  =>  owner_new }. But
+                    // to load article2 onto owner_new, we need to have the
                     // RelationshipAttribute from owner to article, which is the
                     // inverse of HasOneAttribute:owner
                     currentResourcesGroupedInverse = ReplaceKeysWithInverseRelationships(currentResourcesGrouped);
-                    // Note that currently in the JsonApiDotNetCore implementation of hooks, 
-                    // the root layer is ALWAYS homogenous, so we safely assume 
-                    // that for every relationship to the previous layer, the 
+                    // Note that currently in the JsonApiDotNetCore implementation of hooks,
+                    // the root layer is ALWAYS homogenous, so we safely assume
+                    // that for every relationship to the previous layer, the
                     // left type is the same.
                     LeftType leftType = currentResourcesGrouped.First().Key.LeftType;
                     FireForAffectedImplicits(leftType, currentResourcesGroupedInverse, pipeline);
@@ -388,7 +388,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // when Article has one Owner (HasOneAttribute:owner) is set, there is no guarantee
             // that the inverse attribute was also set (Owner has one Article: HasOneAttr:article).
-            // If it isn't, JsonApiDotNetCore currently knows nothing about this relationship pointing back, and it 
+            // If it isn't, JsonApiDotNetCore currently knows nothing about this relationship pointing back, and it
             // currently cannot fire hooks for resources resolved through inverse relationships.
             IEnumerable<KeyValuePair<RelationshipAttribute, IEnumerable>> inversableRelationshipAttributes =
                 resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private IEnumerable CallHook(IResourceHookContainer container, ResourceHook hook, object[] arguments)
         {
             MethodInfo method = container.GetType().GetMethod(hook.ToString("G"));
-            // note that some of the hooks return "void". When these hooks, the 
+            // note that some of the hooks return "void". When these hooks, the
             // are called reflectively with Invoke like here, the return value
             // is just null, so we don't have to worry about casting issues here.
             return (IEnumerable)ThrowJsonApiExceptionOnError(() => method?.Invoke(container, arguments));
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             Dictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped = node.RelationshipsFromPreviousLayer.GetRightResources();
 
-            // the relationships attributes in currentResourcesGrouped will be pointing from a 
+            // the relationships attributes in currentResourcesGrouped will be pointing from a
             // resource in the previous layer to a resource in the current (nested) layer.
             // For the nested hook we need to replace these attributes with their inverse.
             // See the FireNestedBeforeUpdateHooks method for a more detailed example.

@@ -22,7 +22,7 @@ namespace UnitTests.Models
                 }
             };
 
-            // Act 
+            // Act
             relationshipData.Data = relationships;
 
             // Assert
@@ -47,7 +47,7 @@ namespace UnitTests.Models
 
             JArray relationships = JArray.Parse(relationshipsJson);
 
-            // Act 
+            // Act
             relationshipData.Data = relationships;
 
             // Assert
@@ -69,7 +69,7 @@ namespace UnitTests.Models
                 Type = "authors"
             };
 
-            // Act 
+            // Act
             relationshipData.Data = relationship;
 
             // Assert
@@ -92,7 +92,7 @@ namespace UnitTests.Models
 
             JObject relationship = JObject.Parse(relationshipJson);
 
-            // Act 
+            // Act
             relationshipData.Data = relationship;
 
             // Assert

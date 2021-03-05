@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// </summary>
     /// <example>
     /// <code><![CDATA[
-    /// public class Author : Identifiable 
+    /// public class Author : Identifiable
     /// {
     ///     [HasMany(PublicName = "articles")]
     ///     public List<Article> Articles { get; set; }

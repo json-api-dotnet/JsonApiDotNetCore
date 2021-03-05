@@ -75,7 +75,7 @@ namespace UnitTests.Extensions
             var graph = provider.GetRequiredService<IResourceGraph>();
             ResourceContext resourceContext = graph.GetResourceContext<Author>();
 
-            // Assert 
+            // Assert
             Assert.Equal("authors", resourceContext.PublicName);
         }
 

@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IIdentifiable)))
             {
-                // the navigation action references a relationship. Redirect the call to the relationship dictionary. 
+                // the navigation action references a relationship. Redirect the call to the relationship dictionary.
                 return base.GetAffected(navigationAction);
             }
 

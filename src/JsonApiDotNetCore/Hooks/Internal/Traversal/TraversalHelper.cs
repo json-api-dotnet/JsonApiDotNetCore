@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
             // group them conveniently so we can make ChildNodes of them:
             // there might be several relationship attributes in rights dictionary
-            // that point to the same right type. 
+            // that point to the same right type.
             Dictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> leftsGrouped = GroupByRightTypeOfRelationship(lefts);
 
             // convert the groups into child nodes
