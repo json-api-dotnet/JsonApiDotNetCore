@@ -113,8 +113,11 @@ namespace UnitTests.Builders
             public ISet<RelatedResource> RelatedResources { get; set; }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class RelatedResource : Identifiable
         {
+            [Attr]
+            public string Unused { get; set; }
         }
     }
 }
