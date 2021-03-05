@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -9,6 +10,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// <summary>
     /// A helper class that provides insights in which relationships have been updated for which resources.
     /// </summary>
+    [PublicAPI]
     public interface IRelationshipGetters<TLeftResource>
         where TLeftResource : class, IIdentifiable
     {

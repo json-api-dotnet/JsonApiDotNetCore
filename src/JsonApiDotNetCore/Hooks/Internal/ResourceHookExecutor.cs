@@ -546,7 +546,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 return null;
             }
 
-            return _executorHelper.LoadDbValues(resourceType, uniqueResources, targetHook, relationshipsToNextLayer);
+            return _executorHelper.LoadDbValues(resourceType, uniqueResources, relationshipsToNextLayer);
         }
 
         /// <summary>

@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);
         }
 
-        public IEnumerable LoadDbValues(LeftType resourceTypeForRepository, IEnumerable resources, ResourceHook hook,
+        public IEnumerable LoadDbValues(LeftType resourceTypeForRepository, IEnumerable resources,
             params RelationshipAttribute[] relationshipsToNextLayer)
         {
             LeftType idType = TypeHelper.GetIdType(resourceTypeForRepository);
@@ -107,20 +107,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             return (IEnumerable)Activator.CreateInstance(typeof(HashSet<>).MakeGenericType(resourceTypeForRepository),
                 TypeHelper.CopyToList(values, resourceTypeForRepository));
-        }
-
-        public HashSet<TResource> LoadDbValues<TResource>(IEnumerable<TResource> resources, ResourceHook hook, params RelationshipAttribute[] relationships)
-            where TResource : class, IIdentifiable
-        {
-            Type resourceType = typeof(TResource);
-            IEnumerable<TResource> dbValues = LoadDbValues(resourceType, resources, hook, relationships)?.Cast<TResource>();
-
-            if (dbValues == null)
-            {
-                return null;
-            }
-
-            return new HashSet<TResource>(dbValues);
         }
 
         public bool ShouldLoadDbValues(LeftType resourceType, ResourceHook hook)
@@ -230,7 +216,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                 }
 
                 // note that we don't have to check if BeforeImplicitUpdate hook is implemented. If not, it wont ever get here.
-                IEnumerable includedLefts = LoadDbValues(relationship.LeftType, lefts, ResourceHook.BeforeImplicitUpdateRelationship, relationship);
+                IEnumerable includedLefts = LoadDbValues(relationship.LeftType, lefts, relationship);
 
                 AddToImplicitlyAffected(includedLefts, relationship, existingRightResourceList, implicitlyAffected);
             }

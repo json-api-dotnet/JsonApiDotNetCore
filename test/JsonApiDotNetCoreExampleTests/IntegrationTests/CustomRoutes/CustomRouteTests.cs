@@ -28,6 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         {
             // Arrange
             Town town = _fakers.Town.Generate();
+            town.Civilians = _fakers.Civilian.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

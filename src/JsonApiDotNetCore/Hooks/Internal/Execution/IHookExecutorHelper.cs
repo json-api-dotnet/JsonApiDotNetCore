@@ -43,13 +43,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <param name="resources">
         /// The set of resources to load the db values for
         /// </param>
-        /// <param name="hook">
-        /// The hook in which the db values will be displayed.
-        /// </param>
         /// <param name="relationships">
         /// Relationships that need to be included on resources.
         /// </param>
-        IEnumerable LoadDbValues(Type resourceTypeForRepository, IEnumerable resources, ResourceHook hook, params RelationshipAttribute[] relationships);
+        IEnumerable LoadDbValues(Type resourceTypeForRepository, IEnumerable resources, params RelationshipAttribute[] relationships);
 
         /// <summary>
         /// Checks if the display database values option is allowed for the targeted hook, and for a given resource of type <paramref name="resourceType" />
