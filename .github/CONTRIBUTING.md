@@ -59,7 +59,7 @@ Please follow these steps to have your contribution considered by the maintainer
 - After you submit your pull request, verify that all status checks are passing. In release builds, all compiler warnings are treated as errors, so you should address them before push.
 
 We use [CSharpGuidelines](https://csharpcodingguidelines.com/) as our coding standard (with a few minor exceptions). Coding style is validated during PR build.
-You can run the following scripts locally:
+You can run the following [PowerShell scripts](https://github.com/PowerShell/PowerShell/releases) locally:
 - `inspectcode.ps1`: Scans the code for style violations and opens the result in your web browser.
 - `cleanupcode.ps1` Reformats the entire codebase to match with our configured style.
 
