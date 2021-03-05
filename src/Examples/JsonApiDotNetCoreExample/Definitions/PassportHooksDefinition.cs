@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override IEnumerable<Passport> OnReturn(HashSet<Passport> resources, ResourcePipeline pipeline)
         {
-            return resources.Where(passport => !passport.IsLocked);
+            return resources.Where(passport => !passport.IsLocked).ToArray();
         }
     }
 }

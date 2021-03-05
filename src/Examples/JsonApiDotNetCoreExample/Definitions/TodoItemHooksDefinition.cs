@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override IEnumerable<TodoItem> OnReturn(HashSet<TodoItem> resources, ResourcePipeline pipeline)
         {
-            return resources.Where(todoItem => todoItem.Description != "This should not be included");
+            return resources.Where(todoItem => todoItem.Description != "This should not be included").ToArray();
         }
     }
 }

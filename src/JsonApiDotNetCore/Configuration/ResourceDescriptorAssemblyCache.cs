@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             EnsureAssembliesScanned();
 
-            return _resourceDescriptorsPerAssembly.Select(pair => (pair.Key, pair.Value));
+            return _resourceDescriptorsPerAssembly.Select(pair => (pair.Key, pair.Value)).ToArray();
         }
 
         private void EnsureAssembliesScanned()

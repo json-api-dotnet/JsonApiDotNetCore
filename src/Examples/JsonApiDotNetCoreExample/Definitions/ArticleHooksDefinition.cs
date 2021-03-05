@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExample.Definitions
                 });
             }
 
-            return resources.Where(article => article.Caption != "This should not be included");
+            return resources.Where(article => article.Caption != "This should not be included").ToArray();
         }
     }
 }
