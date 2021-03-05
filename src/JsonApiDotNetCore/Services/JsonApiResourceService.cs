@@ -156,7 +156,7 @@ namespace JsonApiDotNetCore.Services
                 relationshipName
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore.Services
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
@@ -401,7 +401,7 @@ namespace JsonApiDotNetCore.Services
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -457,7 +457,7 @@ namespace JsonApiDotNetCore.Services
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);

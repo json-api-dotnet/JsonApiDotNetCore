@@ -20,8 +20,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <inheritdoc />
         public void Declare(string localId, string resourceType)
         {
-            ArgumentGuard.NotNull(localId, nameof(localId));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
+            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
 
             AssertIsNotDeclared(localId);
 
@@ -43,9 +43,9 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <inheritdoc />
         public void Assign(string localId, string resourceType, string stringId)
         {
-            ArgumentGuard.NotNull(localId, nameof(localId));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-            ArgumentGuard.NotNull(stringId, nameof(stringId));
+            ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
+            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNullNorEmpty(stringId, nameof(stringId));
 
             AssertIsDeclared(localId);
 
@@ -64,8 +64,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <inheritdoc />
         public string GetValue(string localId, string resourceType)
         {
-            ArgumentGuard.NotNull(localId, nameof(localId));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNullNorEmpty(localId, nameof(localId));
+            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
 
             AssertIsDeclared(localId);
 

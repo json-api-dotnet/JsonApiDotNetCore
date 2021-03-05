@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaParameterNameScope Create(string typeName)
         {
-            ArgumentGuard.NotNull(typeName, nameof(typeName));
+            ArgumentGuard.NotNullNorEmpty(typeName, nameof(typeName));
 
             string parameterName = typeName.Camelize();
             parameterName = EnsureNameIsUnique(parameterName);

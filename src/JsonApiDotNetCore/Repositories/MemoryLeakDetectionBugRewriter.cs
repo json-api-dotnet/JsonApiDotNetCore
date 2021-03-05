@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Repositories
         private IDictionary<ResourceFieldAttribute, QueryLayer> RewriteProjection(IDictionary<ResourceFieldAttribute, QueryLayer> projection,
             ResourceContext resourceContext)
         {
-            if (projection == null || projection.Count == 0)
+            if (projection.IsNullOrEmpty())
             {
                 return projection;
             }

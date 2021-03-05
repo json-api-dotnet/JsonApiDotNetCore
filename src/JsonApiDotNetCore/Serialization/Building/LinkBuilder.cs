@@ -234,8 +234,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
-            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
-            ArgumentGuard.NotNull(id, nameof(id));
+            ArgumentGuard.NotNullNorEmpty(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNullNorEmpty(id, nameof(id));
 
             ResourceContext resourceContext = _provider.GetResourceContext(resourceName);
 

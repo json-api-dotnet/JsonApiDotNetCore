@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public object Deserialize(string body)
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             if (_request.Kind == EndpointKind.Relationship)
             {

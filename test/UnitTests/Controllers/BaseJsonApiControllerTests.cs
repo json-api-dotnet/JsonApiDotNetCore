@@ -83,14 +83,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<IGetRelationshipService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
 
             // Act
-            await controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None);
+            await controller.GetRelationshipAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetRelationshipAsync(id, string.Empty, CancellationToken.None), Times.Once);
+            serviceMock.Verify(m => m.GetRelationshipAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace UnitTests.Controllers
 
             // Act
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None));
+                controller.GetRelationshipAsync(id, "articles", CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
@@ -114,14 +115,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<IGetSecondaryService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
 
             // Act
-            await controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None);
+            await controller.GetSecondaryAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetSecondaryAsync(id, string.Empty, CancellationToken.None), Times.Once);
+            serviceMock.Verify(m => m.GetSecondaryAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -133,7 +135,7 @@ namespace UnitTests.Controllers
 
             // Act
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None));
+                controller.GetSecondaryAsync(id, "articles", CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
@@ -200,14 +202,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<ISetRelationshipService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
-            await controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None);
+            await controller.PatchRelationshipAsync(id, relationshipName, null, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.SetRelationshipAsync(id, string.Empty, null, CancellationToken.None), Times.Once);
+            serviceMock.Verify(m => m.SetRelationshipAsync(id, relationshipName, null, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -219,7 +222,7 @@ namespace UnitTests.Controllers
 
             // Act
             var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None));
+                controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None));
 
             // Assert
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);

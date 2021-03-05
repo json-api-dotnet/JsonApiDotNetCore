@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected object DeserializeBody(string body)
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             JToken bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
@@ -95,7 +95,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(attributes, nameof(attributes));
 
-            if (attributeValues == null || attributeValues.Count == 0)
+            if (attributeValues.IsNullOrEmpty())
             {
                 return resource;
             }
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(relationshipAttributes, nameof(relationshipAttributes));
 
-            if (relationshipValues == null || relationshipValues.Count == 0)
+            if (relationshipValues.IsNullOrEmpty())
             {
                 return resource;
             }

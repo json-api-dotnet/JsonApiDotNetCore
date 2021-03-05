@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public Type GetResourceTypeForController(string controllerName)
         {
-            ArgumentGuard.NotNull(controllerName, nameof(controllerName));
+            ArgumentGuard.NotNullNorEmpty(controllerName, nameof(controllerName));
 
             if (_registeredResources.TryGetValue(controllerName, out ResourceContext resourceContext))
             {

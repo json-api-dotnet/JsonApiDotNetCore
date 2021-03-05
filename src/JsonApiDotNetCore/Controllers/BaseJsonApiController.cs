@@ -130,7 +130,7 @@ namespace JsonApiDotNetCore.Controllers
                 relationshipName
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             if (_getSecondary == null)
             {
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Controllers
                 relationshipName
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             if (_getRelationship == null)
             {
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Controllers
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             if (_addToRelationship == null)
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCore.Controllers
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             if (_setRelationship == null)
             {
@@ -357,7 +357,7 @@ namespace JsonApiDotNetCore.Controllers
                 secondaryResourceIds
             });
 
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
 
             if (_removeFromRelationship == null)

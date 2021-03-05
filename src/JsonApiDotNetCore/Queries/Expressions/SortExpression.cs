@@ -15,12 +15,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public SortExpression(IReadOnlyCollection<SortElementExpression> elements)
         {
-            ArgumentGuard.NotNull(elements, nameof(elements));
-
-            if (!elements.Any())
-            {
-                throw new ArgumentException("Must have one or more elements.", nameof(elements));
-            }
+            ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
             Elements = elements;
         }

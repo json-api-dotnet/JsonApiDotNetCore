@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             object resource = DeserializeBody(body);
 
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         public ManyResponse<TResource> DeserializeMany<TResource>(string body)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             object resources = DeserializeBody(body);
 
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             }
 
             // if the included property is empty or absent, there is no additional data to be parsed.
-            if (Document.Included == null || Document.Included.Count == 0)
+            if (Document.Included.IsNullOrEmpty())
             {
                 return;
             }

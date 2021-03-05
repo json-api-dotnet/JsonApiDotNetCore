@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public LambdaParameterNameScope(string name, LambdaParameterNameFactory owner)
         {
-            ArgumentGuard.NotNull(name, nameof(name));
+            ArgumentGuard.NotNullNorEmpty(name, nameof(name));
             ArgumentGuard.NotNull(owner, nameof(owner));
 
             Name = name;

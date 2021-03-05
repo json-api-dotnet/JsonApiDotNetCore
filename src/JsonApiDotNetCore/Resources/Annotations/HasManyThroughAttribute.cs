@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </param>
         public HasManyThroughAttribute(string throughPropertyName)
         {
-            ArgumentGuard.NotNull(throughPropertyName, nameof(throughPropertyName));
+            ArgumentGuard.NotNullNorEmpty(throughPropertyName, nameof(throughPropertyName));
 
             ThroughPropertyName = throughPropertyName;
         }

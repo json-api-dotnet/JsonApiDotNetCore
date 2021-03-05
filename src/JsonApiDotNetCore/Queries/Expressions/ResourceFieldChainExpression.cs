@@ -23,12 +23,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public ResourceFieldChainExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)
         {
-            ArgumentGuard.NotNull(fields, nameof(fields));
-
-            if (!fields.Any())
-            {
-                throw new ArgumentException("Must have one or more fields.", nameof(fields));
-            }
+            ArgumentGuard.NotNullNorEmpty(fields, nameof(fields));
 
             Fields = fields;
         }

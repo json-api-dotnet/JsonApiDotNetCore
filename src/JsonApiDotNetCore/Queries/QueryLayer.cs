@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCore.Queries
                     writer.WriteLine($"{nameof(Pagination)}: {layer.Pagination}");
                 }
 
-                if (layer.Projection != null && layer.Projection.Any())
+                if (!layer.Projection.IsNullOrEmpty())
                 {
                     writer.WriteLine(nameof(Projection));
 

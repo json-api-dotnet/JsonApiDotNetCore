@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
         {
-            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNullNorEmpty(resourceName, nameof(resourceName));
 
             return _resources.SingleOrDefault(e => e.PublicName == resourceName);
         }
