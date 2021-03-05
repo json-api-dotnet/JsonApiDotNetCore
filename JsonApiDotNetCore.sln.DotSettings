@@ -72,6 +72,7 @@ JsonApiDotNetCore.ArgumentGuard.NotNull($EXPR$, $NAME$);</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=SpecifyStringComparison/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=StringEndsWithIsCultureSpecific/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=StringStartsWithIsCultureSpecific/@EntryIndexedValue">WARNING</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=SuggestDiscardDeclarationVarStyle/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=TailRecursiveCall/@EntryIndexedValue">SUGGESTION</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=TryCastAlwaysSucceeds/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UnnecessaryWhitespace/@EntryIndexedValue">HINT</s:String>
@@ -554,7 +555,6 @@ JsonApiDotNetCore.ArgumentGuard.NotNull($EXPR$, $NAME$);</s:String>
 	<s:String x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/ForBuiltInTypes/@EntryValue">UseExplicitType</s:String>
 	<s:String x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/ForOtherTypes/@EntryValue">UseVarWhenEvident</s:String>
 	<s:String x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/ForSimpleTypes/@EntryValue">UseVarWhenEvident</s:String>
-	<s:Boolean x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/PreferExplicitDiscardDeclaration/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeStyle/CSharpVarKeywordUsage/UseRoslynLogicForEvidentTypes/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableClangFormatSupport/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/CodeStyle/EditorConfig/EnableEditorConfigSupport/@EntryValue">False</s:Boolean>
@@ -590,7 +590,7 @@ JsonApiDotNetCore.ArgumentGuard.NotNull($EXPR$, $NAME$);</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=546845333F49494AB6CF8F0477A0F71D/ReplacePattern/@EntryValue">JsonApiDotNetCore.ArgumentGuard.NotNull($argument$, nameof($argument$));&#xD;
 $left$ = $right$;</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=546845333F49494AB6CF8F0477A0F71D/SearchPattern/@EntryValue">$left$ = $right$ ?? throw new ArgumentNullException(nameof($argument$));</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=546845333F49494AB6CF8F0477A0F71D/Severity/@EntryValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=546845333F49494AB6CF8F0477A0F71D/Severity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/Comment/@EntryValue">Replace classic argument null check with Guard clause</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/CustomPatternPlaceholder/=argument/@KeyIndexDefined">True</s:Boolean>
@@ -604,7 +604,7 @@ $left$ = $right$;</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/ReplaceComment/@EntryValue">Replace argument null check with Guard clause</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/ReplacePattern/@EntryValue">JsonApiDotNetCore.ArgumentGuard.NotNull($argument$, nameof($argument$));</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/SearchPattern/@EntryValue">if ($argument$ == null) throw new ArgumentNullException(nameof($argument$));</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/Severity/@EntryValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=67F8FFFFE7DCA24889232D6952BDFD59/Severity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/Comment/@EntryValue">Replace collection null/empty check with extension method</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/CustomPatternPlaceholder/=collection/@KeyIndexDefined">True</s:Boolean>
@@ -617,7 +617,7 @@ $left$ = $right$;</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/ReplaceComment/@EntryValue">Replace collection null/empty check with extension method</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/ReplacePattern/@EntryValue">$collection$.IsNullOrEmpty()</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/SearchPattern/@EntryValue">$collection$ == null || !$collection$.Any()</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/Severity/@EntryValue">SUGGESTION</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/Severity/@EntryValue">WARNING</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Assignee/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Injectables/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=linebreaks/@EntryIndexedValue">True</s:Boolean>
