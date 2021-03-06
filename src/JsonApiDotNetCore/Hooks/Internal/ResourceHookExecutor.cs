@@ -67,17 +67,22 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public IEnumerable<TResource> BeforeUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeUpdate, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.BeforeUpdate, resources);
+
+            if (result.Succeeded)
             {
-                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
-                IEnumerable dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeUpdate, relationships);
-                var diff = new DiffableResourceHashSet<TResource>(node.UniqueResources, dbValues, node.LeftsToNextLayer(), _targetedFields);
-                IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
-                node.UpdateUnique(updated);
-                node.Reassign(resources);
+                RelationshipAttribute[] relationships = result.Node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
+
+                IEnumerable dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)result.Node.UniqueResources, ResourceHook.BeforeUpdate,
+                    relationships);
+
+                var diff = new DiffableResourceHashSet<TResource>(result.Node.UniqueResources, dbValues, result.Node.LeftsToNextLayer(), _targetedFields);
+                IEnumerable<TResource> updated = result.Container.BeforeUpdate(diff, pipeline);
+                result.Node.UpdateUnique(updated);
+                result.Node.Reassign(resources);
             }
 
-            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
+            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(result.Node));
             return resources;
         }
 
@@ -85,15 +90,17 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public IEnumerable<TResource> BeforeCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeCreate, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.BeforeCreate, resources);
+
+            if (result.Succeeded)
             {
-                var affected = new ResourceHashSet<TResource>((HashSet<TResource>)node.UniqueResources, node.LeftsToNextLayer());
-                IEnumerable<TResource> updated = container.BeforeCreate(affected, pipeline);
-                node.UpdateUnique(updated);
-                node.Reassign(resources);
+                var affected = new ResourceHashSet<TResource>((HashSet<TResource>)result.Node.UniqueResources, result.Node.LeftsToNextLayer());
+                IEnumerable<TResource> updated = result.Container.BeforeCreate(affected, pipeline);
+                result.Node.UpdateUnique(updated);
+                result.Node.Reassign(resources);
             }
 
-            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(node));
+            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(result.Node));
             return resources;
         }
 
@@ -101,26 +108,28 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public IEnumerable<TResource> BeforeDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.BeforeDelete, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.BeforeDelete, resources);
+
+            if (result.Succeeded)
             {
-                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
+                RelationshipAttribute[] relationships = result.Node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
 
                 IEnumerable targetResources =
-                    LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeDelete, relationships) ??
-                    node.UniqueResources;
+                    LoadDbValues(typeof(TResource), (IEnumerable<TResource>)result.Node.UniqueResources, ResourceHook.BeforeDelete, relationships) ??
+                    result.Node.UniqueResources;
 
-                var affected = new ResourceHashSet<TResource>(targetResources, node.LeftsToNextLayer());
+                var affected = new ResourceHashSet<TResource>(targetResources, result.Node.LeftsToNextLayer());
 
-                IEnumerable<TResource> updated = container.BeforeDelete(affected, pipeline);
-                node.UpdateUnique(updated);
-                node.Reassign(resources);
+                IEnumerable<TResource> updated = result.Container.BeforeDelete(affected, pipeline);
+                result.Node.UpdateUnique(updated);
+                result.Node.Reassign(resources);
             }
 
             // If we're deleting an article, we're implicitly affected any owners related to it.
             // Here we're loading all relations onto the to-be-deleted article
             // if for that relation the BeforeImplicitUpdateHook is implemented,
             // and this hook is then executed
-            foreach (KeyValuePair<Type, Dictionary<RelationshipAttribute, IEnumerable>> entry in node.LeftsToNextLayerByRelationships())
+            foreach (KeyValuePair<Type, Dictionary<RelationshipAttribute, IEnumerable>> entry in result.Node.LeftsToNextLayerByRelationships())
             {
                 Type rightType = entry.Key;
                 Dictionary<RelationshipAttribute, IEnumerable> implicitTargets = entry.Value;
@@ -134,15 +143,17 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public IEnumerable<TResource> OnReturn<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.OnReturn, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.OnReturn, resources);
+
+            if (result.Succeeded)
             {
-                IEnumerable<TResource> updated = container.OnReturn((HashSet<TResource>)node.UniqueResources, pipeline);
+                IEnumerable<TResource> updated = result.Container.OnReturn((HashSet<TResource>)result.Node.UniqueResources, pipeline);
                 ValidateHookResponse(updated);
-                node.UpdateUnique(updated);
-                node.Reassign(resources);
+                result.Node.UpdateUnique(updated);
+                result.Node.Reassign(resources);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
+            Traverse(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
                 IEnumerable filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline));
                 nextNode.UpdateUnique(filteredUniqueSet);
@@ -156,12 +167,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void AfterRead<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterRead, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.AfterRead, resources);
+
+            if (result.Succeeded)
             {
-                container.AfterRead((HashSet<TResource>)node.UniqueResources, pipeline);
+                result.Container.AfterRead((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
+            Traverse(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
                 CallHook(nextContainer, ResourceHook.AfterRead, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline, true));
             });
@@ -171,12 +184,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void AfterCreate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterCreate, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.AfterCreate, resources);
+
+            if (result.Succeeded)
             {
-                container.AfterCreate((HashSet<TResource>)node.UniqueResources, pipeline);
+                result.Container.AfterCreate((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterUpdateRelationship,
+            Traverse(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
@@ -184,12 +199,14 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void AfterUpdate<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterUpdate, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.AfterUpdate, resources);
+
+            if (result.Succeeded)
             {
-                container.AfterUpdate((HashSet<TResource>)node.UniqueResources, pipeline);
+                result.Container.AfterUpdate((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            Traverse(_traversalHelper.CreateNextLayer(node), ResourceHook.AfterUpdateRelationship,
+            Traverse(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
@@ -197,9 +214,11 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void AfterDelete<TResource>(IEnumerable<TResource> resources, ResourcePipeline pipeline, bool succeeded)
             where TResource : class, IIdentifiable
         {
-            if (GetHook(ResourceHook.AfterDelete, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
+            GetHookResult<TResource> result = GetHook(ResourceHook.AfterDelete, resources);
+
+            if (result.Succeeded)
             {
-                container.AfterDelete((HashSet<TResource>)node.UniqueResources, pipeline, succeeded);
+                result.Container.AfterDelete((HashSet<TResource>)result.Node.UniqueResources, pipeline, succeeded);
             }
         }
 
@@ -212,13 +231,13 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// <returns>
         /// <c>true</c>, if hook was implemented, <c>false</c> otherwise.
         /// </returns>
-        private bool GetHook<TResource>(ResourceHook target, IEnumerable<TResource> resources, out IResourceHookContainer<TResource> container,
-            out RootNode<TResource> node)
+        private GetHookResult<TResource> GetHook<TResource>(ResourceHook target, IEnumerable<TResource> resources)
             where TResource : class, IIdentifiable
         {
-            node = _traversalHelper.CreateRootNode(resources);
-            container = _executorHelper.GetResourceHookContainer<TResource>(target);
-            return container != null;
+            RootNode<TResource> node = _traversalHelper.CreateRootNode(resources);
+            IResourceHookContainer<TResource> container = _executorHelper.GetResourceHookContainer<TResource>(target);
+
+            return new GetHookResult<TResource>(container, node);
         }
 
         /// <summary>
@@ -576,6 +595,21 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private HashSet<string> GetIds(IEnumerable resources)
         {
             return new HashSet<string>(resources.Cast<IIdentifiable>().Select(resource => resource.StringId));
+        }
+
+        private sealed class GetHookResult<TResource>
+            where TResource : class, IIdentifiable
+        {
+            public IResourceHookContainer<TResource> Container { get; }
+            public RootNode<TResource> Node { get; }
+
+            public bool Succeeded => Container != null;
+
+            public GetHookResult(IResourceHookContainer<TResource> container, RootNode<TResource> node)
+            {
+                Container = container;
+                Node = node;
+            }
         }
     }
 }

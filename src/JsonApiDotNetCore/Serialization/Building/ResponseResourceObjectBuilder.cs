@@ -70,13 +70,13 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             RelationshipEntry relationshipEntry = null;
-            List<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = null;
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = GetInclusionChain(relationship);
 
-            if (Equals(relationship, _requestRelationship) || ShouldInclude(relationship, out relationshipChains))
+            if (Equals(relationship, _requestRelationship) || relationshipChains.Any())
             {
                 relationshipEntry = base.GetRelationshipData(relationship, resource);
 
-                if (relationshipChains != null && relationshipEntry.HasResource)
+                if (relationshipChains.Any() && relationshipEntry.HasResource)
                 {
                     foreach (IReadOnlyCollection<RelationshipAttribute> chain in relationshipChains)
                     {
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// Inspects the included relationship chains (see <see cref="IIncludeQueryStringParameterReader" /> to see if <paramref name="relationship" /> should be
         /// included or not.
         /// </summary>
-        private bool ShouldInclude(RelationshipAttribute relationship, out List<IReadOnlyCollection<RelationshipAttribute>> inclusionChain)
+        private IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> GetInclusionChain(RelationshipAttribute relationship)
         {
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
+            var inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            return inclusionChain.Any();
+            return inclusionChain;
         }
     }
 }

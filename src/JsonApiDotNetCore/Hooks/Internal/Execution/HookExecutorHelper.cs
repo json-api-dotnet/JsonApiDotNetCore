@@ -209,7 +209,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             foreach (KeyValuePair<RelationshipAttribute, IEnumerable> kvp in leftResourcesByRelation)
             {
-                if (IsHasManyThrough(kvp, out IEnumerable lefts, out RelationshipAttribute relationship))
+                RelationshipAttribute relationship = kvp.Key;
+                IEnumerable lefts = kvp.Value;
+
+                if (relationship is HasManyThroughAttribute)
                 {
                     continue;
                 }
@@ -269,13 +272,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             {
                 list.Add(item);
             }
-        }
-
-        private bool IsHasManyThrough(KeyValuePair<RelationshipAttribute, IEnumerable> kvp, out IEnumerable resources, out RelationshipAttribute attr)
-        {
-            attr = kvp.Key;
-            resources = kvp.Value;
-            return kvp.Key is HasManyThroughAttribute;
         }
     }
 }
