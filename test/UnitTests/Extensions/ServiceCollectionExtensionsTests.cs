@@ -131,8 +131,11 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
 
-            // Act, assert
-            Assert.Throws<InvalidConfigurationException>(() => services.AddResourceService<int>());
+            // Act
+            Action action = () => services.AddResourceService<int>();
+
+            // Assert
+            Assert.Throws<InvalidConfigurationException>(action);
         }
 
         [Fact]

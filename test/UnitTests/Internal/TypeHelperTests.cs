@@ -29,8 +29,10 @@ namespace UnitTests.Internal
             const string formattedString = "this_is_not_a_valid_dto";
 
             // Act
+            Action action = () => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
+
             // Assert
-            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset)));
+            Assert.Throws<FormatException>(action);
         }
 
         [Fact]
@@ -82,7 +84,7 @@ namespace UnitTests.Internal
         [Fact]
         public void ConvertType_Returns_Default_Value_For_Empty_Strings()
         {
-            // Arrange -- can't use non-constants in [Theory]
+            // Arrange
             var data = new Dictionary<Type, object>
             {
                 { typeof(int), 0 },
@@ -105,14 +107,14 @@ namespace UnitTests.Internal
         [Fact]
         public void Can_Convert_TimeSpans()
         {
-            //arrange
+            // Arrange
             TimeSpan timeSpan = TimeSpan.FromMinutes(45);
             string stringSpan = timeSpan.ToString();
 
-            //act
+            // Act
             object result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
 
-            //assert
+            // Assert
             Assert.Equal(timeSpan, result);
         }
 
@@ -122,8 +124,11 @@ namespace UnitTests.Internal
             // Arrange
             const string formattedString = "this_is_not_a_valid_timespan";
 
-            // Act/assert
-            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));
+            // Act
+            Action action = () => TypeHelper.ConvertType(formattedString, typeof(TimeSpan));
+
+            // Assert
+            Assert.Throws<FormatException>(action);
         }
 
         [Fact]

@@ -220,8 +220,11 @@ namespace UnitTests.ResourceHooks
 
             var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
-            // Assert & act
-            foreach (ResourceDiffPair<Dummy> diff in diffs.GetDiffs())
+            // Act
+            ResourceDiffPair<Dummy>[] resourceDiffPairs = diffs.GetDiffs().ToArray();
+
+            // Assert
+            foreach (ResourceDiffPair<Dummy> diff in resourceDiffPairs)
             {
                 Assert.Equal(diff.Resource.Id, diff.DatabaseValue.Id);
                 Assert.NotEqual(diff.Resource, diff.DatabaseValue);

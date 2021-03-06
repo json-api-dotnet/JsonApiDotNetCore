@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -41,9 +42,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, null);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetAsync(CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -71,9 +73,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(id, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetAsync(id, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -102,10 +105,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetRelationshipAsync(id, "articles", CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetRelationshipAsync(id, "articles", CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -134,10 +137,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetSecondaryAsync(id, "articles", CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetSecondaryAsync(id, "articles", CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -168,9 +171,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, resource, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.PatchAsync(id, resource, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
@@ -221,10 +225,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
@@ -252,9 +256,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.DeleteAsync(id, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Delete, exception.Method);
         }

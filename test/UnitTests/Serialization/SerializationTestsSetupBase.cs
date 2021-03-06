@@ -51,17 +51,10 @@ namespace UnitTests.Serialization
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             resourceGraphBuilder.Add<TestResource>("testResource");
             resourceGraphBuilder.Add<TestResourceWithList>("testResource-with-list");
-            // one to one relationships
-            resourceGraphBuilder.Add<OneToOnePrincipal>("oneToOnePrincipals");
-            resourceGraphBuilder.Add<OneToOneDependent>("oneToOneDependents");
-            resourceGraphBuilder.Add<OneToOneRequiredDependent>("oneToOneRequiredDependents");
-            // one to many relationships
-            resourceGraphBuilder.Add<OneToManyPrincipal>("oneToManyPrincipals");
-            resourceGraphBuilder.Add<OneToManyDependent>("oneToManyDependents");
-            resourceGraphBuilder.Add<OneToManyRequiredDependent>("oneToMany-requiredDependents");
-            // collective relationships
-            resourceGraphBuilder.Add<MultipleRelationshipsPrincipalPart>("multiPrincipals");
-            resourceGraphBuilder.Add<MultipleRelationshipsDependentPart>("multiDependents");
+
+            BuildOneToOneRelationships(resourceGraphBuilder);
+            BuildOneToManyRelationships(resourceGraphBuilder);
+            BuildCollectiveRelationships(resourceGraphBuilder);
 
             resourceGraphBuilder.Add<Article>();
             resourceGraphBuilder.Add<Person>();
@@ -75,6 +68,26 @@ namespace UnitTests.Serialization
             resourceGraphBuilder.Add<SecondDerivedModel>();
 
             return resourceGraphBuilder.Build();
+        }
+
+        private static void BuildOneToOneRelationships(ResourceGraphBuilder resourceGraphBuilder)
+        {
+            resourceGraphBuilder.Add<OneToOnePrincipal>("oneToOnePrincipals");
+            resourceGraphBuilder.Add<OneToOneDependent>("oneToOneDependents");
+            resourceGraphBuilder.Add<OneToOneRequiredDependent>("oneToOneRequiredDependents");
+        }
+
+        private static void BuildOneToManyRelationships(ResourceGraphBuilder resourceGraphBuilder)
+        {
+            resourceGraphBuilder.Add<OneToManyPrincipal>("oneToManyPrincipals");
+            resourceGraphBuilder.Add<OneToManyDependent>("oneToManyDependents");
+            resourceGraphBuilder.Add<OneToManyRequiredDependent>("oneToMany-requiredDependents");
+        }
+
+        private static void BuildCollectiveRelationships(ResourceGraphBuilder resourceGraphBuilder)
+        {
+            resourceGraphBuilder.Add<MultipleRelationshipsPrincipalPart>("multiPrincipals");
+            resourceGraphBuilder.Add<MultipleRelationshipsDependentPart>("multiDependents");
         }
     }
 }

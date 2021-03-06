@@ -65,8 +65,11 @@ namespace UnitTests.Middleware
             // Arrange
             InvokeConfiguration configuration = GetConfiguration("/users/-5/");
 
-            // Act / Assert
-            await RunMiddlewareTask(configuration);
+            // Act
+            Func<Task> asyncAction = async () => await RunMiddlewareTask(configuration);
+
+            // Assert
+            await asyncAction();
         }
 
         private Task RunMiddlewareTask(InvokeConfiguration holder)

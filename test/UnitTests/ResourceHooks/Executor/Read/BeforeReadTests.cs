@@ -26,6 +26,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             VerifyNoOtherCalls(todoResourceMock);
@@ -48,6 +49,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -72,6 +74,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -97,6 +100,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -121,6 +125,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             passportResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -145,6 +150,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             todoResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, false, null), Times.Once());
             ownerResourceMock.Verify(rd => rd.BeforeRead(ResourcePipeline.Get, true, null), Times.Once());
@@ -169,6 +175,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
+
             // Assert
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock, passportResourceMock);
         }
