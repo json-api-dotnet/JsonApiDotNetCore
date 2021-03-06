@@ -80,7 +80,7 @@ namespace UnitTests.Serialization
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
         {
             var mock = new Mock<IResourceObjectBuilderSettingsProvider>();
-            mock.Setup(m => m.Get()).Returns(new ResourceObjectBuilderSettings());
+            mock.Setup(provider => provider.Get()).Returns(new ResourceObjectBuilderSettings());
             return mock.Object;
         }
 
@@ -93,24 +93,24 @@ namespace UnitTests.Serialization
         private IMetaBuilder GetMetaBuilder(Dictionary<string, object> meta = null)
         {
             var mock = new Mock<IMetaBuilder>();
-            mock.Setup(m => m.Build()).Returns(meta);
+            mock.Setup(metaBuilder => metaBuilder.Build()).Returns(meta);
             return mock.Object;
         }
 
         protected ILinkBuilder GetLinkBuilder(TopLevelLinks top = null, ResourceLinks resource = null, RelationshipLinks relationship = null)
         {
             var mock = new Mock<ILinkBuilder>();
-            mock.Setup(m => m.GetTopLevelLinks()).Returns(top);
-            mock.Setup(m => m.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
-            mock.Setup(m => m.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
+            mock.Setup(linkBuilder => linkBuilder.GetTopLevelLinks()).Returns(top);
+            mock.Setup(linkBuilder => linkBuilder.GetResourceLinks(It.IsAny<string>(), It.IsAny<string>())).Returns(resource);
+            mock.Setup(linkBuilder => linkBuilder.GetRelationshipLinks(It.IsAny<RelationshipAttribute>(), It.IsAny<IIdentifiable>())).Returns(relationship);
             return mock.Object;
         }
 
         protected IFieldsToSerialize GetSerializableFields()
         {
             var mock = new Mock<IFieldsToSerialize>();
-            mock.Setup(m => m.GetAttributes(It.IsAny<Type>())).Returns<Type>(t => ResourceGraph.GetResourceContext(t).Attributes);
-            mock.Setup(m => m.GetRelationships(It.IsAny<Type>())).Returns<Type>(t => ResourceGraph.GetResourceContext(t).Relationships);
+            mock.Setup(fields => fields.GetAttributes(It.IsAny<Type>())).Returns<Type>(type => ResourceGraph.GetResourceContext(type).Attributes);
+            mock.Setup(fields => fields.GetRelationships(It.IsAny<Type>())).Returns<Type>(type => ResourceGraph.GetResourceContext(type).Relationships);
             return mock.Object;
         }
 
@@ -128,7 +128,7 @@ namespace UnitTests.Serialization
             }
 
             var mock = new Mock<IQueryConstraintProvider>();
-            mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
+            mock.Setup(provider => provider.GetConstraints()).Returns(expressionsInScope);
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
             return includeConstraintProvider.AsEnumerable();

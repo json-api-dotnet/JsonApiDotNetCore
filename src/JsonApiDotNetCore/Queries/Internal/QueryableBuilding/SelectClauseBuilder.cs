@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             if (includesReadOnlyAttribute || containsOnlyRelationships)
             {
                 IEntityType entityModel = _entityModel.GetEntityTypes().Single(type => type.ClrType == elementType);
-                IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(p => !p.IsShadowProperty()).ToArray();
+                IEnumerable<IProperty> entityProperties = entityModel.GetProperties().Where(property => !property.IsShadowProperty()).ToArray();
 
                 foreach (IProperty entityProperty in entityProperties)
                 {

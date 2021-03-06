@@ -16,9 +16,9 @@ namespace UnitTests.Serialization.Server
 
         public ResponseResourceObjectBuilderTests()
         {
-            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(e => new
+            _relationshipsForBuild = ResourceGraph.GetRelationships<OneToManyPrincipal>(relationship => new
             {
-                e.Dependents
+                relationship.Dependents
             }).ToList();
         }
 

@@ -23,12 +23,12 @@ namespace JsonApiDotNetCoreExample.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<TodoItem>()
-                .HasOne(t => t.Assignee)
-                .WithMany(p => p.AssignedTodoItems);
+                .HasOne(todoItem => todoItem.Assignee)
+                .WithMany(person => person.AssignedTodoItems);
 
             builder.Entity<TodoItem>()
-                .HasOne(t => t.Owner)
-                .WithMany(p => p.TodoItems);
+                .HasOne(todoItem => todoItem.Owner)
+                .WithMany(person => person.TodoItems);
 
             builder.Entity<ArticleTag>()
                 .HasKey(bc => new
@@ -45,23 +45,23 @@ namespace JsonApiDotNetCoreExample.Data
                 });
 
             builder.Entity<Person>()
-                .HasOne(t => t.StakeHolderTodoItem)
-                .WithMany(t => t.StakeHolders)
+                .HasOne(person => person.StakeHolderTodoItem)
+                .WithMany(todoItem => todoItem.StakeHolders)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<TodoItem>()
-                .HasMany(t => t.ChildTodoItems)
-                .WithOne(t => t.ParentTodo);
+                .HasMany(todoItem => todoItem.ChildTodoItems)
+                .WithOne(todoItem => todoItem.ParentTodo);
 
             builder.Entity<Passport>()
-                .HasOne(p => p.Person)
-                .WithOne(p => p.Passport)
+                .HasOne(passport => passport.Person)
+                .WithOne(person => person.Passport)
                 .HasForeignKey<Person>("PassportKey")
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<TodoItem>()
-                .HasOne(p => p.OneToOnePerson)
-                .WithOne(p => p.OneToOneTodoItem)
+                .HasOne(todoItem => todoItem.OneToOnePerson)
+                .WithOne(person => person.OneToOneTodoItem)
                 .HasForeignKey<TodoItem>("OneToOnePersonKey");
         }
     }

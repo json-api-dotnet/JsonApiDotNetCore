@@ -107,7 +107,7 @@ namespace Benchmarks.Query
 
         private void Run(int iterations, Action action)
         {
-            for (int i = 0; i < iterations; i++)
+            for (int index = 0; index < iterations; index++)
             {
                 action();
             }

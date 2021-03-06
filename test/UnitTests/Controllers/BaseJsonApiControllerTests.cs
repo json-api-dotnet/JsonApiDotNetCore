@@ -31,7 +31,7 @@ namespace UnitTests.Controllers
             await controller.GetAsync(CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetAsync(CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetAsync(CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace UnitTests.Controllers
             await controller.GetAsync(id, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetAsync(id, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetAsync(id, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace UnitTests.Controllers
             await controller.GetRelationshipAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetRelationshipAsync(id, relationshipName, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetRelationshipAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace UnitTests.Controllers
             await controller.GetSecondaryAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetSecondaryAsync(id, relationshipName, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetSecondaryAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace UnitTests.Controllers
             await controller.PatchAsync(id, resource, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>(), CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.UpdateAsync(id, It.IsAny<Resource>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace UnitTests.Controllers
             var serviceMock = new Mock<ICreateService<Resource>>();
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
+            serviceMock.Setup(service => service.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
 
             controller.ControllerContext = new ControllerContext
             {
@@ -194,7 +194,7 @@ namespace UnitTests.Controllers
             await controller.PostAsync(resource, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>(), CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.CreateAsync(It.IsAny<Resource>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace UnitTests.Controllers
             await controller.PatchRelationshipAsync(id, relationshipName, null, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.SetRelationshipAsync(id, relationshipName, null, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.SetRelationshipAsync(id, relationshipName, null, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace UnitTests.Controllers
             await controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.DeleteAsync(id, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.DeleteAsync(id, CancellationToken.None), Times.Once);
         }
 
         [Fact]

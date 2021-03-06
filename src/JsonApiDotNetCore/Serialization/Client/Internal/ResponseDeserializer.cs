@@ -135,13 +135,14 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             try
             {
-                return Document.Included.SingleOrDefault(r => r.Type == relatedResourceIdentifier.Type && r.Id == relatedResourceIdentifier.Id);
+                return Document.Included.SingleOrDefault(resourceObject =>
+                    resourceObject.Type == relatedResourceIdentifier.Type && resourceObject.Id == relatedResourceIdentifier.Id);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException exception)
             {
                 throw new InvalidOperationException(
                     "A compound document MUST NOT include more than one resource object for each type and ID pair." +
-                    $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
+                    $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", exception);
             }
         }
     }

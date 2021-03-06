@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                         $"Missing value for '{parameterName}' query string parameter.");
                 }
 
-                IQueryStringParameterReader reader = _parameterReaders.FirstOrDefault(r => r.CanRead(parameterName));
+                IQueryStringParameterReader reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
 
                 if (reader != null)
                 {

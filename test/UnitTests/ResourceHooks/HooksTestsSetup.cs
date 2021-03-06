@@ -29,7 +29,7 @@ namespace UnitTests.ResourceHooks
             var ufMock = new Mock<ITargetedFields>();
 
             var constraintsMock = new Mock<IEnumerable<IQueryConstraintProvider>>();
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
 
             var optionsMock = new JsonApiOptions
             {
@@ -192,9 +192,9 @@ namespace UnitTests.ResourceHooks
             IResourceHookContainer<TModel> modelResource, IHooksDiscovery<TModel> discovery, AppDbContext dbContext = null, IResourceGraph resourceGraph = null)
             where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
+            processorFactory.Setup(factory => factory.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
 
-            processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel))).Returns(discovery);
+            processorFactory.Setup(factory => factory.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel))).Returns(discovery);
 
             if (dbContext != null)
             {
@@ -204,8 +204,8 @@ namespace UnitTests.ResourceHooks
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);
 
-                    processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int)))
-                        .Returns(repo);
+                    processorFactory.Setup(factory =>
+                        factory.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
                 {
@@ -229,7 +229,7 @@ namespace UnitTests.ResourceHooks
         private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
         {
             var mock = new Mock<IDbContextResolver>();
-            mock.Setup(r => r.GetContext()).Returns(dbContext);
+            mock.Setup(resolver => resolver.GetContext()).Returns(dbContext);
             return mock.Object;
         }
 
@@ -268,7 +268,9 @@ namespace UnitTests.ResourceHooks
 
             foreach (string requestedRelationship in splitPath)
             {
-                RelationshipAttribute relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
+                RelationshipAttribute relationship =
+                    resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == requestedRelationship);
+
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
@@ -288,7 +290,7 @@ namespace UnitTests.ResourceHooks
             }
 
             var mock = new Mock<IQueryConstraintProvider>();
-            mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
+            mock.Setup(provider => provider.GetConstraints()).Returns(expressionsInScope);
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
             return includeConstraintProvider.AsEnumerable();

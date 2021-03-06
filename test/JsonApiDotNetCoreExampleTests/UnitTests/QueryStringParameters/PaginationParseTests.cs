@@ -147,13 +147,13 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 
             // Assert
             string[] scopeTreesExpectedArray = scopeTreesExpected.Split("|");
-            ResourceFieldChainExpression[] scopeTrees = constraints.Select(x => x.Scope).ToArray();
+            ResourceFieldChainExpression[] scopeTrees = constraints.Select(expressionInScope => expressionInScope.Scope).ToArray();
 
             scopeTrees.Should().HaveSameCount(scopeTreesExpectedArray);
             scopeTrees.Select(tree => tree?.ToString() ?? "").Should().BeEquivalentTo(scopeTreesExpectedArray, options => options.WithStrictOrdering());
 
             string[] valueTreesExpectedArray = valueTreesExpected.Split("|");
-            QueryExpression[] valueTrees = constraints.Select(x => x.Expression).ToArray();
+            QueryExpression[] valueTrees = constraints.Select(expressionInScope => expressionInScope.Expression).ToArray();
 
             valueTrees.Should().HaveSameCount(valueTreesExpectedArray);
             valueTrees.Select(tree => tree.ToString()).Should().BeEquivalentTo(valueTreesExpectedArray, options => options.WithStrictOrdering());

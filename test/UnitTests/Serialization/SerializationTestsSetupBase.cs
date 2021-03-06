@@ -23,24 +23,24 @@ namespace UnitTests.Serialization
             // @formatter:keep_existing_linebreaks true
 
             ArticleFaker = new Faker<Article>()
-                .RuleFor(f => f.Title, f => f.Hacker.Phrase())
-                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+                .RuleFor(article => article.Title, faker => faker.Hacker.Phrase())
+                .RuleFor(article => article.Id, faker => faker.UniqueIndex + 1);
 
             PersonFaker = new Faker<Person>()
-                .RuleFor(f => f.Name, f => f.Person.FullName)
-                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+                .RuleFor(person => person.Name, faker => faker.Person.FullName)
+                .RuleFor(person => person.Id, faker => faker.UniqueIndex + 1);
 
             BlogFaker = new Faker<Blog>()
-                .RuleFor(f => f.Title, f => f.Hacker.Phrase())
-                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+                .RuleFor(blog => blog.Title, faker => faker.Hacker.Phrase())
+                .RuleFor(blog => blog.Id, faker => faker.UniqueIndex + 1);
 
             SongFaker = new Faker<Song>()
-                .RuleFor(f => f.Title, f => f.Lorem.Sentence())
-                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+                .RuleFor(song => song.Title, faker => faker.Lorem.Sentence())
+                .RuleFor(song => song.Id, faker => faker.UniqueIndex + 1);
 
             FoodFaker = new Faker<Food>()
-                .RuleFor(f => f.Dish, f => f.Lorem.Sentence())
-                .RuleFor(f => f.Id, f => f.UniqueIndex + 1);
+                .RuleFor(food => food.Dish, faker => faker.Lorem.Sentence())
+                .RuleFor(food => food.Id, faker => faker.UniqueIndex + 1);
 
             // @formatter:wrap_chained_method_calls restore
             // @formatter:keep_existing_linebreaks restore

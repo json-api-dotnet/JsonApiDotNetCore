@@ -16,8 +16,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public static Type TryGetIdType(Type resourceType)
         {
-            Type identifiableInterface = resourceType.GetInterfaces()
-                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
+            Type identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(@interface =>
+                @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
 
             return identifiableInterface?.GetGenericArguments()[0];
         }

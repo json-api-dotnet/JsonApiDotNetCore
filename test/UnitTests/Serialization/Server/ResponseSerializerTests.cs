@@ -109,8 +109,8 @@ namespace UnitTests.Serialization.Server
                 }
             };
 
-            List<IEnumerable<RelationshipAttribute>> chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r => r.AsEnumerable())
-                .ToList();
+            List<IEnumerable<RelationshipAttribute>> chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
+                .Select(relationship => relationship.AsEnumerable()).ToList();
 
             ResponseSerializer<MultipleRelationshipsPrincipalPart> serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(chain);
 
@@ -186,11 +186,11 @@ namespace UnitTests.Serialization.Server
                 }
             };
 
-            List<List<RelationshipAttribute>> chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(r =>
+            List<List<RelationshipAttribute>> chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(relationship =>
             {
-                List<RelationshipAttribute> chain = r.AsList();
+                List<RelationshipAttribute> chain = relationship.AsList();
 
-                if (r.PublicName != "populatedToManies")
+                if (relationship.PublicName != "populatedToManies")
                 {
                     return chain;
                 }

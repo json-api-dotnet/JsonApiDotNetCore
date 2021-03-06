@@ -44,7 +44,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -68,7 +68,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -93,7 +93,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -117,7 +117,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -141,7 +141,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);
@@ -165,7 +165,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
             List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
             hookExecutor.BeforeRead<TodoItem>(ResourcePipeline.Get);

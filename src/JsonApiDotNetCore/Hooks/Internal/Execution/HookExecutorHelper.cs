@@ -87,8 +87,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return (IResourceHookContainer<TResource>)GetResourceHookContainer(typeof(TResource), hook);
         }
 
-        public IEnumerable LoadDbValues(LeftType resourceTypeForRepository, IEnumerable resources,
-            params RelationshipAttribute[] relationshipsToNextLayer)
+        public IEnumerable LoadDbValues(LeftType resourceTypeForRepository, IEnumerable resources, params RelationshipAttribute[] relationshipsToNextLayer)
         {
             LeftType idType = TypeHelper.GetIdType(resourceTypeForRepository);
 
@@ -97,7 +96,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
                     idType);
 
             IEnumerable<IIdentifiable> cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
-            IList ids = TypeHelper.CopyToList(cast.Select(i => i.GetTypedId()), idType);
+            IList ids = TypeHelper.CopyToList(cast.Select(resource => resource.GetTypedId()), idType);
             var values = (IEnumerable)parameterizedGetWhere.Invoke(this, ArrayFactory.Create<object>(ids, relationshipsToNextLayer));
 
             if (values == null)

@@ -96,8 +96,8 @@ namespace UnitTests.Serialization.Server
         {
             Person person = PersonFaker.Generate();
             List<Article> articles = ArticleFaker.Generate(5);
-            articles.ForEach(a => a.Author = person);
-            articles.ForEach(a => a.Reviewer = person);
+            articles.ForEach(article => article.Author = person);
+            articles.ForEach(article => article.Reviewer = person);
             IncludedResourceObjectBuilder builder = GetBuilder();
             List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author");
             List<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer");
@@ -166,7 +166,9 @@ namespace UnitTests.Serialization.Server
 
             foreach (string requestedRelationship in splitPath)
             {
-                RelationshipAttribute relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
+                RelationshipAttribute relationship =
+                    resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == requestedRelationship);
+
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }

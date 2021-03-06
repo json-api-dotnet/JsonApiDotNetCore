@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_resources.Any(e => e.ResourceType == resourceType))
+            if (_resources.Any(resourceContext => resourceContext.ResourceType == resourceType))
             {
                 return this;
             }
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCore.Configuration
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
-                    PropertyInfo throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
+                    PropertyInfo throughProperty = properties.SingleOrDefault(property => property.Name == hasManyThroughAttribute.ThroughPropertyName);
 
                     if (throughProperty == null)
                     {
@@ -240,14 +240,15 @@ namespace JsonApiDotNetCore.Configuration
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType)) ??
+                        hasManyThroughAttribute.LeftProperty =
+                            throughProperties.SingleOrDefault(property => property.PropertyType.IsAssignableFrom(resourceType)) ??
                             throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
                     }
 
                     // ArticleTag.ArticleId
                     string leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
 
-                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName) ??
+                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(property => property.Name == leftIdPropertyName) ??
                         throw new InvalidConfigurationException(
                             $"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
 
@@ -262,7 +263,8 @@ namespace JsonApiDotNetCore.Configuration
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType) ??
+                        hasManyThroughAttribute.RightProperty =
+                            throughProperties.SingleOrDefault(property => property.PropertyType == hasManyThroughAttribute.RightType) ??
                             throw new InvalidConfigurationException(
                                 $"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
                     }
@@ -270,7 +272,7 @@ namespace JsonApiDotNetCore.Configuration
                     // ArticleTag.TagId
                     string rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
 
-                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName) ??
+                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(property => property.Name == rightIdPropertyName) ??
                         throw new InvalidConfigurationException(
                             $"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
                 }
@@ -339,7 +341,8 @@ namespace JsonApiDotNetCore.Configuration
 
         private Type TypeOrElementType(Type type)
         {
-            Type[] interfaces = type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+            Type[] interfaces = type.GetInterfaces()
+                .Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
 
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }

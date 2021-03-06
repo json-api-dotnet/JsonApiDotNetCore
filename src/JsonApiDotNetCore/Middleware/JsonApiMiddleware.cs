@@ -260,7 +260,7 @@ namespace JsonApiDotNetCore.Middleware
                 if (routeAttribute != null)
                 {
                     List<string> trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
-                    int resourceNameIndex = trimmedComponents.FindIndex(c => c == resourceName);
+                    int resourceNameIndex = trimmedComponents.FindIndex(component => component == resourceName);
                     string[] newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
                     string customRoute = string.Join('/', newComponents);
                     return customRoute == apiNamespace ? null : customRoute;

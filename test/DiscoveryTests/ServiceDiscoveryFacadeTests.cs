@@ -28,7 +28,7 @@ namespace DiscoveryTests
         public ServiceDiscoveryFacadeTests()
         {
             var dbResolverMock = new Mock<IDbContextResolver>();
-            dbResolverMock.Setup(m => m.GetContext()).Returns(new Mock<DbContext>().Object);
+            dbResolverMock.Setup(resolver => resolver.GetContext()).Returns(new Mock<DbContext>().Object);
             _services.AddScoped(_ => dbResolverMock.Object);
 
             _services.AddSingleton<IJsonApiOptions>(_options);

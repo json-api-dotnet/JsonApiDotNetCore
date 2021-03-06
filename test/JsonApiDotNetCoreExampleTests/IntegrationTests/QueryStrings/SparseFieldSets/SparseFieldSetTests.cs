@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Caption.Should().Be(post.Caption);
             postCaptured.Url.Should().BeNull();
         }
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().BeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Caption.Should().Be(post.Caption);
             postCaptured.Url.Should().BeNull();
         }
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Caption.Should().BeNull();
             postCaptured.Url.Should().BeNull();
         }
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Url.Should().Be(post.Url);
             postCaptured.Caption.Should().BeNull();
         }
@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().BeNull();
 
@@ -261,7 +261,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[0].Relationships["preferences"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["preferences"].Links.Related.Should().NotBeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Id.Should().Be(post.Id);
             postCaptured.Caption.Should().Be(post.Caption);
 
@@ -310,7 +310,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[0].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var accountCaptured = (WebAccount)store.Resources.Should().ContainSingle(x => x is WebAccount).And.Subject.Single();
+            var accountCaptured = (WebAccount)store.Resources.Should().ContainSingle(resource => resource is WebAccount).And.Subject.Single();
             accountCaptured.Id.Should().Be(account.Id);
             accountCaptured.DisplayName.Should().Be(account.DisplayName);
 
@@ -360,7 +360,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[0].Relationships["comments"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["comments"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Owner.Should().NotBeNull();
             blogCaptured.Owner.DisplayName.Should().Be(blog.Owner.DisplayName);
@@ -414,7 +414,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[0].Attributes["color"].Should().Be(post.BlogPostLabels.Single().Label.Color.ToString("G"));
             responseDocument.Included[0].Relationships.Should().BeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Id.Should().Be(post.Id);
             postCaptured.Caption.Should().Be(post.Caption);
 
@@ -467,7 +467,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[1].Relationships.Should().BeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
             blogCaptured.PlatformName.Should().BeNull();
@@ -533,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.Included[1].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.Included[1].Relationships["labels"].Links.Related.Should().NotBeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
             blogCaptured.Id.Should().Be(blog.Id);
             blogCaptured.Title.Should().Be(blog.Title);
             blogCaptured.PlatformName.Should().BeNull();
@@ -569,7 +569,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().BeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Id.Should().Be(post.Id);
             postCaptured.Caption.Should().Be(post.Caption);
             postCaptured.Url.Should().BeNull();
@@ -648,7 +648,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.SingleData.Attributes["showAdvertisements"].Should().Be(blog.ShowAdvertisements);
             responseDocument.SingleData.Relationships.Should().BeNull();
 
-            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(x => x is Blog).And.Subject.Single();
+            var blogCaptured = (Blog)store.Resources.Should().ContainSingle(resource => resource is Blog).And.Subject.Single();
             blogCaptured.ShowAdvertisements.Should().Be(blogCaptured.ShowAdvertisements);
             blogCaptured.Title.Should().Be(blog.Title);
         }
@@ -686,7 +686,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(x => x is BlogPost).And.Subject.Single();
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Id.Should().Be(post.Id);
             postCaptured.Caption.Should().Be(post.Caption);
             postCaptured.Url.Should().Be(postCaptured.Url);

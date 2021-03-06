@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
         public bool AnyResources()
         {
-            return _collection.Any(n => n.UniqueResources.Cast<IIdentifiable>().Any());
+            return _collection.Any(node => node.UniqueResources.Cast<IIdentifiable>().Any());
         }
 
         public IEnumerator<IResourceNode> GetEnumerator()

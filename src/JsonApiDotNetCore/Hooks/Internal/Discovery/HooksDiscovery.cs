@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Discovery
 
         public HooksDiscovery(IServiceProvider provider)
         {
-            _allHooks = Enum.GetValues(typeof(ResourceHook)).Cast<ResourceHook>().Where(h => h != ResourceHook.None).ToArray();
+            _allHooks = Enum.GetValues(typeof(ResourceHook)).Cast<ResourceHook>().Where(hook => hook != ResourceHook.None).ToArray();
 
             Type containerType;
 

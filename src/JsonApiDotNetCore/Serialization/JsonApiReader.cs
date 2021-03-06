@@ -181,7 +181,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (model is IEnumerable<IIdentifiable> resourceCollection)
             {
-                return resourceCollection.Select(r => r.GetType()).Distinct();
+                return resourceCollection.Select(resource => resource.GetType()).Distinct();
             }
 
             return model == null ? Enumerable.Empty<Type>() : model.GetType().AsEnumerable();

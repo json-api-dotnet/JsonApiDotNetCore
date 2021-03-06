@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <inheritdoc />
         public Dictionary<RelationshipAttribute, HashSet<TResource>> GetByRelationship(Type resourceType)
         {
-            return this.Where(p => p.Key.RightType == resourceType).ToDictionary(p => p.Key, p => p.Value);
+            return this.Where(pair => pair.Key.RightType == resourceType).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         /// <inheritdoc />
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
 
             PropertyInfo property = TypeHelper.ParseNavigationExpression(navigationAction);
-            return this.Where(p => p.Key.Property.Name == property.Name).Select(p => p.Value).SingleOrDefault();
+            return this.Where(pair => pair.Key.Property.Name == property.Name).Select(pair => pair.Value).SingleOrDefault();
         }
     }
 }

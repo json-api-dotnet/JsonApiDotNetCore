@@ -116,7 +116,8 @@ namespace UnitTests.ResourceHooks.Executor.Update
             (_, Mock<ITargetedFields> ufMock, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery, _options);
 
-            ufMock.Setup(c => c.Relationships).Returns(ResourceGraph.GetRelationships((TodoItem t) => t.OneToOnePerson).ToHashSet);
+            ufMock.Setup(targetedFields => targetedFields.Relationships)
+                .Returns(ResourceGraph.GetRelationships((TodoItem todoItem) => todoItem.OneToOnePerson).ToHashSet);
 
             // Act
             var todoList = new List<TodoItem>
@@ -267,7 +268,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             KeyValuePair<RelationshipAttribute, HashSet<TodoItem>> updatedRelationship = resources.GetByRelationship<Person>().Single();
             bool diffCheck = updatedRelationship.Key.PublicName == "oneToOnePerson";
 
-            bool getAffectedCheck = resources.GetAffected(e => e.OneToOnePerson).Any();
+            bool getAffectedCheck = resources.GetAffected(todoItem => todoItem.OneToOnePerson).Any();
 
             return dbCheck && reqCheck && diffCheck && getAffectedCheck;
         }

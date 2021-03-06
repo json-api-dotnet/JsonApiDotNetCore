@@ -12,33 +12,33 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         private readonly Lazy<Faker<State>> _lazyStateFaker = new Lazy<Faker<State>>(() =>
             new Faker<State>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(state => state.Name, f => f.Address.City()));
+                .RuleFor(state => state.Name, faker => faker.Address.City()));
 
         private readonly Lazy<Faker<City>> _lazyCityFaker = new Lazy<Faker<City>>(() =>
             new Faker<City>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(city => city.Name, f => f.Address.City()));
+                .RuleFor(city => city.Name, faker => faker.Address.City()));
 
         private readonly Lazy<Faker<Street>> _lazyStreetFaker = new Lazy<Faker<Street>>(() =>
             new Faker<Street>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(street => street.Name, f => f.Address.StreetName()));
+                .RuleFor(street => street.Name, faker => faker.Address.StreetName()));
 
         private readonly Lazy<Faker<Building>> _lazyBuildingFaker = new Lazy<Faker<Building>>(() =>
             new Faker<Building>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(building => building.Number, f => f.Address.BuildingNumber()));
+                .RuleFor(building => building.Number, faker => faker.Address.BuildingNumber()));
 
         private readonly Lazy<Faker<Window>> _lazyWindowFaker = new Lazy<Faker<Window>>(() =>
             new Faker<Window>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(window => window.HeightInCentimeters, f => f.Random.Number(30, 199))
-                .RuleFor(window => window.WidthInCentimeters, f => f.Random.Number(30, 199)));
+                .RuleFor(window => window.HeightInCentimeters, faker => faker.Random.Number(30, 199))
+                .RuleFor(window => window.WidthInCentimeters, faker => faker.Random.Number(30, 199)));
 
         private readonly Lazy<Faker<Door>> _lazyDoorFaker = new Lazy<Faker<Door>>(() =>
             new Faker<Door>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(door => door.Color, f => f.Commerce.Color()));
+                .RuleFor(door => door.Color, faker => faker.Commerce.Color()));
 
         public Faker<State> State => _lazyStateFaker.Value;
         public Faker<City> City => _lazyCityFaker.Value;

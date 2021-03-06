@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
 
             foreach (TResource resource in this)
             {
-                TResource currentValueInDatabase = _databaseValues.Single(e => resource.StringId == e.StringId);
+                TResource currentValueInDatabase = _databaseValues.Single(databaseResource => resource.StringId == databaseResource.StringId);
                 yield return new ResourceDiffPair<TResource>(resource, currentValueInDatabase);
             }
         }

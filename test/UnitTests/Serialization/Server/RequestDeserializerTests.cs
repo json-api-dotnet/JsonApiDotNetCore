@@ -84,8 +84,8 @@ namespace UnitTests.Serialization.Server
         {
             attributesToUpdate = new HashSet<AttrAttribute>();
             relationshipsToUpdate = new HashSet<RelationshipAttribute>();
-            _fieldsManagerMock.Setup(m => m.Attributes).Returns(attributesToUpdate);
-            _fieldsManagerMock.Setup(m => m.Relationships).Returns(relationshipsToUpdate);
+            _fieldsManagerMock.Setup(fields => fields.Attributes).Returns(attributesToUpdate);
+            _fieldsManagerMock.Setup(fields => fields.Relationships).Returns(relationshipsToUpdate);
         }
     }
 }

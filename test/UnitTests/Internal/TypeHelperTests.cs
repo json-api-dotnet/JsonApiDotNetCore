@@ -92,13 +92,13 @@ namespace UnitTests.Internal
                 { typeof(Guid), Guid.Empty }
             };
 
-            foreach (KeyValuePair<Type, object> t in data)
+            foreach (KeyValuePair<Type, object> pair in data)
             {
                 // Act
-                object result = TypeHelper.ConvertType(string.Empty, t.Key);
+                object result = TypeHelper.ConvertType(string.Empty, pair.Key);
 
                 // Assert
-                Assert.Equal(t.Value, result);
+                Assert.Equal(pair.Value, result);
             }
         }
 

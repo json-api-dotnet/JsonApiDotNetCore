@@ -216,7 +216,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             IEnumerable<RelationshipProxy> relationshipsFromLeftToRight =
                 _relationshipProxies.Select(entry => entry.Value).Where(proxy => proxy.LeftType == leftType);
 
-            return relationshipsFromLeftToRight.Where(proxy => proxy.IsContextRelation || lefts.Any(p => proxy.GetValue(p) != null)).ToArray();
+            return relationshipsFromLeftToRight.Where(proxy => proxy.IsContextRelation || lefts.Any(resource => proxy.GetValue(resource) != null)).ToArray();
         }
 
         /// <summary>

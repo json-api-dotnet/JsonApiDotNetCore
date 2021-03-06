@@ -166,10 +166,10 @@ namespace JsonApiDotNetCore.Configuration
                     _services.AddScoped(typeof(ResourceHooksDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
                 }
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException exception)
             {
                 throw new InvalidConfigurationException($"Cannot define multiple ResourceHooksDefinition<> implementations for '{identifiable.ResourceType}'",
-                    e);
+                    exception);
             }
         }
 

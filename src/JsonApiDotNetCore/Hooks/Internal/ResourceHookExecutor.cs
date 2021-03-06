@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             if (GetHook(ResourceHook.BeforeUpdate, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
             {
-                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
                 IEnumerable dbValues = LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeUpdate, relationships);
                 var diff = new DiffableResourceHashSet<TResource>(node.UniqueResources, dbValues, node.LeftsToNextLayer(), _targetedFields);
                 IEnumerable<TResource> updated = container.BeforeUpdate(diff, pipeline);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             if (GetHook(ResourceHook.BeforeDelete, resources, out IResourceHookContainer<TResource> container, out RootNode<TResource> node))
             {
-                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
 
                 IEnumerable targetResources =
                     LoadDbValues(typeof(TResource), (IEnumerable<TResource>)node.UniqueResources, ResourceHook.BeforeDelete, relationships) ??
@@ -312,7 +312,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 {
                     if (uniqueResources.Cast<IIdentifiable>().Any())
                     {
-                        RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(p => p.Attribute).ToArray();
+                        RelationshipAttribute[] relationships = node.RelationshipsToNextLayer.Select(proxy => proxy.Attribute).ToArray();
                         IEnumerable dbValues = LoadDbValues(resourceType, uniqueResources, ResourceHook.BeforeUpdateRelationship, relationships);
 
                         // these are the resources of the current node grouped by
@@ -575,7 +575,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         /// </param>
         private HashSet<string> GetIds(IEnumerable resources)
         {
-            return new HashSet<string>(resources.Cast<IIdentifiable>().Select(e => e.StringId));
+            return new HashSet<string>(resources.Cast<IIdentifiable>().Select(resource => resource.StringId));
         }
     }
 }
