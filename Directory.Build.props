@@ -4,7 +4,14 @@
     <AspNetCoreVersion>3.1.*</AspNetCoreVersion>
     <EFCoreVersion>3.1.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>3.1.*</NpgsqlPostgreSQLVersion>
+    <CodeAnalysisRuleSet>$(SolutionDir)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(SolutionDir)CSharpGuidelinesAnalyzer.config">
+      <Link>CSharpGuidelinesAnalyzer.config</Link>
+    </AdditionalFiles>
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <NoWarn>$(NoWarn);1591</NoWarn>
