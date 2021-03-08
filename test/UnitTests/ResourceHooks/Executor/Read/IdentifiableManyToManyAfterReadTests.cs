@@ -26,7 +26,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, List<IdentifiableArticleTag> joins, List<Tag> tags) = CreateIdentifiableManyToManyData();
 
@@ -56,7 +56,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, List<IdentifiableArticleTag> joins, List<Tag> tags) = CreateIdentifiableManyToManyData();
 
@@ -84,7 +84,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, _, List<Tag> tags) = CreateIdentifiableManyToManyData();
 
@@ -110,7 +110,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, List<IdentifiableArticleTag> joins, _) = CreateIdentifiableManyToManyData();
 
@@ -137,7 +137,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, _, _) = CreateIdentifiableManyToManyData();
 
@@ -159,7 +159,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Article>> articleResourceMock,
                     Mock<IResourceHookContainer<IdentifiableArticleTag>> joinResourceMock, Mock<IResourceHookContainer<Tag>> tagResourceMock) =
-                CreateTestObjects(articleDiscovery, joinDiscovery, tagDiscovery);
+                CreateTestObjectsC(articleDiscovery, joinDiscovery, tagDiscovery);
 
             (List<Article> articles, _, _) = CreateIdentifiableManyToManyData();
 

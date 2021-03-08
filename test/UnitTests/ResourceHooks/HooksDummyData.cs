@@ -116,7 +116,7 @@ namespace UnitTests.ResourceHooks
             return (articles, allTags);
         }
 
-        protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
+        protected ManyToManyTestData CreateIdentifiableManyToManyData()
         {
             List<Tag> tagsSubset = TagFaker.Generate(3);
             List<IdentifiableArticleTag> joinsSubSet = _identifiableArticleTagFaker.Generate(3);
@@ -143,7 +143,28 @@ namespace UnitTests.ResourceHooks
 
             List<IdentifiableArticleTag> allJoins = joinsSubSet.Concat(completeJoin).ToList();
             List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
-            return (articles, allJoins, allTags);
+            return new ManyToManyTestData(articles, allJoins, allTags);
+        }
+
+        protected sealed class ManyToManyTestData
+        {
+            public List<Article> Articles { get; }
+            public List<IdentifiableArticleTag> ArticleTags { get; }
+            public List<Tag> Tags { get; }
+
+            public ManyToManyTestData(List<Article> articles, List<IdentifiableArticleTag> articleTags, List<Tag> tags)
+            {
+                Articles = articles;
+                ArticleTags = articleTags;
+                Tags = tags;
+            }
+
+            public void Deconstruct(out List<Article> articles, out List<IdentifiableArticleTag> articleTags, out List<Tag> tags)
+            {
+                articles = Articles;
+                articleTags = ArticleTags;
+                tags = Tags;
+            }
         }
     }
 }

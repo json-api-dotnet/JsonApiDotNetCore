@@ -137,7 +137,7 @@ namespace UnitTests.Serialization.Server
             return authorSong;
         }
 
-        private (Article, Person, Food, Person, Food) GetAuthorChainInstances()
+        private AuthorChainInstances GetAuthorChainInstances()
         {
             Article article = ArticleFaker.Generate();
             Person author = PersonFaker.Generate();
@@ -155,7 +155,7 @@ namespace UnitTests.Serialization.Server
             Food reviewerFood = FoodFaker.Generate();
             reviewer.FavoriteFood = reviewerFood;
 
-            return (article, author, authorFood, reviewer, reviewerFood);
+            return new AuthorChainInstances(article, author, authorFood, reviewer, reviewerFood);
         }
 
         private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
@@ -185,6 +185,33 @@ namespace UnitTests.Serialization.Server
 
             return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor,
                 GetSerializerSettingsProvider());
+        }
+
+        private sealed class AuthorChainInstances
+        {
+            public Article Article { get; }
+            public Person Author { get; }
+            public Food AuthorFood { get; }
+            public Person Reviewer { get; }
+            public Food ReviewerFood { get; }
+
+            public AuthorChainInstances(Article article, Person author, Food authorFood, Person reviewer, Food reviewerFood)
+            {
+                Article = article;
+                Author = author;
+                AuthorFood = authorFood;
+                Reviewer = reviewer;
+                ReviewerFood = reviewerFood;
+            }
+
+            public void Deconstruct(out Article article, out Person author, out Food authorFood, out Person reviewer, out Food reviewerFood)
+            {
+                article = Article;
+                author = Author;
+                authorFood = AuthorFood;
+                reviewer = Reviewer;
+                reviewerFood = ReviewerFood;
+            }
         }
     }
 }

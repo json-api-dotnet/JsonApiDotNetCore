@@ -69,7 +69,7 @@ namespace UnitTests.ResourceHooks.Executor
         {
             // Arrange
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            (ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
+            (IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
             var todo = new TodoItem();
             todo.ParentTodo = todo;
             todo.ChildTodoItems = todo.AsList();
@@ -88,7 +88,7 @@ namespace UnitTests.ResourceHooks.Executor
         {
             // Arrange
             IHooksDiscovery<TodoItem> todoDiscovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            (ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
+            (IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock) = CreateTestObjects(todoDiscovery);
 
             var rootTodo = new TodoItem
             {
