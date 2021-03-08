@@ -94,7 +94,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             LeftType idType = TypeHelper.GetIdType(resourceTypeForRepository);
 
             MethodInfo parameterizedGetWhere =
-                GetType().GetMethod(nameof(GetWhereAndInclude), BindingFlags.NonPublic | BindingFlags.Instance)!.MakeGenericMethod(resourceTypeForRepository,
+                GetType().GetMethod(nameof(GetWhereWithInclude), BindingFlags.NonPublic | BindingFlags.Instance)!.MakeGenericMethod(resourceTypeForRepository,
                     idType);
 
             IEnumerable<IIdentifiable> cast = ((IEnumerable<object>)resources).Cast<IIdentifiable>();
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return discovery;
         }
 
-        private IEnumerable<TResource> GetWhereAndInclude<TResource, TId>(IReadOnlyCollection<TId> ids, RelationshipAttribute[] relationshipsToNextLayer)
+        private IEnumerable<TResource> GetWhereWithInclude<TResource, TId>(IReadOnlyCollection<TId> ids, RelationshipAttribute[] relationshipsToNextLayer)
             where TResource : class, IIdentifiable<TId>
         {
             if (!ids.Any())
