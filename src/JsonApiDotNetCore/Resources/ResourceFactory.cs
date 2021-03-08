@@ -44,7 +44,9 @@ namespace JsonApiDotNetCore.Resources
                     ? (IIdentifiable)Activator.CreateInstance(type)
                     : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
             }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
                 throw new InvalidOperationException(
                     hasSingleConstructorWithoutParameters
@@ -77,7 +79,9 @@ namespace JsonApiDotNetCore.Resources
 
                     constructorArguments.Add(argumentExpression);
                 }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 {
                     throw new InvalidOperationException(
                         $"Failed to create an instance of '{resourceType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.",

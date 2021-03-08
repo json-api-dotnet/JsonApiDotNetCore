@@ -334,7 +334,9 @@ namespace JsonApiDotNetCore
             {
                 return Activator.CreateInstance(type);
             }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
                 throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }

@@ -50,7 +50,9 @@ namespace TestBuildingBlocks
                         return JsonConvert.DeserializeObject<JObject>(text).ToString();
                     }
                 }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 catch
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 {
                     // ignored
                 }

@@ -64,7 +64,9 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     throw ToInvalidRequestBodyException(exception, body);
                 }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 {
                     throw new InvalidRequestBodyException(null, null, body, exception);
                 }
