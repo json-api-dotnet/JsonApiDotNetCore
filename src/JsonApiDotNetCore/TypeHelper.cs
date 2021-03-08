@@ -7,7 +7,10 @@ using System.Reflection;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
+// TODO: Refactor TypeHelper into separate responsibilities
+
 #pragma warning disable AV1008 // Class should not be static
+#pragma warning disable AV1708 // Type name contains term that should be avoided
 
 namespace JsonApiDotNetCore
 {
