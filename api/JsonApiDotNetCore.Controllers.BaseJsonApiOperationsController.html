@@ -73,8 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController" class="text-break">Class BaseJsonApiOperationsController
   </h1>
-  <div class="markdown level0 summary"><p>Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests.
-See <a href="https://jsonapi.org/ext/atomic/">https://jsonapi.org/ext/atomic/</a> for details. Delegates work to <a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html">IOperationsProcessor</a>.</p>
+  <div class="markdown level0 summary"><p>Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
+<a href="https://jsonapi.org/ext/atomic/">https://jsonapi.org/ext/atomic/</a> for details. Delegates work to <a class="xref" href="JsonApiDotNetCore.AtomicOperations.IOperationsProcessor.html">IOperationsProcessor</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -684,13 +684,12 @@ public abstract class BaseJsonApiOperationsController : CoreJsonApiController</c
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList%7BJsonApiDotNetCore.Resources.OperationContainer%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L105">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L107">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_PostOperationsAsync_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)">PostOperationsAsync(IList&lt;OperationContainer&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Atomically processes a list of operations and returns a list of results.
-All changes are reverted if processing fails.
-If processing succeeds but none of the operations returns any data, then HTTP 201 is returned instead of 200.</p>
+  <div class="markdown level1 summary"><p>Atomically processes a list of operations and returns a list of results. All changes are reverted if processing fails. If processing succeeds but
+none of the operations returns any data, then HTTP 201 is returned instead of 200.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -750,6 +749,7 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     }
   }]
 }</code></pre>
+
   <p>The next example updates an existing resource.</p>
 <pre><code>POST /operations HTTP/1.1
 Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&quot;
@@ -766,6 +766,7 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     }
   }]
 }</code></pre>
+
   <p>The next example deletes an existing resource.</p>
 <pre><code>POST /operations HTTP/1.1
 Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&quot;
@@ -779,12 +780,13 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     }
   }]
 }</code></pre>
+
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateClientGeneratedIds_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Resources.OperationContainer%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L123">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L127">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateClientGeneratedIds_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateClientGeneratedIds_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateClientGeneratedIds(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})">ValidateClientGeneratedIds(IEnumerable&lt;OperationContainer&gt;)</h4>
@@ -816,7 +818,7 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Resources.OperationContainer%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L140">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/BaseJsonApiOperationsController.cs/#L145">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__" data-uid="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.ValidateModelState(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Resources.OperationContainer})">ValidateModelState(IEnumerable&lt;OperationContainer&gt;)</h4>

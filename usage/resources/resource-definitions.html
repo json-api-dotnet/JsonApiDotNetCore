@@ -85,7 +85,8 @@ For example, you may accept some sensitive data that should only be exposed to a
 <p>Note: to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code>.</p>
 <pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;
 {
-    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public UserDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -131,7 +132,8 @@ Content-Type: application/vnd.api+json
 <p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
-    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccountDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -153,7 +155,8 @@ Content-Type: application/vnd.api+json
 <p>You may want to enforce pagination on large database tables.</p>
 <pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog&gt;
 {
-    public AccessLogDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccessLogDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -178,7 +181,8 @@ Content-Type: application/vnd.api+json
 <p>Soft-deletion sets <code>IsSoftDeleted</code> to <code>true</code> instead of actually deleting the record, so you may want to always filter them out.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
-    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccountDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -187,8 +191,8 @@ Content-Type: application/vnd.api+json
         var resourceContext = ResourceGraph.GetResourceContext&lt;Account&gt;();
 
         var isSoftDeletedAttribute =
-            resourceContext.Attributes.Single(a =&gt;
-                a.Property.Name == nameof(Account.IsSoftDeleted));
+            resourceContext.Attributes.Single(account =&gt;
+                account.Property.Name == nameof(Account.IsSoftDeleted));
 
         var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
             new ResourceFieldChainExpression(isSoftDeletedAttribute),
@@ -197,13 +201,14 @@ Content-Type: application/vnd.api+json
         return existingFilter == null
             ? (FilterExpression) isNotSoftDeleted
             : new LogicalExpression(LogicalOperator.And,
-                new[] {isNotSoftDeleted, existingFilter});
+                new[] { isNotSoftDeleted, existingFilter });
     }
 }
 </code></pre><h2 id="block-including-related-resources">Block including related resources</h2>
 <pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee&gt;
 {
-    public EmployeeDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public EmployeeDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -230,7 +235,8 @@ If the key is present in a query string, the supplied LINQ expression will be ad
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
 <pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item&gt;
 {
-    public ItemDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public ItemDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 

@@ -80,19 +80,15 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html">DiffableResourceHashSet&lt;TResource&gt;</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary-1.html">RelationshipsDictionary&lt;TResource&gt;</a></h4>
-      <section><p>Implementation of IAffectedRelationships{TRightResource}</p>
-<p>It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}} dictionary
-with the two helper methods defined on IAffectedRelationships{TRightResource}.</p>
+      <section><p>Implementation of IAffectedRelationships{TRightResource} It is practically a ReadOnlyDictionary{RelationshipAttribute, HashSet{TRightResource}}
+dictionary with the two helper methods defined on IAffectedRelationships{TRightResource}.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourceDiffPair-1.html">ResourceDiffPair&lt;TResource&gt;</a></h4>
-      <section><p>A wrapper that contains a resource that is affected by the request, 
-matched to its current database value</p>
+      <section><p>A wrapper that contains a resource that is affected by the request, matched to its current database value</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet-1.html">ResourceHashSet&lt;TResource&gt;</a></h4>
-      <section><p>Implementation of IResourceHashSet{TResource}.</p>
-<p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
-<p>Also contains information about updated relationships through 
-implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+      <section><p>Implementation of IResourceHashSet{TResource}. Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the
+request. Also contains information about updated relationships through implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
@@ -100,10 +96,9 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
       <section><p>An interface that is implemented to expose a relationship dictionary on another class.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet-1.html">IDiffableResourceHashSet&lt;TResource&gt;</a></h4>
-      <section><p>A wrapper class that contains information about the resources that are updated by the request.
-Contains the resources from the request and the corresponding database values.</p>
-<p>Also contains information about updated relationships through 
-implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+      <section><p>A wrapper class that contains information about the resources that are updated by the request. Contains the resources from the request and the
+corresponding database values. Also contains information about updated relationships through implementation of IRelationshipsDictionary
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipGetters-1.html">IRelationshipGetters&lt;TLeftResource&gt;</a></h4>
       <section><p>A helper class that provides insights in which relationships have been updated for which resources.</p>
@@ -115,9 +110,8 @@ implementation of IRelationshipsDictionary<code data-dev-comment-type="typeparam
       <section><p>A helper class that provides insights in which relationships have been updated for which resources.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet-1.html">IResourceHashSet&lt;TResource&gt;</a></h4>
-      <section><p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. </p>
-<p>Also contains information about updated relationships through 
-implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
+      <section><p>Basically a enumerable of <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> of resources that were affected by the request. Also contains information about updated
+relationships through implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>&gt;</p>
 </section>
     <h3 id="enums">Enums
   </h3>
@@ -125,9 +119,9 @@ implementation of IAffectedRelationshipsDictionary<code data-dev-comment-type="t
       <section><p>A enum that represent the available resource hooks.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html">ResourcePipeline</a></h4>
-      <section><p>An enum that represents the initiator of a resource hook. Eg, when BeforeCreate()
-is called from <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync__1_System_Threading_CancellationToken_">GetAsync(TId, CancellationToken)</a>, it will be called
-with parameter pipeline = ResourceAction.GetSingle.</p>
+      <section><p>An enum that represents the initiator of a resource hook. Eg, when BeforeCreate() is called from
+<a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-2.html#JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync__1_System_Threading_CancellationToken_">GetAsync(TId, CancellationToken)</a>, it will be called with parameter pipeline =
+ResourceAction.GetSingle.</p>
 </section>
 </article>
           </div>

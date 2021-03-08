@@ -239,10 +239,8 @@ through a many-to-many join relationship.</p>
 public sealed class HasManyThroughAttribute : HasManyAttribute</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_examples"><strong>Examples</strong></h5>
-  <p>In the following example, we expose a relationship named &quot;tags&quot;
-through the navigation property <code>ArticleTags</code>.
-The <code>Tags</code> property is decorated with <code>NotMapped</code> so that EF does not try
-to map this to a database relationship.</p>
+  <p>In the following example, we expose a relationship named &quot;tags&quot; through the navigation property <code>ArticleTags</code>. The <code>Tags</code> property is decorated with
+<code>NotMapped</code> so that EF does not try to map this to a database relationship.</p>
 <pre><code>public sealed class Article : Identifiable
 {
     [NotMapped]
@@ -273,7 +271,7 @@ public sealed class ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute__ctor_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L128">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L120">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute__ctor_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute__ctor_System_String_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor(System.String)">HasManyThroughAttribute(String)</h4>
@@ -309,12 +307,12 @@ public sealed class ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L72">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L68">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty">LeftIdProperty</h4>
-  <div class="markdown level1 summary"><p>The ID property back to the parent resource from the through type.
-In the example described above, this would point to the <code>Article.ArticleTags.ArticleId</code> property.</p>
+  <div class="markdown level1 summary"><p>The ID property back to the parent resource from the through type. In the example described above, this would point to the
+<code>Article.ArticleTags.ArticleId</code> property.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -341,13 +339,12 @@ In the example described above, this would point to the <code>Article.ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdPropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L115">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L106">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdPropertyName_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdPropertyName" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName">LeftIdPropertyName</h4>
-  <div class="markdown level1 summary"><p>Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type.
-Defaults to the name of <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty">LeftProperty</a> suffixed with &quot;Id&quot;.
-In the example described above, this would be &quot;ArticleId&quot;.</p>
+  <div class="markdown level1 summary"><p>Optional. Can be used to indicate a non-default name for the ID property back to the parent resource from the through type. Defaults to the name of
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty">LeftProperty</a> suffixed with &quot;Id&quot;. In the example described above, this would be &quot;ArticleId&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -374,12 +371,12 @@ In the example described above, this would be &quot;ArticleId&quot;.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L66">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L62">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty">LeftProperty</h4>
-  <div class="markdown level1 summary"><p>The navigation property back to the parent resource from the through type.
-In the example described above, this would point to the <code>Article.ArticleTags.Article</code> property.</p>
+  <div class="markdown level1 summary"><p>The navigation property back to the parent resource from the through type. In the example described above, this would point to the
+<code>Article.ArticleTags.Article</code> property.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -406,12 +403,11 @@ In the example described above, this would point to the <code>Article.ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftPropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L102">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L95">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftPropertyName_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftPropertyName" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName">LeftPropertyName</h4>
-  <div class="markdown level1 summary"><p>Required for a self-referencing many-to-many relationship.
-Contains the name of the property back to the parent resource from the through type.</p>
+  <div class="markdown level1 summary"><p>Required for a self-referencing many-to-many relationship. Contains the name of the property back to the parent resource from the through type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -438,12 +434,11 @@ Contains the name of the property back to the parent resource from the through t
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RelationshipPath.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L96">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L90">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RelationshipPath_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RelationshipPath" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath">RelationshipPath</h4>
-  <div class="markdown level1 summary"><p>The internal navigation property path to the related resource.
-In the example described above, this would contain &quot;ArticleTags.Tag&quot;.</p>
+  <div class="markdown level1 summary"><p>The internal navigation property path to the related resource. In the example described above, this would contain &quot;ArticleTags.Tag&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -472,12 +467,12 @@ In the example described above, this would contain &quot;ArticleTags.Tag&quot;.<
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L84">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L80">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty">RightIdProperty</h4>
-  <div class="markdown level1 summary"><p>The ID property to the related resource from the through type.
-In the example described above, this would point to the <code>Article.ArticleTags.TagId</code> property.</p>
+  <div class="markdown level1 summary"><p>The ID property to the related resource from the through type. In the example described above, this would point to the <code>Article.ArticleTags.TagId</code>
+property.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -504,13 +499,12 @@ In the example described above, this would point to the <code>Article.ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdPropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L122">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L112">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdPropertyName_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdPropertyName" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName">RightIdPropertyName</h4>
-  <div class="markdown level1 summary"><p>Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type.
-Defaults to the name of <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty">RightProperty</a> suffixed with &quot;Id&quot;.
-In the example described above, this would be &quot;TagId&quot;.</p>
+  <div class="markdown level1 summary"><p>Optional. Can be used to indicate a non-default name for the ID property to the related resource from the through type. Defaults to the name of
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty">RightProperty</a> suffixed with &quot;Id&quot;. In the example described above, this would be &quot;TagId&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -537,12 +531,12 @@ In the example described above, this would be &quot;TagId&quot;.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L78">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L74">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty">RightProperty</h4>
-  <div class="markdown level1 summary"><p>The navigation property to the related resource from the through type.
-In the example described above, this would point to the <code>Article.ArticleTags.Tag</code> property.</p>
+  <div class="markdown level1 summary"><p>The navigation property to the related resource from the through type. In the example described above, this would point to the
+<code>Article.ArticleTags.Tag</code> property.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -569,12 +563,11 @@ In the example described above, this would point to the <code>Article.ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightPropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L108">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L100">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightPropertyName_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightPropertyName" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName">RightPropertyName</h4>
-  <div class="markdown level1 summary"><p>Required for a self-referencing many-to-many relationship.
-Contains the name of the property to the related resource from the through type.</p>
+  <div class="markdown level1 summary"><p>Required for a self-referencing many-to-many relationship. Contains the name of the property to the related resource from the through type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -601,12 +594,11 @@ Contains the name of the property to the related resource from the through type.
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughProperty.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L90">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L85">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughProperty_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughProperty" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty">ThroughProperty</h4>
-  <div class="markdown level1 summary"><p>The join resource property on the parent resource.
-In the example described above, this would point to the <code>Article.ArticleTags</code> property.</p>
+  <div class="markdown level1 summary"><p>The join resource property on the parent resource. In the example described above, this would point to the <code>Article.ArticleTags</code> property.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -633,12 +625,11 @@ In the example described above, this would point to the <code>Article.ArticleTag
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L54">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L51">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName">ThroughPropertyName</h4>
-  <div class="markdown level1 summary"><p>The name of the join property on the parent resource.
-In the example described above, this would be &quot;ArticleTags&quot;.</p>
+  <div class="markdown level1 summary"><p>The name of the join property on the parent resource. In the example described above, this would be &quot;ArticleTags&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -665,12 +656,11 @@ In the example described above, this would be &quot;ArticleTags&quot;.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L60">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L56">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType">ThroughType</h4>
-  <div class="markdown level1 summary"><p>The join type.
-In the example described above, this would be <code>ArticleTag</code>.</p>
+  <div class="markdown level1 summary"><p>The join type. In the example described above, this would be <code>ArticleTag</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -699,7 +689,7 @@ In the example described above, this would be <code>ArticleTag</code>.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L187">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L179">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)">Equals(Object)</h4>
@@ -748,7 +738,7 @@ In the example described above, this would be <code>ArticleTag</code>.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L207">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L198">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode">GetHashCode()</h4>
@@ -780,12 +770,12 @@ In the example described above, this would be <code>ArticleTag</code>.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L139">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L131">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)">GetValue(Object)</h4>
-  <div class="markdown level1 summary"><p>Traverses through the provided resource and returns the value of the relationship on the other side of the through type.
-In the example described above, this would be the value of &quot;Articles.ArticleTags.Tag&quot;.</p>
+  <div class="markdown level1 summary"><p>Traverses through the provided resource and returns the value of the relationship on the other side of the through type. In the example described
+above, this would be the value of &quot;Articles.ArticleTags.Tag&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -831,12 +821,12 @@ In the example described above, this would be the value of &quot;Articles.Articl
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_SetValue_System_Object_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue(System.Object%2CSystem.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L160">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L151">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_SetValue_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue*"></a>
   <h4 id="JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_SetValue_System_Object_System_Object_" data-uid="JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue(System.Object,System.Object)">SetValue(Object, Object)</h4>
-  <div class="markdown level1 summary"><p>Traverses through the provided resource and sets the value of the relationship on the other side of the through type.
-In the example described above, this would be the value of &quot;Articles.ArticleTags.Tag&quot;.</p>
+  <div class="markdown level1 summary"><p>Traverses through the provided resource and sets the value of the relationship on the other side of the through type. In the example described above,
+this would be the value of &quot;Articles.ArticleTags.Tag&quot;.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -878,7 +868,7 @@ In the example described above, this would be the value of &quot;Articles.Articl
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L46" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/Annotations/HasManyThroughAttribute.cs/#L44" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

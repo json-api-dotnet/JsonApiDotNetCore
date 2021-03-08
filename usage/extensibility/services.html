@@ -79,22 +79,19 @@ In simple cases, you can also just wrap the base implementation with your custom
 {
     private readonly INotificationService _notificationService;
 
-    public TodoItemService(
-        IResourceRepositoryAccessor repositoryAccessor,
-        IQueryLayerComposer queryLayerComposer,
-        IPaginationContext paginationContext,
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
-        IJsonApiRequest request,
+    public TodoItemService(IResourceRepositoryAccessor repositoryAccessor,
+        IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
+        IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
         IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
         IResourceHookExecutorFacade hookExecutor)
-        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
-            request, resourceChangeTracker, hookExecutor)
+        : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
+            loggerFactory, request, resourceChangeTracker, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
-    public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem resource, CancellationToken cancellationToken)
+    public override async Task&lt;TodoItem&gt; CreateAsync(TodoItem resource,
+        CancellationToken cancellationToken)
     {
         // Call the base implementation
         var newResource = await base.CreateAsync(resource, cancellationToken);
@@ -128,7 +125,8 @@ public class ProductService : IResourceService&lt;Product&gt;
         _dao = dao;
     }
 
-    public async Task&lt;IReadOnlyCollection&lt;Product&gt;&gt; GetAsync(CancellationToken cancellationToken)
+    public async Task&lt;IReadOnlyCollection&lt;Product&gt;&gt; GetAsync(
+        CancellationToken cancellationToken)
     {
         return await _dao.GetProductsAsync(cancellationToken);
     }
@@ -192,22 +190,22 @@ This is helpful when you implement a subset of the resource interfaces and want 
 </code></pre><p>Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:</p>
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
-        ICreateService&lt;Article, int&gt; create,
-        IDeleteService&lt;Article, int&gt; delete)
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        ICreateService&lt;Article, int&gt; create, IDeleteService&lt;Article, int&gt; delete)
         : base(options, loggerFactory, create: create, delete: delete)
-    { }
+    {
+    }
 
     [HttpPost]
-    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article resource, CancellationToken cancellationToken)
+    public override async Task&lt;IActionResult&gt; PostAsync([FromBody] Article resource,
+        CancellationToken cancellationToken)
     {
         return await base.PostAsync(resource, cancellationToken);
     }
 
     [HttpDelete(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt;DeleteAsync(int id, CancellationToken cancellationToken)
+    public override async Task&lt;IActionResult&gt;DeleteAsync(int id,
+        CancellationToken cancellationToken)
     {
         return await base.DeleteAsync(id, cancellationToken);
     }

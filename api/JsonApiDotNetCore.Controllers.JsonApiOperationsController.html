@@ -73,9 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Controllers_JsonApiOperationsController" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController" class="text-break">Class JsonApiOperationsController
   </h1>
-  <div class="markdown level0 summary"><p>The base class to derive atomic:operations controllers from.
-This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a> but adds attributes for routing templates.
-If you want to provide routing templates yourself, you should derive from BaseJsonApiOperationsController directly.</p>
+  <div class="markdown level0 summary"><p>The base class to derive atomic:operations controllers from. This class delegates all work to <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html">BaseJsonApiOperationsController</a> but adds
+attributes for routing templates. If you want to provide routing templates yourself, you should derive from BaseJsonApiOperationsController directly.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -636,7 +635,7 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiOperationsController.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.AtomicOperations.IOperationsProcessor%2CJsonApiDotNetCore.Middleware.IJsonApiRequest%2CJsonApiDotNetCore.Resources.ITargetedFields)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)">JsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)</h4>
@@ -690,13 +689,12 @@ If you want to provide routing templates yourself, you should derive from BaseJs
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList%7BJsonApiDotNetCore.Resources.OperationContainer%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L26">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiOperationsController_PostOperationsAsync_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync*"></a>
   <h4 id="JsonApiDotNetCore_Controllers_JsonApiOperationsController_PostOperationsAsync_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync(System.Collections.Generic.IList{JsonApiDotNetCore.Resources.OperationContainer},System.Threading.CancellationToken)">PostOperationsAsync(IList&lt;OperationContainer&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Atomically processes a list of operations and returns a list of results.
-All changes are reverted if processing fails.
-If processing succeeds but none of the operations returns any data, then HTTP 201 is returned instead of 200.</p>
+  <div class="markdown level1 summary"><p>Atomically processes a list of operations and returns a list of results. All changes are reverted if processing fails. If processing succeeds but
+none of the operations returns any data, then HTTP 201 is returned instead of 200.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -754,7 +752,7 @@ public override Task&lt;IActionResult&gt; PostOperationsAsync([FromBody] IList&l
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiOperationsController.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiOperationsController%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

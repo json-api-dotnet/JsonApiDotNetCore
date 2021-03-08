@@ -73,9 +73,9 @@
   
   <h1 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1" class="text-break">Class ResourceHooksDefinition&lt;TResource&gt;
   </h1>
-  <div class="markdown level0 summary"><p>Provides a resource-specific extensibility point for API developers to be notified of various events and influence behavior using custom code.
-It is intended to improve the developer experience and reduce boilerplate for commonly required features.
-The goal of this class is to reduce the frequency with which developers have to override the service and repository layers.</p>
+  <div class="markdown level0 summary"><p>Provides a resource-specific extensibility point for API developers to be notified of various events and influence behavior using custom code. It is
+intended to improve the developer experience and reduce boilerplate for commonly required features. The goal of this class is to reduce the frequency
+with which developers have to override the service and repository layers.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -147,7 +147,7 @@ public class ResourceHooksDefinition&lt;TResource&gt; : IResourceHookContainer&l
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.%23ctor(JsonApiDotNetCore.Configuration.IResourceGraph)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L20">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1__ctor_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)">ResourceHooksDefinition(IResourceGraph)</h4>
@@ -181,7 +181,7 @@ public class ResourceHooksDefinition&lt;TResource&gt; : IResourceHookContainer&l
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_ResourceGraph.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.ResourceGraph%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L18">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_ResourceGraph_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_ResourceGraph" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.ResourceGraph">ResourceGraph</h4>
@@ -213,16 +213,15 @@ public class ResourceHooksDefinition&lt;TResource&gt; : IResourceHookContainer&l
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.AfterCreate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L29">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L34">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterCreate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterCreate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">AfterCreate(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just after creation of resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after creation of resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-If relationships were created with the created resources, this will
-be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
+If relationships were created with the created resources, this will be reflected by the corresponding NavigationProperty being set. For each of these
+relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
 hook is fired after the execution of this hook.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -262,12 +261,12 @@ hook is fired after the execution of this hook.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.AfterDelete(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L41">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L58">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterDelete_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)">AfterDelete(HashSet&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just after deletion of resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after deletion of resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -312,12 +311,12 @@ layer just after deletion of resources of type <code data-dev-comment-type="type
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.AfterRead(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L33">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L42">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterRead_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterRead_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterRead(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)">AfterRead(HashSet&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just after reading resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after reading resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -349,8 +348,8 @@ layer just after reading resources of type <code data-dev-comment-type="typepara
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">isIncluded</span></td>
-        <td><p>A boolean to indicate whether the resources in this hook execution are the primary resources of the request, 
-or if they were included as a relationship</p>
+        <td><p>A boolean to indicate whether the resources in this hook execution are the primary resources of the request, or if they were included as a
+relationship</p>
 </td>
       </tr>
     </tbody>
@@ -363,16 +362,15 @@ or if they were included as a relationship</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.AfterUpdate(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L37">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdate_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdate_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdate(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">AfterUpdate(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just after updating resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after updating resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-If relationships were updated with the updated resources, this will
-be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
+If relationships were updated with the updated resources, this will be reflected by the corresponding NavigationProperty being set. For each of these
+relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
 hook is fired after the execution of this hook.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -412,12 +410,11 @@ hook is fired after the execution of this hook.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L45">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L66">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_AfterUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.AfterUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">AfterUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer
-just after a relationship was updated.</p>
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after a relationship was updated.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -456,25 +453,21 @@ just after a relationship was updated.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L74">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeCreate_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeCreate(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeCreate(IResourceHashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before creation of resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before creation of resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Post">Post</a> pipeline, <code data-dev-comment-type="paramref" class="paramref">resources</code> 
-will typically contain one entry.
+For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Post">Post</a> pipeline, <code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one entry.
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the 
-pipeline will not be executed for the omitted resources. The returned 
-set may also contain custom changes of the properties on the resources.
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the pipeline will
+not be executed for the omitted resources. The returned set may also contain custom changes of the properties on the resources.
 <p>
-If new relationships are to be created with the to-be-created resources,
-this will be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook is fired after the execution of this hook.</p>
+If new relationships are to be created with the to-be-created resources, this will be reflected by the corresponding NavigationProperty being set.
+For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a> hook is fired after the execution of
+this hook.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -529,24 +522,20 @@ hook is fired after the execution of this hook.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L61">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L100">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeDelete_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeDelete(IResourceHashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before deleting resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before deleting resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a> pipeline,
-<code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource. 
+For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a> pipeline, <code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource.
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the 
-pipeline will not be executed for the omitted resources.
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the pipeline will
+not be executed for the omitted resources.
 <p>
-If by the deletion of these resources any other resources are affected 
-implicitly by the removal of their relationships (eg
-in the case of an one-to-one relationship), the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook is fired for these resources.</p>
+If by the deletion of these resources any other resources are affected implicitly by the removal of their relationships (eg in the case of an
+one-to-one relationship), the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a> hook is fired for these resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -601,22 +590,20 @@ hook is fired for these resources.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L69">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L119">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeImplicitUpdateRelationship(JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before implicitly updating relationships to resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before implicitly updating relationships
+to resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-This hook is fired when a relationship to resources of type 
-<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> is implicitly affected from a dependent pipeline (<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a>
-or <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a>). For example, if an Article was updated
-by setting its author relationship (one-to-one) to an existing Person, 
-and by this the relationship to a different Person was implicitly removed, 
-this hook will be fired for the latter Person.
+This hook is fired when a relationship to resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> is implicitly affected from a dependent pipeline (
+<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a> or <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a>). For example, if an Article was updated by setting its author
+relationship (one-to-one) to an existing Person, and by this the relationship to a different Person was implicitly removed, this hook will be fired
+for the latter Person.
 <p>
-See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdate(IDiffableResourceHashSet&lt;TResource&gt;, ResourcePipeline)</a> for information about
-when this hook is fired.
+See <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdate(IDiffableResourceHashSet&lt;TResource&gt;, ResourcePipeline)</a> for information about when
+this hook is fired.
 <p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -656,12 +643,12 @@ when this hook is fired.
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline%2CSystem.Boolean%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L53">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L83">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeRead_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeRead_JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_System_String_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeRead(JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean,System.String)">BeforeRead(ResourcePipeline, Boolean, String)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before reading resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before reading resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -706,31 +693,25 @@ layer just before reading resources of type <code data-dev-comment-type="typepar
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L57">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L91">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdate_JsonApiDotNetCore_Hooks_Internal_Execution_IDiffableResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdate(JsonApiDotNetCore.Hooks.Internal.Execution.IDiffableResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeUpdate(IDiffableResourceHashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before updating resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before updating resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a> pipeline, the
-<code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource. 
+For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a> pipeline, the <code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource.
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html">DiffableResourceHashSet&lt;TResource&gt;</a> property in parameter <code data-dev-comment-type="paramref" class="paramref">resources</code>, 
-in which case the operation of the  pipeline will not be executed 
-for the omitted resources. The returned set may also contain custom 
-changes of the properties on the resources.
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html">DiffableResourceHashSet&lt;TResource&gt;</a> property in parameter
+<code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the  pipeline will not be executed for the omitted resources. The returned set may also
+contain custom changes of the properties on the resources.
 <p>
-If new relationships are to be created with the to-be-updated resources,
-this will be reflected by the corresponding NavigationProperty being set. 
-For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook is fired after the execution of this hook.
+If new relationships are to be created with the to-be-updated resources, this will be reflected by the corresponding NavigationProperty being set.
+For each of these relationships, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a> hook is fired after the execution of
+this hook.
 <p>
-If by the creation of these relationships, any other relationships (eg
-in the case of an already populated one-to-one relationship) are implicitly 
-affected, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook is fired for these.</p>
+If by the creation of these relationships, any other relationships (eg in the case of an already populated one-to-one relationship) are implicitly
+affected, the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a> hook is fired for these.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -785,22 +766,19 @@ hook is fired for these.</p>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.BeforeUpdateRelationship(System.Collections.Generic.HashSet%7BSystem.String%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L65">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L109">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeUpdateRelationship_System_Collections_Generic_HashSet_System_String__JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.BeforeUpdateRelationship(System.Collections.Generic.HashSet{System.String},JsonApiDotNetCore.Hooks.Internal.Execution.IRelationshipsDictionary{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeUpdateRelationship(HashSet&lt;String&gt;, IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before updating relationships to resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before updating relationships to
+resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-This hook is fired when a relationship is created to resources of type 
-<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from a dependent pipeline (<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Post">Post</a>
-or <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a>). For example, If an Article was created
-and its author relationship was set to an existing Person, this hook will be fired
-for that particular Person.
+This hook is fired when a relationship is created to resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from a dependent pipeline (
+<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Post">Post</a> or <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Patch">Patch</a>). For example, If an Article was created and its author relationship
+was set to an existing Person, this hook will be fired for that particular Person.
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">ids</code>, in which case the operation of the 
-pipeline will not be executed for any resource whose ID was omitted
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of <code data-dev-comment-type="paramref" class="paramref">ids</code>, in which case the operation of the pipeline will not
+be executed for any resource whose ID was omitted
 <p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -862,17 +840,15 @@ pipeline will not be executed for any resource whose ID was omitted
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601.OnReturn(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L73">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L127">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_OnReturn_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn*"></a>
   <h4 id="JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_OnReturn_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Resources.ResourceHooksDefinition`1.OnReturn(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">OnReturn(HashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to transform the result data just before returning
-the resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from the 
+  <div class="markdown level1 summary"><p>Implement this hook to transform the result data just before returning the resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> from the
 <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">resources</code> and may contain changes in properties
-of the encapsulated resources. 
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of <code data-dev-comment-type="paramref" class="paramref">resources</code> and may contain changes in properties of the
+encapsulated resources.
 <p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -956,7 +932,7 @@ of the encapsulated resources.
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_ResourceHooksDefinition_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.ResourceHooksDefinition%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/ResourceHooksDefinition.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

@@ -73,9 +73,9 @@
   
   <h1 id="JsonApiDotNetCore_Repositories_PlaceholderResourceCollector" data-uid="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector" class="text-break">Class PlaceholderResourceCollector
   </h1>
-  <div class="markdown level0 summary"><p>Creates placeholder resource instances (with only their ID property set), which are added to the
-Entity Framework Core change tracker so they can be used in relationship updates without fetching the resource.
-On disposal, the created placeholders are detached, leaving the change tracker in a clean state for reuse.</p>
+  <div class="markdown level0 summary"><p>Creates placeholder resource instances (with only their ID property set), which are added to the Entity Framework Core change tracker so they can be
+used in relationship updates without fetching the resource. On disposal, the created placeholders are detached, leaving the change tracker in a clean
+state for reuse.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -164,12 +164,11 @@ public sealed class PlaceholderResourceCollector : IDisposable</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Repositories_PlaceholderResourceCollector_CaptureExisting__1___0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.CaptureExisting%60%601(%60%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/PlaceholderResourceCollector.cs/#L47">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Repositories/PlaceholderResourceCollector.cs/#L46">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Repositories_PlaceholderResourceCollector_CaptureExisting_" data-uid="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.CaptureExisting*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_PlaceholderResourceCollector_CaptureExisting__1___0_" data-uid="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.CaptureExisting``1(``0)">CaptureExisting&lt;TResource&gt;(TResource)</h4>
-  <div class="markdown level1 summary"><p>Takes an existing placeholder resource, adds it to the change tracker
-in <span class="xref">Microsoft.EntityFrameworkCore.EntityState.Unchanged</span> state and registers it for detachment.</p>
+  <div class="markdown level1 summary"><p>Takes an existing placeholder resource, adds it to the change tracker in <span class="xref">Microsoft.EntityFrameworkCore.EntityState.Unchanged</span> state and registers it for detachment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -233,8 +232,8 @@ in <span class="xref">Microsoft.EntityFrameworkCore.EntityState.Unchanged</span>
   </span>
   <a id="JsonApiDotNetCore_Repositories_PlaceholderResourceCollector_CreateForId_" data-uid="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.CreateForId*"></a>
   <h4 id="JsonApiDotNetCore_Repositories_PlaceholderResourceCollector_CreateForId__2___1_" data-uid="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.CreateForId``2(``1)">CreateForId&lt;TResource, TId&gt;(TId)</h4>
-  <div class="markdown level1 summary"><p>Creates a new placeholder resource, assigns the specified ID, adds it to the change tracker
-in <span class="xref">Microsoft.EntityFrameworkCore.EntityState.Unchanged</span> state and registers it for detachment.</p>
+  <div class="markdown level1 summary"><p>Creates a new placeholder resource, assigns the specified ID, adds it to the change tracker in <span class="xref">Microsoft.EntityFrameworkCore.EntityState.Unchanged</span> state and
+registers it for detachment.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

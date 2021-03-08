@@ -111,13 +111,10 @@
       <section><p>Implement this interface to implement business logic hooks on <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IResourceHookExecutor.html">IResourceHookExecutor</a></h4>
-      <section><p>Transient service responsible for executing Resource Hooks as defined 
-in <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>. See methods in 
-<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and 
-<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information.</p>
-<p>Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Traversal.TraversalHelper</span> for traversal of nested resource data structures.
-Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Execution.HookExecutorHelper</span> for retrieving meta data about hooks, 
-fetching database values and performing other recurring internal operations.</p>
+      <section><p>Transient service responsible for executing Resource Hooks as defined in <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>. See methods in
+<a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information. Uses
+<span class="xref">JsonApiDotNetCore.Hooks.Internal.Traversal.TraversalHelper</span> for traversal of nested resource data structures. Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Execution.HookExecutorHelper</span> for retrieving meta data
+about hooks, fetching database values and performing other recurring internal operations.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookContainer-1.html">IUpdateHookContainer&lt;TResource&gt;</a></h4>
       <section><p>update hooks container</p>

@@ -81,32 +81,30 @@
       <section><p>Server serializer implementation of <a class="xref" href="JsonApiDotNetCore.Serialization.BaseSerializer.html">BaseSerializer</a> for atomic:operations responses.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html">BaseDeserializer</a></h4>
-      <section><p>Abstract base class for deserialization. Deserializes JSON content into <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>s
-and constructs instances of the resource(s) in the document body.</p>
+      <section><p>Abstract base class for deserialization. Deserializes JSON content into <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>s and constructs instances of the resource(s)
+in the document body.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.BaseSerializer.html">BaseSerializer</a></h4>
-      <section><p>Abstract base class for serialization.
-Uses <a class="xref" href="JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder.html">IResourceObjectBuilder</a> to convert resources into <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a>s and wraps them in a <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.</p>
+      <section><p>Abstract base class for serialization. Uses <a class="xref" href="JsonApiDotNetCore.Serialization.Building.IResourceObjectBuilder.html">IResourceObjectBuilder</a> to convert resources into <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a>s and wraps
+them in a <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.EmptyResponseMeta.html">EmptyResponseMeta</a></h4>
-      <section><p>Provides a method to obtain global JSON:API meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
-Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
+      <section><p>Provides a method to obtain global JSON:API meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>. Use
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.FieldsToSerialize.html">FieldsToSerialize</a></h4>
-      <section><p>Responsible for getting the set of fields that are to be included for a
-given type in the serialization result. Typically combines various sources
-of information, like application-wide and request-wide sparse fieldsets.</p>
+      <section><p>Responsible for getting the set of fields that are to be included for a given type in the serialization result. Typically combines various sources of
+information, like application-wide and request-wide sparse fieldsets.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.JsonApiReader.html">JsonApiReader</a></h4>
-      <section><p>The deserializer of the body, used in ASP.NET Core internally
-to process <code>FromBody</code>.</p>
+      <section><p>The deserializer of the body, used in ASP.NET Core internally to process <code>FromBody</code>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.JsonApiSerializationException.html">JsonApiSerializationException</a></h4>
       <section><p>The error that is thrown when (de)serialization of a JSON:API body fails.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.JsonApiWriter.html">JsonApiWriter</a></h4>
-      <section><p>Formats the response data used (see <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0">https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0</a>).
-It was intended to have as little dependencies as possible in formatting layer for greater extensibility.</p>
+      <section><p>Formats the response data used (see <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0">https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0</a>). It was intended to
+have as little dependencies as possible in formatting layer for greater extensibility.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.RequestDeserializer.html">RequestDeserializer</a></h4>
       <section><p>Server deserializer implementation of the <a class="xref" href="JsonApiDotNetCore.Serialization.BaseDeserializer.html">BaseDeserializer</a>.</p>
@@ -115,22 +113,19 @@ It was intended to have as little dependencies as possible in formatting layer f
       <section><p>Server serializer implementation of <a class="xref" href="JsonApiDotNetCore.Serialization.BaseSerializer.html">BaseSerializer</a> for resources of a specific type.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.ResponseSerializerFactory.html">ResponseSerializerFactory</a></h4>
-      <section><p>A factory class to abstract away the initialization of the serializer from the
-ASP.NET Core formatter pipeline.</p>
+      <section><p>A factory class to abstract away the initialization of the serializer from the ASP.NET Core formatter pipeline.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IFieldsToSerialize.html">IFieldsToSerialize</a></h4>
-      <section><p>Responsible for getting the set of fields that are to be included for a
-given type in the serialization result. Typically combines various sources
-of information, like application-wide and request-wide sparse fieldsets.</p>
+      <section><p>Responsible for getting the set of fields that are to be included for a given type in the serialization result. Typically combines various sources of
+information, like application-wide and request-wide sparse fieldsets.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiDeserializer.html">IJsonApiDeserializer</a></h4>
       <section><p>Deserializer used internally in JsonApiDotNetCore to deserialize requests.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiReader.html">IJsonApiReader</a></h4>
-      <section><p>The deserializer of the body, used in ASP.NET Core internally
-to process <code>FromBody</code>.</p>
+      <section><p>The deserializer of the body, used in ASP.NET Core internally to process <code>FromBody</code>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiSerializer.html">IJsonApiSerializer</a></h4>
       <section><p>Serializer used internally in JsonApiDotNetCore to serialize responses.</p>
@@ -140,8 +135,8 @@ to process <code>FromBody</code>.</p>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiWriter.html">IJsonApiWriter</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.IResponseMeta.html">IResponseMeta</a></h4>
-      <section><p>Provides a method to obtain global JSON:API meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>.
-Use <a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
+      <section><p>Provides a method to obtain global JSON:API meta, which is added at top-level to a response <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a>. Use
+<a class="xref" href="JsonApiDotNetCore.Resources.IResourceDefinition-2.html#JsonApiDotNetCore_Resources_IResourceDefinition_2_GetMeta__0_">GetMeta(TResource)</a> to specify nested metadata per individual resource.</p>
 </section>
 </article>
           </div>

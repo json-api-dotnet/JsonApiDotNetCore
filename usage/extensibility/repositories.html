@@ -92,12 +92,9 @@ This is helpful when you implement a subset of the resource interfaces and want 
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public ArticleRepository(
-        IAuthenticationService authenticationService,
-        ITargetedFields targetedFields,
-        IDbContextResolver contextResolver,
-        IResourceGraph resourceGraph,
-        IGenericServiceFactory genericServiceFactory,
+    public ArticleRepository(IAuthenticationService authenticationService,
+        ITargetedFields targetedFields, IDbContextResolver contextResolver,
+        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
@@ -119,13 +116,15 @@ This example shows a single <code>DbContextARepository</code> for all entities t
 <pre><code class="lang-c#">public class DbContextARepository&lt;TResource&gt; : EntityFrameworkCoreRepository&lt;TResource&gt;
     where TResource : class, IIdentifiable&lt;int&gt;
 {
-    public DbContextARepository(ITargetedFields targetedFields, DbContextResolver&lt;DbContextA&gt; contextResolver,
-        //                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public DbContextARepository(ITargetedFields targetedFields,
+        DbContextResolver&lt;DbContextA&gt; contextResolver,
+    //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory, IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
+        IResourceFactory resourceFactory,
+        IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory,
-            constraintProviders, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+            resourceFactory, constraintProviders, loggerFactory)
     {
     }
 }
@@ -138,7 +137,7 @@ services.AddDbContext&lt;DbContextB&gt;(options =&gt; options.UseSqlite(&quot;Da
 services.AddScoped&lt;IResourceRepository&lt;ResourceA&gt;, DbContextARepository&lt;ResourceA&gt;&gt;();
 services.AddScoped&lt;IResourceRepository&lt;ResourceB&gt;, DbContextBRepository&lt;ResourceB&gt;&gt;();
 
-services.AddJsonApi(dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
+services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(DbContextB) });
 </code></pre></article>
           </div>
           

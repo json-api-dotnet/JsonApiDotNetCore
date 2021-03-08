@@ -73,7 +73,7 @@
 <h2 id="configuring-the-ioc-container">Configuring the IoC container</h2>
 <p>The following example replaces the internal exception filter with a custom implementation.</p>
 <pre><code class="lang-c#">/// In Startup.ConfigureServices
-services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;()
+services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&gt;();
 </code></pre><h2 id="configuring-mvcoptions">Configuring <code>MvcOptions</code></h2>
 <p>The following example replaces all internal filters with a custom filter.</p>
 <pre><code class="lang-c#">public class Startup
@@ -84,7 +84,7 @@ services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&
     {
         services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
 
-        var builder = services.AddMvcCore();
+        IMvcCoreBuilder builder = services.AddMvcCore();
         services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
 
         // Ensure this call is placed after the AddJsonApi call.
@@ -97,8 +97,8 @@ services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         // Ensure this call is placed before the UseEndpoints call.
-        _postConfigureMvcOptions = mvcOptions =&gt; 
-        { 
+        _postConfigureMvcOptions = mvcOptions =&gt;
+        {
             mvcOptions.Filters.Clear();
             mvcOptions.Filters.Insert(0,
                 app.ApplicationServices.GetService&lt;CustomAsyncQueryStringActionFilter&gt;());

@@ -71,16 +71,19 @@
 
 <p>At a minimum, resources must implement <code>IIdentifiable&lt;TId&gt;</code> where <code>TId</code> is the type of the primary key. The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
 <pre><code class="lang-c#">public class Person : Identifiable&lt;Guid&gt;
-{ }
+{
+}
 </code></pre><p>You can use the non-generic <code>Identifiable</code> if your primary key is an integer.</p>
 <pre><code class="lang-c#">public class Person : Identifiable
-{ }
+{
+}
 
-// is the same as
+// is the same as:
 
 public class Person : Identifiable&lt;int&gt;
-{ }
-</code></pre><p>If you need to hang annotations or attributes on the <code>Id</code> property,
+{
+}
+</code></pre><p>If you need to attach annotations or attributes on the <code>Id</code> property,
 you can override the virtual property.</p>
 <pre><code class="lang-c#">public class Person : Identifiable
 {

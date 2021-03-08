@@ -73,8 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Repositories_MemoryLeakDetectionBugRewriter" data-uid="JsonApiDotNetCore.Repositories.MemoryLeakDetectionBugRewriter" class="text-break">Class MemoryLeakDetectionBugRewriter
   </h1>
-  <div class="markdown level0 summary"><p>Removes projections from a <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> when its resource type uses injected parameters,
-as a workaround for EF Core bug <a href="https://github.com/dotnet/efcore/issues/20502">https://github.com/dotnet/efcore/issues/20502</a>, which exists in versions below v5.</p>
+  <div class="markdown level0 summary"><p>Removes projections from a <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> when its resource type uses injected parameters, as a workaround for EF Core bug
+<a href="https://github.com/dotnet/efcore/issues/20502">https://github.com/dotnet/efcore/issues/20502</a>, which exists in versions below v5.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -114,8 +114,8 @@ as a workaround for EF Core bug <a href="https://github.com/dotnet/efcore/issues
 public sealed class MemoryLeakDetectionBugRewriter</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Repositories_MemoryLeakDetectionBugRewriter_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>Note that by using this workaround, nested filtering, paging and sorting all remain broken in EF Core 3.1 when using injected parameters in resources.
-But at least it enables simple top-level queries to succeed without an exception.</p>
+  <div class="markdown level0 remarks"><p>Note that by using this workaround, nested filtering, paging and sorting all remain broken in EF Core 3.1 when using injected parameters in
+resources. But at least it enables simple top-level queries to succeed without an exception.</p>
 </div>
   <h3 id="methods">Methods
   </h3>

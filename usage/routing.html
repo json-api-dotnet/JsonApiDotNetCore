@@ -73,13 +73,14 @@
 <p>You can add a namespace to all URLs by specifying it in ConfigureServices.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
-  services.AddJsonApi&lt;AppDbContext&gt;(
-      options =&gt; options.Namespace = &quot;api/v1&quot;);
+  services.AddJsonApi&lt;AppDbContext&gt;(options =&gt; options.Namespace = &quot;api/v1&quot;);
 }
 </code></pre><p>Which results in URLs like: <a href="https://yourdomain.com/api/v1/people">https://yourdomain.com/api/v1/people</a></p>
 <h2 id="default-routing-convention">Default Routing Convention</h2>
 <p>The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the <a href="https://jsonapi.org/recommendations/">recommendations</a> outlined in the JSON:API spec.</p>
-<pre><code class="lang-c#">public class OrderLine : Identifiable { }
+<pre><code class="lang-c#">public class OrderLine : Identifiable
+{
+}
 
 public class OrderLineController : JsonApiController&lt;OrderLine&gt;
 {
@@ -93,7 +94,9 @@ public class OrderLineController : JsonApiController&lt;OrderLine&gt;
 </code></pre><p>The exposed name of the resource (<a href="resource-graph.html#resource-name">which can be customized</a>) is used for the route, instead of the controller name.</p>
 <h3 id="non-jsonapi-controllers">Non-JSON:API controllers</h3>
 <p>If a controller does not inherit from <code>JsonApiController&lt;TResource&gt;</code>, the <a href="options.html#custom-serializer-settings">configured naming convention</a> is applied to the name of the controller.</p>
-<pre><code class="lang-c#">public class OrderLineController : ControllerBase { }
+<pre><code class="lang-c#">public class OrderLineController : ControllerBase
+{
+}
 </code></pre><pre><code class="lang-http">GET /orderLines HTTP/1.1
 </code></pre><h2 id="disabling-the-default-routing-convention">Disabling the Default Routing Convention</h2>
 <p>It is possible to bypass the default routing convention for a controller.</p>

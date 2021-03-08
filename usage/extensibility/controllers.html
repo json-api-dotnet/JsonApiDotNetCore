@@ -72,25 +72,23 @@
 <p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource&gt;</code></p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article&gt;
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 </code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
 <p>If your model is using a type other than <code>int</code> for the primary key, you must explicitly declare it in the controller/service/repository definitions.</p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
 //---------------------------------------------------------- ^^^^
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Article, Guid&gt; resourceService)
         //----------------------- ^^^^
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 </code></pre><h2 id="resource-access-control">Resource Access Control</h2>
 <p>It is often desirable to limit what methods are exposed on your controller. The first way you can do this, is to simply inherit from <code>BaseJsonApiController</code> and explicitly declare what methods are available.</p>
@@ -98,12 +96,11 @@
 <p>This approach is ok, but introduces some boilerplate that can easily be avoided.</p>
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 
     [HttpGet]
     public override async Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellationToken)
@@ -130,12 +127,11 @@ An attempt to use one of the blacklisted methods will result in a HTTP 405 Metho
 <pre><code class="lang-c#">[HttpReadOnly]
 public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Article&gt; resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 }
 </code></pre><h2 id="implicit-access-by-service-injection">Implicit Access By Service Injection</h2>
 <p>Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation, so simply inject the implementation that is available.</p>
@@ -143,12 +139,11 @@ public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 <p>For more information about resource injection, see the next section titled Resource Services.</p>
 <pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt;
 {
-    public ReportsController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
+    public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Report&gt; resourceService)
         : base(options, loggerFactory, resourceService)
-    { }
+    {
+    }
 
     [HttpGet]
     public override async Task&lt;IActionResult&gt; GetAsync(CancellationToken cancellationToken)

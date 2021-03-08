@@ -105,12 +105,12 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer%601.AfterDelete(System.Collections.Generic.HashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/IDeleteHookContainer.cs/#L41">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/IDeleteHookContainer.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_AfterDelete_" data-uid="JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer`1.AfterDelete*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_AfterDelete_System_Collections_Generic_HashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_System_Boolean_" data-uid="JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer`1.AfterDelete(System.Collections.Generic.HashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline,System.Boolean)">AfterDelete(HashSet&lt;TResource&gt;, ResourcePipeline, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just after deletion of resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just after deletion of resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -152,24 +152,20 @@ layer just after deletion of resources of type <code data-dev-comment-type="type
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer%601.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet%7B%600%7D%2CJsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/IDeleteHookContainer.cs/#L32">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/IDeleteHookContainer.cs/#L35">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_BeforeDelete_" data-uid="JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer`1.BeforeDelete*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_Internal_IDeleteHookContainer_1_BeforeDelete_JsonApiDotNetCore_Hooks_Internal_Execution_IResourceHashSet__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_" data-uid="JsonApiDotNetCore.Hooks.Internal.IDeleteHookContainer`1.BeforeDelete(JsonApiDotNetCore.Hooks.Internal.Execution.IResourceHashSet{`0},JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline)">BeforeDelete(IResourceHashSet&lt;TResource&gt;, ResourcePipeline)</h4>
-  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> 
-layer just before deleting resources of type <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
+  <div class="markdown level1 summary"><p>Implement this hook to run custom logic in the <a class="xref" href="JsonApiDotNetCore.Services.JsonApiResourceService-1.html">JsonApiResourceService&lt;TResource&gt;</a> layer just before deleting resources of type
+<code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.
 <p>
-For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a> pipeline,
-<code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource. 
+For the <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.Execution.ResourcePipeline.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_Delete">Delete</a> pipeline, <code data-dev-comment-type="paramref" class="paramref">resources</code> will typically contain one resource.
 <p>
-The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset 
-of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the 
-pipeline will not be executed for the omitted resources.
+The returned <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span> may be a subset of <code data-dev-comment-type="paramref" class="paramref">resources</code>, in which case the operation of the pipeline will
+not be executed for the omitted resources.
 <p>
-If by the deletion of these resources any other resources are affected 
-implicitly by the removal of their relationships (eg
-in the case of an one-to-one relationship), the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a>
-hook is fired for these resources.</p>
+If by the deletion of these resources any other resources are affected implicitly by the removal of their relationships (eg in the case of an
+one-to-one relationship), the <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html#JsonApiDotNetCore_Resources_ResourceHooksDefinition_1_BeforeImplicitUpdateRelationship_JsonApiDotNetCore_Hooks_Internal_Execution_IRelationshipsDictionary__0__JsonApiDotNetCore_Hooks_Internal_Execution_ResourcePipeline_">BeforeImplicitUpdateRelationship(IRelationshipsDictionary&lt;TResource&gt;, ResourcePipeline)</a> hook is fired for these resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
