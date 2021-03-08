@@ -16,6 +16,8 @@ namespace JsonApiDotNetCore.Configuration
     [PublicAPI]
     public static class ServiceCollectionExtensions
     {
+        private static readonly TypeLocator TypeLocator = new TypeLocator();
+
         /// <summary>
         /// Configures JsonApiDotNetCore by registering resources manually.
         /// </summary>

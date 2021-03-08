@@ -19,8 +19,10 @@ namespace UnitTests.Graph
             Type expectedImplementation = typeof(Implementation);
             Type expectedInterface = typeof(IGenericInterface<int>);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            (Type implementation, Type registrationInterface)? result = TypeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
+            (Type implementation, Type registrationInterface)? result = typeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
 
             // Assert
             Assert.NotNull(result);
@@ -38,8 +40,10 @@ namespace UnitTests.Graph
 
             Type expectedImplementation = typeof(DerivedType);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            IReadOnlyCollection<Type> results = TypeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
+            IReadOnlyCollection<Type> results = typeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
 
             // Assert
             Assert.NotNull(results);
@@ -53,8 +57,10 @@ namespace UnitTests.Graph
             // Arrange
             Type type = typeof(Model);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            Type idType = TypeLocator.TryGetIdType(type);
+            Type idType = typeLocator.TryGetIdType(type);
 
             // Assert
             Assert.Equal(typeof(int), idType);
@@ -66,8 +72,10 @@ namespace UnitTests.Graph
             // Arrange
             Type type = typeof(DerivedType);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            Type idType = TypeLocator.TryGetIdType(type);
+            Type idType = typeLocator.TryGetIdType(type);
 
             // Assert
             Assert.Null(idType);
@@ -79,8 +87,10 @@ namespace UnitTests.Graph
             // Arrange
             Type resourceType = typeof(Model);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            ResourceDescriptor descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
             Assert.NotNull(descriptor);
@@ -94,8 +104,10 @@ namespace UnitTests.Graph
             // Arrange
             Type resourceType = typeof(string);
 
+            var typeLocator = new TypeLocator();
+
             // Act
-            ResourceDescriptor descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
             Assert.Null(descriptor);

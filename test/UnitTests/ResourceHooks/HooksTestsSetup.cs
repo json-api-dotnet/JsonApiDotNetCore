@@ -23,6 +23,8 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksTestsSetup : HooksDummyData
     {
+        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+
         private TestMocks CreateMocks()
         {
             var genericServiceFactoryMock = new Mock<IGenericServiceFactory>();

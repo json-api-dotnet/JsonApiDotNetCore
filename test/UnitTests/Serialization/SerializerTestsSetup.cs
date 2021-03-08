@@ -16,6 +16,8 @@ namespace UnitTests.Serialization
 {
     public class SerializerTestsSetup : SerializationTestsSetupBase
     {
+        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+
         protected readonly TopLevelLinks DummyTopLevelLinks;
         protected readonly ResourceLinks DummyResourceLinks;
         protected readonly RelationshipLinks DummyRelationshipLinks;

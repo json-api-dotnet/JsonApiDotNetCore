@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// <summary>
     /// Converts includes between tree and chain formats. Exists for backwards compatibility, subject to be removed in the future.
     /// </summary>
-    internal static class IncludeChainConverter
+    internal sealed class IncludeChainConverter
     {
         /// <summary>
         /// Converts a tree of inclusions into a set of relationship chains.
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// Article -> Revisions -> Author
         /// ]]></code>
         /// </example>
-        public static IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
+        public IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
         {
             ArgumentGuard.NotNull(include, nameof(include));
 
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// }
         /// ]]></code>
         /// </example>
-        public static IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
+        public IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
         {
             ArgumentGuard.NotNull(chains, nameof(chains));
 

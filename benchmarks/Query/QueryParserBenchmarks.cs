@@ -20,6 +20,7 @@ namespace Benchmarks.Query
     [MemoryDiagnoser]
     public class QueryParserBenchmarks
     {
+        private readonly DependencyFactory _dependencyFactory = new DependencyFactory();
         private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new FakeRequestQueryStringAccessor();
         private readonly QueryStringReader _queryStringReaderForSort;
         private readonly QueryStringReader _queryStringReaderForAll;
@@ -31,7 +32,7 @@ namespace Benchmarks.Query
                 EnableLegacyFilterNotation = true
             };
 
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
+            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
 
             var request = new JsonApiRequest
             {

@@ -59,7 +59,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{HexadecimalCodec.Encode(99999999)}')";
+            var codec = new HexadecimalCodec();
+            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(99999999)}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -244,7 +245,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             responseDocument.SingleData.Attributes["ownerName"].Should().Be(newCard.OwnerName);
             responseDocument.SingleData.Attributes["pinCode"].Should().Be(newCard.PinCode);
 
-            int newCardId = HexadecimalCodec.Decode(responseDocument.SingleData.Id);
+            var codec = new HexadecimalCodec();
+            int newCardId = codec.Decode(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -448,7 +450,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public async Task Cannot_delete_missing_resource()
         {
             // Arrange
-            string stringId = HexadecimalCodec.Encode(99999999);
+            var codec = new HexadecimalCodec();
+            string stringId = codec.Encode(99999999);
 
             string route = "/bankAccounts/" + stringId;
 

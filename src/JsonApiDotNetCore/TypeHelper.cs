@@ -7,6 +7,8 @@ using System.Reflection;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
+#pragma warning disable AV1008 // Class should not be static
+
 namespace JsonApiDotNetCore
 {
     internal static class TypeHelper

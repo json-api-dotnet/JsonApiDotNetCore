@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Configuration
     /// <summary>
     /// Used to locate types and facilitate resource auto-discovery.
     /// </summary>
-    internal static class TypeLocator
+    internal sealed class TypeLocator
     {
         /// <summary>
         /// Attempts to lookup the ID type of the specified resource type. Returns <c>null</c> if it does not implement <see cref="IIdentifiable{TId}" />.
         /// </summary>
-        public static Type TryGetIdType(Type resourceType)
+        public Type TryGetIdType(Type resourceType)
         {
             Type identifiableInterface = resourceType.GetInterfaces().FirstOrDefault(@interface =>
                 @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to get a descriptor for the specified resource type.
         /// </summary>
-        public static ResourceDescriptor TryGetResourceDescriptor(Type type)
+        public ResourceDescriptor TryGetResourceDescriptor(Type type)
         {
             if (TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable)))
             {
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Configuration
         /// GetGenericInterfaceImplementation(assembly, typeof(IResourceService<,>), typeof(Article), typeof(Guid));
         /// ]]></code>
         /// </example>
-        public static (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface,
+        public (Type implementation, Type registrationInterface)? GetGenericInterfaceImplementation(Assembly assembly, Type openGenericInterface,
             params Type[] interfaceGenericTypeArguments)
         {
             ArgumentGuard.NotNull(assembly, nameof(assembly));
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Configuration
         /// GetDerivedGenericTypes(assembly, typeof(ResourceDefinition<>), typeof(Article))
         /// ]]></code>
         /// </example>
-        public static IReadOnlyCollection<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
+        public IReadOnlyCollection<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
             Type genericType = openGenericType.MakeGenericType(genericArguments);
             return GetDerivedTypes(assembly, genericType).ToArray();
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCore.Configuration
         /// GetDerivedGenericTypes(assembly, typeof(DbContext))
         /// </code>
         /// </example>
-        public static IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type inheritedType)
+        public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type inheritedType)
         {
             foreach (Type type in assembly.GetTypes())
             {

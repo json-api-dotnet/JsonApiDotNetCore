@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
+        private readonly TypeLocator _typeLocator = new TypeLocator();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
@@ -110,7 +111,7 @@ namespace JsonApiDotNetCore.Configuration
             if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceType);
-                Type effectiveIdType = idType ?? TypeLocator.TryGetIdType(resourceType);
+                Type effectiveIdType = idType ?? _typeLocator.TryGetIdType(resourceType);
 
                 ResourceContext resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
                 _resources.Add(resourceContext);

@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
     /// <inheritdoc />
     internal sealed class ResourceHookExecutor : IResourceHookExecutor
     {
+        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+
         private readonly IHookExecutorHelper _executorHelper;
         private readonly ITraversalHelper _traversalHelper;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
