@@ -138,8 +138,6 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-
             var attributes = new List<AttrAttribute>();
 
             foreach (PropertyInfo property in resourceType.GetProperties())
@@ -183,8 +181,6 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-
             var attributes = new List<RelationshipAttribute>();
             PropertyInfo[] properties = resourceType.GetProperties();
 
@@ -309,13 +305,9 @@ namespace JsonApiDotNetCore.Configuration
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }
 
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
-            if (recursionDepth >= 500)
-            {
-                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
-            }
+            AssertNoInfiniteRecursion(recursionDepth);
 
             var attributes = new List<EagerLoadAttribute>();
             PropertyInfo[] properties = resourceType.GetProperties();
@@ -337,6 +329,15 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             return attributes;
+        }
+
+        [AssertionMethod]
+        private static void AssertNoInfiniteRecursion(int recursionDepth)
+        {
+            if (recursionDepth >= 500)
+            {
+                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            }
         }
 
         private Type TypeOrElementType(Type type)
