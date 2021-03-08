@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
     public sealed class CarsController : JsonApiController<Car, string>
     {
-        public CarsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Car, string> resourceService)
+        public CarsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Car, string> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

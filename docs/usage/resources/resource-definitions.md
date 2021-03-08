@@ -26,7 +26,8 @@ Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapa
 ```c#
 public class UserDefinition : JsonApiResourceDefinition<User>
 {
-    public UserDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public UserDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -84,7 +85,8 @@ You can define the default sort order if no `sort` query string parameter is pro
 ```c#
 public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
-    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccountDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -111,7 +113,8 @@ You may want to enforce pagination on large database tables.
 ```c#
 public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
 {
-    public AccessLogDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccessLogDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -141,7 +144,8 @@ Soft-deletion sets `IsSoftDeleted` to `true` instead of actually deleting the re
 ```c#
 public class AccountDefinition : JsonApiResourceDefinition<Account>
 {
-    public AccountDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public AccountDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -150,8 +154,8 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
         var resourceContext = ResourceGraph.GetResourceContext<Account>();
 
         var isSoftDeletedAttribute =
-            resourceContext.Attributes.Single(a =>
-                a.Property.Name == nameof(Account.IsSoftDeleted));
+            resourceContext.Attributes.Single(account =>
+                account.Property.Name == nameof(Account.IsSoftDeleted));
 
         var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
             new ResourceFieldChainExpression(isSoftDeletedAttribute),
@@ -160,7 +164,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
         return existingFilter == null
             ? (FilterExpression) isNotSoftDeleted
             : new LogicalExpression(LogicalOperator.And,
-                new[] {isNotSoftDeleted, existingFilter});
+                new[] { isNotSoftDeleted, existingFilter });
     }
 }
 ```
@@ -170,7 +174,8 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 ```c#
 public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
 {
-    public EmployeeDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public EmployeeDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 
@@ -204,7 +209,8 @@ But it only works on primary resource endpoints (for example: /articles, but not
 ```c#
 public class ItemDefinition : JsonApiResourceDefinition<Item>
 {
-    public ItemDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+    public ItemDefinition(IResourceGraph resourceGraph)
+        : base(resourceGraph)
     {
     }
 

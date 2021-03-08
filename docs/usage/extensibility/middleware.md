@@ -5,14 +5,16 @@ It is possible to replace JsonApiDotNetCore middleware components by configuring
 ## Configuring the IoC container 
 
 The following example replaces the internal exception filter with a custom implementation.
+
 ```c#
 /// In Startup.ConfigureServices
-services.AddService<IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter>()
+services.AddService<IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter>();
 ```
 
 ## Configuring `MvcOptions`
 
 The following example replaces all internal filters with a custom filter.
+
 ```c#
 public class Startup
 {
@@ -22,7 +24,7 @@ public class Startup
     {
         services.AddSingleton<CustomAsyncQueryStringActionFilter>();
 
-        var builder = services.AddMvcCore();
+        IMvcCoreBuilder builder = services.AddMvcCore();
         services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
 
         // Ensure this call is placed after the AddJsonApi call.
@@ -35,8 +37,8 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         // Ensure this call is placed before the UseEndpoints call.
-        _postConfigureMvcOptions = mvcOptions => 
-        { 
+        _postConfigureMvcOptions = mvcOptions =>
+        {
             mvcOptions.Filters.Clear();
             mvcOptions.Filters.Insert(0,
                 app.ApplicationServices.GetService<CustomAsyncQueryStringActionFilter>());

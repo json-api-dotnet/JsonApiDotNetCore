@@ -7,5 +7,7 @@ namespace JsonApiDotNetCore.Middleware
     /// Application-wide entry point for processing JSON:API request query strings.
     /// </summary>
     [PublicAPI]
-    public interface IAsyncQueryStringActionFilter : IAsyncActionFilter { }
+    public interface IAsyncQueryStringActionFilter : IAsyncActionFilter
+    {
+    }
 }

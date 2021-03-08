@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ThrowingArticlesController : JsonApiController<ThrowingArticle>
     {
-        public ThrowingArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<ThrowingArticle> resourceService)
+        public ThrowingArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ThrowingArticle> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

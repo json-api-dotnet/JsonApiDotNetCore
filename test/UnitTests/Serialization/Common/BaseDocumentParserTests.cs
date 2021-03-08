@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Reflection;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -32,7 +33,8 @@ namespace UnitTests.Serialization.Common
                     Id = "1"
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (TestResource)_deserializer.Deserialize(body);
@@ -46,10 +48,10 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var content = new Document();
-            var body = JsonConvert.SerializeObject(content);
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = _deserializer.Deserialize(body);
+            object result = _deserializer.Deserialize(body);
 
             // Arrange
             Assert.Null(result);
@@ -70,7 +72,8 @@ namespace UnitTests.Serialization.Common
                     }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
@@ -82,8 +85,12 @@ namespace UnitTests.Serialization.Common
         [Fact]
         public void DeserializeResourceIdentifiers_EmptyArrayData_CanDeserialize()
         {
-            var content = new Document { Data = new List<ResourceObject>()};
-            var body = JsonConvert.SerializeObject(content);
+            var content = new Document
+            {
+                Data = new List<ResourceObject>()
+            };
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
@@ -120,7 +127,8 @@ namespace UnitTests.Serialization.Common
                     }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act, assert
             if (expectError)
@@ -133,8 +141,8 @@ namespace UnitTests.Serialization.Common
             var resource = (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            var pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
-            var deserializedValue = pi.GetValue(resource);
+            PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+            object deserializedValue = pi.GetValue(resource);
 
             if (member == "intField")
             {
@@ -181,7 +189,8 @@ namespace UnitTests.Serialization.Common
                     }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (TestResource)_deserializer.Deserialize(body);
@@ -213,8 +222,8 @@ namespace UnitTests.Serialization.Common
                     }
                 }
             };
-            var body = JsonConvert.SerializeObject(content);
 
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (TestResourceWithList)_deserializer.Deserialize(body);
@@ -229,9 +238,18 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationship_SingleDataForToOneRelationship_CannotDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
-            content.SingleData.Relationships["dependents"] = new RelationshipEntry { Data = new ResourceIdentifierObject { Type = "Dependents", Id = "1"  } };
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
+
+            content.SingleData.Relationships["dependents"] = new RelationshipEntry
+            {
+                Data = new ResourceIdentifierObject
+                {
+                    Type = "Dependents",
+                    Id = "1"
+                }
+            };
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act, assert
             Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
@@ -241,9 +259,21 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationship_ManyDataForToManyRelationship_CannotDeserialize()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
-            content.SingleData.Relationships["dependent"] = new RelationshipEntry { Data = new List<ResourceIdentifierObject> { new ResourceIdentifierObject { Type = "Dependent", Id = "1"  } }};
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
+
+            content.SingleData.Relationships["dependent"] = new RelationshipEntry
+            {
+                Data = new List<ResourceIdentifierObject>
+                {
+                    new ResourceIdentifierObject
+                    {
+                        Type = "Dependent",
+                        Id = "1"
+                    }
+                }
+            };
+
+            string body = JsonConvert.SerializeObject(content);
 
             // Act, assert
             Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
@@ -253,8 +283,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyOneToOneDependent_NavigationPropertyIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
@@ -269,8 +299,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_PopulatedOneToOneDependent_NavigationPropertyIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent", "oneToOneDependents");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent", "oneToOneDependents");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
@@ -285,8 +315,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyOneToOnePrincipal_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOneDependents", "principal");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOneDependents", "principal");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
@@ -300,11 +330,11 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyRequiredOneToOnePrincipal_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (OneToOneRequiredDependent) _deserializer.Deserialize(body);
+            var result = (OneToOneRequiredDependent)_deserializer.Deserialize(body);
 
             // assert
             Assert.Equal(1, result.Id);
@@ -315,8 +345,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_PopulatedOneToOnePrincipal_NavigationIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToOneDependents", "principal", "oneToOnePrincipals");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToOneDependents", "principal", "oneToOnePrincipals");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
@@ -332,8 +362,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyOneToManyPrincipal_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyDependents", "principal");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToManyDependents", "principal");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
@@ -348,11 +378,11 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyOneToManyRequiredPrincipal_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToMany-requiredDependents", "principal");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToMany-requiredDependents", "principal");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
-            var result = (OneToManyRequiredDependent) _deserializer.Deserialize(body);
+            var result = (OneToManyRequiredDependent)_deserializer.Deserialize(body);
 
             // assert
             Assert.Equal(1, result.Id);
@@ -364,8 +394,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_PopulatedOneToManyPrincipal_NavigationIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyDependents", "principal", "oneToManyPrincipals");
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToManyDependents", "principal", "oneToManyPrincipals");
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
@@ -381,8 +411,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_EmptyOneToManyDependent_NavigationIsNull()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", isToManyData: true);
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", isToManyData: true);
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);
@@ -397,8 +427,8 @@ namespace UnitTests.Serialization.Common
         public void DeserializeRelationships_PopulatedOneToManyDependent_NavigationIsPopulated()
         {
             // Arrange
-            var content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", "oneToManyDependents", isToManyData: true);
-            var body = JsonConvert.SerializeObject(content);
+            Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", "oneToManyDependents", true);
+            string body = JsonConvert.SerializeObject(content);
 
             // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);

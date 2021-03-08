@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
@@ -13,8 +15,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
-    public sealed class ResourceInjectionTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
+    public sealed class ResourceInjectionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
         private readonly InjectionFakers _fakers;
@@ -35,10 +36,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_get_resource_by_ID()
         {
             // Arrange
-            var clock = (FrozenSystemClock) _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
             clock.UtcNow = 27.January(2021);
 
-            var certificate = _fakers.GiftCertificate.Generate();
+            GiftCertificate certificate = _fakers.GiftCertificate.Generate();
             certificate.IssueDate = 28.January(2020);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -47,10 +48,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/giftCertificates/" + certificate.StringId;
+            string route = "/giftCertificates/" + certificate.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -65,10 +66,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_filter_resources_by_ID()
         {
             // Arrange
-            var clock = (FrozenSystemClock) _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
             clock.UtcNow = 27.January(2021).At(13, 53);
 
-            var postOffices = _fakers.PostOffice.Generate(2);
+            List<PostOffice> postOffices = _fakers.PostOffice.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -77,10 +78,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/postOffices?filter=equals(id,'{postOffices[1].StringId}')";
+            string route = $"/postOffices?filter=equals(id,'{postOffices[1].StringId}')";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -95,10 +96,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_get_secondary_resource_with_fieldset()
         {
             // Arrange
-            var clock = (FrozenSystemClock) _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
             clock.UtcNow = 27.January(2021).At(13, 53);
 
-            var certificate = _fakers.GiftCertificate.Generate();
+            GiftCertificate certificate = _fakers.GiftCertificate.Generate();
             certificate.Issuer = _fakers.PostOffice.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -107,10 +108,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/giftCertificates/{certificate.StringId}/issuer?fields[postOffices]=id,isOpen";
+            string route = $"/giftCertificates/{certificate.StringId}/issuer?fields[postOffices]=id,isOpen";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -125,10 +126,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_create_resource_with_ToOne_relationship_and_include()
         {
             // Arrange
-            var clock = (FrozenSystemClock) _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
             clock.UtcNow = 19.March(1998).At(6, 34);
 
-            var existingOffice = _fakers.PostOffice.Generate();
+            PostOffice existingOffice = _fakers.PostOffice.Generate();
 
             var newIssueDate = 18.March(1997).ToDateTimeOffset();
 
@@ -164,7 +165,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             const string route = "/giftCertificates?include=issuer";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -179,13 +180,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             responseDocument.Included[0].Attributes["address"].Should().Be(existingOffice.Address);
             responseDocument.Included[0].Attributes["isOpen"].Should().Be(false);
 
-            var newCertificateId = int.Parse(responseDocument.SingleData.Id);
+            int newCertificateId = int.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var certificateInDatabase = await dbContext.GiftCertificates
-                    .Include(certificate => certificate.Issuer)
-                    .FirstWithIdAsync(newCertificateId);
+                GiftCertificate certificateInDatabase = await dbContext.GiftCertificates
+                    .Include(certificate => certificate.Issuer).FirstWithIdAsync(newCertificateId);
 
                 certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
@@ -198,13 +198,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_update_resource_with_ToMany_relationship()
         {
             // Arrange
-            var clock = (FrozenSystemClock) _testContext.Factory.Services.GetRequiredService<ISystemClock>();
+            var clock = (FrozenSystemClock)_testContext.Factory.Services.GetRequiredService<ISystemClock>();
             clock.UtcNow = 19.March(1998).At(6, 34);
 
-            var existingOffice = _fakers.PostOffice.Generate();
+            PostOffice existingOffice = _fakers.PostOffice.Generate();
             existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
 
-            var newAddress = _fakers.PostOffice.Generate().Address;
+            string newAddress = _fakers.PostOffice.Generate().Address;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -239,10 +239,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 }
             };
 
-            var route = "/postOffices/" + existingOffice.StringId;
+            string route = "/postOffices/" + existingOffice.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -251,9 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var officeInDatabase = await dbContext.PostOffice
-                    .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstWithIdAsync(existingOffice.Id);
+                PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.Address.Should().Be(newAddress);
 
@@ -266,7 +264,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingOffice = _fakers.PostOffice.Generate();
+            PostOffice existingOffice = _fakers.PostOffice.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -274,10 +272,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/postOffices/" + existingOffice.StringId;
+            string route = "/postOffices/" + existingOffice.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -286,7 +284,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
+                PostOffice officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
 
                 officeInDatabase.Should().BeNull();
             });
@@ -299,14 +297,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
             const string route = "/postOffices/99999999";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be("Resource of type 'postOffices' with ID '99999999' does not exist.");
@@ -316,10 +314,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         public async Task Can_add_to_ToMany_relationship()
         {
             // Arrange
-            var existingOffice = _fakers.PostOffice.Generate();
+            PostOffice existingOffice = _fakers.PostOffice.Generate();
             existingOffice.GiftCertificates = _fakers.GiftCertificate.Generate(1);
 
-            var existingCertificate = _fakers.GiftCertificate.Generate();
+            GiftCertificate existingCertificate = _fakers.GiftCertificate.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -339,10 +337,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 }
             };
 
-            var route = $"/postOffices/{existingOffice.StringId}/relationships/giftCertificates";
+            string route = $"/postOffices/{existingOffice.StringId}/relationships/giftCertificates";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -351,9 +349,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var officeInDatabase = await dbContext.PostOffice
-                    .Include(postOffice => postOffice.GiftCertificates)
-                    .FirstWithIdAsync(existingOffice.Id);
+                PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
                 officeInDatabase.GiftCertificates.Should().HaveCount(2);
             });

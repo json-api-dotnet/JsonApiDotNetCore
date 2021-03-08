@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            var expression = ParsePagination();
+            PaginationQueryStringValueExpression expression = ParsePagination();
 
             AssertTokenStackIsEmpty();
 
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             var elements = new List<PaginationElementQueryStringValueExpression>();
 
-            var element = ParsePaginationElement();
+            PaginationElementQueryStringValueExpression element = ParsePaginationElement();
             elements.Add(element);
 
             while (TokenStack.Any())
@@ -56,17 +56,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected PaginationElementQueryStringValueExpression ParsePaginationElement()
         {
-            var number = TryParseNumber();
+            int? number = TryParseNumber();
+
             if (number != null)
             {
                 return new PaginationElementQueryStringValueExpression(null, number.Value);
             }
 
-            var scope = ParseFieldChain(FieldChainRequirements.EndsInToMany, "Number or relationship name expected.");
+            ResourceFieldChainExpression scope = ParseFieldChain(FieldChainRequirements.EndsInToMany, "Number or relationship name expected.");
 
             EatSingleCharacterToken(TokenKind.Colon);
 
             number = TryParseNumber();
+
             if (number == null)
             {
                 throw new QueryParseException("Number expected.");
@@ -85,8 +87,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 {
                     TokenStack.Pop();
 
-                    if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text &&
-                        int.TryParse(token.Value, out number))
+                    if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text && int.TryParse(token.Value, out number))
                     {
                         return -number;
                     }

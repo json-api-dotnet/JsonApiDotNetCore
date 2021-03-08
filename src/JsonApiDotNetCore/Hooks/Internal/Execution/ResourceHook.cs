@@ -1,6 +1,5 @@
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
-
     /// <summary>
     /// A enum that represent the available resource hooks.
     /// </summary>
@@ -20,5 +19,4 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         AfterDelete,
         AfterUpdateRelationship
     }
-
 }

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -8,8 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public sealed class NoHttpPostTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
+    public sealed class NoHttpPostTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
         private readonly RestrictionFakers _fakers = new RestrictionFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/tables";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -50,14 +50,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
             const string route = "/tables";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Resource does not support POST requests.");
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Can_update_resource()
         {
             // Arrange
-            var existingTable = _fakers.Table.Generate();
+            Table existingTable = _fakers.Table.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -87,10 +87,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            var route = "/tables/" + existingTable.StringId;
+            string route = "/tables/" + existingTable.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public async Task Can_delete_resource()
         {
             // Arrange
-            var existingTable = _fakers.Table.Generate();
+            Table existingTable = _fakers.Table.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -108,10 +108,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = "/tables/" + existingTable.StringId;
+            string route = "/tables/" + existingTable.StringId;
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);

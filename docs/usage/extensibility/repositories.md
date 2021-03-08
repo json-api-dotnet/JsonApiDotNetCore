@@ -36,12 +36,9 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public ArticleRepository(
-        IAuthenticationService authenticationService,
-        ITargetedFields targetedFields,
-        IDbContextResolver contextResolver,
-        IResourceGraph resourceGraph,
-        IGenericServiceFactory genericServiceFactory,
+    public ArticleRepository(IAuthenticationService authenticationService,
+        ITargetedFields targetedFields, IDbContextResolver contextResolver,
+        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
@@ -68,13 +65,15 @@ This example shows a single `DbContextARepository` for all entities that are mem
 public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
     where TResource : class, IIdentifiable<int>
 {
-    public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> contextResolver,
-        //                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    public DbContextARepository(ITargetedFields targetedFields,
+        DbContextResolver<DbContextA> contextResolver,
+    //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders,
+        IResourceFactory resourceFactory,
+        IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory, resourceFactory,
-            constraintProviders, loggerFactory)
+        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+            resourceFactory, constraintProviders, loggerFactory)
     {
     }
 }
@@ -91,5 +90,5 @@ services.AddDbContext<DbContextB>(options => options.UseSqlite("Data Source=B.db
 services.AddScoped<IResourceRepository<ResourceA>, DbContextARepository<ResourceA>>();
 services.AddScoped<IResourceRepository<ResourceB>, DbContextBRepository<ResourceB>>();
 
-services.AddJsonApi(dbContextTypes: new[] {typeof(DbContextA), typeof(DbContextB)});
+services.AddJsonApi(dbContextTypes: new[] { typeof(DbContextA), typeof(DbContextB) });
 ```

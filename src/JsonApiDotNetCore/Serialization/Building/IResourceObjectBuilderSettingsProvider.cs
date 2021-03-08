@@ -1,7 +1,7 @@
 namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <summary>
-    /// Service that provides the server serializer with <see cref="ResourceObjectBuilderSettings"/>.
+    /// Service that provides the server serializer with <see cref="ResourceObjectBuilderSettings" />.
     /// </summary>
     public interface IResourceObjectBuilderSettingsProvider
     {

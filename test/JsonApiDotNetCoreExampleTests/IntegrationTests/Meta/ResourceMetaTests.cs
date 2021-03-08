@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
@@ -10,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();
@@ -30,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Returns_resource_meta_from_ResourceDefinition()
         {
             // Arrange
-            var tickets = _fakers.SupportTicket.Generate(3);
+            List<SupportTicket> tickets = _fakers.SupportTicket.Generate(3);
             tickets[0].Description = "Critical: " + tickets[0].Description;
             tickets[2].Description = "Critical: " + tickets[2].Description;
 
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             const string route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -59,7 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Returns_resource_meta_from_ResourceDefinition_in_included_resources()
         {
             // Arrange
-            var family = _fakers.ProductFamily.Generate();
+            ProductFamily family = _fakers.ProductFamily.Generate();
             family.Tickets = _fakers.SupportTicket.Generate(1);
             family.Tickets[0].Description = "Critical: " + family.Tickets[0].Description;
 
@@ -70,10 +71,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/productFamilies/{family.StringId}?include=tickets";
+            string route = $"/productFamilies/{family.StringId}?include=tickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

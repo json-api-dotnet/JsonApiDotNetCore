@@ -13,7 +13,11 @@ namespace JsonApiDotNetCore
     {
         private static readonly Type[] HashSetCompatibleCollectionTypes =
         {
-            typeof(HashSet<>), typeof(ICollection<>), typeof(ISet<>), typeof(IEnumerable<>), typeof(IReadOnlyCollection<>)
+            typeof(HashSet<>),
+            typeof(ICollection<>),
+            typeof(ISet<>),
+            typeof(IEnumerable<>),
+            typeof(IReadOnlyCollection<>)
         };
 
         public static object ConvertType(object value, Type type)
@@ -31,12 +35,14 @@ namespace JsonApiDotNetCore
             }
 
             Type runtimeType = value.GetType();
+
             if (type == runtimeType || type.IsAssignableFrom(runtimeType))
             {
                 return value;
             }
 
             string stringValue = value.ToString();
+
             if (string.IsNullOrEmpty(stringValue))
             {
                 return GetDefaultValue(type);
@@ -50,19 +56,19 @@ namespace JsonApiDotNetCore
                 if (nonNullableType == typeof(Guid))
                 {
                     Guid convertedValue = Guid.Parse(stringValue);
-                    return isNullableTypeRequested ? (Guid?) convertedValue : convertedValue;
+                    return isNullableTypeRequested ? (Guid?)convertedValue : convertedValue;
                 }
 
                 if (nonNullableType == typeof(DateTimeOffset))
                 {
                     DateTimeOffset convertedValue = DateTimeOffset.Parse(stringValue);
-                    return isNullableTypeRequested ? (DateTimeOffset?) convertedValue : convertedValue;
+                    return isNullableTypeRequested ? (DateTimeOffset?)convertedValue : convertedValue;
                 }
 
                 if (nonNullableType == typeof(TimeSpan))
                 {
                     TimeSpan convertedValue = TimeSpan.Parse(stringValue);
-                    return isNullableTypeRequested ? (TimeSpan?) convertedValue : convertedValue;
+                    return isNullableTypeRequested ? (TimeSpan?)convertedValue : convertedValue;
                 }
 
                 if (nonNullableType.IsEnum)
@@ -76,11 +82,10 @@ namespace JsonApiDotNetCore
                 // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
                 return Convert.ChangeType(stringValue, nonNullableType);
             }
-            catch (Exception exception) when (exception is FormatException || exception is OverflowException ||
-                                              exception is InvalidCastException || exception is ArgumentException)
+            catch (Exception exception) when (exception is FormatException || exception is OverflowException || exception is InvalidCastException ||
+                exception is ArgumentException)
             {
-                throw new FormatException(
-                    $"Failed to convert '{value}' of type '{runtimeType.Name}' to type '{type.Name}'.", exception);
+                throw new FormatException($"Failed to convert '{value}' of type '{runtimeType.Name}' to type '{type.Name}'.", exception);
             }
         }
 
@@ -111,8 +116,7 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Gets the property info that is referenced in the NavigationAction expression.
-        /// Credits: https://stackoverflow.com/a/17116267/4441216
+        /// Gets the property info that is referenced in the NavigationAction expression. Credits: https://stackoverflow.com/a/17116267/4441216
         /// </summary>
         public static PropertyInfo ParseNavigationExpression<TResource>(Expression<Func<TResource, object>> navigationExpression)
         {
@@ -147,20 +151,29 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
-        /// <returns>The instance of the parameterized generic type</returns>
-        /// <param name="parameters">Generic type parameters to be used in open type.</param>
-        /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
-        /// <param name="openType">Open generic type</param>
+        /// <returns>
+        /// The instance of the parameterized generic type
+        /// </returns>
+        /// <param name="parameters">
+        /// Generic type parameters to be used in open type.
+        /// </param>
+        /// <param name="constructorArguments">
+        /// Constructor arguments to be provided in instantiation.
+        /// </param>
+        /// <param name="openType">
+        /// Open generic type
+        /// </param>
         private static object CreateInstanceOfOpenType(Type openType, Type[] parameters, params object[] constructorArguments)
         {
-            var parameterizedType = openType.MakeGenericType(parameters);
+            Type parameterizedType = openType.MakeGenericType(parameters);
             return Activator.CreateInstance(parameterizedType, constructorArguments);
         }
 
         /// <summary>
-        /// Helper method that "unboxes" the TValue from the relationship dictionary into  
+        /// Helper method that "unboxes" the TValue from the relationship dictionary into
         /// </summary>
-        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(Dictionary<RelationshipAttribute, IEnumerable> relationships)
+        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(
+            Dictionary<RelationshipAttribute, IEnumerable> relationships)
         {
             return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TValueOut>)pair.Value);
         }
@@ -168,7 +181,8 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Converts a dictionary of AttrAttributes to the underlying PropertyInfo that is referenced
         /// </summary>
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes, HashSet<TValueOut> resources)
+        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes,
+            HashSet<TValueOut> resources)
         {
             return attributes.ToDictionary(attr => attr.Property, _ => resources);
         }
@@ -176,10 +190,18 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
-        /// <returns>The instance of the parameterized generic type</returns>
-        /// <param name="parameter">Generic type parameter to be used in open type.</param>
-        /// <param name="constructorArguments">Constructor arguments to be provided in instantiation.</param>
-        /// <param name="openType">Open generic type</param>
+        /// <returns>
+        /// The instance of the parameterized generic type
+        /// </returns>
+        /// <param name="parameter">
+        /// Generic type parameter to be used in open type.
+        /// </param>
+        /// <param name="constructorArguments">
+        /// Constructor arguments to be provided in instantiation.
+        /// </param>
+        /// <param name="openType">
+        /// Open generic type
+        /// </param>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, params object[] constructorArguments)
         {
             return CreateInstanceOfOpenType(openType, parameter.AsArray(), constructorArguments);
@@ -190,13 +212,17 @@ namespace JsonApiDotNetCore
         /// </summary>
         public static object CreateInstanceOfOpenType(Type openType, Type parameter, bool hasInternalConstructor, params object[] constructorArguments)
         {
-            Type[] parameters = {parameter};
+            Type[] parameters =
+            {
+                parameter
+            };
+
             if (!hasInternalConstructor)
             {
                 return CreateInstanceOfOpenType(openType, parameters, constructorArguments);
             }
 
-            var parameterizedType = openType.MakeGenericType(parameters);
+            Type parameterizedType = openType.MakeGenericType(parameters);
             // note that if for whatever reason the constructor of AffectedResource is set from
             // internal to public, this will throw an error, as it is looking for a non-public one.
             return Activator.CreateInstance(parameterizedType, BindingFlags.NonPublic | BindingFlags.Instance, null, constructorArguments, null);
@@ -205,15 +231,19 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Reflectively instantiates a list of a certain type.
         /// </summary>
-        /// <returns>The list of the target type</returns>
-        /// <param name="elementType">The target type</param>
+        /// <returns>
+        /// The list of the target type
+        /// </returns>
+        /// <param name="elementType">
+        /// The target type
+        /// </param>
         public static IList CreateListFor(Type elementType)
         {
             return (IList)CreateInstanceOfOpenType(typeof(List<>), elementType);
         }
 
         /// <summary>
-        /// Reflectively instantiates a hashset of a certain type. 
+        /// Reflectively instantiates a hashset of a certain type.
         /// </summary>
         public static IEnumerable CreateHashSetFor(Type type, object elements)
         {
@@ -245,14 +275,14 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Indicates whether a <see cref="HashSet{T}"/> instance can be assigned to the specified type,
-        /// for example IList{Article} -> false or ISet{Article} -> true.
+        /// Indicates whether a <see cref="HashSet{T}" /> instance can be assigned to the specified type, for example IList{Article} -> false or ISet{Article} ->
+        /// true.
         /// </summary>
         public static bool TypeCanContainHashSet(Type collectionType)
         {
             if (collectionType.IsGenericType)
             {
-                var openCollectionType = collectionType.GetGenericTypeDefinition();
+                Type openCollectionType = collectionType.GetGenericTypeDefinition();
                 return HashSetCompatibleCollectionTypes.Contains(openCollectionType);
             }
 
@@ -260,11 +290,12 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Gets the type (such as Guid or int) of the Id property on a type that implements <see cref="IIdentifiable"/>.
+        /// Gets the type (such as Guid or int) of the Id property on a type that implements <see cref="IIdentifiable" />.
         /// </summary>
         public static Type GetIdType(Type resourceType)
         {
-            var property = resourceType.GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = resourceType.GetProperty(nameof(Identifiable.Id));
+
             if (property == null)
             {
                 throw new ArgumentException($"Type '{resourceType.Name}' does not have 'Id' property.");
@@ -303,8 +334,7 @@ namespace JsonApiDotNetCore
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException(
-                    $"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
+                throw new InvalidOperationException($"Failed to create an instance of '{type.FullName}' using its default constructor.", exception);
             }
         }
 
@@ -321,8 +351,8 @@ namespace JsonApiDotNetCore
 
             if (elementConverter != null)
             {
-                var converted = copyFrom.Cast<object>().Select(element => elementConverter(element));
-                return (IList) CopyToTypedCollection(converted, collectionType);
+                IEnumerable<object> converted = copyFrom.Cast<object>().Select(element => elementConverter(element));
+                return (IList)CopyToTypedCollection(converted, collectionType);
             }
 
             return (IList)CopyToTypedCollection(copyFrom, collectionType);
@@ -331,19 +361,23 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Creates a collection instance based on the specified collection type and copies the specified elements into it.
         /// </summary>
-        /// <param name="source">Source to copy from.</param>
-        /// <param name="collectionType">Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).</param>
+        /// <param name="source">
+        /// Source to copy from.
+        /// </param>
+        /// <param name="collectionType">
+        /// Target collection type, for example: typeof(List{Article}) or typeof(ISet{Person}).
+        /// </param>
         public static IEnumerable CopyToTypedCollection(IEnumerable source, Type collectionType)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(collectionType, nameof(collectionType));
 
-            var concreteCollectionType = ToConcreteCollectionType(collectionType);
+            Type concreteCollectionType = ToConcreteCollectionType(collectionType);
             dynamic concreteCollectionInstance = CreateInstance(concreteCollectionType);
 
-            foreach (var item in source)
+            foreach (object item in source)
             {
-                concreteCollectionInstance.Add((dynamic) item);
+                concreteCollectionInstance.Add((dynamic)item);
             }
 
             return concreteCollectionInstance;

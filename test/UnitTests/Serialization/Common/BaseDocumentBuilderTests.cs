@@ -17,34 +17,34 @@ namespace UnitTests.Serialization.Common
         public BaseDocumentBuilderTests()
         {
             var mock = new Mock<IResourceObjectBuilder>();
-            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(), It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+
+            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(),
+                It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
+
             _builder = new TestSerializer(mock.Object);
         }
-
 
         [Fact]
         public void ResourceToDocument_NullResource_CanBuild()
         {
             // Act
-            var document = _builder.PublicBuild((TestResource) null);
+            Document document = _builder.PublicBuild((TestResource)null);
 
             // Assert
             Assert.Null(document.Data);
             Assert.False(document.IsPopulated);
         }
 
-
         [Fact]
         public void ResourceToDocument_EmptyList_CanBuild()
         {
             // Act
-            var document = _builder.PublicBuild(new List<TestResource>());
+            Document document = _builder.PublicBuild(new List<TestResource>());
 
             // Assert
             Assert.NotNull(document.Data);
             Assert.Empty(document.ManyData);
         }
-
 
         [Fact]
         public void ResourceToDocument_SingleResource_CanBuild()
@@ -53,7 +53,7 @@ namespace UnitTests.Serialization.Common
             IIdentifiable dummy = new DummyResource();
 
             // Act
-            var document = _builder.PublicBuild(dummy);
+            Document document = _builder.PublicBuild(dummy);
 
             // Assert
             Assert.NotNull(document.Data);
@@ -64,10 +64,10 @@ namespace UnitTests.Serialization.Common
         public void ResourceToDocument_ResourceList_CanBuild()
         {
             // Arrange
-            var resources = ArrayFactory.Create(new DummyResource(), new DummyResource());
+            DummyResource[] resources = ArrayFactory.Create(new DummyResource(), new DummyResource());
 
             // Act
-            var document = _builder.PublicBuild(resources);
+            Document document = _builder.PublicBuild(resources);
             var data = (List<ResourceObject>)document.Data;
 
             // Assert

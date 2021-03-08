@@ -7,6 +7,7 @@ namespace UnitTests.TestModels
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Song : Identifiable
     {
-        [Attr] public string Title { get; set; }
+        [Attr]
+        public string Title { get; set; }
     }
 }

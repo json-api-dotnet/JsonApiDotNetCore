@@ -39,8 +39,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Page);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Page);
         }
 
         /// <inheritdoc />
@@ -54,7 +53,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             try
             {
-                var constraint = GetPageConstraint(parameterValue);
+                PaginationQueryStringValueExpression constraint = GetPageConstraint(parameterValue);
 
                 if (constraint.Elements.Any(element => element.Scope == null))
                 {
@@ -107,8 +106,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         [AssertionMethod]
         protected virtual void ValidatePageNumber(PaginationQueryStringValueExpression constraint)
         {
-            if (_options.MaximumPageNumber != null &&
-                constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
+            if (_options.MaximumPageNumber != null && constraint.Elements.Any(element => element.Value > _options.MaximumPageNumber.OneBasedValue))
             {
                 throw new QueryParseException($"Page number cannot be higher than {_options.MaximumPageNumber}.");
             }
@@ -124,16 +122,18 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             var context = new PaginationContext();
 
-            foreach (var element in _pageSizeConstraint?.Elements ?? Array.Empty<PaginationElementQueryStringValueExpression>())
+            foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
+                Array.Empty<PaginationElementQueryStringValueExpression>())
             {
-                var entry = context.ResolveEntryInScope(element.Scope);
+                MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
                 entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
                 entry.HasSetPageSize = true;
             }
 
-            foreach (var element in _pageNumberConstraint?.Elements ?? Array.Empty<PaginationElementQueryStringValueExpression>())
+            foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
+                Array.Empty<PaginationElementQueryStringValueExpression>())
             {
-                var entry = context.ResolveEntryInScope(element.Scope);
+                MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
                 entry.PageNumber = new PageNumber(element.Value);
             }
 
@@ -145,7 +145,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private sealed class PaginationContext
         {
             private readonly MutablePaginationEntry _globalScope = new MutablePaginationEntry();
-            private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new Dictionary<ResourceFieldChainExpression, MutablePaginationEntry>();
+
+            private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes =
+                new Dictionary<ResourceFieldChainExpression, MutablePaginationEntry>();
 
             public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression scope)
             {
@@ -166,7 +168,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 ApplyOptionsInEntry(_globalScope, options);
 
-                foreach (var (_, entry) in _nestedScopes)
+                foreach ((_, MutablePaginationEntry entry) in _nestedScopes)
                 {
                     ApplyOptionsInEntry(entry, options);
                 }
@@ -191,7 +193,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber, _globalScope.PageSize));
 
-                foreach (var (scope, entry) in _nestedScopes)
+                foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
                 {
                     yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber, entry.PageSize));
                 }

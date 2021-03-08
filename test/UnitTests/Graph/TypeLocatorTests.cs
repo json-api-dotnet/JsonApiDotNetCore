@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using Xunit;
 
@@ -9,19 +12,15 @@ namespace UnitTests.Graph
         public void GetGenericInterfaceImplementation_Gets_Implementation()
         {
             // Arrange
-            var assembly = GetType().Assembly;
-            var openGeneric = typeof(IGenericInterface<>);
-            var genericArg = typeof(int);
+            Assembly assembly = GetType().Assembly;
+            Type openGeneric = typeof(IGenericInterface<>);
+            Type genericArg = typeof(int);
 
-            var expectedImplementation = typeof(Implementation);
-            var expectedInterface = typeof(IGenericInterface<int>);
+            Type expectedImplementation = typeof(Implementation);
+            Type expectedInterface = typeof(IGenericInterface<int>);
 
             // Act
-            var result = TypeLocator.GetGenericInterfaceImplementation(
-                assembly,
-                openGeneric,
-                genericArg
-            );
+            (Type implementation, Type registrationInterface)? result = TypeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
 
             // Assert
             Assert.NotNull(result);
@@ -33,22 +32,18 @@ namespace UnitTests.Graph
         public void GetDerivedGenericTypes_Gets_Implementation()
         {
             // Arrange
-            var assembly = GetType().Assembly;
-            var openGeneric = typeof(BaseType<>);
-            var genericArg = typeof(int);
+            Assembly assembly = GetType().Assembly;
+            Type openGeneric = typeof(BaseType<>);
+            Type genericArg = typeof(int);
 
-            var expectedImplementation = typeof(DerivedType);
+            Type expectedImplementation = typeof(DerivedType);
 
             // Act
-            var results = TypeLocator.GetDerivedGenericTypes(
-                assembly,
-                openGeneric,
-                genericArg
-            );
+            IReadOnlyCollection<Type> results = TypeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
 
             // Assert
             Assert.NotNull(results);
-            var result = Assert.Single(results);
+            Type result = Assert.Single(results);
             Assert.Equal(expectedImplementation, result);
         }
 
@@ -56,10 +51,10 @@ namespace UnitTests.Graph
         public void GetIdType_Correctly_Identifies_JsonApiResource()
         {
             // Arrange
-            var type = typeof(Model);
+            Type type = typeof(Model);
 
             // Act
-            var idType = TypeLocator.TryGetIdType(type);
+            Type idType = TypeLocator.TryGetIdType(type);
 
             // Assert
             Assert.Equal(typeof(int), idType);
@@ -69,10 +64,10 @@ namespace UnitTests.Graph
         public void GetIdType_Correctly_Identifies_NonJsonApiResource()
         {
             // Arrange
-            var type = typeof(DerivedType);
+            Type type = typeof(DerivedType);
 
             // Act
-            var idType = TypeLocator.TryGetIdType(type);
+            Type idType = TypeLocator.TryGetIdType(type);
 
             // Assert
             Assert.Null(idType);
@@ -82,10 +77,10 @@ namespace UnitTests.Graph
         public void TryGetResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
         {
             // Arrange
-            var resourceType = typeof(Model);
+            Type resourceType = typeof(Model);
 
             // Act
-            var descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
             Assert.NotNull(descriptor);
@@ -97,10 +92,10 @@ namespace UnitTests.Graph
         public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
         {
             // Arrange
-            var resourceType = typeof(string);
+            Type resourceType = typeof(string);
 
             // Act
-            var descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = TypeLocator.TryGetResourceDescriptor(resourceType);
 
             // Assert
             Assert.Null(descriptor);

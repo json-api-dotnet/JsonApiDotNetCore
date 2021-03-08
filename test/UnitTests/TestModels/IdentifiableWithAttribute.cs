@@ -7,6 +7,7 @@ namespace UnitTests.TestModels
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public class IdentifiableWithAttribute : Identifiable
     {
-        [Attr] public string AttributeMember { get; set; }
+        [Attr]
+        public string AttributeMember { get; set; }
     }
 }

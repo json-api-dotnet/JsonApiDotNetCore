@@ -14,19 +14,18 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// The default routing convention registers the name of the resource as the route
-    /// using the serializer naming convention. The default for this is
-    /// a camel case formatter. If the controller directly inherits from <see cref="CoreJsonApiController"/> and there is no
-    /// resource directly associated, it uses the name of the controller instead of the name of the type.
+    /// The default routing convention registers the name of the resource as the route using the serializer naming convention. The default for this is a
+    /// camel case formatter. If the controller directly inherits from <see cref="CoreJsonApiController" /> and there is no resource directly associated, it
+    /// uses the name of the controller instead of the name of the type.
     /// </summary>
     /// <example><![CDATA[
     /// public class SomeResourceController : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
-    ///
+    /// 
     /// public class RandomNameController<SomeResource> : JsonApiController<SomeResource> { } // => /someResources/relationship/relatedResource
-    ///
+    /// 
     /// // when using kebab-case naming convention:
     /// public class SomeResourceController<SomeResource> : JsonApiController<SomeResource> { } // => /some-resources/relationship/related-resource
-    ///
+    /// 
     /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource
     /// ]]></example>
     [PublicAPI]
@@ -51,11 +50,11 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(controllerName, nameof(controllerName));
 
-            if (_registeredResources.TryGetValue(controllerName, out var resourceContext))
+            if (_registeredResources.TryGetValue(controllerName, out ResourceContext resourceContext))
             {
                 return resourceContext.ResourceType;
             }
-            
+
             return null;
         }
 
@@ -64,16 +63,17 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(application, nameof(application));
 
-            foreach (var controller in application.Controllers)
+            foreach (ControllerModel controller in application.Controllers)
             {
                 bool isOperationsController = IsOperationsController(controller.ControllerType);
+
                 if (!isOperationsController)
                 {
-                    var resourceType = ExtractResourceTypeFromController(controller.ControllerType);
+                    Type resourceType = ExtractResourceTypeFromController(controller.ControllerType);
 
                     if (resourceType != null)
                     {
-                        var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                        ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
                         if (resourceContext != null)
                         {
@@ -87,14 +87,17 @@ namespace JsonApiDotNetCore.Middleware
                     continue;
                 }
 
-                var template = TemplateFromResource(controller) ?? TemplateFromController(controller);
+                string template = TemplateFromResource(controller) ?? TemplateFromController(controller);
+
                 if (template == null)
                 {
-                    throw new InvalidConfigurationException(
-                        $"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
+                    throw new InvalidConfigurationException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
                 }
 
-                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel { Template = template };
+                controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
+                {
+                    Template = template
+                };
             }
         }
 
@@ -109,9 +112,10 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private string TemplateFromResource(ControllerModel model)
         {
-            if (_registeredResources.TryGetValue(model.ControllerName, out var resourceContext))
+            if (_registeredResources.TryGetValue(model.ControllerName, out ResourceContext resourceContext))
             {
-                var template = $"{_options.Namespace}/{resourceContext.PublicName}";
+                string template = $"{_options.Namespace}/{resourceContext.PublicName}";
+
                 if (_registeredTemplates.Add(template))
                 {
                     return template;
@@ -127,13 +131,13 @@ namespace JsonApiDotNetCore.Middleware
         private string TemplateFromController(ControllerModel model)
         {
             string controllerName = _options.SerializerNamingStrategy.GetPropertyName(model.ControllerName, false);
-            var template = $"{_options.Namespace}/{controllerName}";
+            string template = $"{_options.Namespace}/{controllerName}";
 
             if (_registeredTemplates.Add(template))
             {
                 return template;
             }
-            
+
             return null;
         }
 
@@ -142,19 +146,19 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private Type ExtractResourceTypeFromController(Type type)
         {
-            var aspNetControllerType = typeof(ControllerBase);
-            var coreControllerType = typeof(CoreJsonApiController);
-            var baseControllerType = typeof(BaseJsonApiController<,>);
-            var currentType = type;
+            Type aspNetControllerType = typeof(ControllerBase);
+            Type coreControllerType = typeof(CoreJsonApiController);
+            Type baseControllerType = typeof(BaseJsonApiController<,>);
+            Type currentType = type;
+
             while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerType)
             {
-                var nextBaseType = currentType.BaseType;
+                Type nextBaseType = currentType.BaseType;
 
-                if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) &&
-                    currentType.IsGenericType)
+                if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
                 {
-                    var resourceType = currentType.GetGenericArguments()
-                        .FirstOrDefault(t => TypeHelper.IsOrImplementsInterface(t, typeof(IIdentifiable)));
+                    Type resourceType = currentType.GetGenericArguments().FirstOrDefault(t => TypeHelper.IsOrImplementsInterface(t, typeof(IIdentifiable)));
+
                     if (resourceType != null)
                     {
                         return resourceType;
@@ -162,6 +166,7 @@ namespace JsonApiDotNetCore.Middleware
                 }
 
                 currentType = nextBaseType;
+
                 if (nextBaseType == null)
                 {
                     break;
@@ -173,7 +178,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private static bool IsOperationsController(Type type)
         {
-            var baseControllerType = typeof(BaseJsonApiOperationsController);
+            Type baseControllerType = typeof(BaseJsonApiOperationsController);
             return baseControllerType.IsAssignableFrom(type);
         }
     }

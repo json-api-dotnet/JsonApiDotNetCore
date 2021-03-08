@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -19,7 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicCreateResourceWithToOneRelationshipTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicCreateResourceWithToOneRelationshipTests(
+            ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -30,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Can_create_OneToOne_relationship_from_principal_side()
         {
             // Arrange
-            var existingTrack = _fakers.MusicTrack.Generate();
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -67,7 +69,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -78,13 +81,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Results[0].SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
-            var newLyricId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            long newLyricId = long.Parse(responseDocument.Results[0].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var lyricInDatabase = await dbContext.Lyrics
-                    .Include(lyric => lyric.Track)
-                    .FirstWithIdAsync(newLyricId);
+                Lyric lyricInDatabase = await dbContext.Lyrics.Include(lyric => lyric.Track).FirstWithIdAsync(newLyricId);
 
                 lyricInDatabase.Track.Should().NotBeNull();
                 lyricInDatabase.Track.Id.Should().Be(existingTrack.Id);
@@ -95,8 +96,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Can_create_OneToOne_relationship_from_dependent_side()
         {
             // Arrange
-            var existingLyric = _fakers.Lyric.Generate();
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            Lyric existingLyric = _fakers.Lyric.Generate();
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -137,7 +138,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -148,13 +150,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Results[0].SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.Lyric)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.Lyric).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.Lyric.Should().NotBeNull();
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
@@ -167,8 +167,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // Arrange
             const int elementCount = 5;
 
-            var existingCompany = _fakers.RecordCompany.Generate();
-            var newTrackTitles = _fakers.MusicTrack.Generate(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
+            RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+            string[] newTrackTitles = _fakers.MusicTrack.Generate(elementCount).Select(musicTrack => musicTrack.Title).ToArray();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -177,6 +177,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             });
 
             var operationElements = new List<object>(elementCount);
+
             for (int index = 0; index < elementCount; index++)
             {
                 operationElements.Add(new
@@ -212,7 +213,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -226,14 +228,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 responseDocument.Results[index].SingleData.Attributes["title"].Should().Be(newTrackTitles[index]);
             }
 
-            var newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id));
+            IEnumerable<Guid> newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id));
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                var tracksInDatabase = await dbContext.MusicTracks
+                List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks
                     .Include(musicTrack => musicTrack.OwnedBy)
                     .Where(musicTrack => newTrackIds.Contains(musicTrack.Id))
                     .ToListAsync();
@@ -245,7 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
                 for (int index = 0; index < elementCount; index++)
                 {
-                    var trackInDatabase = tracksInDatabase.Single(musicTrack =>
+                    MusicTrack trackInDatabase = tracksInDatabase.Single(musicTrack =>
                         musicTrack.Id == Guid.Parse(responseDocument.Results[index].SingleData.Id));
 
                     trackInDatabase.Title.Should().Be(newTrackTitles[index]);
@@ -288,14 +290,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().Be("Expected 'type' element in 'lyric' relationship.");
@@ -335,14 +337,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
@@ -381,14 +383,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
             error.Detail.Should().Be("Expected 'id' or 'lid' element in 'lyric' relationship.");
@@ -428,14 +430,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be("Related resource of type 'lyrics' with ID '12345678' in relationship 'lyric' does not exist.");
@@ -475,14 +477,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             error.Detail.Should().Be("Relationship 'lyric' contains incompatible resource type 'playlists'.");
@@ -493,8 +495,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         public async Task Can_create_resource_with_duplicate_relationship()
         {
             // Arrange
-            var existingCompany = _fakers.RecordCompany.Generate();
-            var newTrackTitle = _fakers.MusicTrack.Generate().Title;
+            RecordCompany existingCompany = _fakers.RecordCompany.Generate();
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -540,12 +542,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 }
             };
 
-            var requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("ownedBy_duplicate", "ownedBy");
+            string requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("ownedBy_duplicate", "ownedBy");
 
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBodyText);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBodyText);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -556,13 +559,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Results[0].SingleData.Attributes.Should().NotBeEmpty();
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
-            var newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                var trackInDatabase = await dbContext.MusicTracks
-                    .Include(musicTrack => musicTrack.OwnedBy)
-                    .FirstWithIdAsync(newTrackId);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(newTrackId);
 
                 trackInDatabase.OwnedBy.Should().NotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
@@ -605,14 +606,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
             error.Detail.Should().Be("Expected single data element for 'lyric' relationship.");

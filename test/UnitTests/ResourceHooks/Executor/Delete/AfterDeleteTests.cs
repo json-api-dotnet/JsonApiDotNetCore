@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using JsonApiDotNetCore.Hooks.Internal;
+using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCoreExample.Models;
 using Moq;
@@ -8,15 +10,18 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 {
     public sealed class AfterDeleteTests : HooksTestsSetup
     {
-        private readonly ResourceHook[] _targetHooks = { ResourceHook.AfterDelete };
+        private readonly ResourceHook[] _targetHooks =
+        {
+            ResourceHook.AfterDelete
+        };
 
         [Fact]
         public void AfterDelete()
         {
             // Arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
-            var (hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
+            (ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
@@ -30,9 +35,9 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         public void AfterDelete_Without_Any_Hook_Implemented()
         {
             // Arrange
-            var discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
-            var (hookExecutor, resourceDefinitionMock) = CreateTestObjects(discovery);
-            var todoList = CreateTodoWithOwner();
+            IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
+            (ResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
+            HashSet<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterDelete(todoList, ResourcePipeline.Delete, It.IsAny<bool>());
@@ -42,4 +47,3 @@ namespace UnitTests.ResourceHooks.Executor.Delete
         }
     }
 }
-

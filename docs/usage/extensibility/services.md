@@ -15,22 +15,19 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
 {
     private readonly INotificationService _notificationService;
 
-    public TodoItemService(
-        IResourceRepositoryAccessor repositoryAccessor,
-        IQueryLayerComposer queryLayerComposer,
-        IPaginationContext paginationContext,
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
-        IJsonApiRequest request,
+    public TodoItemService(IResourceRepositoryAccessor repositoryAccessor,
+        IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
+        IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
         IResourceChangeTracker<TodoItem> resourceChangeTracker,
         IResourceHookExecutorFacade hookExecutor)
-        : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory,
-            request, resourceChangeTracker, hookExecutor)
+        : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
+            loggerFactory, request, resourceChangeTracker, hookExecutor)
     {
         _notificationService = notificationService;
     }
 
-    public override async Task<TodoItem> CreateAsync(TodoItem resource, CancellationToken cancellationToken)
+    public override async Task<TodoItem> CreateAsync(TodoItem resource,
+        CancellationToken cancellationToken)
     {
         // Call the base implementation
         var newResource = await base.CreateAsync(resource, cancellationToken);
@@ -69,7 +66,8 @@ public class ProductService : IResourceService<Product>
         _dao = dao;
     }
 
-    public async Task<IReadOnlyCollection<Product>> GetAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<Product>> GetAsync(
+        CancellationToken cancellationToken)
     {
         return await _dao.GetProductsAsync(cancellationToken);
     }
@@ -152,22 +150,22 @@ Then in the controller, you should inherit from the base controller and pass the
 ```c#
 public class ArticlesController : BaseJsonApiController<Article>
 {
-    public ArticlesController(
-        IJsonApiOptions options,
-        ILoggerFactory loggerFactory,
-        ICreateService<Article, int> create,
-        IDeleteService<Article, int> delete)
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        ICreateService<Article, int> create, IDeleteService<Article, int> delete)
         : base(options, loggerFactory, create: create, delete: delete)
-    { }
+    {
+    }
 
     [HttpPost]
-    public override async Task<IActionResult> PostAsync([FromBody] Article resource, CancellationToken cancellationToken)
+    public override async Task<IActionResult> PostAsync([FromBody] Article resource,
+        CancellationToken cancellationToken)
     {
         return await base.PostAsync(resource, cancellationToken);
     }
 
     [HttpDelete("{id}")]
-    public override async Task<IActionResult>DeleteAsync(int id, CancellationToken cancellationToken)
+    public override async Task<IActionResult>DeleteAsync(int id,
+        CancellationToken cancellationToken)
     {
         return await base.DeleteAsync(id, cancellationToken);
     }

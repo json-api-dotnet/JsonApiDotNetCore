@@ -18,8 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         internal const int ObjectResultWithErrorObjectId = 44444444;
         internal const int ObjectResultWithErrorCollectionId = 55555555;
 
-        protected BaseToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Toothbrush> resourceService)
+        protected BaseToothbrushesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Toothbrush> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }
@@ -60,6 +59,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
                         Title = "This is not a very great request."
                     }
                 };
+
                 return Error(errors);
             }
 

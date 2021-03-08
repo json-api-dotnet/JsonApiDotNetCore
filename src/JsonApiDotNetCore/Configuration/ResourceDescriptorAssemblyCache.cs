@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,8 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     internal sealed class ResourceDescriptorAssemblyCache
     {
-        private readonly Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>> _resourceDescriptorsPerAssembly = new Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>>();
+        private readonly Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>> _resourceDescriptorsPerAssembly =
+            new Dictionary<Assembly, IReadOnlyCollection<ResourceDescriptor>>();
 
         public void RegisterAssembly(Assembly assembly)
         {
@@ -28,8 +30,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void EnsureAssembliesScanned()
         {
-            foreach (var assemblyToScan in _resourceDescriptorsPerAssembly.Where(pair => pair.Value == null)
-                .Select(pair => pair.Key).ToArray())
+            foreach (Assembly assemblyToScan in _resourceDescriptorsPerAssembly.Where(pair => pair.Value == null).Select(pair => pair.Key).ToArray())
             {
                 _resourceDescriptorsPerAssembly[assemblyToScan] = ScanForResourceDescriptors(assemblyToScan).ToArray();
             }
@@ -37,9 +38,10 @@ namespace JsonApiDotNetCore.Configuration
 
         private static IEnumerable<ResourceDescriptor> ScanForResourceDescriptors(Assembly assembly)
         {
-            foreach (var type in assembly.GetTypes())
+            foreach (Type type in assembly.GetTypes())
             {
-                var resourceDescriptor = TypeLocator.TryGetResourceDescriptor(type);
+                ResourceDescriptor resourceDescriptor = TypeLocator.TryGetResourceDescriptor(type);
+
                 if (resourceDescriptor != null)
                 {
                     yield return resourceDescriptor;

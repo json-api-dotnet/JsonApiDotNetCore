@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
@@ -10,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 {
-    public sealed class AtomicAbsoluteLinksTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicAbsoluteLinksTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -34,8 +34,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
         public async Task Update_resource_with_side_effects_returns_absolute_links()
         {
             // Arrange
-            var existingLanguage = _fakers.TextLanguage.Generate();
-            var existingCompany = _fakers.RecordCompany.Generate();
+            TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
+            RecordCompany existingCompany = _fakers.RecordCompany.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -77,7 +77,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
             const string route = "/operations";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -86,7 +87,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 
             string languageLink = HostPrefix + "/textLanguages/" + existingLanguage.StringId;
 
-            var singleData1 = responseDocument.Results[0].SingleData;
+            ResourceObject singleData1 = responseDocument.Results[0].SingleData;
             singleData1.Should().NotBeNull();
             singleData1.Links.Should().NotBeNull();
             singleData1.Links.Self.Should().Be(languageLink);
@@ -97,7 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 
             string companyLink = HostPrefix + "/recordCompanies/" + existingCompany.StringId;
 
-            var singleData2 = responseDocument.Results[1].SingleData;
+            ResourceObject singleData2 = responseDocument.Results[1].SingleData;
             singleData2.Should().NotBeNull();
             singleData2.Links.Should().NotBeNull();
             singleData2.Links.Self.Should().Be(companyLink);

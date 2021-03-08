@@ -13,8 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
     public abstract class ObfuscatedIdentifiableController<TResource> : BaseJsonApiController<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        protected ObfuscatedIdentifiableController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<TResource> resourceService)
+        protected ObfuscatedIdentifiableController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }
@@ -53,8 +52,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpPost("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName,
-            [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
             return base.PostRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
@@ -68,8 +67,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName,
-            [FromBody] object secondaryResourceIds, CancellationToken cancellationToken)
+        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
             return base.PatchRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
@@ -83,8 +82,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName,
-            [FromBody] ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
         {
             int idValue = HexadecimalCodec.Decode(id);
             return base.DeleteRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);

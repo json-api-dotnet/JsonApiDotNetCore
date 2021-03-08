@@ -33,9 +33,11 @@ Comparison operators compare an attribute against a constant value (between quot
 ```http
 GET /users?filter=equals(displayName,'Brian O''Connor') HTTP/1.1
 ```
+
 ```http
 GET /users?filter=equals(displayName,null) HTTP/1.1
 ```
+
 ```http
 GET /users?filter=equals(displayName,lastName) HTTP/1.1
 ```
@@ -45,6 +47,7 @@ Comparison operators can be combined with the `count` function, which acts on Ha
 ```http
 GET /blogs?filter=lessThan(count(owner.articles),'10') HTTP/1.1
 ```
+
 ```http
 GET /customers?filter=greaterThan(count(orders),count(invoices)) HTTP/1.1
 ```

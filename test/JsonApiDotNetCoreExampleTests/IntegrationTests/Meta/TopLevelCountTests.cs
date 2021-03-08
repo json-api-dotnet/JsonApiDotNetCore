@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -11,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class TopLevelCountTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class TopLevelCountTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
-            var options = (JsonApiOptions) testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = true;
         }
 
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Renders_resource_count_for_collection()
         {
             // Arrange
-            var ticket = _fakers.SupportTicket.Generate();
+            SupportTicket ticket = _fakers.SupportTicket.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             const string route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             const string route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Hides_resource_count_in_create_resource_response()
         {
             // Arrange
-            var newDescription = _fakers.SupportTicket.Generate().Description;
+            string newDescription = _fakers.SupportTicket.Generate().Description;
 
             var requestBody = new
             {
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             const string route = "/supportTickets";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -109,9 +109,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         public async Task Hides_resource_count_in_update_resource_response()
         {
             // Arrange
-            var existingTicket = _fakers.SupportTicket.Generate();
+            SupportTicket existingTicket = _fakers.SupportTicket.Generate();
 
-            var newDescription = _fakers.SupportTicket.Generate().Description;
+            string newDescription = _fakers.SupportTicket.Generate().Description;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -132,10 +132,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
                 }
             };
 
-            var route = "/supportTickets/" + existingTicket.StringId;
+            string route = "/supportTickets/" + existingTicket.StringId;
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

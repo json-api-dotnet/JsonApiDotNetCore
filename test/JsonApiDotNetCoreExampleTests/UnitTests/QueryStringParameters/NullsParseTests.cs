@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         public void Reader_Supports_Parameter_Name(string parameterName, bool expectCanParse)
         {
             // Act
-            var canParse = _reader.CanRead(parameterName);
+            bool canParse = _reader.CanRead(parameterName);
 
             // Assert
             canParse.Should().Be(expectCanParse);
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             var reader = new NullsQueryStringParameterReader(options);
 
             // Act
-            var isEnabled = reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
+            bool isEnabled = reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
 
             // Assert
             isEnabled.Should().Be(allowOverride && expectIsEnabled);
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             Action action = () => _reader.Read(parameterName, parameterValue);
 
             // Assert
-            var exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
+            InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.QueryParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
@@ -112,7 +112,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             // Arrange
             var options = new JsonApiOptions
             {
-                SerializerSettings = {NullValueHandling = optionsNullValue},
+                SerializerSettings =
+                {
+                    NullValueHandling = optionsNullValue
+                },
                 AllowQueryStringOverrideForSerializerNullValueHandling = optionsAllowOverride
             };
 

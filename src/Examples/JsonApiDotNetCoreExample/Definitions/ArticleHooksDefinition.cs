@@ -14,7 +14,10 @@ namespace JsonApiDotNetCoreExample.Definitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ArticleHooksDefinition : ResourceHooksDefinition<Article>
     {
-        public ArticleHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph) { }
+        public ArticleHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
+        {
+        }
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> resources, ResourcePipeline pipeline)
         {
@@ -26,8 +29,7 @@ namespace JsonApiDotNetCoreExample.Definitions
                 });
             }
 
-            return resources.Where(t => t.Caption != "This should not be included");
+            return resources.Where(article => article.Caption != "This should not be included");
         }
     }
 }
-

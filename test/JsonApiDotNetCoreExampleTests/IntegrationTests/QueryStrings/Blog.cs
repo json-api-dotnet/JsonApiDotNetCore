@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Blog : Identifiable
     {
-        [Attr] 
+        [Attr]
         public string Title { get; set; }
 
         [Attr]

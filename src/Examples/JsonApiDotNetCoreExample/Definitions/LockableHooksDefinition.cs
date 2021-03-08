@@ -9,17 +9,20 @@ using JsonApiDotNetCoreExample.Models;
 
 namespace JsonApiDotNetCoreExample.Definitions
 {
-    public abstract class LockableHooksDefinition<T> : ResourceHooksDefinition<T> where T : class, IIsLockable, IIdentifiable
+    public abstract class LockableHooksDefinition<T> : ResourceHooksDefinition<T>
+        where T : class, IIsLockable, IIdentifiable
     {
         private readonly IResourceGraph _resourceGraph;
-        protected LockableHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+
+        protected LockableHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
             _resourceGraph = resourceGraph;
         }
 
         protected void DisallowLocked(IEnumerable<T> resources)
         {
-            foreach (var resource in resources ?? Enumerable.Empty<T>())
+            foreach (T resource in resources ?? Enumerable.Empty<T>())
             {
                 if (resource.IsLocked)
                 {

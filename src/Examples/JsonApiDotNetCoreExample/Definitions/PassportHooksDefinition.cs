@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExample.Definitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PassportHooksDefinition : LockableHooksDefinition<Passport>
     {
-        public PassportHooksDefinition(IResourceGraph resourceGraph) : base(resourceGraph)
+        public PassportHooksDefinition(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
         }
 
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override IEnumerable<Passport> OnReturn(HashSet<Passport> resources, ResourcePipeline pipeline)
         {
-            return resources.Where(p => !p.IsLocked);
+            return resources.Where(passport => !passport.IsLocked);
         }
     }
 }

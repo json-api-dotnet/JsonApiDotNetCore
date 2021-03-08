@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -27,20 +28,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public async Task Cannot_override_from_query_string()
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowQueryStringOverrideForSerializerNullValueHandling = false;
 
             const string route = "/calendars?nulls=true";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Usage of one or more query string parameters is not allowed at the requested endpoint.");
             error.Detail.Should().Be("The parameter 'nulls' cannot be used at this endpoint.");
@@ -60,11 +61,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public async Task Can_override_from_query_string(NullValueHandling? configurationValue, string queryStringValue, bool expectInDocument)
         {
             // Arrange
-            var options = (JsonApiOptions) _testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowQueryStringOverrideForSerializerNullValueHandling = true;
             options.SerializerSettings.NullValueHandling = configurationValue ?? NullValueHandling.Include;
 
-            var calendar = _fakers.Calendar.Generate();
+            Calendar calendar = _fakers.Calendar.Generate();
             calendar.TimeZone = null;
             calendar.Appointments = _fakers.Appointment.Generate(1).ToHashSet();
             calendar.Appointments.Single().Title = null;
@@ -75,10 +76,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/calendars/{calendar.StringId}?include=appointments" + (queryStringValue != null ? "&nulls=" + queryStringValue : "");
+            string route = $"/calendars/{calendar.StringId}?include=appointments" + (queryStringValue != null ? "&nulls=" + queryStringValue : "");
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

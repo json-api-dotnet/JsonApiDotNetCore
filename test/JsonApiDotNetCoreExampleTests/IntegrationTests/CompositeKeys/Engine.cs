@@ -10,7 +10,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         [Attr]
         public string SerialCode { get; set; }
 
-        [HasOne] 
+        [HasOne]
         public Car Car { get; set; }
     }
 }

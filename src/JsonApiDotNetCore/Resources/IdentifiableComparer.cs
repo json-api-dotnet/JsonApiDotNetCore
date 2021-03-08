@@ -5,8 +5,8 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId"/>,
-    /// falling back to <see cref="IIdentifiable.LocalId"/> when both StringIds are null.
+    /// Compares `IIdentifiable` instances with each other based on their type and <see cref="IIdentifiable.StringId" />, falling back to
+    /// <see cref="IIdentifiable.LocalId" /> when both StringIds are null.
     /// </summary>
     [PublicAPI]
     public sealed class IdentifiableComparer : IEqualityComparer<IIdentifiable>

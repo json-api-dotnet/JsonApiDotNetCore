@@ -12,28 +12,28 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksDummyData
     {
-        protected IResourceGraph ResourceGraph { get; }
-        protected ResourceHook[] NoHooks { get; } = new ResourceHook[0];
-        protected ResourceHook[] EnableDbValues { get; } = { ResourceHook.BeforeUpdate, ResourceHook.BeforeUpdateRelationship };
-        protected ResourceHook[] DisableDbValues { get; } = new ResourceHook[0];
+        private readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<TodoItem> TodoFaker;
         protected readonly Faker<Person> PersonFaker;
         protected readonly Faker<Article> ArticleFaker;
         protected readonly Faker<Tag> TagFaker;
         protected readonly Faker<ArticleTag> ArticleTagFaker;
-        private readonly Faker<IdentifiableArticleTag> _identifiableArticleTagFaker;
         protected readonly Faker<Passport> PassportFaker;
+        protected IResourceGraph ResourceGraph { get; }
+        protected ResourceHook[] NoHooks { get; } = new ResourceHook[0];
+
+        protected ResourceHook[] EnableDbValues { get; } =
+        {
+            ResourceHook.BeforeUpdate,
+            ResourceHook.BeforeUpdateRelationship
+        };
+
+        protected ResourceHook[] DisableDbValues { get; } = new ResourceHook[0];
 
         protected HooksDummyData()
         {
-            ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance)
-                .Add<TodoItem>()
-                .Add<Person>()
-                .Add<Passport>()
-                .Add<Article>()
-                .Add<IdentifiableArticleTag>()
-                .Add<Tag>()
-                .Build();
+            ResourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TodoItem>().Add<Person>().Add<Passport>()
+                .Add<Article>().Add<IdentifiableArticleTag>().Add<Tag>().Build();
 
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
@@ -64,9 +64,9 @@ namespace UnitTests.ResourceHooks
 
         protected List<TodoItem> CreateTodoWithToOnePerson()
         {
-            var todoItem = TodoFaker.Generate();
-            var person = PersonFaker.Generate();
-            var todoList = todoItem.AsList();
+            TodoItem todoItem = TodoFaker.Generate();
+            Person person = PersonFaker.Generate();
+            List<TodoItem> todoList = todoItem.AsList();
             person.OneToOneTodoItem = todoItem;
             todoItem.OneToOnePerson = person;
             return todoList;
@@ -74,9 +74,14 @@ namespace UnitTests.ResourceHooks
 
         protected HashSet<TodoItem> CreateTodoWithOwner()
         {
-            var todoItem = TodoFaker.Generate();
-            var person = PersonFaker.Generate();
-            var todoList = new HashSet<TodoItem> { todoItem };
+            TodoItem todoItem = TodoFaker.Generate();
+            Person person = PersonFaker.Generate();
+
+            var todoList = new HashSet<TodoItem>
+            {
+                todoItem
+            };
+
             person.AssignedTodoItems = todoList;
             todoItem.Owner = person;
             return todoList;
@@ -84,20 +89,21 @@ namespace UnitTests.ResourceHooks
 
         protected (List<Article>, List<Tag>) CreateManyToManyData()
         {
-            var tagsSubset = TagFaker.Generate(3);
-            var joinsSubSet = ArticleTagFaker.Generate(3);
-            var articleTagsSubset = ArticleFaker.Generate();
+            List<Tag> tagsSubset = TagFaker.Generate(3);
+            List<ArticleTag> joinsSubSet = ArticleTagFaker.Generate(3);
+            Article articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
+
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
 
-            var allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
-            var completeJoin = ArticleTagFaker.Generate(6);
+            List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
+            List<ArticleTag> completeJoin = ArticleTagFaker.Generate(6);
 
-            var articleWithAllTags = ArticleFaker.Generate();
+            Article articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
             for (int i = 0; i < 6; i++)
@@ -106,25 +112,27 @@ namespace UnitTests.ResourceHooks
                 completeJoin[i].Tag = allTags[i];
             }
 
-            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
+            List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allTags);
         }
 
         protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
         {
-            var tagsSubset = TagFaker.Generate(3);
-            var joinsSubSet = _identifiableArticleTagFaker.Generate(3);
-            var articleTagsSubset = ArticleFaker.Generate();
+            List<Tag> tagsSubset = TagFaker.Generate(3);
+            List<IdentifiableArticleTag> joinsSubSet = _identifiableArticleTagFaker.Generate(3);
+            Article articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.IdentifiableArticleTags = joinsSubSet.ToHashSet();
+
             for (int i = 0; i < 3; i++)
             {
                 joinsSubSet[i].Article = articleTagsSubset;
                 joinsSubSet[i].Tag = tagsSubset[i];
             }
-            var allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
-            var completeJoin = _identifiableArticleTagFaker.Generate(6);
 
-            var articleWithAllTags = ArticleFaker.Generate();
+            List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
+            List<IdentifiableArticleTag> completeJoin = _identifiableArticleTagFaker.Generate(6);
+
+            Article articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.IdentifiableArticleTags = joinsSubSet.ToHashSet();
 
             for (int i = 0; i < 6; i++)
@@ -133,8 +141,8 @@ namespace UnitTests.ResourceHooks
                 completeJoin[i].Tag = allTags[i];
             }
 
-            var allJoins = joinsSubSet.Concat(completeJoin).ToList();
-            var articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
+            List<IdentifiableArticleTag> allJoins = joinsSubSet.Concat(completeJoin).ToList();
+            List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allJoins, allTags);
         }
     }

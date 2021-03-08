@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
 
         private InjectionDbContext ResolveDbContext()
         {
-            using var scope = _serviceProvider.CreateScope();
+            using IServiceScope scope = _serviceProvider.CreateScope();
             return scope.ServiceProvider.GetRequiredService<InjectionDbContext>();
         }
     }

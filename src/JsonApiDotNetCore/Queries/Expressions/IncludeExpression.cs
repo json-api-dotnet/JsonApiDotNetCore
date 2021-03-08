@@ -11,14 +11,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class IncludeExpression : QueryExpression
     {
-        public IReadOnlyCollection<IncludeElementExpression> Elements { get; }
-
         public static readonly IncludeExpression Empty = new IncludeExpression();
-
-        private IncludeExpression()
-        {
-            Elements = Array.Empty<IncludeElementExpression>();
-        }
+        public IReadOnlyCollection<IncludeElementExpression> Elements { get; }
 
         public IncludeExpression(IReadOnlyCollection<IncludeElementExpression> elements)
         {
@@ -32,6 +26,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
             Elements = elements;
         }
 
+        private IncludeExpression()
+        {
+            Elements = Array.Empty<IncludeElementExpression>();
+        }
+
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
             return visitor.VisitInclude(this, argument);
@@ -39,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override string ToString()
         {
-            var chains = IncludeChainConverter.GetRelationshipChains(this);
+            IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
             return string.Join(",", chains.Select(child => child.ToString()));
         }
 
@@ -55,7 +54,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (IncludeExpression) obj;
+            var other = (IncludeExpression)obj;
 
             return Elements.SequenceEqual(other.Elements);
         }
@@ -64,7 +63,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var element in Elements)
+            foreach (IncludeElementExpression element in Elements)
             {
                 hashCode.Add(element);
             }

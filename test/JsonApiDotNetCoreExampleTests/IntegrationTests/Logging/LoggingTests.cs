@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCoreExampleTests.Startups;
@@ -10,8 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
+    public sealed class LoggingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
         private readonly AuditFakers _fakers = new AuditFakers();
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
             loggerFactory.Logger.Clear();
 
-            var newEntry = _fakers.AuditEntry.Generate();
+            AuditEntry newEntry = _fakers.AuditEntry.Generate();
 
             var requestBody = new
             {
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -89,14 +89,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
-            loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace && 
+            loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
                 message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             const string route = "/auditEntries";
 
             // Act
-            var (httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);

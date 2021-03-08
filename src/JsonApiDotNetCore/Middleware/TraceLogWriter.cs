@@ -54,7 +54,8 @@ namespace JsonApiDotNetCore.Middleware
             if (propertyContainer != null)
             {
                 bool isFirstMember = true;
-                foreach (var property in propertyContainer.GetType().GetProperties())
+
+                foreach (PropertyInfo property in propertyContainer.GetType().GetProperties())
                 {
                     if (isFirstMember)
                     {
@@ -75,7 +76,8 @@ namespace JsonApiDotNetCore.Middleware
             builder.Append(property.Name);
             builder.Append(": ");
 
-            var value = property.GetValue(instance);
+            object value = property.GetValue(instance);
+
             if (value == null)
             {
                 builder.Append("null");
@@ -100,7 +102,7 @@ namespace JsonApiDotNetCore.Middleware
             }
             else
             {
-                var text = SerializeObject(value);
+                string text = SerializeObject(value);
                 builder.Append(text);
             }
         }
@@ -109,7 +111,8 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (type != null)
             {
-                var toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+                MethodInfo toStringMethod = type.GetMethod("ToString", Array.Empty<Type>());
+
                 if (toStringMethod != null && toStringMethod.DeclaringType != typeof(object))
                 {
                     return true;

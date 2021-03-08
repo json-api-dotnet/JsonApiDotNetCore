@@ -10,9 +10,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
     {
         [Attr]
         public string TrackAndTraceCode { get; set; }
-        
+
         [Attr]
-        public DateTimeOffset ShippedAt { get; set; } 
+        public DateTimeOffset ShippedAt { get; set; }
 
         [HasOne]
         public Order Order { get; set; }

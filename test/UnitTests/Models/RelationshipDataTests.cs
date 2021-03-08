@@ -12,8 +12,11 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-            var relationships = new List<ResourceIdentifierObject> {
-                new ResourceIdentifierObject {
+
+            var relationships = new List<ResourceIdentifierObject>
+            {
+                new ResourceIdentifierObject
+                {
                     Id = "9",
                     Type = "authors"
                 }
@@ -34,6 +37,7 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
+
             const string relationshipsJson = @"[
                 {
                     ""type"": ""authors"",
@@ -41,7 +45,7 @@ namespace UnitTests.Models
                 }
             ]";
 
-            var relationships = JArray.Parse(relationshipsJson);
+            JArray relationships = JArray.Parse(relationshipsJson);
 
             // Act 
             relationshipData.Data = relationships;
@@ -58,7 +62,9 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
-            var relationship = new ResourceIdentifierObject {
+
+            var relationship = new ResourceIdentifierObject
+            {
                 Id = "9",
                 Type = "authors"
             };
@@ -78,12 +84,13 @@ namespace UnitTests.Models
         {
             // Arrange
             var relationshipData = new RelationshipEntry();
+
             const string relationshipJson = @"{
                     ""id"": ""9"",
                     ""type"": ""authors""
                 }";
 
-            var relationship = JObject.Parse(relationshipJson);
+            JObject relationship = JObject.Parse(relationshipJson);
 
             // Act 
             relationshipData.Data = relationship;

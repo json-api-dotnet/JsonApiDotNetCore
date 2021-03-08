@@ -86,13 +86,17 @@ services.AddJsonApi(resources: builder =>
 2. The model is decorated with a `ResourceAttribute`
 ```c#
 [Resource("myResources")]
-public class MyModel : Identifiable { }
+public class MyModel : Identifiable
+{
+}
 ```
 
 3. The configured naming convention (by default this is camel-case).
 ```c#
 // this will be registered as "myModels"
-public class MyModel : Identifiable { }
+public class MyModel : Identifiable
+{
+}
 ```
 
 The default naming convention can be changed in [options](~/usage/options.md#custom-serializer-settings).

@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (SortExpression) obj;
+            var other = (SortExpression)obj;
 
             return Elements.SequenceEqual(other.Elements);
         }
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach (var element in Elements)
+            foreach (SortElementExpression element in Elements)
             {
                 hashCode.Add(element);
             }

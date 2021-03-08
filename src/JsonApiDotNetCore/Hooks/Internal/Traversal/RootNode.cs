@@ -8,10 +8,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
     /// <summary>
-    /// The root node class of the breadth-first-traversal of resource data structures
-    /// as performed by the <see cref="ResourceHookExecutor"/>
+    /// The root node class of the breadth-first-traversal of resource data structures as performed by the <see cref="ResourceHookExecutor" />
     /// </summary>
-    internal sealed class RootNode<TResource> : IResourceNode where TResource : class, IIdentifiable
+    internal sealed class RootNode<TResource> : IResourceNode
+        where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
@@ -19,21 +19,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         public Type ResourceType { get; }
         public IEnumerable UniqueResources => _uniqueResources;
         public RelationshipProxy[] RelationshipsToNextLayer { get; }
-
-        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
-        {
-            return _allRelationshipsToNextLayer
-                    .GroupBy(proxy => proxy.RightType)
-                    .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, _ => UniqueResources));
-        }
-
-        /// <summary>
-        /// The current layer resources grouped by affected relationship to the next layer
-        /// </summary>
-        public Dictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
-        {
-            return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, _ => UniqueResources);
-        }
 
         /// <summary>
         /// The root node does not have a parent layer and therefore does not have any relationships to any previous layer
@@ -48,20 +33,34 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             _allRelationshipsToNextLayer = allRelationships;
         }
 
+        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
+        {
+            return _allRelationshipsToNextLayer.GroupBy(proxy => proxy.RightType)
+                .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(p => p.Attribute, _ => UniqueResources));
+        }
+
         /// <summary>
-        /// Update the internal list of affected resources. 
+        /// The current layer resources grouped by affected relationship to the next layer
+        /// </summary>
+        public Dictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
+        {
+            return RelationshipsToNextLayer.ToDictionary(p => p.Attribute, _ => UniqueResources);
+        }
+
+        /// <summary>
+        /// Update the internal list of affected resources.
         /// </summary>
         /// <param name="updated">Updated.</param>
         public void UpdateUnique(IEnumerable updated)
         {
-            var cast = updated.Cast<TResource>().ToList();
-            var intersected = _uniqueResources.Intersect(cast, _comparer).Cast<TResource>();
+            List<TResource> cast = updated.Cast<TResource>().ToList();
+            IEnumerable<TResource> intersected = _uniqueResources.Intersect(cast, _comparer).Cast<TResource>();
             _uniqueResources = new HashSet<TResource>(intersected);
         }
 
         public void Reassign(IEnumerable source = null)
         {
-            var ids = _uniqueResources.Select(ue => ue.StringId);
+            IEnumerable<string> ids = _uniqueResources.Select(ue => ue.StringId);
 
             if (source is HashSet<TResource> hashSet)
             {

@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Resources
         public TResource CreateInstance<TResource>()
             where TResource : IIdentifiable
         {
-            return (TResource) InnerCreateInstance(typeof(TResource), _serviceProvider);
+            return (TResource)InnerCreateInstance(typeof(TResource), _serviceProvider);
         }
 
         private static IIdentifiable InnerCreateInstance(Type type, IServiceProvider serviceProvider)
@@ -46,10 +46,10 @@ namespace JsonApiDotNetCore.Resources
             }
             catch (Exception exception)
             {
-                throw new InvalidOperationException(hasSingleConstructorWithoutParameters
+                throw new InvalidOperationException(
+                    hasSingleConstructorWithoutParameters
                         ? $"Failed to create an instance of '{type.FullName}' using its default constructor."
-                        : $"Failed to create an instance of '{type.FullName}' using injected constructor parameters.",
-                    exception);
+                        : $"Failed to create an instance of '{type.FullName}' using injected constructor parameters.", exception);
             }
         }
 
@@ -63,18 +63,17 @@ namespace JsonApiDotNetCore.Resources
                 return Expression.New(resourceType);
             }
 
-            List<Expression> constructorArguments = new List<Expression>();
+            var constructorArguments = new List<Expression>();
 
-            var longestConstructor = GetLongestConstructor(resourceType);
+            ConstructorInfo longestConstructor = GetLongestConstructor(resourceType);
+
             foreach (ParameterInfo constructorParameter in longestConstructor.GetParameters())
             {
                 try
                 {
-                    object constructorArgument =
-                        ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
+                    object constructorArgument = ActivatorUtilities.GetServiceOrCreateInstance(_serviceProvider, constructorParameter.ParameterType);
 
-                    var argumentExpression =
-                        CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType());
+                    Expression argumentExpression = CreateTupleAccessExpressionForConstant(constructorArgument, constructorArgument.GetType());
 
                     constructorArguments.Add(argumentExpression);
                 }
@@ -123,8 +122,9 @@ namespace JsonApiDotNetCore.Resources
 
             for (int index = 1; index < constructors.Length; index++)
             {
-                var constructor = constructors[index];
+                ConstructorInfo constructor = constructors[index];
                 int length = constructor.GetParameters().Length;
+
                 if (length > maxParameterLength)
                 {
                     bestMatch = constructor;

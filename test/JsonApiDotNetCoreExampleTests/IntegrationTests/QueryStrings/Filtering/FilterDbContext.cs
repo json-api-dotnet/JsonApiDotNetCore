@@ -8,7 +8,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
     {
         public DbSet<FilterableResource> FilterableResources { get; set; }
 
-        public FilterDbContext(DbContextOptions<FilterDbContext> options) : base(options)
+        public FilterDbContext(DbContextOptions<FilterDbContext> options)
+            : base(options)
         {
         }
     }

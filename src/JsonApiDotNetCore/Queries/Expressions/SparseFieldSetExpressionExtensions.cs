@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
@@ -18,9 +19,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            var newSparseFieldSet = sparseFieldSet;
+            SparseFieldSetExpression newSparseFieldSet = sparseFieldSet;
 
-            foreach (var field in resourceGraph.GetFields(fieldSelector))
+            foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
                 newSparseFieldSet = IncludeField(newSparseFieldSet, field);
             }
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
             fieldSet.Add(fieldToInclude);
             return new SparseFieldSetExpression(fieldSet);
         }
@@ -47,9 +48,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            var newSparseFieldSet = sparseFieldSet;
+            SparseFieldSetExpression newSparseFieldSet = sparseFieldSet;
 
-            foreach (var field in resourceGraph.GetFields(fieldSelector))
+            foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
                 newSparseFieldSet = ExcludeField(newSparseFieldSet, field);
             }
@@ -69,7 +70,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            var fieldSet = sparseFieldSet.Fields.ToHashSet();
+            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
             fieldSet.Remove(fieldToExclude);
             return new SparseFieldSetExpression(fieldSet);
         }

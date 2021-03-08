@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
     {
         private readonly CustomRouteDbContext _dbContext;
 
-        public TownsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<Town> resourceService, CustomRouteDbContext dbContext)
+        public TownsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Town> resourceService, CustomRouteDbContext dbContext)
             : base(options, loggerFactory, resourceService)
         {
             _dbContext = dbContext;
@@ -27,11 +27,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         [HttpGet("largest-{count}")]
         public async Task<IActionResult> GetLargestTownsAsync(int count, CancellationToken cancellationToken)
         {
-            var query = _dbContext.Towns
-                .OrderByDescending(town => town.Civilians.Count)
-                .Take(count);
+            IQueryable<Town> query = _dbContext.Towns.OrderByDescending(town => town.Civilians.Count).Take(count);
 
-            var results = await query.ToListAsync(cancellationToken);
+            List<Town> results = await query.ToListAsync(cancellationToken);
             return Ok(results);
         }
     }

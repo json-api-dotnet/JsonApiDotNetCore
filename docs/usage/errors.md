@@ -5,6 +5,7 @@ You can create a custom error by throwing a `JsonApiException` (which accepts an
 Please keep in mind that JSON:API requires Title to be a generic message, while Detail should contain information about the specific problem occurence.
 
 From a controller method:
+
 ```c#
 return Conflict(new Error(HttpStatusCode.Conflict)
 {
@@ -14,6 +15,7 @@ return Conflict(new Error(HttpStatusCode.Conflict)
 ```
 
 From other code:
+
 ```c#
 throw new JsonApiException(new Error(HttpStatusCode.Conflict)
 {

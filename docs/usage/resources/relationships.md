@@ -37,8 +37,11 @@ However, under the covers it will use the join type and Entity Framework Core's 
 ```c#
 public class Article : Identifiable
 {
-    [NotMapped] // tells Entity Framework Core to ignore this property
-    [HasManyThrough(nameof(ArticleTags))] // tells JsonApiDotNetCore to use the join table below
+    // tells Entity Framework Core to ignore this property
+    [NotMapped]
+
+    // tells JsonApiDotNetCore to use the join table below
+    [HasManyThrough(nameof(ArticleTags))]
     public ICollection<Tag> Tags { get; set; }
 
     // this is the Entity Framework Core navigation to the join table
@@ -92,7 +95,8 @@ public class ShippingAddress : Identifiable
         get { return Country.DisplayName; }
     }
 
-    [EagerLoad] // not exposed as resource, but adds .Include("Country") to the query
+    // not exposed as resource, but adds .Include("Country") to the query
+    [EagerLoad]
     public Country Country { get; set; }
 }
 

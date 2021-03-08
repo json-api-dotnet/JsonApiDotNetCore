@@ -26,10 +26,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         [Range(typeof(long), "0", "9223372036854775807")]
         public long SizeInBytes { get; set; }
 
-        [HasMany] 
+        [HasMany]
         public ICollection<SystemDirectory> Subdirectories { get; set; }
 
-        [HasMany] 
+        [HasMany]
         public ICollection<SystemFile> Files { get; set; }
 
         [HasOne]
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         [HasOne]
         public SystemDirectory AlsoSelf { get; set; }
 
-        [HasOne] 
+        [HasOne]
         public SystemDirectory Parent { get; set; }
     }
 }

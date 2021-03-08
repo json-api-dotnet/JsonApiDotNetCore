@@ -19,9 +19,14 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public class InvalidModelStateException : JsonApiException
     {
-        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType,
-            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, bool includeExceptionStackTraceInErrors,
+            NamingStrategy namingStrategy)
             : this(FromModelStateDictionary(modelState, resourceType), includeExceptionStackTraceInErrors, namingStrategy)
+        {
+        }
+
+        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+            : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingStrategy))
         {
         }
 
@@ -32,7 +37,7 @@ namespace JsonApiDotNetCore.Errors
 
             var violations = new List<ModelStateViolation>();
 
-            foreach (var (propertyName, entry) in modelState)
+            foreach ((string propertyName, ModelStateEntry entry) in modelState)
             {
                 AddValidationErrors(entry, propertyName, resourceType, violations);
             }
@@ -40,8 +45,7 @@ namespace JsonApiDotNetCore.Errors
             return violations;
         }
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType,
-            List<ModelStateViolation> violations)
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, List<ModelStateViolation> violations)
         {
             foreach (ModelError error in entry.Errors)
             {
@@ -50,14 +54,8 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations,
-            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
-            : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingStrategy))
-        {
-        }
-
-        private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, 
-            bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
+        private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors,
+            NamingStrategy namingStrategy)
         {
             ArgumentGuard.NotNull(violations, nameof(violations));
             ArgumentGuard.NotNull(namingStrategy, nameof(namingStrategy));
@@ -70,7 +68,7 @@ namespace JsonApiDotNetCore.Errors
         {
             if (violation.Error.Exception is JsonApiException jsonApiException)
             {
-                foreach (var error in jsonApiException.Errors)
+                foreach (Error error in jsonApiException.Errors)
                 {
                     yield return error;
                 }
@@ -78,16 +76,16 @@ namespace JsonApiDotNetCore.Errors
             else
             {
                 string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
-                var attributePath = violation.Prefix + attributeName;
+                string attributePath = violation.Prefix + attributeName;
 
                 yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
             }
         }
 
-        private static string GetDisplayNameForProperty(string propertyName, Type resourceType,
-            NamingStrategy namingStrategy)
+        private static string GetDisplayNameForProperty(string propertyName, Type resourceType, NamingStrategy namingStrategy)
         {
             PropertyInfo property = resourceType.GetProperty(propertyName);
+
             if (property != null)
             {
                 var attrAttribute = property.GetCustomAttribute<AttrAttribute>();
@@ -97,8 +95,7 @@ namespace JsonApiDotNetCore.Errors
             return propertyName;
         }
 
-        private static Error FromModelError(ModelError modelError, string attributePath,
-            bool includeExceptionStackTraceInErrors)
+        private static Error FromModelError(ModelError modelError, string attributePath, bool includeExceptionStackTraceInErrors)
         {
             var error = new Error(HttpStatusCode.UnprocessableEntity)
             {

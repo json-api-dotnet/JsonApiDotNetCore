@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
@@ -11,8 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 {
-    public sealed class SortTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_primary_resources()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(3);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(3);
             posts[0].Caption = "B";
             posts[1].Caption = "A";
             posts[2].Caption = "C";
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogPosts?sort=caption";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_single_primary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -64,17 +64,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}?sort=id";
+            string route = $"/blogPosts/{post.StringId}?sort=id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_secondary_resources()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(3);
             blog.Posts[0].Caption = "B";
             blog.Posts[1].Caption = "A";
@@ -97,10 +97,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/posts?sort=caption";
+            string route = $"/blogs/{blog.StringId}/posts?sort=caption";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_single_secondary_resource()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -123,17 +123,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}/author?sort=id";
+            string route = $"/blogPosts/{post.StringId}/author?sort=id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasMany_relationship()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[0].Posts = _fakers.BlogPost.Generate(2);
             blogs[1].Posts = _fakers.BlogPost.Generate(1);
 
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogs?sort=count(posts)";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -172,7 +172,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasManyThrough_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+
             posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -180,6 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                     Label = _fakers.Label.Generate()
                 }
             };
+
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -202,7 +204,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogPosts?sort=-count(labels)";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -216,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_scope_of_HasMany_relationship()
         {
             // Arrange
-            var account = _fakers.WebAccount.Generate();
+            WebAccount account = _fakers.WebAccount.Generate();
             account.Posts = _fakers.BlogPost.Generate(3);
             account.Posts[0].Caption = "B";
             account.Posts[1].Caption = "A";
@@ -228,10 +230,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/webAccounts/{account.StringId}?include=posts&sort[posts]=caption";
+            string route = $"/webAccounts/{account.StringId}?include=posts&sort[posts]=caption";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -249,7 +251,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_scope_of_HasMany_relationship_on_secondary_resource()
         {
             // Arrange
-            var blog = _fakers.Blog.Generate();
+            Blog blog = _fakers.Blog.Generate();
             blog.Owner = _fakers.WebAccount.Generate();
             blog.Owner.Posts = _fakers.BlogPost.Generate(3);
             blog.Owner.Posts[0].Caption = "B";
@@ -262,10 +264,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogs/{blog.StringId}/owner?include=posts&sort[posts]=caption";
+            string route = $"/blogs/{blog.StringId}/owner?include=posts&sort[posts]=caption";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -283,7 +285,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_scope_of_HasManyThrough_relationship()
         {
             // Arrange
-            var post = _fakers.BlogPost.Generate();
+            BlogPost post = _fakers.BlogPost.Generate();
+
             post.BlogPostLabels = new HashSet<BlogPostLabel>
             {
                 new BlogPostLabel
@@ -310,10 +313,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
                 await dbContext.SaveChangesAsync();
             });
 
-            var route = $"/blogPosts/{post.StringId}?include=labels&sort[labels]=name";
+            string route = $"/blogPosts/{post.StringId}?include=labels&sort[labels]=name";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -331,7 +334,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_multiple_fields_in_multiple_scopes()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[0].Title = "Z";
             blogs[1].Title = "Y";
 
@@ -360,7 +363,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogs?include=posts.comments&sort=title&sort[posts]=caption,url&sort[posts.comments]=-createdAt";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -397,7 +400,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_on_HasOne_relationship()
         {
             // Arrange
-            var posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
             posts[0].Author = _fakers.WebAccount.Generate();
             posts[1].Author = _fakers.WebAccount.Generate();
 
@@ -414,7 +417,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogPosts?sort=-author.displayName";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -428,7 +431,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_in_multiple_scopes()
         {
             // Arrange
-            var blogs = _fakers.Blog.Generate(2);
+            List<Blog> blogs = _fakers.Blog.Generate(2);
             blogs[0].Title = "Cooking";
             blogs[1].Title = "Technology";
 
@@ -451,7 +454,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/blogs?include=owner.posts.comments&sort=-title&sort[owner.posts]=-caption&sort[owner.posts.comments]=-createdAt";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -475,14 +478,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort[doesNotExist]=id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
@@ -496,14 +499,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort[posts.doesNotExist]=id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
@@ -517,14 +520,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort=dateOfBirth";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            var error = responseDocument.Errors[0];
+            Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Sorting on the requested attribute is not allowed.");
             error.Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
@@ -535,7 +538,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Can_sort_descending_by_ID()
         {
             // Arrange
-            var accounts = _fakers.WebAccount.Generate(3);
+            List<WebAccount> accounts = _fakers.WebAccount.Generate(3);
             accounts[0].Id = 3000;
             accounts[1].Id = 2000;
             accounts[2].Id = 1000;
@@ -554,7 +557,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort=displayName,-id";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -569,7 +572,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public async Task Sorts_by_ID_if_none_specified()
         {
             // Arrange
-            var accounts = _fakers.WebAccount.Generate(4);
+            List<WebAccount> accounts = _fakers.WebAccount.Generate(4);
             accounts[0].Id = 300;
             accounts[1].Id = 200;
             accounts[2].Id = 100;
@@ -585,7 +588,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts";
 
             // Act
-            var (httpResponse, responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

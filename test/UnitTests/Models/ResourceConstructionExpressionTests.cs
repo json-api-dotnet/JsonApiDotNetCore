@@ -18,10 +18,8 @@ namespace UnitTests.Models
             NewExpression newExpression = factory.CreateNewExpression(typeof(ResourceWithoutConstructor));
 
             // Assert
-            var function = Expression
-                .Lambda<Func<ResourceWithoutConstructor>>(newExpression)
-                .Compile();
-            
+            Func<ResourceWithoutConstructor> function = Expression.Lambda<Func<ResourceWithoutConstructor>>(newExpression).Compile();
+
             ResourceWithoutConstructor resource = function();
             Assert.NotNull(resource);
         }
@@ -37,8 +35,8 @@ namespace UnitTests.Models
 
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(
-                "Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor': Parameter 'text' could not be resolved.",
+
+            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor': Parameter 'text' could not be resolved.",
                 exception.Message);
         }
     }

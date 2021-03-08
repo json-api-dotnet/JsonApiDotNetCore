@@ -11,15 +11,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     /// The base class for parsing query string parameters, using the Recursive Descent algorithm.
     /// </summary>
     /// <remarks>
-    /// Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions.
-    /// Implementations should throw <see cref="QueryParseException"/> on invalid input.
+    /// Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions. Implementations
+    /// should throw <see cref="QueryParseException" /> on invalid input.
     /// </remarks>
     [PublicAPI]
     public abstract class QueryExpressionParser
     {
-        private protected ResourceFieldChainResolver ChainResolver { get; }
-
         protected Stack<Token> TokenStack { get; private set; }
+        private protected ResourceFieldChainResolver ChainResolver { get; }
 
         protected QueryExpressionParser(IResourceContextProvider resourceContextProvider)
         {
@@ -41,7 +40,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
             {
-                var chain = OnResolveFieldChain(token.Value, chainRequirements);
+                IReadOnlyCollection<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value, chainRequirements);
+
                 if (chain.Any())
                 {
                     return new ResourceFieldChainExpression(chain);

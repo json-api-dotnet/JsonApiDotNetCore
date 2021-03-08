@@ -7,8 +7,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
     public sealed class ArtGalleriesController : JsonApiController<ArtGallery>
     {
-        public ArtGalleriesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IResourceService<ArtGallery> resourceService)
+        public ArtGalleriesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ArtGallery> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

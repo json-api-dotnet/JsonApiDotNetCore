@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Repositories
             where TResource : class, IIdentifiable
         {
             dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (IReadOnlyCollection<TResource>) await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<TResource>)await repository.GetAsync(layer, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Repositories
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             dynamic repository = ResolveReadRepository(resourceType);
-            return (IReadOnlyCollection<IIdentifiable>) await repository.GetAsync(layer, cancellationToken);
+            return (IReadOnlyCollection<IIdentifiable>)await repository.GetAsync(layer, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Repositories
             where TResource : class, IIdentifiable
         {
             dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (int) await repository.CountAsync(topFilter, cancellationToken);
+            return (int)await repository.CountAsync(topFilter, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -106,7 +106,8 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
@@ -114,7 +115,8 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
+            CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
@@ -123,12 +125,12 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual object ResolveReadRepository(Type resourceType)
         {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {
-                var intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceContext.ResourceType);
-                var intRepository = _serviceProvider.GetService(intRepositoryType);
+                Type intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceContext.ResourceType);
+                object intRepository = _serviceProvider.GetService(intRepositoryType);
 
                 if (intRepository != null)
                 {
@@ -136,19 +138,19 @@ namespace JsonApiDotNetCore.Repositories
                 }
             }
 
-            var resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
 
         private object GetWriteRepository(Type resourceType)
         {
-            var writeRepository = ResolveWriteRepository(resourceType);
+            object writeRepository = ResolveWriteRepository(resourceType);
 
             if (_request.TransactionId != null)
             {
                 if (!(writeRepository is IRepositorySupportsTransaction repository))
                 {
-                    var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                    ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
                     throw new MissingTransactionSupportException(resourceContext.PublicName);
                 }
 
@@ -163,12 +165,12 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual object ResolveWriteRepository(Type resourceType)
         {
-            var resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {
-                var intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceContext.ResourceType);
-                var intRepository = _serviceProvider.GetService(intRepositoryType);
+                Type intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceContext.ResourceType);
+                object intRepository = _serviceProvider.GetService(intRepositoryType);
 
                 if (intRepository != null)
                 {
@@ -176,7 +178,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
             }
 
-            var resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
     }

@@ -29,9 +29,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
-        public JsonApiReader(IJsonApiDeserializer deserializer,
-            IJsonApiRequest request,
-            IResourceContextProvider resourceContextProvider,
+        public JsonApiReader(IJsonApiDeserializer deserializer, IJsonApiRequest request, IResourceContextProvider resourceContextProvider,
             ILoggerFactory loggerFactory)
         {
             ArgumentGuard.NotNull(deserializer, nameof(deserializer));
@@ -55,6 +53,7 @@ namespace JsonApiDotNetCore.Serialization
             _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
 
             object model = null;
+
             if (!string.IsNullOrWhiteSpace(body))
             {
                 try
@@ -93,17 +92,15 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (_request.Kind != EndpointKind.AtomicOperations)
             {
-                return new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body,
-                    exception);
+                return new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
             }
 
             // In contrast to resource endpoints, we don't include the request body for operations because they are usually very long.
-            var requestException =
-                new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
+            var requestException = new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
 
             if (exception.AtomicOperationIndex != null)
             {
-                foreach (var error in requestException.Errors)
+                foreach (Error error in requestException.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
                 }
@@ -111,7 +108,7 @@ namespace JsonApiDotNetCore.Serialization
 
             return requestException;
         }
-        
+
         private bool RequiresRequestBody(string requestMethod)
         {
             if (requestMethod == HttpMethods.Post || requestMethod == HttpMethods.Patch)
@@ -154,31 +151,30 @@ namespace JsonApiDotNetCore.Serialization
 
         private void ValidateIncomingResourceType(object model, HttpRequest httpRequest)
         {
-            var endpointResourceType = GetResourceTypeFromEndpoint();
+            Type endpointResourceType = GetResourceTypeFromEndpoint();
+
             if (endpointResourceType == null)
             {
                 return;
             }
 
-            var bodyResourceTypes = GetResourceTypesFromRequestBody(model);
-            foreach (var bodyResourceType in bodyResourceTypes)
+            IEnumerable<Type> bodyResourceTypes = GetResourceTypesFromRequestBody(model);
+
+            foreach (Type bodyResourceType in bodyResourceTypes)
             {
                 if (!endpointResourceType.IsAssignableFrom(bodyResourceType))
                 {
-                    var resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
-                    var resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+                    ResourceContext resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
+                    ResourceContext resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
 
-                    throw new ResourceTypeMismatchException(new HttpMethod(httpRequest.Method),
-                        httpRequest.Path, resourceFromEndpoint, resourceFromBody);
+                    throw new ResourceTypeMismatchException(new HttpMethod(httpRequest.Method), httpRequest.Path, resourceFromEndpoint, resourceFromBody);
                 }
             }
         }
 
         private Type GetResourceTypeFromEndpoint()
         {
-            return _request.Kind == EndpointKind.Primary
-                ? _request.PrimaryResource.ResourceType 
-                : _request.SecondaryResource?.ResourceType;
+            return _request.Kind == EndpointKind.Primary ? _request.PrimaryResource.ResourceType : _request.SecondaryResource?.ResourceType;
         }
 
         private IEnumerable<Type> GetResourceTypesFromRequestBody(object model)
@@ -194,6 +190,7 @@ namespace JsonApiDotNetCore.Serialization
         private void ValidateRequestIncludesId(object model, string body)
         {
             bool hasMissingId = model is IEnumerable list ? HasMissingId(list) : HasMissingId(model);
+
             if (hasMissingId)
             {
                 throw new InvalidRequestBodyException("Request body must include 'id' element.", null, body);
@@ -204,7 +201,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (_request.Kind == EndpointKind.Primary)
             {
-                if (TryGetId(model, out var bodyId) && bodyId != _request.PrimaryId)
+                if (TryGetId(model, out string bodyId) && bodyId != _request.PrimaryId)
                 {
                     throw new ResourceIdMismatchException(bodyId, _request.PrimaryId, requestPath);
                 }
@@ -224,7 +221,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private bool HasMissingId(IEnumerable models)
         {
-            foreach (var model in models)
+            foreach (object model in models)
             {
                 if (TryGetId(model, out string id) && id == null)
                 {
