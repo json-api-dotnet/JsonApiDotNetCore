@@ -25,7 +25,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => null;
 
-        public RootNode(IEnumerable<TResource> uniqueResources, IReadOnlyCollection<RelationshipProxy> populatedRelationships, IReadOnlyCollection<RelationshipProxy> allRelationships)
+        public RootNode(IEnumerable<TResource> uniqueResources, IReadOnlyCollection<RelationshipProxy> populatedRelationships,
+            IReadOnlyCollection<RelationshipProxy> allRelationships)
         {
             ResourceType = typeof(TResource);
             _uniqueResources = new HashSet<TResource>(uniqueResources);
