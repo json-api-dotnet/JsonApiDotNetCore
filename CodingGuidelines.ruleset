@@ -11,7 +11,7 @@
     <Rule Id="AV1536" Action="None" />
     <Rule Id="AV1537" Action="None" />
     <Rule Id="AV1551" Action="Info" />
-    <Rule Id="AV1555" Action="Info" />
+    <Rule Id="AV1555" Action="Warning" />
     <Rule Id="AV1564" Action="Info" />
     <Rule Id="AV1568" Action="Warning" />
     <Rule Id="AV1706" Action="Warning" />
