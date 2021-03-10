@@ -26,7 +26,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
@@ -50,7 +50,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
@@ -74,7 +74,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);
@@ -93,7 +93,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.BeforeCreate(todoList, ResourcePipeline.Post);

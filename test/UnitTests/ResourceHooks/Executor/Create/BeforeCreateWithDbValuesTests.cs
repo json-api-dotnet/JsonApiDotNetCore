@@ -30,7 +30,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
         };
 
         private readonly string _personId;
-        private readonly List<TodoItem> _todoList;
+        private readonly IList<TodoItem> _todoList;
         private readonly DbContextOptions<AppDbContext> _options;
 
         public BeforeCreateWithDbValuesTests()

@@ -126,7 +126,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
         private bool CheckImplicitTodoItems(IRelationshipsDictionary<TodoItem> rh)
         {
-            Dictionary<RelationshipAttribute, HashSet<TodoItem>> todoItems = rh.GetByRelationship<Person>();
+            IDictionary<RelationshipAttribute, HashSet<TodoItem>> todoItems = rh.GetByRelationship<Person>();
             return todoItems.Count == 2;
         }
 

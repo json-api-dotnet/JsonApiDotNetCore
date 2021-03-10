@@ -15,6 +15,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <summary>
         /// Gets a dictionary of affected resources grouped by affected relationships.
         /// </summary>
-        Dictionary<RelationshipAttribute, HashSet<TRightResource>> AffectedRelationships { get; }
+        IDictionary<RelationshipAttribute, HashSet<TRightResource>> AffectedRelationships { get; }
     }
 }

@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
             return _genericProcessorFactory.Get<IResourceReadRepository<TResource, TId>>(typeof(IResourceReadRepository<,>), typeof(TResource), typeof(TId));
         }
 
-        public Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
+        public IDictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(IDictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
             IEnumerable existingRightResources = null)
         {
             List<IIdentifiable> existingRightResourceList = existingRightResources?.Cast<IIdentifiable>().ToList();

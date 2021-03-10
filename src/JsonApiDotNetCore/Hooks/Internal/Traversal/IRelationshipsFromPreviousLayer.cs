@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <returns>
         /// The right side resources.
         /// </returns>
-        Dictionary<RelationshipAttribute, IEnumerable> GetRightResources();
+        IDictionary<RelationshipAttribute, IEnumerable> GetRightResources();
 
         /// <summary>
         /// Grouped by relationship to the previous layer, gets all the resources of the previous layer
@@ -23,6 +23,6 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <returns>
         /// The right side resources.
         /// </returns>
-        Dictionary<RelationshipAttribute, IEnumerable> GetLeftResources();
+        IDictionary<RelationshipAttribute, IEnumerable> GetLeftResources();
     }
 }

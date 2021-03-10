@@ -62,7 +62,7 @@ namespace UnitTests.ResourceHooks
             // @formatter:keep_existing_linebreaks restore
         }
 
-        protected List<TodoItem> CreateTodoWithToOnePerson()
+        protected IList<TodoItem> CreateTodoWithToOnePerson()
         {
             TodoItem todoItem = TodoFaker.Generate();
             Person person = PersonFaker.Generate();
@@ -72,19 +72,19 @@ namespace UnitTests.ResourceHooks
             return todoList;
         }
 
-        protected HashSet<TodoItem> CreateTodoWithOwner()
+        protected IEnumerable<TodoItem> CreateTodoWithOwner()
         {
             TodoItem todoItem = TodoFaker.Generate();
             Person person = PersonFaker.Generate();
 
-            var todoList = new HashSet<TodoItem>
+            var todoSet = new HashSet<TodoItem>
             {
                 todoItem
             };
 
-            person.AssignedTodoItems = todoList;
+            person.AssignedTodoItems = todoSet;
             todoItem.Owner = person;
-            return todoList;
+            return todoSet;
         }
 
         protected (List<Article>, List<Tag>) CreateManyToManyData()

@@ -22,7 +22,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(_targetHooks, DisableDbValues);
             (IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
             // Act
             hookExecutor.BeforeDelete(todoList, ResourcePipeline.Delete);
 
@@ -38,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             IHooksDiscovery<TodoItem> discovery = SetDiscoverableHooks<TodoItem>(NoHooks, DisableDbValues);
             (IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> resourceDefinitionMock) = CreateTestObjects(discovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
             // Act
             hookExecutor.BeforeDelete(todoList, ResourcePipeline.Delete);
 

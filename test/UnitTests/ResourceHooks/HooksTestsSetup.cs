@@ -248,9 +248,9 @@ namespace UnitTests.ResourceHooks
             return resourceDefinition;
         }
 
-        protected List<List<RelationshipAttribute>> GetIncludedRelationshipsChains(params string[] chains)
+        protected IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> GetIncludedRelationshipsChains(params string[] chains)
         {
-            var parsedChains = new List<List<RelationshipAttribute>>();
+            var parsedChains = new List<IReadOnlyCollection<RelationshipAttribute>>();
 
             foreach (string chain in chains)
             {
@@ -260,7 +260,7 @@ namespace UnitTests.ResourceHooks
             return parsedChains;
         }
 
-        private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        private IReadOnlyCollection<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
             ResourceContext resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
@@ -278,7 +278,7 @@ namespace UnitTests.ResourceHooks
             return parsedChain;
         }
 
-        protected IEnumerable<IQueryConstraintProvider> ConvertInclusionChains(List<List<RelationshipAttribute>> inclusionChains)
+        protected IEnumerable<IQueryConstraintProvider> ConvertInclusionChains(IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> inclusionChains)
         {
             var expressionsInScope = new List<ExpressionInScope>();
 

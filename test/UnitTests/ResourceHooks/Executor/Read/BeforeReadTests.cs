@@ -44,7 +44,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 CreateTestObjects(todoDiscovery, personDiscovery);
 
             // eg a call on api/todoItems?include=owner,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
@@ -69,7 +71,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
@@ -95,7 +99,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
@@ -120,7 +126,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
@@ -145,7 +153,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act
@@ -170,7 +180,9 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
             // eg a call on api/todoItems?include=owner.passport,assignee,stakeHolders
-            List<List<RelationshipAttribute>> relationshipsChains = GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipsChains =
+                GetIncludedRelationshipsChains("owner.passport", "assignee", "stakeHolders");
+
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(ConvertInclusionChains(relationshipsChains).GetEnumerator());
 
             // Act

@@ -6,7 +6,7 @@
     <Rule Id="AV1506" Action="Warning" />
     <Rule Id="AV1507" Action="Warning" />
     <Rule Id="AV1008" Action="Warning" />
-    <Rule Id="AV1130" Action="Info" />
+    <Rule Id="AV1130" Action="Warning" />
     <Rule Id="AV1135" Action="Info" />
     <Rule Id="AV1536" Action="None" />
     <Rule Id="AV1537" Action="None" />

@@ -20,7 +20,7 @@ namespace UnitTests.Serialization.Server
         {
             // Arrange
             (Article article, Person author, _, Person reviewer, _) = GetAuthorChainInstances();
-            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            IReadOnlyCollection<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
@@ -49,7 +49,7 @@ namespace UnitTests.Serialization.Server
             IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
-            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            IReadOnlyCollection<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             builder.IncludeRelationshipChain(authorChain, article);
             builder.IncludeRelationshipChain(authorChain, secondArticle);
 
@@ -62,12 +62,12 @@ namespace UnitTests.Serialization.Server
         public void BuildIncluded_OverlappingDeeplyNestedCircularChains_CanBuild()
         {
             // Arrange
-            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
+            IReadOnlyCollection<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author.blogs.reviewer.favoriteFood");
             (Article article, Person author, _, Person reviewer, Food reviewerFood) = GetAuthorChainInstances();
             Blog sharedBlog = author.Blogs.First();
             Person sharedBlogAuthor = reviewer;
             Song authorSong = GetReviewerChainInstances(article, sharedBlog, sharedBlogAuthor);
-            List<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
+            IReadOnlyCollection<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer.blogs.author.favoriteSong");
             IncludedResourceObjectBuilder builder = GetBuilder();
 
             // Act
@@ -99,8 +99,8 @@ namespace UnitTests.Serialization.Server
             articles.ForEach(article => article.Author = person);
             articles.ForEach(article => article.Reviewer = person);
             IncludedResourceObjectBuilder builder = GetBuilder();
-            List<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author");
-            List<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer");
+            IReadOnlyCollection<RelationshipAttribute> authorChain = GetIncludedRelationshipsChain("author");
+            IReadOnlyCollection<RelationshipAttribute> reviewerChain = GetIncludedRelationshipsChain("reviewer");
 
             foreach (Article article in articles)
             {
@@ -158,7 +158,7 @@ namespace UnitTests.Serialization.Server
             return new AuthorChainInstances(article, author, authorFood, reviewer, reviewerFood);
         }
 
-        private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        private IReadOnlyCollection<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
         {
             var parsedChain = new List<RelationshipAttribute>();
             ResourceContext resourceContext = ResourceGraph.GetResourceContext<Article>();

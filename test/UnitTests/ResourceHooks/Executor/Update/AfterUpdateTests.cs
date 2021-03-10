@@ -26,7 +26,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -47,7 +47,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -67,7 +67,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);
@@ -87,7 +87,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             (_, _, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TodoItem>> todoResourceMock,
                 Mock<IResourceHookContainer<Person>> ownerResourceMock) = CreateTestObjects(todoDiscovery, personDiscovery);
 
-            HashSet<TodoItem> todoList = CreateTodoWithOwner();
+            IEnumerable<TodoItem> todoList = CreateTodoWithOwner();
 
             // Act
             hookExecutor.AfterUpdate(todoList, ResourcePipeline.Patch);

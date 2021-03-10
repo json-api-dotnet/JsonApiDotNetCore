@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
@@ -24,7 +25,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <value>
         /// The relationships to next layer.
         /// </value>
-        RelationshipProxy[] RelationshipsToNextLayer { get; }
+        IReadOnlyCollection<RelationshipProxy> RelationshipsToNextLayer { get; }
 
         /// <summary>
         /// Relationships to the previous layer

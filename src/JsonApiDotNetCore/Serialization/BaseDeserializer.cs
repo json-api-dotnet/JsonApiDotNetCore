@@ -164,7 +164,9 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
+#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         protected JToken LoadJToken(string body)
+#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         {
             using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
             {

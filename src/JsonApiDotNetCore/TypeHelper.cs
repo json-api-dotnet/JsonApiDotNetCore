@@ -175,24 +175,6 @@ namespace JsonApiDotNetCore
         }
 
         /// <summary>
-        /// Helper method that "unboxes" the TValue from the relationship dictionary into
-        /// </summary>
-        public static Dictionary<RelationshipAttribute, HashSet<TValueOut>> ConvertRelationshipDictionary<TValueOut>(
-            Dictionary<RelationshipAttribute, IEnumerable> relationships)
-        {
-            return relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TValueOut>)pair.Value);
-        }
-
-        /// <summary>
-        /// Converts a dictionary of AttrAttributes to the underlying PropertyInfo that is referenced
-        /// </summary>
-        public static Dictionary<PropertyInfo, HashSet<TValueOut>> ConvertAttributeDictionary<TValueOut>(IEnumerable<AttrAttribute> attributes,
-            HashSet<TValueOut> resources)
-        {
-            return attributes.ToDictionary(attr => attr.Property, _ => resources);
-        }
-
-        /// <summary>
         /// Creates an instance of the specified generic type
         /// </summary>
         /// <returns>

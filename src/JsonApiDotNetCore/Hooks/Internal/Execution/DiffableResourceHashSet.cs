@@ -17,10 +17,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     {
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
-        private readonly Dictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
+        private readonly IDictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
 
         public DiffableResourceHashSet(HashSet<TResource> requestResources, HashSet<TResource> databaseResources,
-            Dictionary<RelationshipAttribute, HashSet<TResource>> relationships, Dictionary<PropertyInfo, HashSet<TResource>> updatedAttributes)
+            IDictionary<RelationshipAttribute, HashSet<TResource>> relationships, IDictionary<PropertyInfo, HashSet<TResource>> updatedAttributes)
             : base(requestResources, relationships)
         {
             _databaseValues = databaseResources;
@@ -32,12 +32,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// Used internally by the ResourceHookExecutor to make live a bit easier with generics
         /// </summary>
         internal DiffableResourceHashSet(IEnumerable requestResources, IEnumerable databaseResources,
-            Dictionary<RelationshipAttribute, IEnumerable> relationships, ITargetedFields targetedFields)
+            IDictionary<RelationshipAttribute, IEnumerable> relationships, ITargetedFields targetedFields)
             : this((HashSet<TResource>)requestResources, (HashSet<TResource>)databaseResources,
-                TypeHelper.ConvertRelationshipDictionary<TResource>(relationships),
-                targetedFields.Attributes == null
-                    ? null
-                    : TypeHelper.ConvertAttributeDictionary(targetedFields.Attributes, (HashSet<TResource>)requestResources))
+                relationships.ToDictionary(pair => pair.Key, pair => (HashSet<TResource>)pair.Value),
+                targetedFields.Attributes?.ToDictionary(attr => attr.Property, _ => (HashSet<TResource>)requestResources))
         {
         }
 

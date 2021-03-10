@@ -121,9 +121,9 @@ namespace UnitTests.ResourceHooks
             var relationshipsDictionary = new RelationshipsDictionary<Dummy>(_relationships);
 
             // Act
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = relationshipsDictionary.GetByRelationship<ToOne>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = relationshipsDictionary.GetByRelationship<ToMany>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = relationshipsDictionary.GetByRelationship<NotTargeted>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = relationshipsDictionary.GetByRelationship<ToOne>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toManies = relationshipsDictionary.GetByRelationship<ToMany>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = relationshipsDictionary.GetByRelationship<NotTargeted>();
 
             // Assert
             AssertRelationshipDictionaryGetters(relationshipsDictionary, toOnes, toManies, notTargeted);
@@ -153,10 +153,10 @@ namespace UnitTests.ResourceHooks
             var resources = new ResourceHashSet<Dummy>(_allResources, _relationships);
 
             // Act
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = resources.GetByRelationship<ToOne>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = resources.GetByRelationship<ToMany>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = resources.GetByRelationship<NotTargeted>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = resources.AffectedRelationships;
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = resources.GetByRelationship<ToOne>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toManies = resources.GetByRelationship<ToMany>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = resources.GetByRelationship<NotTargeted>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = resources.AffectedRelationships;
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
@@ -180,10 +180,10 @@ namespace UnitTests.ResourceHooks
             var diffs = new DiffableResourceHashSet<Dummy>(_allResources, dbResources, _relationships, null);
 
             // Act
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.GetByRelationship<ToOne>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies = diffs.GetByRelationship<ToMany>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = diffs.GetByRelationship<NotTargeted>();
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = diffs.AffectedRelationships;
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toOnes = diffs.GetByRelationship<ToOne>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toManies = diffs.GetByRelationship<ToMany>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted = diffs.GetByRelationship<NotTargeted>();
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> allRelationships = diffs.AffectedRelationships;
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
@@ -281,9 +281,9 @@ namespace UnitTests.ResourceHooks
         }
 
         [AssertionMethod]
-        private void AssertRelationshipDictionaryGetters(Dictionary<RelationshipAttribute, HashSet<Dummy>> relationshipsDictionary,
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> toOnes, Dictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
-            Dictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
+        private void AssertRelationshipDictionaryGetters(IDictionary<RelationshipAttribute, HashSet<Dummy>> relationshipsDictionary,
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> toOnes, IDictionary<RelationshipAttribute, HashSet<Dummy>> toManies,
+            IDictionary<RelationshipAttribute, HashSet<Dummy>> notTargeted)
         {
             Assert.Contains(_firstToOneAttr, toOnes.Keys);
             Assert.Contains(_secondToOneAttr, toOnes.Keys);

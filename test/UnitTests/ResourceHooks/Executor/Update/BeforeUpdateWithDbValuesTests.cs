@@ -32,7 +32,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
         };
 
         private readonly string _personId;
-        private readonly List<TodoItem> _todoList;
+        private readonly IList<TodoItem> _todoList;
         private readonly DbContextOptions<AppDbContext> _options;
 
         public BeforeUpdateWithDbValuesTests()
@@ -285,7 +285,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
 
         private bool PersonCheck(string checksum, IRelationshipsDictionary<Person> helper)
         {
-            Dictionary<RelationshipAttribute, HashSet<Person>> entries = helper.GetByRelationship<TodoItem>();
+            IDictionary<RelationshipAttribute, HashSet<Person>> entries = helper.GetByRelationship<TodoItem>();
             return entries.Single().Value.Single().LastName == checksum;
         }
     }

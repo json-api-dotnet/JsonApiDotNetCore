@@ -14,18 +14,18 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
-        private readonly RelationshipProxy[] _allRelationshipsToNextLayer;
+        private readonly IReadOnlyCollection<RelationshipProxy> _allRelationshipsToNextLayer;
         private HashSet<TResource> _uniqueResources;
         public Type ResourceType { get; }
         public IEnumerable UniqueResources => _uniqueResources;
-        public RelationshipProxy[] RelationshipsToNextLayer { get; }
+        public IReadOnlyCollection<RelationshipProxy> RelationshipsToNextLayer { get; }
 
         /// <summary>
         /// The root node does not have a parent layer and therefore does not have any relationships to any previous layer
         /// </summary>
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => null;
 
-        public RootNode(IEnumerable<TResource> uniqueResources, RelationshipProxy[] populatedRelationships, RelationshipProxy[] allRelationships)
+        public RootNode(IEnumerable<TResource> uniqueResources, IReadOnlyCollection<RelationshipProxy> populatedRelationships, IReadOnlyCollection<RelationshipProxy> allRelationships)
         {
             ResourceType = typeof(TResource);
             _uniqueResources = new HashSet<TResource>(uniqueResources);
@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             _allRelationshipsToNextLayer = allRelationships;
         }
 
-        public Dictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
+        public IDictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
         {
             return _allRelationshipsToNextLayer.GroupBy(proxy => proxy.RightType)
                 .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(proxy => proxy.Attribute, _ => UniqueResources));
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <summary>
         /// The current layer resources grouped by affected relationship to the next layer
         /// </summary>
-        public Dictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
+        public IDictionary<RelationshipAttribute, IEnumerable> LeftsToNextLayer()
         {
             return RelationshipsToNextLayer.ToDictionary(proxy => proxy.Attribute, _ => UniqueResources);
         }

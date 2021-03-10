@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <returns>
         /// The implicitly affected resources by relationship
         /// </returns>
-        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
+        IDictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(IDictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
             IEnumerable existingRightResources = null);
 
         /// <summary>

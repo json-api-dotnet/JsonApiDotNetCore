@@ -20,7 +20,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         public RightType ResourceType { get; }
 
         /// <inheritdoc />
-        public RelationshipProxy[] RelationshipsToNextLayer { get; }
+        public IReadOnlyCollection<RelationshipProxy> RelationshipsToNextLayer { get; }
 
         /// <inheritdoc />
         public IEnumerable UniqueResources
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <inheritdoc />
         public IRelationshipsFromPreviousLayer RelationshipsFromPreviousLayer => _relationshipsFromPreviousLayer;
 
-        public ChildNode(RelationshipProxy[] nextLayerRelationships, RelationshipsFromPreviousLayer<TResource> prevLayerRelationships)
+        public ChildNode(IReadOnlyCollection<RelationshipProxy> nextLayerRelationships, RelationshipsFromPreviousLayer<TResource> prevLayerRelationships)
         {
             ResourceType = typeof(TResource);
             RelationshipsToNextLayer = nextLayerRelationships;
