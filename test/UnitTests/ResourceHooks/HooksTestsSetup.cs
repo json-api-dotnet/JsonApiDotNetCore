@@ -248,46 +248,42 @@ namespace UnitTests.ResourceHooks
             return resourceDefinition;
         }
 
-        protected IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> GetIncludedRelationshipsChains(params string[] chains)
+        protected IncludeExpression ToIncludeExpression(params string[] includePaths)
         {
-            var parsedChains = new List<IReadOnlyCollection<RelationshipAttribute>>();
+            var relationshipChains = new List<ResourceFieldChainExpression>();
 
-            foreach (string chain in chains)
+            foreach (string includePath in includePaths)
             {
-                parsedChains.Add(GetIncludedRelationshipsChain(chain));
+                ResourceFieldChainExpression relationshipChain = GetRelationshipsInPath(includePath);
+                relationshipChains.Add(relationshipChain);
             }
 
-            return parsedChains;
+            return IncludeChainConverter.FromRelationshipChains(relationshipChains);
         }
 
-        private IReadOnlyCollection<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        private ResourceFieldChainExpression GetRelationshipsInPath(string includePath)
         {
-            var parsedChain = new List<RelationshipAttribute>();
             ResourceContext resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
-            string[] splitPath = chain.Split('.');
+            var relationships = new List<RelationshipAttribute>();
 
-            foreach (string requestedRelationship in splitPath)
+            foreach (string relationshipName in includePath.Split('.'))
             {
-                RelationshipAttribute relationship =
-                    resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == requestedRelationship);
+                RelationshipAttribute relationship = resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == relationshipName);
 
-                parsedChain.Add(relationship);
+                relationships.Add(relationship);
+
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
 
-            return parsedChain;
+            return new ResourceFieldChainExpression(relationships);
         }
 
-        protected IEnumerable<IQueryConstraintProvider> ConvertInclusionChains(IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> inclusionChains)
+        protected IEnumerable<IQueryConstraintProvider> Wrap(IncludeExpression includeExpression)
         {
-            var expressionsInScope = new List<ExpressionInScope>();
-
-            if (inclusionChains != null)
+            var expressionsInScope = new List<ExpressionInScope>
             {
-                List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
-                IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
-                expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
-            }
+                new ExpressionInScope(null, includeExpression)
+            };
 
             var mock = new Mock<IQueryConstraintProvider>();
             mock.Setup(provider => provider.GetConstraints()).Returns(expressionsInScope);
