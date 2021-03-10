@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 {
                     // add attributes and relationships of a parsed HasMany relationship
                     IEnumerable<IIdentifiable> items = data.ManyData.Select(ParseIncludedRelationship);
-                    IEnumerable values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
+                    IEnumerable values = CollectionConverter.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
                     hasManyAttr.SetValue(resource, values);
                 }
             }

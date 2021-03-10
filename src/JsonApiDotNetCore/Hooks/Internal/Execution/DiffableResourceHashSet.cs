@@ -15,6 +15,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     public sealed class DiffableResourceHashSet<TResource> : ResourceHashSet<TResource>, IDiffableResourceHashSet<TResource>
         where TResource : class, IIdentifiable
     {
+        // ReSharper disable once StaticMemberInGenericType
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;
         private readonly IDictionary<PropertyInfo, HashSet<TResource>> _updatedAttributes;
@@ -59,15 +62,15 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
 
-            PropertyInfo propertyInfo = TypeHelper.ParseNavigationExpression(navigationAction);
+            PropertyInfo propertyInfo = HooksNavigationParser.ParseNavigationExpression(navigationAction);
             Type propertyType = propertyInfo.PropertyType;
 
-            if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IEnumerable)))
+            if (propertyType.IsOrImplementsInterface(typeof(IEnumerable)))
             {
-                propertyType = TypeHelper.TryGetCollectionElementType(propertyType);
+                propertyType = CollectionConverter.TryGetCollectionElementType(propertyType);
             }
 
-            if (TypeHelper.IsOrImplementsInterface(propertyType, typeof(IIdentifiable)))
+            if (propertyType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 // the navigation action references a relationship. Redirect the call to the relationship dictionary.
                 return base.GetAffected(navigationAction);

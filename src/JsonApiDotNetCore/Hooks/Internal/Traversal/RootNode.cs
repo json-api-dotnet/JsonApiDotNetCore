@@ -36,8 +36,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
         public IDictionary<Type, Dictionary<RelationshipAttribute, IEnumerable>> LeftsToNextLayerByRelationships()
         {
-            return _allRelationshipsToNextLayer.GroupBy(proxy => proxy.RightType)
-                .ToDictionary(gdc => gdc.Key, gdc => gdc.ToDictionary(proxy => proxy.Attribute, _ => UniqueResources));
+            return _allRelationshipsToNextLayer.GroupBy(proxy => proxy.RightType).ToDictionary(grouping => grouping.Key,
+                grouping => grouping.ToDictionary(proxy => proxy.Attribute, _ => UniqueResources));
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <param name="updated">Updated.</param>
         public void UpdateUnique(IEnumerable updated)
         {
-            List<TResource> cast = updated.Cast<TResource>().ToList();
-            IEnumerable<TResource> intersected = _uniqueResources.Intersect(cast, _comparer).Cast<TResource>();
+            List<TResource> list = updated.Cast<TResource>().ToList();
+            IEnumerable<TResource> intersected = _uniqueResources.Intersect(list, _comparer).Cast<TResource>();
             _uniqueResources = new HashSet<TResource>(intersected);
         }
 

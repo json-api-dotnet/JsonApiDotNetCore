@@ -17,6 +17,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     [PublicAPI]
     public class WhereClauseBuilder : QueryClauseBuilder<Type>
     {
+        private static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
         private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
@@ -51,7 +53,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression property = Visit(expression.TargetCollection, argument);
 
-            Type elementType = TypeHelper.TryGetCollectionElementType(property.Type);
+            Type elementType = CollectionConverter.TryGetCollectionElementType(property.Type);
 
             if (elementType == null)
             {
@@ -188,7 +190,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Type leftType = ResolveFixedType(left);
 
-            if (TypeHelper.CanContainNull(leftType))
+            if (TypeConverter.CanContainNull(leftType))
             {
                 return leftType;
             }
@@ -200,7 +202,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             Type rightType = TryResolveFixedType(right);
 
-            if (rightType != null && TypeHelper.CanContainNull(rightType))
+            if (rightType != null && TypeConverter.CanContainNull(rightType))
             {
                 return rightType;
             }
@@ -258,7 +260,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             try
             {
-                return TypeHelper.ConvertType(text, targetType);
+                return TypeConverter.ConvertType(text, targetType);
             }
             catch (FormatException exception)
             {

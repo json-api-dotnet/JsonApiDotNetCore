@@ -13,6 +13,9 @@ namespace JsonApiDotNetCore.Serialization.Building
     [PublicAPI]
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
+        private static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         private readonly ResourceObjectBuilderSettings _settings;
         protected IResourceContextProvider ResourceContextProvider { get; }
 
@@ -110,7 +113,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         private IList<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
             object value = relationship.GetValue(resource);
-            ICollection<IIdentifiable> relatedResources = TypeHelper.ExtractResources(value);
+            ICollection<IIdentifiable> relatedResources = CollectionConverter.ExtractResources(value);
 
             var manyData = new List<ResourceIdentifierObject>();
 
@@ -172,7 +175,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
 
                 if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore &&
-                    Equals(value, TypeHelper.GetDefaultValue(attr.Property.PropertyType)))
+                    Equals(value, TypeConverter.GetDefaultValue(attr.Property.PropertyType)))
                 {
                     return;
                 }

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public sealed class TypeConversionTests
+    public sealed class RuntimeTypeConverterTests
     {
         [Fact]
         public void Can_Convert_DateTimeOffsets()
@@ -14,8 +14,10 @@ namespace UnitTests.Internal
             var dto = new DateTimeOffset(new DateTime(2002, 2, 2), TimeSpan.FromHours(4));
             string formattedString = dto.ToString("O");
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            object result = TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
+            object result = typeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
             Assert.Equal(dto, result);
@@ -27,8 +29,10 @@ namespace UnitTests.Internal
             // Arrange
             const string formattedString = "this_is_not_a_valid_dto";
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            Action action = () => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
+            Action action = () => typeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
             Assert.Throws<FormatException>(action);
@@ -40,8 +44,10 @@ namespace UnitTests.Internal
             // Arrange
             const string formattedString = "1";
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            object result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
+            object result = typeConverter.ConvertType(formattedString, typeof(TestEnum));
 
             // Assert
             Assert.Equal(TestEnum.Test, result);
@@ -52,11 +58,12 @@ namespace UnitTests.Internal
         {
             // Arrange
             var val = new ComplexType();
-
             Type type = val.GetType();
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            object result = TypeHelper.ConvertType(val, type);
+            object result = typeConverter.ConvertType(val, type);
 
             // Assert
             Assert.Equal(val, result);
@@ -71,9 +78,11 @@ namespace UnitTests.Internal
             Type baseType = typeof(BaseType);
             Type iType = typeof(IType);
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            object baseResult = TypeHelper.ConvertType(val, baseType);
-            object iResult = TypeHelper.ConvertType(val, iType);
+            object baseResult = typeConverter.ConvertType(val, baseType);
+            object iResult = typeConverter.ConvertType(val, iType);
 
             // Assert
             Assert.Equal(val, baseResult);
@@ -93,10 +102,12 @@ namespace UnitTests.Internal
                 { typeof(Guid), Guid.Empty }
             };
 
+            var typeConverter = new RuntimeTypeConverter();
+
             foreach (KeyValuePair<Type, object> pair in data)
             {
                 // Act
-                object result = TypeHelper.ConvertType(string.Empty, pair.Key);
+                object result = typeConverter.ConvertType(string.Empty, pair.Key);
 
                 // Assert
                 Assert.Equal(pair.Value, result);
@@ -110,8 +121,10 @@ namespace UnitTests.Internal
             TimeSpan timeSpan = TimeSpan.FromMinutes(45);
             string stringSpan = timeSpan.ToString();
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            object result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
+            object result = typeConverter.ConvertType(stringSpan, typeof(TimeSpan));
 
             // Assert
             Assert.Equal(timeSpan, result);
@@ -123,8 +136,10 @@ namespace UnitTests.Internal
             // Arrange
             const string formattedString = "this_is_not_a_valid_timespan";
 
+            var typeConverter = new RuntimeTypeConverter();
+
             // Act
-            Action action = () => TypeHelper.ConvertType(formattedString, typeof(TimeSpan));
+            Action action = () => typeConverter.ConvertType(formattedString, typeof(TimeSpan));
 
             // Assert
             Assert.Throws<FormatException>(action);

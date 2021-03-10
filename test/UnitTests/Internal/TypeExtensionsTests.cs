@@ -5,22 +5,8 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public sealed class TypeAnalysisTests
+    public sealed class TypeExtensionsTests
     {
-        [Fact]
-        public void New_Creates_An_Instance_If_T_Implements_Interface()
-        {
-            // Arrange
-            Type type = typeof(Model);
-
-            // Act
-            var instance = (IIdentifiable)TypeHelper.CreateInstance(type);
-
-            // Assert
-            Assert.NotNull(instance);
-            Assert.IsType<Model>(instance);
-        }
-
         [Fact]
         public void Implements_Returns_True_If_Type_Implements_Interface()
         {
@@ -28,7 +14,7 @@ namespace UnitTests.Internal
             Type type = typeof(Model);
 
             // Act
-            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
 
             // Assert
             Assert.True(result);
@@ -41,7 +27,7 @@ namespace UnitTests.Internal
             Type type = typeof(string);
 
             // Act
-            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
+            bool result = type.IsOrImplementsInterface(typeof(IIdentifiable));
 
             // Assert
             Assert.False(result);

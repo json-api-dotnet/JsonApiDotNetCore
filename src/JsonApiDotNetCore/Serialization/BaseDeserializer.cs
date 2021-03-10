@@ -21,6 +21,9 @@ namespace JsonApiDotNetCore.Serialization
     [PublicAPI]
     public abstract class BaseDeserializer
     {
+        private protected static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
+        private protected static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         protected IResourceContextProvider ResourceContextProvider { get; }
         protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
@@ -254,7 +257,7 @@ namespace JsonApiDotNetCore.Serialization
             HashSet<IIdentifiable> rightResources = relationshipData.ManyData.Select(rio => CreateRightResource(hasManyRelationship, rio))
                 .ToHashSet(IdentifiableComparer.Instance);
 
-            IEnumerable convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
+            IEnumerable convertedCollection = CollectionConverter.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
             hasManyRelationship.SetValue(resource, convertedCollection);
 
             AfterProcessField(resource, hasManyRelationship, relationshipData);
@@ -346,7 +349,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             // the attribute value is a native C# type.
-            object convertedValue = TypeHelper.ConvertType(newValue, targetType);
+            object convertedValue = TypeConverter.ConvertType(newValue, targetType);
             return convertedValue;
         }
 

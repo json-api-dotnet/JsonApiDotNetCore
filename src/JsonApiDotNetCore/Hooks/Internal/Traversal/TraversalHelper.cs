@@ -17,6 +17,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     /// </summary>
     internal sealed class TraversalHelper : ITraversalHelper
     {
+        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
+        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
+
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IResourceGraph _resourceGraph;
         private readonly ITargetedFields _targetedFields;
@@ -124,7 +127,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         private IDictionary<RightType, List<KeyValuePair<RelationshipProxy, List<IIdentifiable>>>> GroupByRightTypeOfRelationship(
             Dictionary<RelationshipProxy, List<IIdentifiable>> relationships)
         {
-            return relationships.GroupBy(kvp => kvp.Key.RightType).ToDictionary(gdc => gdc.Key, gdc => gdc.ToList());
+            return relationships.GroupBy(pair => pair.Key.RightType).ToDictionary(grouping => grouping.Key, grouping => grouping.ToList());
         }
 
         /// <summary>
@@ -149,10 +152,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 
             MethodInfo processResourcesMethod = GetType().GetMethod(nameof(ProcessResources), BindingFlags.NonPublic | BindingFlags.Instance);
 
-            foreach (KeyValuePair<RelationshipProxy, List<IIdentifiable>> kvp in rightResourcesGrouped)
+            foreach (KeyValuePair<RelationshipProxy, List<IIdentifiable>> pair in rightResourcesGrouped)
             {
-                RightType type = kvp.Key.RightType;
-                IList list = TypeHelper.CopyToList(kvp.Value, type);
+                RightType type = pair.Key.RightType;
+                IList list = CollectionConverter.CopyToList(pair.Value, type);
                 processResourcesMethod!.MakeGenericMethod(type).Invoke(this, ArrayFactory.Create<object>(list));
             }
 
@@ -181,21 +184,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                     continue;
                 }
 
-                if (!(relationshipValue is IEnumerable rightResources))
-                {
-                    // in the case of a to-one relationship, the assigned value
-                    // will not be a list. We therefore first wrap it in a list.
-                    IList list = TypeHelper.CreateListFor(proxy.RightType);
-
-                    if (relationshipValue != null)
-                    {
-                        list.Add(relationshipValue);
-                    }
-
-                    rightResources = list;
-                }
-
-                ISet<IIdentifiable> uniqueRightResources = UniqueInTree(rightResources.Cast<IIdentifiable>(), proxy.RightType);
+                ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(relationshipValue);
+                ISet<IIdentifiable> uniqueRightResources = UniqueInTree(rightResources, proxy.RightType);
 
                 if (proxy.IsContextRelation || uniqueRightResources.Any())
                 {
@@ -332,7 +322,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </param>
         private RightType GetRightTypeFromRelationship(RelationshipAttribute attr)
         {
-            if (attr is HasManyThroughAttribute throughAttr && TypeHelper.IsOrImplementsInterface(throughAttr.ThroughType, typeof(IIdentifiable)))
+            if (attr is HasManyThroughAttribute throughAttr && throughAttr.ThroughType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 return throughAttr.ThroughType;
             }
@@ -359,7 +349,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
             IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             IRelationshipsFromPreviousLayer prev = CreateRelationshipsFromInstance(nodeType, relationshipsFromPrev);
-            return (IResourceNode)TypeHelper.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, relationshipsToNext, prev);
+            return (IResourceNode)ObjectFactory.CreateInstanceOfOpenType(typeof(ChildNode<>), nodeType, relationshipsToNext, prev);
         }
 
         /// <summary>
@@ -368,8 +358,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         private IRelationshipsFromPreviousLayer CreateRelationshipsFromInstance(RightType nodeType, IEnumerable<IRelationshipGroup> relationshipsFromPrev)
         {
             List<IRelationshipGroup> relationshipsFromPrevList = relationshipsFromPrev.ToList();
-            IList cast = TypeHelper.CopyToList(relationshipsFromPrevList, relationshipsFromPrevList.First().GetType());
-            return (IRelationshipsFromPreviousLayer)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, cast);
+            IList list = CollectionConverter.CopyToList(relationshipsFromPrevList, relationshipsFromPrevList.First().GetType());
+            return (IRelationshipsFromPreviousLayer)ObjectFactory.CreateInstanceOfOpenType(typeof(RelationshipsFromPreviousLayer<>), nodeType, list);
         }
 
         /// <summary>
@@ -378,11 +368,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         private IRelationshipGroup CreateRelationshipGroupInstance(RightType thisLayerType, RelationshipProxy proxy, List<IIdentifiable> leftResources,
             List<IIdentifiable> rightResources)
         {
-            object rightResourcesHashed =
-                TypeHelper.CreateInstanceOfOpenType(typeof(HashSet<>), thisLayerType, TypeHelper.CopyToList(rightResources, thisLayerType));
+            IEnumerable rightResourceSet = CollectionConverter.CopyToHashSet(rightResources, thisLayerType);
 
-            return (IRelationshipGroup)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipGroup<>), thisLayerType, proxy,
-                new HashSet<IIdentifiable>(leftResources), rightResourcesHashed);
+            return (IRelationshipGroup)ObjectFactory.CreateInstanceOfOpenType(typeof(RelationshipGroup<>), thisLayerType, proxy,
+                new HashSet<IIdentifiable>(leftResources), rightResourceSet);
         }
     }
 }

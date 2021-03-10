@@ -24,6 +24,7 @@ namespace UnitTests.ResourceHooks
     public class HooksTestsSetup : HooksDummyData
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
 
         private TestMocks CreateMocks()
         {
@@ -198,7 +199,7 @@ namespace UnitTests.ResourceHooks
 
             if (dbContext != null)
             {
-                Type idType = TypeHelper.GetIdType(typeof(TModel));
+                Type idType = ObjectFactory.GetIdType(typeof(TModel));
 
                 if (idType == typeof(int))
                 {

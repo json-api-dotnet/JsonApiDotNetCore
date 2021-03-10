@@ -160,7 +160,7 @@ namespace UnitTests.ResourceHooks
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
-            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(pair => pair.Value).ToList();
 
             _noRelationshipsResources.ToList().ForEach(resource =>
             {
@@ -187,7 +187,7 @@ namespace UnitTests.ResourceHooks
 
             // Assert
             AssertRelationshipDictionaryGetters(allRelationships, toOnes, toManies, notTargeted);
-            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(kvp => kvp.Value).ToList();
+            List<Dummy> allResourcesWithAffectedRelationships = allRelationships.SelectMany(pair => pair.Value).ToList();
 
             _noRelationshipsResources.ToList().ForEach(resource =>
             {

@@ -16,6 +16,8 @@ namespace JsonApiDotNetCore.Resources
     /// </typeparam>
     public abstract class Identifiable<TId> : IIdentifiable<TId>
     {
+        private static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
+
         /// <inheritdoc />
         public virtual TId Id { get; set; }
 
@@ -44,7 +46,7 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         protected virtual TId GetTypedId(string value)
         {
-            return value == null ? default : (TId)TypeHelper.ConvertType(value, typeof(TId));
+            return value == null ? default : (TId)TypeConverter.ConvertType(value, typeof(TId));
         }
     }
 }

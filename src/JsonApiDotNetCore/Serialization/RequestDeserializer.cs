@@ -260,7 +260,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 try
                 {
-                    TypeHelper.ConvertType(resourceIdentifierObject.Id, idType);
+                    TypeConverter.ConvertType(resourceIdentifierObject.Id, idType);
                 }
                 catch (FormatException exception)
                 {
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCore.Serialization
                     secondaryResources.Add(secondaryResource);
                 }
 
-                IEnumerable rightResources = TypeHelper.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
+                IEnumerable rightResources = CollectionConverter.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
                 relationship.SetValue(primaryResource, rightResources);
             }
         }

@@ -13,6 +13,7 @@ namespace JsonApiDotNetCore.Queries.Internal
     [PublicAPI]
     public class QueryLayerComposer : IQueryLayerComposer
     {
+        private readonly CollectionConverter _collectionConverter = new CollectionConverter();
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
@@ -343,7 +344,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(primaryResource);
-                ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
+                ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
                 if (rightResourceIds.Any())
                 {

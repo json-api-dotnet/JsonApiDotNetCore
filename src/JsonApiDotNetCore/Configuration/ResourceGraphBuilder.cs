@@ -108,7 +108,7 @@ namespace JsonApiDotNetCore.Configuration
                 return this;
             }
 
-            if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
+            if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceType);
                 Type effectiveIdType = idType ?? _typeLocator.TryGetIdType(resourceType);
@@ -288,7 +288,7 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     Type constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
 
-                    if (TypeHelper.IsOrImplementsInterface(throughProperty.PropertyType, constructedThroughType))
+                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
                     {
                         return typeArguments[0];
                     }

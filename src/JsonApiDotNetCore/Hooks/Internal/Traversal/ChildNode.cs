@@ -6,11 +6,16 @@ using RightType = System.Type;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
+    internal abstract class ChildNode
+    {
+        protected static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+    }
+
     /// <summary>
     /// Child node in the tree
     /// </summary>
     /// <typeparam name="TResource"></typeparam>
-    internal sealed class ChildNode<TResource> : IResourceNode
+    internal sealed class ChildNode<TResource> : ChildNode, IResourceNode
         where TResource : class, IIdentifiable
     {
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
@@ -44,11 +49,11 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <inheritdoc />
         public void UpdateUnique(IEnumerable updated)
         {
-            List<TResource> cast = updated.Cast<TResource>().ToList();
+            List<TResource> list = updated.Cast<TResource>().ToList();
 
             foreach (RelationshipGroup<TResource> group in _relationshipsFromPreviousLayer)
             {
-                group.RightResources = new HashSet<TResource>(group.RightResources.Intersect(cast, _comparer).Cast<TResource>());
+                group.RightResources = new HashSet<TResource>(group.RightResources.Intersect(list, _comparer).Cast<TResource>());
             }
         }
 
@@ -77,7 +82,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 if (currentValue is IEnumerable<IIdentifiable> relationshipCollection)
                 {
                     IEnumerable<IIdentifiable> intersection = relationshipCollection.Intersect(unique, _comparer);
-                    IEnumerable typedCollection = TypeHelper.CopyToTypedCollection(intersection, relationshipCollection.GetType());
+                    IEnumerable typedCollection = CollectionConverter.CopyToTypedCollection(intersection, relationshipCollection.GetType());
                     proxy.SetValue(left, typedCollection);
                 }
                 else if (currentValue is IIdentifiable relationshipSingle)

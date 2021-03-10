@@ -21,6 +21,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     [PublicAPI]
     public class SelectClauseBuilder : QueryClauseBuilder<object>
     {
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
         private static readonly ConstantExpression NullConstant = Expression.Constant(null);
 
         private readonly Expression _source;
@@ -159,7 +160,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, LambdaScope outerLambdaScope, MemberExpression propertyAccess,
             PropertyInfo selectorPropertyInfo, LambdaScopeFactory lambdaScopeFactory)
         {
-            Type collectionElementType = TypeHelper.TryGetCollectionElementType(selectorPropertyInfo.PropertyType);
+            Type collectionElementType = CollectionConverter.TryGetCollectionElementType(selectorPropertyInfo.PropertyType);
             Type bodyElementType = collectionElementType ?? selectorPropertyInfo.PropertyType;
 
             if (collectionElementType != null)
@@ -193,7 +194,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             if (EntityFrameworkCoreSupport.Version.Major < 5)
             {
                 Type enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
-                Type typedCollection = TypeHelper.ToConcreteCollectionType(collectionProperty.PropertyType);
+                Type typedCollection = CollectionConverter.ToConcreteCollectionType(collectionProperty.PropertyType);
 
                 ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(enumerableOfElementType.AsArray());
 
@@ -205,7 +206,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 return Expression.New(typedCollectionConstructor, layerExpression);
             }
 
-            string operationName = TypeHelper.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
+            string operationName = CollectionConverter.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
             return CopyCollectionExtensionMethodCall(layerExpression, operationName, elementType);
         }
 

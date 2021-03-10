@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         {
             ArgumentGuard.NotNull(navigationAction, nameof(navigationAction));
 
-            PropertyInfo property = TypeHelper.ParseNavigationExpression(navigationAction);
+            PropertyInfo property = HooksNavigationParser.ParseNavigationExpression(navigationAction);
             return this.Where(pair => pair.Key.Property.Name == property.Name).Select(pair => pair.Value).SingleOrDefault();
         }
     }

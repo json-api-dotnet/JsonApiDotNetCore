@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override void BeforeImplicitUpdateRelationship(IRelationshipsDictionary<Passport> resourcesByRelationship, ResourcePipeline pipeline)
         {
-            resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(kvp => DisallowLocked(kvp.Value));
+            resourcesByRelationship.GetByRelationship<Person>().ToList().ForEach(pair => DisallowLocked(pair.Value));
         }
 
         public override IEnumerable<Passport> OnReturn(HashSet<Passport> resources, ResourcePipeline pipeline)

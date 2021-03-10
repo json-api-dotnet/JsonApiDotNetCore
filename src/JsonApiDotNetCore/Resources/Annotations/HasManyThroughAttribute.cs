@@ -45,6 +45,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class HasManyThroughAttribute : HasManyAttribute
     {
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         /// <summary>
         /// The name of the join property on the parent resource. In the example described above, this would be "ArticleTags".
         /// </summary>
@@ -141,7 +143,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
             IEnumerable<object> rightResources = ((IEnumerable)throughEntity).Cast<object>().Select(rightResource => RightProperty.GetValue(rightResource));
 
-            return TypeHelper.CopyToTypedCollection(rightResources, Property.PropertyType);
+            return CollectionConverter.CopyToTypedCollection(rightResources, Property.PropertyType);
         }
 
         /// <summary>
@@ -164,14 +166,14 @@ namespace JsonApiDotNetCore.Resources.Annotations
 
                 foreach (IIdentifiable rightResource in (IEnumerable)newValue)
                 {
-                    object throughEntity = TypeHelper.CreateInstance(ThroughType);
+                    object throughEntity = Activator.CreateInstance(ThroughType);
 
                     LeftProperty.SetValue(throughEntity, resource);
                     RightProperty.SetValue(throughEntity, rightResource);
                     throughResources.Add(throughEntity);
                 }
 
-                IEnumerable typedCollection = TypeHelper.CopyToTypedCollection(throughResources, ThroughProperty.PropertyType);
+                IEnumerable typedCollection = CollectionConverter.CopyToTypedCollection(throughResources, ThroughProperty.PropertyType);
                 ThroughProperty.SetValue(resource, typedCollection);
             }
         }

@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public ResourceDescriptor TryGetResourceDescriptor(Type type)
         {
-            if (TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable)))
+            if (type.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 Type idType = TryGetIdType(type);
 

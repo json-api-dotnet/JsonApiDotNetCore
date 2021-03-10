@@ -22,6 +22,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
     internal sealed class ResourceHookExecutor : IResourceHookExecutor
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
+        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
 
         private readonly IHookExecutorHelper _executorHelper;
         private readonly ITraversalHelper _traversalHelper;
@@ -414,9 +416,9 @@ namespace JsonApiDotNetCore.Hooks.Internal
             // If it isn't, JsonApiDotNetCore currently knows nothing about this relationship pointing back, and it
             // currently cannot fire hooks for resources resolved through inverse relationships.
             IEnumerable<KeyValuePair<RelationshipAttribute, IEnumerable>> inversableRelationshipAttributes =
-                resourcesByRelationship.Where(kvp => kvp.Key.InverseNavigationProperty != null);
+                resourcesByRelationship.Where(pair => pair.Key.InverseNavigationProperty != null);
 
-            return inversableRelationshipAttributes.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+            return inversableRelationshipAttributes.ToDictionary(pair => _resourceGraph.GetInverseRelationship(pair.Key), pair => pair.Value);
         }
 
         /// <summary>
@@ -441,7 +443,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             }
 
             Dictionary<RelationshipAttribute, IEnumerable> inverse =
-                implicitAffected.ToDictionary(kvp => _resourceGraph.GetInverseRelationship(kvp.Key), kvp => kvp.Value);
+                implicitAffected.ToDictionary(pair => _resourceGraph.GetInverseRelationship(pair.Key), pair => pair.Value);
 
             IRelationshipsDictionary resourcesByRelationship = CreateRelationshipHelper(resourceTypeToInclude, inverse);
             CallHook(container, ResourceHook.BeforeImplicitUpdateRelationship, ArrayFactory.Create<object>(resourcesByRelationship, pipeline));
@@ -510,7 +512,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 prevLayerRelationshipsWithDbValues = ReplaceWithDbValues(prevLayerRelationshipsWithDbValues, dbValues.Cast<IIdentifiable>());
             }
 
-            return (IRelationshipsDictionary)TypeHelper.CreateInstanceOfOpenType(typeof(RelationshipsDictionary<>), resourceType, true,
+            return (IRelationshipsDictionary)ObjectFactory.CreateInstanceOfInternalOpenType(typeof(RelationshipsDictionary<>), resourceType,
                 prevLayerRelationshipsWithDbValues);
         }
 
@@ -525,8 +527,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 IEnumerable<IIdentifiable> source = prevLayerRelationships[key].Cast<IIdentifiable>().Select(resource =>
                     dbValues.Single(dbResource => dbResource.StringId == resource.StringId));
 
-                IList replaced = TypeHelper.CopyToList(source, key.LeftType);
-                prevLayerRelationships[key] = TypeHelper.CreateHashSetFor(key.LeftType, replaced);
+                prevLayerRelationships[key] = CollectionConverter.CopyToHashSet(source, key.LeftType);
             }
 
             return prevLayerRelationships;

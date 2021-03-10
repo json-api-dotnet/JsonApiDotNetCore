@@ -25,6 +25,7 @@ namespace JsonApiDotNetCore.Services
     public class JsonApiResourceService<TResource, TId> : IResourceService<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
+        private readonly CollectionConverter _collectionConverter = new CollectionConverter();
         private readonly IResourceRepositoryAccessor _repositoryAccessor;
         private readonly IQueryLayerComposer _queryLayerComposer;
         private readonly IPaginationContext _paginationContext;
@@ -244,7 +245,7 @@ namespace JsonApiDotNetCore.Services
             foreach ((QueryLayer queryLayer, RelationshipAttribute relationship) in _queryLayerComposer.ComposeForGetTargetedSecondaryResourceIds(resource))
             {
                 object rightValue = relationship.GetValue(resource);
-                ICollection<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue);
+                ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
                 IAsyncEnumerable<MissingResourceInRelationship> missingResourcesInRelationship =
                     GetMissingRightResourcesAsync(queryLayer, relationship, rightResourceIds, cancellationToken);
@@ -325,7 +326,7 @@ namespace JsonApiDotNetCore.Services
             AssertPrimaryResourceExists(primaryResource);
 
             object rightValue = _request.Relationship.GetValue(primaryResource);
-            ICollection<IIdentifiable> existingRightResourceIds = TypeHelper.ExtractResources(rightValue);
+            ICollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
             secondaryResourceIds.ExceptWith(existingRightResourceIds);
         }
@@ -415,7 +416,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                await AssertResourcesExistAsync(TypeHelper.ExtractResources(secondaryResourceIds), cancellationToken);
+                await AssertResourcesExistAsync(_collectionConverter.ExtractResources(secondaryResourceIds), cancellationToken);
                 throw;
             }
 
