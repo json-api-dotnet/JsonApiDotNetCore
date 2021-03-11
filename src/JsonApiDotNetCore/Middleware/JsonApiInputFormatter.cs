@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    /// <inheritdoc />
-    public sealed class JsonApiInputFormatter : IJsonApiInputFormatter
+    /// <inheritdoc cref="JsonApiDotNetCore.Middleware.IJsonApiInputFormatter" />
+    public sealed class JsonApiInputFormatter : JsonApiFormatter, IJsonApiInputFormatter
     {
         /// <inheritdoc />
         public bool CanRead(InputFormatterContext context)
@@ -26,14 +23,6 @@ namespace JsonApiDotNetCore.Middleware
 
             var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
             return await reader.ReadAsync(context);
-        }
-
-        public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
-        {
-            return new MediaTypeCollection
-            {
-                new MediaTypeHeaderValue(HeaderConstants.MediaType)
-            };
         }
     }
 }

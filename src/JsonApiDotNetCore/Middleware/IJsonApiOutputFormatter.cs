@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace JsonApiDotNetCore.Middleware
@@ -8,7 +7,7 @@ namespace JsonApiDotNetCore.Middleware
     /// Application-wide entry point for writing JSON:API response bodies.
     /// </summary>
     [PublicAPI]
-    public interface IJsonApiOutputFormatter : IOutputFormatter, IApiRequestFormatMetadataProvider
+    public interface IJsonApiOutputFormatter : IOutputFormatter
     {
     }
 }
