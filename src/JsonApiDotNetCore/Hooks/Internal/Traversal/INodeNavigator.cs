@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
-    internal interface ITraversalHelper
+    internal interface INodeNavigator
     {
         /// <summary>
         /// Creates the next layer

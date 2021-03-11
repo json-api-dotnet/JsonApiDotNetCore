@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     /// breadth-first-traversal It creates nodes for each layer. Typically, the first layer is homogeneous (all resources have the same type), and further
     /// nodes can be mixed.
     /// </summary>
-    internal sealed class TraversalHelper : ITraversalHelper
+    internal sealed class NodeNavigator : INodeNavigator
     {
         private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
         private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// </summary>
         private Dictionary<RightType, HashSet<IIdentifiable>> _processedResources;
 
-        public TraversalHelper(IResourceGraph resourceGraph, ITargetedFields targetedFields)
+        public NodeNavigator(IResourceGraph resourceGraph, ITargetedFields targetedFields)
         {
             _targetedFields = targetedFields;
             _resourceGraph = resourceGraph;

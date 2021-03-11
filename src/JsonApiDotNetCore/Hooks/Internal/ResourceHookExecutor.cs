@@ -26,16 +26,16 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
 
         private readonly IHookExecutorHelper _executorHelper;
-        private readonly ITraversalHelper _traversalHelper;
+        private readonly INodeNavigator _nodeNavigator;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
 
-        public ResourceHookExecutor(IHookExecutorHelper executorHelper, ITraversalHelper traversalHelper, ITargetedFields targetedFields,
+        public ResourceHookExecutor(IHookExecutorHelper executorHelper, INodeNavigator nodeNavigator, ITargetedFields targetedFields,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph)
         {
             _executorHelper = executorHelper;
-            _traversalHelper = traversalHelper;
+            _nodeNavigator = nodeNavigator;
             _targetedFields = targetedFields;
             _constraintProviders = constraintProviders;
             _resourceGraph = resourceGraph;
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Node.Reassign(resources);
             }
 
-            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(result.Node));
+            FireNestedBeforeUpdateHooks(pipeline, _nodeNavigator.CreateNextLayer(result.Node));
             return resources;
         }
 
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Node.Reassign(resources);
             }
 
-            FireNestedBeforeUpdateHooks(pipeline, _traversalHelper.CreateNextLayer(result.Node));
+            FireNestedBeforeUpdateHooks(pipeline, _nodeNavigator.CreateNextLayer(result.Node));
             return resources;
         }
 
@@ -157,7 +157,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Node.Reassign(resources);
             }
 
-            TraverseNodesInLayer(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
+            TraverseNodesInLayer(_nodeNavigator.CreateNextLayer(result.Node), ResourceHook.OnReturn, (nextContainer, nextNode) =>
             {
                 IEnumerable filteredUniqueSet = CallHook(nextContainer, ResourceHook.OnReturn, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline));
                 nextNode.UpdateUnique(filteredUniqueSet);
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Container.AfterRead((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            TraverseNodesInLayer(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
+            TraverseNodesInLayer(_nodeNavigator.CreateNextLayer(result.Node), ResourceHook.AfterRead, (nextContainer, nextNode) =>
             {
                 CallHook(nextContainer, ResourceHook.AfterRead, ArrayFactory.Create<object>(nextNode.UniqueResources, pipeline, true));
             });
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Container.AfterCreate((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            TraverseNodesInLayer(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
+            TraverseNodesInLayer(_nodeNavigator.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 result.Container.AfterUpdate((HashSet<TResource>)result.Node.UniqueResources, pipeline);
             }
 
-            TraverseNodesInLayer(_traversalHelper.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
+            TraverseNodesInLayer(_nodeNavigator.CreateNextLayer(result.Node), ResourceHook.AfterUpdateRelationship,
                 (nextContainer, nextNode) => FireAfterUpdateRelationship(nextContainer, nextNode, pipeline));
         }
 
@@ -238,7 +238,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private GetHookResult<TResource> GetHook<TResource>(ResourceHook target, IEnumerable<TResource> resources)
             where TResource : class, IIdentifiable
         {
-            RootNode<TResource> node = _traversalHelper.CreateRootNode(resources);
+            RootNode<TResource> node = _nodeNavigator.CreateRootNode(resources);
             IResourceHookContainer<TResource> container = _executorHelper.GetResourceHookContainer<TResource>(target);
 
             return new GetHookResult<TResource>(container, node);
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
 
                 TraverseNextLayer(nextLayer, action, target);
 
-                nextLayer = _traversalHelper.CreateNextLayer(nextLayer.ToList());
+                nextLayer = _nodeNavigator.CreateNextLayer(nextLayer.ToList());
             }
         }
 

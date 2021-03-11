@@ -55,7 +55,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return new TestObjectsA<TPrimary>(hookExecutor, primaryResource);
@@ -82,7 +82,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondaryResource.Object, secondaryDiscovery, dbContext, resourceGraph);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return new TestObjectsB<TPrimary, TSecondary>(constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
@@ -114,7 +114,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondSecondaryResource.Object, secondSecondaryDiscovery, dbContext, resourceGraph);
 
             var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
             return new TestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary>(constraintsMock, hookExecutor, primaryResource, firstSecondaryResource,
