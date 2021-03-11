@@ -2,9 +2,11 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
+#pragma warning disable AV1008 // Class should not be static
+
 namespace JsonApiDotNetCore.Hooks.Internal
 {
-    internal sealed class HooksNavigationParser
+    internal static class HooksNavigationParser
     {
         /// <summary>
         /// Gets the property info that is referenced in the NavigationAction expression. Credits: https://stackoverflow.com/a/17116267/4441216

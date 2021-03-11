@@ -326,7 +326,9 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             foreach (IResourceNode node in layer)
             {
-                IResourceHookContainer nestedHookContainer = _containerProvider.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
+                IResourceHookContainer nestedHookContainer =
+                    _containerProvider.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
+
                 IEnumerable uniqueResources = node.UniqueResources;
                 RightType resourceType = node.ResourceType;
                 IDictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped;
@@ -427,7 +429,8 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private void FireForAffectedImplicits(Type resourceTypeToInclude, IDictionary<RelationshipAttribute, IEnumerable> implicitsTarget,
             ResourcePipeline pipeline, IEnumerable existingImplicitResources = null)
         {
-            IResourceHookContainer container = _containerProvider.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
+            IResourceHookContainer container =
+                _containerProvider.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
 
             if (container == null)
             {

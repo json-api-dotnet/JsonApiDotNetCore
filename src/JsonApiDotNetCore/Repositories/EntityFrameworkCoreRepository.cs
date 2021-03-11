@@ -245,7 +245,9 @@ namespace JsonApiDotNetCore.Repositories
             ICollection<IIdentifiable> newRightResourceIds = _collectionConverter.ExtractResources(valueToAssign);
 
             object existingRightValue = relationship.GetValue(leftResource);
-            HashSet<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
+
+            HashSet<IIdentifiable> existingRightResourceIds =
+                _collectionConverter.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
 
             existingRightResourceIds.ExceptWith(newRightResourceIds);
 

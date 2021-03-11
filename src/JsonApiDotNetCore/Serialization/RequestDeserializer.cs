@@ -260,7 +260,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 try
                 {
-                    TypeConverter.ConvertType(resourceIdentifierObject.Id, idType);
+                    RuntimeTypeConverter.ConvertType(resourceIdentifierObject.Id, idType);
                 }
                 catch (FormatException exception)
                 {

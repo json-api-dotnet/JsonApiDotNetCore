@@ -1,10 +1,12 @@
 using System;
 
+#pragma warning disable AV1008 // Class should not be static
+
 namespace JsonApiDotNetCore
 {
-    internal sealed class RuntimeTypeConverter
+    internal static class RuntimeTypeConverter
     {
-        public object ConvertType(object value, Type type)
+        public static object ConvertType(object value, Type type)
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
@@ -73,12 +75,12 @@ namespace JsonApiDotNetCore
             }
         }
 
-        public bool CanContainNull(Type type)
+        public static bool CanContainNull(Type type)
         {
             return !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
         }
 
-        public object GetDefaultValue(Type type)
+        public static object GetDefaultValue(Type type)
         {
             return type.IsValueType ? Activator.CreateInstance(type) : null;
         }

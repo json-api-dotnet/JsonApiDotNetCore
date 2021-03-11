@@ -21,7 +21,6 @@ namespace JsonApiDotNetCore.Serialization
     [PublicAPI]
     public abstract class BaseDeserializer
     {
-        private protected static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
         private protected static readonly CollectionConverter CollectionConverter = new CollectionConverter();
 
         protected IResourceContextProvider ResourceContextProvider { get; }
@@ -349,7 +348,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             // the attribute value is a native C# type.
-            object convertedValue = TypeConverter.ConvertType(newValue, targetType);
+            object convertedValue = RuntimeTypeConverter.ConvertType(newValue, targetType);
             return convertedValue;
         }
 

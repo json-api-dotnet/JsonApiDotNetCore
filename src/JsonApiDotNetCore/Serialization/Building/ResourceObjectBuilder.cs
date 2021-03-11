@@ -13,7 +13,6 @@ namespace JsonApiDotNetCore.Serialization.Building
     [PublicAPI]
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
-        private static readonly RuntimeTypeConverter TypeConverter = new RuntimeTypeConverter();
         private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
 
         private readonly ResourceObjectBuilderSettings _settings;
@@ -175,7 +174,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
 
                 if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore &&
-                    Equals(value, TypeConverter.GetDefaultValue(attr.Property.PropertyType)))
+                    Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
                 {
                     return;
                 }
