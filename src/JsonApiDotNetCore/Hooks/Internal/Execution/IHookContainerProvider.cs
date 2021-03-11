@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// A helper class for retrieving meta data about hooks, fetching database values and performing other recurring internal operations. Used internally by
     /// <see cref="ResourceHookExecutor" />
     /// </summary>
-    internal interface IHookExecutorHelper
+    internal interface IHookContainerProvider
     {
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if the ResourceHooksDefinition has an implementation for the hook and if so, return

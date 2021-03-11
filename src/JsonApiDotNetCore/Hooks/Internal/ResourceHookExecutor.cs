@@ -25,16 +25,16 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
         private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
 
-        private readonly IHookExecutorHelper _executorHelper;
+        private readonly IHookContainerProvider _containerProvider;
         private readonly INodeNavigator _nodeNavigator;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly ITargetedFields _targetedFields;
         private readonly IResourceGraph _resourceGraph;
 
-        public ResourceHookExecutor(IHookExecutorHelper executorHelper, INodeNavigator nodeNavigator, ITargetedFields targetedFields,
+        public ResourceHookExecutor(IHookContainerProvider containerProvider, INodeNavigator nodeNavigator, ITargetedFields targetedFields,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph)
         {
-            _executorHelper = executorHelper;
+            _containerProvider = containerProvider;
             _nodeNavigator = nodeNavigator;
             _targetedFields = targetedFields;
             _constraintProviders = constraintProviders;
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         public void BeforeRead<TResource>(ResourcePipeline pipeline, string stringId = null)
             where TResource : class, IIdentifiable
         {
-            IResourceHookContainer<TResource> hookContainer = _executorHelper.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
+            IResourceHookContainer<TResource> hookContainer = _containerProvider.GetResourceHookContainer<TResource>(ResourceHook.BeforeRead);
             hookContainer?.BeforeRead(pipeline, false, stringId);
             List<Type> calledContainers = typeof(TResource).AsList();
 
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             where TResource : class, IIdentifiable
         {
             RootNode<TResource> node = _nodeNavigator.CreateRootNode(resources);
-            IResourceHookContainer<TResource> container = _executorHelper.GetResourceHookContainer<TResource>(target);
+            IResourceHookContainer<TResource> container = _containerProvider.GetResourceHookContainer<TResource>(target);
 
             return new GetHookResult<TResource>(container, node);
         }
@@ -270,7 +270,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             foreach (IResourceNode node in nextLayer)
             {
-                IResourceHookContainer hookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, target);
+                IResourceHookContainer hookContainer = _containerProvider.GetResourceHookContainer(node.ResourceType, target);
 
                 if (hookContainer != null)
                 {
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
                 if (!calledContainers.Contains(relationship.RightType))
                 {
                     calledContainers.Add(relationship.RightType);
-                    IResourceHookContainer container = _executorHelper.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
+                    IResourceHookContainer container = _containerProvider.GetResourceHookContainer(relationship.RightType, ResourceHook.BeforeRead);
 
                     if (container != null)
                     {
@@ -326,7 +326,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             foreach (IResourceNode node in layer)
             {
-                IResourceHookContainer nestedHookContainer = _executorHelper.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
+                IResourceHookContainer nestedHookContainer = _containerProvider.GetResourceHookContainer(node.ResourceType, ResourceHook.BeforeUpdateRelationship);
                 IEnumerable uniqueResources = node.UniqueResources;
                 RightType resourceType = node.ResourceType;
                 IDictionary<RelationshipAttribute, IEnumerable> currentResourcesGrouped;
@@ -427,7 +427,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
         private void FireForAffectedImplicits(Type resourceTypeToInclude, IDictionary<RelationshipAttribute, IEnumerable> implicitsTarget,
             ResourcePipeline pipeline, IEnumerable existingImplicitResources = null)
         {
-            IResourceHookContainer container = _executorHelper.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
+            IResourceHookContainer container = _containerProvider.GetResourceHookContainer(resourceTypeToInclude, ResourceHook.BeforeImplicitUpdateRelationship);
 
             if (container == null)
             {
@@ -435,7 +435,7 @@ namespace JsonApiDotNetCore.Hooks.Internal
             }
 
             IDictionary<RelationshipAttribute, IEnumerable> implicitAffected =
-                _executorHelper.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
+                _containerProvider.LoadImplicitlyAffected(implicitsTarget, existingImplicitResources);
 
             if (!implicitAffected.Any())
             {
@@ -565,12 +565,12 @@ namespace JsonApiDotNetCore.Hooks.Internal
         {
             // We only need to load database values if the target hook of this hook execution
             // cycle is compatible with displaying database values and has this option enabled.
-            if (!_executorHelper.ShouldLoadDbValues(resourceType, targetHook))
+            if (!_containerProvider.ShouldLoadDbValues(resourceType, targetHook))
             {
                 return null;
             }
 
-            return _executorHelper.LoadDbValues(resourceType, uniqueResources, relationshipsToNextLayer);
+            return _containerProvider.LoadDbValues(resourceType, uniqueResources, relationshipsToNextLayer);
         }
 
         /// <summary>

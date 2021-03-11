@@ -17,7 +17,7 @@ using RightType = System.Type;
 namespace JsonApiDotNetCore.Hooks.Internal.Execution
 {
     /// <inheritdoc />
-    internal sealed class HookExecutorHelper : IHookExecutorHelper
+    internal sealed class HookContainerProvider : IHookContainerProvider
     {
         private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
         private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         private readonly Dictionary<RightType, IHooksDiscovery> _hookDiscoveries;
         private readonly List<ResourceHook> _targetedHooksForRelatedResources;
 
-        public HookExecutorHelper(IGenericServiceFactory genericServiceFactory, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
+        public HookContainerProvider(IGenericServiceFactory genericServiceFactory, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
         {
             _options = options;
             _genericServiceFactory = genericServiceFactory;

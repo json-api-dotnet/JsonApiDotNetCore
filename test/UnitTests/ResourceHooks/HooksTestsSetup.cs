@@ -54,7 +54,7 @@ namespace UnitTests.ResourceHooks
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
             var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
@@ -81,7 +81,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondaryResource.Object, secondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
             var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
@@ -113,7 +113,7 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, firstSecondaryResource.Object, firstSecondaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondSecondaryResource.Object, secondSecondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
             var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
