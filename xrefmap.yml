@@ -6006,12 +6006,12 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.IControllerResourceMapping
   fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping
   nameWithType: IControllerResourceMapping
-- uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.String)
-  name: GetResourceTypeForController(String)
-  href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetResourceTypeForController_System_String_
-  commentId: M:JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.String)
-  fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.String)
-  nameWithType: IControllerResourceMapping.GetResourceTypeForController(String)
+- uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.Type)
+  name: GetResourceTypeForController(Type)
+  href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetResourceTypeForController_System_Type_
+  commentId: M:JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.Type)
+  fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.Type)
+  nameWithType: IControllerResourceMapping.GetResourceTypeForController(Type)
 - uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController*
   name: GetResourceTypeForController
   href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetResourceTypeForController_
@@ -6482,12 +6482,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.Apply
   nameWithType: JsonApiRoutingConvention.Apply
-- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.String)
-  name: GetResourceTypeForController(String)
-  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_System_String_
-  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.String)
-  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.String)
-  nameWithType: JsonApiRoutingConvention.GetResourceTypeForController(String)
+- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)
+  name: GetResourceTypeForController(Type)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_System_Type_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)
+  nameWithType: JsonApiRoutingConvention.GetResourceTypeForController(Type)
 - uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController*
   name: GetResourceTypeForController
   href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_

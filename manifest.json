@@ -1617,7 +1617,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html",
-          "hash": "K62VaBP4MHaIIS3Z+J+ItA=="
+          "hash": "w3pnvZV/pL6G8W09umVQNw=="
         }
       },
       "is_incremental": false,
@@ -1677,7 +1677,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html",
-          "hash": "i0/+fcfUz8F3lMyJy28ZhA=="
+          "hash": "p64OMclU2IrStixCYnLlIQ=="
         }
       },
       "is_incremental": false,
@@ -1701,7 +1701,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiMiddleware.html",
-          "hash": "ImjynXZs6vDoUHejvJBncA=="
+          "hash": "vzioAU+wXgDbF7/iYlTnag=="
         }
       },
       "is_incremental": false,
@@ -1737,7 +1737,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html",
-          "hash": "gNHrzie2Phssm1dGeuWMug=="
+          "hash": "GfXOPqEftoIltvzopLvj8Q=="
         }
       },
       "is_incremental": false,
