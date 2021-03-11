@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Coding Guidelines" Description=" " ToolsVersion="16.0">
+  <Rules AnalyzerId="CSharpGuidelinesAnalyzer" RuleNamespace="CSharpGuidelinesAnalyzer">
+    <Rule Id="AV1500" Action="None" />
+    <Rule Id="AV1505" Action="Warning" />
+    <Rule Id="AV1506" Action="Warning" />
+    <Rule Id="AV1507" Action="Warning" />
+    <Rule Id="AV1008" Action="Warning" />
+    <Rule Id="AV1130" Action="Warning" />
+    <Rule Id="AV1135" Action="Info" />
+    <Rule Id="AV1536" Action="None" />
+    <Rule Id="AV1537" Action="None" />
+    <Rule Id="AV1551" Action="Info" />
+    <Rule Id="AV1555" Action="Warning" />
+    <Rule Id="AV1564" Action="Info" />
+    <Rule Id="AV1568" Action="Warning" />
+    <Rule Id="AV1706" Action="Warning" />
+    <Rule Id="AV1710" Action="Info" />
+    <Rule Id="AV1711" Action="Info" />
+    <Rule Id="AV1738" Action="Warning" />
+    <Rule Id="AV1739" Action="Warning" />
+    <Rule Id="AV1745" Action="Warning" />
+    <Rule Id="AV1755" Action="Warning" />
+    <Rule Id="AV2210" Action="None" />
+    <Rule Id="AV2220" Action="Warning" />
+    <Rule Id="AV2230" Action="Info" />
+    <Rule Id="AV2305" Action="None" />
+    <Rule Id="AV2310" Action="Info" />
+    <Rule Id="AV2318" Action="Info" />
+  </Rules>
+</RuleSet>

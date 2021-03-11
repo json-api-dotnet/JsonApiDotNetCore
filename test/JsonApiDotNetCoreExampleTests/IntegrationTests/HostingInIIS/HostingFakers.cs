@@ -12,12 +12,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         private readonly Lazy<Faker<ArtGallery>> _lazyArtGalleryFaker = new Lazy<Faker<ArtGallery>>(() =>
             new Faker<ArtGallery>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(artGallery => artGallery.Theme, f => f.Lorem.Word()));
+                .RuleFor(artGallery => artGallery.Theme, faker => faker.Lorem.Word()));
 
         private readonly Lazy<Faker<Painting>> _lazyPaintingFaker = new Lazy<Faker<Painting>>(() =>
             new Faker<Painting>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(painting => painting.Title, f => f.Lorem.Sentence()));
+                .RuleFor(painting => painting.Title, faker => faker.Lorem.Sentence()));
 
         public Faker<ArtGallery> ArtGallery => _lazyArtGalleryFaker.Value;
         public Faker<Painting> Painting => _lazyPaintingFaker.Value;

@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -65,8 +66,11 @@ namespace UnitTests.ResourceHooks
             return services.BuildServiceProvider();
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class Dummy : Identifiable
         {
+            [Attr]
+            public string Unused { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
@@ -87,8 +91,11 @@ namespace UnitTests.ResourceHooks
             }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class AnotherDummy : Identifiable
         {
+            [Attr]
+            public string Unused { get; set; }
         }
 
         public abstract class ResourceDefinitionBase<T> : ResourceHooksDefinition<T>
@@ -118,8 +125,11 @@ namespace UnitTests.ResourceHooks
             }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class YetAnotherDummy : Identifiable
         {
+            [Attr]
+            public string Unused { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

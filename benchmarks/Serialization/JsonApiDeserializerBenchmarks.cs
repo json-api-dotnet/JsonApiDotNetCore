@@ -29,12 +29,13 @@ namespace Benchmarks.Serialization
             }
         });
 
+        private readonly DependencyFactory _dependencyFactory = new DependencyFactory();
         private readonly IJsonApiDeserializer _jsonApiDeserializer;
 
         public JsonApiDeserializerBenchmarks()
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
+            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
             var targetedFields = new TargetedFields();
             var request = new JsonApiRequest();
             var resourceFactory = new ResourceFactory(new ServiceContainer());

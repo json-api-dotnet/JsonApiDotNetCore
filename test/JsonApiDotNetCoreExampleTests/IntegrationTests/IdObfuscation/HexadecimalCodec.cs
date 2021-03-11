@@ -8,9 +8,9 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
-    internal static class HexadecimalCodec
+    internal sealed class HexadecimalCodec
     {
-        public static int Decode(string value)
+        public int Decode(string value)
         {
             if (value == null)
             {
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             return new string(chars);
         }
 
-        public static string Encode(int value)
+        public string Encode(int value)
         {
             if (value == 0)
             {

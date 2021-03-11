@@ -14,6 +14,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     /// </summary>
     internal sealed class RelationshipProxy
     {
+        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
+
         private readonly bool _skipThroughType;
 
         public Type LeftType => Attribute.LeftType;
@@ -108,7 +110,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                 var throughResources = (IEnumerable)hasManyThrough.ThroughProperty.GetValue(resource);
 
                 var filteredList = new List<object>();
-                IList rightResources = TypeHelper.CopyToList((IEnumerable)value, RightType);
+
+                IList rightResources = CollectionConverter.CopyToList((IEnumerable)value, RightType);
 
                 foreach (object throughResource in throughResources ?? Array.Empty<object>())
                 {
@@ -118,7 +121,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
                     }
                 }
 
-                IEnumerable collectionValue = TypeHelper.CopyToTypedCollection(filteredList, hasManyThrough.ThroughProperty.PropertyType);
+                IEnumerable collectionValue = CollectionConverter.CopyToTypedCollection(filteredList, hasManyThrough.ThroughProperty.PropertyType);
                 hasManyThrough.ThroughProperty.SetValue(resource, collectionValue);
                 return;
             }

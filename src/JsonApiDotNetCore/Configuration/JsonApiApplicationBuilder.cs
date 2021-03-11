@@ -261,8 +261,8 @@ namespace JsonApiDotNetCore.Configuration
                 _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
                 _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
                 _services.AddTransient<IResourceHookExecutor, ResourceHookExecutor>();
-                _services.AddTransient<IHookExecutorHelper, HookExecutorHelper>();
-                _services.AddScoped<ITraversalHelper, TraversalHelper>();
+                _services.AddTransient<IHookContainerProvider, HookContainerProvider>();
+                _services.AddScoped<INodeNavigator, NodeNavigator>();
                 _services.AddScoped<IResourceHookExecutorFacade, ResourceHookExecutorFacade>();
             }
             else

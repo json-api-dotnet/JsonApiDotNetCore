@@ -75,7 +75,7 @@ namespace UnitTests.Extensions
             var graph = provider.GetRequiredService<IResourceGraph>();
             ResourceContext resourceContext = graph.GetResourceContext<Author>();
 
-            // Assert 
+            // Assert
             Assert.Equal("authors", resourceContext.PublicName);
         }
 
@@ -131,8 +131,11 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
 
-            // Act, assert
-            Assert.Throws<InvalidConfigurationException>(() => services.AddResourceService<int>());
+            // Act
+            Action action = () => services.AddResourceService<int>();
+
+            // Assert
+            Assert.Throws<InvalidConfigurationException>(action);
         }
 
         [Fact]

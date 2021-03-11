@@ -53,7 +53,9 @@ namespace JsonApiDotNetCore.Serialization
             {
                 responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);
             }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
                 ErrorDocument errorDocument = _exceptionHandler.HandleException(exception);
                 responseContent = _serializer.Serialize(errorDocument);

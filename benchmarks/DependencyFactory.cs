@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks
 {
-    internal static class DependencyFactory
+    internal sealed class DependencyFactory
     {
-        public static IResourceGraph CreateResourceGraph(IJsonApiOptions options)
+        public IResourceGraph CreateResourceGraph(IJsonApiOptions options)
         {
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             builder.Add<BenchmarkResource>(BenchmarkResourcePublicNames.Type);

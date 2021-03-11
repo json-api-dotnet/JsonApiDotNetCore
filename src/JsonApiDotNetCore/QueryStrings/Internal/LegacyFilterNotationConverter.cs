@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public IEnumerable<string> ExtractConditions(string parameterValue)
         {
-            ArgumentGuard.NotNull(parameterValue, nameof(parameterValue));
+            ArgumentGuard.NotNullNorEmpty(parameterValue, nameof(parameterValue));
 
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal) || parameterValue.StartsWith(InPrefix, StringComparison.Ordinal) ||
                 parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
@@ -47,8 +47,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         public (string parameterName, string parameterValue) Convert(string parameterName, string parameterValue)
         {
-            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
-            ArgumentGuard.NotNull(parameterValue, nameof(parameterValue));
+            ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
+            ArgumentGuard.NotNullNorEmpty(parameterValue, nameof(parameterValue));
 
             if (parameterValue.StartsWith(ExpressionPrefix, StringComparison.Ordinal))
             {

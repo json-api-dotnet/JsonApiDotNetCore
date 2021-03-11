@@ -11,17 +11,15 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class IncludeExpression : QueryExpression
     {
+        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+
         public static readonly IncludeExpression Empty = new IncludeExpression();
+
         public IReadOnlyCollection<IncludeElementExpression> Elements { get; }
 
         public IncludeExpression(IReadOnlyCollection<IncludeElementExpression> elements)
         {
-            ArgumentGuard.NotNull(elements, nameof(elements));
-
-            if (!elements.Any())
-            {
-                throw new ArgumentException("Must have one or more elements.", nameof(elements));
-            }
+            ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
             Elements = elements;
         }

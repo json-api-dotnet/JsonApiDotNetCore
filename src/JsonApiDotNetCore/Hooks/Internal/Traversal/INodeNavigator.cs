@@ -3,17 +3,17 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
-    internal interface ITraversalHelper
+    internal interface INodeNavigator
     {
         /// <summary>
-        /// Crates the next layer
+        /// Creates the next layer
         /// </summary>
-        NodeLayer CreateNextLayer(IResourceNode node);
+        IEnumerable<IResourceNode> CreateNextLayer(IResourceNode node);
 
         /// <summary>
         /// Creates the next layer based on the nodes provided
         /// </summary>
-        NodeLayer CreateNextLayer(IEnumerable<IResourceNode> nodes);
+        IEnumerable<IResourceNode> CreateNextLayer(IEnumerable<IResourceNode> nodes);
 
         /// <summary>
         /// Creates a root node for breadth-first-traversal (BFS). Note that typically, in JsonApiDotNetCore, the root layer will be homogeneous. Also, because

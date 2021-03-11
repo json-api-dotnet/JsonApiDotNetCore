@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (collectionExpression.Type.IsInterface)
             {
-                foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(i => i.GetProperties()))
+                foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(@interface => @interface.GetProperties()))
                 {
                     properties.Add(item);
                 }
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             //   Tuple.Create<T>(value).Item1;
 
             MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
-                .Single(m => m.Name == "Create" && m.IsGenericMethod && m.GetGenericArguments().Length == 1);
+                .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
 
             MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
 

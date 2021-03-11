@@ -32,9 +32,9 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string resourceName)
         {
-            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNullNorEmpty(resourceName, nameof(resourceName));
 
-            return _resources.SingleOrDefault(e => e.PublicName == resourceName);
+            return _resources.SingleOrDefault(resourceContext => resourceContext.PublicName == resourceName);
         }
 
         /// <inheritdoc />
@@ -43,8 +43,8 @@ namespace JsonApiDotNetCore.Configuration
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             return IsLazyLoadingProxyForResourceType(resourceType)
-                ? _resources.SingleOrDefault(e => e.ResourceType == resourceType.BaseType)
-                : _resources.SingleOrDefault(e => e.ResourceType == resourceType);
+                ? _resources.SingleOrDefault(resourceContext => resourceContext.ResourceType == resourceType.BaseType)
+                : _resources.SingleOrDefault(resourceContext => resourceContext.ResourceType == resourceType);
         }
 
         /// <inheritdoc />
@@ -109,7 +109,8 @@ namespace JsonApiDotNetCore.Configuration
                 return null;
             }
 
-            return GetResourceContext(relationship.RightType).Relationships.SingleOrDefault(r => r.Property == relationship.InverseNavigationProperty);
+            return GetResourceContext(relationship.RightType).Relationships
+                .SingleOrDefault(nextRelationship => nextRelationship.Property == relationship.InverseNavigationProperty);
         }
 
         private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null,
@@ -145,7 +146,7 @@ namespace JsonApiDotNetCore.Configuration
                 // model => model.Field1
                 try
                 {
-                    targeted.Add(available.Single(f => f.Property.Name == memberExpression.Member.Name));
+                    targeted.Add(available.Single(field => field.Property.Name == memberExpression.Member.Name));
                     return targeted;
                 }
                 catch (InvalidOperationException)
@@ -169,7 +170,7 @@ namespace JsonApiDotNetCore.Configuration
                     foreach (MemberInfo member in newExpression.Members)
                     {
                         memberName = member.Name;
-                        targeted.Add(available.Single(f => f.Property.Name == memberName));
+                        targeted.Add(available.Single(field => field.Property.Name == memberName));
                     }
 
                     return targeted;

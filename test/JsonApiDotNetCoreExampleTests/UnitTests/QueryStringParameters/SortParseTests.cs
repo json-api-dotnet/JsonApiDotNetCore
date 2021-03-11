@@ -109,10 +109,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
             IReadOnlyCollection<ExpressionInScope> constraints = _reader.GetConstraints();
 
             // Assert
-            ResourceFieldChainExpression scope = constraints.Select(x => x.Scope).Single();
+            ResourceFieldChainExpression scope = constraints.Select(expressionInScope => expressionInScope.Scope).Single();
             scope?.ToString().Should().Be(scopeExpected);
 
-            QueryExpression value = constraints.Select(x => x.Expression).Single();
+            QueryExpression value = constraints.Select(expressionInScope => expressionInScope.Expression).Single();
             value.ToString().Should().Be(valueExpected);
         }
     }

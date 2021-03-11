@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -74,7 +73,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 expression = ApplyPagination(expression, layer.Pagination);
             }
 
-            if (layer.Projection != null && layer.Projection.Any())
+            if (!layer.Projection.IsNullOrEmpty())
             {
                 expression = ApplyProjection(expression, layer.Projection, layer.ResourceContext);
             }

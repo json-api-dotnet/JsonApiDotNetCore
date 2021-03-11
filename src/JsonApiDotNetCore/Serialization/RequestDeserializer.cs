@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public object Deserialize(string body)
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             if (_request.Kind == EndpointKind.Relationship)
             {
@@ -260,7 +260,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 try
                 {
-                    TypeHelper.ConvertType(resourceIdentifierObject.Id, idType);
+                    RuntimeTypeConverter.ConvertType(resourceIdentifierObject.Id, idType);
                 }
                 catch (FormatException exception)
                 {
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCore.Serialization
                     secondaryResources.Add(secondaryResource);
                 }
 
-                IEnumerable rightResources = TypeHelper.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
+                IEnumerable rightResources = CollectionConverter.CopyToTypedCollection(secondaryResources, relationship.Property.PropertyType);
                 relationship.SetValue(primaryResource, rightResources);
             }
         }

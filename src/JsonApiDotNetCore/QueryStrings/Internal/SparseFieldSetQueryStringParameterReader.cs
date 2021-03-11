@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
-            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+            ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
 
             return parameterName.StartsWith("fields[", StringComparison.Ordinal) && parameterName.EndsWith("]", StringComparison.Ordinal);
         }

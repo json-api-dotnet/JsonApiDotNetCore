@@ -34,14 +34,10 @@ namespace JsonApiDotNetCore.Errors
         public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)
             : base(null, innerException)
         {
-            ArgumentGuard.NotNull(errors, nameof(errors));
+            List<Error> errorList = errors?.ToList();
+            ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
-            Errors = errors.ToList();
-
-            if (!Errors.Any())
-            {
-                throw new ArgumentException("At least one error is required.", nameof(errors));
-            }
+            Errors = errorList;
         }
     }
 }

@@ -52,16 +52,16 @@ namespace TestBuildingBlocks
                 int hash1 = (5381 << 16) + 5381;
                 int hash2 = hash1;
 
-                for (int i = 0; i < source.Length; i += 2)
+                for (int index = 0; index < source.Length; index += 2)
                 {
-                    hash1 = ((hash1 << 5) + hash1) ^ source[i];
+                    hash1 = ((hash1 << 5) + hash1) ^ source[index];
 
-                    if (i == source.Length - 1)
+                    if (index == source.Length - 1)
                     {
                         break;
                     }
 
-                    hash2 = ((hash2 << 5) + hash2) ^ source[i + 1];
+                    hash2 = ((hash2 << 5) + hash2) ^ source[index + 1];
                 }
 
                 return hash1 + hash2 * 1566083941;

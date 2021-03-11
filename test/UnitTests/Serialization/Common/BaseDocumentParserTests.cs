@@ -130,43 +130,45 @@ namespace UnitTests.Serialization.Common
 
             string body = JsonConvert.SerializeObject(content);
 
-            // Act, assert
-            if (expectError)
-            {
-                Assert.ThrowsAny<FormatException>(() => _deserializer.Deserialize(body));
-                return;
-            }
-
             // Act
-            var resource = (TestResource)_deserializer.Deserialize(body);
+            Func<TestResource> action = () => (TestResource)_deserializer.Deserialize(body);
 
             // Assert
-            PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
-            object deserializedValue = pi.GetValue(resource);
-
-            if (member == "intField")
+            if (expectError)
             {
-                Assert.Equal(1, deserializedValue);
-            }
-            else if (member == "nullableIntField" && value == null)
-            {
-                Assert.Null(deserializedValue);
-            }
-            else if (member == "nullableIntField" && (string)value == "1")
-            {
-                Assert.Equal(1, deserializedValue);
-            }
-            else if (member == "guidField")
-            {
-                Assert.Equal(deserializedValue, Guid.Parse("1a68be43-cc84-4924-a421-7f4d614b7781"));
-            }
-            else if (member == "dateTimeField")
-            {
-                Assert.Equal(deserializedValue, DateTime.Parse("9/11/2019 11:41:40 AM"));
+                Assert.ThrowsAny<FormatException>(action);
             }
             else
             {
-                Assert.Equal(value, deserializedValue);
+                TestResource resource = action();
+
+                PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+                object deserializedValue = pi.GetValue(resource);
+
+                if (member == "intField")
+                {
+                    Assert.Equal(1, deserializedValue);
+                }
+                else if (member == "nullableIntField" && value == null)
+                {
+                    Assert.Null(deserializedValue);
+                }
+                else if (member == "nullableIntField" && (string)value == "1")
+                {
+                    Assert.Equal(1, deserializedValue);
+                }
+                else if (member == "guidField")
+                {
+                    Assert.Equal(deserializedValue, Guid.Parse("1a68be43-cc84-4924-a421-7f4d614b7781"));
+                }
+                else if (member == "dateTimeField")
+                {
+                    Assert.Equal(deserializedValue, DateTime.Parse("9/11/2019 11:41:40 AM"));
+                }
+                else
+                {
+                    Assert.Equal(value, deserializedValue);
+                }
             }
         }
 
@@ -251,8 +253,11 @@ namespace UnitTests.Serialization.Common
 
             string body = JsonConvert.SerializeObject(content);
 
-            // Act, assert
-            Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
+            // Act
+            Action action = () => _deserializer.Deserialize(body);
+
+            // Assert
+            Assert.Throws<JsonApiSerializationException>(action);
         }
 
         [Fact]
@@ -275,8 +280,11 @@ namespace UnitTests.Serialization.Common
 
             string body = JsonConvert.SerializeObject(content);
 
-            // Act, assert
-            Assert.Throws<JsonApiSerializationException>(() => _deserializer.Deserialize(body));
+            // Act
+            Action action = () => _deserializer.Deserialize(body);
+
+            // Assert
+            Assert.Throws<JsonApiSerializationException>(action);
         }
 
         [Fact]
@@ -336,7 +344,7 @@ namespace UnitTests.Serialization.Common
             // Act
             var result = (OneToOneRequiredDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
         }
@@ -384,7 +392,7 @@ namespace UnitTests.Serialization.Common
             // Act
             var result = (OneToManyRequiredDependent)_deserializer.Deserialize(body);
 
-            // assert
+            // Assert
             Assert.Equal(1, result.Id);
             Assert.Null(result.Principal);
             Assert.Null(result.AttributeMember);

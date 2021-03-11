@@ -17,12 +17,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> table)
         {
-            ArgumentGuard.NotNull(table, nameof(table));
-
-            if (!table.Any())
-            {
-                throw new ArgumentException("Must have one or more entries.", nameof(table));
-            }
+            ArgumentGuard.NotNullNorEmpty(table, nameof(table), "entries");
 
             Table = table;
         }

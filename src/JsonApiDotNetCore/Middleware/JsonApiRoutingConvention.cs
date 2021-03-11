@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <inheritdoc />
         public Type GetResourceTypeForController(string controllerName)
         {
-            ArgumentGuard.NotNull(controllerName, nameof(controllerName));
+            ArgumentGuard.NotNullNorEmpty(controllerName, nameof(controllerName));
 
             if (_registeredResources.TryGetValue(controllerName, out ResourceContext resourceContext))
             {
@@ -157,7 +157,8 @@ namespace JsonApiDotNetCore.Middleware
 
                 if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
                 {
-                    Type resourceType = currentType.GetGenericArguments().FirstOrDefault(t => TypeHelper.IsOrImplementsInterface(t, typeof(IIdentifiable)));
+                    Type resourceType = currentType.GetGenericArguments()
+                        .FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface(typeof(IIdentifiable)));
 
                     if (resourceType != null)
                     {

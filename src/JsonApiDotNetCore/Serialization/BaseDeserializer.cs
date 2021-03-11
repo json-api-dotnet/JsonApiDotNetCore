@@ -21,6 +21,8 @@ namespace JsonApiDotNetCore.Serialization
     [PublicAPI]
     public abstract class BaseDeserializer
     {
+        private protected static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         protected IResourceContextProvider ResourceContextProvider { get; }
         protected IResourceFactory ResourceFactory { get; }
         protected Document Document { get; set; }
@@ -56,7 +58,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected object DeserializeBody(string body)
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             JToken bodyJToken = LoadJToken(body);
             Document = bodyJToken.ToObject<Document>();
@@ -95,7 +97,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(attributes, nameof(attributes));
 
-            if (attributeValues == null || attributeValues.Count == 0)
+            if (attributeValues.IsNullOrEmpty())
             {
                 return resource;
             }
@@ -137,7 +139,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(relationshipAttributes, nameof(relationshipAttributes));
 
-            if (relationshipValues == null || relationshipValues.Count == 0)
+            if (relationshipValues.IsNullOrEmpty())
             {
                 return resource;
             }
@@ -164,7 +166,9 @@ namespace JsonApiDotNetCore.Serialization
             return resource;
         }
 
+#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         protected JToken LoadJToken(string body)
+#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         {
             using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
             {
@@ -252,7 +256,7 @@ namespace JsonApiDotNetCore.Serialization
             HashSet<IIdentifiable> rightResources = relationshipData.ManyData.Select(rio => CreateRightResource(hasManyRelationship, rio))
                 .ToHashSet(IdentifiableComparer.Instance);
 
-            IEnumerable convertedCollection = TypeHelper.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
+            IEnumerable convertedCollection = CollectionConverter.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
             hasManyRelationship.SetValue(resource, convertedCollection);
 
             AfterProcessField(resource, hasManyRelationship, relationshipData);
@@ -344,7 +348,7 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             // the attribute value is a native C# type.
-            object convertedValue = TypeHelper.ConvertType(newValue, targetType);
+            object convertedValue = RuntimeTypeConverter.ConvertType(newValue, targetType);
             return convertedValue;
         }
 

@@ -12,53 +12,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         private readonly Lazy<Faker<Blog>> _lazyBlogFaker = new Lazy<Faker<Blog>>(() =>
             new Faker<Blog>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(blog => blog.Title, f => f.Lorem.Word())
-                .RuleFor(blog => blog.PlatformName, f => f.Company.CompanyName()));
+                .RuleFor(blog => blog.Title, faker => faker.Lorem.Word())
+                .RuleFor(blog => blog.PlatformName, faker => faker.Company.CompanyName()));
 
         private readonly Lazy<Faker<BlogPost>> _lazyBlogPostFaker = new Lazy<Faker<BlogPost>>(() =>
             new Faker<BlogPost>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(blogPost => blogPost.Caption, f => f.Lorem.Sentence())
-                .RuleFor(blogPost => blogPost.Url, f => f.Internet.Url()));
+                .RuleFor(blogPost => blogPost.Caption, faker => faker.Lorem.Sentence())
+                .RuleFor(blogPost => blogPost.Url, faker => faker.Internet.Url()));
 
         private readonly Lazy<Faker<Label>> _lazyLabelFaker = new Lazy<Faker<Label>>(() =>
             new Faker<Label>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(label => label.Name, f => f.Lorem.Word())
-                .RuleFor(label => label.Color, f => f.PickRandom<LabelColor>()));
+                .RuleFor(label => label.Name, faker => faker.Lorem.Word())
+                .RuleFor(label => label.Color, faker => faker.PickRandom<LabelColor>()));
 
         private readonly Lazy<Faker<Comment>> _lazyCommentFaker = new Lazy<Faker<Comment>>(() =>
             new Faker<Comment>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(comment => comment.Text, f => f.Lorem.Paragraph())
-                .RuleFor(comment => comment.CreatedAt, f => f.Date.Past()));
+                .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
+                .RuleFor(comment => comment.CreatedAt, faker => faker.Date.Past()));
 
         private readonly Lazy<Faker<WebAccount>> _lazyWebAccountFaker = new Lazy<Faker<WebAccount>>(() =>
             new Faker<WebAccount>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(webAccount => webAccount.UserName, f => f.Person.UserName)
-                .RuleFor(webAccount => webAccount.Password, f => f.Internet.Password())
-                .RuleFor(webAccount => webAccount.DisplayName, f => f.Person.FullName)
-                .RuleFor(webAccount => webAccount.DateOfBirth, f => f.Person.DateOfBirth)
-                .RuleFor(webAccount => webAccount.EmailAddress, f => f.Internet.Email()));
+                .RuleFor(webAccount => webAccount.UserName, faker => faker.Person.UserName)
+                .RuleFor(webAccount => webAccount.Password, faker => faker.Internet.Password())
+                .RuleFor(webAccount => webAccount.DisplayName, faker => faker.Person.FullName)
+                .RuleFor(webAccount => webAccount.DateOfBirth, faker => faker.Person.DateOfBirth)
+                .RuleFor(webAccount => webAccount.EmailAddress, faker => faker.Internet.Email()));
 
         private readonly Lazy<Faker<AccountPreferences>> _lazyAccountPreferencesFaker = new Lazy<Faker<AccountPreferences>>(() =>
             new Faker<AccountPreferences>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(accountPreferences => accountPreferences.UseDarkTheme, f => f.Random.Bool()));
+                .RuleFor(accountPreferences => accountPreferences.UseDarkTheme, faker => faker.Random.Bool()));
 
         private readonly Lazy<Faker<Calendar>> _lazyCalendarFaker = new Lazy<Faker<Calendar>>(() =>
             new Faker<Calendar>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(calendar => calendar.TimeZone, f => f.Date.TimeZoneString())
-                .RuleFor(calendar => calendar.DefaultAppointmentDurationInMinutes, f => f.PickRandom(15, 30, 45, 60)));
+                .RuleFor(calendar => calendar.TimeZone, faker => faker.Date.TimeZoneString())
+                .RuleFor(calendar => calendar.DefaultAppointmentDurationInMinutes, faker => faker.PickRandom(15, 30, 45, 60)));
 
         private readonly Lazy<Faker<Appointment>> _lazyAppointmentFaker = new Lazy<Faker<Appointment>>(() =>
             new Faker<Appointment>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(appointment => appointment.Title, f => f.Random.Word())
-                .RuleFor(appointment => appointment.StartTime, f => f.Date.FutureOffset())
-                .RuleFor(appointment => appointment.EndTime, (f, appointment) => appointment.StartTime.AddHours(f.Random.Double(1, 4))));
+                .RuleFor(appointment => appointment.Title, faker => faker.Random.Word())
+                .RuleFor(appointment => appointment.StartTime, faker => faker.Date.FutureOffset())
+                .RuleFor(appointment => appointment.EndTime, (faker, appointment) => appointment.StartTime.AddHours(faker.Random.Double(1, 4))));
 
         public Faker<Blog> Blog => _lazyBlogFaker.Value;
         public Faker<BlogPost> BlogPost => _lazyBlogPostFaker.Value;

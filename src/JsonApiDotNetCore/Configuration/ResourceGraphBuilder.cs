@@ -19,6 +19,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
         private readonly List<ResourceContext> _resources = new List<ResourceContext>();
+        private readonly TypeLocator _typeLocator = new TypeLocator();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
         {
@@ -102,15 +103,15 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_resources.Any(e => e.ResourceType == resourceType))
+            if (_resources.Any(resourceContext => resourceContext.ResourceType == resourceType))
             {
                 return this;
             }
 
-            if (TypeHelper.IsOrImplementsInterface(resourceType, typeof(IIdentifiable)))
+            if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceType);
-                Type effectiveIdType = idType ?? TypeLocator.TryGetIdType(resourceType);
+                Type effectiveIdType = idType ?? _typeLocator.TryGetIdType(resourceType);
 
                 ResourceContext resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
                 _resources.Add(resourceContext);
@@ -138,8 +139,6 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-
             var attributes = new List<AttrAttribute>();
 
             foreach (PropertyInfo property in resourceType.GetProperties())
@@ -183,8 +182,6 @@ namespace JsonApiDotNetCore.Configuration
 
         private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-
             var attributes = new List<RelationshipAttribute>();
             PropertyInfo[] properties = resourceType.GetProperties();
 
@@ -205,7 +202,7 @@ namespace JsonApiDotNetCore.Configuration
 
                 if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
                 {
-                    PropertyInfo throughProperty = properties.SingleOrDefault(p => p.Name == hasManyThroughAttribute.ThroughPropertyName);
+                    PropertyInfo throughProperty = properties.SingleOrDefault(property => property.Name == hasManyThroughAttribute.ThroughPropertyName);
 
                     if (throughProperty == null)
                     {
@@ -240,14 +237,15 @@ namespace JsonApiDotNetCore.Configuration
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.LeftProperty = throughProperties.SingleOrDefault(x => x.PropertyType.IsAssignableFrom(resourceType)) ??
+                        hasManyThroughAttribute.LeftProperty =
+                            throughProperties.SingleOrDefault(property => property.PropertyType.IsAssignableFrom(resourceType)) ??
                             throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
                     }
 
                     // ArticleTag.ArticleId
                     string leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
 
-                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(x => x.Name == leftIdPropertyName) ??
+                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(property => property.Name == leftIdPropertyName) ??
                         throw new InvalidConfigurationException(
                             $"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
 
@@ -262,7 +260,8 @@ namespace JsonApiDotNetCore.Configuration
                     else
                     {
                         // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.RightProperty = throughProperties.SingleOrDefault(x => x.PropertyType == hasManyThroughAttribute.RightType) ??
+                        hasManyThroughAttribute.RightProperty =
+                            throughProperties.SingleOrDefault(property => property.PropertyType == hasManyThroughAttribute.RightType) ??
                             throw new InvalidConfigurationException(
                                 $"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
                     }
@@ -270,7 +269,7 @@ namespace JsonApiDotNetCore.Configuration
                     // ArticleTag.TagId
                     string rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
 
-                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(x => x.Name == rightIdPropertyName) ??
+                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(property => property.Name == rightIdPropertyName) ??
                         throw new InvalidConfigurationException(
                             $"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
                 }
@@ -289,7 +288,7 @@ namespace JsonApiDotNetCore.Configuration
                 {
                     Type constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
 
-                    if (TypeHelper.IsOrImplementsInterface(throughProperty.PropertyType, constructedThroughType))
+                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
                     {
                         return typeArguments[0];
                     }
@@ -307,13 +306,9 @@ namespace JsonApiDotNetCore.Configuration
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }
 
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
         {
-            if (recursionDepth >= 500)
-            {
-                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
-            }
+            AssertNoInfiniteRecursion(recursionDepth);
 
             var attributes = new List<EagerLoadAttribute>();
             PropertyInfo[] properties = resourceType.GetProperties();
@@ -337,9 +332,19 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
+        [AssertionMethod]
+        private static void AssertNoInfiniteRecursion(int recursionDepth)
+        {
+            if (recursionDepth >= 500)
+            {
+                throw new InvalidOperationException("Infinite recursion detected in eager-load chain.");
+            }
+        }
+
         private Type TypeOrElementType(Type type)
         {
-            Type[] interfaces = type.GetInterfaces().Where(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
+            Type[] interfaces = type.GetInterfaces()
+                .Where(@interface => @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IEnumerable<>)).ToArray();
 
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }

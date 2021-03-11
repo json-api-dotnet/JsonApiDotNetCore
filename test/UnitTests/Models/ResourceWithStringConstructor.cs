@@ -11,7 +11,7 @@ namespace UnitTests.Models
 
         public ResourceWithStringConstructor(string text)
         {
-            ArgumentGuard.NotNull(text, nameof(text));
+            ArgumentGuard.NotNullNorEmpty(text, nameof(text));
 
             Text = text;
         }

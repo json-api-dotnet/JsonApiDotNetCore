@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         {
             builder.Entity<SystemDirectory>()
                 .HasMany(systemDirectory => systemDirectory.Subdirectories)
-                .WithOne(x => x.Parent);
+                .WithOne(systemDirectory => systemDirectory.Parent);
 
             builder.Entity<SystemDirectory>()
                 .HasOne(systemDirectory => systemDirectory.Self)

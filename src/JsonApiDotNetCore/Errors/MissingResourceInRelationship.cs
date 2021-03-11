@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Errors
 
         public MissingResourceInRelationship(string relationshipName, string resourceType, string resourceId)
         {
-            ArgumentGuard.NotNull(relationshipName, nameof(relationshipName));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-            ArgumentGuard.NotNull(resourceId, nameof(resourceId));
+            ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
+            ArgumentGuard.NotNullNorEmpty(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNullNorEmpty(resourceId, nameof(resourceId));
 
             RelationshipName = relationshipName;
             ResourceType = resourceType;

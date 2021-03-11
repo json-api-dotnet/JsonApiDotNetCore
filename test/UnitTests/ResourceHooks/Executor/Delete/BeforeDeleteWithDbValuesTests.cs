@@ -58,7 +58,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
-                CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
+                CreateTestObjectsC(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
             // Act
             hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
@@ -87,7 +87,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
-                CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
+                CreateTestObjectsC(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
             // Act
             hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
@@ -114,7 +114,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
             (_, IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<Person>> personResourceMock,
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Passport>> passportResourceMock) =
-                CreateTestObjects(personDiscovery, todoDiscovery, passportDiscovery, _options);
+                CreateTestObjectsC(personDiscovery, todoDiscovery, passportDiscovery, _options);
 
             // Act
             hookExecutor.BeforeDelete(_person.AsList(), ResourcePipeline.Delete);
@@ -126,7 +126,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
 
         private bool CheckImplicitTodoItems(IRelationshipsDictionary<TodoItem> rh)
         {
-            Dictionary<RelationshipAttribute, HashSet<TodoItem>> todoItems = rh.GetByRelationship<Person>();
+            IDictionary<RelationshipAttribute, HashSet<TodoItem>> todoItems = rh.GetByRelationship<Person>();
             return todoItems.Count == 2;
         }
 

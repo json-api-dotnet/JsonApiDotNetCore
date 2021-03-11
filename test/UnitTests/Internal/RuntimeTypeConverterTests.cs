@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore;
-using JsonApiDotNetCore.Resources;
 using Xunit;
 
 namespace UnitTests.Internal
 {
-    public sealed class TypeHelperTests
+    public sealed class RuntimeTypeConverterTests
     {
         [Fact]
         public void Can_Convert_DateTimeOffsets()
@@ -16,7 +15,7 @@ namespace UnitTests.Internal
             string formattedString = dto.ToString("O");
 
             // Act
-            object result = TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset));
+            object result = RuntimeTypeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
 
             // Assert
             Assert.Equal(dto, result);
@@ -29,8 +28,10 @@ namespace UnitTests.Internal
             const string formattedString = "this_is_not_a_valid_dto";
 
             // Act
+            Action action = () => RuntimeTypeConverter.ConvertType(formattedString, typeof(DateTimeOffset));
+
             // Assert
-            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(DateTimeOffset)));
+            Assert.Throws<FormatException>(action);
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace UnitTests.Internal
             const string formattedString = "1";
 
             // Act
-            object result = TypeHelper.ConvertType(formattedString, typeof(TestEnum));
+            object result = RuntimeTypeConverter.ConvertType(formattedString, typeof(TestEnum));
 
             // Assert
             Assert.Equal(TestEnum.Test, result);
@@ -51,11 +52,10 @@ namespace UnitTests.Internal
         {
             // Arrange
             var val = new ComplexType();
-
             Type type = val.GetType();
 
             // Act
-            object result = TypeHelper.ConvertType(val, type);
+            object result = RuntimeTypeConverter.ConvertType(val, type);
 
             // Assert
             Assert.Equal(val, result);
@@ -71,8 +71,8 @@ namespace UnitTests.Internal
             Type iType = typeof(IType);
 
             // Act
-            object baseResult = TypeHelper.ConvertType(val, baseType);
-            object iResult = TypeHelper.ConvertType(val, iType);
+            object baseResult = RuntimeTypeConverter.ConvertType(val, baseType);
+            object iResult = RuntimeTypeConverter.ConvertType(val, iType);
 
             // Assert
             Assert.Equal(val, baseResult);
@@ -82,7 +82,7 @@ namespace UnitTests.Internal
         [Fact]
         public void ConvertType_Returns_Default_Value_For_Empty_Strings()
         {
-            // Arrange -- can't use non-constants in [Theory]
+            // Arrange
             var data = new Dictionary<Type, object>
             {
                 { typeof(int), 0 },
@@ -92,27 +92,27 @@ namespace UnitTests.Internal
                 { typeof(Guid), Guid.Empty }
             };
 
-            foreach (KeyValuePair<Type, object> t in data)
+            foreach (KeyValuePair<Type, object> pair in data)
             {
                 // Act
-                object result = TypeHelper.ConvertType(string.Empty, t.Key);
+                object result = RuntimeTypeConverter.ConvertType(string.Empty, pair.Key);
 
                 // Assert
-                Assert.Equal(t.Value, result);
+                Assert.Equal(pair.Value, result);
             }
         }
 
         [Fact]
         public void Can_Convert_TimeSpans()
         {
-            //arrange
+            // Arrange
             TimeSpan timeSpan = TimeSpan.FromMinutes(45);
             string stringSpan = timeSpan.ToString();
 
-            //act
-            object result = TypeHelper.ConvertType(stringSpan, typeof(TimeSpan));
+            // Act
+            object result = RuntimeTypeConverter.ConvertType(stringSpan, typeof(TimeSpan));
 
-            //assert
+            // Assert
             Assert.Equal(timeSpan, result);
         }
 
@@ -122,48 +122,11 @@ namespace UnitTests.Internal
             // Arrange
             const string formattedString = "this_is_not_a_valid_timespan";
 
-            // Act/assert
-            Assert.Throws<FormatException>(() => TypeHelper.ConvertType(formattedString, typeof(TimeSpan)));
-        }
-
-        [Fact]
-        public void New_Creates_An_Instance_If_T_Implements_Interface()
-        {
-            // Arrange
-            Type type = typeof(Model);
-
             // Act
-            var instance = (IIdentifiable)TypeHelper.CreateInstance(type);
+            Action action = () => RuntimeTypeConverter.ConvertType(formattedString, typeof(TimeSpan));
 
             // Assert
-            Assert.NotNull(instance);
-            Assert.IsType<Model>(instance);
-        }
-
-        [Fact]
-        public void Implements_Returns_True_If_Type_Implements_Interface()
-        {
-            // Arrange
-            Type type = typeof(Model);
-
-            // Act
-            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
-
-            // Assert
-            Assert.True(result);
-        }
-
-        [Fact]
-        public void Implements_Returns_False_If_Type_DoesNot_Implement_Interface()
-        {
-            // Arrange
-            Type type = typeof(string);
-
-            // Act
-            bool result = TypeHelper.IsOrImplementsInterface(type, typeof(IIdentifiable));
-
-            // Assert
-            Assert.False(result);
+            Assert.Throws<FormatException>(action);
         }
 
         private enum TestEnum
@@ -181,12 +144,6 @@ namespace UnitTests.Internal
 
         private interface IType
         {
-        }
-
-        private sealed class Model : IIdentifiable
-        {
-            public string StringId { get; set; }
-            public string LocalId { get; set; }
         }
     }
 }

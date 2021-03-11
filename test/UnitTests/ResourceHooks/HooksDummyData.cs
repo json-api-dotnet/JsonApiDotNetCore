@@ -39,30 +39,30 @@ namespace UnitTests.ResourceHooks
             // @formatter:keep_existing_linebreaks true
 
             TodoFaker = new Faker<TodoItem>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(todoItem => todoItem.Id, faker => faker.UniqueIndex + 1);
 
             PersonFaker = new Faker<Person>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(person => person.Id, faker => faker.UniqueIndex + 1);
 
             ArticleFaker = new Faker<Article>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(article => article.Id, faker => faker.UniqueIndex + 1);
 
             TagFaker = new Faker<Tag>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(tag => tag.Id, faker => faker.UniqueIndex + 1);
 
             ArticleTagFaker = new Faker<ArticleTag>();
 
             _identifiableArticleTagFaker = new Faker<IdentifiableArticleTag>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(identifiableArticleTag => identifiableArticleTag.Id, faker => faker.UniqueIndex + 1);
 
             PassportFaker = new Faker<Passport>()
-                .RuleFor(x => x.Id, f => f.UniqueIndex + 1);
+                .RuleFor(passport => passport.Id, faker => faker.UniqueIndex + 1);
 
             // @formatter:wrap_chained_method_calls restore
             // @formatter:keep_existing_linebreaks restore
         }
 
-        protected List<TodoItem> CreateTodoWithToOnePerson()
+        protected IList<TodoItem> CreateTodoWithToOnePerson()
         {
             TodoItem todoItem = TodoFaker.Generate();
             Person person = PersonFaker.Generate();
@@ -72,19 +72,19 @@ namespace UnitTests.ResourceHooks
             return todoList;
         }
 
-        protected HashSet<TodoItem> CreateTodoWithOwner()
+        protected IEnumerable<TodoItem> CreateTodoWithOwner()
         {
             TodoItem todoItem = TodoFaker.Generate();
             Person person = PersonFaker.Generate();
 
-            var todoList = new HashSet<TodoItem>
+            var todoSet = new HashSet<TodoItem>
             {
                 todoItem
             };
 
-            person.AssignedTodoItems = todoList;
+            person.AssignedTodoItems = todoSet;
             todoItem.Owner = person;
-            return todoList;
+            return todoSet;
         }
 
         protected (List<Article>, List<Tag>) CreateManyToManyData()
@@ -94,10 +94,10 @@ namespace UnitTests.ResourceHooks
             Article articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
 
-            for (int i = 0; i < 3; i++)
+            for (int index = 0; index < 3; index++)
             {
-                joinsSubSet[i].Article = articleTagsSubset;
-                joinsSubSet[i].Tag = tagsSubset[i];
+                joinsSubSet[index].Article = articleTagsSubset;
+                joinsSubSet[index].Tag = tagsSubset[index];
             }
 
             List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
@@ -106,27 +106,27 @@ namespace UnitTests.ResourceHooks
             Article articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
-            for (int i = 0; i < 6; i++)
+            for (int index = 0; index < 6; index++)
             {
-                completeJoin[i].Article = articleWithAllTags;
-                completeJoin[i].Tag = allTags[i];
+                completeJoin[index].Article = articleWithAllTags;
+                completeJoin[index].Tag = allTags[index];
             }
 
             List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
             return (articles, allTags);
         }
 
-        protected (List<Article>, List<IdentifiableArticleTag>, List<Tag>) CreateIdentifiableManyToManyData()
+        protected ManyToManyTestData CreateIdentifiableManyToManyData()
         {
             List<Tag> tagsSubset = TagFaker.Generate(3);
             List<IdentifiableArticleTag> joinsSubSet = _identifiableArticleTagFaker.Generate(3);
             Article articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.IdentifiableArticleTags = joinsSubSet.ToHashSet();
 
-            for (int i = 0; i < 3; i++)
+            for (int index = 0; index < 3; index++)
             {
-                joinsSubSet[i].Article = articleTagsSubset;
-                joinsSubSet[i].Tag = tagsSubset[i];
+                joinsSubSet[index].Article = articleTagsSubset;
+                joinsSubSet[index].Tag = tagsSubset[index];
             }
 
             List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
@@ -135,15 +135,36 @@ namespace UnitTests.ResourceHooks
             Article articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.IdentifiableArticleTags = joinsSubSet.ToHashSet();
 
-            for (int i = 0; i < 6; i++)
+            for (int index = 0; index < 6; index++)
             {
-                completeJoin[i].Article = articleWithAllTags;
-                completeJoin[i].Tag = allTags[i];
+                completeJoin[index].Article = articleWithAllTags;
+                completeJoin[index].Tag = allTags[index];
             }
 
             List<IdentifiableArticleTag> allJoins = joinsSubSet.Concat(completeJoin).ToList();
             List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();
-            return (articles, allJoins, allTags);
+            return new ManyToManyTestData(articles, allJoins, allTags);
+        }
+
+        protected sealed class ManyToManyTestData
+        {
+            public List<Article> Articles { get; }
+            public List<IdentifiableArticleTag> ArticleTags { get; }
+            public List<Tag> Tags { get; }
+
+            public ManyToManyTestData(List<Article> articles, List<IdentifiableArticleTag> articleTags, List<Tag> tags)
+            {
+                Articles = articles;
+                ArticleTags = articleTags;
+                Tags = tags;
+            }
+
+            public void Deconstruct(out List<Article> articles, out List<IdentifiableArticleTag> articleTags, out List<Tag> tags)
+            {
+                articles = Articles;
+                articleTags = ArticleTags;
+                tags = Tags;
+            }
         }
     }
 }

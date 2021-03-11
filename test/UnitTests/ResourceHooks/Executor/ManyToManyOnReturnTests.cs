@@ -104,10 +104,10 @@ namespace UnitTests.ResourceHooks.Executor
             Article articleTagsSubset = ArticleFaker.Generate();
             articleTagsSubset.ArticleTags = joinsSubSet.ToHashSet();
 
-            for (int i = 0; i < 3; i++)
+            for (int index = 0; index < 3; index++)
             {
-                joinsSubSet[i].Article = articleTagsSubset;
-                joinsSubSet[i].Tag = tagsSubset[i];
+                joinsSubSet[index].Article = articleTagsSubset;
+                joinsSubSet[index].Tag = tagsSubset[index];
             }
 
             List<Tag> allTags = TagFaker.Generate(3).Concat(tagsSubset).ToList();
@@ -116,10 +116,10 @@ namespace UnitTests.ResourceHooks.Executor
             Article articleWithAllTags = ArticleFaker.Generate();
             articleWithAllTags.ArticleTags = completeJoin.ToHashSet();
 
-            for (int i = 0; i < 6; i++)
+            for (int index = 0; index < 6; index++)
             {
-                completeJoin[i].Article = articleWithAllTags;
-                completeJoin[i].Tag = allTags[i];
+                completeJoin[index].Article = articleWithAllTags;
+                completeJoin[index].Tag = allTags[index];
             }
 
             List<Article> articles = ArrayFactory.Create(articleTagsSubset, articleWithAllTags).ToList();

@@ -60,8 +60,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
                 throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
             }
 
-            object convertedValue = TypeHelper.ConvertType(newValue, Property.PropertyType);
-            Property.SetValue(resource, convertedValue);
+            Property.SetValue(resource, newValue);
         }
 
         public override bool Equals(object obj)

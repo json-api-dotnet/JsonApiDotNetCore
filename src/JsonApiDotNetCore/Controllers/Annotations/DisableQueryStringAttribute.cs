@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         /// </summary>
         public DisableQueryStringAttribute(string parameterNames)
         {
-            ArgumentGuard.NotNull(parameterNames, nameof(parameterNames));
+            ArgumentGuard.NotNullNorEmpty(parameterNames, nameof(parameterNames));
 
             ParameterNames = parameterNames.Split(",").ToList();
         }

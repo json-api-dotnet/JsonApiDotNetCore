@@ -23,23 +23,26 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksTestsSetup : HooksDummyData
     {
-        private (Mock<ITargetedFields>, Mock<IEnumerable<IQueryConstraintProvider>>, Mock<IGenericServiceFactory>, IJsonApiOptions) CreateMocks()
+        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
+
+        private TestMocks CreateMocks()
         {
-            var pfMock = new Mock<IGenericServiceFactory>();
-            var ufMock = new Mock<ITargetedFields>();
+            var genericServiceFactoryMock = new Mock<IGenericServiceFactory>();
+            var targetedFieldsMock = new Mock<ITargetedFields>();
 
             var constraintsMock = new Mock<IEnumerable<IQueryConstraintProvider>>();
-            constraintsMock.Setup(x => x.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
+            constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(Enumerable.Empty<IQueryConstraintProvider>().GetEnumerator());
 
             var optionsMock = new JsonApiOptions
             {
                 LoadDatabaseValues = false
             };
 
-            return (ufMock, constraintsMock, pfMock, optionsMock);
+            return new TestMocks(targetedFieldsMock, constraintsMock, genericServiceFactoryMock, optionsMock);
         }
 
-        internal (ResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>) CreateTestObjects<TPrimary>(IHooksDiscovery<TPrimary> primaryDiscovery = null)
+        protected TestObjectsA<TPrimary> CreateTestObjects<TPrimary>(IHooksDiscovery<TPrimary> primaryDiscovery = null)
             where TPrimary : class, IIdentifiable<int>
         {
             // creates the resource definition mock and corresponding ImplementedHooks discovery instance
@@ -51,16 +54,15 @@ namespace UnitTests.ResourceHooks
 
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
-            return (hookExecutor, primaryResource);
+            return new TestObjectsA<TPrimary>(hookExecutor, primaryResource);
         }
 
-        protected (Mock<IEnumerable<IQueryConstraintProvider>>, Mock<ITargetedFields>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>,
-            Mock<IResourceHookContainer<TSecondary>>) CreateTestObjects<TPrimary, TSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
-                IHooksDiscovery<TSecondary> secondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
+        protected TestObjectsB<TPrimary, TSecondary> CreateTestObjects<TPrimary, TSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
+            IHooksDiscovery<TSecondary> secondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TSecondary : class, IIdentifiable<int>
         {
@@ -79,18 +81,16 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, primaryResource.Object, primaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondaryResource.Object, secondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
-            return (constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
+            return new TestObjectsB<TPrimary, TSecondary>(constraintsMock, ufMock, hookExecutor, primaryResource, secondaryResource);
         }
 
-        protected (Mock<IEnumerable<IQueryConstraintProvider>>, IResourceHookExecutor, Mock<IResourceHookContainer<TPrimary>>,
-            Mock<IResourceHookContainer<TFirstSecondary>>, Mock<IResourceHookContainer<TSecondSecondary>>)
-            CreateTestObjects<TPrimary, TFirstSecondary, TSecondSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
-                IHooksDiscovery<TFirstSecondary> firstSecondaryDiscovery = null, IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null,
-                DbContextOptions<AppDbContext> repoDbContextOptions = null)
+        protected TestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary> CreateTestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary>(
+            IHooksDiscovery<TPrimary> primaryDiscovery = null, IHooksDiscovery<TFirstSecondary> firstSecondaryDiscovery = null,
+            IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TFirstSecondary : class, IIdentifiable<int>
             where TSecondSecondary : class, IIdentifiable<int>
@@ -113,11 +113,12 @@ namespace UnitTests.ResourceHooks
             SetupProcessorFactoryForResourceDefinition(gpfMock, firstSecondaryResource.Object, firstSecondaryDiscovery, dbContext, resourceGraph);
             SetupProcessorFactoryForResourceDefinition(gpfMock, secondSecondaryResource.Object, secondSecondaryDiscovery, dbContext, resourceGraph);
 
-            var execHelper = new HookExecutorHelper(gpfMock.Object, ResourceGraph, options);
-            var traversalHelper = new TraversalHelper(ResourceGraph, ufMock.Object);
+            var execHelper = new HookContainerProvider(gpfMock.Object, ResourceGraph, options);
+            var traversalHelper = new NodeNavigator(ResourceGraph, ufMock.Object);
             var hookExecutor = new ResourceHookExecutor(execHelper, traversalHelper, ufMock.Object, constraintsMock.Object, ResourceGraph);
 
-            return (constraintsMock, hookExecutor, primaryResource, firstSecondaryResource, secondSecondaryResource);
+            return new TestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary>(constraintsMock, hookExecutor, primaryResource, firstSecondaryResource,
+                secondSecondaryResource);
         }
 
         protected IHooksDiscovery<TResource> SetDiscoverableHooks<TResource>(ResourceHook[] implementedHooks, params ResourceHook[] enableDbValuesHooks)
@@ -192,20 +193,20 @@ namespace UnitTests.ResourceHooks
             IResourceHookContainer<TModel> modelResource, IHooksDiscovery<TModel> discovery, AppDbContext dbContext = null, IResourceGraph resourceGraph = null)
             where TModel : class, IIdentifiable<int>
         {
-            processorFactory.Setup(c => c.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
+            processorFactory.Setup(factory => factory.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
 
-            processorFactory.Setup(c => c.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel))).Returns(discovery);
+            processorFactory.Setup(factory => factory.Get<IHooksDiscovery>(typeof(IHooksDiscovery<>), typeof(TModel))).Returns(discovery);
 
             if (dbContext != null)
             {
-                Type idType = TypeHelper.GetIdType(typeof(TModel));
+                Type idType = ObjectFactory.GetIdType(typeof(TModel));
 
                 if (idType == typeof(int))
                 {
                     IResourceReadRepository<TModel, int> repo = CreateTestRepository<TModel>(dbContext, resourceGraph);
 
-                    processorFactory.Setup(c => c.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int)))
-                        .Returns(repo);
+                    processorFactory.Setup(factory =>
+                        factory.Get<IResourceReadRepository<TModel, int>>(typeof(IResourceReadRepository<,>), typeof(TModel), typeof(int))).Returns(repo);
                 }
                 else
                 {
@@ -229,7 +230,7 @@ namespace UnitTests.ResourceHooks
         private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
         {
             var mock = new Mock<IDbContextResolver>();
-            mock.Setup(r => r.GetContext()).Returns(dbContext);
+            mock.Setup(resolver => resolver.GetContext()).Returns(dbContext);
             return mock.Object;
         }
 
@@ -248,50 +249,162 @@ namespace UnitTests.ResourceHooks
             return resourceDefinition;
         }
 
-        protected List<List<RelationshipAttribute>> GetIncludedRelationshipsChains(params string[] chains)
+        protected IncludeExpression ToIncludeExpression(params string[] includePaths)
         {
-            var parsedChains = new List<List<RelationshipAttribute>>();
+            var relationshipChains = new List<ResourceFieldChainExpression>();
 
-            foreach (string chain in chains)
+            foreach (string includePath in includePaths)
             {
-                parsedChains.Add(GetIncludedRelationshipsChain(chain));
+                ResourceFieldChainExpression relationshipChain = GetRelationshipsInPath(includePath);
+                relationshipChains.Add(relationshipChain);
             }
 
-            return parsedChains;
+            return IncludeChainConverter.FromRelationshipChains(relationshipChains);
         }
 
-        private List<RelationshipAttribute> GetIncludedRelationshipsChain(string chain)
+        private ResourceFieldChainExpression GetRelationshipsInPath(string includePath)
         {
-            var parsedChain = new List<RelationshipAttribute>();
             ResourceContext resourceContext = ResourceGraph.GetResourceContext<TodoItem>();
-            string[] splitPath = chain.Split('.');
+            var relationships = new List<RelationshipAttribute>();
 
-            foreach (string requestedRelationship in splitPath)
+            foreach (string relationshipName in includePath.Split('.'))
             {
-                RelationshipAttribute relationship = resourceContext.Relationships.Single(r => r.PublicName == requestedRelationship);
-                parsedChain.Add(relationship);
+                RelationshipAttribute relationship = resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == relationshipName);
+
+                relationships.Add(relationship);
+
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
             }
 
-            return parsedChain;
+            return new ResourceFieldChainExpression(relationships);
         }
 
-        protected IEnumerable<IQueryConstraintProvider> ConvertInclusionChains(List<List<RelationshipAttribute>> inclusionChains)
+        protected IEnumerable<IQueryConstraintProvider> Wrap(IncludeExpression includeExpression)
         {
-            var expressionsInScope = new List<ExpressionInScope>();
-
-            if (inclusionChains != null)
+            var expressionsInScope = new List<ExpressionInScope>
             {
-                List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships)).ToList();
-                IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
-                expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
-            }
+                new ExpressionInScope(null, includeExpression)
+            };
 
             var mock = new Mock<IQueryConstraintProvider>();
-            mock.Setup(x => x.GetConstraints()).Returns(expressionsInScope);
+            mock.Setup(provider => provider.GetConstraints()).Returns(expressionsInScope);
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
             return includeConstraintProvider.AsEnumerable();
+        }
+
+        private sealed class TestMocks
+        {
+            public Mock<ITargetedFields> TargetedFieldsMock { get; }
+            public Mock<IEnumerable<IQueryConstraintProvider>> ConstraintsMock { get; }
+            public Mock<IGenericServiceFactory> GenericServiceFactoryMock { get; }
+            public IJsonApiOptions Options { get; }
+
+            public TestMocks(Mock<ITargetedFields> targetedFieldsMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock,
+                Mock<IGenericServiceFactory> genericServiceFactoryMock, IJsonApiOptions options)
+            {
+                TargetedFieldsMock = targetedFieldsMock;
+                ConstraintsMock = constraintsMock;
+                GenericServiceFactoryMock = genericServiceFactoryMock;
+                Options = options;
+            }
+
+            public void Deconstruct(out Mock<ITargetedFields> targetedFieldsMock, out Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock,
+                out Mock<IGenericServiceFactory> genericServiceFactoryMock, out IJsonApiOptions optionsMock)
+            {
+                targetedFieldsMock = TargetedFieldsMock;
+                constraintsMock = ConstraintsMock;
+                genericServiceFactoryMock = GenericServiceFactoryMock;
+                optionsMock = Options;
+            }
+        }
+
+        protected sealed class TestObjectsA<TPrimary>
+            where TPrimary : class, IIdentifiable<int>
+        {
+            public IResourceHookExecutor HookExecutor { get; }
+            public Mock<IResourceHookContainer<TPrimary>> PrimaryResourceContainerMock { get; }
+
+            public TestObjectsA(IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TPrimary>> primaryResourceContainerMock)
+            {
+                HookExecutor = hookExecutor;
+                PrimaryResourceContainerMock = primaryResourceContainerMock;
+            }
+
+            public void Deconstruct(out IResourceHookExecutor hookExecutor, out Mock<IResourceHookContainer<TPrimary>> primaryResourceContainerMock)
+            {
+                hookExecutor = HookExecutor;
+                primaryResourceContainerMock = PrimaryResourceContainerMock;
+            }
+        }
+
+        protected sealed class TestObjectsB<TPrimary, TSecondary>
+            where TPrimary : class, IIdentifiable<int>
+            where TSecondary : class, IIdentifiable<int>
+        {
+            public Mock<IEnumerable<IQueryConstraintProvider>> ConstraintsMock { get; }
+            public Mock<ITargetedFields> TargetedFieldsMock { get; }
+            public IResourceHookExecutor HookExecutor { get; }
+            public Mock<IResourceHookContainer<TPrimary>> PrimaryResourceContainerMock { get; }
+            public Mock<IResourceHookContainer<TSecondary>> SecondaryResourceContainerMock { get; }
+
+            public TestObjectsB(Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<ITargetedFields> targetedFieldsMock,
+                IResourceHookExecutor hookExecutor, Mock<IResourceHookContainer<TPrimary>> primaryResourceContainerMock,
+                Mock<IResourceHookContainer<TSecondary>> secondaryResourceContainerMock)
+            {
+                ConstraintsMock = constraintsMock;
+                TargetedFieldsMock = targetedFieldsMock;
+                HookExecutor = hookExecutor;
+                PrimaryResourceContainerMock = primaryResourceContainerMock;
+                SecondaryResourceContainerMock = secondaryResourceContainerMock;
+            }
+
+            public void Deconstruct(out Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, out Mock<ITargetedFields> ufMock,
+                out IResourceHookExecutor hookExecutor, out Mock<IResourceHookContainer<TPrimary>> primaryResource,
+                out Mock<IResourceHookContainer<TSecondary>> secondaryResource)
+            {
+                constraintsMock = ConstraintsMock;
+                ufMock = TargetedFieldsMock;
+                hookExecutor = HookExecutor;
+                primaryResource = PrimaryResourceContainerMock;
+                secondaryResource = SecondaryResourceContainerMock;
+            }
+        }
+
+        protected sealed class TestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary>
+            where TPrimary : class, IIdentifiable<int>
+            where TFirstSecondary : class, IIdentifiable<int>
+            where TSecondSecondary : class, IIdentifiable<int>
+        {
+            public Mock<IEnumerable<IQueryConstraintProvider>> ConstraintsMock { get; }
+            public IResourceHookExecutor HookExecutor { get; }
+            public Mock<IResourceHookContainer<TPrimary>> PrimaryResourceContainerMock { get; }
+            public Mock<IResourceHookContainer<TFirstSecondary>> FirstSecondaryResourceContainerMock { get; }
+            public Mock<IResourceHookContainer<TSecondSecondary>> SecondSecondaryResourceContainerMock { get; }
+
+            public TestObjectsC(Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, IResourceHookExecutor hookExecutor,
+                Mock<IResourceHookContainer<TPrimary>> primaryResourceContainerMock,
+                Mock<IResourceHookContainer<TFirstSecondary>> firstSecondaryResourceContainerMock,
+                Mock<IResourceHookContainer<TSecondSecondary>> secondSecondaryResourceContainerMock)
+            {
+                ConstraintsMock = constraintsMock;
+                HookExecutor = hookExecutor;
+                PrimaryResourceContainerMock = primaryResourceContainerMock;
+                FirstSecondaryResourceContainerMock = firstSecondaryResourceContainerMock;
+                SecondSecondaryResourceContainerMock = secondSecondaryResourceContainerMock;
+            }
+
+            public void Deconstruct(out Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, out IResourceHookExecutor hookExecutor,
+                out Mock<IResourceHookContainer<TPrimary>> primaryResourceContainerMock,
+                out Mock<IResourceHookContainer<TFirstSecondary>> firstSecondaryResourceContainerMock,
+                out Mock<IResourceHookContainer<TSecondSecondary>> secondSecondaryResourceContainerMock)
+            {
+                constraintsMock = ConstraintsMock;
+                hookExecutor = HookExecutor;
+                primaryResourceContainerMock = PrimaryResourceContainerMock;
+                firstSecondaryResourceContainerMock = FirstSecondaryResourceContainerMock;
+                secondSecondaryResourceContainerMock = SecondSecondaryResourceContainerMock;
+            }
         }
     }
 }

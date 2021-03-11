@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace UnitTests.Controllers
             await controller.GetAsync(CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetAsync(CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetAsync(CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -41,9 +42,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, null);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetAsync(CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -60,7 +62,7 @@ namespace UnitTests.Controllers
             await controller.GetAsync(id, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetAsync(id, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetAsync(id, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -71,9 +73,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.GetAsync(id, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetAsync(id, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -83,14 +86,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<IGetRelationshipService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
 
             // Act
-            await controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None);
+            await controller.GetRelationshipAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetRelationshipAsync(id, string.Empty, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetRelationshipAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -101,10 +105,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetRelationshipAsync(id, string.Empty, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetRelationshipAsync(id, "articles", CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -114,14 +118,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<IGetSecondaryService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
 
             // Act
-            await controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None);
+            await controller.GetSecondaryAsync(id, relationshipName, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.GetSecondaryAsync(id, string.Empty, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.GetSecondaryAsync(id, relationshipName, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -132,10 +137,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.GetSecondaryAsync(id, string.Empty, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.GetSecondaryAsync(id, "articles", CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Get, exception.Method);
         }
@@ -154,7 +159,7 @@ namespace UnitTests.Controllers
             await controller.PatchAsync(id, resource, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.UpdateAsync(id, It.IsAny<Resource>(), CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.UpdateAsync(id, It.IsAny<Resource>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -166,9 +171,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.PatchAsync(id, resource, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.PatchAsync(id, resource, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
@@ -181,7 +187,7 @@ namespace UnitTests.Controllers
             var serviceMock = new Mock<ICreateService<Resource>>();
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
-            serviceMock.Setup(m => m.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
+            serviceMock.Setup(service => service.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
 
             controller.ControllerContext = new ControllerContext
             {
@@ -192,7 +198,7 @@ namespace UnitTests.Controllers
             await controller.PostAsync(resource, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.CreateAsync(It.IsAny<Resource>(), CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.CreateAsync(It.IsAny<Resource>(), CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -200,14 +206,15 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
+            const string relationshipName = "articles";
             var serviceMock = new Mock<ISetRelationshipService<Resource>>();
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
-            await controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None);
+            await controller.PatchRelationshipAsync(id, relationshipName, null, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.SetRelationshipAsync(id, string.Empty, null, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.SetRelationshipAsync(id, relationshipName, null, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -218,10 +225,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() =>
-                controller.PatchRelationshipAsync(id, string.Empty, null, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Patch, exception.Method);
         }
@@ -238,7 +245,7 @@ namespace UnitTests.Controllers
             await controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
-            serviceMock.Verify(m => m.DeleteAsync(id, CancellationToken.None), Times.Once);
+            serviceMock.Verify(service => service.DeleteAsync(id, CancellationToken.None), Times.Once);
         }
 
         [Fact]
@@ -249,9 +256,10 @@ namespace UnitTests.Controllers
             var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
 
             // Act
-            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(() => controller.DeleteAsync(id, CancellationToken.None));
+            Func<Task> asyncAction = () => controller.DeleteAsync(id, CancellationToken.None);
 
             // Assert
+            var exception = await Assert.ThrowsAsync<RequestMethodNotAllowedException>(asyncAction);
             Assert.Equal(HttpStatusCode.MethodNotAllowed, exception.Errors[0].StatusCode);
             Assert.Equal(HttpMethod.Delete, exception.Method);
         }

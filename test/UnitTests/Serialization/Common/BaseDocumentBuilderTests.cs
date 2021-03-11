@@ -18,7 +18,7 @@ namespace UnitTests.Serialization.Common
         {
             var mock = new Mock<IResourceObjectBuilder>();
 
-            mock.Setup(m => m.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(),
+            mock.Setup(builder => builder.Build(It.IsAny<IIdentifiable>(), It.IsAny<IReadOnlyCollection<AttrAttribute>>(),
                 It.IsAny<IReadOnlyCollection<RelationshipAttribute>>())).Returns(new ResourceObject());
 
             _builder = new TestSerializer(mock.Object);

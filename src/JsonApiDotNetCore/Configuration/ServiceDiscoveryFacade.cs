@@ -70,6 +70,7 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IJsonApiOptions _options;
         private readonly ResourceDescriptorAssemblyCache _assemblyCache = new ResourceDescriptorAssemblyCache();
+        private readonly TypeLocator _typeLocator = new TypeLocator();
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options,
             ILoggerFactory loggerFactory)
@@ -140,7 +141,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddDbContextResolvers(Assembly assembly)
         {
-            IEnumerable<Type> dbContextTypes = TypeLocator.GetDerivedTypes(assembly, typeof(DbContext));
+            IEnumerable<Type> dbContextTypes = _typeLocator.GetDerivedTypes(assembly, typeof(DbContext));
 
             foreach (Type dbContextType in dbContextTypes)
             {
@@ -158,7 +159,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             try
             {
-                Type resourceDefinition = TypeLocator.GetDerivedGenericTypes(assembly, typeof(ResourceHooksDefinition<>), identifiable.ResourceType)
+                Type resourceDefinition = _typeLocator.GetDerivedGenericTypes(assembly, typeof(ResourceHooksDefinition<>), identifiable.ResourceType)
                     .SingleOrDefault();
 
                 if (resourceDefinition != null)
@@ -166,10 +167,10 @@ namespace JsonApiDotNetCore.Configuration
                     _services.AddScoped(typeof(ResourceHooksDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
                 }
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException exception)
             {
                 throw new InvalidConfigurationException($"Cannot define multiple ResourceHooksDefinition<> implementations for '{identifiable.ResourceType}'",
-                    e);
+                    exception);
             }
         }
 
@@ -203,8 +204,8 @@ namespace JsonApiDotNetCore.Configuration
                 ? ArrayFactory.Create(resourceDescriptor.ResourceType, resourceDescriptor.IdType)
                 : ArrayFactory.Create(resourceDescriptor.ResourceType);
 
-            (Type implementation, Type registrationInterface)?
-                result = TypeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
+            (Type implementation, Type registrationInterface)? result =
+                _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);
 
             if (result != null)
             {

@@ -65,8 +65,11 @@ namespace UnitTests.Middleware
             // Arrange
             InvokeConfiguration configuration = GetConfiguration("/users/-5/");
 
-            // Act / Assert
-            await RunMiddlewareTask(configuration);
+            // Act
+            Func<Task> asyncAction = async () => await RunMiddlewareTask(configuration);
+
+            // Assert
+            await asyncAction();
         }
 
         private Task RunMiddlewareTask(InvokeConfiguration holder)
@@ -93,7 +96,7 @@ namespace UnitTests.Middleware
 
             const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
-            mockMapping.Setup(x => x.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
+            mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
 
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
             Mock<IResourceGraph> mockGraph = CreateMockResourceGraph(resourceName, relType != null);
@@ -123,7 +126,7 @@ namespace UnitTests.Middleware
         private static Mock<IJsonApiOptions> CreateMockOptions(string forcedNamespace)
         {
             var mockOptions = new Mock<IJsonApiOptions>();
-            mockOptions.Setup(o => o.Namespace).Returns(forcedNamespace);
+            mockOptions.Setup(options => options.Namespace).Returns(forcedNamespace);
             return mockOptions;
         }
 
@@ -162,7 +165,8 @@ namespace UnitTests.Middleware
                 IdentityType = typeof(string)
             };
 
-            ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(d => d.GetResourceContext(It.IsAny<Type>())).Returns(resourceContext);
+            ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(resourceGraph => resourceGraph.GetResourceContext(It.IsAny<Type>()))
+                .Returns(resourceContext);
 
             if (includeRelationship)
             {

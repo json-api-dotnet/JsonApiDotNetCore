@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Resources
         public object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-            ArgumentGuard.NotNull(parameterName, nameof(parameterName));
+            ArgumentGuard.NotNullNorEmpty(parameterName, nameof(parameterName));
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             dynamic handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();

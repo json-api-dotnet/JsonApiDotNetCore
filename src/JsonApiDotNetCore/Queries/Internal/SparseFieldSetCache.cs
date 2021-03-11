@@ -141,7 +141,9 @@ namespace JsonApiDotNetCore.Queries.Internal
             return _visitedTable[resourceContext];
         }
 
+#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         private HashSet<ResourceFieldAttribute> GetResourceFields(ResourceContext resourceContext)
+#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 

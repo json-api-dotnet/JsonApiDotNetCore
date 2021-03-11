@@ -44,7 +44,9 @@ namespace JsonApiDotNetCore.Resources
                     ? (IIdentifiable)Activator.CreateInstance(type)
                     : (IIdentifiable)ActivatorUtilities.CreateInstance(serviceProvider, type);
             }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
                 throw new InvalidOperationException(
                     hasSingleConstructorWithoutParameters
@@ -77,7 +79,9 @@ namespace JsonApiDotNetCore.Resources
 
                     constructorArguments.Add(argumentExpression);
                 }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 {
                     throw new InvalidOperationException(
                         $"Failed to create an instance of '{resourceType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.",
@@ -91,7 +95,7 @@ namespace JsonApiDotNetCore.Resources
         private static Expression CreateTupleAccessExpressionForConstant(object value, Type type)
         {
             MethodInfo tupleCreateMethod = typeof(Tuple).GetMethods()
-                .Single(m => m.Name == "Create" && m.IsGenericMethod && m.GetGenericArguments().Length == 1);
+                .Single(method => method.Name == "Create" && method.IsGenericMethod && method.GetGenericArguments().Length == 1);
 
             MethodInfo constructedTupleCreateMethod = tupleCreateMethod.MakeGenericMethod(type);
 
@@ -103,14 +107,14 @@ namespace JsonApiDotNetCore.Resources
 
         internal static bool HasSingleConstructorWithoutParameters(Type type)
         {
-            ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
+            ConstructorInfo[] constructors = type.GetConstructors().Where(constructor => !constructor.IsStatic).ToArray();
 
             return constructors.Length == 1 && constructors[0].GetParameters().Length == 0;
         }
 
         private static ConstructorInfo GetLongestConstructor(Type type)
         {
-            ConstructorInfo[] constructors = type.GetConstructors().Where(c => !c.IsStatic).ToArray();
+            ConstructorInfo[] constructors = type.GetConstructors().Where(constructor => !constructor.IsStatic).ToArray();
 
             if (constructors.Length == 0)
             {

@@ -62,7 +62,7 @@ namespace UnitTests.Builders
 
             // Assert
             ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, i => i.PublicName == "compoundAttribute");
+            Assert.Contains(resource.Attributes, attribute => attribute.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace UnitTests.Builders
 
             // Assert
             ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resource.Relationships.Single(r => r is HasOneAttribute).PublicName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(r => !(r is HasOneAttribute)).PublicName);
+            Assert.Equal("relatedResource", resource.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(relationship => !(relationship is HasOneAttribute)).PublicName);
         }
 
         private sealed class NonDbResource : Identifiable
@@ -113,8 +113,11 @@ namespace UnitTests.Builders
             public ISet<RelatedResource> RelatedResources { get; set; }
         }
 
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class RelatedResource : Identifiable
         {
+            [Attr]
+            public string Unused { get; set; }
         }
     }
 }

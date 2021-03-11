@@ -8,114 +8,114 @@ namespace UnitTests.Models
         [Fact]
         public void HasManyAttribute_Equals_Returns_True_When_Same_Name()
         {
-            var a = new HasManyAttribute
+            var attribute1 = new HasManyAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new HasManyAttribute
+            var attribute2 = new HasManyAttribute
             {
                 PublicName = "test"
             };
 
-            Assert.Equal(a, b);
+            Assert.Equal(attribute1, attribute2);
         }
 
         [Fact]
         public void HasManyAttribute_Equals_Returns_False_When_Different_Name()
         {
-            var a = new HasManyAttribute
+            var attribute1 = new HasManyAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new HasManyAttribute
+            var attribute2 = new HasManyAttribute
             {
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(a, b);
+            Assert.NotEqual(attribute1, attribute2);
         }
 
         [Fact]
         public void HasOneAttribute_Equals_Returns_True_When_Same_Name()
         {
-            var a = new HasOneAttribute
+            var attribute1 = new HasOneAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new HasOneAttribute
+            var attribute2 = new HasOneAttribute
             {
                 PublicName = "test"
             };
 
-            Assert.Equal(a, b);
+            Assert.Equal(attribute1, attribute2);
         }
 
         [Fact]
         public void HasOneAttribute_Equals_Returns_False_When_Different_Name()
         {
-            var a = new HasOneAttribute
+            var attribute1 = new HasOneAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new HasOneAttribute
+            var attribute2 = new HasOneAttribute
             {
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(a, b);
+            Assert.NotEqual(attribute1, attribute2);
         }
 
         [Fact]
         public void AttrAttribute_Equals_Returns_True_When_Same_Name()
         {
-            var a = new AttrAttribute
+            var attribute1 = new AttrAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new AttrAttribute
+            var attribute2 = new AttrAttribute
             {
                 PublicName = "test"
             };
 
-            Assert.Equal(a, b);
+            Assert.Equal(attribute1, attribute2);
         }
 
         [Fact]
         public void AttrAttribute_Equals_Returns_False_When_Different_Name()
         {
-            var a = new AttrAttribute
+            var attribute1 = new AttrAttribute
             {
                 PublicName = "test"
             };
 
-            var b = new AttrAttribute
+            var attribute2 = new AttrAttribute
             {
                 PublicName = "test2"
             };
 
-            Assert.NotEqual(a, b);
+            Assert.NotEqual(attribute1, attribute2);
         }
 
         [Fact]
         public void HasManyAttribute_Does_Not_Equal_HasOneAttribute_With_Same_Name()
         {
-            RelationshipAttribute a = new HasManyAttribute
+            RelationshipAttribute attribute1 = new HasManyAttribute
             {
                 PublicName = "test"
             };
 
-            RelationshipAttribute b = new HasOneAttribute
+            RelationshipAttribute attribute2 = new HasOneAttribute
             {
                 PublicName = "test"
             };
 
-            Assert.NotEqual(a, b);
-            Assert.NotEqual(b, a);
+            Assert.NotEqual(attribute1, attribute2);
+            Assert.NotEqual(attribute2, attribute1);
         }
     }
 }

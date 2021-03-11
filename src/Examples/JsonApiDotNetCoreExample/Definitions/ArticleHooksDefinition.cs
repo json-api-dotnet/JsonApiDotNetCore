@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> resources, ResourcePipeline pipeline)
         {
-            if (pipeline == ResourcePipeline.GetSingle && resources.Any(r => r.Caption == "Classified"))
+            if (pipeline == ResourcePipeline.GetSingle && resources.Any(article => article.Caption == "Classified"))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                 {
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExample.Definitions
                 });
             }
 
-            return resources.Where(article => article.Caption != "This should not be included");
+            return resources.Where(article => article.Caption != "This should not be included").ToArray();
         }
     }
 }

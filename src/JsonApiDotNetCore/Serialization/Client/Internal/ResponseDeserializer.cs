@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         public SingleResponse<TResource> DeserializeSingle<TResource>(string body)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             object resource = DeserializeBody(body);
 
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         public ManyResponse<TResource> DeserializeMany<TResource>(string body)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(body, nameof(body));
+            ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
             object resources = DeserializeBody(body);
 
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
             }
 
             // if the included property is empty or absent, there is no additional data to be parsed.
-            if (Document.Included == null || Document.Included.Count == 0)
+            if (Document.Included.IsNullOrEmpty())
             {
                 return;
             }
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
                 {
                     // add attributes and relationships of a parsed HasMany relationship
                     IEnumerable<IIdentifiable> items = data.ManyData.Select(ParseIncludedRelationship);
-                    IEnumerable values = TypeHelper.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
+                    IEnumerable values = CollectionConverter.CopyToTypedCollection(items, hasManyAttr.Property.PropertyType);
                     hasManyAttr.SetValue(resource, values);
                 }
             }
@@ -135,13 +135,14 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
         {
             try
             {
-                return Document.Included.SingleOrDefault(r => r.Type == relatedResourceIdentifier.Type && r.Id == relatedResourceIdentifier.Id);
+                return Document.Included.SingleOrDefault(resourceObject =>
+                    resourceObject.Type == relatedResourceIdentifier.Type && resourceObject.Id == relatedResourceIdentifier.Id);
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException exception)
             {
                 throw new InvalidOperationException(
                     "A compound document MUST NOT include more than one resource object for each type and ID pair." +
-                    $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", e);
+                    $"The duplicate pair was '{relatedResourceIdentifier.Type}, {relatedResourceIdentifier.Id}'", exception);
             }
         }
     }

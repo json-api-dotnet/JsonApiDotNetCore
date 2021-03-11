@@ -21,12 +21,13 @@ namespace Benchmarks.Serialization
             Name = Guid.NewGuid().ToString()
         };
 
+        private readonly DependencyFactory _dependencyFactory = new DependencyFactory();
         private readonly IJsonApiSerializer _jsonApiSerializer;
 
         public JsonApiSerializerBenchmarks()
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = DependencyFactory.CreateResourceGraph(options);
+            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
             IFieldsToSerialize fieldsToSerialize = CreateFieldsToSerialize(resourceGraph);
 
             IMetaBuilder metaBuilder = new Mock<IMetaBuilder>().Object;

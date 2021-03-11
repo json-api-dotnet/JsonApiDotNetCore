@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         public HttpStatusCode GetErrorStatusCode()
         {
-            int[] statusCodes = Errors.Select(e => (int)e.StatusCode).Distinct().ToArray();
+            int[] statusCodes = Errors.Select(error => (int)error.StatusCode).Distinct().ToArray();
 
             if (statusCodes.Length == 1)
             {

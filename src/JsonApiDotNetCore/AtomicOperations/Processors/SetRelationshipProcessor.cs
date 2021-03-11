@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     public class SetRelationshipProcessor<TResource, TId> : ISetRelationshipProcessor<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
+        private readonly CollectionConverter _collectionConverter = new CollectionConverter();
         private readonly ISetRelationshipService<TResource, TId> _service;
 
         public SetRelationshipProcessor(ISetRelationshipService<TResource, TId> service)
@@ -36,14 +37,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             return null;
         }
 
-        private static object GetRelationshipRightValue(OperationContainer operation)
+        private object GetRelationshipRightValue(OperationContainer operation)
         {
             RelationshipAttribute relationship = operation.Request.Relationship;
             object rightValue = relationship.GetValue(operation.Resource);
 
             if (relationship is HasManyAttribute)
             {
-                ICollection<IIdentifiable> rightResources = TypeHelper.ExtractResources(rightValue);
+                ICollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
                 return rightResources.ToHashSet(IdentifiableComparer.Instance);
             }
 

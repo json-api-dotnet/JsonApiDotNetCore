@@ -12,6 +12,8 @@ namespace JsonApiDotNetCore.Resources
     [PublicAPI]
     public sealed class OperationContainer
     {
+        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+
         public OperationKind Kind { get; }
         public IIdentifiable Resource { get; }
         public ITargetedFields TargetedFields { get; }
@@ -57,7 +59,7 @@ namespace JsonApiDotNetCore.Resources
         {
             object rightValue = relationship.GetValue(Resource);
 
-            foreach (IIdentifiable rightResource in TypeHelper.ExtractResources(rightValue))
+            foreach (IIdentifiable rightResource in CollectionConverter.ExtractResources(rightValue))
             {
                 secondaryResources.Add(rightResource);
             }

@@ -28,6 +28,7 @@ namespace JsonApiDotNetCore.Repositories
     public class EntityFrameworkCoreRepository<TResource, TId> : IResourceRepository<TResource, TId>, IRepositorySupportsTransaction
         where TResource : class, IIdentifiable<TId>
     {
+        private readonly CollectionConverter _collectionConverter = new CollectionConverter();
         private readonly ITargetedFields _targetedFields;
         private readonly DbContext _dbContext;
         private readonly IResourceGraph _resourceGraph;
@@ -239,12 +240,14 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
 
-        private static bool IsToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
+        private bool IsToManyRelationshipBeingCleared(RelationshipAttribute relationship, TResource leftResource, object valueToAssign)
         {
-            ICollection<IIdentifiable> newRightResourceIds = TypeHelper.ExtractResources(valueToAssign);
+            ICollection<IIdentifiable> newRightResourceIds = _collectionConverter.ExtractResources(valueToAssign);
 
             object existingRightValue = relationship.GetValue(leftResource);
-            HashSet<IIdentifiable> existingRightResourceIds = TypeHelper.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
+
+            HashSet<IIdentifiable> existingRightResourceIds =
+                _collectionConverter.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
 
             existingRightResourceIds.ExceptWith(newRightResourceIds);
 
@@ -265,7 +268,7 @@ namespace JsonApiDotNetCore.Repositories
             foreach (RelationshipAttribute relationship in _resourceGraph.GetRelationships<TResource>())
             {
                 // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
-                // entities into memory is required for successfully executing the selected deletion behavior. 
+                // entities into memory is required for successfully executing the selected deletion behavior.
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
                     NavigationEntry navigation = GetNavigationEntry(resource, relationship);
@@ -385,7 +388,7 @@ namespace JsonApiDotNetCore.Repositories
 
             object rightValue = relationship.GetValue(primaryResource);
 
-            HashSet<IIdentifiable> rightResourceIds = TypeHelper.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
+            HashSet<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue).ToHashSet(IdentifiableComparer.Instance);
             rightResourceIds.ExceptWith(secondaryResourceIds);
 
             AssertIsNotClearingRequiredRelationship(relationship, primaryResource, rightResourceIds);
@@ -419,25 +422,25 @@ namespace JsonApiDotNetCore.Repositories
                 return null;
             }
 
-            ICollection<IIdentifiable> rightResources = TypeHelper.ExtractResources(rightValue);
+            ICollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
             IIdentifiable[] rightResourcesTracked = rightResources.Select(collector.CaptureExisting).ToArray();
 
             return rightValue is IEnumerable
-                ? (object)TypeHelper.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
+                ? (object)_collectionConverter.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
                 : rightResourcesTracked.Single();
         }
 
-        private static bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, object trackedValueToAssign)
+        private bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, object trackedValueToAssign)
         {
             // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
             return trackedValueToAssign != null && relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship);
         }
 
-        private static bool IsOneToOneRelationship(RelationshipAttribute relationship)
+        private bool IsOneToOneRelationship(RelationshipAttribute relationship)
         {
             if (relationship is HasOneAttribute hasOneRelationship)
             {
-                Type elementType = TypeHelper.TryGetCollectionElementType(hasOneRelationship.InverseNavigationProperty.PropertyType);
+                Type elementType = _collectionConverter.TryGetCollectionElementType(hasOneRelationship.InverseNavigationProperty.PropertyType);
                 return elementType == null;
             }
 

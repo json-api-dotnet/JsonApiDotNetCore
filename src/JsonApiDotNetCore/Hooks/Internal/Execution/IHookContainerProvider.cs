@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// A helper class for retrieving meta data about hooks, fetching database values and performing other recurring internal operations. Used internally by
     /// <see cref="ResourceHookExecutor" />
     /// </summary>
-    internal interface IHookExecutorHelper
+    internal interface IHookContainerProvider
     {
         /// <summary>
         /// For a particular ResourceHook and for a given model type, checks if the ResourceHooksDefinition has an implementation for the hook and if so, return
@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <returns>
         /// The implicitly affected resources by relationship
         /// </returns>
-        Dictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(Dictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
+        IDictionary<RelationshipAttribute, IEnumerable> LoadImplicitlyAffected(IDictionary<RelationshipAttribute, IEnumerable> leftResourcesByRelation,
             IEnumerable existingRightResources = null);
 
         /// <summary>
@@ -43,13 +43,10 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         /// <param name="resources">
         /// The set of resources to load the db values for
         /// </param>
-        /// <param name="hook">
-        /// The hook in which the db values will be displayed.
-        /// </param>
         /// <param name="relationships">
         /// Relationships that need to be included on resources.
         /// </param>
-        IEnumerable LoadDbValues(Type resourceTypeForRepository, IEnumerable resources, ResourceHook hook, params RelationshipAttribute[] relationships);
+        IEnumerable LoadDbValues(Type resourceTypeForRepository, IEnumerable resources, params RelationshipAttribute[] relationships);
 
         /// <summary>
         /// Checks if the display database values option is allowed for the targeted hook, and for a given resource of type <paramref name="resourceType" />

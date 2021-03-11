@@ -20,16 +20,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         private readonly Lazy<Faker<Meeting>> _lazyMeetingFaker = new Lazy<Faker<Meeting>>(() =>
             new Faker<Meeting>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(meeting => meeting.Title, f => f.Lorem.Word())
-                .RuleFor(meeting => meeting.StartTime, f => TruncateToWholeMilliseconds(f.Date.FutureOffset()))
-                .RuleFor(meeting => meeting.Duration, f => f.PickRandom(MeetingDurations))
-                .RuleFor(meeting => meeting.Latitude, f => f.Address.Latitude())
-                .RuleFor(meeting => meeting.Longitude, f => f.Address.Longitude()));
+                .RuleFor(meeting => meeting.Title, faker => faker.Lorem.Word())
+                .RuleFor(meeting => meeting.StartTime, faker => TruncateToWholeMilliseconds(faker.Date.FutureOffset()))
+                .RuleFor(meeting => meeting.Duration, faker => faker.PickRandom(MeetingDurations))
+                .RuleFor(meeting => meeting.Latitude, faker => faker.Address.Latitude())
+                .RuleFor(meeting => meeting.Longitude, faker => faker.Address.Longitude()));
 
         private readonly Lazy<Faker<MeetingAttendee>> _lazyMeetingAttendeeFaker = new Lazy<Faker<MeetingAttendee>>(() =>
             new Faker<MeetingAttendee>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(attendee => attendee.DisplayName, f => f.Random.Utf16String()));
+                .RuleFor(attendee => attendee.DisplayName, faker => faker.Random.Utf16String()));
 
         public Faker<Meeting> Meeting => _lazyMeetingFaker.Value;
         public Faker<MeetingAttendee> MeetingAttendee => _lazyMeetingAttendeeFaker.Value;

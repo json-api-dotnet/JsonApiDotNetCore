@@ -12,19 +12,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         private readonly Lazy<Faker<PhotoAlbum>> _lazyPhotoAlbumFaker = new Lazy<Faker<PhotoAlbum>>(() =>
             new Faker<PhotoAlbum>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(photoAlbum => photoAlbum.Name, f => f.Lorem.Sentence()));
+                .RuleFor(photoAlbum => photoAlbum.Name, faker => faker.Lorem.Sentence()));
 
         private readonly Lazy<Faker<Photo>> _lazyPhotoFaker = new Lazy<Faker<Photo>>(() =>
             new Faker<Photo>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(photo => photo.Url, f => f.Image.PlaceImgUrl()));
+                .RuleFor(photo => photo.Url, faker => faker.Image.PlaceImgUrl()));
 
         private readonly Lazy<Faker<PhotoLocation>> _lazyPhotoLocationFaker = new Lazy<Faker<PhotoLocation>>(() =>
             new Faker<PhotoLocation>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(photoLocation => photoLocation.PlaceName, f => f.Address.FullAddress())
-                .RuleFor(photoLocation => photoLocation.Latitude, f => f.Address.Latitude())
-                .RuleFor(photoLocation => photoLocation.Longitude, f => f.Address.Longitude()));
+                .RuleFor(photoLocation => photoLocation.PlaceName, faker => faker.Address.FullAddress())
+                .RuleFor(photoLocation => photoLocation.Latitude, faker => faker.Address.Latitude())
+                .RuleFor(photoLocation => photoLocation.Longitude, faker => faker.Address.Longitude()));
 
         public Faker<PhotoAlbum> PhotoAlbum => _lazyPhotoAlbumFaker.Value;
         public Faker<Photo> Photo => _lazyPhotoFaker.Value;

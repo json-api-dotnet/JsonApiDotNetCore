@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Controllers
 
         public ModelStateViolation(string prefix, string propertyName, Type resourceType, ModelError error)
         {
-            ArgumentGuard.NotNull(prefix, nameof(prefix));
-            ArgumentGuard.NotNull(propertyName, nameof(propertyName));
+            ArgumentGuard.NotNullNorEmpty(prefix, nameof(prefix));
+            ArgumentGuard.NotNullNorEmpty(propertyName, nameof(propertyName));
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
             ArgumentGuard.NotNull(error, nameof(error));
 

@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: prevent including owner if user has insufficient permissions.
 
-            if (!_userRolesService.AllowIncludeOwner && existingIncludes.Any(x => x.Relationship.Property.Name == nameof(CallableResource.Owner)))
+            if (!_userRolesService.AllowIncludeOwner && existingIncludes.Any(include => include.Relationship.Property.Name == nameof(CallableResource.Owner)))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
                 {
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Use case: automatically exclude deleted resources for all requests.
 
             ResourceContext resourceContext = ResourceGraph.GetResourceContext<CallableResource>();
-            AttrAttribute isDeletedAttribute = resourceContext.Attributes.Single(a => a.Property.Name == nameof(CallableResource.IsDeleted));
+            AttrAttribute isDeletedAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(CallableResource.IsDeleted));
 
             var isNotDeleted = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(isDeletedAttribute),
                 new LiteralConstantExpression(bool.FalseString));

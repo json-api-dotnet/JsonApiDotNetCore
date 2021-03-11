@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
 
-                _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, string.Empty);
+                _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, "placeholder");
             }
         }
 

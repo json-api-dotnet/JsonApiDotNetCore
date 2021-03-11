@@ -51,10 +51,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             // Arrange
             User newUser = _fakers.User.Generate();
 
-            IRequestSerializer serializer = GetRequestSerializer<User>(p => new
+            IRequestSerializer serializer = GetRequestSerializer<User>(user => new
             {
-                p.Password,
-                p.UserName
+                user.Password,
+                user.UserName
             });
 
             string requestBody = serializer.Serialize(newUser);
@@ -96,9 +96,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             existingUser.Password = _fakers.User.Generate().Password;
 
-            IRequestSerializer serializer = GetRequestSerializer<User>(p => new
+            IRequestSerializer serializer = GetRequestSerializer<User>(user => new
             {
-                p.Password
+                user.Password
             });
 
             string requestBody = serializer.Serialize(existingUser);

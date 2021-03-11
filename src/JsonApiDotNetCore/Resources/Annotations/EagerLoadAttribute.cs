@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// <example><![CDATA[
     /// public class User : Identifiable
     /// {
-    ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)] 
+    ///     [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
     ///     [NotMapped]
     ///     public string DisplayName => Name.First + " " + Name.Last;
     /// 

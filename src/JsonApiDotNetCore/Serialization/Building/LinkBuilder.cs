@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize)
         {
-            List<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue);
+            IList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue);
             int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
 
             if (topPageSize != null)
@@ -216,7 +216,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             return parameterValue == string.Empty ? null : parameterValue;
         }
 
-        private List<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue)
+        private IList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue)
         {
             if (pageSizeParameterValue == null)
             {
@@ -234,8 +234,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <inheritdoc />
         public ResourceLinks GetResourceLinks(string resourceName, string id)
         {
-            ArgumentGuard.NotNull(resourceName, nameof(resourceName));
-            ArgumentGuard.NotNull(id, nameof(id));
+            ArgumentGuard.NotNullNorEmpty(resourceName, nameof(resourceName));
+            ArgumentGuard.NotNullNorEmpty(id, nameof(id));
 
             ResourceContext resourceContext = _provider.GetResourceContext(resourceName);
 
