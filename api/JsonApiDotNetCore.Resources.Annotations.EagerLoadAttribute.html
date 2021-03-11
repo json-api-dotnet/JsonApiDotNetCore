@@ -224,7 +224,7 @@ public sealed class EagerLoadAttribute : Attribute</code></pre>
 <example>
 public class User : Identifiable
 {
-    [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)] 
+    [Attr(AttrCapabilities.AllowFilter | AttrCapabilities.AllowSort)]
     [NotMapped]
     public string DisplayName =&gt; Name.First + &quot; &quot; + Name.Last;<p>
 <pre><code>[EagerLoad]

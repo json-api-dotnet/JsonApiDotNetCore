@@ -253,7 +253,7 @@
 public class HasManyAttribute : RelationshipAttribute</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_examples"><strong>Examples</strong></h5>
-  <pre><code>public class Author : Identifiable 
+  <pre><code>public class Author : Identifiable
 {
     [HasMany(PublicName = &quot;articles&quot;)]
     public List&lt;Article> Articles { get; set; }

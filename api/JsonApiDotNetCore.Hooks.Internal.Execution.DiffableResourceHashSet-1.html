@@ -248,18 +248,18 @@ public sealed class DiffableResourceHashSet&lt;TResource&gt; : ResourceHashSet&l
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_Dictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet%601.%23ctor(System.Collections.Generic.HashSet%7B%600%7D%2CSystem.Collections.Generic.HashSet%7B%600%7D%2CSystem.Collections.Generic.Dictionary%7BJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2CSystem.Collections.Generic.HashSet%7B%600%7D%7D%2CSystem.Collections.Generic.Dictionary%7BSystem.Reflection.PropertyInfo%2CSystem.Collections.Generic.HashSet%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_IDictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet%601.%23ctor(System.Collections.Generic.HashSet%7B%600%7D%2CSystem.Collections.Generic.HashSet%7B%600%7D%2CSystem.Collections.Generic.IDictionary%7BJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2CSystem.Collections.Generic.HashSet%7B%600%7D%7D%2CSystem.Collections.Generic.IDictionary%7BSystem.Reflection.PropertyInfo%2CSystem.Collections.Generic.HashSet%7B%600%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_Dictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.Dictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})">DiffableResourceHashSet(HashSet&lt;TResource&gt;, HashSet&lt;TResource&gt;, Dictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt;, Dictionary&lt;PropertyInfo, HashSet&lt;TResource&gt;&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_IDictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.IDictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})">DiffableResourceHashSet(HashSet&lt;TResource&gt;, HashSet&lt;TResource&gt;, IDictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt;, IDictionary&lt;PropertyInfo, HashSet&lt;TResource&gt;&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public DiffableResourceHashSet(HashSet&lt;TResource&gt; requestResources, HashSet&lt;TResource&gt; databaseResources, Dictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt; relationships, Dictionary&lt;PropertyInfo, HashSet&lt;TResource&gt;&gt; updatedAttributes)</code></pre>
+    <pre><code class="lang-csharp hljs">public DiffableResourceHashSet(HashSet&lt;TResource&gt; requestResources, HashSet&lt;TResource&gt; databaseResources, IDictionary&lt;RelationshipAttribute, HashSet&lt;TResource&gt;&gt; relationships, IDictionary&lt;PropertyInfo, HashSet&lt;TResource&gt;&gt; updatedAttributes)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -282,12 +282,12 @@ public sealed class DiffableResourceHashSet&lt;TResource&gt; : ResourceHashSet&l
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
         <td><span class="parametername">relationships</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Reflection.PropertyInfo</span>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Reflection.PropertyInfo</span>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TResource&gt;&gt;</td>
         <td><span class="parametername">updatedAttributes</span></td>
         <td></td>
       </tr>
@@ -300,7 +300,7 @@ public sealed class DiffableResourceHashSet&lt;TResource&gt; : ResourceHashSet&l
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet%601.GetAffected(System.Linq.Expressions.Expression%7BSystem.Func%7B%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L60">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L61">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetAffected_" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.GetAffected*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetAffected_System_Linq_Expressions_Expression_System_Func__0_System_Object___" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.GetAffected(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">GetAffected(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -350,7 +350,7 @@ public sealed class DiffableResourceHashSet&lt;TResource&gt; : ResourceHashSet&l
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetDiffs.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet%601.GetDiffs%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L45">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/DiffableResourceHashSet.cs/#L46">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetDiffs_" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.GetDiffs*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1_GetDiffs" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.GetDiffs">GetDiffs()</h4>

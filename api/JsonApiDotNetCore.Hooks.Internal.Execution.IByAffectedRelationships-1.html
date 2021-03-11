@@ -92,7 +92,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Hooks_Internal_Execution_IByAffectedRelationships_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IByAffectedRelationships&lt;TRightResource&gt; : IRelationshipGetters&lt;TRightResource&gt; where TRightResource : class, IIdentifiable</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public interface IByAffectedRelationships&lt;TRightResource&gt; : IRelationshipGetters&lt;TRightResource&gt; where TRightResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -116,7 +117,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_IByAffectedRelationships_1_AffectedRelationships.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.IByAffectedRelationships%601.AffectedRelationships%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/IByAffectedRelationships.cs/#L16">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/IByAffectedRelationships.cs/#L18">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Hooks_Internal_Execution_IByAffectedRelationships_1_AffectedRelationships_" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.IByAffectedRelationships`1.AffectedRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Hooks_Internal_Execution_IByAffectedRelationships_1_AffectedRelationships" data-uid="JsonApiDotNetCore.Hooks.Internal.Execution.IByAffectedRelationships`1.AffectedRelationships">AffectedRelationships</h4>
@@ -125,7 +126,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Dictionary&lt;RelationshipAttribute, HashSet&lt;TRightResource&gt;&gt; AffectedRelationships { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">IDictionary&lt;RelationshipAttribute, HashSet&lt;TRightResource&gt;&gt; AffectedRelationships { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -137,7 +138,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TRightResource&gt;&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>, <span class="xref">System.Collections.Generic.HashSet</span>&lt;TRightResource&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -153,7 +154,7 @@
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Hooks_Internal_Execution_IByAffectedRelationships_1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Hooks.Internal.Execution.IByAffectedRelationships%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/IByAffectedRelationships.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Hooks/Internal/Execution/IByAffectedRelationships.cs/#L11" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

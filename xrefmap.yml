@@ -3845,25 +3845,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Errors.MissingTransactionSupportException.MissingTransactionSupportException
   nameWithType: MissingTransactionSupportException.MissingTransactionSupportException
-- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException
-  name: NonSharedTransactionException
-  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html
-  commentId: T:JsonApiDotNetCore.Errors.NonSharedTransactionException
-  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException
-  nameWithType: NonSharedTransactionException
-- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
-  name: NonSharedTransactionException()
-  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html#JsonApiDotNetCore_Errors_NonSharedTransactionException__ctor
-  commentId: M:JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
-  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException.NonSharedTransactionException()
-  nameWithType: NonSharedTransactionException.NonSharedTransactionException()
-- uid: JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor*
-  name: NonSharedTransactionException
-  href: api/JsonApiDotNetCore.Errors.NonSharedTransactionException.html#JsonApiDotNetCore_Errors_NonSharedTransactionException__ctor_
-  commentId: Overload:JsonApiDotNetCore.Errors.NonSharedTransactionException.#ctor
+- uid: JsonApiDotNetCore.Errors.NonParticipatingTransactionException
+  name: NonParticipatingTransactionException
+  href: api/JsonApiDotNetCore.Errors.NonParticipatingTransactionException.html
+  commentId: T:JsonApiDotNetCore.Errors.NonParticipatingTransactionException
+  fullName: JsonApiDotNetCore.Errors.NonParticipatingTransactionException
+  nameWithType: NonParticipatingTransactionException
+- uid: JsonApiDotNetCore.Errors.NonParticipatingTransactionException.#ctor
+  name: NonParticipatingTransactionException()
+  href: api/JsonApiDotNetCore.Errors.NonParticipatingTransactionException.html#JsonApiDotNetCore_Errors_NonParticipatingTransactionException__ctor
+  commentId: M:JsonApiDotNetCore.Errors.NonParticipatingTransactionException.#ctor
+  fullName: JsonApiDotNetCore.Errors.NonParticipatingTransactionException.NonParticipatingTransactionException()
+  nameWithType: NonParticipatingTransactionException.NonParticipatingTransactionException()
+- uid: JsonApiDotNetCore.Errors.NonParticipatingTransactionException.#ctor*
+  name: NonParticipatingTransactionException
+  href: api/JsonApiDotNetCore.Errors.NonParticipatingTransactionException.html#JsonApiDotNetCore_Errors_NonParticipatingTransactionException__ctor_
+  commentId: Overload:JsonApiDotNetCore.Errors.NonParticipatingTransactionException.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Errors.NonSharedTransactionException.NonSharedTransactionException
-  nameWithType: NonSharedTransactionException.NonSharedTransactionException
+  fullName: JsonApiDotNetCore.Errors.NonParticipatingTransactionException.NonParticipatingTransactionException
+  nameWithType: NonParticipatingTransactionException.NonParticipatingTransactionException
 - uid: JsonApiDotNetCore.Errors.RelationshipNotFoundException
   name: RelationshipNotFoundException
   href: api/JsonApiDotNetCore.Errors.RelationshipNotFoundException.html
@@ -4275,15 +4275,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet(Of TResource)
   nameWithType: DiffableResourceHashSet<TResource>
   nameWithType.vb: DiffableResourceHashSet(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.Dictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
-  name: DiffableResourceHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>, Dictionary<PropertyInfo, HashSet<TResource>>)
-  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_Dictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.Dictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
-  name.vb: DiffableResourceHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)), Dictionary(Of PropertyInfo, HashSet(Of TResource)))
-  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet<TResource>.DiffableResourceHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>, System.Collections.Generic.Dictionary<System.Reflection.PropertyInfo, System.Collections.Generic.HashSet<TResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet(Of TResource).DiffableResourceHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)), System.Collections.Generic.Dictionary(Of System.Reflection.PropertyInfo, System.Collections.Generic.HashSet(Of TResource)))
-  nameWithType: DiffableResourceHashSet<TResource>.DiffableResourceHashSet(HashSet<TResource>, HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>, Dictionary<PropertyInfo, HashSet<TResource>>)
-  nameWithType.vb: DiffableResourceHashSet(Of TResource).DiffableResourceHashSet(HashSet(Of TResource), HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)), Dictionary(Of PropertyInfo, HashSet(Of TResource)))
+- uid: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.IDictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
+  name: DiffableResourceHashSet(HashSet<TResource>, HashSet<TResource>, IDictionary<RelationshipAttribute, HashSet<TResource>>, IDictionary<PropertyInfo, HashSet<TResource>>)
+  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_HashSet__0__System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___System_Collections_Generic_IDictionary_System_Reflection_PropertyInfo_System_Collections_Generic_HashSet__0___
+  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.HashSet{`0},System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}},System.Collections.Generic.IDictionary{System.Reflection.PropertyInfo,System.Collections.Generic.HashSet{`0}})
+  name.vb: DiffableResourceHashSet(HashSet(Of TResource), HashSet(Of TResource), IDictionary(Of RelationshipAttribute, HashSet(Of TResource)), IDictionary(Of PropertyInfo, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet<TResource>.DiffableResourceHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.IDictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>, System.Collections.Generic.IDictionary<System.Reflection.PropertyInfo, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet(Of TResource).DiffableResourceHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.IDictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)), System.Collections.Generic.IDictionary(Of System.Reflection.PropertyInfo, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: DiffableResourceHashSet<TResource>.DiffableResourceHashSet(HashSet<TResource>, HashSet<TResource>, IDictionary<RelationshipAttribute, HashSet<TResource>>, IDictionary<PropertyInfo, HashSet<TResource>>)
+  nameWithType.vb: DiffableResourceHashSet(Of TResource).DiffableResourceHashSet(HashSet(Of TResource), HashSet(Of TResource), IDictionary(Of RelationshipAttribute, HashSet(Of TResource)), IDictionary(Of PropertyInfo, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet`1.#ctor*
   name: DiffableResourceHashSet
   href: api/JsonApiDotNetCore.Hooks.Internal.Execution.DiffableResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_DiffableResourceHashSet_1__ctor_
@@ -4466,15 +4466,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary(Of TResource)
   nameWithType: RelationshipsDictionary<TResource>
   nameWithType.vb: RelationshipsDictionary(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary`1.#ctor(System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_RelationshipsDictionary_1__ctor_System_Collections_Generic_Dictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary`1.#ctor(System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
-  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary<TResource>.RelationshipsDictionary(System.Collections.Generic.Dictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary(Of TResource).RelationshipsDictionary(System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
-  nameWithType: RelationshipsDictionary<TResource>.RelationshipsDictionary(Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  nameWithType.vb: RelationshipsDictionary(Of TResource).RelationshipsDictionary(Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+- uid: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary`1.#ctor(System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name: RelationshipsDictionary(IDictionary<RelationshipAttribute, HashSet<TResource>>)
+  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_RelationshipsDictionary_1__ctor_System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___
+  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary`1.#ctor(System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name.vb: RelationshipsDictionary(IDictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary<TResource>.RelationshipsDictionary(System.Collections.Generic.IDictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary(Of TResource).RelationshipsDictionary(System.Collections.Generic.IDictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: RelationshipsDictionary<TResource>.RelationshipsDictionary(IDictionary<RelationshipAttribute, HashSet<TResource>>)
+  nameWithType.vb: RelationshipsDictionary(Of TResource).RelationshipsDictionary(IDictionary(Of RelationshipAttribute, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary`1.#ctor*
   name: RelationshipsDictionary
   href: api/JsonApiDotNetCore.Hooks.Internal.Execution.RelationshipsDictionary-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_RelationshipsDictionary_1__ctor_
@@ -4597,15 +4597,15 @@ references:
   fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet(Of TResource)
   nameWithType: ResourceHashSet<TResource>
   nameWithType.vb: ResourceHashSet(Of TResource)
-- uid: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name: ResourceHashSet(HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_Dictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___
-  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.Dictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
-  name.vb: ResourceHashSet(HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
-  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet<TResource>.ResourceHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.Dictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
-  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet(Of TResource).ResourceHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.Dictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
-  nameWithType: ResourceHashSet<TResource>.ResourceHashSet(HashSet<TResource>, Dictionary<RelationshipAttribute, HashSet<TResource>>)
-  nameWithType.vb: ResourceHashSet(Of TResource).ResourceHashSet(HashSet(Of TResource), Dictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+- uid: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name: ResourceHashSet(HashSet<TResource>, IDictionary<RelationshipAttribute, HashSet<TResource>>)
+  href: api/JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourceHashSet_1__ctor_System_Collections_Generic_HashSet__0__System_Collections_Generic_IDictionary_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_System_Collections_Generic_HashSet__0___
+  commentId: M:JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet`1.#ctor(System.Collections.Generic.HashSet{`0},System.Collections.Generic.IDictionary{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,System.Collections.Generic.HashSet{`0}})
+  name.vb: ResourceHashSet(HashSet(Of TResource), IDictionary(Of RelationshipAttribute, HashSet(Of TResource)))
+  fullName: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet<TResource>.ResourceHashSet(System.Collections.Generic.HashSet<TResource>, System.Collections.Generic.IDictionary<JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet<TResource>>)
+  fullName.vb: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet(Of TResource).ResourceHashSet(System.Collections.Generic.HashSet(Of TResource), System.Collections.Generic.IDictionary(Of JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute, System.Collections.Generic.HashSet(Of TResource)))
+  nameWithType: ResourceHashSet<TResource>.ResourceHashSet(HashSet<TResource>, IDictionary<RelationshipAttribute, HashSet<TResource>>)
+  nameWithType.vb: ResourceHashSet(Of TResource).ResourceHashSet(HashSet(Of TResource), IDictionary(Of RelationshipAttribute, HashSet(Of TResource)))
 - uid: JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet`1.#ctor*
   name: ResourceHashSet
   href: api/JsonApiDotNetCore.Hooks.Internal.Execution.ResourceHashSet-1.html#JsonApiDotNetCore_Hooks_Internal_Execution_ResourceHashSet_1__ctor_

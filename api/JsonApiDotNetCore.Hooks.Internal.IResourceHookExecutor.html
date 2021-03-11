@@ -75,7 +75,7 @@
   </h1>
   <div class="markdown level0 summary"><p>Transient service responsible for executing Resource Hooks as defined in <a class="xref" href="JsonApiDotNetCore.Resources.ResourceHooksDefinition-1.html">ResourceHooksDefinition&lt;TResource&gt;</a>. See methods in
 <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IReadHookExecutor.html">IReadHookExecutor</a>, <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IUpdateHookExecutor.html">IUpdateHookExecutor</a> and <a class="xref" href="JsonApiDotNetCore.Hooks.Internal.IOnReturnHookExecutor.html">IOnReturnHookExecutor</a> for more information. Uses
-<span class="xref">JsonApiDotNetCore.Hooks.Internal.Traversal.TraversalHelper</span> for traversal of nested resource data structures. Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Execution.HookExecutorHelper</span> for retrieving meta data
+<span class="xref">JsonApiDotNetCore.Hooks.Internal.Traversal.NodeNavigator</span> for traversal of nested resource data structures. Uses <span class="xref">JsonApiDotNetCore.Hooks.Internal.Execution.HookContainerProvider</span> for retrieving meta data
 about hooks, fetching database values and performing other recurring internal operations.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
