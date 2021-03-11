@@ -1,12 +1,14 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Moq;
 using Moq.Language;
 using Xunit;
@@ -96,7 +98,7 @@ namespace UnitTests.Middleware
 
             const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
-            mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<string>())).Returns(typeof(string));
+            mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(string));
 
             Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
             Mock<IResourceGraph> mockGraph = CreateMockResourceGraph(resourceName, relType != null);
@@ -151,7 +153,13 @@ namespace UnitTests.Middleware
             }
 
             context.Features.Set<IRouteValuesFeature>(feature);
-            context.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(), null));
+
+            var controllerActionDescriptor = new ControllerActionDescriptor
+            {
+                ControllerTypeInfo = (TypeInfo)typeof(object)
+            };
+
+            context.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(controllerActionDescriptor), null));
             return context;
         }
 

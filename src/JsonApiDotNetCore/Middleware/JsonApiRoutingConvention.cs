@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Middleware
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
-        private readonly Dictionary<string, ResourceContext> _registeredResources = new Dictionary<string, ResourceContext>();
+        private readonly Dictionary<Type, ResourceContext> _resourceContextPerControllerTypeMap = new Dictionary<Type, ResourceContext>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
@@ -46,11 +46,11 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         /// <inheritdoc />
-        public Type GetResourceTypeForController(string controllerName)
+        public Type GetResourceTypeForController(Type controllerType)
         {
-            ArgumentGuard.NotNullNorEmpty(controllerName, nameof(controllerName));
+            ArgumentGuard.NotNull(controllerType, nameof(controllerType));
 
-            if (_registeredResources.TryGetValue(controllerName, out ResourceContext resourceContext))
+            if (_resourceContextPerControllerTypeMap.TryGetValue(controllerType, out ResourceContext resourceContext))
             {
                 return resourceContext.ResourceType;
             }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Middleware
 
                         if (resourceContext != null)
                         {
-                            _registeredResources.Add(controller.ControllerName, resourceContext);
+                            _resourceContextPerControllerTypeMap.Add(controller.ControllerType, resourceContext);
                         }
                     }
                 }
@@ -112,7 +112,7 @@ namespace JsonApiDotNetCore.Middleware
         /// </summary>
         private string TemplateFromResource(ControllerModel model)
         {
-            if (_registeredResources.TryGetValue(model.ControllerName, out ResourceContext resourceContext))
+            if (_resourceContextPerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceContext resourceContext))
             {
                 string template = $"{_options.Namespace}/{resourceContext.PublicName}";
 
