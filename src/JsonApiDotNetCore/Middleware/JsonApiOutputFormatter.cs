@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -23,6 +26,14 @@ namespace JsonApiDotNetCore.Middleware
 
             var writer = context.HttpContext.RequestServices.GetRequiredService<IJsonApiWriter>();
             await writer.WriteAsync(context);
+        }
+
+        public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
+        {
+            return new MediaTypeCollection
+            {
+                new MediaTypeHeaderValue(HeaderConstants.MediaType)
+            };
         }
     }
 }
