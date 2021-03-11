@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ben.Demystifier" Version="0.1.6" />
+    <PackageReference Include="Ben.Demystifier" Version="0.3.0" />
     <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.6.0">
       <PrivateAssets>none</PrivateAssets>
     </PackageReference>
