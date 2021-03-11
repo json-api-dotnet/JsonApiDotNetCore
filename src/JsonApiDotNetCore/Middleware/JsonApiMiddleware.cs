@@ -14,6 +14,7 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCore.Middleware
 
             RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
 
-            ResourceContext primaryResourceContext = CreatePrimaryResourceContext(routeValues, controllerResourceMapping, resourceContextProvider);
+            ResourceContext primaryResourceContext = CreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceContextProvider);
 
             if (primaryResourceContext != null)
             {
@@ -77,14 +78,16 @@ namespace JsonApiDotNetCore.Middleware
             await _next(httpContext);
         }
 
-        private static ResourceContext CreatePrimaryResourceContext(RouteValueDictionary routeValues, IControllerResourceMapping controllerResourceMapping,
+        private static ResourceContext CreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,
             IResourceContextProvider resourceContextProvider)
         {
-            string controllerName = (string)routeValues["controller"];
+            Endpoint endpoint = httpContext.GetEndpoint();
+            var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
 
-            if (controllerName != null)
+            if (controllerActionDescriptor != null)
             {
-                Type resourceType = controllerResourceMapping.GetResourceTypeForController(controllerName);
+                Type controllerType = controllerActionDescriptor.ControllerTypeInfo;
+                Type resourceType = controllerResourceMapping.GetResourceTypeForController(controllerType);
 
                 if (resourceType != null)
                 {
