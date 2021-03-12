@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(SolutionDir)CSharpGuidelinesAnalyzer.config">
-      <Link>CSharpGuidelinesAnalyzer.config</Link>
-    </AdditionalFiles>
+    <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" PrivateAssets="All" />
+    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.6.0" PrivateAssets="All" />
+    <AdditionalFiles Include="$(SolutionDir)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
