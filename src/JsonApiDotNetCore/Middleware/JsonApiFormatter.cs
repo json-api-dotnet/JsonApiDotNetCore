@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public abstract class JsonApiFormatter : IApiRequestFormatMetadataProvider
     {
-        private readonly Type OperationContainerType = typeof(OperationContainer);
+        private readonly Type _operationContainerType = typeof(OperationContainer);
 
         /// <inheritdoc />
         public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Middleware
 
         private bool IsAtomicOperationsType(Type objectType)
         {
-            return objectType.GetInterface(nameof(IEnumerable)) != null && objectType.GetGenericArguments().First() == OperationContainerType;
+            return objectType.GetInterface(nameof(IEnumerable)) != null && objectType.GetGenericArguments().First() == _operationContainerType;
         }
     }
 }
