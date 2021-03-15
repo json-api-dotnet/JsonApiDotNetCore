@@ -17,8 +17,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
         {
             _testContext = testContext;
-
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
         }
 
         [Fact]

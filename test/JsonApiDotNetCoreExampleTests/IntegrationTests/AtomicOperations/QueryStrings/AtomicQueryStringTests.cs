@@ -29,8 +29,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddSingleton<ISystemClock>(new FrozenSystemClock
                 {
                     UtcNow = FrozenTime

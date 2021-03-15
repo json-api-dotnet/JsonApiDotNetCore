@@ -14,6 +14,8 @@ namespace JsonApiDotNetCoreExampleTests.Startups
     {
         public override void ConfigureServices(IServiceCollection services)
         {
+            services.UseControllersFromNamespace(typeof(TDbContext).Namespace);
+
             services.AddJsonApi<TDbContext>(SetJsonApiOptions);
         }
 

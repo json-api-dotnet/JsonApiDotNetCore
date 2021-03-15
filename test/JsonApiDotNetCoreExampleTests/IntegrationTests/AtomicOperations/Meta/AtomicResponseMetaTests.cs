@@ -25,8 +25,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddSingleton<IResponseMeta, AtomicResponseMeta>();
             });
         }

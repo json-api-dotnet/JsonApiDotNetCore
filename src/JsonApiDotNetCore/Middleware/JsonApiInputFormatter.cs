@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -14,8 +11,6 @@ namespace JsonApiDotNetCore.Middleware
 {
     public sealed class JsonApiInputFormatter : IJsonApiInputFormatter, IApiRequestFormatMetadataProvider
     {
-        private static readonly Type OperationContainerType = typeof(OperationContainer);
-
         /// <inheritdoc />
         public bool CanRead(InputFormatterContext context)
         {
@@ -33,24 +28,19 @@ namespace JsonApiDotNetCore.Middleware
             return await reader.ReadAsync(context);
         }
 
-
         /// <inheritdoc />
         public IReadOnlyList<string> GetSupportedContentTypes(string contentType, Type objectType)
         {
-            ArgumentGuard.NotNull(contentType, nameof(contentType));
             ArgumentGuard.NotNull(objectType, nameof(objectType));
 
-            string mediaType = IsAtomicOperationsType(objectType) ? HeaderConstants.AtomicOperationsMediaType : HeaderConstants.MediaType;
+            var mediaTypes = new MediaTypeCollection();
 
-            return new MediaTypeCollection
+            if (contentType == HeaderConstants.MediaType || contentType == HeaderConstants.AtomicOperationsMediaType)
             {
-                new MediaTypeHeaderValue(mediaType)
-            };
-        }
+                mediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+            }
 
-        private bool IsAtomicOperationsType(Type objectType)
-        {
-            return objectType.GetInterface(nameof(IEnumerable)) != null && objectType.GetGenericArguments().First() == OperationContainerType;
+            return mediaTypes;
         }
     }
 }

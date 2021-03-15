@@ -24,8 +24,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddResourceRepository<PerformerRepository>();
                 services.AddResourceRepository<MusicTrackRepository>();
                 services.AddResourceRepository<LyricRepository>();
