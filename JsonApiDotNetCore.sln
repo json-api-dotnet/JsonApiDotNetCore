@@ -8,13 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{24B15015-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5B4D998-CECB-454D-9F32-085A897577BE}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
-		Build.ps1 = Build.ps1
-		build.sh = build.sh
+		CSharpGuidelinesAnalyzer.config = CSharpGuidelinesAnalyzer.config
 		Directory.Build.props = Directory.Build.props
-		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{026FBC6C-AF76-4568-9B87-EC73457899FD}"
@@ -45,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDbContextExample", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDbContextTests", "test\MultiDbContextTests\MultiDbContextTests.csproj", "{EC3202C6-1D4C-4B14-A599-B9D3F27FE3BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBuildingBlocks", "test\TestBuildingBlocks\TestBuildingBlocks.csproj", "{210FD61E-FF5D-4CEE-8E0D-C739ECCCBA21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBuildingBlocks", "test\TestBuildingBlocks\TestBuildingBlocks.csproj", "{210FD61E-FF5D-4CEE-8E0D-C739ECCCBA21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

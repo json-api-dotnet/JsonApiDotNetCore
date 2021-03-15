@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.DisableTopPagination = false;
             options.DisableChildrenPagination = false;
         }
