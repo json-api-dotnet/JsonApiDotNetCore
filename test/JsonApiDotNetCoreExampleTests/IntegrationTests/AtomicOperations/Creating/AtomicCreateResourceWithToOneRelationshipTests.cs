@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                 responseDocument.Results[index].SingleData.Attributes["title"].Should().Be(newTrackTitles[index]);
             }
 
-            IEnumerable<Guid> newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id));
+            Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id)).ToArray();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -247,8 +247,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
                 for (int index = 0; index < elementCount; index++)
                 {
-                    MusicTrack trackInDatabase = tracksInDatabase.Single(musicTrack =>
-                        musicTrack.Id == Guid.Parse(responseDocument.Results[index].SingleData.Id));
+                    MusicTrack trackInDatabase = tracksInDatabase.Single(musicTrack => musicTrack.Id == newTrackIds[index]);
 
                     trackInDatabase.Title.Should().Be(newTrackTitles[index]);
 
