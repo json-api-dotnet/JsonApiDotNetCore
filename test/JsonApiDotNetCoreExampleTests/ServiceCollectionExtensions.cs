@@ -3,7 +3,6 @@ using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreExampleTests
 {

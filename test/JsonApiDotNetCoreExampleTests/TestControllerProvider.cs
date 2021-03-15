@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace JsonApiDotNetCoreExampleTests
 {
-    public sealed class TestControllerProvider : ControllerFeatureProvider
+    internal sealed class TestControllerProvider : ControllerFeatureProvider
     {
         private readonly string _controllerNamespace;
 
