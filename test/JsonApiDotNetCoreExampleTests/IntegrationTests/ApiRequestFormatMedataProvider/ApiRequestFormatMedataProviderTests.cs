@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
@@ -19,9 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiRequestFormatMedataP
             _testContext = testContext;
         }
 
-        // TODO: Clean up, this is a draft.
         [Fact]
-        public async Task Input_formatters()
+        public void Can_retrieve_content_type_set_with_ConsumesAttribute_value_in_ApiExplorer()
         {
             // Arrange
             var provider = _testContext.Factory.Services.GetRequiredService<IApiDescriptionGroupCollectionProvider>();
@@ -30,20 +30,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiRequestFormatMedataP
             IReadOnlyList<ApiDescriptionGroup> groups = provider.ApiDescriptionGroups.Items;
 
             // Assert
-            List<ApiDescription> descriptions = groups.Single().Items.Where(description => description.SupportedRequestFormats.Count == 1).ToList();
+            IReadOnlyList<ApiDescription> descriptions = groups.Single().Items.ToList();
+            MethodInfo postStoresMethod = typeof(StoresController).GetMethod(nameof(StoresController.PostAsync));
+            ApiDescription postStoresDescription = descriptions.First(description =>  (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo ==
+                postStoresMethod);
 
-            ApiDescription operationsDescription = descriptions.First(descriptor =>
-                ((ControllerActionDescriptor)descriptor.ActionDescriptor).ControllerTypeInfo == typeof(OperationsController));
-
-            operationsDescription.SupportedRequestFormats.Should().HaveCount(1);
-
-            operationsDescription.SupportedRequestFormats[0].MediaType.Should().Be(HeaderConstants.AtomicOperationsMediaType.Replace(";", "; "));
-
-            descriptions.Remove(operationsDescription);
-
-            descriptions.Should().HaveCount(1);
-            descriptions[0].SupportedRequestFormats.Should().HaveCount(1);
-            descriptions[0].SupportedRequestFormats[0].MediaType.Should().Be(HeaderConstants.MediaType);
+            postStoresDescription.Should().NotBeNull();
+            postStoresDescription.SupportedRequestFormats.Should().HaveCount(1);
+            postStoresDescription.SupportedRequestFormats[0].MediaType.Should().Be(HeaderConstants.MediaType);
         }
     }
 }
