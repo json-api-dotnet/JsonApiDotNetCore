@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
         }
 
         [Fact]
-        public async Task Returns_top_level_meta_in_update_resource_with_side_effects()
+        public async Task Returns_resource_meta_in_update_resource_with_side_effects()
         {
             // Arrange
             TextLanguage existingLanguage = _fakers.TextLanguage.Generate();
