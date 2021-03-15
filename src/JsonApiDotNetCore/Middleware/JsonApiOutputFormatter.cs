@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -9,7 +11,7 @@ using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter, IApiRequestFormatMetadataProvider
+    public sealed class JsonApiOutputFormatter : IJsonApiOutputFormatter, IApiResponseTypeMetadataProvider
     {
         /// <inheritdoc />
         public bool CanWriteResult(OutputFormatterCanWriteContext context)
@@ -37,7 +39,12 @@ namespace JsonApiDotNetCore.Middleware
 
             if (contentType == HeaderConstants.MediaType)
             {
-                mediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+                Type typeToCheck = typeof(IEnumerable).IsAssignableFrom(objectType) ? objectType.GetGenericArguments()[0] : objectType;
+
+                if (typeToCheck.IsOrImplementsInterface(typeof(IIdentifiable)) || typeToCheck == typeof(object))
+                {
+                    mediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+                }
             }
 
             return mediaTypes;

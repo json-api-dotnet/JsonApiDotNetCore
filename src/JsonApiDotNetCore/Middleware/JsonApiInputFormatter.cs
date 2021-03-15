@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -35,12 +37,35 @@ namespace JsonApiDotNetCore.Middleware
 
             var mediaTypes = new MediaTypeCollection();
 
-            if (contentType == HeaderConstants.MediaType || contentType == HeaderConstants.AtomicOperationsMediaType)
+            switch (contentType)
             {
-                mediaTypes.Add(MediaTypeHeaderValue.Parse(contentType));
+                case HeaderConstants.AtomicOperationsMediaType when IsOperationsType(objectType):
+                {
+                    mediaTypes.Add(MediaTypeHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType));
+                    break;
+                }
+                case HeaderConstants.MediaType when IsJsonApiResource(objectType):
+                {
+                    mediaTypes.Add(MediaTypeHeaderValue.Parse(HeaderConstants.MediaType));
+                    break;
+                }
             }
 
             return mediaTypes;
+        }
+
+        private bool IsJsonApiResource(Type type)
+        {
+            Type typeToCheck = typeof(IEnumerable).IsAssignableFrom(type) ? type.GetGenericArguments()[0] : type;
+
+            return typeToCheck.IsOrImplementsInterface(typeof(IIdentifiable)) || typeToCheck == typeof(object);
+        }
+
+        private bool IsOperationsType(Type type)
+        {
+            Type typeToCheck = typeof(IEnumerable).IsAssignableFrom(type) ? type.GetGenericArguments()[0] : type;
+
+            return typeToCheck == typeof(OperationContainer);
         }
     }
 }

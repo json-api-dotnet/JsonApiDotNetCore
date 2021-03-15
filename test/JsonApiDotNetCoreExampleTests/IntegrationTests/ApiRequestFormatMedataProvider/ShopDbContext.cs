@@ -4,11 +4,13 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiRequestFormatMedataProvider
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class StoreDbContext : DbContext
+    public sealed class ShopDbContext : DbContext
     {
         public DbSet<Store> Stores { get; set; }
 
-        public StoreDbContext(DbContextOptions<StoreDbContext> options)
+        public DbSet<Product> Products { get; set; }
+
+        public ShopDbContext(DbContextOptions<ShopDbContext> options)
             : base(options)
         {
         }

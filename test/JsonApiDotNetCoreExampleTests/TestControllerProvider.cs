@@ -3,7 +3,7 @@ using System.Reflection;
 using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
-namespace TestBuildingBlocks
+namespace JsonApiDotNetCoreExampleTests
 {
     public sealed class TestControllerProvider : ControllerFeatureProvider
     {
