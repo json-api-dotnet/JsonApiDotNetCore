@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(existingTrack.Title);
-                trackInDatabase.LengthInSeconds.Should().Be(existingTrack.LengthInSeconds);
+                trackInDatabase.LengthInSeconds.Should().BeApproximately(existingTrack.LengthInSeconds);
                 trackInDatabase.Genre.Should().Be(newGenre);
                 trackInDatabase.ReleasedAt.Should().BeCloseTo(existingTrack.ReleasedAt);
 
@@ -366,7 +366,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                 MusicTrack trackInDatabase = await dbContext.MusicTracks.Include(musicTrack => musicTrack.OwnedBy).FirstWithIdAsync(existingTrack.Id);
 
                 trackInDatabase.Title.Should().Be(newTitle);
-                trackInDatabase.LengthInSeconds.Should().Be(newLengthInSeconds);
+                trackInDatabase.LengthInSeconds.Should().BeApproximately(newLengthInSeconds);
                 trackInDatabase.Genre.Should().Be(newGenre);
                 trackInDatabase.ReleasedAt.Should().BeCloseTo(newReleasedAt);
 
