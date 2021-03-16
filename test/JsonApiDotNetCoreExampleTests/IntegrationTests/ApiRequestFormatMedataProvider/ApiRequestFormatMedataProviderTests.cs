@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiRequestFormatMedataP
         }
 
         [Fact]
-        public void Cannot_retrieve_atomic_operations_request_content_type_in_ApiExplorer_when_set_on_regular_endpoint()
+        public void Cannot_retrieve_atomic_operations_request_content_type_in_ApiExplorer_when_set_on_relationship_endpoint()
         {
             // Arrange
             var provider = _testContext.Factory.Services.GetRequiredService<IApiDescriptionGroupCollectionProvider>();

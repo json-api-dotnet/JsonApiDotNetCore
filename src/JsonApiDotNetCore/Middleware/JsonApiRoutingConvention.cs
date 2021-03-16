@@ -89,11 +89,13 @@ namespace JsonApiDotNetCore.Middleware
 
                 string template = TemplateFromResource(controller) ?? TemplateFromController(controller);
 
-                if (!_registeredTemplates.TryAdd(template, controller))
+                if (_registeredTemplates.ContainsKey(template))
                 {
                     throw new InvalidConfigurationException(
                         $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredTemplates[template].ControllerType.FullName}' was already registered for this template.");
                 }
+
+                _registeredTemplates.Add(template, controller);
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
