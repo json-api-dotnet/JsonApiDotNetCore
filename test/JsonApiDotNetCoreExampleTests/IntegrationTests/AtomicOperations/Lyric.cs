@@ -14,11 +14,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         [Attr]
         public string Text { get; set; }
 
-        [HasOne]
-        public TextLanguage Language { get; set; }
-
         [Attr(Capabilities = AttrCapabilities.None)]
         public DateTimeOffset CreatedAt { get; set; }
+
+        [HasOne]
+        public TextLanguage Language { get; set; }
 
         [HasOne]
         public MusicTrack Track { get; set; }
