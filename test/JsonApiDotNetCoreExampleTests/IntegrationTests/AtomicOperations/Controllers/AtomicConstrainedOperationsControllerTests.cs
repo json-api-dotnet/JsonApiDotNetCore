@@ -3,24 +3,23 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Controllers
 {
-    public sealed class AtomicConstrainedOperationsControllerTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicConstrainedOperationsControllerTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
         public AtomicConstrainedOperationsControllerTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 
-            testContext.AddController<OperationsController>();
+            testContext.AddController<CreateMusicTrackOperationsController>();
         }
 
         [Fact]

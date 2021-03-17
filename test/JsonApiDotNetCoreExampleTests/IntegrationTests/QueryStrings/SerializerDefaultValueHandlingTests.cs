@@ -13,15 +13,17 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
-    public sealed class SerializerDefaultValueHandlingTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class SerializerDefaultValueHandlingTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
         public SerializerDefaultValueHandlingTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<CalendarsController>();
         }
 
         [Fact]

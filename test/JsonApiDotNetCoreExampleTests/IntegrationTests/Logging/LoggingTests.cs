@@ -11,15 +11,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IntegrationTestCollection<TestableStartup<AuditDbContext>, AuditDbContext>
+    public sealed class LoggingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
         private readonly AuditFakers _fakers = new AuditFakers();
 
         public LoggingTests(ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<AuditEntriesController>();
 
             FakeLoggerFactory loggerFactory = null;
 

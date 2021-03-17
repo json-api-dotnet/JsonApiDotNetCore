@@ -12,15 +12,17 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class TopLevelCountTests : IntegrationTestCollection<TestableStartup<SupportDbContext>, SupportDbContext>
+    public sealed class TopLevelCountTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();
 
         public TopLevelCountTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<ProductFamiliesController>();
+            testContext.AddController<SupportTicketsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

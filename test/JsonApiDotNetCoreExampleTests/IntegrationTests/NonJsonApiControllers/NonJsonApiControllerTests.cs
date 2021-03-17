@@ -4,20 +4,19 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCoreExample.Startups;
+using Microsoft.AspNetCore.Mvc.Testing;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
 {
-    public sealed class NonJsonApiControllerTests : IClassFixture<ExampleIntegrationTestContext<Startup>>
+    public sealed class NonJsonApiControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private readonly ExampleIntegrationTestContext<Startup> _testContext;
+        private readonly WebApplicationFactory<Startup> _factory;
 
-        public NonJsonApiControllerTests(ExampleIntegrationTestContext<Startup> testContext)
+        public NonJsonApiControllerTests(WebApplicationFactory<Startup> factory)
         {
-            _testContext = testContext;
-
-            testContext.AddController<NonJsonApiController>();
+            _factory = factory;
         }
 
         [Fact]
@@ -26,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Get, "/NonJsonApi");
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -54,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
                 }
             };
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -73,7 +72,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Post, "/NonJsonApi");
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -101,7 +100,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
                 }
             };
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -120,7 +119,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Patch, "/NonJsonApi?name=Janice");
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);
@@ -139,7 +138,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
             // Arrange
             using var request = new HttpRequestMessage(HttpMethod.Delete, "/NonJsonApi");
 
-            HttpClient client = _testContext.Factory.CreateClient();
+            HttpClient client = _factory.CreateClient();
 
             // Act
             HttpResponseMessage httpResponse = await client.SendAsync(request);

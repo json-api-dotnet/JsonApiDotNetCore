@@ -14,12 +14,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transactions
 {
-    public sealed class AtomicTransactionConsistencyTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicTransactionConsistencyTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
         public AtomicTransactionConsistencyTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 

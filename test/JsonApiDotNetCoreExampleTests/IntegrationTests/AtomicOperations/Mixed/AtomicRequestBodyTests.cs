@@ -12,12 +12,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 {
-    public sealed class AtomicRequestBodyTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicRequestBodyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
         public AtomicRequestBodyTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 

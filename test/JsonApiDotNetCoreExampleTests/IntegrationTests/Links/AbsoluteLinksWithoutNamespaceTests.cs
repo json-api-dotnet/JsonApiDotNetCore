@@ -13,7 +13,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class AbsoluteLinksWithoutNamespaceTests : IntegrationTestCollection<AbsoluteLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>
+    public sealed class AbsoluteLinksWithoutNamespaceTests
+        : IClassFixture<ExampleIntegrationTestContext<AbsoluteLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -21,9 +22,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         private readonly LinksFakers _fakers = new LinksFakers();
 
         public AbsoluteLinksWithoutNamespaceTests(ExampleIntegrationTestContext<AbsoluteLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<PhotoAlbumsController>();
+            testContext.AddController<PhotosController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

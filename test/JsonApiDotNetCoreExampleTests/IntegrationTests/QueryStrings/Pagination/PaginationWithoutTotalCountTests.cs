@@ -12,7 +12,8 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class PaginationWithoutTotalCountTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class PaginationWithoutTotalCountTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private const string HostPrefix = "http://localhost";
         private const int DefaultPageSize = 5;
@@ -21,9 +22,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
         public PaginationWithoutTotalCountTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<BlogPostsController>();
+            testContext.AddController<WebAccountsController>();
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = false;

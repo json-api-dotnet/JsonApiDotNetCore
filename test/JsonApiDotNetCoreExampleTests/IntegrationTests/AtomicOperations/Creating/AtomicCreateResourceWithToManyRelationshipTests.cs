@@ -13,14 +13,14 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
-    public sealed class AtomicCreateResourceWithToManyRelationshipTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicCreateResourceWithToManyRelationshipTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
         public AtomicCreateResourceWithToManyRelationshipTests(
             ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 

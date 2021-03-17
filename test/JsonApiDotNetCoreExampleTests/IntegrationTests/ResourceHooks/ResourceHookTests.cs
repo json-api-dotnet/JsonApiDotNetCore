@@ -30,7 +30,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         {
             _testContext = testContext;
 
-            testContext.AddControllersInNamespaceOf<ArticlesController>();
+            testContext.AddController<ArticlesController>();
+            testContext.AddController<AuthorsController>();
+            testContext.AddController<PassportsController>();
+            testContext.AddController<PeopleController>();
+            testContext.AddController<TodoItemsController>();
+            testContext.AddController<UsersController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

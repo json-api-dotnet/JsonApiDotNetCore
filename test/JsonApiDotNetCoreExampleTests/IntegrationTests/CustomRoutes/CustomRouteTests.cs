@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    public sealed class CustomRouteTests : IntegrationTestCollection<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
+    public sealed class CustomRouteTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -19,9 +19,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         private readonly CustomRouteFakers _fakers = new CustomRouteFakers();
 
         public CustomRouteTests(ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<CiviliansController>();
+            testContext.AddController<TownsController>();
         }
 
         [Fact]

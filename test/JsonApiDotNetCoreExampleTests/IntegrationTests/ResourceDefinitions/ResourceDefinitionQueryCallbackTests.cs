@@ -14,14 +14,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
-    public sealed class ResourceDefinitionQueryCallbackTests : IntegrationTestCollection<TestableStartup<CallableDbContext>, CallableDbContext>
+    public sealed class ResourceDefinitionQueryCallbackTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> _testContext;
 
         public ResourceDefinitionQueryCallbackTests(ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<CallableResourcesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

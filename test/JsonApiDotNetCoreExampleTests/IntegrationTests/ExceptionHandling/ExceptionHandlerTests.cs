@@ -16,14 +16,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ExceptionHandlerTests : IntegrationTestCollection<TestableStartup<ErrorDbContext>, ErrorDbContext>
+    public sealed class ExceptionHandlerTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 
         public ExceptionHandlerTests(ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<ThrowingArticlesController>();
+            testContext.AddController<ConsumerArticlesController>();
 
             FakeLoggerFactory loggerFactory = null;
 

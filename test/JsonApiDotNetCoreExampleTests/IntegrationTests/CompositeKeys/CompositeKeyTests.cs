@@ -14,14 +14,17 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
-    public sealed class CompositeKeyTests : IntegrationTestCollection<TestableStartup<CompositeDbContext>, CompositeDbContext>
+    public sealed class CompositeKeyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 
         public CompositeKeyTests(ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<DealershipsController>();
+            testContext.AddController<EnginesController>();
+            testContext.AddController<CarsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

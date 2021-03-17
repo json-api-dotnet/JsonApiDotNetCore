@@ -13,13 +13,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ResourceDefinitions
 {
-    public sealed class AtomicSparseFieldSetResourceDefinitionTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicSparseFieldSetResourceDefinitionTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
         public AtomicSparseFieldSetResourceDefinitionTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 

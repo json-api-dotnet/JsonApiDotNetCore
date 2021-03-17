@@ -11,15 +11,18 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
-    public sealed class EagerLoadingTests : IntegrationTestCollection<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>
+    public sealed class EagerLoadingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
         private readonly EagerLoadingFakers _fakers = new EagerLoadingFakers();
 
         public EagerLoadingTests(ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<StreetsController>();
+            testContext.AddController<StatesController>();
+            testContext.AddController<BuildingsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

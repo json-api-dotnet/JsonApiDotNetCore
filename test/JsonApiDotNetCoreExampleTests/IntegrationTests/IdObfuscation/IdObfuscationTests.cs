@@ -11,15 +11,17 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
-    public sealed class IdObfuscationTests : IntegrationTestCollection<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>
+    public sealed class IdObfuscationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
         private readonly ObfuscationFakers _fakers = new ObfuscationFakers();
 
         public IdObfuscationTests(ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<BankAccountsController>();
+            testContext.AddController<DebitCardsController>();
         }
 
         [Fact]

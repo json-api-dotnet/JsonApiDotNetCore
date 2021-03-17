@@ -9,14 +9,15 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
-    public sealed class ActionResultTests : IntegrationTestCollection<TestableStartup<ActionResultDbContext>, ActionResultDbContext>
+    public sealed class ActionResultTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> _testContext;
 
         public ActionResultTests(ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<ToothbrushesController>();
         }
 
         [Fact]

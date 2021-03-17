@@ -13,15 +13,18 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class RelativeLinksWithNamespaceTests : IntegrationTestCollection<RelativeLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>
+    public sealed class RelativeLinksWithNamespaceTests
+        : IClassFixture<ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();
 
         public RelativeLinksWithNamespaceTests(ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<PhotoAlbumsController>();
+            testContext.AddController<PhotosController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

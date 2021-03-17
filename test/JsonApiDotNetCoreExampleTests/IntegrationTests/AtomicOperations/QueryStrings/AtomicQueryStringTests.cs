@@ -17,7 +17,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
-    public sealed class AtomicQueryStringTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicQueryStringTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
 
@@ -25,11 +25,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
         public AtomicQueryStringTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 
             testContext.AddController<OperationsController>();
+            testContext.AddController<MusicTracksController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

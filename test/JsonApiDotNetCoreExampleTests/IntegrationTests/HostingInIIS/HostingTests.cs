@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
-    public sealed class HostingTests : IntegrationTestCollection<HostingStartup<HostingDbContext>, HostingDbContext>
+    public sealed class HostingTests : IClassFixture<ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
@@ -17,9 +17,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         private readonly HostingFakers _fakers = new HostingFakers();
 
         public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<PaintingsController>();
+            testContext.AddController<ArtGalleriesController>();
         }
 
         [Fact]

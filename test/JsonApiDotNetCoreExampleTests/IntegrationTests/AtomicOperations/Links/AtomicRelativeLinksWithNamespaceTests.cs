@@ -14,13 +14,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 {
     public sealed class AtomicRelativeLinksWithNamespaceTests
-        : IntegrationTestCollection<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>
+        : IClassFixture<ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
         public AtomicRelativeLinksWithNamespaceTests(
             ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 

@@ -11,15 +11,15 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 {
-    public sealed class ContentTypeHeaderTests : IntegrationTestCollection<TestableStartup<PolicyDbContext>, PolicyDbContext>
+    public sealed class ContentTypeHeaderTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 
         public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
 
+            testContext.AddController<PoliciesController>();
             testContext.AddController<OperationsController>();
         }
 

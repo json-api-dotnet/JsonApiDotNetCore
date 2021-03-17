@@ -11,16 +11,22 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class DefaultBehaviorTests : IntegrationTestCollection<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>
+    public sealed class DefaultBehaviorTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> _testContext;
 
         private readonly DefaultBehaviorFakers _fakers = new DefaultBehaviorFakers();
 
         public DefaultBehaviorTests(ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<OrdersController>();
+            ;
+            testContext.AddController<ShipmentsController>();
+            ;
+            testContext.AddController<CustomersController>();
+            ;
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;

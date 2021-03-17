@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,14 +44,9 @@ namespace TestBuildingBlocks
         }
 
         public void AddController<TController>()
-            where TController : class
+            where TController : ControllerBase
         {
             _testControllerProvider.AddController(typeof(TController));
-        }
-
-        public void AddControllersInNamespaceOf<TNamespaceEntryPoint>()
-        {
-            _testControllerProvider.AddNamespaceEntrypoint(typeof(TNamespaceEntryPoint));
         }
 
         protected override HttpClient CreateClient()

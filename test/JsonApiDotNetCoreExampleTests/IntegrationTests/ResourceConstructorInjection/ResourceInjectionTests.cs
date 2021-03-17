@@ -15,15 +15,17 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
-    public sealed class ResourceInjectionTests : IntegrationTestCollection<TestableStartup<InjectionDbContext>, InjectionDbContext>
+    public sealed class ResourceInjectionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
         private readonly InjectionFakers _fakers;
 
         public ResourceInjectionTests(ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<GiftCertificatesController>();
+            testContext.AddController<PostOfficesController>();
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {

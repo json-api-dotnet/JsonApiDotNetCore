@@ -11,14 +11,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public sealed class DisableQueryStringTests : IntegrationTestCollection<TestableStartup<RestrictionDbContext>, RestrictionDbContext>
+    public sealed class DisableQueryStringTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
 
         public DisableQueryStringTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
-            : base(testContext)
         {
             _testContext = testContext;
+
+            testContext.AddController<BlockingHttpDeleteController>();
+            testContext.AddController<BlockingWritesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
