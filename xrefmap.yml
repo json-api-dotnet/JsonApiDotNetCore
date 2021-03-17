@@ -15851,12 +15851,12 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.OperationContainer.Resource
   nameWithType: OperationContainer.Resource
-- uid: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
-  name: SetTransactionId(Guid)
-  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_SetTransactionId_System_Guid_
-  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
-  fullName: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.Guid)
-  nameWithType: OperationContainer.SetTransactionId(Guid)
+- uid: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.String)
+  name: SetTransactionId(String)
+  href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_SetTransactionId_System_String_
+  commentId: M:JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.String)
+  fullName: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId(System.String)
+  nameWithType: OperationContainer.SetTransactionId(String)
 - uid: JsonApiDotNetCore.Resources.OperationContainer.SetTransactionId*
   name: SetTransactionId
   href: api/JsonApiDotNetCore.Resources.OperationContainer.html#JsonApiDotNetCore_Resources_OperationContainer_SetTransactionId_
