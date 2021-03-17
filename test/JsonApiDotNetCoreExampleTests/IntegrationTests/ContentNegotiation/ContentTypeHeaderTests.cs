@@ -4,21 +4,23 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 {
-    public sealed class ContentTypeHeaderTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext>>
+    public sealed class ContentTypeHeaderTests : IntegrationTestFixture<TestableStartup<PolicyDbContext>, PolicyDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 
         public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            TestControllerProvider.AddController<OperationsController>();
         }
 
         [Fact]

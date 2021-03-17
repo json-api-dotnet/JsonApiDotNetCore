@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore
 {
-    internal static class ArgumentGuard
+    public static class ArgumentGuard
     {
         [AssertionMethod]
         [ContractAnnotation("value: null => halt")]
