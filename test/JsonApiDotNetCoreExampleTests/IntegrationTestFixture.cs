@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreExampleTests
 {
     public abstract class IntegrationTestFixture<TStartup, TDbContext> : IClassFixture<ExampleIntegrationTestContext<TStartup, TDbContext>>
         where TStartup : class

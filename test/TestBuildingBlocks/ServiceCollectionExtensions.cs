@@ -26,22 +26,6 @@ namespace TestBuildingBlocks
             });
         }
 
-        private static void RemoveControllerFeatureProviders(this IServiceCollection services)
-        {
-            ArgumentGuard.NotNull(services, nameof(services));
-
-            services.AddMvcCore().ConfigureApplicationPartManager(manager =>
-            {
-                IApplicationFeatureProvider<ControllerFeature>[] providers = manager.FeatureProviders.OfType<IApplicationFeatureProvider<ControllerFeature>>()
-                    .ToArray();
-
-                foreach (IApplicationFeatureProvider<ControllerFeature> provider in providers)
-                {
-                    manager.FeatureProviders.Remove(provider);
-                }
-            });
-        }
-
         private static void RemoveExistingControllerFeatureProviders(ApplicationPartManager manager)
         {
             IApplicationFeatureProvider<ControllerFeature>[] providers = manager.FeatureProviders.OfType<IApplicationFeatureProvider<ControllerFeature>>()

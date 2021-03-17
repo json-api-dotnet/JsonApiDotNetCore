@@ -10,8 +10,8 @@ namespace TestBuildingBlocks
     {
         private readonly IList<Type> _namespaceEntryPoints = new List<Type>();
         private readonly IList<Type> _allowedControllerTypes = new List<Type>();
-        internal readonly ISet<Assembly> ControllerAssemblies = new HashSet<Assembly>();
         private string[] _namespaces;
+        internal ISet<Assembly> ControllerAssemblies { get; } = new HashSet<Assembly>();
 
         public void AddController(Type controller)
         {
