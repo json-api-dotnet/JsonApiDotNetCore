@@ -3,10 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExample.Startups;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 

@@ -6,7 +6,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -14,12 +13,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 {
-    public sealed class MaximumOperationsPerRequestTests
-        : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class MaximumOperationsPerRequestTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
-        public MaximumOperationsPerRequestTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
+        public MaximumOperationsPerRequestTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 

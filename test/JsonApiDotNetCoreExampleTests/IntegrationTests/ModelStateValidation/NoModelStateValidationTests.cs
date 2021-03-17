@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
@@ -14,7 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
 
-        public NoModelStateValidationTests(ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext) : base(testContext)
+        public NoModelStateValidationTests(ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
         }

@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
@@ -15,7 +14,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         private readonly ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();
 
-        public LinkInclusionTests(ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext) : base(testContext)
+        public LinkInclusionTests(ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
         }

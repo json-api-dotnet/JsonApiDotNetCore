@@ -6,7 +6,6 @@ using FluentAssertions;
 using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         private readonly ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
         private readonly InjectionFakers _fakers;
 
-        public ResourceInjectionTests(ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext) : base(testContext)
+        public ResourceInjectionTests(ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 

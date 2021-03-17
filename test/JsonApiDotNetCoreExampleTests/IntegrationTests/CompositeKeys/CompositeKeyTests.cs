@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +18,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 
-        public CompositeKeyTests(ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext) : base(testContext)
+        public CompositeKeyTests(ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 

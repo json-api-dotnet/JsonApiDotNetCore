@@ -9,7 +9,6 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -21,7 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
-        public FilterOperatorTests(ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext) : base(testContext)
+        public FilterOperatorTests(ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 

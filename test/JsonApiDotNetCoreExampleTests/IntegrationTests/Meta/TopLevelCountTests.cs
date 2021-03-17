@@ -5,7 +5,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -18,7 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();
 
-        public TopLevelCountTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext) : base(testContext)
+        public TopLevelCountTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 

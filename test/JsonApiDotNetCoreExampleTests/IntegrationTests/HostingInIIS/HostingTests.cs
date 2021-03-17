@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -17,7 +16,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         private readonly ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> _testContext;
         private readonly HostingFakers _fakers = new HostingFakers();
 
-        public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext) : base(testContext)
+        public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
         }

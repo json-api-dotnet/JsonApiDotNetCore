@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -12,14 +11,14 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class RangeValidationWithMaximumTests
-        : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class RangeValidationWithMaximumTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private const int MaximumPageSize = 15;
         private const int MaximumPageNumber = 20;
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-        public RangeValidationWithMaximumTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext) : base(testContext)
+        public RangeValidationWithMaximumTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+            : base(testContext)
         {
             _testContext = testContext;
 
