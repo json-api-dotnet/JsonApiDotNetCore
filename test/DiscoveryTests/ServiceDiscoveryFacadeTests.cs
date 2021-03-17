@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using FluentAssertions;
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
@@ -153,50 +151,6 @@ namespace DiscoveryTests
 
             var resourceHooksDefinition = services.GetRequiredService<ResourceHooksDefinition<TestResource>>();
             resourceHooksDefinition.Should().BeOfType<TestResourceHooksDefinition>();
-        }
-
-        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class TestResource : Identifiable
-        {
-        }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class TestResourceService : JsonApiResourceService<TestResource>
-        {
-            public TestResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
-                IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-                IResourceChangeTracker<TestResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
-                : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
-            {
-            }
-        }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
-        {
-            public TestResourceRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
-                IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
-                : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
-            {
-            }
-        }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class TestResourceHooksDefinition : ResourceHooksDefinition<TestResource>
-        {
-            public TestResourceHooksDefinition(IResourceGraph resourceGraph)
-                : base(resourceGraph)
-            {
-            }
-        }
-
-        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        public sealed class TestResourceDefinition : JsonApiResourceDefinition<TestResource>
-        {
-            public TestResourceDefinition(IResourceGraph resourceGraph)
-                : base(resourceGraph)
-            {
-            }
         }
     }
 }
