@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Identifies the active transaction.
         /// </summary>
-        Guid TransactionId { get; }
+        string TransactionId { get; }
 
         /// <summary>
         /// Enables to execute custom logic before processing of an operation starts.
