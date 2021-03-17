@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public sealed class NoHttpPostTests : IntegrationTestFixture<TestableStartup<RestrictionDbContext>, RestrictionDbContext>
+    public sealed class NoHttpPostTests : IntegrationTestCollection<TestableStartup<RestrictionDbContext>, RestrictionDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
         private readonly RestrictionFakers _fakers = new RestrictionFakers();

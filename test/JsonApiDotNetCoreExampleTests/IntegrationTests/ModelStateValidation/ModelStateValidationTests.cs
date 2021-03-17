@@ -10,7 +10,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
 {
-    public sealed class ModelStateValidationTests : IntegrationTestFixture<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>
+    public sealed class ModelStateValidationTests : IntegrationTestCollection<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>
     {
         private readonly ExampleIntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
 

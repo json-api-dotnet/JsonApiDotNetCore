@@ -16,7 +16,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ExceptionHandlerTests : IntegrationTestFixture<TestableStartup<ErrorDbContext>, ErrorDbContext>
+    public sealed class ExceptionHandlerTests : IntegrationTestCollection<TestableStartup<ErrorDbContext>, ErrorDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 

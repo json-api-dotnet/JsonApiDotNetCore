@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class InheritanceTests : IntegrationTestFixture<TestableStartup<InheritanceDbContext>, InheritanceDbContext>
+    public sealed class InheritanceTests : IntegrationTestCollection<TestableStartup<InheritanceDbContext>, InheritanceDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
 

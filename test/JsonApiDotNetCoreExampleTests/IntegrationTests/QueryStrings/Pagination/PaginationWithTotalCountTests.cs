@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class PaginationWithTotalCountTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class PaginationWithTotalCountTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private const string HostPrefix = "http://localhost";
         private const int DefaultPageSize = 5;

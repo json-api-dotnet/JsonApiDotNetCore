@@ -17,7 +17,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
 {
-    public sealed class AtomicQueryStringTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicQueryStringTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private static readonly DateTime FrozenTime = 30.July(2018).At(13, 46, 12);
 

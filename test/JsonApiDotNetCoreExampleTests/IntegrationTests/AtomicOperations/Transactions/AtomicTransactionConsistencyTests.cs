@@ -14,7 +14,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transactions
 {
-    public sealed class AtomicTransactionConsistencyTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicTransactionConsistencyTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 

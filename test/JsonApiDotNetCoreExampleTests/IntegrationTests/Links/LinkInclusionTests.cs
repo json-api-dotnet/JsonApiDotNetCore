@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class LinkInclusionTests : IntegrationTestFixture<TestableStartup<LinksDbContext>, LinksDbContext>
+    public sealed class LinkInclusionTests : IntegrationTestCollection<TestableStartup<LinksDbContext>, LinksDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();

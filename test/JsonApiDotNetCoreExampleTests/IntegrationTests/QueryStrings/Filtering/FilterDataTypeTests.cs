@@ -16,7 +16,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDataTypeTests : IntegrationTestFixture<TestableStartup<FilterDbContext>, FilterDbContext>
+    public sealed class FilterDataTypeTests : IntegrationTestCollection<TestableStartup<FilterDbContext>, FilterDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 

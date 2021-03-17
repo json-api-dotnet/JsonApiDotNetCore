@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFieldSets
 {
-    public sealed class SparseFieldSetTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class SparseFieldSetTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();

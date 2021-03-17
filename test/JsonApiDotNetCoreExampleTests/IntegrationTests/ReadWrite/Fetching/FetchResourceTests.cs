@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 {
-    public sealed class FetchResourceTests : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
+    public sealed class FetchResourceTests : IntegrationTestCollection<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();

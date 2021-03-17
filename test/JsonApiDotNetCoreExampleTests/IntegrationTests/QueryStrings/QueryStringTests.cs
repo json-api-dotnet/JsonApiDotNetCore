@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
-    public sealed class QueryStringTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class QueryStringTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 

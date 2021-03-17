@@ -12,7 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class RangeValidationTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class RangeValidationTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private const int DefaultPageSize = 5;
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
 {
-    public sealed class UpdateResourceTests : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
+    public sealed class UpdateResourceTests : IntegrationTestCollection<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();

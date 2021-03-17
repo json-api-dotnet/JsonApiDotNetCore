@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
-    public sealed class RangeValidationWithMaximumTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
+    public sealed class RangeValidationWithMaximumTests : IntegrationTestCollection<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private const int MaximumPageSize = 15;
         private const int MaximumPageNumber = 20;

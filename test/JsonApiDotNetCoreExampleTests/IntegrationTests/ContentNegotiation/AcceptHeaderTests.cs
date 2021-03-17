@@ -12,7 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 {
-    public sealed class AcceptHeaderTests : IntegrationTestFixture<TestableStartup<PolicyDbContext>, PolicyDbContext>
+    public sealed class AcceptHeaderTests : IntegrationTestCollection<TestableStartup<PolicyDbContext>, PolicyDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 

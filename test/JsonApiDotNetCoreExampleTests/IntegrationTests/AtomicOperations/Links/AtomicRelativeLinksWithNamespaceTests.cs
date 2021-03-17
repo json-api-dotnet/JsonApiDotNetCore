@@ -14,7 +14,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 {
     public sealed class AtomicRelativeLinksWithNamespaceTests
-        : IntegrationTestFixture<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>
+        : IntegrationTestCollection<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 

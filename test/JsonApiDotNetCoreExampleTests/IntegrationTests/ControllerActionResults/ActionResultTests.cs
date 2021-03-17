@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
-    public sealed class ActionResultTests : IntegrationTestFixture<TestableStartup<ActionResultDbContext>, ActionResultDbContext>
+    public sealed class ActionResultTests : IntegrationTestCollection<TestableStartup<ActionResultDbContext>, ActionResultDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> _testContext;
 

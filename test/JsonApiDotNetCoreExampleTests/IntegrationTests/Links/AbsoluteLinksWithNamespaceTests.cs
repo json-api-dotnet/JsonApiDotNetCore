@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class AbsoluteLinksWithNamespaceTests : IntegrationTestFixture<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>
+    public sealed class AbsoluteLinksWithNamespaceTests : IntegrationTestCollection<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>
     {
         private const string HostPrefix = "http://localhost";
 

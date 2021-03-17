@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    public sealed class CustomRouteTests : IntegrationTestFixture<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
+    public sealed class CustomRouteTests : IntegrationTestCollection<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
     {
         private const string HostPrefix = "http://localhost";
 

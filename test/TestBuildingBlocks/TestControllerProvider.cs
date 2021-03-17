@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace TestBuildingBlocks
 {
-    public sealed class TestControllerProvider : ControllerFeatureProvider
+    internal sealed class TestControllerProvider : ControllerFeatureProvider
     {
         private readonly IList<Type> _namespaceEntryPoints = new List<Type>();
         private readonly IList<Type> _allowedControllerTypes = new List<Type>();

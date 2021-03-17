@@ -12,7 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 {
-    public sealed class AtomicAbsoluteLinksTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
+    public sealed class AtomicAbsoluteLinksTests : IntegrationTestCollection<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private const string HostPrefix = "http://localhost";
 

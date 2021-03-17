@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
-    public sealed class HostingTests : IntegrationTestFixture<HostingStartup<HostingDbContext>, HostingDbContext>
+    public sealed class HostingTests : IntegrationTestCollection<HostingStartup<HostingDbContext>, HostingDbContext>
     {
         private const string HostPrefix = "http://localhost";
 

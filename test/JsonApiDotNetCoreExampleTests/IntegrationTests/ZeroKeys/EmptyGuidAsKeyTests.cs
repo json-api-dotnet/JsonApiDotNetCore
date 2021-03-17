@@ -15,7 +15,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
-    public sealed class EmptyGuidAsKeyTests : IntegrationTestFixture<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>
+    public sealed class EmptyGuidAsKeyTests : IntegrationTestCollection<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
         private readonly ZeroKeyFakers _fakers = new ZeroKeyFakers();

@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public sealed class SoftDeletionTests : IntegrationTestFixture<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>
+    public sealed class SoftDeletionTests : IntegrationTestCollection<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
 

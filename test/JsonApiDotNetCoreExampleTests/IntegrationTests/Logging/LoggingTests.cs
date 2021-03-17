@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IntegrationTestFixture<TestableStartup<AuditDbContext>, AuditDbContext>
+    public sealed class LoggingTests : IntegrationTestCollection<TestableStartup<AuditDbContext>, AuditDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
         private readonly AuditFakers _fakers = new AuditFakers();

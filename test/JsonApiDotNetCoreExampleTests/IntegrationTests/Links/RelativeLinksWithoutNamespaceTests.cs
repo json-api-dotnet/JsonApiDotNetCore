@@ -13,7 +13,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
-    public sealed class RelativeLinksWithoutNamespaceTests : IntegrationTestFixture<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>
+    public sealed class RelativeLinksWithoutNamespaceTests : IntegrationTestCollection<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();

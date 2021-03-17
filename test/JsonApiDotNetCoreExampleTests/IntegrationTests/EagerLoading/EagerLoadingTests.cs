@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
-    public sealed class EagerLoadingTests : IntegrationTestFixture<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>
+    public sealed class EagerLoadingTests : IntegrationTestCollection<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
         private readonly EagerLoadingFakers _fakers = new EagerLoadingFakers();

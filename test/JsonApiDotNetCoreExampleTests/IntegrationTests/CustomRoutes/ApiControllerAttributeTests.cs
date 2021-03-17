@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    public sealed class ApiControllerAttributeTests : IntegrationTestFixture<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
+    public sealed class ApiControllerAttributeTests : IntegrationTestCollection<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
 

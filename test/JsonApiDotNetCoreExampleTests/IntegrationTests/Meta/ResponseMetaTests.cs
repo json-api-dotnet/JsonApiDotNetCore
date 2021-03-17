@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests : IntegrationTestFixture<TestableStartup<SupportDbContext>, SupportDbContext>
+    public sealed class ResponseMetaTests : IntegrationTestCollection<TestableStartup<SupportDbContext>, SupportDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
 

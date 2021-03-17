@@ -12,7 +12,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class TopLevelCountTests : IntegrationTestFixture<TestableStartup<SupportDbContext>, SupportDbContext>
+    public sealed class TopLevelCountTests : IntegrationTestCollection<TestableStartup<SupportDbContext>, SupportDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();

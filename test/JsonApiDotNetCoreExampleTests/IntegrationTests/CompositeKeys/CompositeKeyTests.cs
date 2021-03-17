@@ -14,7 +14,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
-    public sealed class CompositeKeyTests : IntegrationTestFixture<TestableStartup<CompositeDbContext>, CompositeDbContext>
+    public sealed class CompositeKeyTests : IntegrationTestCollection<TestableStartup<CompositeDbContext>, CompositeDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 

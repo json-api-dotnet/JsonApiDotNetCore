@@ -14,7 +14,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 {
-    public sealed class ResourceDefinitionQueryCallbackTests : IntegrationTestFixture<TestableStartup<CallableDbContext>, CallableDbContext>
+    public sealed class ResourceDefinitionQueryCallbackTests : IntegrationTestCollection<TestableStartup<CallableDbContext>, CallableDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext> _testContext;
 

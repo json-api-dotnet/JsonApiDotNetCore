@@ -15,7 +15,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
 {
-    public sealed class ResourceInjectionTests : IntegrationTestFixture<TestableStartup<InjectionDbContext>, InjectionDbContext>
+    public sealed class ResourceInjectionTests : IntegrationTestCollection<TestableStartup<InjectionDbContext>, InjectionDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<InjectionDbContext>, InjectionDbContext> _testContext;
         private readonly InjectionFakers _fakers;

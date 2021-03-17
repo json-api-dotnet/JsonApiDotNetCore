@@ -17,7 +17,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 {
-    public sealed class SerializationTests : IntegrationTestFixture<TestableStartup<SerializationDbContext>, SerializationDbContext>
+    public sealed class SerializationTests : IntegrationTestCollection<TestableStartup<SerializationDbContext>, SerializationDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
         private readonly SerializationFakers _fakers = new SerializationFakers();

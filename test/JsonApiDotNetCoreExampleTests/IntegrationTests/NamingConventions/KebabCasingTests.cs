@@ -9,7 +9,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
-    public sealed class KebabCasingTests : IntegrationTestFixture<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>
+    public sealed class KebabCasingTests : IntegrationTestCollection<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>
     {
         private readonly ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
         private readonly SwimmingFakers _fakers = new SwimmingFakers();

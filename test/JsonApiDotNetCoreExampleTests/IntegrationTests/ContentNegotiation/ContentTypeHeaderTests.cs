@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
 {
-    public sealed class ContentTypeHeaderTests : IntegrationTestFixture<TestableStartup<PolicyDbContext>, PolicyDbContext>
+    public sealed class ContentTypeHeaderTests : IntegrationTestCollection<TestableStartup<PolicyDbContext>, PolicyDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 

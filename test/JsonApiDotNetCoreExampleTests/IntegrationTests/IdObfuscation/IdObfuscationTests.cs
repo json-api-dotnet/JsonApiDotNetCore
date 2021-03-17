@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
 {
-    public sealed class IdObfuscationTests : IntegrationTestFixture<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>
+    public sealed class IdObfuscationTests : IntegrationTestCollection<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> _testContext;
         private readonly ObfuscationFakers _fakers = new ObfuscationFakers();

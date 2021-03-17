@@ -9,7 +9,7 @@ namespace TestBuildingBlocks
 {
     public static class ServiceCollectionExtensions
     {
-        public static void UseControllers(this IServiceCollection services, TestControllerProvider provider)
+        internal static void UseControllers(this IServiceCollection services, TestControllerProvider provider)
         {
             ArgumentGuard.NotNull(services, nameof(services));
 

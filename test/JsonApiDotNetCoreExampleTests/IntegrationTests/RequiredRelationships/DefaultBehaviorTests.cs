@@ -11,7 +11,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class DefaultBehaviorTests : IntegrationTestFixture<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>
+    public sealed class DefaultBehaviorTests : IntegrationTestCollection<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> _testContext;
 
