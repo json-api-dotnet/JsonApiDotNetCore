@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             _testContext = testContext;
 
-            _testContext.AddController<OperationsController>();
+            testContext.AddController<OperationsController>();
         }
 
         [Fact]

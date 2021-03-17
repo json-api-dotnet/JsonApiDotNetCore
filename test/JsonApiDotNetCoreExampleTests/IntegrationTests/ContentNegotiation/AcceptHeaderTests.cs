@@ -19,7 +19,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         public AcceptHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
-            _testContext.AddController<OperationsController>();
+
+            testContext.AddController<OperationsController>();
         }
 
         [Fact]

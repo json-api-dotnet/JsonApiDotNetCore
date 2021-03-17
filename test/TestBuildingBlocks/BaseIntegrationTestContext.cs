@@ -39,17 +39,12 @@ namespace TestBuildingBlocks
 
         public void AddController<TController>() where TController : class
         {
-            _testControllerProvider.AddController<TController>();
-        }
-
-        public void AddControllersInNamespaceOf(Type entrypoint)
-        {
-            _testControllerProvider.AddNamespaceEntrypoint(entrypoint);
+            _testControllerProvider.AddController(typeof(TController));
         }
 
         public void AddControllersInNamespaceOf<TNamespaceEntryPoint>()
         {
-            AddControllersInNamespaceOf(typeof(TNamespaceEntryPoint));
+            _testControllerProvider.AddNamespaceEntrypoint(typeof(TNamespaceEntryPoint));
         }
 
         protected BaseIntegrationTestContext()

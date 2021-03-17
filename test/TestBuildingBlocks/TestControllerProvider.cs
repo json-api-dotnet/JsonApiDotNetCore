@@ -14,9 +14,8 @@ namespace TestBuildingBlocks
         private readonly IList<Type> _allowedControllerTypes = new List<Type>();
         private string[] _namespaces;
 
-        public void AddController<TController>()
+        public void AddController(Type controller)
         {
-            Type controller = typeof(TController);
             _allowedControllerTypes.Add(controller);
             ControllerAssemblies.Add(controller.Assembly);
         }

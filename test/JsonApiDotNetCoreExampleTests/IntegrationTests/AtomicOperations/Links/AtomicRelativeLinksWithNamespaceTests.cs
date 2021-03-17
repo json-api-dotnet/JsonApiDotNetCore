@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
         {
             _testContext = testContext;
 
-            _testContext.AddController<OperationsController>();
+            testContext.AddController<OperationsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

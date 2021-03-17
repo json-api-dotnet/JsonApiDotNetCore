@@ -7,11 +7,11 @@ using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore
 {
-    public static class ArgumentGuard
+    internal static class ArgumentGuard
     {
         [AssertionMethod]
         [ContractAnnotation("value: null => halt")]
-        public static void NotNull<T>([CanBeNull] [NoEnumeration] T value, [NotNull] [InvokerParameterName] string name)
+        internal static void NotNull<T>([CanBeNull] [NoEnumeration] T value, [NotNull] [InvokerParameterName] string name)
             where T : class
         {
             if (value is null)
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore
 
         [AssertionMethod]
         [ContractAnnotation("value: null => halt")]
-        public static void NotNullNorEmpty<T>([CanBeNull] IEnumerable<T> value, [NotNull] [InvokerParameterName] string name,
+        internal static void NotNullNorEmpty<T>([CanBeNull] IEnumerable<T> value, [NotNull] [InvokerParameterName] string name,
             [CanBeNull] string collectionName = null)
         {
             NotNull(value, name);
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore
 
         [AssertionMethod]
         [ContractAnnotation("value: null => halt")]
-        public static void NotNullNorEmpty([CanBeNull] string value, [NotNull] [InvokerParameterName] string name)
+        internal static void NotNullNorEmpty([CanBeNull] string value, [NotNull] [InvokerParameterName] string name)
         {
             NotNull(value, name);
 

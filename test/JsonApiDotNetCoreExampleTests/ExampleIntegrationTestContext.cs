@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Startups;
-using JsonApiDotNetCoreExampleTests.IntegrationTests;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 
@@ -16,13 +15,13 @@ namespace JsonApiDotNetCoreExampleTests
     /// The EF Core database context, which can be defined in the test project.
     /// </typeparam>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ExampleIntegrationTestContext<TStartup, TDbContext> : BaseIntegrationTestContext<TStartup, EmptyStartup, TDbContext>
+    public class ExampleIntegrationTestContext<TStartup, TDbContext> : BaseIntegrationTestContext<TStartup, EmptyStartup, TDbContext>
         where TStartup : class
         where TDbContext : DbContext
     {
     }
 
-    public sealed class ExampleIntegrationTestContext<TStartup> : BaseIntegrationTestContext<TStartup, EmptyStartup, NoModelsDbContext>
+    public sealed class ExampleIntegrationTestContext<TStartup> : ExampleIntegrationTestContext<TStartup, NoModelsDbContext>
         where TStartup : class
     {
     }

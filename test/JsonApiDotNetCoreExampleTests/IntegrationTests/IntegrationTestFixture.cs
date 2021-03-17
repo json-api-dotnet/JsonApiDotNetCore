@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Npgsql.TypeHandlers.FullTextSearchHandlers;
-using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests
