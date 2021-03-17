@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Middleware;
@@ -31,7 +30,7 @@ namespace JsonApiDotNetCore.Resources
             Request = request;
         }
 
-        public void SetTransactionId(Guid transactionId)
+        public void SetTransactionId(string transactionId)
         {
             ((JsonApiRequest)Request).TransactionId = transactionId;
         }

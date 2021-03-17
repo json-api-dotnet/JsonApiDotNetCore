@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Repositories
@@ -12,6 +11,6 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Identifies the currently active transaction.
         /// </summary>
-        Guid? TransactionId { get; }
+        string TransactionId { get; }
     }
 }
