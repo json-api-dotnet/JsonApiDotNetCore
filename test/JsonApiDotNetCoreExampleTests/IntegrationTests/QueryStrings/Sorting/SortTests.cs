@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
 {
-    public sealed class SortTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class SortTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public SortTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+        public SortTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

@@ -3,17 +3,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
 {
-    public sealed class ActionResultTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext>>
+    public sealed class ActionResultTests : IntegrationTestFixture<TestableStartup<ActionResultDbContext>, ActionResultDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> _testContext;
 
-        public ActionResultTests(ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> testContext)
+        public ActionResultTests(ExampleIntegrationTestContext<TestableStartup<ActionResultDbContext>, ActionResultDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

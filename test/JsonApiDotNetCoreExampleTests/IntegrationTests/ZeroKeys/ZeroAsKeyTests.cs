@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,12 +15,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 {
-    public sealed class ZeroAsKeyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>>
+    public sealed class ZeroAsKeyTests : IntegrationTestFixture<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> _testContext;
         private readonly ZeroKeyFakers _fakers = new ZeroKeyFakers();
 
-        public ZeroAsKeyTests(ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext)
+        public ZeroAsKeyTests(ExampleIntegrationTestContext<TestableStartup<ZeroKeyDbContext>, ZeroKeyDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

@@ -6,6 +6,8 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -13,19 +15,19 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 {
-    public sealed class AtomicResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicResourceMetaTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 
+            _testContext.AddController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackMetaDefinition>();
                 services.AddScoped<IResourceDefinition<TextLanguage, Guid>, TextLanguageMetaDefinition>();
             });

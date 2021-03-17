@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -13,17 +15,16 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
     public sealed class AtomicCreateResourceWithClientGeneratedIdTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+        : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
         public AtomicCreateResourceWithClientGeneratedIdTests(
-            ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+            ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
-
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            _testContext.AddController<OperationsController>();
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowClientGeneratedIds = true;

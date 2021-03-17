@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -15,12 +16,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
 {
-    public sealed class UpdateResourceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class UpdateResourceTests : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
 
-        public UpdateResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        public UpdateResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

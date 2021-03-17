@@ -15,12 +15,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> _testContext;
 
-        public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext)
-            : base(testContext)
+        public ContentTypeHeaderTests(ExampleIntegrationTestContext<TestableStartup<PolicyDbContext>, PolicyDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
-
-            TestControllerProvider.AddController<OperationsController>();
+            _testContext.AddController<OperationsController>();
         }
 
         [Fact]

@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -12,16 +14,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalIds
 {
-    public sealed class AtomicLocalIdTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicLocalIdTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicLocalIdTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicLocalIdTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            _testContext.AddController<OperationsController>();
         }
 
         [Fact]

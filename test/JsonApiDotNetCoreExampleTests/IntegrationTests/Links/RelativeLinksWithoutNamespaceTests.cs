@@ -6,6 +6,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -14,12 +15,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
 {
     public sealed class RelativeLinksWithoutNamespaceTests
-        : IClassFixture<ExampleIntegrationTestContext<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>>
+        : IntegrationTestFixture<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new LinksFakers();
 
-        public RelativeLinksWithoutNamespaceTests(ExampleIntegrationTestContext<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext> testContext)
+        public RelativeLinksWithoutNamespaceTests(ExampleIntegrationTestContext<RelativeLinksNoNamespaceStartup<LinksDbContext>, LinksDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

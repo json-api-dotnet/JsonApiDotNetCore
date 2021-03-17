@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -17,12 +18,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 {
-    public sealed class SerializationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+    public sealed class SerializationTests : IntegrationTestFixture<TestableStartup<SerializationDbContext>, SerializationDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
         private readonly SerializationFakers _fakers = new SerializationFakers();
 
-        public SerializationTests(ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        public SerializationTests(ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -14,16 +16,16 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creating
 {
-    public sealed class AtomicCreateResourceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicCreateResourceTests : IntegrationTestFixture<TestableStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new OperationsFakers();
 
-        public AtomicCreateResourceTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicCreateResourceTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            _testContext.AddController<OperationsController>();
         }
 
         [Fact]

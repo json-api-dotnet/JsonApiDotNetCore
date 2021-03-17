@@ -3,18 +3,19 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
-    public sealed class HttpReadOnlyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext>>
+    public sealed class HttpReadOnlyTests : IntegrationTestFixture<TestableStartup<RestrictionDbContext>, RestrictionDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> _testContext;
         private readonly RestrictionFakers _fakers = new RestrictionFakers();
 
-        public HttpReadOnlyTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
+        public HttpReadOnlyTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

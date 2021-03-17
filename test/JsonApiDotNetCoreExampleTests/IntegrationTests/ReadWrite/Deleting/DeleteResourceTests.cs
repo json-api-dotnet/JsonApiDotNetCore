@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -12,12 +13,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 {
-    public sealed class DeleteResourceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class DeleteResourceTests : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
 
-        public DeleteResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        public DeleteResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

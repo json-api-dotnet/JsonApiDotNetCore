@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -12,12 +13,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResourceMetaTests : IntegrationTestFixture<TestableStartup<SupportDbContext>, SupportDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new SupportFakers();
 
-        public ResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

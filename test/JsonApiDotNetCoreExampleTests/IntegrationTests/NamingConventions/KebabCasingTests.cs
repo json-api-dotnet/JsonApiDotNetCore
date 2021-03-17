@@ -4,17 +4,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
 {
-    public sealed class KebabCasingTests : IClassFixture<ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
+    public sealed class KebabCasingTests : IntegrationTestFixture<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>
     {
         private readonly ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
         private readonly SwimmingFakers _fakers = new SwimmingFakers();
 
-        public KebabCasingTests(ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
+        public KebabCasingTests(ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

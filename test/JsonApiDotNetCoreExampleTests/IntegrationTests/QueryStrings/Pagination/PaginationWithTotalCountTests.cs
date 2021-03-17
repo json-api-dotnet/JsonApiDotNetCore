@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -14,7 +15,7 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
 {
     public sealed class PaginationWithTotalCountTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+        : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private const string HostPrefix = "http://localhost";
         private const int DefaultPageSize = 5;
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public PaginationWithTotalCountTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+        public PaginationWithTotalCountTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

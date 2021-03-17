@@ -4,19 +4,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
 {
-    public sealed class HostingTests : IClassFixture<ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
+    public sealed class HostingTests : IntegrationTestFixture<HostingStartup<HostingDbContext>, HostingDbContext>
     {
         private const string HostPrefix = "http://localhost";
 
         private readonly ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> _testContext;
         private readonly HostingFakers _fakers = new HostingFakers();
 
-        public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
+        public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

@@ -5,20 +5,21 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
 {
-    public sealed class CustomRouteTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>>
+    public sealed class CustomRouteTests : IntegrationTestFixture<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext>
     {
         private const string HostPrefix = "http://localhost";
 
         private readonly ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> _testContext;
         private readonly CustomRouteFakers _fakers = new CustomRouteFakers();
 
-        public CustomRouteTests(ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
+        public CustomRouteTests(ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

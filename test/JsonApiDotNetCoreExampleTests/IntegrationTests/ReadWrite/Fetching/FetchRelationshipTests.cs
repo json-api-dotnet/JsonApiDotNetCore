@@ -5,18 +5,19 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 {
-    public sealed class FetchRelationshipTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class FetchRelationshipTests : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
 
-        public FetchRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        public FetchRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

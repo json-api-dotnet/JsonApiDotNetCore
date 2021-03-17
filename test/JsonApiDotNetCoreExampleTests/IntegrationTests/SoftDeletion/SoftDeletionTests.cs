@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -13,11 +14,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
-    public sealed class SoftDeletionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
+    public sealed class SoftDeletionTests : IntegrationTestFixture<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
 
-        public SoftDeletionTests(ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext)
+        public SoftDeletionTests(ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

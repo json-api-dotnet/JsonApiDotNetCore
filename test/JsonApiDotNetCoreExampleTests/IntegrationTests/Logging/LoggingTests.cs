@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,12 +12,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
+    public sealed class LoggingTests : IntegrationTestFixture<TestableStartup<AuditDbContext>, AuditDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
         private readonly AuditFakers _fakers = new AuditFakers();
 
-        public LoggingTests(ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
+        public LoggingTests(ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

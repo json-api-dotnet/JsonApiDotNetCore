@@ -13,6 +13,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExample.Startups;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using TestBuildingBlocks;
@@ -20,6 +22,7 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 {
+
     public sealed class ResourceHookTests : IClassFixture<ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
@@ -28,6 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public ResourceHookTests(ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
             _testContext = testContext;
+            _testContext.AddControllersInNamespaceOf<Startup>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

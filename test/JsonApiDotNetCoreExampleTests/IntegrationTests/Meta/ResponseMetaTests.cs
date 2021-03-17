@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -11,11 +12,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
 {
-    public sealed class ResponseMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResponseMetaTests : IntegrationTestFixture<TestableStartup<SupportDbContext>, SupportDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
 
-        public ResponseMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResponseMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

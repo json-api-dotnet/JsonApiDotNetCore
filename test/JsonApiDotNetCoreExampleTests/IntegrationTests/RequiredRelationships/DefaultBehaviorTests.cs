@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -11,13 +12,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class DefaultBehaviorTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>>
+    public sealed class DefaultBehaviorTests : IntegrationTestFixture<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> _testContext;
 
         private readonly DefaultBehaviorFakers _fakers = new DefaultBehaviorFakers();
 
-        public DefaultBehaviorTests(ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> testContext)
+        public DefaultBehaviorTests(ExampleIntegrationTestContext<TestableStartup<DefaultBehaviorDbContext>, DefaultBehaviorDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

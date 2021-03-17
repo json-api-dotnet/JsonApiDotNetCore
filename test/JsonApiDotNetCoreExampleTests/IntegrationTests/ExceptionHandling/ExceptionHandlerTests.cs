@@ -7,6 +7,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,11 +17,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ExceptionHandlerTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
+    public sealed class ExceptionHandlerTests : IntegrationTestFixture<TestableStartup<ErrorDbContext>, ErrorDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 
-        public ExceptionHandlerTests(ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
+        public ExceptionHandlerTests(ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

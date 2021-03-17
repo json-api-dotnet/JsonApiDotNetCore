@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -13,12 +14,12 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 {
     public sealed class CreateResourceWithToManyRelationshipTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+        : IntegrationTestFixture<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new ReadWriteFakers();
 
-        public CreateResourceWithToManyRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        public CreateResourceWithToManyRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

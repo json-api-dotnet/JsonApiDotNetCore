@@ -1,30 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql.TypeHandlers.FullTextSearchHandlers;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests
 {
-    public class IntegrationTestFixture<TStartup, TDbContext> : IClassFixture<ExampleIntegrationTestContext<TStartup, TDbContext>>
+    public abstract class IntegrationTestFixture<TStartup, TDbContext> : IClassFixture<ExampleIntegrationTestContext<TStartup, TDbContext>>
         where TStartup : class
         where TDbContext : DbContext
     {
-        protected TestControllerProvider TestControllerProvider = new TestControllerProvider();
-
-        public IntegrationTestFixture()
+        protected IntegrationTestFixture(ExampleIntegrationTestContext<TStartup, TDbContext> testContext)
         {
-        }
-
-        public IntegrationTestFixture(ExampleIntegrationTestContext<TStartup, TDbContext> testContext)
-        {
-            TestControllerProvider.NamespaceEntryPoints.Add(GetType());
-
-
-            testContext.ConfigureServicesBeforeStartup(services =>
-            {
-                services.RemoveControllerFeatureProviders();
-
-                services.UseControllers(TestControllerProvider);
-            });
+            testContext.AddControllersInNamespaceOf<TDbContext>();
         }
     }
 }

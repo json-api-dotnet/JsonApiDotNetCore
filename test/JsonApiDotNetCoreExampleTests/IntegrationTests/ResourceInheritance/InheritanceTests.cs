@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +14,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class InheritanceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext>>
+    public sealed class InheritanceTests : IntegrationTestFixture<TestableStartup<InheritanceDbContext>, InheritanceDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
 
-        public InheritanceTests(ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
+        public InheritanceTests(ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

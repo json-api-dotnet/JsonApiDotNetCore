@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -11,12 +12,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
 {
-    public sealed class EagerLoadingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
+    public sealed class EagerLoadingTests : IntegrationTestFixture<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
         private readonly EagerLoadingFakers _fakers = new EagerLoadingFakers();
 
-        public EagerLoadingTests(ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext)
+        public EagerLoadingTests(ExampleIntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 

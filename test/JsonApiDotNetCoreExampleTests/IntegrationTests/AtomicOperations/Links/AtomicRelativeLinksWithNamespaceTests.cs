@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -13,19 +15,19 @@ using Xunit;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 {
     public sealed class AtomicRelativeLinksWithNamespaceTests
-        : IClassFixture<ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>>
+        : IntegrationTestFixture<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>
     {
         private readonly ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> _testContext;
 
         public AtomicRelativeLinksWithNamespaceTests(
-            ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> testContext)
+            ExampleIntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 
+            _testContext.AddController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
         }

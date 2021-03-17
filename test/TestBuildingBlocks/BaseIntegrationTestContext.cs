@@ -30,11 +30,27 @@ namespace TestBuildingBlocks
         where TDbContext : DbContext
     {
         private readonly Lazy<WebApplicationFactory<TRemoteStartup>> _lazyFactory;
+        private readonly TestControllerProvider _testControllerProvider = new TestControllerProvider();
         private Action<ILoggingBuilder> _loggingConfiguration;
         private Action<IServiceCollection> _beforeServicesConfiguration;
         private Action<IServiceCollection> _afterServicesConfiguration;
 
         public WebApplicationFactory<TRemoteStartup> Factory => _lazyFactory.Value;
+
+        public void AddController<TController>() where TController : class
+        {
+            _testControllerProvider.AddController<TController>();
+        }
+
+        public void AddControllersInNamespaceOf(Type entrypoint)
+        {
+            _testControllerProvider.AddNamespaceEntrypoint(entrypoint);
+        }
+
+        public void AddControllersInNamespaceOf<TNamespaceEntryPoint>()
+        {
+            AddControllersInNamespaceOf(typeof(TNamespaceEntryPoint));
+        }
 
         protected BaseIntegrationTestContext()
         {
@@ -57,6 +73,8 @@ namespace TestBuildingBlocks
 
             factory.ConfigureServicesBeforeStartup(services =>
             {
+                services.UseControllers(_testControllerProvider);
+
                 _beforeServicesConfiguration?.Invoke(services);
 
                 services.AddDbContext<TDbContext>(options =>

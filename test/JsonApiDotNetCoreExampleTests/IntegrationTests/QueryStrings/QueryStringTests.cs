@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -11,11 +12,11 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
 {
-    public sealed class QueryStringTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class QueryStringTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
 
-        public QueryStringTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+        public QueryStringTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
         }

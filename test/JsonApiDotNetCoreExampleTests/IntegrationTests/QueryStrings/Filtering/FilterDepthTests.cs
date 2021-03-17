@@ -7,6 +7,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -14,12 +15,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
+    public sealed class FilterDepthTests : IntegrationTestFixture<TestableStartup<QueryStringDbContext>, QueryStringDbContext>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
         private readonly QueryStringFakers _fakers = new QueryStringFakers();
 
-        public FilterDepthTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
+        public FilterDepthTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext) : base(testContext)
         {
             _testContext = testContext;
 
