@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Middleware
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly HashSet<string> _registeredTemplates = new HashSet<string>();
+        private readonly Dictionary<string, ControllerModel> _registeredTemplates = new Dictionary<string, ControllerModel>();
         private readonly Dictionary<Type, ResourceContext> _resourceContextPerControllerTypeMap = new Dictionary<Type, ResourceContext>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
@@ -89,10 +89,13 @@ namespace JsonApiDotNetCore.Middleware
 
                 string template = TemplateFromResource(controller) ?? TemplateFromController(controller);
 
-                if (template == null)
+                if (_registeredTemplates.ContainsKey(template))
                 {
-                    throw new InvalidConfigurationException($"Controllers with overlapping route templates detected: {controller.ControllerType.FullName}");
+                    throw new InvalidConfigurationException(
+                        $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredTemplates[template].ControllerType.FullName}' was already registered for this template.");
                 }
+
+                _registeredTemplates.Add(template, controller);
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
@@ -116,10 +119,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 string template = $"{_options.Namespace}/{resourceContext.PublicName}";
 
-                if (_registeredTemplates.Add(template))
-                {
-                    return template;
-                }
+                return template;
             }
 
             return null;
@@ -133,12 +133,7 @@ namespace JsonApiDotNetCore.Middleware
             string controllerName = _options.SerializerNamingStrategy.GetPropertyName(model.ControllerName, false);
             string template = $"{_options.Namespace}/{controllerName}";
 
-            if (_registeredTemplates.Add(template))
-            {
-                return template;
-            }
-
-            return null;
+            return template;
         }
 
         /// <summary>
