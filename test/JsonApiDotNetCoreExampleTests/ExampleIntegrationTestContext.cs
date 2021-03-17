@@ -20,16 +20,4 @@ namespace JsonApiDotNetCoreExampleTests
         where TDbContext : DbContext
     {
     }
-
-    /// <summary>
-    /// A test context for tests that reference the JsonApiDotNetCoreExample project when no database is needed.
-    /// </summary>
-    /// <typeparam name="TStartup">
-    /// The server Startup class, which can be defined in the test project.
-    /// </typeparam>
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ExampleIntegrationTestContext<TStartup> : BaseIntegrationTestContext<TStartup, EmptyStartup, NoModelsDbContext>
-        where TStartup : class
-    {
-    }
 }
