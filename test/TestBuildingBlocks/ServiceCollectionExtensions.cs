@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace TestBuildingBlocks
 {
-    public static class ServiceCollectionExtensions
+    internal static class ServiceCollectionExtensions
     {
-        internal static void UseControllers(this IServiceCollection services, TestControllerProvider provider)
+        public static void UseControllers(this IServiceCollection services, TestControllerProvider provider)
         {
             ArgumentGuard.NotNull(services, nameof(services));
 
