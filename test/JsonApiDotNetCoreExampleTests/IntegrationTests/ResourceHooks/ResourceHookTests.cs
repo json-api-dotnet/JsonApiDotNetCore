@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Definitions;
 using JsonApiDotNetCoreExample.Models;
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public ResourceHookTests(ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
             _testContext = testContext;
-            _testContext.AddControllersInNamespaceOf<Startup>();
+            _testContext.AddControllersInNamespaceOf<ArticlesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
