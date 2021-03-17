@@ -18,11 +18,6 @@ namespace TestBuildingBlocks
 
         protected override bool IsController(TypeInfo typeInfo)
         {
-            if (!base.IsController(typeInfo))
-            {
-                return false;
-            }
-
             return _allowedControllerTypes.Contains(typeInfo);
         }
     }
