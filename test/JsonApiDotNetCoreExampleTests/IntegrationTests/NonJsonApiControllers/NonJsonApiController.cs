@@ -2,7 +2,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JsonApiDotNetCoreExample.Controllers
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NonJsonApiControllers
 {
     [Route("[controller]")]
     public sealed class NonJsonApiController : ControllerBase

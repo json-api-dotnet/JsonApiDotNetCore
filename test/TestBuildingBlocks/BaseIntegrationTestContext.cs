@@ -88,9 +88,12 @@ namespace TestBuildingBlocks
 
             factory.ConfigureServicesAfterStartup(_afterServicesConfiguration);
 
-            using IServiceScope scope = factory.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
-            dbContext.Database.EnsureCreated();
+            if (typeof(TDbContext) != typeof(NoModelsDbContext))
+            {
+                using IServiceScope scope = factory.Services.CreateScope();
+                var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
+                dbContext.Database.EnsureCreated();
+            }
 
             return factory;
         }
