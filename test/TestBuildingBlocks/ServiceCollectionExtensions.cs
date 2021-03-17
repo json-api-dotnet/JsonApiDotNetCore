@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,10 +42,10 @@ namespace TestBuildingBlocks
             });
         }
 
-
         private static void RemoveExistingControllerFeatureProviders(ApplicationPartManager manager)
         {
-            IApplicationFeatureProvider<ControllerFeature>[] providers = manager.FeatureProviders.OfType<IApplicationFeatureProvider<ControllerFeature>>().ToArray();
+            IApplicationFeatureProvider<ControllerFeature>[] providers = manager.FeatureProviders.OfType<IApplicationFeatureProvider<ControllerFeature>>()
+                .ToArray();
 
             foreach (IApplicationFeatureProvider<ControllerFeature> provider in providers)
             {

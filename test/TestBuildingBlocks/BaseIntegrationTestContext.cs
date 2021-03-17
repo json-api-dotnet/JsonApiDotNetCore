@@ -37,7 +37,13 @@ namespace TestBuildingBlocks
 
         public WebApplicationFactory<TRemoteStartup> Factory => _lazyFactory.Value;
 
-        public void AddController<TController>() where TController : class
+        protected BaseIntegrationTestContext()
+        {
+            _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
+        }
+
+        public void AddController<TController>()
+            where TController : class
         {
             _testControllerProvider.AddController(typeof(TController));
         }
@@ -45,11 +51,6 @@ namespace TestBuildingBlocks
         public void AddControllersInNamespaceOf<TNamespaceEntryPoint>()
         {
             _testControllerProvider.AddNamespaceEntrypoint(typeof(TNamespaceEntryPoint));
-        }
-
-        protected BaseIntegrationTestContext()
-        {
-            _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
         }
 
         protected override HttpClient CreateClient()

@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 
 namespace TestBuildingBlocks
 {
     public sealed class TestControllerProvider : ControllerFeatureProvider
     {
-        internal readonly ISet<Assembly> ControllerAssemblies = new HashSet<Assembly>();
-        private readonly IList<Type> _namespaceEntryPoints  = new List<Type>();
+        private readonly IList<Type> _namespaceEntryPoints = new List<Type>();
         private readonly IList<Type> _allowedControllerTypes = new List<Type>();
+        internal readonly ISet<Assembly> ControllerAssemblies = new HashSet<Assembly>();
         private string[] _namespaces;
 
         public void AddController(Type controller)
@@ -35,7 +34,8 @@ namespace TestBuildingBlocks
 
             _namespaces ??= _namespaceEntryPoints.Select(type => type.Namespace).ToArray();
 
-            return _allowedControllerTypes.Contains(typeInfo) || _namespaces.Any(@namespace => typeInfo.Namespace!.StartsWith(@namespace, StringComparison.Ordinal));
+            return _allowedControllerTypes.Contains(typeInfo) ||
+                _namespaces.Any(@namespace => typeInfo.Namespace!.StartsWith(@namespace, StringComparison.Ordinal));
         }
     }
 }
