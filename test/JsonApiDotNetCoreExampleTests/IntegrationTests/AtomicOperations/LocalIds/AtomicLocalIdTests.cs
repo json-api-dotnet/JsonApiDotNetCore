@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         {
             _testContext = testContext;
 
-            testContext.AddController<OperationsController>();
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

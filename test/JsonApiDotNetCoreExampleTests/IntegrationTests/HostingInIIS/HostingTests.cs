@@ -20,8 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         {
             _testContext = testContext;
 
-            testContext.AddController<PaintingsController>();
-            testContext.AddController<ArtGalleriesController>();
+            testContext.UseController<PaintingsController>();
+            testContext.UseController<ArtGalleriesController>();
         }
 
         [Fact]

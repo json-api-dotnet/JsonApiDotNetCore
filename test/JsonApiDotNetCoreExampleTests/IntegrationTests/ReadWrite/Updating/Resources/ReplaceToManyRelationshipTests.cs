@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         {
             _testContext = testContext;
 
-            testContext.AddController<WorkItemsController>();
+            testContext.UseController<WorkItemsController>();
         }
 
         [Fact]

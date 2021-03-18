@@ -20,8 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         {
             _testContext = testContext;
 
-            testContext.AddController<WorkItemsController>();
-            testContext.AddController<UserAccountsController>();
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<UserAccountsController>();
         }
 
         [Fact]

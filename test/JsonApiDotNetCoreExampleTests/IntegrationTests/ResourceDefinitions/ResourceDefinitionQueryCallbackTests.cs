@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             _testContext = testContext;
 
-            testContext.AddController<CallableResourcesController>();
+            testContext.UseController<CallableResourcesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

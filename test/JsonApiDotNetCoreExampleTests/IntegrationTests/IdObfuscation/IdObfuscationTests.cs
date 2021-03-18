@@ -20,8 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         {
             _testContext = testContext;
 
-            testContext.AddController<BankAccountsController>();
-            testContext.AddController<DebitCardsController>();
+            testContext.UseController<BankAccountsController>();
+            testContext.UseController<DebitCardsController>();
         }
 
         [Fact]

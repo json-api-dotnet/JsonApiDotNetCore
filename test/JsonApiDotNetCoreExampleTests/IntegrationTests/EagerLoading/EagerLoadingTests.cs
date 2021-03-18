@@ -20,9 +20,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
         {
             _testContext = testContext;
 
-            testContext.AddController<StreetsController>();
-            testContext.AddController<StatesController>();
-            testContext.AddController<BuildingsController>();
+            testContext.UseController<StreetsController>();
+            testContext.UseController<StatesController>();
+            testContext.UseController<BuildingsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

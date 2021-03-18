@@ -19,8 +19,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
         {
             _testContext = testContext;
 
-            testContext.AddController<PoliciesController>();
-            testContext.AddController<OperationsController>();
+            testContext.UseController<PoliciesController>();
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

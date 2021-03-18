@@ -21,8 +21,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         {
             _testContext = testContext;
 
-            testContext.AddController<CompaniesController>();
-            testContext.AddController<DepartmentsController>();
+            testContext.UseController<CompaniesController>();
+            testContext.UseController<DepartmentsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

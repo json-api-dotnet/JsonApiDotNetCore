@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         {
             _testContext = testContext;
 
-            testContext.AddController<MenController>();
+            testContext.UseController<MenController>();
         }
 
         [Fact]

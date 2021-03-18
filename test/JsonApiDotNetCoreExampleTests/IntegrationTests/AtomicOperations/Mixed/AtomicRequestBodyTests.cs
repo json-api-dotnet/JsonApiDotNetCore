@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         {
             _testContext = testContext;
 
-            testContext.AddController<OperationsController>();
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

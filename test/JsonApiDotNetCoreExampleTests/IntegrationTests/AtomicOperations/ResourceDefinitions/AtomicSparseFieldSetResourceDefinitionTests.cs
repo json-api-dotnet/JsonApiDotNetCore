@@ -23,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
         {
             _testContext = testContext;
 
-            testContext.AddController<OperationsController>();
+            testContext.UseController<OperationsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

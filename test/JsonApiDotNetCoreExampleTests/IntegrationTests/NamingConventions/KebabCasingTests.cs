@@ -18,8 +18,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         {
             _testContext = testContext;
 
-            testContext.AddController<DivingBoardsController>();
-            testContext.AddController<SwimmingPoolsController>();
+            testContext.UseController<DivingBoardsController>();
+            testContext.UseController<SwimmingPoolsController>();
         }
 
         [Fact]

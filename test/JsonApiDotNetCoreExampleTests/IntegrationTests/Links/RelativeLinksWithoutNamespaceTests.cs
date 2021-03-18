@@ -23,8 +23,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         {
             _testContext = testContext;
 
-            testContext.AddController<PhotoAlbumsController>();
-            testContext.AddController<PhotosController>();
+            testContext.UseController<PhotoAlbumsController>();
+            testContext.UseController<PhotosController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

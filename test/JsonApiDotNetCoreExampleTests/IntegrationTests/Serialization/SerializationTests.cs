@@ -26,8 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         {
             _testContext = testContext;
 
-            testContext.AddController<MeetingAttendeesController>();
-            testContext.AddController<MeetingsController>();
+            testContext.UseController<MeetingAttendeesController>();
+            testContext.UseController<MeetingsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

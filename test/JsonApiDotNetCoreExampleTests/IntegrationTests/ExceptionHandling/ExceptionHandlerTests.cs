@@ -24,8 +24,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
         {
             _testContext = testContext;
 
-            testContext.AddController<ThrowingArticlesController>();
-            testContext.AddController<ConsumerArticlesController>();
+            testContext.UseController<ThrowingArticlesController>();
+            testContext.UseController<ConsumerArticlesController>();
 
             FakeLoggerFactory loggerFactory = null;
 

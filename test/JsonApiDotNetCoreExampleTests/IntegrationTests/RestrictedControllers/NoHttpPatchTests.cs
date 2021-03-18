@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.AddController<BlockingHttpPatchController>();
+            testContext.UseController<BlockingHttpPatchController>();
         }
 
         [Fact]

@@ -21,9 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         {
             _testContext = testContext;
 
-            testContext.AddController<BlogPostsController>();
-            testContext.AddController<BlogsController>();
-            testContext.AddController<WebAccountsController>();
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<BlogsController>();
+            testContext.UseController<WebAccountsController>();
         }
 
         [Fact]

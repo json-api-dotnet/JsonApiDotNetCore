@@ -24,8 +24,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         {
             _testContext = testContext;
 
-            testContext.AddController<GiftCertificatesController>();
-            testContext.AddController<PostOfficesController>();
+            testContext.UseController<GiftCertificatesController>();
+            testContext.UseController<PostOfficesController>();
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {

@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Middleware
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;
-        private readonly Dictionary<string, ControllerModel> _registeredTemplates = new Dictionary<string, ControllerModel>();
+        private readonly Dictionary<string, string> _registeredControllerNameByTemplate = new Dictionary<string, string>();
         private readonly Dictionary<Type, ResourceContext> _resourceContextPerControllerTypeMap = new Dictionary<Type, ResourceContext>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
@@ -89,13 +89,13 @@ namespace JsonApiDotNetCore.Middleware
 
                 string template = TemplateFromResource(controller) ?? TemplateFromController(controller);
 
-                if (_registeredTemplates.ContainsKey(template))
+                if (_registeredControllerNameByTemplate.ContainsKey(template))
                 {
                     throw new InvalidConfigurationException(
-                        $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredTemplates[template].ControllerType.FullName}' was already registered for this template.");
+                        $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredControllerNameByTemplate[template]}' was already registered for this template.");
                 }
 
-                _registeredTemplates.Add(template, controller);
+                _registeredControllerNameByTemplate.Add(template, controller.ControllerType.FullName);
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {

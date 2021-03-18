@@ -28,8 +28,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         {
             _testContext = testContext;
 
-            testContext.AddController<OperationsController>();
-            testContext.AddController<MusicTracksController>();
+            testContext.UseController<OperationsController>();
+            testContext.UseController<MusicTracksController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

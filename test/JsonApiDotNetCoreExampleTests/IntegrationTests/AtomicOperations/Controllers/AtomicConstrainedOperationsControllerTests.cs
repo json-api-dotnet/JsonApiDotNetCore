@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Contro
         {
             _testContext = testContext;
 
-            testContext.AddController<CreateMusicTrackOperationsController>();
+            testContext.UseController<CreateMusicTrackOperationsController>();
         }
 
         [Fact]

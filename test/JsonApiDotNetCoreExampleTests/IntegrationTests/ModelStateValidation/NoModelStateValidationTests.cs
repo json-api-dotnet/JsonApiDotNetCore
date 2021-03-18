@@ -17,8 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         {
             _testContext = testContext;
 
-            testContext.AddController<SystemDirectoriesController>();
-            testContext.AddController<SystemFilesController>();
+            testContext.UseController<SystemDirectoriesController>();
+            testContext.UseController<SystemFilesController>();
         }
 
         [Fact]

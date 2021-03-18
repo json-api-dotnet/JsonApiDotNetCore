@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         {
             _testContext = testContext;
 
-            testContext.AddController<CalendarsController>();
+            testContext.UseController<CalendarsController>();
         }
 
         [Fact]

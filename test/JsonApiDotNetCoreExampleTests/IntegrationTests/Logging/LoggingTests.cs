@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
         {
             _testContext = testContext;
 
-            testContext.AddController<AuditEntriesController>();
+            testContext.UseController<AuditEntriesController>();
 
             FakeLoggerFactory loggerFactory = null;
 

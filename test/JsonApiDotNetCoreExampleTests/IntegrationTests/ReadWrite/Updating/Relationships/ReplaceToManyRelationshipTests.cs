@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         {
             _testContext = testContext;
 
-            testContext.AddController<WorkItemsController>();
+            testContext.UseController<WorkItemsController>();
         }
 
         [Fact]

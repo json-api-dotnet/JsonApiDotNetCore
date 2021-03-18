@@ -22,9 +22,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         {
             _testContext = testContext;
 
-            testContext.AddController<BlogPostsController>();
-            testContext.AddController<WebAccountsController>();
-            testContext.AddController<BlogsController>();
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<WebAccountsController>();
+            testContext.UseController<BlogsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

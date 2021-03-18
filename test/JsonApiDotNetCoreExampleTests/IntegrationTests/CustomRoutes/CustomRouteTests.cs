@@ -22,8 +22,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         {
             _testContext = testContext;
 
-            testContext.AddController<CiviliansController>();
-            testContext.AddController<TownsController>();
+            testContext.UseController<CiviliansController>();
+            testContext.UseController<TownsController>();
         }
 
         [Fact]

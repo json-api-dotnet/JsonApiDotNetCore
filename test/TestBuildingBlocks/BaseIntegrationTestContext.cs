@@ -43,7 +43,7 @@ namespace TestBuildingBlocks
             _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
         }
 
-        public void AddController<TController>()
+        public void UseController<TController>()
             where TController : ControllerBase
         {
             _testControllerProvider.AddController(typeof(TController));
@@ -65,9 +65,9 @@ namespace TestBuildingBlocks
 
             factory.ConfigureServicesBeforeStartup(services =>
             {
-                services.UseControllers(_testControllerProvider);
-
                 _beforeServicesConfiguration?.Invoke(services);
+
+                services.ReplaceControllers(_testControllerProvider);
 
                 services.AddDbContext<TDbContext>(options =>
                 {

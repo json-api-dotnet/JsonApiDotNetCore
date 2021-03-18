@@ -23,9 +23,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         {
             _testContext = testContext;
 
-            testContext.AddController<GamesController>();
-            testContext.AddController<MapsController>();
-            testContext.AddController<PlayersController>();
+            testContext.UseController<GamesController>();
+            testContext.UseController<MapsController>();
+            testContext.UseController<PlayersController>();
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;

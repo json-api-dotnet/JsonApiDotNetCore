@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
         {
             _testContext = testContext;
 
-            testContext.AddController<ToothbrushesController>();
+            testContext.UseController<ToothbrushesController>();
         }
 
         [Fact]

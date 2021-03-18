@@ -19,8 +19,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
-            testContext.AddController<BlockingHttpDeleteController>();
-            testContext.AddController<BlockingWritesController>();
+            testContext.UseController<BlockingHttpDeleteController>();
+            testContext.UseController<BlockingWritesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {

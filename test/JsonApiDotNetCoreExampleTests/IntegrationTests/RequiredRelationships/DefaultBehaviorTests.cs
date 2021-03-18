@@ -21,11 +21,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         {
             _testContext = testContext;
 
-            testContext.AddController<OrdersController>();
+            testContext.UseController<OrdersController>();
             ;
-            testContext.AddController<ShipmentsController>();
+            testContext.UseController<ShipmentsController>();
             ;
-            testContext.AddController<CustomersController>();
+            testContext.UseController<CustomersController>();
             ;
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

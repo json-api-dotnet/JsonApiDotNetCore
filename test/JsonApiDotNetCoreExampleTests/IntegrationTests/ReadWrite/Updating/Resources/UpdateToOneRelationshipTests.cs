@@ -21,9 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         {
             _testContext = testContext;
 
-            testContext.AddController<WorkItemsController>();
-            testContext.AddController<WorkItemGroupsController>();
-            testContext.AddController<RgbColorsController>();
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<WorkItemGroupsController>();
+            testContext.UseController<RgbColorsController>();
         }
 
         [Fact]

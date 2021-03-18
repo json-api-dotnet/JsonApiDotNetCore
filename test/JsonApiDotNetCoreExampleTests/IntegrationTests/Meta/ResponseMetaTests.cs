@@ -19,8 +19,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
         {
             _testContext = testContext;
 
-            testContext.AddController<ProductFamiliesController>();
-            testContext.AddController<SupportTicketsController>();
+            testContext.UseController<ProductFamiliesController>();
+            testContext.UseController<SupportTicketsController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
