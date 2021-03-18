@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -37,7 +36,7 @@ namespace JsonApiDotNetCore.Middleware
         public OperationKind? OperationKind { get; set; }
 
         /// <inheritdoc />
-        public Guid? TransactionId { get; set; }
+        public string TransactionId { get; set; }
 
         /// <inheritdoc />
         public void CopyFrom(IJsonApiRequest other)

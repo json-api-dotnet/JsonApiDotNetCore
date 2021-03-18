@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -18,7 +17,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly DbContext _dbContext;
 
         /// <inheritdoc />
-        public Guid TransactionId => _transaction.TransactionId;
+        public string TransactionId => _transaction.TransactionId.ToString();
 
         public EntityFrameworkCoreTransaction(IDbContextTransaction transaction, DbContext dbContext)
         {

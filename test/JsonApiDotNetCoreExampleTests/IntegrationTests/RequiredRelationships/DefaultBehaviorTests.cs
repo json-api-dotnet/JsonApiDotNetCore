@@ -22,11 +22,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             _testContext = testContext;
 
             testContext.UseController<OrdersController>();
-            ;
             testContext.UseController<ShipmentsController>();
-            ;
             testContext.UseController<CustomersController>();
-            ;
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;

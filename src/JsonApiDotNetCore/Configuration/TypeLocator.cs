@@ -85,18 +85,21 @@ namespace JsonApiDotNetCore.Configuration
         private static (Type implementation, Type registrationInterface)? FindGenericInterfaceImplementationForType(Type nextType, Type openGenericInterface,
             Type[] interfaceGenericTypeArguments)
         {
-            foreach (Type nextGenericInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
+            if (!nextType.IsNested)
             {
-                Type nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
-
-                if (nextOpenGenericInterface == openGenericInterface)
+                foreach (Type nextGenericInterface in nextType.GetInterfaces().Where(type => type.IsGenericType))
                 {
-                    Type[] nextGenericArguments = nextGenericInterface.GetGenericArguments();
+                    Type nextOpenGenericInterface = nextGenericInterface.GetGenericTypeDefinition();
 
-                    if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length &&
-                        nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
+                    if (nextOpenGenericInterface == openGenericInterface)
                     {
-                        return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));
+                        Type[] nextGenericArguments = nextGenericInterface.GetGenericArguments();
+
+                        if (nextGenericArguments.Length == interfaceGenericTypeArguments.Length &&
+                            nextGenericArguments.SequenceEqual(interfaceGenericTypeArguments))
+                        {
+                            return (nextType, nextOpenGenericInterface.MakeGenericType(interfaceGenericTypeArguments));
+                        }
                     }
                 }
             }

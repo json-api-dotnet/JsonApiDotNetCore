@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
         /// <inheritdoc />
-        public virtual Guid? TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId;
+        public virtual string TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId.ToString();
 
         public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
