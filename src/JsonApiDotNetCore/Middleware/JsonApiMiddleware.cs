@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
@@ -120,7 +119,7 @@ namespace JsonApiDotNetCore.Middleware
         private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue allowedMediaTypeValue, HttpContext httpContext,
             JsonSerializerSettings serializerSettings)
         {
-            StringValues acceptHeaders = httpContext.Request.Headers["Accept"];
+            string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
 
             if (!acceptHeaders.Any())
             {

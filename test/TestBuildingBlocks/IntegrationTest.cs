@@ -63,16 +63,15 @@ namespace TestBuildingBlocks
                 }
             }
 
-            using HttpClient client = CreateClient();
-
             if (acceptHeaders != null)
             {
                 foreach (MediaTypeWithQualityHeaderValue acceptHeader in acceptHeaders)
                 {
-                    client.DefaultRequestHeaders.Accept.Add(acceptHeader);
+                    request.Headers.Accept.Add(acceptHeader);
                 }
             }
 
+            using HttpClient client = CreateClient();
             HttpResponseMessage responseMessage = await client.SendAsync(request);
 
             string responseText = await responseMessage.Content.ReadAsStringAsync();
