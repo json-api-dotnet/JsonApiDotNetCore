@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace JsonApiDotNetCore.Middleware
@@ -7,7 +8,7 @@ namespace JsonApiDotNetCore.Middleware
     /// Application-wide entry point for reading JSON:API request bodies.
     /// </summary>
     [PublicAPI]
-    public interface IJsonApiInputFormatter : IInputFormatter
+    public interface IJsonApiInputFormatter : IInputFormatter, IApiRequestFormatMetadataProvider
     {
     }
 }
