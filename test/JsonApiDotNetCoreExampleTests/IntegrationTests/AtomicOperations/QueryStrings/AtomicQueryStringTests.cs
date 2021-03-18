@@ -8,6 +8,7 @@ using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,10 +28,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
         {
             _testContext = testContext;
 
+            testContext.UseController<OperationsController>();
+            testContext.UseController<MusicTracksController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddSingleton<ISystemClock>(new FrozenSystemClock
                 {
                     UtcNow = FrozenTime

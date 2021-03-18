@@ -13,8 +13,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
         public override void ConfigureServices(IServiceCollection services)
         {
             base.ConfigureServices(services);
-
-            services.AddControllersFromExampleProject();
             services.AddClientSerialization();
         }
 

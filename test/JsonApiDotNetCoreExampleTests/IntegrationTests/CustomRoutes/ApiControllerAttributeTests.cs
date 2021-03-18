@@ -16,6 +16,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
         public ApiControllerAttributeTests(ExampleIntegrationTestContext<TestableStartup<CustomRouteDbContext>, CustomRouteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<CiviliansController>();
         }
 
         [Fact]

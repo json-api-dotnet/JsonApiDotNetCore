@@ -17,6 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public NoHttpDeleteTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<BlockingHttpDeleteController>();
         }
 
         [Fact]

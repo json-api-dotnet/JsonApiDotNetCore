@@ -22,6 +22,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public SerializerDefaultValueHandlingTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<CalendarsController>();
         }
 
         [Fact]

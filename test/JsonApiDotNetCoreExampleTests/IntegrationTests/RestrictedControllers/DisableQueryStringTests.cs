@@ -19,6 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         {
             _testContext = testContext;
 
+            testContext.UseController<BlockingHttpDeleteController>();
+            testContext.UseController<BlockingWritesController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped<SkipCacheQueryStringParameterReader>();

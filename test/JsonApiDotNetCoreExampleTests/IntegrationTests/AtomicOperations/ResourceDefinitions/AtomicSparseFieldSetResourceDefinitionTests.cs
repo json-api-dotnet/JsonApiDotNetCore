@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -22,10 +23,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
         {
             _testContext = testContext;
 
+            testContext.UseController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddSingleton<LyricPermissionProvider>();
                 services.AddScoped<IResourceDefinition<Lyric, long>, LyricTextDefinition>();
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));

@@ -19,6 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         public FetchResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<UserAccountsController>();
         }
 
         [Fact]

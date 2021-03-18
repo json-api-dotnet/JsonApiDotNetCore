@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ namespace TestBuildingBlocks
         where TDbContext : DbContext
     {
         private readonly Lazy<WebApplicationFactory<TRemoteStartup>> _lazyFactory;
+        private readonly TestControllerProvider _testControllerProvider = new TestControllerProvider();
         private Action<ILoggingBuilder> _loggingConfiguration;
         private Action<IServiceCollection> _beforeServicesConfiguration;
         private Action<IServiceCollection> _afterServicesConfiguration;
@@ -39,6 +41,12 @@ namespace TestBuildingBlocks
         protected BaseIntegrationTestContext()
         {
             _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
+        }
+
+        public void UseController<TController>()
+            where TController : ControllerBase
+        {
+            _testControllerProvider.AddController(typeof(TController));
         }
 
         protected override HttpClient CreateClient()
@@ -58,6 +66,8 @@ namespace TestBuildingBlocks
             factory.ConfigureServicesBeforeStartup(services =>
             {
                 _beforeServicesConfiguration?.Invoke(services);
+
+                services.ReplaceControllers(_testControllerProvider);
 
                 services.AddDbContext<TDbContext>(options =>
                 {

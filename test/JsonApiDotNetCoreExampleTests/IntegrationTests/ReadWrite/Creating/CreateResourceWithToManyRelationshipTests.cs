@@ -21,6 +21,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         public CreateResourceWithToManyRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<UserAccountsController>();
         }
 
         [Fact]

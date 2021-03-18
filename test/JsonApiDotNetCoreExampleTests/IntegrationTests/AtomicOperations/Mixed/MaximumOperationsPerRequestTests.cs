@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -21,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

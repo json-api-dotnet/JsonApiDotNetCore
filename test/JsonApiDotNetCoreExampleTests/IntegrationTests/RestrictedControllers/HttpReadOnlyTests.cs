@@ -17,6 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
         public HttpReadOnlyTests(ExampleIntegrationTestContext<TestableStartup<RestrictionDbContext>, RestrictionDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<BlockingWritesController>();
         }
 
         [Fact]

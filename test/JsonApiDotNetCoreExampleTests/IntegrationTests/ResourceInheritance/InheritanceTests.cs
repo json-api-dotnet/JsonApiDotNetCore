@@ -20,6 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public InheritanceTests(ExampleIntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<MenController>();
         }
 
         [Fact]

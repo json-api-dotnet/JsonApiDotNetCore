@@ -25,6 +25,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         {
             _testContext = testContext;
 
+            testContext.UseController<PhotoAlbumsController>();
+            testContext.UseController<PhotosController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,10 +23,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
         {
             _testContext = testContext;
 
+            testContext.UseController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddResourceRepository<PerformerRepository>();
                 services.AddResourceRepository<MusicTrackRepository>();
                 services.AddResourceRepository<LyricRepository>();

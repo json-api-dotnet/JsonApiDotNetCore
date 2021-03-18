@@ -20,6 +20,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         public SortTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<BlogsController>();
+            testContext.UseController<WebAccountsController>();
         }
 
         [Fact]

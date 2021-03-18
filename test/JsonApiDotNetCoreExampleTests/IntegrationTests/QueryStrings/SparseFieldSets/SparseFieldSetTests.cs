@@ -22,6 +22,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         {
             _testContext = testContext;
 
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<WebAccountsController>();
+            testContext.UseController<BlogsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddSingleton<ResourceCaptureStore>();
@@ -143,43 +147,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
-        public async Task Can_select_fields_in_primary_resource_by_ID()
-        {
-            // Arrange
-            var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
-            store.Clear();
-
-            BlogPost post = _fakers.BlogPost.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Posts.Add(post);
-                await dbContext.SaveChangesAsync();
-            });
-
-            string route = $"/blogPosts/{post.StringId}?fields[blogPosts]=url,author";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
-            responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
-            responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
-
-            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
-            postCaptured.Url.Should().Be(post.Url);
-            postCaptured.Caption.Should().BeNull();
-        }
-
-        [Fact]
         public async Task Can_select_fields_in_secondary_resources()
         {
             // Arrange
@@ -219,6 +186,43 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             blogCaptured.Posts.Should().HaveCount(1);
             blogCaptured.Posts[0].Caption.Should().Be(blog.Posts[0].Caption);
             blogCaptured.Posts[0].Url.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Can_select_fields_in_primary_resource_by_ID()
+        {
+            // Arrange
+            var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+            store.Clear();
+
+            BlogPost post = _fakers.BlogPost.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Posts.Add(post);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/blogPosts/{post.StringId}?fields[blogPosts]=url,author";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.SingleData.Attributes.Should().HaveCount(1);
+            responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
+            responseDocument.SingleData.Relationships.Should().HaveCount(1);
+            responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
+            responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
+            responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
+
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+            postCaptured.Url.Should().Be(post.Url);
+            postCaptured.Caption.Should().BeNull();
         }
 
         [Fact]

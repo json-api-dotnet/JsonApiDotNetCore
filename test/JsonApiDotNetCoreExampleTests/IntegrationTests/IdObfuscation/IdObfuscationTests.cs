@@ -19,6 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         public IdObfuscationTests(ExampleIntegrationTestContext<TestableStartup<ObfuscationDbContext>, ObfuscationDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<BankAccountsController>();
+            testContext.UseController<DebitCardsController>();
         }
 
         [Fact]

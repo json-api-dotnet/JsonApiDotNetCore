@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
@@ -23,10 +24,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
         {
             _testContext = testContext;
 
+            testContext.UseController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddSingleton<IResponseMeta, AtomicResponseMeta>();
             });
         }

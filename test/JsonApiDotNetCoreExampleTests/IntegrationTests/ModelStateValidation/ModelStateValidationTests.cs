@@ -18,6 +18,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
         public ModelStateValidationTests(ExampleIntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<SystemDirectoriesController>();
+            testContext.UseController<SystemFilesController>();
         }
 
         [Fact]

@@ -6,6 +6,7 @@ using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
@@ -22,10 +23,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
         {
             _testContext = testContext;
 
+            testContext.UseController<OperationsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddControllersFromExampleProject();
-
                 services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackMetaDefinition>();
                 services.AddScoped<IResourceDefinition<TextLanguage, Guid>, TextLanguageMetaDefinition>();
             });

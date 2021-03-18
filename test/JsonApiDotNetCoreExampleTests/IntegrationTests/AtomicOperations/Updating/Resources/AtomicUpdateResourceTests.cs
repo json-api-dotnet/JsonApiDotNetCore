@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -23,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

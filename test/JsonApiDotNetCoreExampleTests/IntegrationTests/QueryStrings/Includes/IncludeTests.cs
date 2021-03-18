@@ -22,6 +22,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         {
             _testContext = testContext;
 
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<BlogsController>();
+            testContext.UseController<CommentsController>();
+            testContext.UseController<WebAccountsController>();
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.MaximumIncludeDepth = null;
         }

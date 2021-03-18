@@ -26,6 +26,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         {
             _testContext = testContext;
 
+            testContext.UseController<MeetingAttendeesController>();
+            testContext.UseController<MeetingsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));

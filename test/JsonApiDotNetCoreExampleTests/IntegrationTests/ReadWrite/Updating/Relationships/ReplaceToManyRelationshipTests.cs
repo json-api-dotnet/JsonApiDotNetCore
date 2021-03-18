@@ -20,6 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         public ReplaceToManyRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
         }
 
         [Fact]

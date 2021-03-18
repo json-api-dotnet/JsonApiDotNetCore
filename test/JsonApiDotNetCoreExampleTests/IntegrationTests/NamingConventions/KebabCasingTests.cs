@@ -17,6 +17,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
         public KebabCasingTests(ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<DivingBoardsController>();
+            testContext.UseController<SwimmingPoolsController>();
         }
 
         [Fact]

@@ -22,6 +22,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
             _testContext = testContext;
 
+            testContext.UseController<DealershipsController>();
+            testContext.UseController<EnginesController>();
+            testContext.UseController<CarsController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddResourceRepository<CarRepository>();

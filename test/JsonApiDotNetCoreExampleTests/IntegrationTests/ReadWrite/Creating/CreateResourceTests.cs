@@ -26,6 +26,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         {
             _testContext = testContext;
 
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<WorkItemGroupsController>();
+            testContext.UseController<UserAccountsController>();
+            testContext.UseController<RgbColorsController>();
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = false;
             options.AllowClientGeneratedIds = false;

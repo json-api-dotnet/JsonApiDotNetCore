@@ -17,6 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         public LinkInclusionTests(ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<PhotoLocationsController>();
         }
 
         [Fact]

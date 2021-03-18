@@ -24,6 +24,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
         {
             _testContext = testContext;
 
+            testContext.UseController<GiftCertificatesController>();
+            testContext.UseController<PostOfficesController>();
+
             testContext.ConfigureServicesBeforeStartup(services =>
             {
                 services.AddSingleton<ISystemClock, FrozenSystemClock>();

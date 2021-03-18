@@ -18,6 +18,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         public QueryStringTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<CalendarsController>();
         }
 
         [Fact]

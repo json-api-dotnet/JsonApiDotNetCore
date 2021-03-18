@@ -20,6 +20,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         public DeleteResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<WorkItemGroupsController>();
+            testContext.UseController<RgbColorsController>();
         }
 
         [Fact]

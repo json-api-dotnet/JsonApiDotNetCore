@@ -23,6 +23,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
         {
             _testContext = testContext;
 
+            testContext.UseController<GamesController>();
+            testContext.UseController<MapsController>();
+            testContext.UseController<PlayersController>();
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = true;
             options.AllowClientGeneratedIds = true;

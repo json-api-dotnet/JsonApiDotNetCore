@@ -19,6 +19,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
         public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<PaintingsController>();
+            testContext.UseController<ArtGalleriesController>();
         }
 
         [Fact]

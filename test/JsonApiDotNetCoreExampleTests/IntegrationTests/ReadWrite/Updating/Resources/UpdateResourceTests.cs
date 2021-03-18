@@ -23,6 +23,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public UpdateResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<WorkItemGroupsController>();
+            testContext.UseController<UserAccountsController>();
+            testContext.UseController<RgbColorsController>();
         }
 
         [Fact]

@@ -25,6 +25,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         {
             _testContext = testContext;
 
+            testContext.UseController<BlogPostsController>();
+            testContext.UseController<WebAccountsController>();
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeTotalResourceCount = false;
             options.DefaultPageSize = new PageSize(DefaultPageSize);

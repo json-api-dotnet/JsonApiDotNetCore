@@ -24,6 +24,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         {
             _testContext = testContext;
 
+            testContext.UseController<FilterableResourcesController>();
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
         }

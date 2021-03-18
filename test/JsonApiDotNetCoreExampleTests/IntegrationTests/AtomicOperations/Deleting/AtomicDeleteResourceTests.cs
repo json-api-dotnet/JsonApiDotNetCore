@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -22,7 +23,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         {
             _testContext = testContext;
 
-            testContext.ConfigureServicesAfterStartup(services => services.AddControllersFromExampleProject());
+            testContext.UseController<OperationsController>();
         }
 
         [Fact]

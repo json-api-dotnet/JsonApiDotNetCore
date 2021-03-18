@@ -20,6 +20,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         public UpdateToOneRelationshipTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
+
+            testContext.UseController<WorkItemsController>();
+            testContext.UseController<WorkItemGroupsController>();
+            testContext.UseController<RgbColorsController>();
         }
 
         [Fact]
