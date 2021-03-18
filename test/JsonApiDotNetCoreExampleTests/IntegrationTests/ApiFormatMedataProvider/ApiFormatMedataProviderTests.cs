@@ -44,8 +44,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiFormatMedataProvider
             List<ApiDescription> descriptions = groups.Single().Items.ToList();
             MethodInfo postStore = typeof(StoresController).GetMethod(nameof(StoresController.PostAsync));
 
-            ApiDescription postStoreDescription = descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo ==
-                postStore);
+            ApiDescription postStoreDescription =
+                descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo == postStore);
 
             postStoreDescription.Should().NotBeNull();
             postStoreDescription!.SupportedRequestFormats.Should().HaveCount(1);
@@ -65,8 +65,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiFormatMedataProvider
             List<ApiDescription> descriptions = groups.Single().Items.ToList();
             MethodInfo postOperations = typeof(OperationsController).GetMethod(nameof(OperationsController.PostOperationsAsync));
 
-            ApiDescription postOperationsDescription =
-                descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo == postOperations);
+            ApiDescription postOperationsDescription = descriptions.FirstOrDefault(description =>
+                (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo == postOperations);
 
             postOperationsDescription.Should().NotBeNull();
             postOperationsDescription!.SupportedRequestFormats.Should().HaveCount(1);
@@ -129,8 +129,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiFormatMedataProvider
             MethodInfo getStores = typeof(StoresController).GetMethods()
                 .First(method => method.Name == nameof(StoresController.GetAsync) && method.GetParameters().Length == 1);
 
-            ApiDescription getStoresDescription = descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo ==
-                getStores);
+            ApiDescription getStoresDescription =
+                descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo == getStores);
 
             getStoresDescription!.Should().NotBeNull();
             getStoresDescription.SupportedResponseTypes.Should().HaveCount(1);
@@ -157,8 +157,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ApiFormatMedataProvider
             MethodInfo getStores = typeof(StoresController).GetMethods()
                 .First(method => method.Name == nameof(StoresController.GetAsync) && method.GetParameters().Length == 2);
 
-            ApiDescription getStoresDescription = descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo ==
-                getStores);
+            ApiDescription getStoresDescription =
+                descriptions.FirstOrDefault(description => (description.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo == getStores);
 
             getStoresDescription.Should().NotBeNull();
             getStoresDescription!.SupportedResponseTypes.Should().HaveCount(1);
