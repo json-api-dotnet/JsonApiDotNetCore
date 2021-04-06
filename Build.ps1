@@ -63,6 +63,17 @@ function RunCleanupCode {
     }
 }
 
+function ReportCodeCoverage {
+    if ($env:APPVEYOR) {
+        dotnet codecov -f "**\coverage.cobertura.xml"
+    }
+    else {
+        dotnet reportgenerator -reports:**\coverage.cobertura.xml -targetdir:artifacts\coverage
+    }
+
+    CheckLastExitCode
+}
+
 $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
 $revision = "{0:D4}" -f [convert]::ToInt32($revision, 10)
 
@@ -75,8 +86,10 @@ CheckLastExitCode
 RunInspectCode
 RunCleanupCode
 
-dotnet test -c Release --no-build
+dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
 CheckLastExitCode
+
+ReportCodeCoverage
 
 Write-Output "APPVEYOR_REPO_TAG: $env:APPVEYOR_REPO_TAG"
 
