@@ -10,7 +10,7 @@ environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   GIT_ACCESS_TOKEN:
-    secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
+    secure: vw2jhp7V38fTOqphzFgnXtLwHoHRW2zM2K5RJgDAnmkoaIKT6jXLDIfkFdyVz9nJ
 
 branches:
   only:
@@ -52,10 +52,11 @@ for:
             throw "docfx build failed with exit code $lastexitcode."
         }
 
+        # https://www.appveyor.com/docs/how-to/git-push/
         git config --global credential.helper store
-        Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GIT_ACCESS_TOKEN):x-oauth-basic@github.com`n"
-        git config --global user.email "jaredcnance@gmail.com"
-        git config --global user.name "Jared Nance"
+        Set-Content -Path "$HOME\.git-credentials" -Value "https://$($env:GIT_ACCESS_TOKEN):x-oauth-basic@github.com`n" -NoNewline
+        git config --global user.email "cibuild@jsonapi.net"
+        git config --global user.name "json-api-cibuild"
         git config --global core.autocrlf false
         git config --global core.safecrlf false
         git clone https://github.com/json-api-dotnet/JsonApiDotNetCore.git -b gh-pages origin_site -q
@@ -66,7 +67,7 @@ for:
         Copy-Item -Recurse home/assets/* _site/styles/
         CD _site
         git add -A 2>&1
-        git commit -m "CI Updates" -q
+        git commit -m "Automated commit from cibuild" -q
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             git push origin gh-pages -q
             echo "Documentation updated successfully."
