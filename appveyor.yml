@@ -77,32 +77,16 @@ for:
     name: NuGet
   deploy:
   - provider: NuGet
-    server: https://www.myget.org/F/research-institute/api/v2/package
-    api_key:
-      secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-    skip_symbols: false
-    symbol_server: https://www.myget.org/F/research-institute/symbols/api/v2/package
-    on:
-      branch: develop
-  - provider: NuGet
-    server: https://www.myget.org/F/jadnc/api/v2/package
-    api_key:
-      secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-    skip_symbols: false
-    on:
-      branch: unstable
-  - provider: NuGet
-    name: production
     skip_symbols: false
     api_key:
-      secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
+      secure: OBYPCgp3WCuwkDRMuZ9a4QcBdTja/lqlUwZ+Yl5VHqooSJRVTYKP5y15XK0fuHsZ
     on:
       branch: master
       appveyor_repo_tag: true
   - provider: NuGet
     skip_symbols: false
     api_key:
-      secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
+      secure: OBYPCgp3WCuwkDRMuZ9a4QcBdTja/lqlUwZ+Yl5VHqooSJRVTYKP5y15XK0fuHsZ
     on:
       branch: /release\/.+/
       appveyor_repo_tag: true
