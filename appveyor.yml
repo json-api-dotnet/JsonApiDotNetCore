@@ -58,11 +58,8 @@ branches:
 nuget:
   disable_publish_on_pr: true
 
-init:
-  - SET PATH=C:\Program Files\PostgreSQL\9.6\bin\;%PATH%
-
-services:  
-  - postgresql96
+services:
+  - postgresql101
 
 build_script:
 - pwsh: dotnet --version

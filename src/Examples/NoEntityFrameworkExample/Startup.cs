@@ -29,10 +29,7 @@ namespace NoEntityFrameworkExample
 
             services.AddScoped<IResourceService<WorkItem>, WorkItemService>();
 
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseNpgsql(_connectionString, postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
-            });
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(_connectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

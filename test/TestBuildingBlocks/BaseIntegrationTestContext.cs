@@ -71,8 +71,7 @@ namespace TestBuildingBlocks
 
                 services.AddDbContext<TDbContext>(options =>
                 {
-                    options.UseNpgsql(dbConnectionString, postgresOptions => postgresOptions.SetPostgresVersion(new Version(9, 6)));
-
+                    options.UseNpgsql(dbConnectionString);
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
                 });
