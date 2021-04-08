@@ -1,32 +1,59 @@
+image:
+  - Ubuntu
+  - Visual Studio 2019
+
 version: '{build}'
-os: Visual Studio 2019
+
+stack: postgresql
 
 environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
-  ACCESS_TOKEN:
+  GIT_ACCESS_TOKEN:
     secure: g1T332Uarmdgtkftchpafa8tDP/7eM4O0BD6iu1wu+zR224IyH5R8pb4sTChr4Ia
 
-# REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
-before_build:
-  - pwsh: |
+branches:
+  only:
+  - master
+  - develop
+  - unstable
+  - /release\/.+/
+
+pull_requests:
+  do_not_increment_build_number: true
+
+nuget:
+  disable_publish_on_pr: true
+
+matrix:
+  fast_finish: true
+
+for:
+-
+  matrix:
+    only:
+    - image: Visual Studio 2019
+  services:
+  - postgresql101
+  # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
+  before_build:
+    - pwsh: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
             # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
             git checkout $env:APPVEYOR_REPO_BRANCH -q
         }
         choco install docfx -y
-
-after_build:
-  - pwsh: |
+  after_build:
+    - pwsh: |
         CD ./docs
         & ./generate-examples.ps1
         & docfx docfx.json
         if ($lastexitcode -ne 0) {
-          throw [System.Exception] "docfx build failed with exit code $lastexitcode."
+            throw "docfx build failed with exit code $lastexitcode."
         }
-        
+
         git config --global credential.helper store
-        Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:ACCESS_TOKEN):x-oauth-basic@github.com`n"
+        Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:GIT_ACCESS_TOKEN):x-oauth-basic@github.com`n"
         git config --global user.email "jaredcnance@gmail.com"
         git config --global user.name "Jared Nance"
         git config --global core.autocrlf false
@@ -44,64 +71,43 @@ after_build:
             git push origin gh-pages -q
             echo "Documentation updated successfully."
         }
-
-pull_requests:
-  do_not_increment_build_number: true
-
-branches:
-  only:
-  - master
-  - develop
-  - unstable
-  - /release\/.+/
-
-nuget:
-  disable_publish_on_pr: true
-
-services:
-  - postgresql101
+  artifacts:
+  - path: .\**\artifacts\**\*.nupkg
+    name: NuGet
+  deploy:
+  - provider: NuGet
+    server: https://www.myget.org/F/research-institute/api/v2/package
+    api_key:
+      secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
+    skip_symbols: false
+    symbol_server: https://www.myget.org/F/research-institute/symbols/api/v2/package
+    on:
+      branch: develop
+  - provider: NuGet
+    server: https://www.myget.org/F/jadnc/api/v2/package
+    api_key:
+      secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
+    skip_symbols: false
+    on:
+      branch: unstable
+  - provider: NuGet
+    name: production
+    skip_symbols: false
+    api_key:
+      secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
+    on:
+      branch: master
+      appveyor_repo_tag: true
+  - provider: NuGet
+    skip_symbols: false
+    api_key:
+      secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
+    on:
+      branch: /release\/.+/
+      appveyor_repo_tag: true
 
 build_script:
 - pwsh: dotnet --version
 - pwsh: .\Build.ps1
 
 test: off
-
-artifacts:
-- path: .\**\artifacts\**\*.nupkg
-  name: NuGet
-
-deploy:
-- provider: NuGet
-  server: https://www.myget.org/F/research-institute/api/v2/package
-  api_key:
-    secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-  skip_symbols: false
-  symbol_server: https://www.myget.org/F/research-institute/symbols/api/v2/package
-  on:
-    branch: develop
-
-- provider: NuGet
-  server: https://www.myget.org/F/jadnc/api/v2/package
-  api_key:
-    secure: 6CeYcZ4Ze+57gxfeuHzqP6ldbUkPtF6pfpVM1Gw/K2jExFrAz763gNAQ++tiacq3
-  skip_symbols: false
-  on:
-    branch: unstable
-
-- provider: NuGet
-  name: production
-  skip_symbols: false
-  api_key:
-    secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
-  on:
-    branch: master
-    appveyor_repo_tag: true
-
-- provider: NuGet
-  skip_symbols: false
-  api_key:
-    secure: SirU21S2S6F1OswSl8oiB4lYLLPchyyCIqtd2sWkTgHluelYfTa4PRaAfxlZP4fg
-  on:
-    branch: /release\/.+/
-    appveyor_repo_tag: true
