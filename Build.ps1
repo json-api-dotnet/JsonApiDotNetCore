@@ -76,10 +76,10 @@ function CreateNuGetPackage {
         # Get the version suffix from the auto-incrementing build number. Example: "123" => "pre-0123".
         if ($env:APPVEYOR_BUILD_NUMBER) {
             $revision = "{0:D4}" -f [convert]::ToInt32($env:APPVEYOR_BUILD_NUMBER, 10)
-            $versionSuffix="pre-$revision"
+            $versionSuffix = "pre-$revision"
         }
         else {
-            $versionSuffix="pre-0001"
+            $versionSuffix = "pre-0001"
         }
     }
 
