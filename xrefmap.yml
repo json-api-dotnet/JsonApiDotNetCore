@@ -15176,6 +15176,57 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.IIdentifiable(Of TId).Id
   nameWithType: IIdentifiable<TId>.Id
   nameWithType.vb: IIdentifiable(Of TId).Id
+- uid: JsonApiDotNetCore.Resources.Internal
+  name: JsonApiDotNetCore.Resources.Internal
+  href: api/JsonApiDotNetCore.Resources.Internal.html
+  commentId: N:JsonApiDotNetCore.Resources.Internal
+  fullName: JsonApiDotNetCore.Resources.Internal
+  nameWithType: JsonApiDotNetCore.Resources.Internal
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter
+  name: RuntimeTypeConverter
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html
+  commentId: T:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter
+  nameWithType: RuntimeTypeConverter
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull(System.Type)
+  name: CanContainNull(Type)
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_CanContainNull_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull(System.Type)
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull(System.Type)
+  nameWithType: RuntimeTypeConverter.CanContainNull(Type)
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull*
+  name: CanContainNull
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_CanContainNull_
+  commentId: Overload:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.CanContainNull
+  nameWithType: RuntimeTypeConverter.CanContainNull
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType(System.Object,System.Type)
+  name: ConvertType(Object, Type)
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_ConvertType_System_Object_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType(System.Object,System.Type)
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType(System.Object, System.Type)
+  nameWithType: RuntimeTypeConverter.ConvertType(Object, Type)
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType*
+  name: ConvertType
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_ConvertType_
+  commentId: Overload:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.ConvertType
+  nameWithType: RuntimeTypeConverter.ConvertType
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue(System.Type)
+  name: GetDefaultValue(Type)
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_GetDefaultValue_System_Type_
+  commentId: M:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue(System.Type)
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue(System.Type)
+  nameWithType: RuntimeTypeConverter.GetDefaultValue(Type)
+- uid: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue*
+  name: GetDefaultValue
+  href: api/JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.html#JsonApiDotNetCore_Resources_Internal_RuntimeTypeConverter_GetDefaultValue_
+  commentId: Overload:JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Internal.RuntimeTypeConverter.GetDefaultValue
+  nameWithType: RuntimeTypeConverter.GetDefaultValue
 - uid: JsonApiDotNetCore.Resources.IResourceChangeTracker`1
   name: IResourceChangeTracker<TResource>
   href: api/JsonApiDotNetCore.Resources.IResourceChangeTracker-1.html
