@@ -16,7 +16,7 @@ if ($LASTEXITCODE -ne 0) {
 
 $outputPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.xml')
 $resultPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'jetbrains-inspectcode-results.html')
-dotnet jb inspectcode JsonApiDotNetCore.sln --output="$outputPath" --profile=JsonApiDotNetCore-WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=SolutionPersonal -dsl=ProjectPersonal
+dotnet jb inspectcode JsonApiDotNetCore.sln --output="$outputPath" --profile=WarningSeverities.DotSettings --properties:Configuration=Release --severity=WARNING --verbosity=WARN -dsl=GlobalAll -dsl=SolutionPersonal -dsl=ProjectPersonal
 
 if ($LASTEXITCODE -ne 0) {
     throw "Code inspection failed with exit code $LASTEXITCODE"
