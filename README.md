@@ -34,7 +34,7 @@ These are some steps you can take to help you understand what this project is an
 
 ## Examples
 
-See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JADNC API and an EmberJs client.
+See the [examples](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/src/Examples) directory for up-to-date sample applications. There is also a [Todo List App](https://github.com/json-api-dotnet/TodoListExample) that includes a JsonApiDotNetCore API and an EmberJs client.
 
 ## Installation and Usage
 
@@ -82,45 +82,24 @@ public class Startup
 }
 ```
 
-## Development
+## Compatibility
 
-Restore all NuGet packages with:
+A lot of changes were introduced in v4. The following chart should help you pick the best version, based on your environment.
 
-```bash
-dotnet restore
-```
+| .NET Version      | EF Core Version | JsonApiDotNetCore Version |
+| ----------------- | --------------- | ------------------------- |
+| .NET Core 2.x     | 2.x             | v3.x                      |
+| .NET Core 3.1     | 3.1, 5          | v4                        |
+| .NET 5            | 5               | v4                        |
 
-### Testing
-
-Running tests locally requires access to a PostgreSQL database.  If you have docker installed, this can be propped up via:
-
-```bash
-docker run --rm --name jsonapi-dotnet-core-testing  -e POSTGRES_DB=JsonApiDotNetCoreExample -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 postgres:12.0
-```
-
-And then to run the tests:
-
-```bash
-dotnet test
-```
 
 ## Contributing
 
 Have a question, found a bug or want to submit code changes? See our [contributing guidelines](./.github/CONTRIBUTING.md).
 
-## Compatibility
+## Trying out the latest build
 
-A lot of changes were introduced in v4, the following chart should help you with compatibility issues between .NET Core versions.
-
-| .NET Core Version | EF Core Version | JADNC Version |
-| ----------------- | --------------- | ------------- |
-| 2.x               | 2.x             | v3.x          |
-| 3.x               | 3.x, 5.x        | v4.x          |
-| 5.x               | 5.x             | v4.x          |
-
-### Trying out the latest build
-
-After each commit, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/nuget/jsonapidotnetcore. To try it out, follow the next steps:
+After each commit to the master branch, a new prerelease NuGet package is automatically published to AppVeyor at https://ci.appveyor.com/nuget/jsonapidotnetcore. To try it out, follow the next steps:
 
 * In Visual Studio: **Tools**, **NuGet Package Manager**, **Package Manager Settings**, **Package Sources**
     * Click **+**
@@ -129,3 +108,29 @@ After each commit, a new prerelease NuGet package is automatically published to 
 * Open the NuGet package manager console (**Tools**, **NuGet Package Manager**, **Package Manager Console**)
     * Select **AppVeyor JADNC** as package source
     * Run command: `Install-Package JonApiDotNetCore -pre`
+
+## Development
+
+To build the code from this repository locally, run:
+
+```bash
+dotnet build
+```
+
+Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can be propped up via:
+
+```bash
+run-docker-postgres.ps1
+```
+
+And then to run the tests:
+
+```bash
+dotnet test
+```
+
+Alternatively, to build and validate the code, run all tests, generate code coverage and produce the NuGet package:
+
+```bash
+Build.ps1
+```
