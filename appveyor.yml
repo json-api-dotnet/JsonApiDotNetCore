@@ -42,7 +42,9 @@ for:
             # https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html
             git checkout $env:APPVEYOR_REPO_BRANCH -q
         }
-        choco install docfx -y
+
+        # Pinning to previous version, because v2.57 (released 3h ago) breaks our site.
+        choco install docfx -y --version 2.56.7
   after_build:
     - pwsh: |
         CD ./docs
