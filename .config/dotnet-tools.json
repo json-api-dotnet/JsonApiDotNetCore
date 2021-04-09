@@ -13,6 +13,18 @@
       "commands": [
         "regitlint"
       ]
+    },
+    "codecov.tool": {
+      "version": "1.13.0",
+      "commands": [
+        "codecov"
+      ]
+    },
+    "dotnet-reportgenerator-globaltool": {
+      "version": "4.8.7",
+      "commands": [
+        "reportgenerator"
+      ]
     }
   }
 }

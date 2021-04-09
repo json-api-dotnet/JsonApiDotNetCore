@@ -11,4 +11,4 @@ For further documentation and implementation of a JsonApiDotnetCore Application 
 
 Repository: https://github.com/json-api-dotnet/JsonApiDotNetCore
 
-Documentation: https://json-api-dotnet.github.io/
+Documentation: http://www.jsonapi.net

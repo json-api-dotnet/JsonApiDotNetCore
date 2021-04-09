@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 

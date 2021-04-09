@@ -1,10 +1,12 @@
 using System;
+using JetBrains.Annotations;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace JsonApiDotNetCore
+namespace JsonApiDotNetCore.Resources.Internal
 {
-    internal static class RuntimeTypeConverter
+    [PublicAPI]
+    public static class RuntimeTypeConverter
     {
         public static object ConvertType(object value, Type type)
         {
