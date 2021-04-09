@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore;
+using JsonApiDotNetCore.Resources.Internal;
 using Xunit;
 
 namespace UnitTests.Internal

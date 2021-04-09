@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
