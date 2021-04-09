@@ -55,9 +55,9 @@ public class Article : Identifiable
 ```c#
 public class ArticlesController : JsonApiController<Article>
 {
-    public ArticlesController(IJsonApiOptions options, IResourceService<Article> resourceService,
-        ILoggerFactory loggerFactory)
-        : base(options, resourceService, loggerFactory)
+    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
+        IResourceService<Article> resourceService,)
+        : base(options, loggerFactory, resourceService)
     {
     }
 }
