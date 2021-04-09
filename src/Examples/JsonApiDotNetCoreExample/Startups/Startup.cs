@@ -22,6 +22,7 @@ namespace JsonApiDotNetCoreExample.Startups
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public override void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ISystemClock, SystemClock>();
@@ -42,6 +43,7 @@ namespace JsonApiDotNetCoreExample.Startups
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
         {
             using (IServiceScope scope = app.ApplicationServices.CreateScope())
