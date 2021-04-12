@@ -14,10 +14,13 @@ Copy-Item home/*.ico _site/
 Copy-Item -Recurse home/assets/* _site/styles/
 
 cd _site
-httpserver &
+$webServerJob = httpserver &
 Start-Process "http://localhost:8080/"
 cd ..
 
 Write-Host ""
 Write-Host "Web server started. Press Enter to close."
 $key = [Console]::ReadKey()
+
+Stop-Job -Id $webServerJob.Id
+Get-job | Remove-Job
