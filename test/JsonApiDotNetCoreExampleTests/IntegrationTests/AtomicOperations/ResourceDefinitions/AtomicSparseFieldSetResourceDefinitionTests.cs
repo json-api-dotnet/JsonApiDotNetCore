@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddSingleton<LyricPermissionProvider>();
-                services.AddScoped<IResourceDefinition<Lyric, long>, LyricTextDefinition>();
+                services.AddResourceDefinition<LyricTextDefinition>();
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
         }

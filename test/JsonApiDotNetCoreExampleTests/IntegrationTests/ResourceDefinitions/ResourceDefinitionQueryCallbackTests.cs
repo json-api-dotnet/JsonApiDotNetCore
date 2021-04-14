@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<IResourceDefinition<CallableResource>, CallableResourceDefinition>();
+                services.AddResourceDefinition<CallableResourceDefinition>();
                 services.AddSingleton<IUserRolesService, FakeUserRolesService>();
             });
 

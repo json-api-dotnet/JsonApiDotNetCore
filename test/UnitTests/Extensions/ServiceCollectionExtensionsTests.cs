@@ -171,6 +171,34 @@ namespace UnitTests.Extensions
         }
 
         [Fact]
+        public void AddResourceDefinition_Registers_Shorthand_Definition_Interface()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceDefinition<IntResourceDefinition>();
+
+            // Assert
+            ServiceProvider provider = services.BuildServiceProvider();
+            Assert.IsType<IntResourceDefinition>(provider.GetRequiredService(typeof(IResourceDefinition<IntResource>)));
+        }
+
+        [Fact]
+        public void AddResourceDefinition_Registers_LongForm_Definition_Interface()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceDefinition<GuidResourceDefinition>();
+
+            // Assert
+            ServiceProvider provider = services.BuildServiceProvider();
+            Assert.IsType<GuidResourceDefinition>(provider.GetRequiredService(typeof(IResourceDefinition<GuidResource, Guid>)));
+        }
+
+        [Fact]
         public void AddJsonApi_With_Context_Uses_Resource_Type_Name_If_NoOtherSpecified()
         {
             // Arrange
@@ -416,6 +444,84 @@ namespace UnitTests.Extensions
 
             public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
                 CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class IntResourceDefinition : IResourceDefinition<IntResource>
+        {
+            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            {
+                throw new NotImplementedException();
+            }
+
+            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SortExpression OnApplySort(SortExpression existingSort)
+            {
+                throw new NotImplementedException();
+            }
+
+            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public QueryStringParameterHandlers<IntResource> OnRegisterQueryableHandlersForQueryStringParameters()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDictionary<string, object> GetMeta(IntResource resource)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class GuidResourceDefinition : IResourceDefinition<GuidResource, Guid>
+        {
+            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            {
+                throw new NotImplementedException();
+            }
+
+            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SortExpression OnApplySort(SortExpression existingSort)
+            {
+                throw new NotImplementedException();
+            }
+
+            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public QueryStringParameterHandlers<GuidResource> OnRegisterQueryableHandlersForQueryStringParameters()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDictionary<string, object> GetMeta(GuidResource resource)
             {
                 throw new NotImplementedException();
             }

@@ -4,10 +4,9 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
-using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -26,8 +25,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<IResourceDefinition<Company>, SoftDeletionResourceDefinition<Company>>();
-                services.AddScoped<IResourceDefinition<Department>, SoftDeletionResourceDefinition<Department>>();
+                services.AddResourceDefinition<SoftDeletionResourceDefinition<Company>>();
+                services.AddResourceDefinition<SoftDeletionResourceDefinition<Department>>();
             });
         }
 
