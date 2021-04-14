@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -87,6 +89,82 @@ namespace JsonApiDotNetCore.Resources
 
             dynamic resourceDefinition = ResolveResourceDefinition(resourceType);
             return resourceDefinition.GetMeta((dynamic)resourceInstance);
+        }
+
+        /// <inheritdoc />
+        public async Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnInitializeResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnBeforeCreateResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnAfterCreateResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnAfterGetForUpdateResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnBeforeUpdateResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnAfterUpdateResourceAsync(resource, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>
+        {
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnBeforeDeleteResourceAsync(id, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>
+        {
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnAfterDeleteResourceAsync(id, cancellationToken);
         }
 
         protected virtual object ResolveResourceDefinition(Type resourceType)

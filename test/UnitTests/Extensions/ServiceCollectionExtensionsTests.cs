@@ -486,6 +486,46 @@ namespace UnitTests.Extensions
             {
                 throw new NotImplementedException();
             }
+
+            public Task OnInitializeResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeCreateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterCreateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterGetForUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeDeleteResourceAsync(int id, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterDeleteResourceAsync(int id, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
@@ -522,6 +562,46 @@ namespace UnitTests.Extensions
             }
 
             public IDictionary<string, object> GetMeta(GuidResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnInitializeResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeCreateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterCreateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterGetForUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnBeforeDeleteResourceAsync(Guid id, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAfterDeleteResourceAsync(Guid id, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }

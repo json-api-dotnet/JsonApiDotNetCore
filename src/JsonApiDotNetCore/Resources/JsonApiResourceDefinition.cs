@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -111,6 +113,54 @@ namespace JsonApiDotNetCore.Resources
         public virtual IDictionary<string, object> GetMeta(TResource resource)
         {
             return null;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnInitializeResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnBeforeCreateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnAfterCreateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnAfterGetForUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnBeforeUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnAfterUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnBeforeDeleteResourceAsync(TId id, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnAfterDeleteResourceAsync(TId id, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>

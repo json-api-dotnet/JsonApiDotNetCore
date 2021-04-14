@@ -35,6 +35,7 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
         private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         /// <inheritdoc />
         public virtual string TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId.ToString();
@@ -55,6 +56,10 @@ namespace JsonApiDotNetCore.Repositories
             _constraintProviders = constraintProviders;
             _dbContext = contextResolver.GetContext();
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
+
+#pragma warning disable 612 // Method is obsolete
+            _resourceDefinitionAccessor = resourceFactory.GetResourceDefinitionAccessor();
+#pragma warning restore 612
         }
 
         /// <inheritdoc />
@@ -175,6 +180,8 @@ namespace JsonApiDotNetCore.Repositories
                 attribute.SetValue(resourceForDatabase, attribute.GetValue(resourceFromRequest));
             }
 
+            await _resourceDefinitionAccessor.OnBeforeCreateResourceAsync(resourceForDatabase, cancellationToken);
+
             DbSet<TResource> dbSet = _dbContext.Set<TResource>();
             await dbSet.AddAsync(resourceForDatabase, cancellationToken);
 
@@ -215,6 +222,8 @@ namespace JsonApiDotNetCore.Repositories
             {
                 attribute.SetValue(resourceFromDatabase, attribute.GetValue(resourceFromRequest));
             }
+
+            await _resourceDefinitionAccessor.OnBeforeUpdateResourceAsync(resourceFromDatabase, cancellationToken);
 
             await SaveChangesAsync(cancellationToken);
         }

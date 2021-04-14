@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
@@ -15,7 +18,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -218,8 +220,7 @@ namespace UnitTests.ResourceHooks
         private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph)
             where TModel : class, IIdentifiable<int>
         {
-            IServiceProvider serviceProvider = ((IInfrastructure<IServiceProvider>)dbContext).Instance;
-            var resourceFactory = new ResourceFactory(serviceProvider);
+            var resourceFactory = new TestResourceFactory();
             IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
 
@@ -404,6 +405,117 @@ namespace UnitTests.ResourceHooks
                 primaryResourceContainerMock = PrimaryResourceContainerMock;
                 firstSecondaryResourceContainerMock = FirstSecondaryResourceContainerMock;
                 secondSecondaryResourceContainerMock = SecondSecondaryResourceContainerMock;
+            }
+        }
+
+        private sealed class TestResourceFactory : IResourceFactory
+        {
+            public IIdentifiable CreateInstance(Type resourceType)
+            {
+                return (IIdentifiable)Activator.CreateInstance(resourceType);
+            }
+
+            public TResource CreateInstance<TResource>()
+                where TResource : IIdentifiable
+            {
+                return (TResource)Activator.CreateInstance(typeof(TResource));
+            }
+
+            public NewExpression CreateNewExpression(Type resourceType)
+            {
+                return Expression.New(resourceType);
+            }
+
+            public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
+            {
+                return new NeverResourceDefinitionAccessor();
+            }
+
+            private sealed class NeverResourceDefinitionAccessor : IResourceDefinitionAccessor
+            {
+                public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType,
+                    IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+                {
+                    return existingIncludes;
+                }
+
+                public FilterExpression OnApplyFilter(Type resourceType, FilterExpression existingFilter)
+                {
+                    return existingFilter;
+                }
+
+                public SortExpression OnApplySort(Type resourceType, SortExpression existingSort)
+                {
+                    return existingSort;
+                }
+
+                public PaginationExpression OnApplyPagination(Type resourceType, PaginationExpression existingPagination)
+                {
+                    return existingPagination;
+                }
+
+                public SparseFieldSetExpression OnApplySparseFieldSet(Type resourceType, SparseFieldSetExpression existingSparseFieldSet)
+                {
+                    return existingSparseFieldSet;
+                }
+
+                public object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName)
+                {
+                    return new QueryStringParameterHandlers<IIdentifiable>();
+                }
+
+                public IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance)
+                {
+                    return null;
+                }
+
+                public Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable<TId>
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable<TId>
+                {
+                    return Task.CompletedTask;
+                }
             }
         }
     }

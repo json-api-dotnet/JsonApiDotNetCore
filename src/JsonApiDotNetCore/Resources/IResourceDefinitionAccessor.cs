@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using JsonApiDotNetCore.Queries.Expressions;
 
 namespace JsonApiDotNetCore.Resources
@@ -45,5 +47,53 @@ namespace JsonApiDotNetCore.Resources
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.GetMeta" /> for the specified resource.
         /// </summary>
         IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance);
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnInitializeResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeCreateResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterCreateResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterGetForUpdateResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeUpdateResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterUpdateResourceAsync" /> for the specified resource.
+        /// </summary>
+        Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeDeleteResourceAsync" /> for the specified resource ID.
+        /// </summary>
+        Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterDeleteResourceAsync" /> for the specified resource ID.
+        /// </summary>
+        Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable<TId>;
     }
 }

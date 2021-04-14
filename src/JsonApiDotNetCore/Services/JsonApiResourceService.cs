@@ -34,6 +34,7 @@ namespace JsonApiDotNetCore.Services
         private readonly IJsonApiRequest _request;
         private readonly IResourceChangeTracker<TResource> _resourceChangeTracker;
         private readonly IResourceHookExecutorFacade _hookExecutor;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
@@ -56,6 +57,10 @@ namespace JsonApiDotNetCore.Services
             _resourceChangeTracker = resourceChangeTracker;
             _hookExecutor = hookExecutor;
             _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
+
+#pragma warning disable 612 // Method is obsolete
+            _resourceDefinitionAccessor = queryLayerComposer.GetResourceDefinitionAccessor();
+#pragma warning restore 612
         }
 
         /// <inheritdoc />
@@ -197,6 +202,8 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
 
+            await _resourceDefinitionAccessor.OnInitializeResourceAsync(resourceForDatabase, cancellationToken);
+
             try
             {
                 await _repositoryAccessor.CreateAsync(resourceFromRequest, resourceForDatabase, cancellationToken);
@@ -222,6 +229,8 @@ namespace JsonApiDotNetCore.Services
                 await TryGetPrimaryResourceByIdAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
 
             AssertPrimaryResourceExists(resourceFromDatabase);
+
+            await _resourceDefinitionAccessor.OnAfterCreateResourceAsync(resourceFromDatabase, cancellationToken);
 
             _hookExecutor.AfterCreate(resourceFromDatabase);
 
@@ -364,6 +373,8 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
+            await _resourceDefinitionAccessor.OnAfterGetForUpdateResourceAsync(resourceFromDatabase, cancellationToken);
+
             try
             {
                 await _repositoryAccessor.UpdateAsync(resourceFromRequest, resourceFromDatabase, cancellationToken);
@@ -376,6 +387,8 @@ namespace JsonApiDotNetCore.Services
 
             TResource afterResourceFromDatabase = await TryGetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes, cancellationToken);
             AssertPrimaryResourceExists(afterResourceFromDatabase);
+
+            await _resourceDefinitionAccessor.OnAfterUpdateResourceAsync(afterResourceFromDatabase, cancellationToken);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
 
@@ -433,6 +446,8 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeDelete<TResource, TId>(id);
 
+            await _resourceDefinitionAccessor.OnBeforeDeleteResourceAsync<TResource, TId>(id, cancellationToken);
+
             try
             {
                 await _repositoryAccessor.DeleteAsync<TResource, TId>(id, cancellationToken);
@@ -443,6 +458,8 @@ namespace JsonApiDotNetCore.Services
                 AssertPrimaryResourceExists(primaryResource);
                 throw;
             }
+
+            await _resourceDefinitionAccessor.OnAfterDeleteResourceAsync<TResource, TId>(id, cancellationToken);
 
             _hookExecutor.AfterDelete<TResource, TId>(id);
         }

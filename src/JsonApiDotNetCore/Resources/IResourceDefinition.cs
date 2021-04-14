@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
 
@@ -29,6 +31,7 @@ namespace JsonApiDotNetCore.Resources
     /// The resource identifier type.
     /// </typeparam>
     [PublicAPI]
+    // ReSharper disable once TypeParameterCanBeVariant -- Justification: making TId contravariant is a breaking change.
     public interface IResourceDefinition<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
@@ -129,5 +132,106 @@ namespace JsonApiDotNetCore.Resources
         /// Enables to add JSON:API meta information, specific to this resource.
         /// </summary>
         IDictionary<string, object> GetMeta(TResource resource);
+
+        /// <summary>
+        /// Enables to execute custom logic to initialize a newly instantiated resource during a POST request. This is typically used to assign default values to
+        /// properties or to side-load-and-attach required relationships.
+        /// </summary>
+        /// <param name="resource">
+        /// A freshly instantiated resource object.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnInitializeResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic, just before a resource is inserted in the underlying data store, during a POST request. This is typically used to
+        /// overwrite attributes from the incoming request, such as a creation-timestamp. Another use case is to add a notification message to an outbox table,
+        /// which gets committed along with the resource write in a single transaction (see https://microservices.io/patterns/data/transactional-outbox.html).
+        /// </summary>
+        /// <param name="resource">
+        /// The resource with incoming request data applied on it.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnBeforeCreateResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic after a resource has been inserted in the underlying data store, during a POST request. A typical use case is to
+        /// enqueue a notification message on a service bus.
+        /// </summary>
+        /// <param name="resource">
+        /// The re-fetched resource after a successful insertion.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnAfterCreateResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic to validate if the update request can be processed, based on the currently stored resource. A typical use case is to
+        /// throw when the resource is soft-deleted or archived.
+        /// </summary>
+        /// <param name="resource">
+        /// The resource as currently stored in the underlying data store.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnAfterGetForUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic, just before a resource is updated in the underlying data store, during a PATCH request. This is typically used to
+        /// overwrite attributes from the incoming request, such as a last-modification-timestamp. Another use case is to add a notification message to an outbox
+        /// table, which gets committed along with the resource write in a single transaction (see
+        /// https://microservices.io/patterns/data/transactional-outbox.html).
+        /// </summary>
+        /// <param name="resource">
+        /// The stored resource with incoming request data applied on it.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnBeforeUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic after a resource has been updated in the underlying data store, during a PATCH request. A typical use case is to
+        /// enqueue a notification message on a service bus.
+        /// </summary>
+        /// <param name="resource">
+        /// The re-fetched resource after a successful update.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnAfterUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic, just before a resource is deleted from the underlying data store, during a DELETE request. This enables to throw in
+        /// case the user does not have permission, an attempt is made to delete an unarchived resource or a non-closed work item etc. Another use case is to add
+        /// a notification message to an outbox table, which gets committed along with the resource write in a single transaction (see
+        /// https://microservices.io/patterns/data/transactional-outbox.html).
+        /// </summary>
+        /// <param name="id">
+        /// The identifier of the resource to delete.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnBeforeDeleteResourceAsync(TId id, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Enables to execute custom logic after a resource has been deleted from the underlying data store, during a DELETE request. A typical use case is to
+        /// enqueue a notification message on a service bus.
+        /// </summary>
+        /// <param name="id">
+        /// The identifier of the resource to delete.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnAfterDeleteResourceAsync(TId id, CancellationToken cancellationToken);
     }
 }

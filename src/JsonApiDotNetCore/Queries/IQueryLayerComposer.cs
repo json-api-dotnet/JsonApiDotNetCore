@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using JsonApiDotNetCore.Services;
 
 namespace JsonApiDotNetCore.Queries
 {
@@ -57,5 +59,12 @@ namespace JsonApiDotNetCore.Queries
         /// Builds a query for a to-many relationship with a filter to match on its left and right resource IDs.
         /// </summary>
         QueryLayer ComposeForHasMany<TId>(HasManyAttribute hasManyRelationship, TId leftId, ICollection<IIdentifiable> rightResourceIds);
+
+        /// <summary>
+        /// Provides access to the request-scoped <see cref="IResourceDefinitionAccessor" /> instance. This method has been added solely to prevent introducing a
+        /// breaking change in the <see cref="JsonApiResourceService{TResource,TId}" /> constructor and will be removed in the next major version.
+        /// </summary>
+        [Obsolete]
+        IResourceDefinitionAccessor GetResourceDefinitionAccessor();
     }
 }
