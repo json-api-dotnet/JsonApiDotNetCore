@@ -201,7 +201,7 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceForDatabase);
 
-            await _resourceDefinitionAccessor.OnInitializeResourceAsync(resourceForDatabase, cancellationToken);
+            await InitializeResourceAsync(resourceForDatabase, cancellationToken);
 
             try
             {
@@ -241,6 +241,11 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.OnReturnSingle(resourceFromDatabase, ResourcePipeline.Post);
             return resourceFromDatabase;
+        }
+
+        protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
+        {
+            await _resourceDefinitionAccessor.OnInitializeResourceAsync(resourceForDatabase, cancellationToken);
         }
 
         protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
