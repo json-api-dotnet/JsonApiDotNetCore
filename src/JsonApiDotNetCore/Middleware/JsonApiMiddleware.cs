@@ -102,6 +102,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             string contentType = httpContext.Request.ContentType;
 
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (contentType != null && contentType != allowedContentType)
             {
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
@@ -257,11 +258,11 @@ namespace JsonApiDotNetCore.Middleware
             if (resourceName != null)
             {
                 Endpoint endpoint = httpContext.GetEndpoint();
-                var routeAttribute = endpoint.Metadata.GetMetadata<RouteAttribute>();
+                var routeAttribute = endpoint?.Metadata.GetMetadata<RouteAttribute>();
 
                 if (routeAttribute != null)
                 {
-                    List<string> trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
+                    List<string> trimmedComponents = httpContext.Request.Path.Value!.Trim('/').Split('/').ToList();
                     int resourceNameIndex = trimmedComponents.FindIndex(component => component == resourceName);
                     string[] newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
                     string customRoute = string.Join('/', newComponents);

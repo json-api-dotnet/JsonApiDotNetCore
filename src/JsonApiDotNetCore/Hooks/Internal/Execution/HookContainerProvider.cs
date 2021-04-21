@@ -19,9 +19,9 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
     /// <inheritdoc />
     internal sealed class HookContainerProvider : IHookContainerProvider
     {
-        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
-        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
-        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
+        private static readonly HooksCollectionConverter CollectionConverter = new();
+        private static readonly HooksObjectFactory ObjectFactory = new();
+        private static readonly IncludeChainConverter IncludeChainConverter = new();
 
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IJsonApiOptions _options;

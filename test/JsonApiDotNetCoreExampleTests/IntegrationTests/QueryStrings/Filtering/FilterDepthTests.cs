@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
     public sealed class FilterDepthTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> _testContext;
-        private readonly QueryStringFakers _fakers = new QueryStringFakers();
+        private readonly QueryStringFakers _fakers = new();
 
         public FilterDepthTests(ExampleIntegrationTestContext<TestableStartup<QueryStringDbContext>, QueryStringDbContext> testContext)
         {
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
+                new()
                 {
                     Label = _fakers.Label.Generate()
                 }
@@ -300,7 +300,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
+                new()
                 {
                     Label = _fakers.Label.Generate()
                 }
@@ -308,7 +308,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
             {
-                new BlogPostLabel
+                new()
                 {
                     Label = _fakers.Label.Generate()
                 }

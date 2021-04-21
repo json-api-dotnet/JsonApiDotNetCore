@@ -23,8 +23,8 @@ namespace UnitTests.ResourceHooks
 {
     public class HooksTestsSetup : HooksDummyData
     {
-        private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
-        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
+        private static readonly IncludeChainConverter IncludeChainConverter = new();
+        private static readonly HooksObjectFactory ObjectFactory = new();
 
         private TestMocks CreateMocks()
         {
@@ -174,7 +174,7 @@ namespace UnitTests.ResourceHooks
 
             resourceDefinition
                 .Setup(rd => rd.BeforeUpdateRelationship(It.IsAny<HashSet<string>>(), It.IsAny<IRelationshipsDictionary<TModel>>(),
-                    It.IsAny<ResourcePipeline>())).Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, _, __) => ids)
+                    It.IsAny<ResourcePipeline>())).Returns<IEnumerable<string>, IRelationshipsDictionary<TModel>, ResourcePipeline>((ids, _, _) => ids)
                 .Verifiable();
 
             resourceDefinition.Setup(rd => rd.BeforeImplicitUpdateRelationship(It.IsAny<IRelationshipsDictionary<TModel>>(), It.IsAny<ResourcePipeline>()))
@@ -283,7 +283,7 @@ namespace UnitTests.ResourceHooks
         {
             var expressionsInScope = new List<ExpressionInScope>
             {
-                new ExpressionInScope(null, includeExpression)
+                new(null, includeExpression)
             };
 
             var mock = new Mock<IQueryConstraintProvider>();

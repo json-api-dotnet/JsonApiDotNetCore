@@ -6,6 +6,8 @@ using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources.Annotations;
 using Xunit;
 
+// ReSharper disable ParameterOnlyUsedForPreconditionCheck.Local
+
 namespace UnitTests.ResourceHooks
 {
     public sealed class RelationshipDictionaryTests
@@ -14,9 +16,9 @@ namespace UnitTests.ResourceHooks
         private readonly HasOneAttribute _secondToOneAttr;
         private readonly HasManyAttribute _toManyAttr;
 
-        private readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> _relationships = new Dictionary<RelationshipAttribute, HashSet<Dummy>>();
+        private readonly Dictionary<RelationshipAttribute, HashSet<Dummy>> _relationships = new();
 
-        private readonly HashSet<Dummy> _firstToOnesResources = new HashSet<Dummy>
+        private readonly HashSet<Dummy> _firstToOnesResources = new()
         {
             new Dummy
             {
@@ -32,7 +34,7 @@ namespace UnitTests.ResourceHooks
             }
         };
 
-        private readonly HashSet<Dummy> _secondToOnesResources = new HashSet<Dummy>
+        private readonly HashSet<Dummy> _secondToOnesResources = new()
         {
             new Dummy
             {
@@ -48,7 +50,7 @@ namespace UnitTests.ResourceHooks
             }
         };
 
-        private readonly HashSet<Dummy> _toManiesResources = new HashSet<Dummy>
+        private readonly HashSet<Dummy> _toManiesResources = new()
         {
             new Dummy
             {
@@ -64,7 +66,7 @@ namespace UnitTests.ResourceHooks
             }
         };
 
-        private readonly HashSet<Dummy> _noRelationshipsResources = new HashSet<Dummy>
+        private readonly HashSet<Dummy> _noRelationshipsResources = new()
         {
             new Dummy
             {

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
     {
         private readonly ExtraDbContext _extraDbContext;
 
-        public override string TransactionId => _extraDbContext.Database.CurrentTransaction.TransactionId.ToString();
+        public override string TransactionId => _extraDbContext.Database.CurrentTransaction!.TransactionId.ToString();
 
         public LyricRepository(ExtraDbContext extraDbContext, ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)

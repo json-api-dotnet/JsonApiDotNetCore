@@ -17,8 +17,8 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     /// </summary>
     internal sealed class NodeNavigator : INodeNavigator
     {
-        private static readonly HooksObjectFactory ObjectFactory = new HooksObjectFactory();
-        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
+        private static readonly HooksObjectFactory ObjectFactory = new();
+        private static readonly HooksCollectionConverter CollectionConverter = new();
 
         private readonly IdentifiableComparer _comparer = IdentifiableComparer.Instance;
         private readonly IResourceGraph _resourceGraph;
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
         /// <summary>
         /// A mapper from <see cref="RelationshipAttribute" /> to <see cref="RelationshipProxy" />. See the latter for more details.
         /// </summary>
-        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> _relationshipProxies = new Dictionary<RelationshipAttribute, RelationshipProxy>();
+        private readonly Dictionary<RelationshipAttribute, RelationshipProxy> _relationshipProxies = new();
 
         /// <summary>
         /// Keeps track of which resources has already been traversed through, to prevent infinite loops in eg cyclic data structures.

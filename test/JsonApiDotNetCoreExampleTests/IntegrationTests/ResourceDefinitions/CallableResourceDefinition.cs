@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>
     {
-        private static readonly PageSize MaxPageSize = new PageSize(5);
+        private static readonly PageSize MaxPageSize = new(5);
         private readonly IUserRolesService _userRolesService;
 
         public CallableResourceDefinition(IResourceGraph resourceGraph, IUserRolesService userRolesService)
@@ -54,9 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             var isNotDeleted = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(isDeletedAttribute),
                 new LiteralConstantExpression(bool.FalseString));
 
-            return existingFilter == null
-                ? (FilterExpression)isNotDeleted
-                : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotDeleted, existingFilter));
+            return existingFilter == null ? isNotDeleted : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotDeleted, existingFilter));
         }
 
         public override SortExpression OnApplySort(SortExpression existingSort)
@@ -105,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
         {
             // Use case: 'isHighRisk' query string parameter can be used to add extra filter on IQueryable<TResource>.
 
-            return new QueryStringParameterHandlers<CallableResource>
+            return new()
             {
                 ["isHighRisk"] = FilterByHighRisk
             };

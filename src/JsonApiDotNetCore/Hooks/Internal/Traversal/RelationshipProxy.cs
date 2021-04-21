@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
     /// </summary>
     internal sealed class RelationshipProxy
     {
-        private static readonly HooksCollectionConverter CollectionConverter = new HooksCollectionConverter();
+        private static readonly HooksCollectionConverter CollectionConverter = new();
 
         private readonly bool _skipThroughType;
 

@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Configuration
     [PublicAPI]
     public class ServiceDiscoveryFacade
     {
-        internal static readonly HashSet<Type> ServiceInterfaces = new HashSet<Type>
+        internal static readonly HashSet<Type> ServiceInterfaces = new()
         {
             typeof(IResourceService<>),
             typeof(IResourceService<,>),
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IRemoveFromRelationshipService<,>)
         };
 
-        internal static readonly HashSet<Type> RepositoryInterfaces = new HashSet<Type>
+        internal static readonly HashSet<Type> RepositoryInterfaces = new()
         {
             typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Configuration
             typeof(IResourceReadRepository<,>)
         };
 
-        internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new HashSet<Type>
+        internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new()
         {
             typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
@@ -69,8 +69,8 @@ namespace JsonApiDotNetCore.Configuration
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
         private readonly IJsonApiOptions _options;
-        private readonly ResourceDescriptorAssemblyCache _assemblyCache = new ResourceDescriptorAssemblyCache();
-        private readonly TypeLocator _typeLocator = new TypeLocator();
+        private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
+        private readonly TypeLocator _typeLocator = new();
 
         public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options,
             ILoggerFactory loggerFactory)

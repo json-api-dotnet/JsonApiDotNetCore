@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Execution
         where TResource : class, IIdentifiable
     {
         // ReSharper disable once StaticMemberInGenericType
-        private static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+        private static readonly CollectionConverter CollectionConverter = new();
 
         private readonly HashSet<TResource> _databaseValues;
         private readonly bool _databaseValuesLoaded;

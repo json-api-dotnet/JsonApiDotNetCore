@@ -122,7 +122,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             // Act
             var todoList = new List<TodoItem>
             {
-                new TodoItem
+                new()
                 {
                     Id = _todoList[0].Id
                 }

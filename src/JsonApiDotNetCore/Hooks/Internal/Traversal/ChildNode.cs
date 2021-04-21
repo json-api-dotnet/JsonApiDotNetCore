@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Hooks.Internal.Traversal
 {
     internal abstract class ChildNode
     {
-        protected static readonly CollectionConverter CollectionConverter = new CollectionConverter();
+        protected static readonly CollectionConverter CollectionConverter = new();
     }
 
     /// <summary>

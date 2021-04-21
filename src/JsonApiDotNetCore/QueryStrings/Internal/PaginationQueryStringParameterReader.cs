@@ -11,6 +11,8 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 using Microsoft.Extensions.Primitives;
 
+// ReSharper disable ParameterOnlyUsedForPreconditionCheck.Local
+
 namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     [PublicAPI]
@@ -144,10 +146,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private sealed class PaginationContext
         {
-            private readonly MutablePaginationEntry _globalScope = new MutablePaginationEntry();
+            private readonly MutablePaginationEntry _globalScope = new();
 
-            private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes =
-                new Dictionary<ResourceFieldChainExpression, MutablePaginationEntry>();
+            private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
 
             public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression scope)
             {

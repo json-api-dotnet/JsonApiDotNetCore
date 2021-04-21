@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Serialization
                 ValidateRequestBody(model, body, context.HttpContext.Request);
             }
 
-            return await InputFormatterResult.SuccessAsync(model);
+            return await InputFormatterResult.SuccessAsync(model!);
         }
 
         private async Task<string> GetRequestBodyAsync(Stream bodyStream)

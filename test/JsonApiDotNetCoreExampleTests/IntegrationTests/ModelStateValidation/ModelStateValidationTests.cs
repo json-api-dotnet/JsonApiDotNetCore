@@ -580,7 +580,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 IsCaseSensitive = false,
                 Subdirectories = new List<SystemDirectory>
                 {
-                    new SystemDirectory
+                    new()
                     {
                         Name = "C#",
                         IsCaseSensitive = false
@@ -588,7 +588,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 },
                 Files = new List<SystemFile>
                 {
-                    new SystemFile
+                    new()
                     {
                         FileName = "readme.txt"
                     }
@@ -851,11 +851,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 IsCaseSensitive = true,
                 Files = new List<SystemFile>
                 {
-                    new SystemFile
+                    new()
                     {
                         FileName = "Main.cs"
                     },
-                    new SystemFile
+                    new()
                     {
                         FileName = "Program.cs"
                     }
@@ -907,7 +907,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
                 IsCaseSensitive = true,
                 Files = new List<SystemFile>
                 {
-                    new SystemFile
+                    new()
                     {
                         FileName = "Main.cs",
                         SizeInBytes = 100

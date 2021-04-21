@@ -13,7 +13,7 @@ namespace TestBuildingBlocks
     /// </summary>
     public abstract class IntegrationTest
     {
-        private static readonly IntegrationTestConfiguration IntegrationTestConfiguration = new IntegrationTestConfiguration();
+        private static readonly IntegrationTestConfiguration IntegrationTestConfiguration = new();
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
             IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)

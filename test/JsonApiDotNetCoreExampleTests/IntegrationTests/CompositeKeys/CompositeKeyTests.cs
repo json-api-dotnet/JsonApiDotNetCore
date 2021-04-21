@@ -188,7 +188,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 Car carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == 123 && car.LicensePlate == "AA-BB-11");
 
                 carInDatabase.Should().NotBeNull();
-                carInDatabase.Id.Should().Be("123:AA-BB-11");
+                carInDatabase!.Id.Should().Be("123:AA-BB-11");
             });
         }
 
@@ -317,12 +317,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
-                    new Car
+                    new()
                     {
                         RegionId = 123,
                         LicensePlate = "AA-BB-11"
                     },
-                    new Car
+                    new()
                     {
                         RegionId = 456,
                         LicensePlate = "CC-DD-22"
@@ -432,12 +432,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 Address = "Dam 1, 1012JS Amsterdam, the Netherlands",
                 Inventory = new HashSet<Car>
                 {
-                    new Car
+                    new()
                     {
                         RegionId = 123,
                         LicensePlate = "AA-BB-11"
                     },
-                    new Car
+                    new()
                     {
                         RegionId = 456,
                         LicensePlate = "CC-DD-22"

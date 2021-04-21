@@ -21,7 +21,13 @@ namespace JsonApiDotNetCoreExample.Definitions
 
         public override IEnumerable<Article> OnReturn(HashSet<Article> resources, ResourcePipeline pipeline)
         {
-            if (pipeline == ResourcePipeline.GetSingle && resources.Any(article => article.Caption == "Classified"))
+            [AssertionMethod]
+            static bool Predicate(Article article)
+            {
+                return article.Caption == "Classified";
+            }
+
+            if (pipeline == ResourcePipeline.GetSingle && resources.Any(Predicate))
             {
                 throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                 {

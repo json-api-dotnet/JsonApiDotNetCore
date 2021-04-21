@@ -466,7 +466,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 Children = new List<FilterableResource>
                 {
-                    new FilterableResource()
+                    new()
                 }
             };
 
@@ -497,8 +497,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             {
                 Children = new List<FilterableResource>
                 {
-                    new FilterableResource(),
-                    new FilterableResource()
+                    new(),
+                    new()
                 }
             };
 

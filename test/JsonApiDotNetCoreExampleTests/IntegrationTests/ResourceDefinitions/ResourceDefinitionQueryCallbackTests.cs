@@ -77,22 +77,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     IsDeleted = true
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     IsDeleted = false
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     IsDeleted = true
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     IsDeleted = false
@@ -127,22 +127,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     IsDeleted = true
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     IsDeleted = false
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     IsDeleted = true
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     IsDeleted = false
@@ -176,19 +176,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     CreatedAt = 1.January(2001),
                     ModifiedAt = 15.January(2001)
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     CreatedAt = 1.January(2001),
                     ModifiedAt = 15.December(2001)
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     CreatedAt = 1.February(2001),
@@ -223,19 +223,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     CreatedAt = 1.January(2001),
                     ModifiedAt = 15.January(2001)
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     CreatedAt = 1.January(2001),
                     ModifiedAt = 15.December(2001)
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     CreatedAt = 1.February(2001),
@@ -422,22 +422,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     RiskLevel = 3
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     RiskLevel = 8
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     RiskLevel = 3
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     RiskLevel = 8
@@ -470,22 +470,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
             // Arrange
             var resources = new List<CallableResource>
             {
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     RiskLevel = 3
                 },
-                new CallableResource
+                new()
                 {
                     Label = "A",
                     RiskLevel = 8
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     RiskLevel = 3
                 },
-                new CallableResource
+                new()
                 {
                     Label = "B",
                     RiskLevel = 8
@@ -520,11 +520,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
                 RiskLevel = 3,
                 Children = new List<CallableResource>
                 {
-                    new CallableResource
+                    new()
                     {
                         RiskLevel = 3
                     },
-                    new CallableResource
+                    new()
                     {
                         RiskLevel = 8
                     }

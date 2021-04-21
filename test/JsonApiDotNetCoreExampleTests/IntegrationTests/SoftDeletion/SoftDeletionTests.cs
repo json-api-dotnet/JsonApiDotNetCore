@@ -37,12 +37,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var departments = new List<Department>
             {
-                new Department
+                new()
                 {
                     Name = "Sales",
                     IsSoftDeleted = true
                 },
-                new Department
+                new()
                 {
                     Name = "Marketing"
                 }
@@ -73,16 +73,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var departments = new List<Department>
             {
-                new Department
+                new()
                 {
                     Name = "Support"
                 },
-                new Department
+                new()
                 {
                     Name = "Sales",
                     IsSoftDeleted = true
                 },
-                new Department
+                new()
                 {
                     Name = "Marketing"
                 }
@@ -148,12 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 Departments = new List<Department>
                 {
-                    new Department
+                    new()
                     {
                         Name = "Sales",
                         IsSoftDeleted = true
                     },
-                    new Department
+                    new()
                     {
                         Name = "Marketing"
                     }
@@ -187,7 +187,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 IsSoftDeleted = true,
                 Departments = new List<Department>
                 {
-                    new Department
+                    new()
                     {
                         Name = "Marketing"
                     }
@@ -223,28 +223,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             // Arrange
             var companies = new List<Company>
             {
-                new Company
+                new()
                 {
                     Name = "Acme Corporation",
                     IsSoftDeleted = true,
                     Departments = new List<Department>
                     {
-                        new Department
+                        new()
                         {
                             Name = "Recruitment"
                         }
                     }
                 },
-                new Company
+                new()
                 {
                     Name = "AdventureWorks",
                     Departments = new List<Department>
                     {
-                        new Department
+                        new()
                         {
                             Name = "Reception"
                         },
-                        new Department
+                        new()
                         {
                             Name = "Sales",
                             IsSoftDeleted = true
@@ -285,12 +285,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             {
                 Departments = new List<Department>
                 {
-                    new Department
+                    new()
                     {
                         Name = "Sales",
                         IsSoftDeleted = true
                     },
-                    new Department
+                    new()
                     {
                         Name = "Marketing"
                     }
@@ -324,7 +324,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 IsSoftDeleted = true,
                 Departments = new List<Department>
                 {
-                    new Department
+                    new()
                     {
                         Name = "Marketing"
                     }
@@ -408,7 +408,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 IsSoftDeleted = true,
                 Departments = new List<Department>
                 {
-                    new Department
+                    new()
                     {
                         Name = "Marketing"
                     }

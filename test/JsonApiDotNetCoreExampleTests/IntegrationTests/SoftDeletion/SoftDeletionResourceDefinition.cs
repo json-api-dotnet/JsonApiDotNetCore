@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
                 new LiteralConstantExpression("false"));
 
             return existingFilter == null
-                ? (FilterExpression)isNotSoftDeleted
+                ? isNotSoftDeleted
                 : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(isNotSoftDeleted, existingFilter));
         }
     }

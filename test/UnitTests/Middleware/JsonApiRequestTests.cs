@@ -106,7 +106,7 @@ namespace UnitTests.Middleware
                 ControllerTypeInfo = (TypeInfo)typeof(object)
             };
 
-            httpContext.SetEndpoint(new Endpoint(null, new EndpointMetadataCollection(controllerActionDescriptor), null));
+            httpContext.SetEndpoint(new Endpoint(null!, new EndpointMetadataCollection(controllerActionDescriptor), null));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
     public sealed class ResourceHookTests : IClassFixture<ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext>>
     {
         private readonly ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> _testContext;
-        private readonly ExampleFakers _fakers = new ExampleFakers();
+        private readonly ExampleFakers _fakers = new();
 
         public ResourceHookTests(ExampleIntegrationTestContext<ResourceHooksStartup<AppDbContext>, AppDbContext> testContext)
         {
@@ -315,11 +315,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
             article.ArticleTags = new HashSet<ArticleTag>
             {
-                new ArticleTag
+                new()
                 {
                     Tag = tags[0]
                 },
-                new ArticleTag
+                new()
                 {
                     Tag = tags[1]
                 }
