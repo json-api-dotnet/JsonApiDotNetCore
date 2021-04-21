@@ -323,7 +323,7 @@ namespace JsonApiDotNetCore.Repositories
             if (relationship is HasOneAttribute)
             {
                 INavigation navigation = TryGetNavigation(relationship);
-                return navigation?.IsDependentToPrincipal() ?? false;
+                return navigation?.IsOnDependent ?? false;
             }
 
             return false;
@@ -453,7 +453,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
-            catch (DbUpdateException exception)
+            catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
             {
                 if (_dbContext.Database.CurrentTransaction != null)
                 {
