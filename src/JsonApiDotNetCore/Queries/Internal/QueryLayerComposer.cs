@@ -100,7 +100,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             {
                 Filter = GetFilter(expressionsInTopScope, resourceContext),
                 Sort = GetSort(expressionsInTopScope, resourceContext),
-                Pagination = ((JsonApiOptions)_options).DisableTopPagination ? null : topPagination,
+                Pagination = topPagination,
                 Projection = GetProjectionForSparseAttributeSet(resourceContext)
             };
         }
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                     {
                         Filter = GetFilter(expressionsInCurrentScope, resourceContext),
                         Sort = GetSort(expressionsInCurrentScope, resourceContext),
-                        Pagination = ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext),
+                        Pagination = GetPagination(expressionsInCurrentScope, resourceContext),
                         Projection = GetProjectionForSparseAttributeSet(resourceContext)
                     };
 

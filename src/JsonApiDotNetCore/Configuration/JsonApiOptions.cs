@@ -12,10 +12,6 @@ namespace JsonApiDotNetCore.Configuration
     {
         internal static readonly NamingStrategy DefaultNamingStrategy = new CamelCaseNamingStrategy();
 
-        // Workaround for https://github.com/dotnet/efcore/issues/21026
-        internal bool DisableTopPagination { get; set; }
-        internal bool DisableChildrenPagination { get; set; }
-
         /// <inheritdoc />
         public string Namespace { get; set; }
 

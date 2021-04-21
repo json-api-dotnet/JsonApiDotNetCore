@@ -47,10 +47,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
-
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.DisableTopPagination = false;
-            options.DisableChildrenPagination = false;
         }
 
         [Fact]
@@ -334,11 +330,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
                 dbContext.Articles.Add(article);
                 await dbContext.SaveChangesAsync();
             });
-
-            // Workaround for https://github.com/dotnet/efcore/issues/21026
-            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.DisableTopPagination = false;
-            options.DisableChildrenPagination = true;
 
             const string route = "/api/v1/articles?include=tags";
 
