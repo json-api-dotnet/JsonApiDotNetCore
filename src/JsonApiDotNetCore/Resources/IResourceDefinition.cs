@@ -3,13 +3,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
+    /// Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.
@@ -21,8 +22,7 @@ namespace JsonApiDotNetCore.Resources
     }
 
     /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
+    /// Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.
@@ -134,104 +134,171 @@ namespace JsonApiDotNetCore.Resources
         IDictionary<string, object> GetMeta(TResource resource);
 
         /// <summary>
-        /// Enables to execute custom logic to initialize a newly instantiated resource during a POST request. This is typically used to assign default values to
-        /// properties or to side-load-and-attach required relationships.
+        /// Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, before the fields from the request are
+        /// copied into it.
+        /// </para>
+        /// <para>
+        /// For POST resource requests, this method is typically used to assign property default values or to side-load-and-attach required relationships.
+        /// </para>
         /// </summary>
         /// <param name="resource">
-        /// A freshly instantiated resource object.
+        /// The original resource retrieved from the underlying data store, or a freshly instantiated resource in case of a POST resource request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.SetRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// Note this intentionally excludes <see cref="OperationKind.DeleteResource" /> and <see cref="OperationKind.AddToRelationship" />, because for those
+        /// endpoints no resource is retrieved upfront.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnInitializeResourceAsync(TResource resource, CancellationToken cancellationToken);
+        Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Enables to execute custom logic, just before a resource is inserted in the underlying data store, during a POST request. This is typically used to
-        /// overwrite attributes from the incoming request, such as a creation-timestamp. Another use case is to add a notification message to an outbox table,
-        /// which gets committed along with the resource write in a single transaction (see https://microservices.io/patterns/data/transactional-outbox.html).
+        /// Executes before replacing (overwriting) a to-one relationship.
+        /// <para>
+        /// Implementing this method enables to perform validations and change <see cref="rightResourceId" />, before the relationship is updated.
+        /// </para>
         /// </summary>
-        /// <param name="resource">
-        /// The resource with incoming request data applied on it.
+        /// <param name="leftResource">
+        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasOneRelationship" />.
+        /// </param>
+        /// <param name="hasOneRelationship">
+        /// The to-one relationship being replaced or cleared.
+        /// </param>
+        /// <param name="rightResourceId">
+        /// The replacement resource identifier (or <c>null</c> to clear the relationship), coming from the request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnBeforeCreateResourceAsync(TResource resource, CancellationToken cancellationToken);
+        /// <returns>
+        /// The replacement resource identifier, or <c>null</c> to clear the relationship.
+        /// </returns>
+        Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+            OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Enables to execute custom logic after a resource has been inserted in the underlying data store, during a POST request. A typical use case is to
-        /// enqueue a notification message on a service bus.
+        /// Executes before replacing (overwriting) a to-many relationship.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
         /// </summary>
-        /// <param name="resource">
-        /// The re-fetched resource after a successful insertion.
+        /// <param name="leftResource">
+        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasManyRelationship" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being replaced.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to replace any existing set with, coming from the request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnAfterCreateResourceAsync(TResource resource, CancellationToken cancellationToken);
+        Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Enables to execute custom logic to validate if the update request can be processed, based on the currently stored resource. A typical use case is to
-        /// throw when the resource is soft-deleted or archived.
+        /// Executes before adding resources to a to-many relationship, as part of a POST relationship request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
         /// </summary>
-        /// <param name="resource">
-        /// The resource as currently stored in the underlying data store.
+        /// <param name="leftResourceId">
+        /// Identifier of the resource that declares <paramref name="hasManyRelationship" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being added to.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to add to the to-many relationship, coming from the request.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnAfterGetForUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
+        Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken);
 
         /// <summary>
-        /// Enables to execute custom logic, just before a resource is updated in the underlying data store, during a PATCH request. This is typically used to
-        /// overwrite attributes from the incoming request, such as a last-modification-timestamp. Another use case is to add a notification message to an outbox
-        /// table, which gets committed along with the resource write in a single transaction (see
+        /// Executes before removing resources from a to-many relationship, as part of a DELETE relationship request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
+        /// </summary>
+        /// <param name="leftResource">
+        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasManyRelationship" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being removed from.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to remove from the to-many relationship, coming from the request.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before writing the changed resource to the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, after the fields from the request have been
+        /// copied into it.
+        /// </para>
+        /// <para>
+        /// An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.
+        /// </para>
+        /// <para>
+        /// Another use case is to add a notification message to an outbox table, which gets committed along with the resource write in a single transaction (see
         /// https://microservices.io/patterns/data/transactional-outbox.html).
+        /// </para>
         /// </summary>
         /// <param name="resource">
-        /// The stored resource with incoming request data applied on it.
+        /// The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
+        /// the changes from the incoming request. Exception: In case <paramref name="operationKind" /> is <see cref="OperationKind.DeleteResource" /> or
+        /// <see cref="OperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable.Id" /> property set, because for those
+        /// endpoints no resource is retrieved upfront.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
+        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnBeforeUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
+        Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Enables to execute custom logic after a resource has been updated in the underlying data store, during a PATCH request. A typical use case is to
-        /// enqueue a notification message on a service bus.
+        /// Executes after successfully writing the changed resource to the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
+        /// </para>
         /// </summary>
         /// <param name="resource">
-        /// The re-fetched resource after a successful update.
+        /// The resource as written to the underlying data store.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
+        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnAfterUpdateResourceAsync(TResource resource, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Enables to execute custom logic, just before a resource is deleted from the underlying data store, during a DELETE request. This enables to throw in
-        /// case the user does not have permission, an attempt is made to delete an unarchived resource or a non-closed work item etc. Another use case is to add
-        /// a notification message to an outbox table, which gets committed along with the resource write in a single transaction (see
-        /// https://microservices.io/patterns/data/transactional-outbox.html).
-        /// </summary>
-        /// <param name="id">
-        /// The identifier of the resource to delete.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// Propagates notification that request handling should be canceled.
-        /// </param>
-        Task OnBeforeDeleteResourceAsync(TId id, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Enables to execute custom logic after a resource has been deleted from the underlying data store, during a DELETE request. A typical use case is to
-        /// enqueue a notification message on a service bus.
-        /// </summary>
-        /// <param name="id">
-        /// The identifier of the resource to delete.
-        /// </param>
-        /// <param name="cancellationToken">
-        /// Propagates notification that request handling should be canceled.
-        /// </param>
-        Task OnAfterDeleteResourceAsync(TId id, CancellationToken cancellationToken);
+        Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
     }
 }

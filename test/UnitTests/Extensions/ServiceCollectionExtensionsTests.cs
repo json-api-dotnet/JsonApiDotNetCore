@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
@@ -487,42 +488,39 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task OnInitializeResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task OnPrepareWriteAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeCreateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(IntResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, OperationKind operationKind,
+                CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterCreateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task OnSetToManyRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
+                CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterGetForUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task OnAddToRelationshipAsync(int leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task OnRemoveFromRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterUpdateResourceAsync(IntResource resource, CancellationToken cancellationToken)
+            public Task OnWritingAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeDeleteResourceAsync(int id, CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnAfterDeleteResourceAsync(int id, CancellationToken cancellationToken)
+            public Task OnWriteSucceededAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -566,42 +564,39 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task OnInitializeResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task OnPrepareWriteAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeCreateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(GuidResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, OperationKind operationKind,
+                CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterCreateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task OnSetToManyRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
+                CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterGetForUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task OnAddToRelationshipAsync(Guid leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task OnRemoveFromRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnAfterUpdateResourceAsync(GuidResource resource, CancellationToken cancellationToken)
+            public Task OnWritingAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnBeforeDeleteResourceAsync(Guid id, CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnAfterDeleteResourceAsync(Guid id, CancellationToken cancellationToken)
+            public Task OnWriteSucceededAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }

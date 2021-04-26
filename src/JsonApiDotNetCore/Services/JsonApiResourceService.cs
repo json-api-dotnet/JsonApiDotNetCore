@@ -226,8 +226,6 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceByIdAsync(resourceForDatabase.Id, TopFieldSelection.WithAllAttributes, cancellationToken);
 
-            await _resourceDefinitionAccessor.OnAfterCreateResourceAsync(resourceFromDatabase, cancellationToken);
-
             _hookExecutor.AfterCreate(resourceFromDatabase);
 
             _resourceChangeTracker.SetFinallyStoredAttributeValues(resourceFromDatabase);
@@ -245,7 +243,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
         {
-            await _resourceDefinitionAccessor.OnInitializeResourceAsync(resourceForDatabase, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, OperationKind.CreateResource, cancellationToken);
         }
 
         protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
@@ -303,25 +301,22 @@ namespace JsonApiDotNetCore.Services
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            if (secondaryResourceIds.Any())
+            if (secondaryResourceIds.Any() && _request.Relationship is HasManyThroughAttribute hasManyThrough)
             {
-                if (_request.Relationship is HasManyThroughAttribute hasManyThrough)
-                {
-                    // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
-                    // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
-                    await RemoveExistingIdsFromSecondarySetAsync(primaryId, secondaryResourceIds, hasManyThrough, cancellationToken);
-                }
+                // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
+                // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
+                await RemoveExistingIdsFromSecondarySetAsync(primaryId, secondaryResourceIds, hasManyThrough, cancellationToken);
+            }
 
-                try
-                {
-                    await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds, cancellationToken);
-                }
-                catch (DataStoreUpdateException)
-                {
-                    _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-                    await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
-                    throw;
-                }
+            try
+            {
+                await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds, cancellationToken);
+            }
+            catch (DataStoreUpdateException)
+            {
+                _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+                throw;
             }
         }
 
@@ -379,7 +374,7 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
-            await _resourceDefinitionAccessor.OnAfterGetForUpdateResourceAsync(resourceFromDatabase, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.UpdateResource, cancellationToken);
 
             try
             {
@@ -392,8 +387,6 @@ namespace JsonApiDotNetCore.Services
             }
 
             TResource afterResourceFromDatabase = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.WithAllAttributes, cancellationToken);
-
-            await _resourceDefinitionAccessor.OnAfterUpdateResourceAsync(afterResourceFromDatabase, cancellationToken);
 
             _hookExecutor.AfterUpdateResource(afterResourceFromDatabase);
 
@@ -426,6 +419,8 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
 
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.SetRelationship, cancellationToken);
+
             _hookExecutor.BeforeUpdateRelationship(resourceFromDatabase);
 
             try
@@ -451,8 +446,6 @@ namespace JsonApiDotNetCore.Services
 
             _hookExecutor.BeforeDelete<TResource, TId>(id);
 
-            await _resourceDefinitionAccessor.OnBeforeDeleteResourceAsync<TResource, TId>(id, cancellationToken);
-
             try
             {
                 await _repositoryAccessor.DeleteAsync<TResource, TId>(id, cancellationToken);
@@ -462,8 +455,6 @@ namespace JsonApiDotNetCore.Services
                 _ = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 throw;
             }
-
-            await _resourceDefinitionAccessor.OnAfterDeleteResourceAsync<TResource, TId>(id, cancellationToken);
 
             _hookExecutor.AfterDelete<TResource, TId>(id);
         }
@@ -485,12 +476,12 @@ namespace JsonApiDotNetCore.Services
             AssertHasRelationship(_request.Relationship, relationshipName);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
+
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.RemoveFromRelationship, cancellationToken);
+
             await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
 
-            if (secondaryResourceIds.Any())
-            {
-                await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
-            }
+            await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
         }
 
         protected async Task<TResource> GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)

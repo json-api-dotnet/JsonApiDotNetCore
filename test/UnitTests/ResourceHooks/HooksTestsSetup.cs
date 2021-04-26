@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Hooks.Internal.Traversal;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
@@ -469,50 +470,48 @@ namespace UnitTests.ResourceHooks
                     return null;
                 }
 
-                public Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                public Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
                     where TResource : class, IIdentifiable
                 {
                     return Task.CompletedTask;
                 }
 
-                public Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+                public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+                    OperationKind operationKind, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.FromResult(rightResourceId);
+                }
+
+                public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
+                    CancellationToken cancellationToken)
                     where TResource : class, IIdentifiable
                 {
                     return Task.CompletedTask;
                 }
 
-                public Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+                public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                    CancellationToken cancellationToken)
                     where TResource : class, IIdentifiable<TId>
                 {
                     return Task.CompletedTask;
                 }
 
-                public Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable<TId>
+                public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                    CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
+                {
+                    return Task.CompletedTask;
+                }
+
+                public Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+                    where TResource : class, IIdentifiable
                 {
                     return Task.CompletedTask;
                 }

@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JsonApiDotNetCore.Resources
@@ -92,79 +94,83 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public async Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public async Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnInitializeResourceAsync(resource, cancellationToken);
+            await resourceDefinition.OnPrepareWriteAsync(resource, operationKind, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public async Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
+            ArgumentGuard.NotNull(hasOneRelationship, nameof(hasOneRelationship));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnBeforeCreateResourceAsync(resource, cancellationToken);
+            return await resourceDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, rightResourceId, operationKind, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public async Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
+            ISet<IIdentifiable> rightResourceIds, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
-            ArgumentGuard.NotNull(resource, nameof(resource));
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnAfterCreateResourceAsync(resource, cancellationToken);
+            await resourceDefinition.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, operationKind, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnAfterGetForUpdateResourceAsync(resource, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnBeforeUpdateResourceAsync(resource, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnAfterUpdateResourceAsync(resource, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public async Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+        public async Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship,
+            ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnBeforeDeleteResourceAsync(id, cancellationToken);
+            await resourceDefinition.OnAddToRelationshipAsync(leftResourceId, hasManyRelationship, rightResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable<TId>
+        public async Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
+            ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
         {
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnAfterDeleteResourceAsync(id, cancellationToken);
+            await resourceDefinition.OnRemoveFromRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnWritingAsync(resource, operationKind, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
+            await resourceDefinition.OnWriteSucceededAsync(resource, operationKind, cancellationToken);
         }
 
         protected virtual object ResolveResourceDefinition(Type resourceType)

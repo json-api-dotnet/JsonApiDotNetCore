@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -116,49 +117,47 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task OnInitializeResourceAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnBeforeCreateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(rightResourceId);
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            OperationKind operationKind, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnAfterCreateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnAfterGetForUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnBeforeUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
+        public virtual Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnAfterUpdateResourceAsync(TResource resource, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public virtual Task OnBeforeDeleteResourceAsync(TId id, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public virtual Task OnAfterDeleteResourceAsync(TId id, CancellationToken cancellationToken)
+        public virtual Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

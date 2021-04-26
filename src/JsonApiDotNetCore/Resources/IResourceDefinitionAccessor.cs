@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
@@ -49,51 +51,49 @@ namespace JsonApiDotNetCore.Resources
         IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance);
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnInitializeResourceAsync" /> for the specified resource.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnPrepareWriteAsync" /> for the specified resource.
         /// </summary>
-        Task OnInitializeResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeCreateResourceAsync" /> for the specified resource.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSetToOneRelationshipAsync" /> for the specified resource.
         /// </summary>
-        Task OnBeforeCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterCreateResourceAsync" /> for the specified resource.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSetToManyRelationshipAsync" /> for the specified resource.
         /// </summary>
-        Task OnAfterCreateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
+        public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterGetForUpdateResourceAsync" /> for the specified resource.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAddToRelationshipAsync" /> for the specified resource.
         /// </summary>
-        Task OnAfterGetForUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable;
-
-        /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeUpdateResourceAsync" /> for the specified resource.
-        /// </summary>
-        Task OnBeforeUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable;
-
-        /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterUpdateResourceAsync" /> for the specified resource.
-        /// </summary>
-        Task OnAfterUpdateResourceAsync<TResource>(TResource resource, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable;
-
-        /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnBeforeDeleteResourceAsync" /> for the specified resource ID.
-        /// </summary>
-        Task OnBeforeDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
+        public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
-        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnAfterDeleteResourceAsync" /> for the specified resource ID.
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnRemoveFromRelationshipAsync" /> for the specified resource.
         /// </summary>
-        Task OnAfterDeleteResourceAsync<TResource, TId>(TId id, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable<TId>;
+        public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnWritingAsync" /> for the specified resource.
+        /// </summary>
+        Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnWriteSucceededAsync" /> for the specified resource.
+        /// </summary>
+        Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            where TResource : class, IIdentifiable;
     }
 }

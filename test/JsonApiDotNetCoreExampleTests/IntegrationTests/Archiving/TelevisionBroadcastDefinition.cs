@@ -119,11 +119,28 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             return walker.HasFilterOnArchivedAt;
         }
 
-        public override Task OnBeforeCreateResourceAsync(TelevisionBroadcast broadcast, CancellationToken cancellationToken)
+        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
         {
-            AssertIsNotArchived(broadcast);
+            if (operationKind == OperationKind.CreateResource)
+            {
+                AssertIsNotArchived(broadcast);
+            }
+            else if (operationKind == OperationKind.UpdateResource)
+            {
+                AssertIsNotShiftingArchiveDate(broadcast);
+            }
+            else if (operationKind == OperationKind.DeleteResource)
+            {
+                TelevisionBroadcast broadcastToDelete =
+                    await _dbContext.Broadcasts.FirstOrDefaultAsync(resource => resource.Id == broadcast.Id, cancellationToken);
 
-            return base.OnBeforeCreateResourceAsync(broadcast, cancellationToken);
+                if (broadcastToDelete != null)
+                {
+                    AssertIsArchived(broadcastToDelete);
+                }
+            }
+
+            await base.OnWritingAsync(broadcast, operationKind, cancellationToken);
         }
 
         [AssertionMethod]
@@ -138,24 +155,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             }
         }
 
-        public override Task OnAfterGetForUpdateResourceAsync(TelevisionBroadcast resource, CancellationToken cancellationToken)
-        {
-            _storedArchivedAt = resource.ArchivedAt;
-
-            return base.OnAfterGetForUpdateResourceAsync(resource, cancellationToken);
-        }
-
-        public override Task OnBeforeUpdateResourceAsync(TelevisionBroadcast resource, CancellationToken cancellationToken)
-        {
-            AssertIsNotShiftingArchiveDate(resource);
-
-            return base.OnBeforeUpdateResourceAsync(resource, cancellationToken);
-        }
-
         [AssertionMethod]
-        private void AssertIsNotShiftingArchiveDate(TelevisionBroadcast resource)
+        private void AssertIsNotShiftingArchiveDate(TelevisionBroadcast broadcast)
         {
-            if (_storedArchivedAt != null && resource.ArchivedAt != null && _storedArchivedAt != resource.ArchivedAt)
+            if (_storedArchivedAt != null && broadcast.ArchivedAt != null && _storedArchivedAt != broadcast.ArchivedAt)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                 {
@@ -164,29 +167,26 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             }
         }
 
-        public override async Task OnBeforeDeleteResourceAsync(int broadcastId, CancellationToken cancellationToken)
-        {
-            TelevisionBroadcast televisionBroadcast =
-                await _dbContext.Broadcasts.FirstOrDefaultAsync(broadcast => broadcast.Id == broadcastId, cancellationToken);
-
-            if (televisionBroadcast != null)
-            {
-                AssertIsArchived(televisionBroadcast);
-            }
-
-            await base.OnBeforeDeleteResourceAsync(broadcastId, cancellationToken);
-        }
-
         [AssertionMethod]
-        private static void AssertIsArchived(TelevisionBroadcast televisionBroadcast)
+        private static void AssertIsArchived(TelevisionBroadcast broadcast)
         {
-            if (televisionBroadcast.ArchivedAt == null)
+            if (broadcast.ArchivedAt == null)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
                 {
                     Title = "Television broadcasts must first be archived before they can be deleted."
                 });
             }
+        }
+
+        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            if (operationKind == OperationKind.UpdateResource)
+            {
+                _storedArchivedAt = broadcast.ArchivedAt;
+            }
+
+            return base.OnPrepareWriteAsync(broadcast, operationKind, cancellationToken);
         }
 
         private sealed class FilterWalker : QueryExpressionRewriter<object>
