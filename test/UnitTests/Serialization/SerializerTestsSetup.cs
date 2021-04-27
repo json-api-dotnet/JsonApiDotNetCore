@@ -56,10 +56,16 @@ namespace UnitTests.Serialization
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder();
             IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
 
-            var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph,
-                GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
 
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, new JsonApiOptions());
+            IResourceObjectBuilderSettingsProvider settingsProvider = GetSerializerSettingsProvider();
+
+            var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor,
+                settingsProvider);
+
+            var jsonApiOptions = new JsonApiOptions();
+
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor, jsonApiOptions);
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null,

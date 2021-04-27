@@ -173,6 +173,24 @@ namespace JsonApiDotNetCore.Resources
             await resourceDefinition.OnWriteSucceededAsync(resource, operationKind, cancellationToken);
         }
 
+        /// <inheritdoc />
+        public void OnDeserialize(IIdentifiable resource)
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(resource.GetType());
+            resourceDefinition.OnDeserialize((dynamic)resource);
+        }
+
+        /// <inheritdoc />
+        public void OnSerialize(IIdentifiable resource)
+        {
+            ArgumentGuard.NotNull(resource, nameof(resource));
+
+            dynamic resourceDefinition = ResolveResourceDefinition(resource.GetType());
+            resourceDefinition.OnSerialize((dynamic)resource);
+        }
+
         protected virtual object ResolveResourceDefinition(Type resourceType)
         {
             ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);

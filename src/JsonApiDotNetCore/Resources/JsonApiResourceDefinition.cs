@@ -162,6 +162,16 @@ namespace JsonApiDotNetCore.Resources
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
+        public virtual void OnDeserialize(TResource resource)
+        {
+        }
+
+        /// <inheritdoc />
+        public virtual void OnSerialize(TResource resource)
+        {
+        }
+
         /// <summary>
         /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
         /// details.

@@ -95,5 +95,15 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnDeserialize" /> for the specified resource.
+        /// </summary>
+        void OnDeserialize(IIdentifiable resource);
+
+        /// <summary>
+        /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSerialize" /> for the specified resource.
+        /// </summary>
+        void OnSerialize(IIdentifiable resource);
     }
 }

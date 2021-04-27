@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Hooks.Internal.Traversal;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
@@ -406,115 +402,6 @@ namespace UnitTests.ResourceHooks
                 primaryResourceContainerMock = PrimaryResourceContainerMock;
                 firstSecondaryResourceContainerMock = FirstSecondaryResourceContainerMock;
                 secondSecondaryResourceContainerMock = SecondSecondaryResourceContainerMock;
-            }
-        }
-
-        private sealed class TestResourceFactory : IResourceFactory
-        {
-            public IIdentifiable CreateInstance(Type resourceType)
-            {
-                return (IIdentifiable)Activator.CreateInstance(resourceType);
-            }
-
-            public TResource CreateInstance<TResource>()
-                where TResource : IIdentifiable
-            {
-                return (TResource)Activator.CreateInstance(typeof(TResource));
-            }
-
-            public NewExpression CreateNewExpression(Type resourceType)
-            {
-                return Expression.New(resourceType);
-            }
-
-            public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-            {
-                return new NeverResourceDefinitionAccessor();
-            }
-
-            private sealed class NeverResourceDefinitionAccessor : IResourceDefinitionAccessor
-            {
-                public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType,
-                    IReadOnlyCollection<IncludeElementExpression> existingIncludes)
-                {
-                    return existingIncludes;
-                }
-
-                public FilterExpression OnApplyFilter(Type resourceType, FilterExpression existingFilter)
-                {
-                    return existingFilter;
-                }
-
-                public SortExpression OnApplySort(Type resourceType, SortExpression existingSort)
-                {
-                    return existingSort;
-                }
-
-                public PaginationExpression OnApplyPagination(Type resourceType, PaginationExpression existingPagination)
-                {
-                    return existingPagination;
-                }
-
-                public SparseFieldSetExpression OnApplySparseFieldSet(Type resourceType, SparseFieldSetExpression existingSparseFieldSet)
-                {
-                    return existingSparseFieldSet;
-                }
-
-                public object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName)
-                {
-                    return new QueryStringParameterHandlers<IIdentifiable>();
-                }
-
-                public IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance)
-                {
-                    return null;
-                }
-
-                public Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
-                    OperationKind operationKind, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.FromResult(rightResourceId);
-                }
-
-                public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
-                    CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnAddToRelationshipAsync<TResource, TId>(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-                    CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable<TId>
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnRemoveFromRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-                    CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
-
-                public Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
-                    where TResource : class, IIdentifiable
-                {
-                    return Task.CompletedTask;
-                }
             }
         }
     }

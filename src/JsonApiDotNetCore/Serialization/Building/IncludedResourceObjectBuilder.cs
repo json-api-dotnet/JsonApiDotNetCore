@@ -135,8 +135,14 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private void ProcessRelationship(IIdentifiable parent, IList<RelationshipAttribute> inclusionChain)
         {
-            // get the resource object for parent.
-            ResourceObject resourceObject = GetOrBuildResourceObject(parent);
+            ResourceObject resourceObject = TryGetBuiltResourceObjectFor(parent);
+
+            if (resourceObject == null)
+            {
+                _resourceDefinitionAccessor.OnSerialize(parent);
+
+                resourceObject = BuildCachedResourceObjectFor(parent);
+            }
 
             if (!inclusionChain.Any())
             {
@@ -188,23 +194,25 @@ namespace JsonApiDotNetCore.Serialization.Building
             };
         }
 
-        /// <summary>
-        /// Gets the resource object for <paramref name="parent" /> by searching the included list. If it was not already built, it is constructed and added to
-        /// the inclusion list.
-        /// </summary>
-        private ResourceObject GetOrBuildResourceObject(IIdentifiable parent)
+        private ResourceObject TryGetBuiltResourceObjectFor(IIdentifiable resource)
         {
-            Type type = parent.GetType();
-            string resourceName = ResourceContextProvider.GetResourceContext(type).PublicName;
-            ResourceObject entry = _included.SingleOrDefault(ro => ro.Type == resourceName && ro.Id == parent.StringId);
+            Type resourceType = resource.GetType();
+            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceType);
 
-            if (entry == null)
-            {
-                entry = Build(parent, _fieldsToSerialize.GetAttributes(type), _fieldsToSerialize.GetRelationships(type));
-                _included.Add(entry);
-            }
+            return _included.SingleOrDefault(resourceObject => resourceObject.Type == resourceContext.PublicName && resourceObject.Id == resource.StringId);
+        }
 
-            return entry;
+        private ResourceObject BuildCachedResourceObjectFor(IIdentifiable resource)
+        {
+            Type resourceType = resource.GetType();
+            IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(resourceType);
+            IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(resourceType);
+
+            ResourceObject resourceObject = Build(resource, attributes, relationships);
+
+            _included.Add(resourceObject);
+
+            return resourceObject;
         }
     }
 }

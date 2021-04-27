@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -20,8 +19,8 @@ namespace UnitTests.Serialization.Server
 
         public RequestDeserializerTests()
         {
-            _deserializer = new RequestDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()), _fieldsManagerMock.Object,
-                MockHttpContextAccessor.Object, _requestMock.Object, new JsonApiOptions());
+            _deserializer = new RequestDeserializer(ResourceGraph, new TestResourceFactory(), _fieldsManagerMock.Object, MockHttpContextAccessor.Object,
+                _requestMock.Object, new JsonApiOptions());
         }
 
         [Fact]

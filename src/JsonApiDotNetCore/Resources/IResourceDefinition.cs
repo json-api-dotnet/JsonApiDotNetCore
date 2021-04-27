@@ -160,7 +160,7 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Executes before replacing (overwriting) a to-one relationship.
         /// <para>
-        /// Implementing this method enables to perform validations and change <see cref="rightResourceId" />, before the relationship is updated.
+        /// Implementing this method enables to perform validations and change <paramref name="rightResourceId" />, before the relationship is updated.
         /// </para>
         /// </summary>
         /// <param name="leftResource">
@@ -269,8 +269,8 @@ namespace JsonApiDotNetCore.Resources
         /// <param name="resource">
         /// The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
         /// the changes from the incoming request. Exception: In case <paramref name="operationKind" /> is <see cref="OperationKind.DeleteResource" /> or
-        /// <see cref="OperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable.Id" /> property set, because for those
-        /// endpoints no resource is retrieved upfront.
+        /// <see cref="OperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable{T}.Id" /> property set, because for
+        /// those endpoints no resource is retrieved upfront.
         /// </param>
         /// <param name="operationKind">
         /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
@@ -300,5 +300,37 @@ namespace JsonApiDotNetCore.Resources
         /// Propagates notification that request handling should be canceled.
         /// </param>
         Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes after a resource has been deserialized from an incoming request body.
+        /// </summary>
+        /// <para>
+        /// Implementing this method enables to change the incoming resource before it enters an ASP.NET Controller Action method.
+        /// </para>
+        /// <para>
+        /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests, because
+        /// side effect detection considers any changes done from this method to be part of the incoming request body. So setting additional attributes from this
+        /// method (that were not sent by the client) are not considered side effects, resulting in incorrectly reporting that there were no side effects.
+        /// </para>
+        /// <param name="resource">
+        /// The deserialized resource.
+        /// </param>
+        void OnDeserialize(TResource resource);
+
+        /// <summary>
+        /// Executes before a (primary or included) resource is serialized into an outgoing response body.
+        /// </summary>
+        /// <para>
+        /// Implementing this method enables to change the returned resource, for example scrub sensitive data or transform returned attribute values.
+        /// </para>
+        /// <para>
+        /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests. What this
+        /// means is that if side effects were detected before, this is not re-evaluated after running this method, so it may incorrectly report side effects if
+        /// they were undone by this method.
+        /// </para>
+        /// <param name="resource">
+        /// The serialized resource.
+        /// </param>
+        void OnSerialize(TResource resource);
     }
 }

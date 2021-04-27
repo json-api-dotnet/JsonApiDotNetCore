@@ -493,24 +493,26 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync(IntResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, OperationKind operationKind,
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(IntResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnSetToManyRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAddToRelationshipAsync(int leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnSetToManyRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
+            public Task OnRemoveFromRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnAddToRelationshipAsync(int leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnRemoveFromRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -521,6 +523,16 @@ namespace UnitTests.Extensions
             }
 
             public Task OnWriteSucceededAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnDeserialize(IntResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnSerialize(IntResource resource)
             {
                 throw new NotImplementedException();
             }
@@ -569,24 +581,26 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync(GuidResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, OperationKind operationKind,
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(GuidResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnSetToManyRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAddToRelationshipAsync(Guid leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task OnSetToManyRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, OperationKind operationKind,
+            public Task OnRemoveFromRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnAddToRelationshipAsync(Guid leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Task OnRemoveFromRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -597,6 +611,16 @@ namespace UnitTests.Extensions
             }
 
             public Task OnWriteSucceededAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnDeserialize(GuidResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnSerialize(GuidResource resource)
             {
                 throw new NotImplementedException();
             }
