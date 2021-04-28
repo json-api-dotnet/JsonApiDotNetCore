@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
@@ -212,7 +213,7 @@ namespace JsonApiDotNetCore.Configuration
             {
                 Type implementationType = openGenericInterface.GetGenericArguments().Length == 1 ? intImplementation : implementation;
 
-                _services.AddScoped(openGenericInterface, implementationType);
+                _services.TryAddScoped(openGenericInterface, implementationType);
             }
         }
 
