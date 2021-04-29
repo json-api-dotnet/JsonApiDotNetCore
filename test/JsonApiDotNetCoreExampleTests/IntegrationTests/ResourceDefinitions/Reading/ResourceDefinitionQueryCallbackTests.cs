@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
 {
     public sealed class ResourceDefinitionQueryCallbackTests
         : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CallableDbContext>, CallableDbContext>>

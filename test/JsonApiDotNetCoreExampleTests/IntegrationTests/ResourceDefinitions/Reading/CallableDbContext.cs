@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class CallableDbContext : DbContext

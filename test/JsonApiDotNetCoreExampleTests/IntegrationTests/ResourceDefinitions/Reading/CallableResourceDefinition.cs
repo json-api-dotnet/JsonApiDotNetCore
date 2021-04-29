@@ -12,7 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CallableResourceDefinition : JsonApiResourceDefinition<CallableResource>

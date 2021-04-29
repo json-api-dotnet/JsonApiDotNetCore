@@ -1,9 +1,9 @@
-﻿using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
 {
     public sealed class CallableResourcesController : JsonApiController<CallableResource>
     {
