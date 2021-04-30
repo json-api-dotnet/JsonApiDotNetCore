@@ -7,7 +7,7 @@ using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelState
 {
     public sealed class NoModelStateValidationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext>>
     {

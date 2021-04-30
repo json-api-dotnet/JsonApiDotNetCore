@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelState
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SystemDirectory : Identifiable

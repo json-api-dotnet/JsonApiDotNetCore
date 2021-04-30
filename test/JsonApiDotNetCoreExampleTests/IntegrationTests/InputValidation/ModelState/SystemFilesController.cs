@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ModelStateValidation
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelState
 {
     public sealed class SystemFilesController : JsonApiController<SystemFile>
     {
