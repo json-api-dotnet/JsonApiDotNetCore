@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Serialization
 
             object instance = DeserializeBody(body);
 
-            if (instance is IIdentifiable resource)
+            if (instance is IIdentifiable resource && _request.Kind != EndpointKind.Relationship)
             {
                 _resourceDefinitionAccessor.OnDeserialize(resource);
             }

@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
-            if (resource != null)
+            if (resource != null && _fieldsToSerialize.ShouldSerialize)
             {
                 _resourceDefinitionAccessor.OnSerialize(resource);
             }
@@ -128,9 +128,12 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
-            foreach (IIdentifiable resource in resources)
+            if (_fieldsToSerialize.ShouldSerialize)
             {
-                _resourceDefinitionAccessor.OnSerialize(resource);
+                foreach (IIdentifiable resource in resources)
+                {
+                    _resourceDefinitionAccessor.OnSerialize(resource);
+                }
             }
 
             IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
