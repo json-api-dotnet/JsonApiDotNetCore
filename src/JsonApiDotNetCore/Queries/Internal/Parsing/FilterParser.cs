@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatText(operatorName);
             EatSingleCharacterToken(TokenKind.OpenParen);
 
-            var terms = new List<QueryExpression>();
+            var terms = new List<FilterExpression>();
 
             FilterExpression term = ParseFilter();
             terms.Add(term);
