@@ -125,7 +125,7 @@ If you want to use the new filter notation in that case, prefix the parameter va
 GET /articles?filter[caption]=tech&filter=expr:equals(caption,'cooking')) HTTP/1.1
 ```
 
-## Custom Filters
+# Custom Filters
 
 There are multiple ways you can add custom filters:
 
@@ -134,3 +134,62 @@ There are multiple ways you can add custom filters:
 3. Add an implementation of `IQueryConstraintProvider` to supply additional `FilterExpression`s, which are combined with existing filters using AND operator
 4. Override `EntityFrameworkCoreRepository.ApplyQueryLayer` to adapt the `IQueryable<T>` expression just before execution
 5. Take a deep dive and plug into reader/parser/tokenizer/visitor/builder for adding additional general-purpose filter operators
+
+# Filter syntax
+
+For reference, we provide the EBNF grammar for filter expressions below (in [ANTLR4](https://github.com/antlr/antlr4) style):
+
+```ebnf
+grammar Filter;
+
+filterExpression:
+    notExpression
+    | logicalExpression
+    | comparisonExpression
+    | matchTextExpression
+    | anyExpression
+    | hasExpression;
+
+notExpression:
+    'not' LPAREN filterExpression RPAREN;
+
+logicalExpression:
+    ( 'and' | 'or' ) LPAREN filterExpression ( COMMA filterExpression )* RPAREN;
+
+comparisonExpression:
+    ( 'equals' | 'greaterThan' | 'greaterOrEqual' | 'lessThan' | 'lessOrEqual' ) LPAREN (
+        countExpression | fieldChain
+    ) COMMA (
+        countExpression | literalConstant | 'null' | fieldChain
+    ) RPAREN;
+
+matchTextExpression:
+    ( 'contains' | 'startsWith' | 'endsWith' ) LPAREN fieldChain COMMA literalConstant RPAREN;
+
+anyExpression:
+    'any' LPAREN fieldChain COMMA literalConstant ( COMMA literalConstant )+ RPAREN;
+
+hasExpression:
+    'has' LPAREN fieldChain ( COMMA filterExpression )? RPAREN;
+
+countExpression:
+    'count' LPAREN fieldChain RPAREN;
+
+fieldChain:
+    FIELD ( '.' FIELD )*;
+
+literalConstant:
+    ESCAPED_TEXT;
+
+LPAREN: '(';
+RPAREN: ')';
+COMMA: ',';
+
+fragment OUTER_FIELD_CHARACTER: [A-Za-z0-9];
+fragment INNER_FIELD_CHARACTER: [A-Za-z0-9_-];
+FIELD: OUTER_FIELD_CHARACTER ( INNER_FIELD_CHARACTER* OUTER_FIELD_CHARACTER )?;
+
+ESCAPED_TEXT: '\'' ( ~['] | '\'\'' )* '\'' ;
+
+LINE_BREAKS: [\r\n]+ -> skip;
+```
