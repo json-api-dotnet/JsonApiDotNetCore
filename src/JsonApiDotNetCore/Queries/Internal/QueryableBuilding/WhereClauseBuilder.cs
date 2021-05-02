@@ -23,25 +23,33 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private readonly Expression _source;
         private readonly Type _extensionType;
+        private readonly LambdaParameterNameFactory _nameFactory;
 
-        public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType)
+        public WhereClauseBuilder(Expression source, LambdaScope lambdaScope, Type extensionType, LambdaParameterNameFactory nameFactory)
             : base(lambdaScope)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(extensionType, nameof(extensionType));
+            ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
 
             _source = source;
             _extensionType = extensionType;
+            _nameFactory = nameFactory;
         }
 
         public Expression ApplyWhere(FilterExpression filter)
         {
             ArgumentGuard.NotNull(filter, nameof(filter));
 
-            Expression body = Visit(filter, null);
-            LambdaExpression lambda = Expression.Lambda(body, LambdaScope.Parameter);
+            LambdaExpression lambda = GetPredicateLambda(filter);
 
             return WhereExtensionMethodCall(lambda);
+        }
+
+        private LambdaExpression GetPredicateLambda(FilterExpression filter)
+        {
+            Expression body = Visit(filter, null);
+            return Expression.Lambda(body, LambdaScope.Parameter);
         }
 
         private Expression WhereExtensionMethodCall(LambdaExpression predicate)
@@ -60,11 +68,28 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 throw new InvalidOperationException("Expression must be a collection.");
             }
 
-            return AnyExtensionMethodCall(elementType, property);
+            Expression predicate = null;
+
+            if (expression.Filter != null)
+            {
+                var hasManyThrough = expression.TargetCollection.Fields.Last() as HasManyThroughAttribute;
+                var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory, hasManyThrough);
+                using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(elementType);
+
+                var builder = new WhereClauseBuilder(property, lambdaScope, typeof(Enumerable), _nameFactory);
+                predicate = builder.GetPredicateLambda(expression.Filter);
+            }
+
+            return AnyExtensionMethodCall(elementType, property, predicate);
         }
 
-        private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source)
+        private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression predicate)
         {
+            if (predicate != null)
+            {
+                return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source, predicate);
+            }
+
             return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
         }
 
@@ -276,6 +301,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static string GetPropertyName(ResourceFieldAttribute field)
         {
+            // TODO: Is this still true when using has() with a filter?
+
             // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
             return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }

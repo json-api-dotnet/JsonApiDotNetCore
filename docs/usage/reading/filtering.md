@@ -74,6 +74,16 @@ Putting it all together, you can build quite complex filters, such as:
 GET /blogs?include=owner.articles.revisions&filter=and(or(equals(title,'Technology'),has(owner.articles)),not(equals(owner.lastName,null)))&filter[owner.articles]=equals(caption,'Two')&filter[owner.articles.revisions]=greaterThan(publishTime,'2005-05-05') HTTP/1.1
 ```
 
+_since v4.2_
+
+The `has` function takes an optional filter condition as second parameter, for example:
+
+```http
+GET /customers?filter=has(orders,not(equals(status,'Paid'))) HTTP/1.1
+```
+
+Which returns only customers that have at least one unpaid order.
+
 # Legacy filters
 
 The next section describes how filtering worked in versions prior to v4.0. They are always applied on the set of resources being requested (no nesting).
