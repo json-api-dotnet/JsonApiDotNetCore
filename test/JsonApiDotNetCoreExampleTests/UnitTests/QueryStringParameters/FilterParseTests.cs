@@ -113,6 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("filter", "equals(title,'Brian O''Quote')", null, "equals(title,'Brian O''Quote')")]
+        [InlineData("filter", "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')", null, "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')")]
         [InlineData("filter", "equals(title,'')", null, "equals(title,'')")]
         [InlineData("filter[posts]", "equals(caption,'this, that & more')", "posts", "equals(caption,'this, that & more')")]
         [InlineData("filter[owner.posts]", "equals(caption,'some')", "owner.posts", "equals(caption,'some')")]
