@@ -119,6 +119,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             return walker.HasFilterOnArchivedAt;
         }
 
+        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            if (operationKind == OperationKind.UpdateResource)
+            {
+                _storedArchivedAt = broadcast.ArchivedAt;
+            }
+
+            return base.OnPrepareWriteAsync(broadcast, operationKind, cancellationToken);
+        }
+
         public override async Task OnWritingAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
         {
             if (operationKind == OperationKind.CreateResource)
@@ -177,16 +187,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
                     Title = "Television broadcasts must first be archived before they can be deleted."
                 });
             }
-        }
-
-        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
-        {
-            if (operationKind == OperationKind.UpdateResource)
-            {
-                _storedArchivedAt = broadcast.ArchivedAt;
-            }
-
-            return base.OnPrepareWriteAsync(broadcast, operationKind, cancellationToken);
         }
 
         private sealed class FilterWalker : QueryExpressionRewriter<object>
