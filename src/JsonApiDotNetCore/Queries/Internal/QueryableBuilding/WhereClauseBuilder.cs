@@ -301,9 +301,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static string GetPropertyName(ResourceFieldAttribute field)
         {
-            // TODO: Is this still true when using has() with a filter?
-
-            // In case of a HasManyThrough access (from count() or has() function), we only need to look at the number of entries in the join table.
             return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
