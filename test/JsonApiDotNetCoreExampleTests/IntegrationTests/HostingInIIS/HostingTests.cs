@@ -60,9 +60,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
             responseDocument.ManyData[0].Relationships["paintings"].Links.Self.Should().Be(galleryLink + "/relationships/paintings");
             responseDocument.ManyData[0].Relationships["paintings"].Links.Related.Should().Be(galleryLink + "/paintings");
 
-            // TODO: The next link is wrong: it should use the custom route.
-            // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/956
-            string paintingLink = HostPrefix + $"/iis-application-virtual-directory/public-api/paintings/{gallery.Paintings.ElementAt(0).StringId}";
+            string paintingLink = HostPrefix +
+                $"/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(paintingLink);
@@ -84,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/iis-application-virtual-directory/custom/path/to/paintings?include=exposedAt";
+            const string route = "/iis-application-virtual-directory/custom/path/to/paintings-of-the-world?include=exposedAt";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -99,16 +98,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
-            string paintingLink = HostPrefix + $"/iis-application-virtual-directory/custom/path/to/paintings/{painting.StringId}";
+            string paintingLink = HostPrefix + $"/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{painting.StringId}";
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Links.Self.Should().Be(paintingLink);
             responseDocument.ManyData[0].Relationships["exposedAt"].Links.Self.Should().Be(paintingLink + "/relationships/exposedAt");
             responseDocument.ManyData[0].Relationships["exposedAt"].Links.Related.Should().Be(paintingLink + "/exposedAt");
 
-            // TODO: The next link is wrong: it should not use the custom route.
-            // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/956
-            string galleryLink = HostPrefix + $"/iis-application-virtual-directory/custom/path/to/artGalleries/{painting.ExposedAt.StringId}";
+            string galleryLink = HostPrefix + $"/iis-application-virtual-directory/public-api/artGalleries/{painting.ExposedAt.StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(galleryLink);

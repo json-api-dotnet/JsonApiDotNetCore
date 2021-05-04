@@ -1,3 +1,4 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -22,6 +23,7 @@ namespace JsonApiDotNetCore.Middleware
         /// Relative: /api/v1
         /// ]]></code>
         /// </example>
+        [Obsolete("This value is calculated for backwards compatibility, but it is no longer used and will be removed in a future version.")]
         string BasePath { get; }
 
         /// <summary>

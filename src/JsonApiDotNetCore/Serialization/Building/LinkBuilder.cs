@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Routing;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
@@ -22,83 +23,103 @@ namespace JsonApiDotNetCore.Serialization.Building
         private const string PageSizeParameterName = "page[size]";
         private const string PageNumberParameterName = "page[number]";
 
-        private readonly IResourceContextProvider _provider;
-        private readonly IRequestQueryStringAccessor _queryStringAccessor;
+        private static readonly string GetPrimaryControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetAsync));
+        private static readonly string GetSecondaryControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetSecondaryAsync));
+        private static readonly string GetRelationshipControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetRelationshipAsync));
+
         private readonly IJsonApiOptions _options;
         private readonly IJsonApiRequest _request;
         private readonly IPaginationContext _paginationContext;
+        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly LinkGenerator _linkGenerator;
+        private readonly IControllerResourceMapping _controllerResourceMapping;
 
-        public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IResourceContextProvider provider,
-            IRequestQueryStringAccessor queryStringAccessor)
+        public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext,
+            IResourceContextProvider resourceContextProvider, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator,
+            IControllerResourceMapping controllerResourceMapping)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
-            ArgumentGuard.NotNull(provider, nameof(provider));
-            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(linkGenerator, nameof(linkGenerator));
+            ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
 
             _options = options;
             _request = request;
             _paginationContext = paginationContext;
-            _provider = provider;
-            _queryStringAccessor = queryStringAccessor;
+            _resourceContextProvider = resourceContextProvider;
+            _httpContextAccessor = httpContextAccessor;
+            _linkGenerator = linkGenerator;
+            _controllerResourceMapping = controllerResourceMapping;
+        }
+
+        private static string WithoutAsyncSuffix(string actionName)
+        {
+            return actionName.EndsWith("Async", StringComparison.Ordinal) ? actionName[..^"Async".Length] : actionName;
         }
 
         /// <inheritdoc />
         public TopLevelLinks GetTopLevelLinks()
         {
-            ResourceContext resourceContext = _request.PrimaryResource;
+            var links = new TopLevelLinks();
 
-            TopLevelLinks topLevelLinks = null;
+            ResourceContext requestContext = _request.SecondaryResource ?? _request.PrimaryResource;
 
-            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Self))
+            if (ShouldIncludeTopLevelLink(LinkTypes.Self, requestContext))
             {
-                topLevelLinks = new TopLevelLinks
-                {
-                    Self = GetSelfTopLevelLink(resourceContext, null)
-                };
+                links.Self = GetLinkForTopLevelSelf();
             }
 
-            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Related) && _request.Kind == EndpointKind.Relationship)
+            if (_request.Kind == EndpointKind.Relationship && ShouldIncludeTopLevelLink(LinkTypes.Related, requestContext))
             {
-                topLevelLinks ??= new TopLevelLinks();
-                topLevelLinks.Related = GetRelatedRelationshipLink(_request.PrimaryResource.PublicName, _request.PrimaryId, _request.Relationship.PublicName);
+                links.Related = GetLinkForRelationshipRelated(_request.PrimaryId, _request.Relationship);
             }
 
-            if (ShouldAddTopLevelLink(resourceContext, LinkTypes.Paging) && _paginationContext.PageSize != null && _request.IsCollection)
+            if (_request.IsCollection && _paginationContext.PageSize != null && ShouldIncludeTopLevelLink(LinkTypes.Paging, requestContext))
             {
-                SetPageLinks(resourceContext, topLevelLinks ??= new TopLevelLinks());
+                SetPaginationInTopLevelLinks(requestContext, links);
             }
 
-            return topLevelLinks;
+            return links.HasValue() ? links : null;
         }
 
         /// <summary>
-        /// Checks if the top-level <paramref name="link" /> should be added by first checking configuration on the <see cref="ResourceContext" />, and if not
-        /// configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
+        /// Checks if the top-level <paramref name="linkType" /> should be added by first checking configuration on the <see cref="ResourceContext" />, and if
+        /// not configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
         /// </summary>
-        private bool ShouldAddTopLevelLink(ResourceContext resourceContext, LinkTypes link)
+        private bool ShouldIncludeTopLevelLink(LinkTypes linkType, ResourceContext resourceContext)
         {
             if (resourceContext.TopLevelLinks != LinkTypes.NotConfigured)
             {
-                return resourceContext.TopLevelLinks.HasFlag(link);
+                return resourceContext.TopLevelLinks.HasFlag(linkType);
             }
 
-            return _options.TopLevelLinks.HasFlag(link);
+            return _options.TopLevelLinks.HasFlag(linkType);
         }
 
-        private void SetPageLinks(ResourceContext resourceContext, TopLevelLinks links)
+        private string GetLinkForTopLevelSelf()
         {
-            links.First = GetPageLink(resourceContext, 1, _paginationContext.PageSize);
+            return _options.UseRelativeLinks
+                ? _httpContextAccessor.HttpContext.Request.GetEncodedPathAndQuery()
+                : _httpContextAccessor.HttpContext.Request.GetEncodedUrl();
+        }
+
+        private void SetPaginationInTopLevelLinks(ResourceContext requestContext, TopLevelLinks links)
+        {
+            string pageSizeValue = CalculatePageSizeValue(_paginationContext.PageSize, requestContext);
+
+            links.First = GetLinkForPagination(1, pageSizeValue);
 
             if (_paginationContext.TotalPageCount > 0)
             {
-                links.Last = GetPageLink(resourceContext, _paginationContext.TotalPageCount.Value, _paginationContext.PageSize);
+                links.Last = GetLinkForPagination(_paginationContext.TotalPageCount.Value, pageSizeValue);
             }
 
             if (_paginationContext.PageNumber.OneBasedValue > 1)
             {
-                links.Prev = GetPageLink(resourceContext, _paginationContext.PageNumber.OneBasedValue - 1, _paginationContext.PageSize);
+                links.Prev = GetLinkForPagination(_paginationContext.PageNumber.OneBasedValue - 1, pageSizeValue);
             }
 
             bool hasNextPage = _paginationContext.PageNumber.OneBasedValue < _paginationContext.TotalPageCount;
@@ -106,87 +127,21 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (hasNextPage || possiblyHasNextPage)
             {
-                links.Next = GetPageLink(resourceContext, _paginationContext.PageNumber.OneBasedValue + 1, _paginationContext.PageSize);
+                links.Next = GetLinkForPagination(_paginationContext.PageNumber.OneBasedValue + 1, pageSizeValue);
             }
         }
 
-        private string GetSelfTopLevelLink(ResourceContext resourceContext, Action<Dictionary<string, string>> queryStringUpdateAction)
+        private string CalculatePageSizeValue(PageSize topPageSize, ResourceContext requestContext)
         {
-            var builder = new StringBuilder();
-            builder.Append(_request.BasePath);
-            builder.Append('/');
-            builder.Append(resourceContext.PublicName);
+            string pageSizeParameterValue = _httpContextAccessor.HttpContext.Request.Query[PageSizeParameterName];
 
-            if (_request.PrimaryId != null)
-            {
-                builder.Append('/');
-                builder.Append(_request.PrimaryId);
-            }
-
-            if (_request.Kind == EndpointKind.Relationship)
-            {
-                builder.Append("/relationships");
-            }
-
-            if (_request.Relationship != null)
-            {
-                builder.Append('/');
-                builder.Append(_request.Relationship.PublicName);
-            }
-
-            string queryString = BuildQueryString(queryStringUpdateAction);
-            builder.Append(queryString);
-
-            return builder.ToString();
+            PageSize newTopPageSize = Equals(topPageSize, _options.DefaultPageSize) ? null : topPageSize;
+            return ChangeTopPageSize(pageSizeParameterValue, newTopPageSize, requestContext);
         }
 
-        private string BuildQueryString(Action<Dictionary<string, string>> updateAction)
+        private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize, ResourceContext requestContext)
         {
-            Dictionary<string, string> parameters = _queryStringAccessor.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
-            updateAction?.Invoke(parameters);
-            string queryString = QueryString.Create(parameters).Value;
-
-            return DecodeSpecialCharacters(queryString);
-        }
-
-        private static string DecodeSpecialCharacters(string uri)
-        {
-            return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'").Replace("%3A", ":");
-        }
-
-        private string GetPageLink(ResourceContext resourceContext, int pageOffset, PageSize pageSize)
-        {
-            return GetSelfTopLevelLink(resourceContext, parameters =>
-            {
-                string existingPageSizeParameterValue = parameters.ContainsKey(PageSizeParameterName) ? parameters[PageSizeParameterName] : null;
-
-                PageSize newTopPageSize = Equals(pageSize, _options.DefaultPageSize) ? null : pageSize;
-
-                string newPageSizeParameterValue = ChangeTopPageSize(existingPageSizeParameterValue, newTopPageSize);
-
-                if (newPageSizeParameterValue == null)
-                {
-                    parameters.Remove(PageSizeParameterName);
-                }
-                else
-                {
-                    parameters[PageSizeParameterName] = newPageSizeParameterValue;
-                }
-
-                if (pageOffset == 1)
-                {
-                    parameters.Remove(PageNumberParameterName);
-                }
-                else
-                {
-                    parameters[PageNumberParameterName] = pageOffset.ToString();
-                }
-            });
-        }
-
-        private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize)
-        {
-            IList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue);
+            IList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, requestContext);
             int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
 
             if (topPageSize != null)
@@ -216,19 +171,57 @@ namespace JsonApiDotNetCore.Serialization.Building
             return parameterValue == string.Empty ? null : parameterValue;
         }
 
-        private IList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue)
+        private IList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue, ResourceContext requestResource)
         {
             if (pageSizeParameterValue == null)
             {
                 return new List<PaginationElementQueryStringValueExpression>();
             }
 
-            ResourceContext requestResource = _request.SecondaryResource ?? _request.PrimaryResource;
-
-            var parser = new PaginationParser(_provider);
+            var parser = new PaginationParser(_resourceContextProvider);
             PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
             return paginationExpression.Elements.ToList();
+        }
+
+        private string GetLinkForPagination(int pageOffset, string pageSizeValue)
+        {
+            IDictionary<string, string> parameters =
+                _httpContextAccessor.HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
+
+            if (pageSizeValue == null)
+            {
+                parameters.Remove(PageSizeParameterName);
+            }
+            else
+            {
+                parameters[PageSizeParameterName] = pageSizeValue;
+            }
+
+            if (pageOffset == 1)
+            {
+                parameters.Remove(PageNumberParameterName);
+            }
+            else
+            {
+                parameters[PageNumberParameterName] = pageOffset.ToString();
+            }
+
+            string queryStringValue = QueryString.Create(parameters).Value;
+            queryStringValue = DecodeSpecialCharacters(queryStringValue);
+
+            var builder = new UriBuilder(_httpContextAccessor.HttpContext.Request.GetEncodedUrl())
+            {
+                Query = queryStringValue
+            };
+
+            UriComponents components = _options.UseRelativeLinks ? UriComponents.PathAndQuery : UriComponents.AbsoluteUri;
+            return builder.Uri.GetComponents(components, UriFormat.SafeUnescaped);
+        }
+
+        private static string DecodeSpecialCharacters(string uri)
+        {
+            return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'").Replace("%3A", ":");
         }
 
         /// <inheritdoc />
@@ -237,17 +230,37 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNullNorEmpty(resourceName, nameof(resourceName));
             ArgumentGuard.NotNullNorEmpty(id, nameof(id));
 
-            ResourceContext resourceContext = _provider.GetResourceContext(resourceName);
+            var links = new ResourceLinks();
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
 
-            if (ShouldAddResourceLink(resourceContext, LinkTypes.Self))
+            if (_request.Kind != EndpointKind.Relationship && ShouldIncludeResourceLink(LinkTypes.Self, resourceContext))
             {
-                return new ResourceLinks
-                {
-                    Self = GetSelfResourceLink(resourceName, id)
-                };
+                links.Self = GetLinkForResourceSelf(resourceContext, id);
             }
 
-            return null;
+            return links.HasValue() ? links : null;
+        }
+
+        /// <summary>
+        /// Checks if the resource object level <paramref name="linkType" /> should be added by first checking configuration on the
+        /// <see cref="ResourceContext" />, and if not configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
+        /// </summary>
+        private bool ShouldIncludeResourceLink(LinkTypes linkType, ResourceContext resourceContext)
+        {
+            if (resourceContext.ResourceLinks != LinkTypes.NotConfigured)
+            {
+                return resourceContext.ResourceLinks.HasFlag(linkType);
+            }
+
+            return _options.ResourceLinks.HasFlag(linkType);
+        }
+
+        private string GetLinkForResourceSelf(ResourceContext resourceContext, string resourceId)
+        {
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceContext.ResourceType);
+            IDictionary<string, object> routeValues = GetRouteValues(resourceId, null);
+
+            return RenderLinkForAction(controllerName, GetPrimaryControllerAction, routeValues);
         }
 
         /// <inheritdoc />
@@ -256,79 +269,76 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(parent, nameof(parent));
 
-            ResourceContext parentResourceContext = _provider.GetResourceContext(parent.GetType());
-            string childNavigation = relationship.PublicName;
-            RelationshipLinks links = null;
+            var links = new RelationshipLinks();
+            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(parent.GetType());
 
-            if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Related))
+            if (ShouldIncludeRelationshipLink(LinkTypes.Self, relationship, leftResourceContext))
             {
-                links = new RelationshipLinks
-                {
-                    Related = GetRelatedRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation)
-                };
+                links.Self = GetLinkForRelationshipSelf(parent.StringId, relationship);
             }
 
-            if (ShouldAddRelationshipLink(parentResourceContext, relationship, LinkTypes.Self))
+            if (ShouldIncludeRelationshipLink(LinkTypes.Related, relationship, leftResourceContext))
             {
-                links ??= new RelationshipLinks();
-                links.Self = GetSelfRelationshipLink(parentResourceContext.PublicName, parent.StringId, childNavigation);
+                links.Related = GetLinkForRelationshipRelated(parent.StringId, relationship);
             }
 
-            return links;
+            return links.HasValue() ? links : null;
         }
 
-        private string GetSelfRelationshipLink(string parent, string parentId, string navigation)
+        private string GetLinkForRelationshipSelf(string primaryId, RelationshipAttribute relationship)
         {
-            return $"{_request.BasePath}/{parent}/{parentId}/relationships/{navigation}";
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
+            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+
+            return RenderLinkForAction(controllerName, GetRelationshipControllerAction, routeValues);
         }
 
-        private string GetSelfResourceLink(string resource, string resourceId)
+        private string GetLinkForRelationshipRelated(string primaryId, RelationshipAttribute relationship)
         {
-            return $"{_request.BasePath}/{resource}/{resourceId}";
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
+            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+
+            return RenderLinkForAction(controllerName, GetSecondaryControllerAction, routeValues);
         }
 
-        private string GetRelatedRelationshipLink(string parent, string parentId, string navigation)
+        private IDictionary<string, object> GetRouteValues(string primaryId, string relationshipName)
         {
-            return $"{_request.BasePath}/{parent}/{parentId}/{navigation}";
+            // By default, we copy all route parameters from the *current* endpoint, which helps in case all endpoints have the same
+            // set of non-standard parameters. There is no way we can know which non-standard parameters a *different* endpoint needs,
+            // so users must override RenderLinkForAction to supply them, if applicable.
+            RouteValueDictionary routeValues = _httpContextAccessor.HttpContext.Request.RouteValues;
+
+            routeValues["id"] = primaryId;
+            routeValues["relationshipName"] = relationshipName;
+
+            return routeValues;
+        }
+
+        protected virtual string RenderLinkForAction(string controllerName, string actionName, IDictionary<string, object> routeValues)
+        {
+            return _options.UseRelativeLinks
+                ? _linkGenerator.GetPathByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues)
+                : _linkGenerator.GetUriByAction(_httpContextAccessor.HttpContext, actionName, controllerName, routeValues);
         }
 
         /// <summary>
-        /// Checks if the resource object level <paramref name="link" /> should be added by first checking configuration on the <see cref="ResourceContext" />,
-        /// and if not configured, by checking with the global configuration in <see cref="IJsonApiOptions" />.
+        /// Checks if the relationship object level <paramref name="linkType" /> should be added by first checking configuration on the
+        /// <paramref name="relationship" /> attribute, if not configured by checking <see cref="ResourceLinksAttribute.RelationshipLinks" /> on the resource
+        /// type that contains this relationship, and if not configured by checking with the global configuration in <see cref="IJsonApiOptions" />.
         /// </summary>
-        private bool ShouldAddResourceLink(ResourceContext resourceContext, LinkTypes link)
-        {
-            if (_request.Kind == EndpointKind.Relationship)
-            {
-                return false;
-            }
-
-            if (resourceContext.ResourceLinks != LinkTypes.NotConfigured)
-            {
-                return resourceContext.ResourceLinks.HasFlag(link);
-            }
-
-            return _options.ResourceLinks.HasFlag(link);
-        }
-
-        /// <summary>
-        /// Checks if the resource object level <paramref name="link" /> should be added by first checking configuration on the <paramref name="relationship" />
-        /// attribute, if not configured by checking the <see cref="ResourceContext" />, and if not configured by checking with the global configuration in
-        /// <see cref="IJsonApiOptions" />.
-        /// </summary>
-        private bool ShouldAddRelationshipLink(ResourceContext resourceContext, RelationshipAttribute relationship, LinkTypes link)
+        private bool ShouldIncludeRelationshipLink(LinkTypes linkType, RelationshipAttribute relationship, ResourceContext leftResourceContext)
         {
             if (relationship.Links != LinkTypes.NotConfigured)
             {
-                return relationship.Links.HasFlag(link);
+                return relationship.Links.HasFlag(linkType);
             }
 
-            if (resourceContext.RelationshipLinks != LinkTypes.NotConfigured)
+            if (leftResourceContext.RelationshipLinks != LinkTypes.NotConfigured)
             {
-                return resourceContext.RelationshipLinks.HasFlag(link);
+                return leftResourceContext.RelationshipLinks.HasFlag(linkType);
             }
 
-            return _options.RelationshipLinks.HasFlag(link);
+            return _options.RelationshipLinks.HasFlag(linkType);
         }
     }
 }

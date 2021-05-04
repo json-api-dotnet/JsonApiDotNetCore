@@ -8,8 +8,13 @@ namespace JsonApiDotNetCore.Middleware
     public interface IControllerResourceMapping
     {
         /// <summary>
-        /// Get the associated resource type for the provided controller type.
+        /// Gets the associated resource type for the provided controller type.
         /// </summary>
         Type GetResourceTypeForController(Type controllerType);
+
+        /// <summary>
+        /// Gets the associated controller name for the provided resource type.
+        /// </summary>
+        string GetControllerNameForResourceType(Type resourceType);
     }
 }

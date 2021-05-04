@@ -62,7 +62,7 @@ GET /orderLines HTTP/1.1
 It is possible to bypass the default routing convention for a controller.
 
 ```c#
-[Route("v1/custom/route/orderLines"), DisableRoutingConvention]
+[Route("v1/custom/route/lines-in-order"), DisableRoutingConvention]
 public class OrderLineController : JsonApiController<OrderLine>
 {
     public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
@@ -72,8 +72,6 @@ public class OrderLineController : JsonApiController<OrderLine>
     }
 }
 ```
-
-It is required to match your custom url with the exposed name of the associated resource.
 
 ## Advanced Usage: Custom Routing Convention
 

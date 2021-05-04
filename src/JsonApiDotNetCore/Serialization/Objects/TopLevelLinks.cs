@@ -63,5 +63,11 @@ namespace JsonApiDotNetCore.Serialization.Objects
         {
             return !string.IsNullOrEmpty(Next);
         }
+
+        internal bool HasValue()
+        {
+            return ShouldSerializeSelf() || ShouldSerializeRelated() || ShouldSerializeDescribedBy() || ShouldSerializeFirst() || ShouldSerializeLast() ||
+                ShouldSerializePrev() || ShouldSerializeNext();
+        }
     }
 }

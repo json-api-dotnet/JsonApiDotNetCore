@@ -15,5 +15,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// </summary>
         [JsonProperty("related", NullValueHandling = NullValueHandling.Ignore)]
         public string Related { get; set; }
+
+        internal bool HasValue()
+        {
+            return !string.IsNullOrEmpty(Self) || !string.IsNullOrEmpty(Related);
+        }
     }
 }

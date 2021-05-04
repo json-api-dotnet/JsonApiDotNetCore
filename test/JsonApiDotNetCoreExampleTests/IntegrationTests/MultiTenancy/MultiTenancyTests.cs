@@ -7,6 +7,8 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -15,8 +17,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 {
     public sealed class MultiTenancyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext>>
     {
-        private static readonly Guid ThisTenantId = Guid.NewGuid();
-        private static readonly Guid OtherTenantId = Guid.NewGuid();
+        private static readonly Guid ThisTenantId = RouteTenantProvider.TenantRegistry["nld"];
+        private static readonly Guid OtherTenantId = RouteTenantProvider.TenantRegistry["ita"];
 
         private readonly ExampleIntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> _testContext;
         private readonly MultiTenancyFakers _fakers = new MultiTenancyFakers();
@@ -30,7 +32,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {
-                services.AddSingleton<ITenantProvider>(new FakeTenantProvider(ThisTenantId));
+                services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+                services.AddScoped<ITenantProvider, RouteTenantProvider>();
             });
 
             testContext.ConfigureServicesAfterStartup(services =>
@@ -38,6 +41,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 services.AddResourceService<MultiTenantResourceService<WebShop>>();
                 services.AddResourceService<MultiTenantResourceService<WebProduct>>();
             });
+
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.UseRelativeLinks = true;
         }
 
         [Fact]
@@ -55,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/webShops";
+            const string route = "/nld/shops";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -85,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/webShops?filter=has(products)";
+            const string route = "/nld/shops?filter=has(products)";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -115,7 +121,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/webShops?include=products";
+            const string route = "/nld/shops?include=products";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -145,7 +151,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/webShops/" + shop.StringId;
+            string route = "/nld/shops/" + shop.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -175,7 +181,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/webShops/{shop.StringId}/products";
+            string route = $"/nld/shops/{shop.StringId}/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -205,7 +211,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/webProducts/{product.StringId}/shop";
+            string route = $"/nld/products/{product.StringId}/shop";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -235,7 +241,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/webShops/{shop.StringId}/relationships/products";
+            string route = $"/nld/shops/{shop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -265,7 +271,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/webProducts/{product.StringId}/relationships/shop";
+            string route = $"/nld/products/{product.StringId}/relationships/shop";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -299,7 +305,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            const string route = "/webShops";
+            const string route = "/nld/shops";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
@@ -315,7 +321,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WebShop shopInDatabase = await dbContext.WebShops.FirstWithIdAsync(newShopId);
+                WebShop shopInDatabase = await dbContext.WebShops.IgnoreQueryFilters().FirstWithIdAsync(newShopId);
 
                 shopInDatabase.Url.Should().Be(newShopUrl);
                 shopInDatabase.TenantId.Should().Be(ThisTenantId);
@@ -364,7 +370,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            const string route = "/webShops";
+            const string route = "/nld/shops";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -418,7 +424,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            const string route = "/webProducts";
+            const string route = "/nld/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -463,7 +469,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/webProducts/" + existingProduct.StringId;
+            string route = "/nld/products/" + existingProduct.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -475,7 +481,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WebProduct productInDatabase = await dbContext.WebProducts.FirstWithIdAsync(existingProduct.Id);
+                WebProduct productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdAsync(existingProduct.Id);
 
                 productInDatabase.Name.Should().Be(newProductName);
                 productInDatabase.Price.Should().Be(existingProduct.Price);
@@ -511,7 +517,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/webProducts/" + existingProduct.StringId;
+            string route = "/nld/products/" + existingProduct.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -567,7 +573,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/webShops/" + existingShop.StringId;
+            string route = "/nld/shops/" + existingShop.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -620,7 +626,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/webProducts/" + existingProduct.StringId;
+            string route = "/nld/products/" + existingProduct.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -655,7 +661,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 data = new object[0]
             };
 
-            string route = $"/webShops/{existingShop.StringId}/relationships/products";
+            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -700,7 +706,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = $"/webShops/{existingShop.StringId}/relationships/products";
+            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -735,7 +741,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 data = (object)null
             };
 
-            string route = $"/webProducts/{existingProduct.StringId}/relationships/shop";
+            string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -777,7 +783,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = $"/webProducts/{existingProduct.StringId}/relationships/shop";
+            string route = $"/nld/products/{existingProduct.StringId}/relationships/shop";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -822,7 +828,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = $"/webShops/{existingShop.StringId}/relationships/products";
+            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -866,7 +872,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = $"/webShops/{existingShop.StringId}/relationships/products";
+            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
@@ -908,7 +914,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = $"/webShops/{existingShop.StringId}/relationships/products";
+            string route = $"/nld/shops/{existingShop.StringId}/relationships/products";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
@@ -938,7 +944,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/webProducts/" + existingProduct.StringId;
+            string route = "/nld/products/" + existingProduct.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -950,7 +956,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WebProduct productInDatabase = await dbContext.WebProducts.FirstWithIdOrDefaultAsync(existingProduct.Id);
+                WebProduct productInDatabase = await dbContext.WebProducts.IgnoreQueryFilters().FirstWithIdOrDefaultAsync(existingProduct.Id);
 
                 productInDatabase.Should().BeNull();
             });
@@ -970,7 +976,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/webProducts/" + existingProduct.StringId;
+            string route = "/nld/products/" + existingProduct.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -984,6 +990,51 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
+        }
+
+        [Fact]
+        public async Task Renders_links_with_tenant_route_parameter()
+        {
+            // Arrange
+            WebShop shop = _fakers.WebShop.Generate();
+            shop.TenantId = ThisTenantId;
+            shop.Products = _fakers.WebProduct.Generate(1);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<WebShop>();
+                dbContext.WebShops.Add(shop);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/nld/shops?include=products";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Links.Self.Should().Be(route);
+            responseDocument.Links.Related.Should().BeNull();
+            responseDocument.Links.First.Should().Be(route);
+            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Prev.Should().BeNull();
+            responseDocument.Links.Next.Should().BeNull();
+
+            string shopLink = $"/nld/shops/{shop.StringId}";
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Links.Self.Should().Be(shopLink);
+            responseDocument.ManyData[0].Relationships["products"].Links.Self.Should().Be(shopLink + "/relationships/products");
+            responseDocument.ManyData[0].Relationships["products"].Links.Related.Should().Be(shopLink + "/products");
+
+            string productLink = $"/nld/products/{shop.Products[0].StringId}";
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Links.Self.Should().Be(productLink);
+            responseDocument.Included[0].Relationships["shop"].Links.Self.Should().Be(productLink + "/relationships/shop");
+            responseDocument.Included[0].Relationships["shop"].Links.Related.Should().Be(productLink + "/shop");
         }
     }
 }

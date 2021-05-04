@@ -25,6 +25,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             _testContext = testContext;
 
             testContext.UseController<OperationsController>();
+
+            // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
+            testContext.UseController<PlaylistsController>();
+            testContext.UseController<MusicTracksController>();
         }
 
         [Fact]

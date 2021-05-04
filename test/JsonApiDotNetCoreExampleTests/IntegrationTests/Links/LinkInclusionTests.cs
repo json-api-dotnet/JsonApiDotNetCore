@@ -18,6 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         {
             _testContext = testContext;
 
+            testContext.UseController<PhotosController>();
             testContext.UseController<PhotoLocationsController>();
         }
 
@@ -60,6 +61,36 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             responseDocument.Included[1].Links.Self.Should().NotBeNull();
             responseDocument.Included[1].Relationships["photos"].Links.Self.Should().NotBeNull();
             responseDocument.Included[1].Relationships["photos"].Links.Related.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task Get_secondary_resource_applies_links_visibility_from_ResourceLinksAttribute()
+        {
+            // Arrange
+            Photo photo = _fakers.Photo.Generate();
+            photo.Location = _fakers.PhotoLocation.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Photos.Add(photo);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/photos/{photo.StringId}/location";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Links.Should().BeNull();
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Links.Should().BeNull();
+            responseDocument.SingleData.Relationships["photo"].Links.Self.Should().BeNull();
+            responseDocument.SingleData.Relationships["photo"].Links.Related.Should().NotBeNull();
+            responseDocument.SingleData.Relationships.Should().NotContainKey("album");
         }
     }
 }
