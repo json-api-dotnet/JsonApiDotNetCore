@@ -173,7 +173,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 object rightResources = relationship.GetValue(resourceFromRequest);
 
-                object rightResourcesEdited = await EditRelationshipAsync(resourceForDatabase, relationship, rightResources, OperationKind.CreateResource,
+                object rightResourcesEdited = await VisitSetRelationshipAsync(resourceForDatabase, relationship, rightResources, OperationKind.CreateResource,
                     cancellationToken);
 
                 await UpdateRelationshipAsync(relationship, resourceForDatabase, rightResourcesEdited, collector, cancellationToken);
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Repositories
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceForDatabase, OperationKind.CreateResource, cancellationToken);
         }
 
-        private async Task<object> EditRelationshipAsync(TResource leftResource, RelationshipAttribute relationship, object rightResourceIds,
+        private async Task<object> VisitSetRelationshipAsync(TResource leftResource, RelationshipAttribute relationship, object rightResourceIds,
             OperationKind operationKind, CancellationToken cancellationToken)
         {
             if (relationship is HasOneAttribute hasOneRelationship)
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 object rightResources = relationship.GetValue(resourceFromRequest);
 
-                object rightResourcesEdited = await EditRelationshipAsync(resourceFromDatabase, relationship, rightResources, OperationKind.UpdateResource,
+                object rightResourcesEdited = await VisitSetRelationshipAsync(resourceFromDatabase, relationship, rightResources, OperationKind.UpdateResource,
                     cancellationToken);
 
                 AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightResourcesEdited);
@@ -392,7 +392,7 @@ namespace JsonApiDotNetCore.Repositories
             RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
             object secondaryResourceIdsEdited =
-                await EditRelationshipAsync(primaryResource, relationship, secondaryResourceIds, OperationKind.SetRelationship, cancellationToken);
+                await VisitSetRelationshipAsync(primaryResource, relationship, secondaryResourceIds, OperationKind.SetRelationship, cancellationToken);
 
             AssertIsNotClearingRequiredRelationship(relationship, primaryResource, secondaryResourceIdsEdited);
 

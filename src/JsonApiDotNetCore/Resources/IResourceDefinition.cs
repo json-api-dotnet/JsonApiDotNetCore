@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Resources
         Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes before replacing (overwriting) a to-one relationship.
+        /// Executes before setting (or clearing) the resource at the right side of a to-one relationship.
         /// <para>
         /// Implementing this method enables to perform validations and change <paramref name="rightResourceId" />, before the relationship is updated.
         /// </para>
@@ -167,10 +167,10 @@ namespace JsonApiDotNetCore.Resources
         /// The original resource retrieved from the underlying data store, that declares <paramref name="hasOneRelationship" />.
         /// </param>
         /// <param name="hasOneRelationship">
-        /// The to-one relationship being replaced or cleared.
+        /// The to-one relationship being set.
         /// </param>
         /// <param name="rightResourceId">
-        /// The replacement resource identifier (or <c>null</c> to clear the relationship), coming from the request.
+        /// The new resource identifier (or <c>null</c> to clear the relationship), coming from the request.
         /// </param>
         /// <param name="operationKind">
         /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
@@ -180,13 +180,13 @@ namespace JsonApiDotNetCore.Resources
         /// Propagates notification that request handling should be canceled.
         /// </param>
         /// <returns>
-        /// The replacement resource identifier, or <c>null</c> to clear the relationship.
+        /// The replacement resource identifier, or <c>null</c> to clear the relationship. Returns <paramref name="rightResourceId" /> by default.
         /// </returns>
         Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
             OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes before replacing (overwriting) a to-many relationship.
+        /// Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
         /// <para>
         /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
         /// </para>
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCore.Resources
         /// The original resource retrieved from the underlying data store, that declares <paramref name="hasManyRelationship" />.
         /// </param>
         /// <param name="hasManyRelationship">
-        /// The to-many relationship being replaced.
+        /// The to-many relationship being set.
         /// </param>
         /// <param name="rightResourceIds">
         /// The set of resource identifiers to replace any existing set with, coming from the request.
@@ -211,7 +211,7 @@ namespace JsonApiDotNetCore.Resources
             OperationKind operationKind, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes before adding resources to a to-many relationship, as part of a POST relationship request.
+        /// Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.
         /// <para>
         /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
         /// </para>
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Resources
             CancellationToken cancellationToken);
 
         /// <summary>
-        /// Executes before removing resources from a to-many relationship, as part of a DELETE relationship request.
+        /// Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.
         /// <para>
         /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
         /// </para>
