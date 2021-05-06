@@ -133,7 +133,13 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             foreach (EagerLoadAttribute eagerLoad in resourceContext.EagerLoads)
             {
                 var propertySelector = new PropertySelector(eagerLoad.Property);
-                propertySelectors[propertySelector.Property] = propertySelector;
+
+                // When an entity navigation property is decorated with both EagerLoadAttribute and RelationshipAttribute,
+                // it may already exist with a sub-layer. So do not overwrite in that case.
+                if (!propertySelectors.ContainsKey(propertySelector.Property))
+                {
+                    propertySelectors[propertySelector.Property] = propertySelector;
+                }
             }
 
             return propertySelectors.Values;
