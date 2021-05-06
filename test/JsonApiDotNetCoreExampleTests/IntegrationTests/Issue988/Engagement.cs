@@ -18,9 +18,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
         // Navigation Properties
 
         [HasMany]
-        public ICollection<DocumentType> DocumentTypes { get; set; } //= new List<DocumentType>();
-
-        [HasMany]
         [EagerLoad]
         public ICollection<EngagementParty> Parties { get; set; } //= new List<EngagementParty>();
 

@@ -24,7 +24,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
 
             testContext.UseController<EngagementsController>();
             testContext.UseController<EngagementPartiesController>();
-            testContext.UseController<DocumentTypesController>();
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
@@ -58,7 +57,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
             responseDocument.Included.Should().BeNull();
         }
 
-        [Fact(Skip = "Fails in EF Core with: Unable to find navigation 'FirstParties' specified in string based include path 'FirstParties'.")]
+        [Fact]
         public async Task Can_get_primary_resource_by_ID_with_includes()
         {
             // Arrange
@@ -183,7 +182,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
             responseDocument.Included.Should().BeNull();
         }
 
-        [Fact(Skip = "Fails in EF Core with: Unable to find navigation 'FirstParties' specified in string based include path 'FirstParties'.")]
+        [Fact]
         public async Task Can_get_unmapped_secondary_resources_by_ID()
         {
             // Arrange

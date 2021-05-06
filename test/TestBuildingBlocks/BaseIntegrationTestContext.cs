@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -74,6 +75,8 @@ namespace TestBuildingBlocks
                     options.UseNpgsql(dbConnectionString);
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
+
+                    options.ConfigureWarnings(builder => builder.Ignore(CoreEventId.InvalidIncludePathError));
                 });
             });
 
