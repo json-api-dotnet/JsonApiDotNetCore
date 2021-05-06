@@ -1,7 +1,6 @@
 # [Resources](resources/index.md)
 ## [Attributes](resources/attributes.md)
 ## [Relationships](resources/relationships.md)
-## [Resource Definitions](resources/resource-definitions.md)
 
 # Reading data
 ## [Filtering](reading/filtering.md)
@@ -24,6 +23,7 @@
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)
+## [Resource Definitions](extensibility/resource-definitions.md)
 ## [Controllers](extensibility/controllers.md)
 ## [Resource Services](extensibility/services.md)
 ## [Resource Repositories](extensibility/repositories.md)

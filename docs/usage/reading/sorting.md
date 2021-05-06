@@ -52,5 +52,5 @@ This sorts the list of blogs by their captions and included revisions by their p
 
 ## Default Sort
 
-See the topic on [Resource Definitions](~/usage/resources/resource-definitions.md)
+See the topic on [Resource Definitions](~/usage/extensibility/resource-definitions.md)
 for overriding the default sort behavior.

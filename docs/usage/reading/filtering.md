@@ -119,8 +119,8 @@ GET /articles?filter[caption]=tech&filter=expr:equals(caption,'cooking')) HTTP/1
 
 There are multiple ways you can add custom filters:
 
-1. Implementing `IResourceDefinition.OnApplyFilter` (see [here](~/usage/resources/resource-definitions.md#exclude-soft-deleted-resources)) and inject `IRequestQueryStringAccessor`, which works at all depths, but filter operations are constrained to what `FilterExpression` provides
-2. Implementing `IResourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters` as [described previously](~/usage/resources/resource-definitions.md#custom-query-string-parameters), which enables the full range of `IQueryable<T>` functionality, but only works on primary endpoints
+1. Implementing `IResourceDefinition.OnApplyFilter` (see [here](~/usage/extensibility/resource-definitions.md#exclude-soft-deleted-resources)) and inject `IRequestQueryStringAccessor`, which works at all depths, but filter operations are constrained to what `FilterExpression` provides
+2. Implementing `IResourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters` as described [here](~/usage/extensibility/resource-definitions.md#custom-query-string-parameters), which enables the full range of `IQueryable<T>` functionality, but only works on primary endpoints
 3. Add an implementation of `IQueryConstraintProvider` to supply additional `FilterExpression`s, which are combined with existing filters using AND operator
 4. Override `EntityFrameworkCoreRepository.ApplyQueryLayer` to adapt the `IQueryable<T>` expression just before execution
 5. Take a deep dive and plug into reader/parser/tokenizer/visitor/builder for adding additional general-purpose filter operators
