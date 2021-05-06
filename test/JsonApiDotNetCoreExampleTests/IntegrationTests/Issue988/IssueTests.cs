@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
             responseDocument.Included.Should().BeNull();
         }
 
-        [Fact(Skip = "Fails in EF Core with: Invalid include path: 'FirstParties' - couldn't find navigation for: 'FirstParties'")]
+        [Fact(Skip = "Fails in EF Core with: Unable to find navigation 'FirstParties' specified in string based include path 'FirstParties'.")]
         public async Task Can_get_primary_resource_by_ID_with_includes()
         {
             // Arrange
@@ -183,7 +183,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
             responseDocument.Included.Should().BeNull();
         }
 
-        [Fact(Skip = "Fails in EF Core with: Invalid include path: 'FirstParties' - couldn't find navigation for: 'FirstParties'")]
+        [Fact(Skip = "Fails in EF Core with: Unable to find navigation 'FirstParties' specified in string based include path 'FirstParties'.")]
         public async Task Can_get_unmapped_secondary_resources_by_ID()
         {
             // Arrange

@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Issue988
         }
 
         /// <inheritdoc />
-        public override SortExpression OnApplySort(SortExpression? existingSort)
+        public override SortExpression OnApplySort(SortExpression existingSort)
         {
             if (existingSort != null)
             {

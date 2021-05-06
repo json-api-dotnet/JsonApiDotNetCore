@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
+            error.Detail.Should().StartWith("The value of 'Shipment.Id' is unknown when attempting to save changes.");
         }
 
         [Fact]
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+            error.Detail.Should().StartWith("The property 'Shipment.Id' is part of a key and so cannot be modified or marked as modified.");
         }
 
         [Fact]
@@ -473,7 +473,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+            error.Detail.Should().StartWith("The property 'Shipment.Id' is part of a key and so cannot be modified or marked as modified.");
         }
     }
 }
