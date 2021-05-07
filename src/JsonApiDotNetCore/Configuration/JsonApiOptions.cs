@@ -23,6 +23,9 @@ namespace JsonApiDotNetCore.Configuration
         public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
 
         /// <inheritdoc />
+        public bool IncludeJsonApiVersion { get; set; }
+
+        /// <inheritdoc />
         public bool IncludeExceptionStackTraceInErrors { get; set; }
 
         /// <inheritdoc />

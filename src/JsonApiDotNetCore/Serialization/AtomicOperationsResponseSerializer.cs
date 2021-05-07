@@ -67,6 +67,18 @@ namespace JsonApiDotNetCore.Serialization
                 Meta = _metaBuilder.Build()
             };
 
+            if (_options.IncludeJsonApiVersion)
+            {
+                document.JsonApi = new JsonApiObject
+                {
+                    Version = "1.1",
+                    Ext = new List<string>
+                    {
+                        "https://jsonapi.org/ext/atomic"
+                    }
+                };
+            }
+
             return SerializeObject(document, _options.SerializerSettings);
         }
 

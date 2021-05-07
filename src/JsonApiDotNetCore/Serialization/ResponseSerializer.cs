@@ -149,6 +149,14 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void AddTopLevelObjects(Document document)
         {
+            if (_options.IncludeJsonApiVersion)
+            {
+                document.JsonApi = new JsonApiObject
+                {
+                    Version = "1.1"
+                };
+            }
+
             document.Links = _linkBuilder.GetTopLevelLinks();
             document.Meta = _metaBuilder.Build();
             document.Included = _includedBuilder.Build();
