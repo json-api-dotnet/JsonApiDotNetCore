@@ -1,33 +1,42 @@
 # Layer Overview
 
-By default, data retrieval is distributed across three layers:
+By default, data access flows through the next three layers:
 
 ```
 JsonApiController (required)
-
-+-- JsonApiResourceService : IResourceService
-
-     +-- EntityFrameworkCoreRepository : IResourceRepository
+  JsonApiResourceService : IResourceService
+     EntityFrameworkCoreRepository : IResourceRepository
 ```
 
-Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible, to keep the controllers free of unnecessary logic.
-You can use the following as a general rule of thumb for where to put business logic:
+Aside from these pluggable endpoint-oriented layers, we provide a resource-oriented extensibility point:
 
-- `Controller`: simple validation logic that should result in the return of specific HTTP status codes, such as model validation
-- `IResourceService`: advanced business logic and replacement of data access mechanisms
-- `IResourceRepository`: custom logic that builds on the Entity Framework Core APIs
+```
+JsonApiResourceDefinition : IResourceDefinition
+```
 
-## Replacing Services
+Resource definition callbacks are invoked from the built-in resource service/repository layers, as well as from the serializer.
+For example, `IResourceDefinition.OnSerialize` is invoked whenever a resource is sent back to the client, irrespective of the endpoint.
+Likewise, `IResourceDefinition.OnSetToOneRelationshipAsync` is called from a patch-resource-with-relationships endpoint, as well as from patch-relationship.
 
-**Note:** If you are using auto-discovery, resource services and repositories will be automatically registered for you.
+Customization can be done at any of these extensibility points. It is usually sufficient to place your business logic in a resource definition, but depending
+on your needs, you may want to replace other parts by deriving from the built-in classes and override virtual methods or call their protected base methods.
 
-Replacing services and repositories is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
+## Replacing injected services
+
+**Note:** If you are using auto-discovery, then resource services, repositories and resource definitions will be automatically registered for you.
+
+Replacing built-in services is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
+For convenience, extension methods are provided to register layers on all their implemented interfaces.
 
 ```c#
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped<ProductService, IResourceService<Product>();
-    services.AddScoped<ProductRepository, IResourceRepository<Product>>();
+    services.AddResourceService<ProductService>();
+    services.AddResourceRepository<ProductRepository>();
+    services.AddResourceDefinition<ProductDefinition>();
+
+    services.AddScoped<IResourceFactory, CustomResourceFactory>();
+    services.AddScoped<IJsonApiSerializerFactory, CustomResponseSerializerFactory>();
 }
 ```

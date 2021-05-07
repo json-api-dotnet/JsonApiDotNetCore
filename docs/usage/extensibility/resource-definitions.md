@@ -1,11 +1,19 @@
 # Resource Definitions
 
-In order to improve the developer experience, we have introduced a type that makes
-common modifications to the default API behavior easier. Resource definitions were first introduced in v2.3.4.
+_since v2.3.4_
 
-Resource definitions are resolved from the dependency injection container, so you can inject dependencies in their constructor.
+Resource definitions provide a resource-oriented way to handle custom business logic (irrespective of the originating endpoint).
 
-## Customizing query clauses
+They are resolved from the dependency injection container, so you can inject dependencies in their constructor.
+
+**Note:** Prior to the introduction of auto-discovery (in v3), you needed to register the
+`ResourceDefinition` on the container yourself:
+
+```c#
+services.AddScoped<ResourceDefinition<Product>, ProductResource>();
+```
+
+## Customizing queries
 
 _since v4.0_
 
@@ -21,7 +29,7 @@ from Entity Framework Core `IQueryable` execution.
 There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.
 
-Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]`.
+Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]` on a resource class property.
 
 ```c#
 public class UserDefinition : JsonApiResourceDefinition<User>
@@ -78,7 +86,7 @@ Content-Type: application/vnd.api+json
 }
 ```
 
-## Default sort order
+### Default sort order
 
 You can define the default sort order if no `sort` query string parameter is provided.
 
@@ -106,7 +114,7 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 }
 ```
 
-## Enforce page size
+### Enforce page size
 
 You may want to enforce pagination on large database tables.
 
@@ -137,9 +145,9 @@ public class AccessLogDefinition : JsonApiResourceDefinition<AccessLog>
 }
 ```
 
-## Exclude soft-deleted resources
+### Change filters
 
-Soft-deletion sets `IsSoftDeleted` to `true` instead of actually deleting the record, so you may want to always filter them out.
+The next example filters out `Account` resources that are suspended.
 
 ```c#
 public class AccountDefinition : JsonApiResourceDefinition<Account>
@@ -153,23 +161,25 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
     {
         var resourceContext = ResourceGraph.GetResourceContext<Account>();
 
-        var isSoftDeletedAttribute =
+        var isSuspendedAttribute =
             resourceContext.Attributes.Single(account =>
-                account.Property.Name == nameof(Account.IsSoftDeleted));
+                account.Property.Name == nameof(Account.IsSuspended));
 
-        var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
-            new ResourceFieldChainExpression(isSoftDeletedAttribute),
+        var isNotSuspended = new ComparisonExpression(ComparisonOperator.Equals,
+            new ResourceFieldChainExpression(isSuspendedAttribute),
             new LiteralConstantExpression(bool.FalseString));
 
         return existingFilter == null
-            ? (FilterExpression) isNotSoftDeleted
+            ? (FilterExpression) isNotSuspended
             : new LogicalExpression(LogicalOperator.And,
-                new[] { isNotSoftDeleted, existingFilter });
+                new[] { isNotSuspended, existingFilter });
     }
 }
 ```
 
-## Block including related resources
+### Block including related resources
+
+In the example below, an error is returned when a user tries to include the manager of an employee.
 
 ```c#
 public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
@@ -196,14 +206,14 @@ public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
 }
 ```
 
-## Custom query string parameters
+### Custom query string parameters
 
 _since v3_
 
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
-Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of EF Core functionality. 
+Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of EF Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#
@@ -236,13 +246,4 @@ public class ItemDefinition : JsonApiResourceDefinition<Item>
             : source.Where(item => item.RiskLevel < 5);
     }
 }
-```
-
-## Using Resource Definitions prior to v3
-
-Prior to the introduction of auto-discovery, you needed to register the
-`ResourceDefinition` on the container yourself:
-
-```c#
-services.AddScoped<ResourceDefinition<Item>, ItemResource>();
 ```

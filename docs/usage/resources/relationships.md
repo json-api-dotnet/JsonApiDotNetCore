@@ -29,7 +29,7 @@ public class Person : Identifiable
 
 ## HasManyThrough
 
-Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
+Earlier versions of Entity Framework Core (up to v5) [did not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
 For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`.
 JsonApiDotNetCore will expose this relationship to the client the same way as any other `HasMany` attribute.
 However, under the covers it will use the join type and Entity Framework Core's APIs to get and set the relationship.
