@@ -32,12 +32,11 @@
         ],
         "resource": [
             {
-                "files": [ "images/**" ]
+                "files": [ "diagrams/*.svg" ]
             }
         ],
         "overwrite": [
             {
-                "files": [ "apidoc/**.md" ],
                 "exclude": [ "obj/**", "_site/**" ]
             }
         ],

@@ -247,3 +247,70 @@ public class ItemDefinition : JsonApiResourceDefinition<Item>
     }
 }
 ```
+
+## Handling resource changes
+
+_since v4.2_
+
+Without going into too much details, the diagrams below demonstrate a few scenarios where custom code interacts with write operations.
+Click on a diagram to open it full-size in a new window.
+
+### Create resource
+
+<a href="~/diagrams/resource-definition-create-resource.svg" target="_blank">
+<img src="~/diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
+</a>
+
+1. User sends request to create a resource
+2. An empty resource instance is created
+3. Developer sets default values for attribute 1 and 2
+4. Attribute 1 and 3 from incoming request are copied into default instance
+5. Developer overwrites attribute 3
+6. Row is inserted in database
+7. Developer sends notification to service bus
+8. The new resource is fetched
+9. Resource is sent back to the user
+
+### Update Resource
+
+<a href="~/diagrams/resource-definition-update-resource.svg" target="_blank">
+<img src="~/diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
+</a>
+
+1. User sends request to update resource with ID 1
+2. Existing resource is fetched from database
+3. Developer changes attribute 1 and 2
+4. Attribute 1 and 3 from incoming request are copied into fetched instance
+5. Developer overwrites attribute 3
+6. Row is updated in database
+7. Developer sends notification to service bus
+8. The resource is fetched, along with requested includes
+9. Resource with includes is sent back to the user
+
+### Delete Resource
+
+<a href="~/diagrams/resource-definition-delete-resource.svg" target="_blank">
+<img src="~/diagrams/resource-definition-delete-resource.svg" style="border: 1px solid #000">
+</a>
+
+1. User sends request to delete resource with ID 1
+2. Developer runs custom validation logic
+3. Row is deleted from database
+4. Developer sends notification to service bus
+5. Success status is sent back to user
+
+### Set Relationship
+
+<a href="~/diagrams/resource-definition-set-relationship.svg" target="_blank">
+<img src="~/diagrams/resource-definition-set-relationship.svg" style="border: 1px solid #000">
+</a>
+
+1. User sends request to assign two resources (green) to relationship 'name' (black) on resource 1 (yellow)
+2. Existing resource (blue) with related resources (red) is fetched from database
+3. Developer changes attributes (not shown in diagram for brevity)
+4. Developer removes one resource from the to-be-assigned set (green)
+5. Existing resources in relationship (red) are replaced with resource from previous step (green)
+6. Developer overwrites attributes (not shown in diagram for brevity)
+7. Resource and relationship are updated in database
+8. Developer sends notification to service bus
+9. Success status is sent back to user

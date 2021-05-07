@@ -102,14 +102,20 @@ IResourceService
     +-- ICreateService
     |   POST /
     |
-    +-- IDeleteService
-    |   DELETE /{id}
-    |
     +-- IUpdateService
     |   PATCH /{id}
     |
-    +-- IUpdateRelationshipService
-        PATCH /{id}/relationships/{relationship}
+    +-- IDeleteService
+    |   DELETE /{id}
+    |
+    +-- IAddToRelationshipService
+    |   POST /{id}/relationships/{relationship}
+    |
+    +-- ISetRelationshipService
+    |   PATCH /{id}/relationships/{relationship}
+    |
+    +-- IRemoveFromRelationshipService
+        DELETE /{id}/relationships/{relationship}
 ```
 
 In order to take advantage of these interfaces you first need to register the service for each implemented interface.

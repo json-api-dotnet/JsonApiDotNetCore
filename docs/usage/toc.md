@@ -28,4 +28,4 @@
 ## [Resource Services](extensibility/services.md)
 ## [Resource Repositories](extensibility/repositories.md)
 ## [Middleware](extensibility/middleware.md)
-## [Custom Query Formats](extensibility/custom-query-formats.md)
+## [Query Strings](extensibility/query-strings.md)

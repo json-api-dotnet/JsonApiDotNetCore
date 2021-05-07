@@ -29,7 +29,7 @@ you can override the virtual property.
 public class Person : Identifiable
 {
     [Key]
-    [Column("person_id")]
+    [Column("PersonID")]
     public override int Id { get; set; }
 }
 ```
