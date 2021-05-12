@@ -164,7 +164,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasOneRelationship" />.
+        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
+        /// <paramref name="hasOneRelationship" />.
         /// </param>
         /// <param name="hasOneRelationship">
         /// The to-one relationship being set.
@@ -192,7 +193,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasManyRelationship" />.
+        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
+        /// <paramref name="hasManyRelationship" />.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being set.
@@ -238,7 +240,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store, that declares <paramref name="hasManyRelationship" />.
+        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
+        /// <paramref name="hasManyRelationship" />.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being removed from.
