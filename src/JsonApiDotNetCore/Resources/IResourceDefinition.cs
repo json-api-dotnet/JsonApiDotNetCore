@@ -140,7 +140,8 @@ namespace JsonApiDotNetCore.Resources
         /// copied into it.
         /// </para>
         /// <para>
-        /// For POST resource requests, this method is typically used to assign property default values or to side-load-and-attach required relationships.
+        /// For POST resource requests, this method is typically used to assign property default values or to set required relationships by side-loading the
+        /// related resources and linking them.
         /// </para>
         /// </summary>
         /// <param name="resource">
