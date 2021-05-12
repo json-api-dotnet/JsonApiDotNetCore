@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.Configuration
 
         internal void DiscoverResources()
         {
-            foreach (ResourceDescriptor resourceDescriptor in _assemblyCache.GetResourceDescriptorsPerAssembly().SelectMany(tuple => tuple.resourceDescriptors))
+            foreach (ResourceDescriptor resourceDescriptor in _assemblyCache.GetResourceDescriptors())
             {
                 AddResource(resourceDescriptor);
             }
@@ -117,10 +117,13 @@ namespace JsonApiDotNetCore.Configuration
 
         internal void DiscoverInjectables()
         {
-            foreach ((Assembly assembly, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors) in _assemblyCache.GetResourceDescriptorsPerAssembly())
+            IReadOnlyCollection<ResourceDescriptor> descriptors = _assemblyCache.GetResourceDescriptors();
+            IReadOnlyCollection<Assembly> assemblies = _assemblyCache.GetAssemblies();
+
+            foreach (Assembly assembly in assemblies)
             {
                 AddDbContextResolvers(assembly);
-                AddInjectables(resourceDescriptors, assembly);
+                AddInjectables(descriptors, assembly);
             }
         }
 

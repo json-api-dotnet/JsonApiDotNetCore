@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Xunit;
@@ -20,12 +20,11 @@ namespace UnitTests.Graph
             assemblyCache.RegisterAssembly(resourceType.Assembly);
 
             // Act
-            IEnumerable<(Assembly assembly, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors)> results =
-                assemblyCache.GetResourceDescriptorsPerAssembly();
+            IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            Assert.Contains(results,
-                result => result.resourceDescriptors != null && result.resourceDescriptors.Any(descriptor => descriptor.ResourceType == resourceType));
+            descriptors.Should().NotBeEmpty();
+            descriptors.Should().ContainSingle(descriptor => descriptor.ResourceType == resourceType);
         }
 
         [Fact]
@@ -38,14 +37,11 @@ namespace UnitTests.Graph
             assemblyCache.RegisterAssembly(resourceType.Assembly);
 
             // Act
-            IEnumerable<(Assembly assembly, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors)> results =
-                assemblyCache.GetResourceDescriptorsPerAssembly();
+            IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            foreach (ResourceDescriptor resourceDescriptor in results.SelectMany(result => result.resourceDescriptors))
-            {
-                Assert.True(typeof(IIdentifiable).IsAssignableFrom(resourceDescriptor.ResourceType));
-            }
+            descriptors.Should().NotBeEmpty();
+            descriptors.Select(descriptor => descriptor.ResourceType).Should().AllBeAssignableTo<IIdentifiable>();
         }
     }
 }
