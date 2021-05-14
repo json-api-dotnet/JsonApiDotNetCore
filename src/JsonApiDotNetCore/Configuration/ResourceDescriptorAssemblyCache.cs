@@ -23,11 +23,18 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        public IEnumerable<(Assembly assembly, IReadOnlyCollection<ResourceDescriptor> resourceDescriptors)> GetResourceDescriptorsPerAssembly()
+        public IReadOnlyCollection<ResourceDescriptor> GetResourceDescriptors()
         {
             EnsureAssembliesScanned();
 
-            return _resourceDescriptorsPerAssembly.Select(pair => (pair.Key, pair.Value)).ToArray();
+            return _resourceDescriptorsPerAssembly.SelectMany(pair => pair.Value).ToArray();
+        }
+
+        public IReadOnlyCollection<Assembly> GetAssemblies()
+        {
+            EnsureAssembliesScanned();
+
+            return _resourceDescriptorsPerAssembly.Keys;
         }
 
         private void EnsureAssembliesScanned()
