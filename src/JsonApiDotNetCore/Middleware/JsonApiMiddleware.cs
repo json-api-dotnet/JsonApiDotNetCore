@@ -45,6 +45,11 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
 
+            if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerSettings))
+            {
+                return;
+            }
+
             RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
             ResourceContext primaryResourceContext = CreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceContextProvider);
 
@@ -74,6 +79,21 @@ namespace JsonApiDotNetCore.Middleware
             }
 
             await _next(httpContext);
+        }
+
+        private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        {
+            if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+            {
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.PreconditionFailed)
+                {
+                    Title = "Detection of mid-air edit collisions using ETags is not supported."
+                });
+
+                return false;
+            }
+
+            return true;
         }
 
         private static ResourceContext CreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,

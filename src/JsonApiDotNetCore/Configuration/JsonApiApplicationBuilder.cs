@@ -285,6 +285,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped(typeof(AtomicOperationsResponseSerializer));
             _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
+            _services.AddSingleton<IETagGenerator, ETagGenerator>();
         }
 
         private void AddOperationsLayer()
