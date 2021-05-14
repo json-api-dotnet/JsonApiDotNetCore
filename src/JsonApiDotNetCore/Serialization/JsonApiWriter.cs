@@ -47,8 +47,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(context, nameof(context));
 
+            HttpRequest request = context.HttpContext.Request;
             HttpResponse response = context.HttpContext.Response;
-            response.ContentType = _serializer.ContentType;
 
             await using TextWriter writer = context.WriterFactory(response.Body, Encoding.UTF8);
             string responseContent;
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Serialization
                 response.StatusCode = (int)errorDocument.GetErrorStatusCode();
             }
 
-            bool hasMatchingETag = SetETagResponseHeader(context.HttpContext.Request, response, responseContent);
+            bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
 
             if (hasMatchingETag)
             {
@@ -75,15 +75,19 @@ namespace JsonApiDotNetCore.Serialization
                 responseContent = string.Empty;
             }
 
-            if (context.HttpContext.Request.Method == HttpMethod.Head.Method)
+            if (request.Method == HttpMethod.Head.Method)
             {
                 responseContent = string.Empty;
             }
 
-            string url = context.HttpContext.Request.GetEncodedUrl();
+            string url = request.GetEncodedUrl();
 
-            _traceWriter.LogMessage(() =>
-                $"Sending {response.StatusCode} response for {context.HttpContext.Request.Method} request at '{url}' with body: <<{responseContent}>>");
+            if (!string.IsNullOrEmpty(responseContent))
+            {
+                response.ContentType = _serializer.ContentType;
+            }
+
+            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for {request.Method} request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
