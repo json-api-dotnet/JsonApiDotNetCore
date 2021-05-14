@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             loggerFactory.Logger.Messages.Should().NotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
-                message.Text.StartsWith("Sending 200 response for request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
+                message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
         }
 
         [Fact]

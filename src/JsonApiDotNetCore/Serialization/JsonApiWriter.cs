@@ -63,8 +63,15 @@ namespace JsonApiDotNetCore.Serialization
                 response.StatusCode = (int)errorDocument.GetErrorStatusCode();
             }
 
+            if (context.HttpContext.Request.Method == HttpMethod.Head.Method)
+            {
+                responseContent = string.Empty;
+            }
+
             string url = context.HttpContext.Request.GetEncodedUrl();
-            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
+
+            _traceWriter.LogMessage(() =>
+                $"Sending {response.StatusCode} response for {context.HttpContext.Request.Method} request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
@@ -96,6 +103,11 @@ namespace JsonApiDotNetCore.Serialization
             return _serializer.Serialize(contextObjectWrapped);
         }
 
+        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
+        {
+            return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
+        }
+
         private static object WrapErrors(object contextObject)
         {
             if (contextObject is IEnumerable<Error> errors)
@@ -109,11 +121,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             return contextObject;
-        }
-
-        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
-        {
-            return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
         }
     }
 }

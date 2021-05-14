@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -16,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
@@ -46,7 +46,6 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
 
             RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-
             ResourceContext primaryResourceContext = CreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceContextProvider);
 
             if (primaryResourceContext != null)
@@ -130,7 +129,7 @@ namespace JsonApiDotNetCore.Middleware
 
             foreach (string acceptHeader in acceptHeaders)
             {
-                if (MediaTypeWithQualityHeaderValue.TryParse(acceptHeader, out MediaTypeWithQualityHeaderValue headerValue))
+                if (MediaTypeHeaderValue.TryParse(acceptHeader, out MediaTypeHeaderValue headerValue))
                 {
                     headerValue.Quality = null;
 
@@ -189,7 +188,7 @@ namespace JsonApiDotNetCore.Middleware
         private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext, RouteValueDictionary routeValues,
             IJsonApiOptions options, IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
         {
-            request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method;
+            request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
             request.Kind = EndpointKind.Primary;
             request.PrimaryResource = primaryResourceContext;
             request.PrimaryId = GetPrimaryRequestId(routeValues);

@@ -14,6 +14,12 @@ namespace TestBuildingBlocks
     {
         private static readonly IntegrationTestConfiguration IntegrationTestConfiguration = new IntegrationTestConfiguration();
 
+        public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
+            Action<HttpRequestHeaders> setRequestHeaders = null)
+        {
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Head, requestUrl, null, null, setRequestHeaders);
+        }
+
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
             Action<HttpRequestHeaders> setRequestHeaders = null)
         {

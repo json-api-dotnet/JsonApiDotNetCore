@@ -18,6 +18,12 @@ namespace UnitTests.Middleware
     public sealed class JsonApiRequestTests
     {
         [Theory]
+        [InlineData("HEAD", "/articles", true, EndpointKind.Primary, true)]
+        [InlineData("HEAD", "/articles/1", false, EndpointKind.Primary, true)]
+        [InlineData("HEAD", "/articles/1/author", false, EndpointKind.Secondary, true)]
+        [InlineData("HEAD", "/articles/1/tags", true, EndpointKind.Secondary, true)]
+        [InlineData("HEAD", "/articles/1/relationships/author", false, EndpointKind.Relationship, true)]
+        [InlineData("HEAD", "/articles/1/relationships/tags", true, EndpointKind.Relationship, true)]
         [InlineData("GET", "/articles", true, EndpointKind.Primary, true)]
         [InlineData("GET", "/articles/1", false, EndpointKind.Primary, true)]
         [InlineData("GET", "/articles/1/author", false, EndpointKind.Secondary, true)]
