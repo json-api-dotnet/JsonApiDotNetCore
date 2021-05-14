@@ -350,6 +350,59 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
         }
 
         [Fact]
+        public async Task Get_ToMany_relationship_excludes_archived()
+        {
+            // Arrange
+            TelevisionStation station = _fakers.TelevisionStation.Generate();
+            station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+            station.Broadcasts.ElementAt(1).ArchivedAt = null;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Stations.Add(station);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/televisionStations/{station.StringId}/relationships/broadcasts";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+        }
+
+        [Fact]
+        public async Task Get_ToMany_relationship_with_filter_includes_archived()
+        {
+            // Arrange
+            TelevisionStation station = _fakers.TelevisionStation.Generate();
+            station.Broadcasts = _fakers.TelevisionBroadcast.Generate(2).ToHashSet();
+            station.Broadcasts.ElementAt(1).ArchivedAt = null;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Stations.Add(station);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/televisionStations/{station.StringId}/relationships/broadcasts?filter=or(equals(archivedAt,null),not(equals(archivedAt,null)))";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
+            responseDocument.ManyData[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+        }
+
+        [Fact]
         public async Task Can_create_unarchived_resource()
         {
             // Arrange
