@@ -490,6 +490,53 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
+        public async Task Can_filter_on_has_with_nested_condition()
+        {
+            // Arrange
+            var resources = new List<FilterableResource>
+            {
+                new FilterableResource
+                {
+                    Children = new List<FilterableResource>
+                    {
+                        new FilterableResource
+                        {
+                            SomeBoolean = false
+                        }
+                    }
+                },
+                new FilterableResource
+                {
+                    Children = new List<FilterableResource>
+                    {
+                        new FilterableResource
+                        {
+                            SomeBoolean = true
+                        }
+                    }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<FilterableResource>();
+                dbContext.FilterableResources.AddRange(resources);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/filterableResources?filter=has(children,equals(someBoolean,'true'))";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(resources[1].StringId);
+        }
+
+        [Fact]
         public async Task Can_filter_on_count()
         {
             // Arrange

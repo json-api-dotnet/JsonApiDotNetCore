@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
-            var builder = new WhereClauseBuilder(source, lambdaScope, _extensionType);
+            var builder = new WhereClauseBuilder(source, lambdaScope, _extensionType, _nameFactory);
             return builder.ApplyWhere(filter);
         }
 

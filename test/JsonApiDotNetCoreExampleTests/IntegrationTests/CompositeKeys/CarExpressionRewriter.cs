@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         private QueryExpression RewriteFilterOnCarStringIds(ResourceFieldChainExpression existingCarIdChain, IEnumerable<string> carStringIds)
         {
-            var outerTerms = new List<QueryExpression>();
+            var outerTerms = new List<FilterExpression>();
 
             foreach (string carStringId in carStringIds)
             {
@@ -92,14 +92,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                     StringId = carStringId
                 };
 
-                QueryExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate);
+                FilterExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate);
                 outerTerms.Add(keyComparison);
             }
 
             return outerTerms.Count == 1 ? outerTerms[0] : new LogicalExpression(LogicalOperator.Or, outerTerms);
         }
 
-        private QueryExpression CreateEqualityComparisonOnCompositeKey(ResourceFieldChainExpression existingCarIdChain, long regionIdValue,
+        private FilterExpression CreateEqualityComparisonOnCompositeKey(ResourceFieldChainExpression existingCarIdChain, long regionIdValue,
             string licensePlateValue)
         {
             ResourceFieldChainExpression regionIdChain = ReplaceLastAttributeInChain(existingCarIdChain, _regionIdAttribute);

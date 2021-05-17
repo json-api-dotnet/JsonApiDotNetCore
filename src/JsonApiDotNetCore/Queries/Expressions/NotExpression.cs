@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class NotExpression : FilterExpression
     {
-        public QueryExpression Child { get; }
+        public FilterExpression Child { get; }
 
-        public NotExpression(QueryExpression child)
+        public NotExpression(FilterExpression child)
         {
             ArgumentGuard.NotNull(child, nameof(child));
 

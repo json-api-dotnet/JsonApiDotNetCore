@@ -78,6 +78,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter", "equals(null", "Field 'null' does not exist on resource 'blogs'.")]
         [InlineData("filter", "equals(title,(", "Count function, value between quotes, null or field name expected.")]
         [InlineData("filter", "equals(has(posts),'true')", "Field 'has' does not exist on resource 'blogs'.")]
+        [InlineData("filter", "has(posts,", "Filter function expected.")]
         [InlineData("filter", "contains)", "( expected.")]
         [InlineData("filter", "contains(title,'a','b')", ") expected.")]
         [InlineData("filter", "contains(title,null)", "Value between quotes expected.")]
@@ -112,6 +113,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
 
         [Theory]
         [InlineData("filter", "equals(title,'Brian O''Quote')", null, "equals(title,'Brian O''Quote')")]
+        [InlineData("filter", "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')", null, "equals(title,'!@#$%^&*()-_=+\"''[]{}<>()/|\\:;.,`~')")]
         [InlineData("filter", "equals(title,'')", null, "equals(title,'')")]
         [InlineData("filter[posts]", "equals(caption,'this, that & more')", "posts", "equals(caption,'this, that & more')")]
         [InlineData("filter[owner.posts]", "equals(caption,'some')", "owner.posts", "equals(caption,'some')")]
@@ -125,14 +127,15 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter[posts.comments]", "greaterThan(createdAt,'2000-01-01')", "posts.comments", "greaterThan(createdAt,'2000-01-01')")]
         [InlineData("filter[posts.comments]", "greaterOrEqual(createdAt,'2000-01-01')", "posts.comments", "greaterOrEqual(createdAt,'2000-01-01')")]
         [InlineData("filter", "has(posts)", null, "has(posts)")]
+        [InlineData("filter", "has(posts,not(equals(url,null)))", null, "has(posts,not(equals(url,null)))")]
         [InlineData("filter", "contains(title,'this')", null, "contains(title,'this')")]
         [InlineData("filter", "startsWith(title,'this')", null, "startsWith(title,'this')")]
         [InlineData("filter", "endsWith(title,'this')", null, "endsWith(title,'this')")]
         [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'this','that','there')")]
         [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null,
             "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
-        [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))", "posts",
-            "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments)))")]
+        [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",
+            "posts", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string scopeExpected, string valueExpected)
         {
             // Act

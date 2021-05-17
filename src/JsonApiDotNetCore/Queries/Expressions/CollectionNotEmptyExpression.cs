@@ -1,21 +1,25 @@
+using System;
+using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
 
 namespace JsonApiDotNetCore.Queries.Expressions
 {
     /// <summary>
-    /// Represents the "has" filter function, resulting from text such as: has(articles)
+    /// Represents the "has" filter function, resulting from text such as: has(articles) or has(articles,equals(isHidden,'false'))
     /// </summary>
     [PublicAPI]
     public class CollectionNotEmptyExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetCollection { get; }
+        public FilterExpression Filter { get; }
 
-        public CollectionNotEmptyExpression(ResourceFieldChainExpression targetCollection)
+        public CollectionNotEmptyExpression(ResourceFieldChainExpression targetCollection, FilterExpression filter)
         {
             ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
 
             TargetCollection = targetCollection;
+            Filter = filter;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -25,7 +29,20 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override string ToString()
         {
-            return $"{Keywords.Has}({TargetCollection})";
+            var builder = new StringBuilder();
+            builder.Append(Keywords.Has);
+            builder.Append('(');
+            builder.Append(TargetCollection);
+
+            if (Filter != null)
+            {
+                builder.Append(',');
+                builder.Append(Filter);
+            }
+
+            builder.Append(')');
+
+            return builder.ToString();
         }
 
         public override bool Equals(object obj)
@@ -42,12 +59,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (CollectionNotEmptyExpression)obj;
 
-            return TargetCollection.Equals(other.TargetCollection);
+            return TargetCollection.Equals(other.TargetCollection) && Equals(Filter, other.Filter);
         }
 
         public override int GetHashCode()
         {
-            return TargetCollection.GetHashCode();
+            return HashCode.Combine(TargetCollection, Filter);
         }
     }
 }

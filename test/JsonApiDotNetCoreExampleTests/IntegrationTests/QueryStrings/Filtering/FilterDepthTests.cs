@@ -203,6 +203,35 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
+        public async Task Can_filter_on_HasMany_relationship_with_nested_condition()
+        {
+            // Arrange
+            List<Blog> blogs = _fakers.Blog.Generate(2);
+            blogs[0].Posts = _fakers.BlogPost.Generate(1);
+            blogs[1].Posts = _fakers.BlogPost.Generate(1);
+            blogs[1].Posts[0].Comments = _fakers.Comment.Generate(1).ToHashSet();
+            blogs[1].Posts[0].Comments.ElementAt(0).Text = "ABC";
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Blog>();
+                dbContext.Blogs.AddRange(blogs);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/blogs?filter=has(posts,has(comments,startsWith(text,'A')))";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
+        }
+
+        [Fact]
         public async Task Can_filter_on_HasManyThrough_relationship()
         {
             // Arrange
@@ -233,6 +262,44 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
+        }
+
+        [Fact]
+        public async Task Can_filter_on_HasManyThrough_relationship_with_nested_condition()
+        {
+            // Arrange
+            List<Blog> blogs = _fakers.Blog.Generate(2);
+            blogs[0].Posts = _fakers.BlogPost.Generate(1);
+            blogs[1].Posts = _fakers.BlogPost.Generate(1);
+
+            blogs[1].Posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
+            {
+                new BlogPostLabel
+                {
+                    Label = new Label
+                    {
+                        Color = LabelColor.Green
+                    }
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Blog>();
+                dbContext.Blogs.AddRange(blogs);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/blogs?filter=has(posts,has(labels,equals(color,'Green')))";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
         }
 
         [Fact]

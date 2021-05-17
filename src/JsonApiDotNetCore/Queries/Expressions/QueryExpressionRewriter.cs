@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<QueryExpression> newTerms = VisitSequence(expression.Terms, argument);
+                IReadOnlyCollection<FilterExpression> newTerms = VisitSequence(expression.Terms, argument);
 
                 if (newTerms.Count == 1)
                 {
@@ -75,9 +75,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                QueryExpression newChild = Visit(expression.Child, argument);
-
-                if (newChild != null)
+                if (Visit(expression.Child, argument) is FilterExpression newChild)
                 {
                     var newExpression = new NotExpression(newChild);
                     return newExpression.Equals(expression) ? expression : newExpression;
@@ -93,7 +91,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
             {
                 if (Visit(expression.TargetCollection, argument) is ResourceFieldChainExpression newTargetCollection)
                 {
-                    var newExpression = new CollectionNotEmptyExpression(newTargetCollection);
+                    FilterExpression newFilter = expression.Filter != null ? Visit(expression.Filter, argument) as FilterExpression : null;
+
+                    var newExpression = new CollectionNotEmptyExpression(newTargetCollection, newFilter);
                     return newExpression.Equals(expression) ? expression : newExpression;
                 }
             }

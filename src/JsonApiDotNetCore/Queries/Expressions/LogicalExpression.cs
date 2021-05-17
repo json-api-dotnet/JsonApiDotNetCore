@@ -14,9 +14,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class LogicalExpression : FilterExpression
     {
         public LogicalOperator Operator { get; }
-        public IReadOnlyCollection<QueryExpression> Terms { get; }
+        public IReadOnlyCollection<FilterExpression> Terms { get; }
 
-        public LogicalExpression(LogicalOperator @operator, IReadOnlyCollection<QueryExpression> terms)
+        public LogicalExpression(LogicalOperator @operator, IReadOnlyCollection<FilterExpression> terms)
         {
             ArgumentGuard.NotNull(terms, nameof(terms));
 

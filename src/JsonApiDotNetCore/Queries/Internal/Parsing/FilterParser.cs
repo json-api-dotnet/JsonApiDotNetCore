@@ -14,6 +14,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class FilterParser : QueryExpressionParser
     {
+        private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IResourceFactory _resourceFactory;
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;
@@ -22,8 +23,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
             : base(resourceContextProvider)
         {
+            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
+            _resourceContextProvider = resourceContextProvider;
             _resourceFactory = resourceFactory;
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
@@ -103,7 +106,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatText(operatorName);
             EatSingleCharacterToken(TokenKind.OpenParen);
 
-            var terms = new List<QueryExpression>();
+            var terms = new List<FilterExpression>();
 
             FilterExpression term = ParseFilter();
             terms.Add(term);
@@ -234,10 +237,31 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatSingleCharacterToken(TokenKind.OpenParen);
 
             ResourceFieldChainExpression targetCollection = ParseFieldChain(FieldChainRequirements.EndsInToMany, null);
+            FilterExpression filter = null;
+
+            if (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
+            {
+                EatSingleCharacterToken(TokenKind.Comma);
+
+                filter = ParseFilterInHas((HasManyAttribute)targetCollection.Fields.Last());
+            }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
-            return new CollectionNotEmptyExpression(targetCollection);
+            return new CollectionNotEmptyExpression(targetCollection, filter);
+        }
+
+        private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)
+        {
+            ResourceContext outerScopeBackup = _resourceContextInScope;
+
+            Type innerResourceType = hasManyRelationship.RightType;
+            _resourceContextInScope = _resourceContextProvider.GetResourceContext(innerResourceType);
+
+            FilterExpression filter = ParseFilter();
+
+            _resourceContextInScope = outerScopeBackup;
+            return filter;
         }
 
         protected QueryExpression ParseCountOrField(FieldChainRequirements chainRequirements)
