@@ -40,6 +40,44 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         }
 
         [Fact]
+        public async Task Returns_no_body_for_successful_HEAD_request()
+        {
+            // Arrange
+            Meeting meeting = _fakers.Meeting.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Meetings.Add(meeting);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = "/meetings/" + meeting.StringId;
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task Returns_no_body_for_failed_HEAD_request()
+        {
+            // Arrange
+            const string route = "/meetings/99999999";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            responseDocument.Should().BeEmpty();
+        }
+
+        [Fact]
         public async Task Can_get_primary_resources_with_include()
         {
             // Arrange

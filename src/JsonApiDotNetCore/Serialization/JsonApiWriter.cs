@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -26,16 +27,19 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiSerializer _serializer;
         private readonly IExceptionHandler _exceptionHandler;
+        private readonly IETagGenerator _eTagGenerator;
         private readonly TraceLogWriter<JsonApiWriter> _traceWriter;
 
-        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, ILoggerFactory loggerFactory)
+        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, IETagGenerator eTagGenerator, ILoggerFactory loggerFactory)
         {
             ArgumentGuard.NotNull(serializer, nameof(serializer));
             ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
+            ArgumentGuard.NotNull(eTagGenerator, nameof(eTagGenerator));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
             _serializer = serializer;
             _exceptionHandler = exceptionHandler;
+            _eTagGenerator = eTagGenerator;
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 
@@ -43,8 +47,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(context, nameof(context));
 
+            HttpRequest request = context.HttpContext.Request;
             HttpResponse response = context.HttpContext.Response;
-            response.ContentType = _serializer.ContentType;
 
             await using TextWriter writer = context.WriterFactory(response.Body, Encoding.UTF8);
             string responseContent;
@@ -63,8 +67,27 @@ namespace JsonApiDotNetCore.Serialization
                 response.StatusCode = (int)errorDocument.GetErrorStatusCode();
             }
 
-            string url = context.HttpContext.Request.GetEncodedUrl();
-            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for request at '{url}' with body: <<{responseContent}>>");
+            bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
+
+            if (hasMatchingETag)
+            {
+                response.StatusCode = (int)HttpStatusCode.NotModified;
+                responseContent = string.Empty;
+            }
+
+            if (request.Method == HttpMethod.Head.Method)
+            {
+                responseContent = string.Empty;
+            }
+
+            string url = request.GetEncodedUrl();
+
+            if (!string.IsNullOrEmpty(responseContent))
+            {
+                response.ContentType = _serializer.ContentType;
+            }
+
+            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for {request.Method} request at '{url}' with body: <<{responseContent}>>");
 
             await writer.WriteAsync(responseContent);
             await writer.FlushAsync();
@@ -96,6 +119,11 @@ namespace JsonApiDotNetCore.Serialization
             return _serializer.Serialize(contextObjectWrapped);
         }
 
+        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
+        {
+            return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
+        }
+
         private static object WrapErrors(object contextObject)
         {
             if (contextObject is IEnumerable<Error> errors)
@@ -111,9 +139,41 @@ namespace JsonApiDotNetCore.Serialization
             return contextObject;
         }
 
-        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
+        private bool SetETagResponseHeader(HttpRequest request, HttpResponse response, string responseContent)
         {
-            return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
+            bool isReadOnly = request.Method == HttpMethod.Get.Method || request.Method == HttpMethod.Head.Method;
+
+            if (isReadOnly && response.StatusCode == (int)HttpStatusCode.OK)
+            {
+                string url = request.GetEncodedUrl();
+                EntityTagHeaderValue responseETag = _eTagGenerator.Generate(url, responseContent);
+
+                if (responseETag != null)
+                {
+                    response.Headers.Add(HeaderNames.ETag, responseETag.ToString());
+
+                    return RequestContainsMatchingETag(request.Headers, responseETag);
+                }
+            }
+
+            return false;
+        }
+
+        private static bool RequestContainsMatchingETag(IHeaderDictionary requestHeaders, EntityTagHeaderValue responseETag)
+        {
+            if (requestHeaders.Keys.Contains(HeaderNames.IfNoneMatch) &&
+                EntityTagHeaderValue.TryParseList(requestHeaders[HeaderNames.IfNoneMatch], out IList<EntityTagHeaderValue> requestETags))
+            {
+                foreach (EntityTagHeaderValue requestETag in requestETags)
+                {
+                    if (responseETag.Equals(requestETag))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

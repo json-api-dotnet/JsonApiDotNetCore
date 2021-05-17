@@ -21,6 +21,7 @@
 # [Routing](routing.md)
 # [Errors](errors.md)
 # [Metadata](meta.md)
+# [Caching](caching.md)
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)

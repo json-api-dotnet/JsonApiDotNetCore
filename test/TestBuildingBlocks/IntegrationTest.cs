@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -15,39 +14,44 @@ namespace TestBuildingBlocks
     {
         private static readonly IntegrationTestConfiguration IntegrationTestConfiguration = new IntegrationTestConfiguration();
 
-        public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
-            IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+        public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
+            Action<HttpRequestHeaders> setRequestHeaders = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, acceptHeaders);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Head, requestUrl, null, null, setRequestHeaders);
+        }
+
+        public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
+            Action<HttpRequestHeaders> setRequestHeaders = null)
+        {
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.MediaType, IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, acceptHeaders);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAtomicAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType,
-            IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+            object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, acceptHeaders);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePatchAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.MediaType, IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, acceptHeaders);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteDeleteAsync<TResponseDocument>(string requestUrl,
-            object requestBody = null, string contentType = HeaderConstants.MediaType, IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders = null)
+            object requestBody = null, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
         {
-            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, acceptHeaders);
+            return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         private async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteRequestAsync<TResponseDocument>(HttpMethod method,
-            string requestUrl, object requestBody, string contentType, IEnumerable<MediaTypeWithQualityHeaderValue> acceptHeaders)
+            string requestUrl, object requestBody, string contentType, Action<HttpRequestHeaders> setRequestHeaders)
         {
             using var request = new HttpRequestMessage(method, requestUrl);
             string requestText = SerializeRequest(requestBody);
@@ -63,13 +67,7 @@ namespace TestBuildingBlocks
                 }
             }
 
-            if (acceptHeaders != null)
-            {
-                foreach (MediaTypeWithQualityHeaderValue acceptHeader in acceptHeaders)
-                {
-                    request.Headers.Accept.Add(acceptHeader);
-                }
-            }
+            setRequestHeaders?.Invoke(request.Headers);
 
             using HttpClient client = CreateClient();
             HttpResponseMessage responseMessage = await client.SendAsync(request);

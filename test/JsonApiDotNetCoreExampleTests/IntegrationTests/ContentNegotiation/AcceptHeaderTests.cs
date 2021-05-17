@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -30,10 +31,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
-
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -65,10 +64,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            var acceptHeaders = new MediaTypeWithQualityHeaderValue[0];
-
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -80,14 +77,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html"),
-                MediaTypeWithQualityHeaderValue.Parse("*/*")
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("*/*"));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -99,14 +96,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html;q=0.8"),
-                MediaTypeWithQualityHeaderValue.Parse("application/*;q=0.2")
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html;q=0.8"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/*;q=0.2"));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -118,17 +115,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; q=0.3")
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; q=0.3"));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -160,17 +157,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + ";ext=\"https://jsonapi.org/ext/atomic\"; q=0.2")
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + ";ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -182,17 +179,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             // Arrange
             const string route = "/policies";
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse("text/html"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"),
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType)
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route, acceptHeaders);
+            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
@@ -231,14 +228,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
             const string route = "/operations";
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
-            MediaTypeWithQualityHeaderValue[] acceptHeaders =
+            Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
-                MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType)
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
             };
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, acceptHeaders);
+                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
