@@ -17733,6 +17733,25 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.FieldsToSerialize.ResetCache
   nameWithType: FieldsToSerialize.ResetCache
+- uid: JsonApiDotNetCore.Serialization.IETagGenerator
+  name: IETagGenerator
+  href: api/JsonApiDotNetCore.Serialization.IETagGenerator.html
+  commentId: T:JsonApiDotNetCore.Serialization.IETagGenerator
+  fullName: JsonApiDotNetCore.Serialization.IETagGenerator
+  nameWithType: IETagGenerator
+- uid: JsonApiDotNetCore.Serialization.IETagGenerator.Generate(System.String,System.String)
+  name: Generate(String, String)
+  href: api/JsonApiDotNetCore.Serialization.IETagGenerator.html#JsonApiDotNetCore_Serialization_IETagGenerator_Generate_System_String_System_String_
+  commentId: M:JsonApiDotNetCore.Serialization.IETagGenerator.Generate(System.String,System.String)
+  fullName: JsonApiDotNetCore.Serialization.IETagGenerator.Generate(System.String, System.String)
+  nameWithType: IETagGenerator.Generate(String, String)
+- uid: JsonApiDotNetCore.Serialization.IETagGenerator.Generate*
+  name: Generate
+  href: api/JsonApiDotNetCore.Serialization.IETagGenerator.html#JsonApiDotNetCore_Serialization_IETagGenerator_Generate_
+  commentId: Overload:JsonApiDotNetCore.Serialization.IETagGenerator.Generate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.IETagGenerator.Generate
+  nameWithType: IETagGenerator.Generate
 - uid: JsonApiDotNetCore.Serialization.IFieldsToSerialize
   name: IFieldsToSerialize
   href: api/JsonApiDotNetCore.Serialization.IFieldsToSerialize.html
@@ -18004,12 +18023,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.JsonApiWriter
   fullName: JsonApiDotNetCore.Serialization.JsonApiWriter
   nameWithType: JsonApiWriter
-- uid: JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,JsonApiDotNetCore.Middleware.IExceptionHandler,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: JsonApiWriter(IJsonApiSerializer, IExceptionHandler, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Serialization.JsonApiWriter.html#JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_JsonApiDotNetCore_Middleware_IExceptionHandler_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,JsonApiDotNetCore.Middleware.IExceptionHandler,Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName: JsonApiDotNetCore.Serialization.JsonApiWriter.JsonApiWriter(JsonApiDotNetCore.Serialization.IJsonApiSerializer, JsonApiDotNetCore.Middleware.IExceptionHandler, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: JsonApiWriter.JsonApiWriter(IJsonApiSerializer, IExceptionHandler, ILoggerFactory)
+- uid: JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.IETagGenerator,Microsoft.Extensions.Logging.ILoggerFactory)
+  name: JsonApiWriter(IJsonApiSerializer, IExceptionHandler, IETagGenerator, ILoggerFactory)
+  href: api/JsonApiDotNetCore.Serialization.JsonApiWriter.html#JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_JsonApiDotNetCore_Middleware_IExceptionHandler_JsonApiDotNetCore_Serialization_IETagGenerator_Microsoft_Extensions_Logging_ILoggerFactory_
+  commentId: M:JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.IETagGenerator,Microsoft.Extensions.Logging.ILoggerFactory)
+  fullName: JsonApiDotNetCore.Serialization.JsonApiWriter.JsonApiWriter(JsonApiDotNetCore.Serialization.IJsonApiSerializer, JsonApiDotNetCore.Middleware.IExceptionHandler, JsonApiDotNetCore.Serialization.IETagGenerator, Microsoft.Extensions.Logging.ILoggerFactory)
+  nameWithType: JsonApiWriter.JsonApiWriter(IJsonApiSerializer, IExceptionHandler, IETagGenerator, ILoggerFactory)
 - uid: JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor*
   name: JsonApiWriter
   href: api/JsonApiDotNetCore.Serialization.JsonApiWriter.html#JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_
