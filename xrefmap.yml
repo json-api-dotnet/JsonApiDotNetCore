@@ -6613,12 +6613,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression
   nameWithType: CollectionNotEmptyExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  name: CollectionNotEmptyExpression(ResourceFieldChainExpression)
-  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.CollectionNotEmptyExpression(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression)
-  nameWithType: CollectionNotEmptyExpression.CollectionNotEmptyExpression(ResourceFieldChainExpression)
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: CollectionNotEmptyExpression(ResourceFieldChainExpression, FilterExpression)
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression__ctor_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression,JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.CollectionNotEmptyExpression(JsonApiDotNetCore.Queries.Expressions.ResourceFieldChainExpression, JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: CollectionNotEmptyExpression.CollectionNotEmptyExpression(ResourceFieldChainExpression, FilterExpression)
 - uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.#ctor*
   name: CollectionNotEmptyExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression__ctor_
@@ -6655,6 +6655,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Equals
   nameWithType: CollectionNotEmptyExpression.Equals
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter
+  name: Filter
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_Filter
+  commentId: P:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter
+  nameWithType: CollectionNotEmptyExpression.Filter
+- uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter*
+  name: Filter
+  href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_Filter_
+  commentId: Overload:JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.Filter
+  nameWithType: CollectionNotEmptyExpression.Filter
 - uid: JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.GetHashCode
   name: GetHashCode()
   href: api/JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression.html#JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_GetHashCode
@@ -7349,15 +7362,15 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.LogicalExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression
   nameWithType: LogicalExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression})
-  name: LogicalExpression(LogicalOperator, IReadOnlyCollection<QueryExpression>)
-  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_QueryExpression__
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.QueryExpression})
-  name.vb: LogicalExpression(LogicalOperator, IReadOnlyCollection(Of QueryExpression))
-  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.LogicalExpression(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.QueryExpression>)
-  fullName.vb: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.LogicalExpression(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.QueryExpression))
-  nameWithType: LogicalExpression.LogicalExpression(LogicalOperator, IReadOnlyCollection<QueryExpression>)
-  nameWithType.vb: LogicalExpression.LogicalExpression(LogicalOperator, IReadOnlyCollection(Of QueryExpression))
+- uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.FilterExpression})
+  name: LogicalExpression(LogicalOperator, IReadOnlyCollection<FilterExpression>)
+  href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression__ctor_JsonApiDotNetCore_Queries_Expressions_LogicalOperator_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_FilterExpression__
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.LogicalOperator,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.FilterExpression})
+  name.vb: LogicalExpression(LogicalOperator, IReadOnlyCollection(Of FilterExpression))
+  fullName: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.LogicalExpression(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Queries.Expressions.FilterExpression>)
+  fullName.vb: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.LogicalExpression(JsonApiDotNetCore.Queries.Expressions.LogicalOperator, System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Queries.Expressions.FilterExpression))
+  nameWithType: LogicalExpression.LogicalExpression(LogicalOperator, IReadOnlyCollection<FilterExpression>)
+  nameWithType.vb: LogicalExpression.LogicalExpression(LogicalOperator, IReadOnlyCollection(Of FilterExpression))
 - uid: JsonApiDotNetCore.Queries.Expressions.LogicalExpression.#ctor*
   name: LogicalExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.LogicalExpression.html#JsonApiDotNetCore_Queries_Expressions_LogicalExpression__ctor_
@@ -7583,12 +7596,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Expressions.NotExpression
   fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression
   nameWithType: NotExpression
-- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression)
-  name: NotExpression(QueryExpression)
-  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression__ctor_JsonApiDotNetCore_Queries_Expressions_QueryExpression_
-  commentId: M:JsonApiDotNetCore.Queries.Expressions.NotExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.QueryExpression)
-  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.NotExpression(JsonApiDotNetCore.Queries.Expressions.QueryExpression)
-  nameWithType: NotExpression.NotExpression(QueryExpression)
+- uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  name: NotExpression(FilterExpression)
+  href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression__ctor_JsonApiDotNetCore_Queries_Expressions_FilterExpression_
+  commentId: M:JsonApiDotNetCore.Queries.Expressions.NotExpression.#ctor(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  fullName: JsonApiDotNetCore.Queries.Expressions.NotExpression.NotExpression(JsonApiDotNetCore.Queries.Expressions.FilterExpression)
+  nameWithType: NotExpression.NotExpression(FilterExpression)
 - uid: JsonApiDotNetCore.Queries.Expressions.NotExpression.#ctor*
   name: NotExpression
   href: api/JsonApiDotNetCore.Queries.Expressions.NotExpression.html#JsonApiDotNetCore_Queries_Expressions_NotExpression__ctor_
@@ -11238,12 +11251,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder
   nameWithType: WhereClauseBuilder
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,System.Type)
-  name: WhereClauseBuilder(Expression, LambdaScope, Type)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_System_Type_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,System.Type)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.WhereClauseBuilder(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope, System.Type)
-  nameWithType: WhereClauseBuilder.WhereClauseBuilder(Expression, LambdaScope, Type)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  name: WhereClauseBuilder(Expression, LambdaScope, Type, LambdaParameterNameFactory)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_System_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.WhereClauseBuilder(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope, System.Type, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  nameWithType: WhereClauseBuilder.WhereClauseBuilder(Expression, LambdaScope, Type, LambdaParameterNameFactory)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.#ctor*
   name: WhereClauseBuilder
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder__ctor_

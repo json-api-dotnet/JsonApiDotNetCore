@@ -167,7 +167,11 @@ filtering on included collections can be done using bracket notation:</p>
 </code></pre><p>In the above request, the first filter is applied on the collection of articles, while the second one is applied on the nested collection of tags.</p>
 <p>Putting it all together, you can build quite complex filters, such as:</p>
 <pre><code class="lang-http">GET /blogs?include=owner.articles.revisions&amp;filter=and(or(equals(title,&#39;Technology&#39;),has(owner.articles)),not(equals(owner.lastName,null)))&amp;filter[owner.articles]=equals(caption,&#39;Two&#39;)&amp;filter[owner.articles.revisions]=greaterThan(publishTime,&#39;2005-05-05&#39;) HTTP/1.1
-</code></pre><h1 id="legacy-filters">Legacy filters</h1>
+</code></pre><p><em>since v4.2</em></p>
+<p>The <code>has</code> function takes an optional filter condition as second parameter, for example:</p>
+<pre><code class="lang-http">GET /customers?filter=has(orders,not(equals(status,&#39;Paid&#39;))) HTTP/1.1
+</code></pre><p>Which returns only customers that have at least one unpaid order.</p>
+<h1 id="legacy-filters">Legacy filters</h1>
 <p>The next section describes how filtering worked in versions prior to v4.0. They are always applied on the set of resources being requested (no nesting).
 Legacy filters use the following form.</p>
 <pre><code>?filter[attribute]=value
@@ -257,7 +261,7 @@ Examples can be found in the table below.</p>
 </code></pre><p>Legacy filter notation can still be used in v4.0 by setting <code>options.EnableLegacyFilterNotation</code> to <code>true</code>.
 If you want to use the new filter notation in that case, prefix the parameter value with <code>expr:</code>, for example:</p>
 <pre><code class="lang-http">GET /articles?filter[caption]=tech&amp;filter=expr:equals(caption,&#39;cooking&#39;)) HTTP/1.1
-</code></pre><h2 id="custom-filters">Custom Filters</h2>
+</code></pre><h1 id="custom-filters">Custom Filters</h1>
 <p>There are multiple ways you can add custom filters:</p>
 <ol>
 <li>Implementing <code>IResourceDefinition.OnApplyFilter</code> (see <a href="../resources/resource-definitions.html#exclude-soft-deleted-resources">here</a>) and inject <code>IRequestQueryStringAccessor</code>, which works at all depths, but filter operations are constrained to what <code>FilterExpression</code> provides</li>
@@ -266,7 +270,61 @@ If you want to use the new filter notation in that case, prefix the parameter va
 <li>Override <code>EntityFrameworkCoreRepository.ApplyQueryLayer</code> to adapt the <code>IQueryable&lt;T&gt;</code> expression just before execution</li>
 <li>Take a deep dive and plug into reader/parser/tokenizer/visitor/builder for adding additional general-purpose filter operators</li>
 </ol>
-</article>
+<h1 id="filter-syntax">Filter syntax</h1>
+<p>For reference, we provide the EBNF grammar for filter expressions below (in <a href="https://github.com/antlr/antlr4">ANTLR4</a> style):</p>
+<pre><code class="lang-ebnf">grammar Filter;
+
+filterExpression:
+    notExpression
+    | logicalExpression
+    | comparisonExpression
+    | matchTextExpression
+    | anyExpression
+    | hasExpression;
+
+notExpression:
+    &#39;not&#39; LPAREN filterExpression RPAREN;
+
+logicalExpression:
+    ( &#39;and&#39; | &#39;or&#39; ) LPAREN filterExpression ( COMMA filterExpression )* RPAREN;
+
+comparisonExpression:
+    ( &#39;equals&#39; | &#39;greaterThan&#39; | &#39;greaterOrEqual&#39; | &#39;lessThan&#39; | &#39;lessOrEqual&#39; ) LPAREN (
+        countExpression | fieldChain
+    ) COMMA (
+        countExpression | literalConstant | &#39;null&#39; | fieldChain
+    ) RPAREN;
+
+matchTextExpression:
+    ( &#39;contains&#39; | &#39;startsWith&#39; | &#39;endsWith&#39; ) LPAREN fieldChain COMMA literalConstant RPAREN;
+
+anyExpression:
+    &#39;any&#39; LPAREN fieldChain COMMA literalConstant ( COMMA literalConstant )+ RPAREN;
+
+hasExpression:
+    &#39;has&#39; LPAREN fieldChain ( COMMA filterExpression )? RPAREN;
+
+countExpression:
+    &#39;count&#39; LPAREN fieldChain RPAREN;
+
+fieldChain:
+    FIELD ( &#39;.&#39; FIELD )*;
+
+literalConstant:
+    ESCAPED_TEXT;
+
+LPAREN: &#39;(&#39;;
+RPAREN: &#39;)&#39;;
+COMMA: &#39;,&#39;;
+
+fragment OUTER_FIELD_CHARACTER: [A-Za-z0-9];
+fragment INNER_FIELD_CHARACTER: [A-Za-z0-9_-];
+FIELD: OUTER_FIELD_CHARACTER ( INNER_FIELD_CHARACTER* OUTER_FIELD_CHARACTER )?;
+
+ESCAPED_TEXT: &#39;\&#39;&#39; ( ~[&#39;] | &#39;\&#39;\&#39;&#39; )* &#39;\&#39;&#39; ;
+
+LINE_BREAKS: [\r\n]+ -&gt; skip;
+</code></pre></article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
