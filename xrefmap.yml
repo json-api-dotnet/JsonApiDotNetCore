@@ -1102,6 +1102,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeExceptionStackTraceInErrors
   nameWithType: IJsonApiOptions.IncludeExceptionStackTraceInErrors
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion
+  name: IncludeJsonApiVersion
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeJsonApiVersion
+  commentId: P:JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion
+  nameWithType: IJsonApiOptions.IncludeJsonApiVersion
+- uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion*
+  name: IncludeJsonApiVersion
+  href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeJsonApiVersion_
+  commentId: Overload:JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeJsonApiVersion
+  nameWithType: IJsonApiOptions.IncludeJsonApiVersion
 - uid: JsonApiDotNetCore.Configuration.IJsonApiOptions.IncludeTotalResourceCount
   name: IncludeTotalResourceCount
   href: api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html#JsonApiDotNetCore_Configuration_IJsonApiOptions_IncludeTotalResourceCount
@@ -1580,6 +1593,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeExceptionStackTraceInErrors
   nameWithType: JsonApiOptions.IncludeExceptionStackTraceInErrors
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
+  name: IncludeJsonApiVersion
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeJsonApiVersion
+  commentId: P:JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
+  nameWithType: JsonApiOptions.IncludeJsonApiVersion
+- uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion*
+  name: IncludeJsonApiVersion
+  href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeJsonApiVersion_
+  commentId: Overload:JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeJsonApiVersion
+  nameWithType: JsonApiOptions.IncludeJsonApiVersion
 - uid: JsonApiDotNetCore.Configuration.JsonApiOptions.IncludeTotalResourceCount
   name: IncludeTotalResourceCount
   href: api/JsonApiDotNetCore.Configuration.JsonApiOptions.html#JsonApiDotNetCore_Configuration_JsonApiOptions_IncludeTotalResourceCount
@@ -18763,6 +18789,64 @@ references:
   fullName.vb: JsonApiDotNetCore.Serialization.Objects.ExposableData(Of TResource).SingleData
   nameWithType: ExposableData<TResource>.SingleData
   nameWithType.vb: ExposableData(Of TResource).SingleData
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject
+  name: JsonApiObject
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html
+  commentId: T:JsonApiDotNetCore.Serialization.Objects.JsonApiObject
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject
+  nameWithType: JsonApiObject
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext
+  name: Ext
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Ext
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext
+  nameWithType: JsonApiObject.Ext
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext*
+  name: Ext
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Ext_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext
+  nameWithType: JsonApiObject.Ext
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Meta
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta
+  nameWithType: JsonApiObject.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta*
+  name: Meta
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Meta_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta
+  nameWithType: JsonApiObject.Meta
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile
+  name: Profile
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Profile
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile
+  nameWithType: JsonApiObject.Profile
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile*
+  name: Profile
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Profile_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile
+  nameWithType: JsonApiObject.Profile
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version
+  name: Version
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Version
+  commentId: P:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version
+  nameWithType: JsonApiObject.Version
+- uid: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version*
+  name: Version
+  href: api/JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html#JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Version_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version
+  nameWithType: JsonApiObject.Version
 - uid: JsonApiDotNetCore.Serialization.Objects.RelationshipEntry
   name: RelationshipEntry
   href: api/JsonApiDotNetCore.Serialization.Objects.RelationshipEntry.html
