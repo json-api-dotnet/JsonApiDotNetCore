@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// see "jsonapi" in https://jsonapi.org/format/#document-top-level
         /// </summary>
         [JsonProperty("jsonapi", NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, object> JsonApi { get; set; }
+        public JsonApiObject JsonApi { get; set; }
 
         /// <summary>
         /// see "links" in https://jsonapi.org/format/#document-top-level

@@ -35,6 +35,11 @@ namespace JsonApiDotNetCore.Configuration
         AttrCapabilities DefaultAttrCapabilities { get; }
 
         /// <summary>
+        /// Indicates whether responses should contain a jsonapi object that contains the highest JSON:API version supported. False by default.
+        /// </summary>
+        bool IncludeJsonApiVersion { get; }
+
+        /// <summary>
         /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorMeta" /> objects. False by default.
         /// </summary>
         bool IncludeExceptionStackTraceInErrors { get; }

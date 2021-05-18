@@ -37,6 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.IncludeExceptionStackTraceInErrors = false;
             options.AllowClientGeneratedIds = true;
+            options.IncludeJsonApiVersion = false;
         }
 
         [Fact]
@@ -593,6 +594,40 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
       ""self"": ""http://localhost/meetingAttendees/" + existingAttendee.StringId + @"""
     }
   }
+}");
+        }
+
+        [Fact]
+        public async Task Includes_version_on_resource_endpoint()
+        {
+            // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeJsonApiVersion = true;
+
+            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Attendees.Add(attendee);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/meetingAttendees/{attendee.StringId}/meeting";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1""
+  },
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+  },
+  ""data"": null
 }");
         }
     }
