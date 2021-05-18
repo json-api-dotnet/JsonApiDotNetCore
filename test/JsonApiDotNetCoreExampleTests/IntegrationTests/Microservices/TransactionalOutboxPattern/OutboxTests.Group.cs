@@ -16,7 +16,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
     public sealed partial class OutboxTests
     {
         [Fact]
-        public async Task Create_group_adds_to_outbox()
+        public async Task Create_group_writes_to_outbox()
         {
             // Arrange
             string newGroupName = _fakers.DomainGroup.Generate().Name;
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Create_group_with_users_adds_to_outbox()
+        public async Task Create_group_with_users_writes_to_outbox()
         {
             // Arrange
             DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Update_group_adds_to_outbox()
+        public async Task Update_group_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Update_group_with_users_adds_to_outbox()
+        public async Task Update_group_with_users_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -282,7 +282,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Delete_group_adds_to_outbox()
+        public async Task Delete_group_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Delete_group_with_users_adds_to_outbox()
+        public async Task Delete_group_with_users_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -353,7 +353,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Replace_users_in_group_adds_to_outbox()
+        public async Task Replace_users_in_group_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -429,7 +429,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Add_users_to_group_adds_to_outbox()
+        public async Task Add_users_to_group_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
@@ -493,7 +493,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         }
 
         [Fact]
-        public async Task Remove_users_from_group_adds_to_outbox()
+        public async Task Remove_users_from_group_writes_to_outbox()
         {
             // Arrange
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();

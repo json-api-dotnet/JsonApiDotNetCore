@@ -165,8 +165,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
-        /// <paramref name="hasOneRelationship" />.
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasOneRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
         /// </param>
         /// <param name="hasOneRelationship">
         /// The to-one relationship being set.
@@ -194,8 +194,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
-        /// <paramref name="hasManyRelationship" />.
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being set.
@@ -220,7 +220,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResourceId">
-        /// Identifier of the resource that declares <paramref name="hasManyRelationship" />.
+        /// Identifier of the left resource. The indication "left" specifies that <paramref name="hasManyRelationship" /> is declared on
+        /// <typeparamref name="TResource" />.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being added to.
@@ -241,8 +242,8 @@ namespace JsonApiDotNetCore.Resources
         /// </para>
         /// </summary>
         /// <param name="leftResource">
-        /// The original resource retrieved from the underlying data store. Its type, <typeparamref name="TResource" />, declares
-        /// <paramref name="hasManyRelationship" />.
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being removed from.

@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Get_primary_resources_excludes_other_tenants()
+        public async Task Get_primary_resources_hides_other_tenants()
         {
             // Arrange
             List<WebShop> shops = _fakers.WebShop.Generate(2);
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Filter_on_primary_resources_excludes_other_tenants()
+        public async Task Filter_on_primary_resources_hides_other_tenants()
         {
             // Arrange
             List<WebShop> shops = _fakers.WebShop.Generate(2);
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Get_primary_resources_with_include_excludes_other_tenants()
+        public async Task Get_primary_resources_with_include_hides_other_tenants()
         {
             // Arrange
             List<WebShop> shops = _fakers.WebShop.Generate(2);
