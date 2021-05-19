@@ -31,6 +31,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ILinkBuilder _linkBuilder;
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IJsonApiOptions _options;
         private readonly Type _primaryResourceType;
 
@@ -38,19 +39,22 @@ namespace JsonApiDotNetCore.Serialization
         public string ContentType { get; } = HeaderConstants.MediaType;
 
         public ResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
-            IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IJsonApiOptions options)
+            IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IResourceDefinitionAccessor resourceDefinitionAccessor,
+            IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(options, nameof(options));
 
             _metaBuilder = metaBuilder;
             _linkBuilder = linkBuilder;
             _includedBuilder = includedBuilder;
             _fieldsToSerialize = fieldsToSerialize;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _options = options;
             _primaryResourceType = typeof(TResource);
         }
@@ -92,6 +96,11 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeSingle(IIdentifiable resource)
         {
+            if (resource != null && _fieldsToSerialize.ShouldSerialize)
+            {
+                _resourceDefinitionAccessor.OnSerialize(resource);
+            }
+
             IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
             IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 
@@ -119,6 +128,14 @@ namespace JsonApiDotNetCore.Serialization
         /// </remarks>
         internal string SerializeMany(IReadOnlyCollection<IIdentifiable> resources)
         {
+            if (_fieldsToSerialize.ShouldSerialize)
+            {
+                foreach (IIdentifiable resource in resources)
+                {
+                    _resourceDefinitionAccessor.OnSerialize(resource);
+                }
+            }
+
             IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(_primaryResourceType);
             IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 

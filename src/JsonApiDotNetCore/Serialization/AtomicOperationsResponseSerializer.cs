@@ -20,6 +20,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IMetaBuilder _metaBuilder;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IFieldsToSerialize _fieldsToSerialize;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
 
@@ -27,18 +28,20 @@ namespace JsonApiDotNetCore.Serialization
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
         public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
-            IFieldsToSerialize fieldsToSerialize, IJsonApiRequest request, IJsonApiOptions options)
+            IFieldsToSerialize fieldsToSerialize, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
 
             _metaBuilder = metaBuilder;
             _linkBuilder = linkBuilder;
             _fieldsToSerialize = fieldsToSerialize;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _request = request;
             _options = options;
         }
@@ -90,6 +93,8 @@ namespace JsonApiDotNetCore.Serialization
             {
                 _request.CopyFrom(operation.Request);
                 _fieldsToSerialize.ResetCache();
+
+                _resourceDefinitionAccessor.OnSerialize(operation.Resource);
 
                 Type resourceType = operation.Resource.GetType();
                 IReadOnlyCollection<AttrAttribute> attributes = _fieldsToSerialize.GetAttributes(resourceType);

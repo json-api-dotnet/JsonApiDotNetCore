@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
+    /// Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.
@@ -19,8 +22,7 @@ namespace JsonApiDotNetCore.Resources
     }
 
     /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
+    /// Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.
@@ -29,6 +31,7 @@ namespace JsonApiDotNetCore.Resources
     /// The resource identifier type.
     /// </typeparam>
     [PublicAPI]
+    // ReSharper disable once TypeParameterCanBeVariant -- Justification: making TId contravariant is a breaking change.
     public interface IResourceDefinition<TResource, TId>
         where TResource : class, IIdentifiable<TId>
     {
@@ -129,5 +132,210 @@ namespace JsonApiDotNetCore.Resources
         /// Enables to add JSON:API meta information, specific to this resource.
         /// </summary>
         IDictionary<string, object> GetMeta(TResource resource);
+
+        /// <summary>
+        /// Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, before the fields from the request are
+        /// copied into it.
+        /// </para>
+        /// <para>
+        /// For POST resource requests, this method is typically used to assign property default values or to set required relationships by side-loading the
+        /// related resources and linking them.
+        /// </para>
+        /// </summary>
+        /// <param name="resource">
+        /// The original resource retrieved from the underlying data store, or a freshly instantiated resource in case of a POST resource request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.SetRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// Note this intentionally excludes <see cref="OperationKind.DeleteResource" /> and <see cref="OperationKind.AddToRelationship" />, because for those
+        /// endpoints no resource is retrieved upfront.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before setting (or clearing) the resource at the right side of a to-one relationship.
+        /// <para>
+        /// Implementing this method enables to perform validations and change <paramref name="rightResourceId" />, before the relationship is updated.
+        /// </para>
+        /// </summary>
+        /// <param name="leftResource">
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasOneRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
+        /// </param>
+        /// <param name="hasOneRelationship">
+        /// The to-one relationship being set.
+        /// </param>
+        /// <param name="rightResourceId">
+        /// The new resource identifier (or <c>null</c> to clear the relationship), coming from the request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        /// <returns>
+        /// The replacement resource identifier, or <c>null</c> to clear the relationship. Returns <paramref name="rightResourceId" /> by default.
+        /// </returns>
+        Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+            OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
+        /// </summary>
+        /// <param name="leftResource">
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being set.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to replace any existing set with, coming from the request.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
+        /// </summary>
+        /// <param name="leftResourceId">
+        /// Identifier of the left resource. The indication "left" specifies that <paramref name="hasManyRelationship" /> is declared on
+        /// <typeparamref name="TResource" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being added to.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to add to the to-many relationship, coming from the request.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before removing resources from the right side of a to-many relationship, as part of a DELETE relationship request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="rightResourceIds" />, before the relationship is updated.
+        /// </para>
+        /// </summary>
+        /// <param name="leftResource">
+        /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
+        /// declared on <typeparamref name="TResource" />.
+        /// </param>
+        /// <param name="hasManyRelationship">
+        /// The to-many relationship being removed from.
+        /// </param>
+        /// <param name="rightResourceIds">
+        /// The set of resource identifiers to remove from the to-many relationship, coming from the request.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes before writing the changed resource to the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to perform validations and make changes to <paramref name="resource" />, after the fields from the request have been
+        /// copied into it.
+        /// </para>
+        /// <para>
+        /// An example usage is to set the last-modification timestamp, overwriting the value from the incoming request.
+        /// </para>
+        /// <para>
+        /// Another use case is to add a notification message to an outbox table, which gets committed along with the resource write in a single transaction (see
+        /// https://microservices.io/patterns/data/transactional-outbox.html).
+        /// </para>
+        /// </summary>
+        /// <param name="resource">
+        /// The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
+        /// the changes from the incoming request. Exception: In case <paramref name="operationKind" /> is <see cref="OperationKind.DeleteResource" /> or
+        /// <see cref="OperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable{T}.Id" /> property set, because for
+        /// those endpoints no resource is retrieved upfront.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
+        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes after successfully writing the changed resource to the underlying data store, as part of a write request.
+        /// <para>
+        /// Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
+        /// </para>
+        /// </summary>
+        /// <param name="resource">
+        /// The resource as written to the underlying data store.
+        /// </param>
+        /// <param name="operationKind">
+        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
+        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
+        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// Propagates notification that request handling should be canceled.
+        /// </param>
+        Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Executes after a resource has been deserialized from an incoming request body.
+        /// </summary>
+        /// <para>
+        /// Implementing this method enables to change the incoming resource before it enters an ASP.NET Controller Action method.
+        /// </para>
+        /// <para>
+        /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests, because
+        /// side effect detection considers any changes done from this method to be part of the incoming request body. So setting additional attributes from this
+        /// method (that were not sent by the client) are not considered side effects, resulting in incorrectly reporting that there were no side effects.
+        /// </para>
+        /// <param name="resource">
+        /// The deserialized resource.
+        /// </param>
+        void OnDeserialize(TResource resource);
+
+        /// <summary>
+        /// Executes before a (primary or included) resource is serialized into an outgoing response body.
+        /// </summary>
+        /// <para>
+        /// Implementing this method enables to change the returned resource, for example scrub sensitive data or transform returned attribute values.
+        /// </para>
+        /// <para>
+        /// Changing attributes on <paramref name="resource" /> from this method may break detection of side effects on resource POST/PATCH requests. What this
+        /// means is that if side effects were detected before, this is not re-evaluated after running this method, so it may incorrectly report side effects if
+        /// they were undone by this method.
+        /// </para>
+        /// <param name="resource">
+        /// The serialized resource.
+        /// </param>
+        void OnSerialize(TResource resource);
     }
 }

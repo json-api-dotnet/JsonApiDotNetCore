@@ -1,0 +1,23 @@
+using System.Collections.Generic;
+using JetBrains.Annotations;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
+
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+{
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    public sealed class Scholarship : Identifiable
+    {
+        [Attr]
+        public string ProgramName { get; set; }
+
+        [Attr]
+        public decimal Amount { get; set; }
+
+        [HasMany]
+        public IList<Student> Participants { get; set; }
+
+        [HasOne]
+        public Student PrimaryContact { get; set; }
+    }
+}

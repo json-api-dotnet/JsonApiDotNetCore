@@ -5,6 +5,7 @@ using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Services;
@@ -97,6 +98,19 @@ namespace JsonApiDotNetCore.Configuration
             ArgumentGuard.NotNull(services, nameof(services));
 
             RegisterForConstructedType(services, typeof(TRepository), ServiceDiscoveryFacade.RepositoryInterfaces);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds IoC container registrations for the various JsonApiDotNetCore resource definition interfaces, such as
+        /// <see cref="IResourceDefinition{TResource}" /> and <see cref="IResourceDefinition{TResource,TId}" />.
+        /// </summary>
+        public static IServiceCollection AddResourceDefinition<TResourceDefinition>(this IServiceCollection services)
+        {
+            ArgumentGuard.NotNull(services, nameof(services));
+
+            RegisterForConstructedType(services, typeof(TResourceDefinition), ServiceDiscoveryFacade.ResourceDefinitionInterfaces);
 
             return services;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,8 +12,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         [Attr]
         public string Name { get; set; }
 
-        [Attr]
-        public bool IsSoftDeleted { get; set; }
+        public DateTimeOffset? SoftDeletedAt { get; set; }
 
         [HasMany]
         public ICollection<Department> Departments { get; set; }

@@ -11,6 +11,11 @@ namespace JsonApiDotNetCore.Serialization
     public interface IFieldsToSerialize
     {
         /// <summary>
+        /// Indicates whether attributes and relationships should be serialized, based on the current endpoint.
+        /// </summary>
+        bool ShouldSerialize { get; }
+
+        /// <summary>
         /// Gets the collection of attributes that are to be serialized for resources of type <paramref name="resourceType" />.
         /// </summary>
         IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType);

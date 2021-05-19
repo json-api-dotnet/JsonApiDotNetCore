@@ -1,7 +1,11 @@
+using System;
+using JetBrains.Annotations;
+
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public interface ISoftDeletable
     {
-        bool IsSoftDeleted { get; set; }
+        DateTimeOffset? SoftDeletedAt { get; set; }
     }
 }

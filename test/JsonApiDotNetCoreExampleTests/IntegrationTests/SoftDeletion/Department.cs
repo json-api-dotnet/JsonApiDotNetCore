@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,8 +11,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         [Attr]
         public string Name { get; set; }
 
-        [Attr]
-        public bool IsSoftDeleted { get; set; }
+        public DateTimeOffset? SoftDeletedAt { get; set; }
 
         [HasOne]
         public Company Company { get; set; }

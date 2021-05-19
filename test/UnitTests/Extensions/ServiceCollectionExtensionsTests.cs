@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
@@ -168,6 +169,34 @@ namespace UnitTests.Extensions
             Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceRepository<GuidResource, Guid>)));
             Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceReadRepository<GuidResource, Guid>)));
             Assert.IsType<GuidResourceRepository>(provider.GetRequiredService(typeof(IResourceWriteRepository<GuidResource, Guid>)));
+        }
+
+        [Fact]
+        public void AddResourceDefinition_Registers_Shorthand_Definition_Interface()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceDefinition<IntResourceDefinition>();
+
+            // Assert
+            ServiceProvider provider = services.BuildServiceProvider();
+            Assert.IsType<IntResourceDefinition>(provider.GetRequiredService(typeof(IResourceDefinition<IntResource>)));
+        }
+
+        [Fact]
+        public void AddResourceDefinition_Registers_LongForm_Definition_Interface()
+        {
+            // Arrange
+            var services = new ServiceCollection();
+
+            // Act
+            services.AddResourceDefinition<GuidResourceDefinition>();
+
+            // Assert
+            ServiceProvider provider = services.BuildServiceProvider();
+            Assert.IsType<GuidResourceDefinition>(provider.GetRequiredService(typeof(IResourceDefinition<GuidResource, Guid>)));
         }
 
         [Fact]
@@ -416,6 +445,182 @@ namespace UnitTests.Extensions
 
             public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
                 CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class IntResourceDefinition : IResourceDefinition<IntResource>
+        {
+            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            {
+                throw new NotImplementedException();
+            }
+
+            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SortExpression OnApplySort(SortExpression existingSort)
+            {
+                throw new NotImplementedException();
+            }
+
+            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public QueryStringParameterHandlers<IntResource> OnRegisterQueryableHandlersForQueryStringParameters()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDictionary<string, object> GetMeta(IntResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnPrepareWriteAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(IntResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnSetToManyRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAddToRelationshipAsync(int leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnRemoveFromRelationshipAsync(IntResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnWritingAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnWriteSucceededAsync(IntResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnDeserialize(IntResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnSerialize(IntResource resource)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class GuidResourceDefinition : IResourceDefinition<GuidResource, Guid>
+        {
+            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            {
+                throw new NotImplementedException();
+            }
+
+            public FilterExpression OnApplyFilter(FilterExpression existingFilter)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SortExpression OnApplySort(SortExpression existingSort)
+            {
+                throw new NotImplementedException();
+            }
+
+            public PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+            {
+                throw new NotImplementedException();
+            }
+
+            public SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public QueryStringParameterHandlers<GuidResource> OnRegisterQueryableHandlersForQueryStringParameters()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IDictionary<string, object> GetMeta(GuidResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnPrepareWriteAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IIdentifiable> OnSetToOneRelationshipAsync(GuidResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnSetToManyRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnAddToRelationshipAsync(Guid leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnRemoveFromRelationshipAsync(GuidResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnWritingAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task OnWriteSucceededAsync(GuidResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnDeserialize(GuidResource resource)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void OnSerialize(GuidResource resource)
             {
                 throw new NotImplementedException();
             }

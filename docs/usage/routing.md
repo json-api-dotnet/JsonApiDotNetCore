@@ -1,5 +1,11 @@
 # Routing
 
+An endpoint URL provides access to a resource or a relationship. Resource endpoints are divided into:
+- Primary endpoints, for example: "/articles" and "/articles/1".
+- Secondary endpoints, for example: "/articles/1/author" and "/articles/1/comments".
+
+In the relationship endpoint "/articles/1/relationships/comments", "articles" is the left side of the relationship and "comments" the right side.
+
 ## Namespacing and Versioning URLs
 You can add a namespace to all URLs by specifying it in ConfigureServices.
 

@@ -1,7 +1,7 @@
 
 
 # Resource Hooks
-This section covers the usage of **Resource Hooks**, which is a feature of`ResourceHooksDefinition<T>`. See the [ResourceDefinition usage guide](resource-definitions.md) for a general explanation on how to set up a `JsonApiResourceDefinition<T>`. For a quick start, jump right to the [Getting started: most minimal example](#getting-started-most-minimal-example) section.
+This section covers the usage of **Resource Hooks**, which is a feature of`ResourceHooksDefinition<T>`. See the [ResourceDefinition usage guide](~/usage/extensibility/resource-definitions.md) for a general explanation on how to set up a `JsonApiResourceDefinition<T>`. For a quick start, jump right to the [Getting started: most minimal example](#getting-started-most-minimal-example) section.
 
 > Note: Resource Hooks are an experimental feature and are turned off by default. They are subject to change or be replaced in a future version.
 

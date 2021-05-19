@@ -15,7 +15,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -218,8 +217,7 @@ namespace UnitTests.ResourceHooks
         private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph)
             where TModel : class, IIdentifiable<int>
         {
-            IServiceProvider serviceProvider = ((IInfrastructure<IServiceProvider>)dbContext).Instance;
-            var resourceFactory = new ResourceFactory(serviceProvider);
+            var resourceFactory = new TestResourceFactory();
             IDbContextResolver resolver = CreateTestDbResolver(dbContext);
             var targetedFields = new TargetedFields();
 

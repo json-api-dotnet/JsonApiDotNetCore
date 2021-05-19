@@ -1,7 +1,10 @@
 # Relationships
 
-In order for navigation properties to be identified in the model,
-they should be labeled with the appropriate attribute (either `HasOne`, `HasMany` or `HasManyThrough`).
+A relationship is a named link between two resource types, including a direction.
+They are similar to [navigation properties in Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/modeling/relationships).
+
+Relationships come in three flavors: to-one, to-many and many-to-many.
+The left side of a relationship is where the relationship is declared, the right side is the resource type it points to.
 
 ## HasOne
 
@@ -15,6 +18,9 @@ public class TodoItem : Identifiable
 }
 ```
 
+The left side of this relationship is of type `TodoItem` (public name: "todoItems") and the right side is of type `Person` (public name: "persons").
+
+
 ## HasMany
 
 This exposes a to-many relationship.
@@ -27,11 +33,14 @@ public class Person : Identifiable
 }
 ```
 
+The left side of this relationship is of type `Person` (public name: "persons") and the right side is of type `TodoItem` (public name: "todoItems").
+
+
 ## HasManyThrough
 
-Currently, Entity Framework Core [does not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
+Earlier versions of Entity Framework Core (up to v5) [did not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
 For this reason, we have decided to fill this gap by allowing applications to declare a relationship as `HasManyThrough`.
-JsonApiDotNetCore will expose this relationship to the client the same way as any other `HasMany` attribute.
+JsonApiDotNetCore will expose this relationship to the client the same way as any other `HasMany` relationship.
 However, under the covers it will use the join type and Entity Framework Core's APIs to get and set the relationship.
 
 ```c#
@@ -48,6 +57,9 @@ public class Article : Identifiable
     public ICollection<ArticleTag> ArticleTags { get; set; }
 }
 ```
+
+The left side of this relationship is of type `Article` (public name: "articles") and the right side is of type `Tag` (public name: "tags").
+
 
 ## Name
 

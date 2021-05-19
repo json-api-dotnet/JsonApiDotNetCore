@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -111,6 +114,62 @@ namespace JsonApiDotNetCore.Resources
         public virtual IDictionary<string, object> GetMeta(TResource resource)
         {
             return null;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(rightResourceId);
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnAddToRelationshipAsync(TId leftResourceId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnRemoveFromRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public virtual void OnDeserialize(TResource resource)
+        {
+        }
+
+        /// <inheritdoc />
+        public virtual void OnSerialize(TResource resource)
+        {
         }
 
         /// <summary>

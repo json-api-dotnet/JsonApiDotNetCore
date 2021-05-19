@@ -33,7 +33,10 @@ namespace UnitTests.Models
 
             IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithoutConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+            var serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
+
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
             var body = new
@@ -63,7 +66,10 @@ namespace UnitTests.Models
 
             IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithThrowingConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+            var serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
+
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
             var body = new
@@ -95,7 +101,10 @@ namespace UnitTests.Models
 
             IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithStringConstructor>().Build();
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(new ServiceContainer()), new TargetedFields(), _mockHttpContextAccessor.Object,
+            var serviceContainer = new ServiceContainer();
+            serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
+
+            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
                 _requestMock.Object, options);
 
             var body = new

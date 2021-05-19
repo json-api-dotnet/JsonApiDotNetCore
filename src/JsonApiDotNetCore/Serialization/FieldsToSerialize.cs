@@ -19,6 +19,9 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiRequest _request;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
+        /// <inheritdoc />
+        public bool ShouldSerialize => _request.Kind != EndpointKind.Relationship;
+
         public FieldsToSerialize(IResourceContextProvider resourceContextProvider, IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)
         {
@@ -35,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_request.Kind == EndpointKind.Relationship)
+            if (!ShouldSerialize)
             {
                 return Array.Empty<AttrAttribute>();
             }
@@ -56,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_request.Kind == EndpointKind.Relationship)
+            if (!ShouldSerialize)
             {
                 return Array.Empty<RelationshipAttribute>();
             }

@@ -54,7 +54,8 @@ public class ArticlesController : BaseJsonApiController<Article>
     }
 
     [HttpGet("{id}")]
-    public override async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
+    public override async Task<IActionResult> GetAsync(int id,
+        CancellationToken cancellationToken)
     {
         return await base.GetAsync(id, cancellationToken);
     }

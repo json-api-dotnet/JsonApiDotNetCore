@@ -1,14 +1,12 @@
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
-using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
-using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -27,8 +25,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackMetaDefinition>();
-                services.AddScoped<IResourceDefinition<TextLanguage, Guid>, TextLanguageMetaDefinition>();
+                services.AddResourceDefinition<MusicTrackMetaDefinition>();
+                services.AddResourceDefinition<TextLanguageMetaDefinition>();
             });
         }
 

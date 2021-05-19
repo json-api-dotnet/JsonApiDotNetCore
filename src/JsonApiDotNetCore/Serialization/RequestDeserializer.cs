@@ -26,6 +26,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields,
             IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options)
@@ -40,6 +41,10 @@ namespace JsonApiDotNetCore.Serialization
             _httpContextAccessor = httpContextAccessor;
             _request = request;
             _options = options;
+
+#pragma warning disable 612 // Method is obsolete
+            _resourceDefinitionAccessor = resourceFactory.GetResourceDefinitionAccessor();
+#pragma warning restore 612
         }
 
         /// <inheritdoc />
@@ -58,6 +63,11 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             object instance = DeserializeBody(body);
+
+            if (instance is IIdentifiable resource && _request.Kind != EndpointKind.Relationship)
+            {
+                _resourceDefinitionAccessor.OnDeserialize(resource);
+            }
 
             AssertResourceIdIsNotTargeted(_targetedFields);
 
@@ -203,6 +213,8 @@ namespace JsonApiDotNetCore.Serialization
             _request.CopyFrom(request);
 
             IIdentifiable primaryResource = ParseResourceObject(operation.SingleData);
+
+            _resourceDefinitionAccessor.OnDeserialize(primaryResource);
 
             request.PrimaryId = primaryResource.StringId;
             _request.CopyFrom(request);

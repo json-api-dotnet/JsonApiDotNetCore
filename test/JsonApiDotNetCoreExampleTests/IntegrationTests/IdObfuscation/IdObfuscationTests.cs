@@ -470,7 +470,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");
-            error.Source.Parameter.Should().BeNull();
         }
     }
 }

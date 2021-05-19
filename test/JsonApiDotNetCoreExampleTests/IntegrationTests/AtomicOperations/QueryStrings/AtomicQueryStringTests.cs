@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
@@ -38,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryS
                     UtcNow = FrozenTime
                 });
 
-                services.AddScoped<IResourceDefinition<MusicTrack, Guid>, MusicTrackReleaseDefinition>();
+                services.AddResourceDefinition<MusicTrackReleaseDefinition>();
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

@@ -41,4 +41,4 @@ When omitted, you'll get the included resources returned, but without full resou
 
 ## Overriding
 
-As a developer, you can force to include and/or exclude specific fields as [described previously](~/usage/resources/resource-definitions.md).
+As a developer, you can force to include and/or exclude specific fields as described [here](~/usage/extensibility/resource-definitions.md).

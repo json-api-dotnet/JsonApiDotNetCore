@@ -22,4 +22,4 @@ GET /api/blogs/1/articles?include=revisions&page[size]=10,revisions:5&page[numbe
 
 ## Configuring Default Behavior
 
-You can configure the global default behavior as [described previously](~/usage/options.md#pagination).
+You can configure the global default behavior as described [here](~/usage/options.md#pagination).
