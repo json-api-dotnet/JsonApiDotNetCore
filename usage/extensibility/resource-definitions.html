@@ -69,10 +69,13 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="resource-definitions">Resource Definitions</h1>
 
-<p>In order to improve the developer experience, we have introduced a type that makes
-common modifications to the default API behavior easier. Resource definitions were first introduced in v2.3.4.</p>
-<p>Resource definitions are resolved from the dependency injection container, so you can inject dependencies in their constructor.</p>
-<h2 id="customizing-query-clauses">Customizing query clauses</h2>
+<p><em>since v2.3.4</em></p>
+<p>Resource definitions provide a resource-oriented way to handle custom business logic (irrespective of the originating endpoint).</p>
+<p>They are resolved from the dependency injection container, so you can inject dependencies in their constructor.</p>
+<p><strong>Note:</strong> Prior to the introduction of auto-discovery (in v3), you needed to register the
+<code>ResourceDefinition</code> on the container yourself:</p>
+<pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Product&gt;, ProductResource&gt;();
+</code></pre><h2 id="customizing-queries">Customizing queries</h2>
 <p><em>since v4.0</em></p>
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
 <code>JsonApiResourceDefinition&lt;TResource&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
@@ -82,7 +85,7 @@ from Entity Framework Core <code>IQueryable</code> execution.</p>
 <h3 id="excluding-fields">Excluding fields</h3>
 <p>There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
-<p>Note: to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code>.</p>
+<p>Note: to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code> on a resource class property.</p>
 <pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;
 {
     public UserDefinition(IResourceGraph resourceGraph)
@@ -128,7 +131,7 @@ Content-Type: application/vnd.api+json
     }
   }
 }
-</code></pre><h2 id="default-sort-order">Default sort order</h2>
+</code></pre><h3 id="default-sort-order">Default sort order</h3>
 <p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
@@ -151,7 +154,7 @@ Content-Type: application/vnd.api+json
         });
     }
 }
-</code></pre><h2 id="enforce-page-size">Enforce page size</h2>
+</code></pre><h3 id="enforce-page-size">Enforce page size</h3>
 <p>You may want to enforce pagination on large database tables.</p>
 <pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog&gt;
 {
@@ -177,8 +180,8 @@ Content-Type: application/vnd.api+json
         return new PaginationExpression(PageNumber.ValueOne, maxPageSize);
     }
 }
-</code></pre><h2 id="exclude-soft-deleted-resources">Exclude soft-deleted resources</h2>
-<p>Soft-deletion sets <code>IsSoftDeleted</code> to <code>true</code> instead of actually deleting the record, so you may want to always filter them out.</p>
+</code></pre><h3 id="change-filters">Change filters</h3>
+<p>The next example filters out <code>Account</code> resources that are suspended.</p>
 <pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
 {
     public AccountDefinition(IResourceGraph resourceGraph)
@@ -190,21 +193,22 @@ Content-Type: application/vnd.api+json
     {
         var resourceContext = ResourceGraph.GetResourceContext&lt;Account&gt;();
 
-        var isSoftDeletedAttribute =
+        var isSuspendedAttribute =
             resourceContext.Attributes.Single(account =&gt;
-                account.Property.Name == nameof(Account.IsSoftDeleted));
+                account.Property.Name == nameof(Account.IsSuspended));
 
-        var isNotSoftDeleted = new ComparisonExpression(ComparisonOperator.Equals,
-            new ResourceFieldChainExpression(isSoftDeletedAttribute),
+        var isNotSuspended = new ComparisonExpression(ComparisonOperator.Equals,
+            new ResourceFieldChainExpression(isSuspendedAttribute),
             new LiteralConstantExpression(bool.FalseString));
 
         return existingFilter == null
-            ? (FilterExpression) isNotSoftDeleted
+            ? (FilterExpression) isNotSuspended
             : new LogicalExpression(LogicalOperator.And,
-                new[] { isNotSoftDeleted, existingFilter });
+                new[] { isNotSuspended, existingFilter });
     }
 }
-</code></pre><h2 id="block-including-related-resources">Block including related resources</h2>
+</code></pre><h3 id="block-including-related-resources">Block including related resources</h3>
+<p>In the example below, an error is returned when a user tries to include the manager of an employee.</p>
 <pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee&gt;
 {
     public EmployeeDefinition(IResourceGraph resourceGraph)
@@ -227,11 +231,11 @@ Content-Type: application/vnd.api+json
         return existingIncludes;
     }
 }
-</code></pre><h2 id="custom-query-string-parameters">Custom query string parameters</h2>
+</code></pre><h3 id="custom-query-string-parameters">Custom query string parameters</h3>
 <p><em>since v3</em></p>
 <p>You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.</p>
-<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core functionality. 
+<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
 <pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item&gt;
 {
@@ -262,11 +266,67 @@ But it only works on primary resource endpoints (for example: /articles, but not
             : source.Where(item =&gt; item.RiskLevel &lt; 5);
     }
 }
-</code></pre><h2 id="using-resource-definitions-prior-to-v3">Using Resource Definitions prior to v3</h2>
-<p>Prior to the introduction of auto-discovery, you needed to register the
-<code>ResourceDefinition</code> on the container yourself:</p>
-<pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Item&gt;, ItemResource&gt;();
-</code></pre></article>
+</code></pre><h2 id="handling-resource-changes">Handling resource changes</h2>
+<p><em>since v4.2</em></p>
+<p>Without going into too much details, the diagrams below demonstrate a few scenarios where custom code interacts with write operations.
+Click on a diagram to open it full-size in a new window.</p>
+<h3 id="create-resource">Create resource</h3>
+<p><a href="../../diagrams/resource-definition-create-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-create-resource.svg" style="border: 1px solid #000">
+</a></p>
+<ol>
+<li>User sends request to create a resource</li>
+<li>An empty resource instance is created</li>
+<li>Developer sets default values for attribute 1 and 2</li>
+<li>Attribute 1 and 3 from incoming request are copied into default instance</li>
+<li>Developer overwrites attribute 3</li>
+<li>Row is inserted in database</li>
+<li>Developer sends notification to service bus</li>
+<li>The new resource is fetched</li>
+<li>Resource is sent back to the user</li>
+</ol>
+<h3 id="update-resource">Update Resource</h3>
+<p><a href="../../diagrams/resource-definition-update-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-update-resource.svg" style="border: 1px solid #000">
+</a></p>
+<ol>
+<li>User sends request to update resource with ID 1</li>
+<li>Existing resource is fetched from database</li>
+<li>Developer changes attribute 1 and 2</li>
+<li>Attribute 1 and 3 from incoming request are copied into fetched instance</li>
+<li>Developer overwrites attribute 3</li>
+<li>Row is updated in database</li>
+<li>Developer sends notification to service bus</li>
+<li>The resource is fetched, along with requested includes</li>
+<li>Resource with includes is sent back to the user</li>
+</ol>
+<h3 id="delete-resource">Delete Resource</h3>
+<p><a href="../../diagrams/resource-definition-delete-resource.svg" target="_blank">
+<img src="../../diagrams/resource-definition-delete-resource.svg" style="border: 1px solid #000">
+</a></p>
+<ol>
+<li>User sends request to delete resource with ID 1</li>
+<li>Developer runs custom validation logic</li>
+<li>Row is deleted from database</li>
+<li>Developer sends notification to service bus</li>
+<li>Success status is sent back to user</li>
+</ol>
+<h3 id="set-relationship">Set Relationship</h3>
+<p><a href="../../diagrams/resource-definition-set-relationship.svg" target="_blank">
+<img src="../../diagrams/resource-definition-set-relationship.svg" style="border: 1px solid #000">
+</a></p>
+<ol>
+<li>User sends request to assign two resources (green) to relationship &#39;name&#39; (black) on resource 1 (yellow)</li>
+<li>Existing resource (blue) with related resources (red) is fetched from database</li>
+<li>Developer changes attributes (not shown in diagram for brevity)</li>
+<li>Developer removes one resource from the to-be-assigned set (green)</li>
+<li>Existing resources in relationship (red) are replaced with resource from previous step (green)</li>
+<li>Developer overwrites attributes (not shown in diagram for brevity)</li>
+<li>Resource and relationship are updated in database</li>
+<li>Developer sends notification to service bus</li>
+<li>Success status is sent back to user</li>
+</ol>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -274,7 +334,7 @@ But it only works on primary resource endpoints (for example: /articles, but not
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/resources/resource-definitions.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/resource-definitions.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

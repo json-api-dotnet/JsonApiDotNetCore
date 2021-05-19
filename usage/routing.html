@@ -69,6 +69,12 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="routing">Routing</h1>
 
+<p>An endpoint URL provides access to a resource or a relationship. Resource endpoints are divided into:</p>
+<ul>
+<li>Primary endpoints, for example: &quot;/articles&quot; and &quot;/articles/1&quot;.</li>
+<li>Secondary endpoints, for example: &quot;/articles/1/author&quot; and &quot;/articles/1/comments&quot;.</li>
+</ul>
+<p>In the relationship endpoint &quot;/articles/1/relationships/comments&quot;, &quot;articles&quot; is the left side of the relationship and &quot;comments&quot; the right side.</p>
 <h2 id="namespacing-and-versioning-urls">Namespacing and Versioning URLs</h2>
 <p>You can add a namespace to all URLs by specifying it in ConfigureServices.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)

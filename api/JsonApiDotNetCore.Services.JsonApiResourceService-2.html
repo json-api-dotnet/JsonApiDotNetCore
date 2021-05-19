@@ -157,7 +157,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.%23ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor%2CJsonApiDotNetCore.Queries.IQueryLayerComposer%2CJsonApiDotNetCore.Queries.IPaginationContext%2CJsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Middleware.IJsonApiRequest%2CJsonApiDotNetCore.Resources.IResourceChangeTracker%7B%600%7D%2CJsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L38">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L39">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2__ctor_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Hooks_IResourceHookExecutorFacade_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Hooks.IResourceHookExecutorFacade)">JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker&lt;TResource&gt;, IResourceHookExecutorFacade)</h4>
@@ -226,7 +226,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_AddToToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.AddToToManyRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L281">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L290">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AddToToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AddToToManyRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AddToToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AddToToManyRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">AddToToManyRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
@@ -235,7 +235,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -290,10 +290,114 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertResourcesToAssignInRelationshipsExistAsync__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.AssertResourcesToAssignInRelationshipsExistAsync(%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L249">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertResourcesToAssignInRelationshipsExistAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertResourcesToAssignInRelationshipsExistAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertResourcesToAssignInRelationshipsExistAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertResourcesToAssignInRelationshipsExistAsync(`0,System.Threading.CancellationToken)">AssertResourcesToAssignInRelationshipsExistAsync(TResource, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">primaryResource</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertRightResourcesExistAsync_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.AssertRightResourcesExistAsync(System.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L338">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertRightResourcesExistAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertRightResourcesExistAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_AssertRightResourcesExistAsync_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.AssertRightResourcesExistAsync(System.Object,System.Threading.CancellationToken)">AssertRightResourcesExistAsync(Object, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Task AssertRightResourcesExistAsync(object rightResourceIds, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">rightResourceIds</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.CreateAsync(%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L182">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L186">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CreateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_CreateAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.CreateAsync(`0,System.Threading.CancellationToken)">CreateAsync(TResource, CancellationToken)</h4>
@@ -346,7 +450,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_DeleteAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.DeleteAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L427">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L440">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_DeleteAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.DeleteAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_DeleteAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.DeleteAsync(`1,System.Threading.CancellationToken)">DeleteAsync(TId, CancellationToken)</h4>
@@ -399,7 +503,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L92">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L97">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetAsync(`1,System.Threading.CancellationToken)">GetAsync(TId, CancellationToken)</h4>
@@ -452,7 +556,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetAsync(System.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L62">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L67">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetAsync_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetAsync(System.Threading.CancellationToken)">GetAsync(CancellationToken)</h4>
@@ -497,10 +601,119 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceByIdAsync__1_JsonApiDotNetCore_Queries_TopFieldSelection_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetPrimaryResourceByIdAsync(%601%2CJsonApiDotNetCore.Queries.TopFieldSelection%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L487">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceByIdAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceByIdAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceByIdAsync__1_JsonApiDotNetCore_Queries_TopFieldSelection_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceByIdAsync(`1,JsonApiDotNetCore.Queries.TopFieldSelection,System.Threading.CancellationToken)">GetPrimaryResourceByIdAsync(TId, TopFieldSelection, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Task&lt;TResource&gt; GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Queries.TopFieldSelection.html">TopFieldSelection</a></td>
+        <td><span class="parametername">fieldSelection</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceForUpdateAsync__1_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetPrimaryResourceForUpdateAsync(%601%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L503">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceForUpdateAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceForUpdateAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetPrimaryResourceForUpdateAsync__1_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetPrimaryResourceForUpdateAsync(`1,System.Threading.CancellationToken)">GetPrimaryResourceForUpdateAsync(TId, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Task&lt;TResource&gt; GetPrimaryResourceForUpdateAsync(TId id, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TId</span></td>
+        <td><span class="parametername">id</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span>&lt;TResource&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetRelationshipAsync(%601%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L152">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L156">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetRelationshipAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetRelationshipAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetRelationshipAsync(`1,System.String,System.Threading.CancellationToken)">GetRelationshipAsync(TId, String, CancellationToken)</h4>
@@ -558,7 +771,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.GetSecondaryAsync(%601%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L111">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L115">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetSecondaryAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetSecondaryAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_GetSecondaryAsync__1_System_String_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.GetSecondaryAsync(`1,System.String,System.Threading.CancellationToken)">GetSecondaryAsync(TId, String, CancellationToken)</h4>
@@ -614,10 +827,62 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_InitializeResourceAsync__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.InitializeResourceAsync(%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L244">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_InitializeResourceAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.InitializeResourceAsync*"></a>
+  <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_InitializeResourceAsync__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.InitializeResourceAsync(`0,System.Threading.CancellationToken)">InitializeResourceAsync(TResource, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">TResource</span></td>
+        <td><span class="parametername">resourceForDatabase</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Threading.CancellationToken</span></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_RemoveFromToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.RemoveFromToManyRelationshipAsync(%601%2CSystem.String%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L451">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L463">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_RemoveFromToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.RemoveFromToManyRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_RemoveFromToManyRelationshipAsync__1_System_String_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.RemoveFromToManyRelationshipAsync(`1,System.String,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">RemoveFromToManyRelationshipAsync(TId, String, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
@@ -626,7 +891,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -684,7 +949,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_SetRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.SetRelationshipAsync(%601%2CSystem.String%2CSystem.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L396">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L407">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_SetRelationshipAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.SetRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_SetRelationshipAsync__1_System_String_System_Object_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.SetRelationshipAsync(`1,System.String,System.Object,System.Threading.CancellationToken)">SetRelationshipAsync(TId, String, Object, CancellationToken)</h4>
@@ -751,7 +1016,7 @@ public class JsonApiResourceService&lt;TResource, TId&gt; : IResourceService&lt;
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Services_JsonApiResourceService_2_UpdateAsync__1__0_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Services.JsonApiResourceService%602.UpdateAsync(%601%2C%600%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L348">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Services/JsonApiResourceService.cs/#L358">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Services_JsonApiResourceService_2_UpdateAsync_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.UpdateAsync*"></a>
   <h4 id="JsonApiDotNetCore_Services_JsonApiResourceService_2_UpdateAsync__1__0_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Services.JsonApiResourceService`2.UpdateAsync(`1,`0,System.Threading.CancellationToken)">UpdateAsync(TId, TResource, CancellationToken)</h4>

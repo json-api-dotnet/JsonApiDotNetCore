@@ -109,7 +109,8 @@
     }
 
     [HttpGet(&quot;{id}&quot;)]
-    public override async Task&lt;IActionResult&gt; GetAsync(int id, CancellationToken cancellationToken)
+    public override async Task&lt;IActionResult&gt; GetAsync(int id,
+        CancellationToken cancellationToken)
     {
         return await base.GetAsync(id, cancellationToken);
     }

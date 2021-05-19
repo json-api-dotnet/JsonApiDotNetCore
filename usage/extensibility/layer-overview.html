@@ -69,27 +69,30 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="layer-overview">Layer Overview</h1>
 
-<p>By default, data retrieval is distributed across three layers:</p>
+<p>By default, data access flows through the next three layers:</p>
 <pre><code>JsonApiController (required)
-
-+-- JsonApiResourceService : IResourceService
-
-     +-- EntityFrameworkCoreRepository : IResourceRepository
-</code></pre><p>Customization can be done at any of these layers. However, it is recommended that you make your customizations at the service or the repository layer when possible, to keep the controllers free of unnecessary logic.
-You can use the following as a general rule of thumb for where to put business logic:</p>
-<ul>
-<li><code>Controller</code>: simple validation logic that should result in the return of specific HTTP status codes, such as model validation</li>
-<li><code>IResourceService</code>: advanced business logic and replacement of data access mechanisms</li>
-<li><code>IResourceRepository</code>: custom logic that builds on the Entity Framework Core APIs</li>
-</ul>
-<h2 id="replacing-services">Replacing Services</h2>
-<p><strong>Note:</strong> If you are using auto-discovery, resource services and repositories will be automatically registered for you.</p>
-<p>Replacing services and repositories is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.</p>
+  JsonApiResourceService : IResourceService
+     EntityFrameworkCoreRepository : IResourceRepository
+</code></pre><p>Aside from these pluggable endpoint-oriented layers, we provide a resource-oriented extensibility point:</p>
+<pre><code>JsonApiResourceDefinition : IResourceDefinition
+</code></pre><p>Resource definition callbacks are invoked from the built-in resource service/repository layers, as well as from the serializer.
+For example, <code>IResourceDefinition.OnSerialize</code> is invoked whenever a resource is sent back to the client, irrespective of the endpoint.
+Likewise, <code>IResourceDefinition.OnSetToOneRelationshipAsync</code> is called from a patch-resource-with-relationships endpoint, as well as from patch-relationship.</p>
+<p>Customization can be done at any of these extensibility points. It is usually sufficient to place your business logic in a resource definition, but depending
+on your needs, you may want to replace other parts by deriving from the built-in classes and override virtual methods or call their protected base methods.</p>
+<h2 id="replacing-injected-services">Replacing injected services</h2>
+<p><strong>Note:</strong> If you are using auto-discovery, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+<p>Replacing built-in services is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
+For convenience, extension methods are provided to register layers on all their implemented interfaces.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped&lt;ProductService, IResourceService&lt;Product&gt;();
-    services.AddScoped&lt;ProductRepository, IResourceRepository&lt;Product&gt;&gt;();
+    services.AddResourceService&lt;ProductService&gt;();
+    services.AddResourceRepository&lt;ProductRepository&gt;();
+    services.AddResourceDefinition&lt;ProductDefinition&gt;();
+
+    services.AddScoped&lt;IResourceFactory, CustomResourceFactory&gt;();
+    services.AddScoped&lt;IJsonApiSerializerFactory, CustomResponseSerializerFactory&gt;();
 }
 </code></pre></article>
           </div>

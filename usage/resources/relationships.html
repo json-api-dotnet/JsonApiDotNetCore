@@ -69,8 +69,10 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="relationships">Relationships</h1>
 
-<p>In order for navigation properties to be identified in the model,
-they should be labeled with the appropriate attribute (either <code>HasOne</code>, <code>HasMany</code> or <code>HasManyThrough</code>).</p>
+<p>A relationship is a named link between two resource types, including a direction.
+They are similar to <a href="https://docs.microsoft.com/en-us/ef/core/modeling/relationships">navigation properties in Entity Framework Core</a>.</p>
+<p>Relationships come in three flavors: to-one, to-many and many-to-many.
+The left side of a relationship is where the relationship is declared, the right side is the resource type it points to.</p>
 <h2 id="hasone">HasOne</h2>
 <p>This exposes a to-one relationship.</p>
 <pre><code class="lang-c#">public class TodoItem : Identifiable
@@ -78,17 +80,19 @@ they should be labeled with the appropriate attribute (either <code>HasOne</code
     [HasOne]
     public Person Owner { get; set; }
 }
-</code></pre><h2 id="hasmany">HasMany</h2>
+</code></pre><p>The left side of this relationship is of type <code>TodoItem</code> (public name: &quot;todoItems&quot;) and the right side is of type <code>Person</code> (public name: &quot;persons&quot;).</p>
+<h2 id="hasmany">HasMany</h2>
 <p>This exposes a to-many relationship.</p>
 <pre><code class="lang-c#">public class Person : Identifiable
 {
     [HasMany]
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; }
 }
-</code></pre><h2 id="hasmanythrough">HasManyThrough</h2>
-<p>Currently, Entity Framework Core <a href="https://github.com/aspnet/EntityFrameworkCore/issues/1368">does not support</a> many-to-many relationships without a join entity.
+</code></pre><p>The left side of this relationship is of type <code>Person</code> (public name: &quot;persons&quot;) and the right side is of type <code>TodoItem</code> (public name: &quot;todoItems&quot;).</p>
+<h2 id="hasmanythrough">HasManyThrough</h2>
+<p>Earlier versions of Entity Framework Core (up to v5) <a href="https://github.com/aspnet/EntityFrameworkCore/issues/1368">did not support</a> many-to-many relationships without a join entity.
 For this reason, we have decided to fill this gap by allowing applications to declare a relationship as <code>HasManyThrough</code>.
-JsonApiDotNetCore will expose this relationship to the client the same way as any other <code>HasMany</code> attribute.
+JsonApiDotNetCore will expose this relationship to the client the same way as any other <code>HasMany</code> relationship.
 However, under the covers it will use the join type and Entity Framework Core&#39;s APIs to get and set the relationship.</p>
 <pre><code class="lang-c#">public class Article : Identifiable
 {
@@ -102,7 +106,8 @@ However, under the covers it will use the join type and Entity Framework Core&#3
     // this is the Entity Framework Core navigation to the join table
     public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
 }
-</code></pre><h2 id="name">Name</h2>
+</code></pre><p>The left side of this relationship is of type <code>Article</code> (public name: &quot;articles&quot;) and the right side is of type <code>Tag</code> (public name: &quot;tags&quot;).</p>
+<h2 id="name">Name</h2>
 <p>There are two ways the exposed relationship name is determined:</p>
 <ol>
 <li><p>Using the configured <a href="../options.html#custom-serializer-settings">naming convention</a>.</p>

@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Middleware_OperationKind" data-uid="JsonApiDotNetCore.Middleware.OperationKind" class="text-break">Enum OperationKind
   </h1>
-  <div class="markdown level0 summary"><p>Lists the functional operation kinds from an atomic:operations request.</p>
+  <div class="markdown level0 summary"><p>Lists the functional operation kinds of a resource request or an atomic:operations request.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
@@ -94,27 +94,34 @@
     <tbody>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship">AddToRelationship</td>
-        <td></td>
+        <td><p>Add resources to a to-many relationship.</p>
+</td>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</td>
-        <td></td>
+        <td><p>Create a new resource with attributes, relationships or both.</p>
+</td>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_DeleteResource">DeleteResource</td>
-        <td></td>
+        <td><p>Delete an existing resource.</p>
+</td>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_RemoveFromRelationship">RemoveFromRelationship</td>
-        <td></td>
+        <td><p>Remove resources from a to-many relationship.</p>
+</td>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</td>
-        <td></td>
+        <td><p>Perform a complete replacement of a relationship on an existing resource.</p>
+</td>
       </tr>
       <tr>
         <td id="JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</td>
-        <td></td>
+        <td><p>Update the attributes and/or relationships of an existing resource. Only the values of sent attributes are replaced. And only the values of sent
+relationships are replaced.</p>
+</td>
       </tr>
     </tbody>
   </thead></thead></table>

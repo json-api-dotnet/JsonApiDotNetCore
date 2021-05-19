@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Custom QueryString parameters </title>
+    <title>Query string parameters </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Custom QueryString parameters ">
+    <meta name="title" content="Query string parameters ">
     <meta name="generator" content="docfx 2.57.2.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
@@ -67,17 +67,27 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="custom-querystring-parameters">Custom QueryString parameters</h1>
+<h1 id="query-string-parameters">Query string parameters</h1>
 
-<p>For information on the built-in query string parameters, see the documentation for them.
-In order to add parsing of custom query string parameters, you can implement the <code>IQueryStringParameterReader</code> interface and inject it.</p>
+<p>The parsing of built-in query string parameters is done by types that implement <code>IQueryStringParameterReader</code>, which accepts the incoming parameter value.
+Those types also implement <code>IQueryConstraintProvider</code>, which they use to expose the parse result.</p>
+<p>The parse result consists of an expression in a scope. For example:</p>
+<pre><code>?filter[articles]=lessThan(price,&#39;1.23&#39;)
+</code></pre><p>has expression <code>lessThan(price,&#39;1.23&#39;)</code> in scope <code>articles</code>.</p>
+<p>For more information on the various built-in query string parameters, see the documentation for them.</p>
+<h2 id="custom-query-string-parameters">Custom query string parameters</h2>
+<p>When using Entity Framework Core, resource definitions provide a concise syntax to bind a LINQ expression to a query string parameter.
+See <a href="resource-definitions.html#custom-query-string-parameters">here</a> for details.</p>
+<h2 id="custom-query-string-parsing">Custom query string parsing</h2>
+<p>In order to add parsing of custom query string parameters, you can implement the <code>IQueryStringParameterReader</code> interface and register your reader.</p>
 <pre><code class="lang-c#">public class YourQueryStringParameterReader : IQueryStringParameterReader
 {
     // ...
 }
 </code></pre><pre><code class="lang-c#">services.AddScoped&lt;YourQueryStringParameterReader&gt;();
 services.AddScoped&lt;IQueryStringParameterReader&gt;(sp =&gt; sp.GetService&lt;YourQueryStringParameterReader&gt;());
-</code></pre></article>
+</code></pre><p>Now you can inject your custom reader in resource services, repositories, resource definitions etc.</p>
+</article>
           </div>
           
           <div class="hidden-sm col-md-2" role="complementary">
@@ -85,7 +95,7 @@ services.AddScoped&lt;IQueryStringParameterReader&gt;(sp =&gt; sp.GetService&lt;
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/custom-query-formats.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/query-strings.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

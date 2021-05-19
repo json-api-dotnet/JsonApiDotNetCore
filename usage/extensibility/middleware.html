@@ -69,7 +69,9 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="middleware">Middleware</h1>
 
-<p>It is possible to replace JsonApiDotNetCore middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>. </p>
+<p>The default middleware validates incoming <code>Content-Type</code> and <code>Accept</code> HTTP headers.
+Based on routing configuration, it fills <code>IJsonApiRequest</code>, an injectable object that contains JSON:API-related information about the request being processed.</p>
+<p>It is possible to replace the built-in middleware components by configuring the IoC container and by configuring <code>MvcOptions</code>. </p>
 <h2 id="configuring-the-ioc-container">Configuring the IoC container</h2>
 <p>The following example replaces the internal exception filter with a custom implementation.</p>
 <pre><code class="lang-c#">/// In Startup.ConfigureServices

@@ -155,14 +155,20 @@ public class ProductService : IResourceService&lt;Product&gt;
     +-- ICreateService
     |   POST /
     |
-    +-- IDeleteService
-    |   DELETE /{id}
-    |
     +-- IUpdateService
     |   PATCH /{id}
     |
-    +-- IUpdateRelationshipService
-        PATCH /{id}/relationships/{relationship}
+    +-- IDeleteService
+    |   DELETE /{id}
+    |
+    +-- IAddToRelationshipService
+    |   POST /{id}/relationships/{relationship}
+    |
+    +-- ISetRelationshipService
+    |   PATCH /{id}/relationships/{relationship}
+    |
+    +-- IRemoveFromRelationshipService
+        DELETE /{id}/relationships/{relationship}
 </code></pre><p>In order to take advantage of these interfaces you first need to register the service for each implemented interface.</p>
 <pre><code class="lang-c#">public class ArticleService : ICreateService&lt;Article&gt;, IDeleteService&lt;Article&gt;
 {
