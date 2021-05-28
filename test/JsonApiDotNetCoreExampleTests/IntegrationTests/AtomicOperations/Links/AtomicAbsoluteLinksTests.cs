@@ -25,6 +25,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
 
             testContext.UseController<OperationsController>();
 
+            // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
+            testContext.UseController<TextLanguagesController>();
+            testContext.UseController<RecordCompaniesController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
@@ -107,6 +111,54 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Links
             singleData2.Relationships["tracks"].Links.Should().NotBeNull();
             singleData2.Relationships["tracks"].Links.Self.Should().Be(companyLink + "/relationships/tracks");
             singleData2.Relationships["tracks"].Links.Related.Should().Be(companyLink + "/tracks");
+        }
+
+        [Fact]
+        public async Task Update_resource_with_side_effects_and_missing_resource_controller_hides_links()
+        {
+            // Arrange
+            Playlist existingPlaylist = _fakers.Playlist.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Playlists.Add(existingPlaylist);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new object[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "playlists",
+                            id = existingPlaylist.StringId,
+                            attributes = new
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
+                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Results.Should().HaveCount(1);
+
+            ResourceObject singleData = responseDocument.Results[0].SingleData;
+            singleData.Should().NotBeNull();
+            singleData.Links.Should().BeNull();
+            singleData.Relationships.Should().BeNull();
         }
     }
 }

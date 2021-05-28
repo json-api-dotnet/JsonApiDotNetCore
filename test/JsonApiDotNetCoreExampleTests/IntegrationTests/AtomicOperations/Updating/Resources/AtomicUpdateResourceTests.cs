@@ -25,6 +25,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             _testContext = testContext;
 
             testContext.UseController<OperationsController>();
+
+            // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
+            testContext.UseController<TextLanguagesController>();
         }
 
         [Fact]

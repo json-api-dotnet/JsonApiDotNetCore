@@ -23,6 +23,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
 
             testContext.UseController<OperationsController>();
 
+            // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
+            testContext.UseController<PerformersController>();
+
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));

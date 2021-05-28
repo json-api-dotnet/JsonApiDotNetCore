@@ -9,5 +9,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// </summary>
         [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
         public string Self { get; set; }
+
+        internal bool HasValue()
+        {
+            return !string.IsNullOrEmpty(Self);
+        }
     }
 }

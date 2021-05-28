@@ -44,7 +44,9 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(other, nameof(other));
 
             Kind = other.Kind;
+#pragma warning disable CS0618 // Type or member is obsolete
             BasePath = other.BasePath;
+#pragma warning restore CS0618 // Type or member is obsolete
             PrimaryId = other.PrimaryId;
             PrimaryResource = other.PrimaryResource;
             SecondaryResource = other.SecondaryResource;

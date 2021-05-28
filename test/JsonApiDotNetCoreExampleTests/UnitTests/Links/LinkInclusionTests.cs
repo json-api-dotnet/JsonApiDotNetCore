@@ -1,14 +1,15 @@
+using System;
 using FluentAssertions;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
@@ -62,7 +63,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 TopLevelLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var options = new JsonApiOptions
+            {
+                TopLevelLinks = linksInOptions
+            };
 
             var request = new JsonApiRequest
             {
@@ -80,14 +84,13 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 TotalResourceCount = 10
             };
 
-            var queryStringAccessor = new EmptyRequestQueryStringAccessor();
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var httpContextAccessor = new FakeHttpContextAccessor();
+            var linkGenerator = new FakeLinkGenerator();
+            var controllerResourceMapping = new FakeControllerResourceMapping();
 
-            var options = new JsonApiOptions
-            {
-                TopLevelLinks = linksInOptions
-            };
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
+                controllerResourceMapping);
 
             // Act
             TopLevelLinks topLevelLinks = linkBuilder.GetTopLevelLinks();
@@ -161,20 +164,20 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 ResourceLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
-
-            var request = new JsonApiRequest();
-
-            var paginationContext = new PaginationContext();
-
-            var queryStringAccessor = new EmptyRequestQueryStringAccessor();
-
             var options = new JsonApiOptions
             {
                 ResourceLinks = linksInOptions
             };
 
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
+            var request = new JsonApiRequest();
+            var paginationContext = new PaginationContext();
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var httpContextAccessor = new FakeHttpContextAccessor();
+            var linkGenerator = new FakeLinkGenerator();
+            var controllerResourceMapping = new FakeControllerResourceMapping();
+
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
+                controllerResourceMapping);
 
             // Act
             ResourceLinks resourceLinks = linkBuilder.GetResourceLinks(nameof(ExampleResource), "id");
@@ -327,20 +330,20 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 RelationshipLinks = linksInResourceContext
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
-
-            var request = new JsonApiRequest();
-
-            var paginationContext = new PaginationContext();
-
-            var queryStringAccessor = new EmptyRequestQueryStringAccessor();
-
             var options = new JsonApiOptions
             {
                 RelationshipLinks = linksInOptions
             };
 
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, queryStringAccessor);
+            var request = new JsonApiRequest();
+            var paginationContext = new PaginationContext();
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var httpContextAccessor = new FakeHttpContextAccessor();
+            var linkGenerator = new FakeLinkGenerator();
+            var controllerResourceMapping = new FakeControllerResourceMapping();
+
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
+                controllerResourceMapping);
 
             var relationship = new HasOneAttribute
             {
@@ -377,13 +380,62 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
             }
         }
 
-        private sealed class EmptyRequestQueryStringAccessor : IRequestQueryStringAccessor
-        {
-            public IQueryCollection Query { get; } = new QueryCollection();
-        }
-
         private sealed class ExampleResource : Identifiable
         {
+        }
+
+        private sealed class FakeHttpContextAccessor : IHttpContextAccessor
+        {
+            public HttpContext HttpContext { get; set; } = new DefaultHttpContext
+            {
+                Request =
+                {
+                    Scheme = "http",
+                    Host = new HostString("localhost")
+                }
+            };
+        }
+
+        private sealed class FakeControllerResourceMapping : IControllerResourceMapping
+        {
+            public Type GetResourceTypeForController(Type controllerType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string GetControllerNameForResourceType(Type resourceType)
+            {
+                return null;
+            }
+        }
+
+        private sealed class FakeLinkGenerator : LinkGenerator
+        {
+            public override string GetPathByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
+                RouteValueDictionary ambientValues = null, PathString? pathBase = null, FragmentString fragment = new FragmentString(),
+                LinkOptions options = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string GetPathByAddress<TAddress>(TAddress address, RouteValueDictionary values, PathString pathBase = new PathString(),
+                FragmentString fragment = new FragmentString(), LinkOptions options = null)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string GetUriByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
+                RouteValueDictionary ambientValues = null, string scheme = null, HostString? host = null, PathString? pathBase = null,
+                FragmentString fragment = new FragmentString(), LinkOptions options = null)
+            {
+                return "https://domain.com/some/path";
+            }
+
+            public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string scheme, HostString host,
+                PathString pathBase = new PathString(), FragmentString fragment = new FragmentString(), LinkOptions options = null)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

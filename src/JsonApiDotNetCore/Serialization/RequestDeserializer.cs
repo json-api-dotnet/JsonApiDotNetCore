@@ -205,7 +205,9 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
+#pragma warning disable CS0618 // Type or member is obsolete
                 BasePath = _request.BasePath,
+#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryResource = primaryResourceContext,
                 OperationKind = kind
             };
@@ -329,7 +331,9 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
+#pragma warning disable CS0618 // Type or member is obsolete
                 BasePath = _request.BasePath,
+#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryId = primaryResource.StringId,
                 PrimaryResource = primaryResourceContext,
                 OperationKind = kind
@@ -364,7 +368,9 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
+#pragma warning disable CS0618 // Type or member is obsolete
                 BasePath = _request.BasePath,
+#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryId = primaryResource.StringId,
                 PrimaryResource = primaryResourceContext,
                 SecondaryResource = secondaryResourceContext,

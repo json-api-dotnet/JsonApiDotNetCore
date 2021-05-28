@@ -35,6 +35,7 @@ namespace JsonApiDotNetCore.Middleware
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly Dictionary<string, string> _registeredControllerNameByTemplate = new Dictionary<string, string>();
         private readonly Dictionary<Type, ResourceContext> _resourceContextPerControllerTypeMap = new Dictionary<Type, ResourceContext>();
+        private readonly Dictionary<ResourceContext, ControllerModel> _controllerPerResourceContextMap = new Dictionary<ResourceContext, ControllerModel>();
 
         public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
         {
@@ -53,6 +54,22 @@ namespace JsonApiDotNetCore.Middleware
             if (_resourceContextPerControllerTypeMap.TryGetValue(controllerType, out ResourceContext resourceContext))
             {
                 return resourceContext.ResourceType;
+            }
+
+            return null;
+        }
+
+        /// <inheritdoc />
+        public string GetControllerNameForResourceType(Type resourceType)
+        {
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+
+            if (_controllerPerResourceContextMap.TryGetValue(resourceContext, out ControllerModel controllerModel))
+
+            {
+                return controllerModel.ControllerName;
             }
 
             return null;
@@ -78,6 +95,7 @@ namespace JsonApiDotNetCore.Middleware
                         if (resourceContext != null)
                         {
                             _resourceContextPerControllerTypeMap.Add(controller.ControllerType, resourceContext);
+                            _controllerPerResourceContextMap.Add(resourceContext, controller);
                         }
                     }
                 }
@@ -117,9 +135,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (_resourceContextPerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceContext resourceContext))
             {
-                string template = $"{_options.Namespace}/{resourceContext.PublicName}";
-
-                return template;
+                return $"{_options.Namespace}/{resourceContext.PublicName}";
             }
 
             return null;
@@ -131,9 +147,7 @@ namespace JsonApiDotNetCore.Middleware
         private string TemplateFromController(ControllerModel model)
         {
             string controllerName = _options.SerializerNamingStrategy.GetPropertyName(model.ControllerName, false);
-            string template = $"{_options.Namespace}/{controllerName}";
-
-            return template;
+            return $"{_options.Namespace}/{controllerName}";
         }
 
         /// <summary>
