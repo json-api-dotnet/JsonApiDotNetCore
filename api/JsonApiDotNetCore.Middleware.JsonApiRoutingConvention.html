@@ -134,7 +134,7 @@ public class SomeResourceController&lt;SomeResource&gt; : JsonApiController&lt;S
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceContextProvider_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Configuration.IResourceContextProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L39">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L40">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceContextProvider_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceContextProvider)">JsonApiRoutingConvention(IJsonApiOptions, IResourceContextProvider)</h4>
@@ -173,7 +173,7 @@ public class SomeResourceController&lt;SomeResource&gt; : JsonApiController&lt;S
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_Apply_Microsoft_AspNetCore_Mvc_ApplicationModels_ApplicationModel_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ApplicationModel)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L62">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L79">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_Apply_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.Apply*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_Apply_Microsoft_AspNetCore_Mvc_ApplicationModels_ApplicationModel_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.Apply(Microsoft.AspNetCore.Mvc.ApplicationModels.ApplicationModel)">Apply(ApplicationModel)</h4>
@@ -202,14 +202,62 @@ public class SomeResourceController&lt;SomeResource&gt; : JsonApiController&lt;S
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetControllerNameForResourceType_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L63">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetControllerNameForResourceType_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetControllerNameForResourceType_System_Type_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType(System.Type)">GetControllerNameForResourceType(Type)</h4>
+  <div class="markdown level1 summary"><p>Gets the associated controller name for the provided resource type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GetControllerNameForResourceType(Type resourceType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">resourceType</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/JsonApiRoutingConvention.cs/#L50">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_System_Type_" data-uid="JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)">GetResourceTypeForController(Type)</h4>
-  <div class="markdown level1 summary"><p>Get the associated resource type for the provided controller type.</p>
+  <div class="markdown level1 summary"><p>Gets the associated resource type for the provided controller type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>

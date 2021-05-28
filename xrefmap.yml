@@ -6048,6 +6048,19 @@ references:
   commentId: T:JsonApiDotNetCore.Middleware.IControllerResourceMapping
   fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping
   nameWithType: IControllerResourceMapping
+- uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType(System.Type)
+  name: GetControllerNameForResourceType(Type)
+  href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetControllerNameForResourceType_System_Type_
+  commentId: M:JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType(System.Type)
+  fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType(System.Type)
+  nameWithType: IControllerResourceMapping.GetControllerNameForResourceType(Type)
+- uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType*
+  name: GetControllerNameForResourceType
+  href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetControllerNameForResourceType_
+  commentId: Overload:JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetControllerNameForResourceType
+  nameWithType: IControllerResourceMapping.GetControllerNameForResourceType
 - uid: JsonApiDotNetCore.Middleware.IControllerResourceMapping.GetResourceTypeForController(System.Type)
   name: GetResourceTypeForController(Type)
   href: api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html#JsonApiDotNetCore_Middleware_IControllerResourceMapping_GetResourceTypeForController_System_Type_
@@ -6524,6 +6537,19 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.Apply
   nameWithType: JsonApiRoutingConvention.Apply
+- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType(System.Type)
+  name: GetControllerNameForResourceType(Type)
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetControllerNameForResourceType_System_Type_
+  commentId: M:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType(System.Type)
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType(System.Type)
+  nameWithType: JsonApiRoutingConvention.GetControllerNameForResourceType(Type)
+- uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType*
+  name: GetControllerNameForResourceType
+  href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetControllerNameForResourceType_
+  commentId: Overload:JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetControllerNameForResourceType
+  nameWithType: JsonApiRoutingConvention.GetControllerNameForResourceType
 - uid: JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.GetResourceTypeForController(System.Type)
   name: GetResourceTypeForController(Type)
   href: api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html#JsonApiDotNetCore_Middleware_JsonApiRoutingConvention_GetResourceTypeForController_System_Type_
@@ -17675,12 +17701,12 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Building.LinkBuilder
   fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder
   nameWithType: LinkBuilder
-- uid: JsonApiDotNetCore.Serialization.Building.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  name: LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IResourceContextProvider, IRequestQueryStringAccessor)
-  href: api/JsonApiDotNetCore.Serialization.Building.LinkBuilder.html#JsonApiDotNetCore_Serialization_Building_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IResourceContextProvider_JsonApiDotNetCore_QueryStrings_IRequestQueryStringAccessor_
-  commentId: M:JsonApiDotNetCore.Serialization.Building.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IResourceContextProvider,JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IResourceContextProvider, JsonApiDotNetCore.QueryStrings.IRequestQueryStringAccessor)
-  nameWithType: LinkBuilder.LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IResourceContextProvider, IRequestQueryStringAccessor)
+- uid: JsonApiDotNetCore.Serialization.Building.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping)
+  name: LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IResourceContextProvider, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping)
+  href: api/JsonApiDotNetCore.Serialization.Building.LinkBuilder.html#JsonApiDotNetCore_Serialization_Building_LinkBuilder__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IResourceContextProvider_Microsoft_AspNetCore_Http_IHttpContextAccessor_Microsoft_AspNetCore_Routing_LinkGenerator_JsonApiDotNetCore_Middleware_IControllerResourceMapping_
+  commentId: M:JsonApiDotNetCore.Serialization.Building.LinkBuilder.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.AspNetCore.Http.IHttpContextAccessor,Microsoft.AspNetCore.Routing.LinkGenerator,JsonApiDotNetCore.Middleware.IControllerResourceMapping)
+  fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder.LinkBuilder(JsonApiDotNetCore.Configuration.IJsonApiOptions, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IResourceContextProvider, Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Routing.LinkGenerator, JsonApiDotNetCore.Middleware.IControllerResourceMapping)
+  nameWithType: LinkBuilder.LinkBuilder(IJsonApiOptions, IJsonApiRequest, IPaginationContext, IResourceContextProvider, IHttpContextAccessor, LinkGenerator, IControllerResourceMapping)
 - uid: JsonApiDotNetCore.Serialization.Building.LinkBuilder.#ctor*
   name: LinkBuilder
   href: api/JsonApiDotNetCore.Serialization.Building.LinkBuilder.html#JsonApiDotNetCore_Serialization_Building_LinkBuilder__ctor_
@@ -17727,6 +17753,22 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder.GetTopLevelLinks
   nameWithType: LinkBuilder.GetTopLevelLinks
+- uid: JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})
+  name: RenderLinkForAction(String, String, IDictionary<String, Object>)
+  href: api/JsonApiDotNetCore.Serialization.Building.LinkBuilder.html#JsonApiDotNetCore_Serialization_Building_LinkBuilder_RenderLinkForAction_System_String_System_String_System_Collections_Generic_IDictionary_System_String_System_Object__
+  commentId: M:JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})
+  name.vb: RenderLinkForAction(String, String, IDictionary(Of String, Object))
+  fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction(System.String, System.String, System.Collections.Generic.IDictionary<System.String, System.Object>)
+  fullName.vb: JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction(System.String, System.String, System.Collections.Generic.IDictionary(Of System.String, System.Object))
+  nameWithType: LinkBuilder.RenderLinkForAction(String, String, IDictionary<String, Object>)
+  nameWithType.vb: LinkBuilder.RenderLinkForAction(String, String, IDictionary(Of String, Object))
+- uid: JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction*
+  name: RenderLinkForAction
+  href: api/JsonApiDotNetCore.Serialization.Building.LinkBuilder.html#JsonApiDotNetCore_Serialization_Building_LinkBuilder_RenderLinkForAction_
+  commentId: Overload:JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.Building.LinkBuilder.RenderLinkForAction
+  nameWithType: LinkBuilder.RenderLinkForAction
 - uid: JsonApiDotNetCore.Serialization.Building.MetaBuilder
   name: MetaBuilder
   href: api/JsonApiDotNetCore.Serialization.Building.MetaBuilder.html

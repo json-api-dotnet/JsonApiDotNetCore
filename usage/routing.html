@@ -106,7 +106,7 @@ public class OrderLineController : JsonApiController&lt;OrderLine&gt;
 </code></pre><pre><code class="lang-http">GET /orderLines HTTP/1.1
 </code></pre><h2 id="disabling-the-default-routing-convention">Disabling the Default Routing Convention</h2>
 <p>It is possible to bypass the default routing convention for a controller.</p>
-<pre><code class="lang-c#">[Route(&quot;v1/custom/route/orderLines&quot;), DisableRoutingConvention]
+<pre><code class="lang-c#">[Route(&quot;v1/custom/route/lines-in-order&quot;), DisableRoutingConvention]
 public class OrderLineController : JsonApiController&lt;OrderLine&gt;
 {
     public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
@@ -115,8 +115,7 @@ public class OrderLineController : JsonApiController&lt;OrderLine&gt;
     {
     }
 }
-</code></pre><p>It is required to match your custom url with the exposed name of the associated resource.</p>
-<h2 id="advanced-usage-custom-routing-convention">Advanced Usage: Custom Routing Convention</h2>
+</code></pre><h2 id="advanced-usage-custom-routing-convention">Advanced Usage: Custom Routing Convention</h2>
 <p>It is possible to replace the built-in routing convention with a <a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/application-model?view=aspnetcore-3.1#sample-custom-routing-convention">custom routing convention</a> by registering an implementation of <code>IJsonApiRoutingConvention</code>.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
