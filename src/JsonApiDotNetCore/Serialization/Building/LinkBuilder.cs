@@ -23,9 +23,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         private const string PageSizeParameterName = "page[size]";
         private const string PageNumberParameterName = "page[number]";
 
-        private static readonly string GetPrimaryControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetAsync));
-        private static readonly string GetSecondaryControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetSecondaryAsync));
-        private static readonly string GetRelationshipControllerAction = WithoutAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetRelationshipAsync));
+        private static readonly string GetPrimaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetAsync));
+        private static readonly string GetSecondaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetSecondaryAsync));
+        private static readonly string GetRelationshipControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable>.GetRelationshipAsync));
 
         private readonly IJsonApiOptions _options;
         private readonly IJsonApiRequest _request;
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _controllerResourceMapping = controllerResourceMapping;
         }
 
-        private static string WithoutAsyncSuffix(string actionName)
+        private static string NoAsyncSuffix(string actionName)
         {
             return actionName.EndsWith("Async", StringComparison.Ordinal) ? actionName[..^"Async".Length] : actionName;
         }
@@ -186,6 +186,19 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string GetLinkForPagination(int pageOffset, string pageSizeValue)
         {
+            string queryStringValue = GetQueryStringInPaginationLink(pageOffset, pageSizeValue);
+
+            var builder = new UriBuilder(_httpContextAccessor.HttpContext.Request.GetEncodedUrl())
+            {
+                Query = queryStringValue
+            };
+
+            UriComponents components = _options.UseRelativeLinks ? UriComponents.PathAndQuery : UriComponents.AbsoluteUri;
+            return builder.Uri.GetComponents(components, UriFormat.SafeUnescaped);
+        }
+
+        private string GetQueryStringInPaginationLink(int pageOffset, string pageSizeValue)
+        {
             IDictionary<string, string> parameters =
                 _httpContextAccessor.HttpContext.Request.Query.ToDictionary(pair => pair.Key, pair => pair.Value.ToString());
 
@@ -208,15 +221,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             }
 
             string queryStringValue = QueryString.Create(parameters).Value;
-            queryStringValue = DecodeSpecialCharacters(queryStringValue);
-
-            var builder = new UriBuilder(_httpContextAccessor.HttpContext.Request.GetEncodedUrl())
-            {
-                Query = queryStringValue
-            };
-
-            UriComponents components = _options.UseRelativeLinks ? UriComponents.PathAndQuery : UriComponents.AbsoluteUri;
-            return builder.Uri.GetComponents(components, UriFormat.SafeUnescaped);
+            return DecodeSpecialCharacters(queryStringValue);
         }
 
         private static string DecodeSpecialCharacters(string uri)
@@ -260,7 +265,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceContext.ResourceType);
             IDictionary<string, object> routeValues = GetRouteValues(resourceId, null);
 
-            return RenderLinkForAction(controllerName, GetPrimaryControllerAction, routeValues);
+            return RenderLinkForAction(controllerName, GetPrimaryControllerActionName, routeValues);
         }
 
         /// <inheritdoc />
@@ -290,7 +295,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
 
-            return RenderLinkForAction(controllerName, GetRelationshipControllerAction, routeValues);
+            return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
         }
 
         private string GetLinkForRelationshipRelated(string primaryId, RelationshipAttribute relationship)
@@ -298,7 +303,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
 
-            return RenderLinkForAction(controllerName, GetSecondaryControllerAction, routeValues);
+            return RenderLinkForAction(controllerName, GetSecondaryControllerActionName, routeValues);
         }
 
         private IDictionary<string, object> GetRouteValues(string primaryId, string relationshipName)
