@@ -1,21 +1,20 @@
 using System;
 using Bogus;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models;
 using TestBuildingBlocks;
-using Person = JsonApiDotNetCoreExample.Models.Person;
+using Person = JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models.Person;
 
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
 {
-    internal sealed class ExampleFakers : FakerContainer
+    internal sealed class HooksFakers : FakerContainer
     {
         private readonly Lazy<Faker<Author>> _lazyAuthorFaker = new Lazy<Faker<Author>>(() =>
             new Faker<Author>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(author => author.FirstName, faker => faker.Person.FirstName)
-                .RuleFor(author => author.LastName, faker => faker.Person.LastName));
+                .RuleFor(author => author.Name, faker => faker.Person.FullName));
 
         private readonly Lazy<Faker<Article>> _lazyArticleFaker = new Lazy<Faker<Article>>(() =>
             new Faker<Article>()
@@ -37,8 +36,7 @@ namespace JsonApiDotNetCoreExampleTests
         private readonly Lazy<Faker<Person>> _lazyPersonFaker = new Lazy<Faker<Person>>(() =>
             new Faker<Person>()
                 .UseSeed(GetFakerSeed())
-                .RuleFor(person => person.FirstName, faker => faker.Person.FirstName)
-                .RuleFor(person => person.LastName, faker => faker.Person.LastName));
+                .RuleFor(person => person.Name, faker => faker.Person.FullName));
 
         private readonly Lazy<Faker<Tag>> _lazyTagFaker = new Lazy<Faker<Tag>>(() =>
             new Faker<Tag>()

@@ -5,10 +5,9 @@ using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Update
@@ -16,7 +15,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
     public sealed class BeforeUpdateWithDbValuesTests : HooksTestsSetup
     {
         private const string Description = "DESCRIPTION";
-        private const string LastName = "NAME";
+        private const string Name = "NAME";
 
         private readonly ResourceHook[] _targetHooks =
         {
@@ -33,7 +32,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
 
         private readonly string _personId;
         private readonly IList<TodoItem> _todoList;
-        private readonly DbContextOptions<AppDbContext> _options;
+        private readonly DbContextOptions<HooksDbContext> _options;
 
         public BeforeUpdateWithDbValuesTests()
         {
@@ -50,7 +49,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             implicitTodo.OneToOnePerson = new Person
             {
                 Id = personId,
-                LastName = LastName
+                Name = Name
             };
 
             implicitTodo.Description = Description + Description;
@@ -63,7 +62,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
                     OneToOnePerson = new Person
                     {
                         Id = implicitPersonId,
-                        LastName = LastName + LastName
+                        Name = Name + Name
                     },
                     Description = Description
                 });
@@ -93,11 +92,11 @@ namespace UnitTests.ResourceHooks.Executor.Update
 
             ownerResourceMock.Verify(
                 rd => rd.BeforeUpdateRelationship(It.Is<HashSet<string>>(ids => PersonIdCheck(ids, _personId)),
-                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName, rh)), ResourcePipeline.Patch), Times.Once());
+                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name, rh)), ResourcePipeline.Patch), Times.Once());
 
             ownerResourceMock.Verify(
-                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName + LastName, rh)),
-                    ResourcePipeline.Patch), Times.Once());
+                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name + Name, rh)), ResourcePipeline.Patch),
+                Times.Once());
 
             todoResourceMock.Verify(
                 rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<TodoItem>>(rh => TodoCheck(rh, Description + Description)),
@@ -136,8 +135,8 @@ namespace UnitTests.ResourceHooks.Executor.Update
                 Times.Once());
 
             ownerResourceMock.Verify(
-                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName + LastName, rh)),
-                    ResourcePipeline.Patch), Times.Once());
+                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name + Name, rh)), ResourcePipeline.Patch),
+                Times.Once());
 
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -158,11 +157,11 @@ namespace UnitTests.ResourceHooks.Executor.Update
             // Assert
             ownerResourceMock.Verify(
                 rd => rd.BeforeUpdateRelationship(It.Is<HashSet<string>>(ids => PersonIdCheck(ids, _personId)),
-                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName, rh)), ResourcePipeline.Patch), Times.Once());
+                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name, rh)), ResourcePipeline.Patch), Times.Once());
 
             ownerResourceMock.Verify(
-                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName + LastName, rh)),
-                    ResourcePipeline.Patch), Times.Once());
+                rd => rd.BeforeImplicitUpdateRelationship(It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name + Name, rh)), ResourcePipeline.Patch),
+                Times.Once());
 
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -233,7 +232,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
             // Assert
             ownerResourceMock.Verify(
                 rd => rd.BeforeUpdateRelationship(It.Is<HashSet<string>>(ids => PersonIdCheck(ids, _personId)),
-                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(LastName, rh)), ResourcePipeline.Patch), Times.Once());
+                    It.Is<IRelationshipsDictionary<Person>>(rh => PersonCheck(Name, rh)), ResourcePipeline.Patch), Times.Once());
 
             VerifyNoOtherCalls(todoResourceMock, ownerResourceMock);
         }
@@ -286,7 +285,7 @@ namespace UnitTests.ResourceHooks.Executor.Update
         private bool PersonCheck(string checksum, IRelationshipsDictionary<Person> helper)
         {
             IDictionary<RelationshipAttribute, HashSet<Person>> entries = helper.GetByRelationship<TodoItem>();
-            return entries.Single().Value.Single().LastName == checksum;
+            return entries.Single().Value.Single().Name == checksum;
         }
     }
 }

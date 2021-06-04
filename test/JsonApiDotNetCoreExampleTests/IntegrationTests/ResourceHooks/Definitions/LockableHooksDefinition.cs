@@ -5,9 +5,9 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models;
 
-namespace JsonApiDotNetCoreExample.Definitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Definitions
 {
     public abstract class LockableHooksDefinition<T> : ResourceHooksDefinition<T>
         where T : class, IIsLockable, IIdentifiable

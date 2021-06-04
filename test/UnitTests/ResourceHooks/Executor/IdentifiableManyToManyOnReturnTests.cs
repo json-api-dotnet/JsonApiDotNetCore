@@ -3,8 +3,8 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCoreExample.Models;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor

@@ -74,10 +74,10 @@ namespace UnitTests.Extensions
             services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
             ServiceProvider provider = services.BuildServiceProvider();
             var graph = provider.GetRequiredService<IResourceGraph>();
-            ResourceContext resourceContext = graph.GetResourceContext<Author>();
+            ResourceContext resourceContext = graph.GetResourceContext<Person>();
 
             // Assert
-            Assert.Equal("authors", resourceContext.PublicName);
+            Assert.Equal("people", resourceContext.PublicName);
         }
 
         [Fact]

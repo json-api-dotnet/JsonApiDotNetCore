@@ -3,8 +3,8 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCoreExample.Models;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor
@@ -45,10 +45,10 @@ namespace UnitTests.ResourceHooks.Executor
 
             var person3 = new Person
             {
-                StakeHolderTodoItem = todo
+                StakeholderTodoItem = todo
             };
 
-            todo.StakeHolders = new HashSet<Person>
+            todo.Stakeholders = new HashSet<Person>
             {
                 person3
             };

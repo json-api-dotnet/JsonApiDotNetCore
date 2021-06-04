@@ -12,11 +12,10 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 
 namespace UnitTests.ResourceHooks
 {
@@ -61,7 +60,7 @@ namespace UnitTests.ResourceHooks
         }
 
         protected TestObjectsB<TPrimary, TSecondary> CreateTestObjects<TPrimary, TSecondary>(IHooksDiscovery<TPrimary> primaryDiscovery = null,
-            IHooksDiscovery<TSecondary> secondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
+            IHooksDiscovery<TSecondary> secondaryDiscovery = null, DbContextOptions<HooksDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TSecondary : class, IIdentifiable<int>
         {
@@ -73,7 +72,7 @@ namespace UnitTests.ResourceHooks
             (Mock<ITargetedFields> ufMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<IGenericServiceFactory> gpfMock,
                 IJsonApiOptions options) = CreateMocks();
 
-            AppDbContext dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            HooksDbContext dbContext = repoDbContextOptions != null ? new HooksDbContext(repoDbContextOptions) : null;
 
             IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TPrimary>().Add<TSecondary>().Build();
 
@@ -89,7 +88,7 @@ namespace UnitTests.ResourceHooks
 
         protected TestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary> CreateTestObjectsC<TPrimary, TFirstSecondary, TSecondSecondary>(
             IHooksDiscovery<TPrimary> primaryDiscovery = null, IHooksDiscovery<TFirstSecondary> firstSecondaryDiscovery = null,
-            IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null, DbContextOptions<AppDbContext> repoDbContextOptions = null)
+            IHooksDiscovery<TSecondSecondary> secondSecondaryDiscovery = null, DbContextOptions<HooksDbContext> repoDbContextOptions = null)
             where TPrimary : class, IIdentifiable<int>
             where TFirstSecondary : class, IIdentifiable<int>
             where TSecondSecondary : class, IIdentifiable<int>
@@ -103,7 +102,7 @@ namespace UnitTests.ResourceHooks
             (Mock<ITargetedFields> ufMock, Mock<IEnumerable<IQueryConstraintProvider>> constraintsMock, Mock<IGenericServiceFactory> gpfMock,
                 IJsonApiOptions options) = CreateMocks();
 
-            AppDbContext dbContext = repoDbContextOptions != null ? new AppDbContext(repoDbContextOptions) : null;
+            HooksDbContext dbContext = repoDbContextOptions != null ? new HooksDbContext(repoDbContextOptions) : null;
 
             IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<TPrimary>().Add<TFirstSecondary>()
                 .Add<TSecondSecondary>().Build();
@@ -145,11 +144,11 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        protected DbContextOptions<AppDbContext> InitInMemoryDb(Action<DbContext> seeder)
+        protected DbContextOptions<HooksDbContext> InitInMemoryDb(Action<DbContext> seeder)
         {
-            DbContextOptions<AppDbContext> options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("repository_mock").Options;
+            DbContextOptions<HooksDbContext> options = new DbContextOptionsBuilder<HooksDbContext>().UseInMemoryDatabase("repository_mock").Options;
 
-            using var context = new AppDbContext(options);
+            using var context = new HooksDbContext(options);
 
             seeder(context);
             ResolveInverseRelationships(context);
@@ -189,7 +188,8 @@ namespace UnitTests.ResourceHooks
         }
 
         private void SetupProcessorFactoryForResourceDefinition<TModel>(Mock<IGenericServiceFactory> processorFactory,
-            IResourceHookContainer<TModel> modelResource, IHooksDiscovery<TModel> discovery, AppDbContext dbContext = null, IResourceGraph resourceGraph = null)
+            IResourceHookContainer<TModel> modelResource, IHooksDiscovery<TModel> discovery, HooksDbContext dbContext = null,
+            IResourceGraph resourceGraph = null)
             where TModel : class, IIdentifiable<int>
         {
             processorFactory.Setup(factory => factory.Get<IResourceHookContainer>(typeof(ResourceHooksDefinition<>), typeof(TModel))).Returns(modelResource);
@@ -214,7 +214,7 @@ namespace UnitTests.ResourceHooks
             }
         }
 
-        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(AppDbContext dbContext, IResourceGraph resourceGraph)
+        private IResourceReadRepository<TModel, int> CreateTestRepository<TModel>(HooksDbContext dbContext, IResourceGraph resourceGraph)
             where TModel : class, IIdentifiable<int>
         {
             var resourceFactory = new TestResourceFactory();
@@ -225,16 +225,16 @@ namespace UnitTests.ResourceHooks
                 Enumerable.Empty<IQueryConstraintProvider>(), NullLoggerFactory.Instance);
         }
 
-        private IDbContextResolver CreateTestDbResolver(AppDbContext dbContext)
+        private IDbContextResolver CreateTestDbResolver(HooksDbContext dbContext)
         {
             var mock = new Mock<IDbContextResolver>();
             mock.Setup(resolver => resolver.GetContext()).Returns(dbContext);
             return mock.Object;
         }
 
-        private void ResolveInverseRelationships(AppDbContext context)
+        private void ResolveInverseRelationships(HooksDbContext context)
         {
-            IEnumerable<DbContextResolver<AppDbContext>> dbContextResolvers = new DbContextResolver<AppDbContext>(context).AsEnumerable();
+            IEnumerable<DbContextResolver<HooksDbContext>> dbContextResolvers = new DbContextResolver<HooksDbContext>(context).AsEnumerable();
             var inverseRelationships = new InverseNavigationResolver(ResourceGraph, dbContextResolvers);
             inverseRelationships.Resolve();
         }

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ArticleTag

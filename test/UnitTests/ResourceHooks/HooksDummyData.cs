@@ -4,9 +4,9 @@ using Bogus;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.Extensions.Logging.Abstractions;
-using Person = JsonApiDotNetCoreExample.Models.Person;
+using UnitTests.ResourceHooks.Models;
+using Person = UnitTests.ResourceHooks.Models.Person;
 
 namespace UnitTests.ResourceHooks
 {
