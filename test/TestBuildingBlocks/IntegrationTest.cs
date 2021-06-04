@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
 using Newtonsoft.Json;
@@ -60,6 +61,7 @@ namespace TestBuildingBlocks
             {
                 requestText = requestText.Replace("atomic__", "atomic:");
                 request.Content = new StringContent(requestText);
+                request.Content.Headers.ContentLength = Encoding.UTF8.GetByteCount(requestText);
 
                 if (contentType != null)
                 {
