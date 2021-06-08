@@ -60,7 +60,6 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("fields[ ]", "", "Unexpected whitespace.")]
         [InlineData("fields[owner]", "", "Resource type 'owner' does not exist.")]
         [InlineData("fields[owner.posts]", "id", "Resource type 'owner.posts' does not exist.")]
-        [InlineData("fields[blogPosts]", "", "Field name expected.")]
         [InlineData("fields[blogPosts]", " ", "Unexpected whitespace.")]
         [InlineData("fields[blogPosts]", "some", "Field 'some' does not exist on resource 'blogPosts'.")]
         [InlineData("fields[blogPosts]", "id,owner.name", "Field 'owner.name' does not exist on resource 'blogPosts'.")]
@@ -87,6 +86,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(caption,url,author)")]
         [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
         [InlineData("fields[blogs]", "id", "blogs(id)")]
+        [InlineData("fields[blogs]", "", "blogs(id)")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act

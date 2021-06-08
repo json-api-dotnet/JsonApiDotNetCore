@@ -40,20 +40,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             var fields = new Dictionary<string, ResourceFieldAttribute>();
 
-            ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
-            ResourceFieldAttribute nextField = nextChain.Fields.Single();
-            fields[nextField.PublicName] = nextField;
-
             while (TokenStack.Any())
             {
-                EatSingleCharacterToken(TokenKind.Comma);
+                if (fields.Count > 0)
+                {
+                    EatSingleCharacterToken(TokenKind.Comma);
+                }
 
-                nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
-                nextField = nextChain.Fields.Single();
+                ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
+                ResourceFieldAttribute nextField = nextChain.Fields.Single();
                 fields[nextField.PublicName] = nextField;
             }
 
-            return new SparseFieldSetExpression(fields.Values);
+            return fields.Any() ? new SparseFieldSetExpression(fields.Values) : null;
         }
 
         protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)

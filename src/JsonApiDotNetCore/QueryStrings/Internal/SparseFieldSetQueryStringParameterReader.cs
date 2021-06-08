@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
+using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Primitives;
 
@@ -21,6 +22,9 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly SparseFieldSetParser _sparseFieldSetParser;
         private readonly Dictionary<ResourceContext, SparseFieldSetExpression> _sparseFieldTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
         private string _lastParameterName;
+
+        /// <inheritdoc />
+        bool IQueryStringParameterReader.AllowEmptyValue => true;
 
         public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
             : base(request, resourceContextProvider)
@@ -79,7 +83,16 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private SparseFieldSetExpression GetSparseFieldSet(string parameterValue, ResourceContext resourceContext)
         {
-            return _sparseFieldSetParser.Parse(parameterValue, resourceContext);
+            SparseFieldSetExpression sparseFieldSet = _sparseFieldSetParser.Parse(parameterValue, resourceContext);
+
+            if (sparseFieldSet == null)
+            {
+                // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
+                AttrAttribute idAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Identifiable.Id));
+                return new SparseFieldSetExpression(ArrayFactory.Create(idAttribute));
+            }
+
+            return sparseFieldSet;
         }
 
         /// <inheritdoc />

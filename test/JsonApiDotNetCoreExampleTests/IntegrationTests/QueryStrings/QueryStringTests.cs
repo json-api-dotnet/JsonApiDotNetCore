@@ -69,8 +69,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         [InlineData("include")]
         [InlineData("filter")]
         [InlineData("sort")]
-        [InlineData("page")]
-        [InlineData("fields")]
+        [InlineData("page[size]")]
+        [InlineData("page[number]")]
         [InlineData("defaults")]
         [InlineData("nulls")]
         public async Task Cannot_use_empty_query_string_parameter_value(string parameterName)
