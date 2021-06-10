@@ -75,6 +75,40 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
         }
 
         [Fact]
+        public async Task Include_from_resource_definition_is_added()
+        {
+            // Arrange
+            var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+            settingsProvider.AutoIncludeOrbitingPlanetForMoons();
+
+            Moon moon = _fakers.Moon.Generate();
+            moon.OrbitsAround = _fakers.Planet.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Moons.Add(moon);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = "/moons/" + moon.StringId;
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.SingleData.Relationships["orbitsAround"].SingleData.Type.Should().Be("planets");
+            responseDocument.SingleData.Relationships["orbitsAround"].SingleData.Id.Should().Be(moon.OrbitsAround.StringId);
+
+            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included[0].Type.Should().Be("planets");
+            responseDocument.Included[0].Id.Should().Be(moon.OrbitsAround.StringId);
+            responseDocument.Included[0].Attributes["publicName"].Should().Be(moon.OrbitsAround.PublicName);
+        }
+
+        [Fact]
         public async Task Filter_from_resource_definition_is_applied()
         {
             // Arrange

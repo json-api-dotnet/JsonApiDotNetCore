@@ -158,6 +158,7 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IPaginationContext, PaginationContext>();
+            _services.AddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
             _services.AddScoped<IQueryLayerComposer, QueryLayerComposer>();
             _services.AddScoped<IInverseNavigationResolver, InverseNavigationResolver>();
         }

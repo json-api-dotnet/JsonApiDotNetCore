@@ -20,11 +20,12 @@ namespace JsonApiDotNetCore.Queries.Internal
         private readonly IJsonApiOptions _options;
         private readonly IPaginationContext _paginationContext;
         private readonly ITargetedFields _targetedFields;
+        private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext,
-            ITargetedFields targetedFields)
+            ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache)
         {
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
 
             _constraintProviders = constraintProviders;
             _resourceContextProvider = resourceContextProvider;
@@ -39,6 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _options = options;
             _paginationContext = paginationContext;
             _targetedFields = targetedFields;
+            _evaluatedIncludeCache = evaluatedIncludeCache;
             _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
         }
 
@@ -71,6 +74,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             QueryLayer topLayer = ComposeTopLayer(constraints, requestResource);
             topLayer.Include = ComposeChildren(topLayer, constraints);
+
+            _evaluatedIncludeCache.Set(topLayer.Include);
 
             return topLayer;
         }

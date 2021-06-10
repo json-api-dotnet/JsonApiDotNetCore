@@ -4,5 +4,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
     {
         bool IsIncludePlanetMoonsBlocked { get; }
         bool ArePlanetsWithPrivateNameHidden { get; }
+        bool IsMoonOrbitingPlanetAutoIncluded { get; }
     }
 }
