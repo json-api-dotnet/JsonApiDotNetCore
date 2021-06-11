@@ -35,10 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
                 return existingIncludes;
             }
 
-            ResourceContext resourceContext = ResourceGraph.GetResourceContext<Moon>();
-
             RelationshipAttribute orbitsAroundRelationship =
-                resourceContext.Relationships.Single(relationship => relationship.Property.Name == nameof(Moon.OrbitsAround));
+                ResourceContext.Relationships.Single(relationship => relationship.Property.Name == nameof(Moon.OrbitsAround));
 
             return new List<IncludeElementExpression>(existingIncludes)
             {

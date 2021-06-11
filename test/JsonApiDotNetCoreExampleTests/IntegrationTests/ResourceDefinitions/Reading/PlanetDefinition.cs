@@ -50,8 +50,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
             if (_clientSettingsProvider.ArePlanetsWithPrivateNameHidden)
             {
-                ResourceContext resourceContext = ResourceGraph.GetResourceContext<Planet>();
-                AttrAttribute privateNameAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Planet.PrivateName));
+                AttrAttribute privateNameAttribute = ResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Planet.PrivateName));
 
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
                     new NullConstantExpression());
