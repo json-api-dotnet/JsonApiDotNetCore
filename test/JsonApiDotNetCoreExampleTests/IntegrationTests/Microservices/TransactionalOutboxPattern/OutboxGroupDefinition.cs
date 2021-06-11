@@ -11,16 +11,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class OutboxGroupDefinition : MessagingGroupDefinition
     {
+        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly DbSet<OutgoingMessage> _outboxMessageSet;
 
-        public OutboxGroupDefinition(IResourceGraph resourceGraph, OutboxDbContext dbContext)
-            : base(resourceGraph, dbContext.Users, dbContext.Groups)
+        public OutboxGroupDefinition(IResourceGraph resourceGraph, OutboxDbContext dbContext, ResourceDefinitionHitCounter hitCounter)
+            : base(resourceGraph, dbContext.Users, dbContext.Groups, hitCounter)
         {
+            _hitCounter = hitCounter;
             _outboxMessageSet = dbContext.OutboxMessages;
         }
 
         public override Task OnWritingAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
+
             return FinishWriteAsync(group, operationKind, cancellationToken);
         }
 

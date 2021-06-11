@@ -22,6 +22,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
         internal Task PostMessageAsync(OutgoingMessage message, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            SentMessages.Add(message);
+
             if (SimulateFailure)
             {
                 throw new JsonApiException(new Error(HttpStatusCode.ServiceUnavailable)
@@ -29,10 +32,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
                     Title = "Message delivery failed."
                 });
             }
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            SentMessages.Add(message);
 
             return Task.CompletedTask;
         }

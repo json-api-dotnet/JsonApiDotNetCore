@@ -8,6 +8,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -19,6 +20,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Create_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             string newGroupName = _fakers.DomainGroup.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -49,6 +52,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -66,6 +75,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Create_group_with_users_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
 
             DomainUser existingUserWithOtherGroup = _fakers.DomainUser.Generate();
@@ -122,6 +133,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -148,6 +166,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Update_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             string newGroupName = _fakers.DomainGroup.Generate().Name;
@@ -182,6 +202,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -198,6 +224,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Update_group_with_users_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
@@ -261,6 +289,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -285,6 +320,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Delete_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -304,6 +341,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -318,6 +360,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Delete_group_with_users_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
             existingGroup.Users = _fakers.DomainUser.Generate(1).ToHashSet();
 
@@ -338,6 +382,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -356,6 +405,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Replace_users_in_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
@@ -408,6 +459,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -432,6 +490,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Add_users_to_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             DomainUser existingUserWithoutGroup = _fakers.DomainUser.Generate();
@@ -476,6 +536,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
 
             responseDocument.Should().BeEmpty();
 
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
@@ -496,6 +562,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
         public async Task Remove_users_from_group_writes_to_outbox()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             DomainUser existingUserWithSameGroup1 = _fakers.DomainUser.Generate();
@@ -532,6 +600,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

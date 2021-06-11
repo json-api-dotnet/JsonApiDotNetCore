@@ -11,13 +11,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
     {
         internal const string NoticeText = "See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes.";
 
-        public TextLanguageMetaDefinition(IResourceGraph resourceGraph)
+        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        public TextLanguageMetaDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
+            _hitCounter = hitCounter;
         }
 
         public override IDictionary<string, object> GetMeta(TextLanguage resource)
         {
+            _hitCounter.TrackInvocation<TextLanguage>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
+
             return new Dictionary<string, object>
             {
                 ["Notice"] = NoticeText

@@ -8,18 +8,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
     public sealed class StudentDefinition : JsonApiResourceDefinition<Student>
     {
         private readonly IEncryptionService _encryptionService;
-        private readonly SerializationHitCounter _hitCounter;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
 
-        public StudentDefinition(IResourceGraph resourceGraph, IEncryptionService encryptionService, SerializationHitCounter hitCounter)
+        public StudentDefinition(IResourceGraph resourceGraph, IEncryptionService encryptionService, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
+            // This constructor will be resolved from the container, which means
+            // you can take on any dependency that is also defined in the container.
+
             _encryptionService = encryptionService;
             _hitCounter = hitCounter;
         }
 
         public override void OnDeserialize(Student resource)
         {
-            _hitCounter.IncrementDeserializeCount();
+            _hitCounter.TrackInvocation<Student>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize);
 
             if (!string.IsNullOrEmpty(resource.SocialSecurityNumber))
             {
@@ -29,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
 
         public override void OnSerialize(Student resource)
         {
-            _hitCounter.IncrementSerializeCount();
+            _hitCounter.TrackInvocation<Student>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize);
 
             if (!string.IsNullOrEmpty(resource.SocialSecurityNumber))
             {

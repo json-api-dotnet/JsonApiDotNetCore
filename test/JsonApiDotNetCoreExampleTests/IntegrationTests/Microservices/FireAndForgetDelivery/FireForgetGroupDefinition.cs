@@ -12,16 +12,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
     public sealed class FireForgetGroupDefinition : MessagingGroupDefinition
     {
         private readonly MessageBroker _messageBroker;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
         private DomainGroup _groupToDelete;
 
-        public FireForgetGroupDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker)
-            : base(resourceGraph, dbContext.Users, dbContext.Groups)
+        public FireForgetGroupDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
+            ResourceDefinitionHitCounter hitCounter)
+            : base(resourceGraph, dbContext.Users, dbContext.Groups, hitCounter)
         {
             _messageBroker = messageBroker;
+            _hitCounter = hitCounter;
         }
 
         public override async Task OnWritingAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
+
             if (operationKind == OperationKind.DeleteResource)
             {
                 _groupToDelete = await base.GetGroupToDeleteAsync(group.Id, cancellationToken);
@@ -30,6 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
         public override Task OnWriteSucceededAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync);
+
             return FinishWriteAsync(group, operationKind, cancellationToken);
         }
 

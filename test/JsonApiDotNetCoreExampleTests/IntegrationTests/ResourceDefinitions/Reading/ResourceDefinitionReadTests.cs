@@ -33,6 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
                 services.AddResourceDefinition<MoonDefinition>();
 
                 services.AddSingleton<IClientSettingsProvider, TestClientSettingsProvider>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
@@ -40,12 +41,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
             var settingsProvider = (TestClientSettingsProvider)testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
             settingsProvider.ResetToDefaults();
+
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            hitCounter.Reset();
         }
 
         [Fact]
         public async Task Include_from_resource_definition_is_blocked()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
             settingsProvider.BlockIncludePlanetMoons();
 
@@ -72,12 +78,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including moons is not permitted.");
             error.Detail.Should().BeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Include_from_resource_definition_is_added()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
             settingsProvider.AutoIncludeOrbitingPlanetForMoons();
 
@@ -106,12 +121,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.Included[0].Type.Should().Be("planets");
             responseDocument.Included[0].Id.Should().Be(moon.OrbitsAround.StringId);
             responseDocument.Included[0].Attributes["publicName"].Should().Be(moon.OrbitsAround.PublicName);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Filter_from_resource_definition_is_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
             settingsProvider.HidePlanetsWithPrivateName();
 
@@ -139,12 +161,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.ManyData[1].Id.Should().Be(planets[3].StringId);
 
             responseDocument.Meta["totalResources"].Should().Be(2);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Filter_from_resource_definition_and_query_string_are_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
             settingsProvider.HidePlanetsWithPrivateName();
 
@@ -179,12 +210,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.ManyData[0].Id.Should().Be(planets[3].StringId);
 
             responseDocument.Meta["totalResources"].Should().Be(1);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Sort_from_resource_definition_is_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<Star> stars = _fakers.Star.Generate(3);
 
             stars[0].SolarMass = 500m;
@@ -215,12 +255,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.ManyData[0].Id.Should().Be(stars[1].StringId);
             responseDocument.ManyData[1].Id.Should().Be(stars[0].StringId);
             responseDocument.ManyData[2].Id.Should().Be(stars[2].StringId);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Sort_from_query_string_is_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<Star> stars = _fakers.Star.Generate(3);
 
             stars[0].Name = "B";
@@ -251,12 +302,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.ManyData[0].Id.Should().Be(stars[2].StringId);
             responseDocument.ManyData[1].Id.Should().Be(stars[0].StringId);
             responseDocument.ManyData[2].Id.Should().Be(stars[1].StringId);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Page_size_from_resource_definition_is_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<Star> stars = _fakers.Star.Generate(10);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -275,12 +337,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(5);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Attribute_inclusion_from_resource_definition_is_applied_for_omitted_query_string()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             Star star = _fakers.Star.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -302,12 +375,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
             responseDocument.SingleData.Attributes["kind"].Should().Be(star.Kind.ToString());
             responseDocument.SingleData.Relationships.Should().NotBeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Attribute_inclusion_from_resource_definition_is_applied_for_fields_query_string()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             Star star = _fakers.Star.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -330,12 +414,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
             responseDocument.SingleData.Attributes["solarRadius"].As<decimal>().Should().BeApproximately(star.SolarRadius);
             responseDocument.SingleData.Relationships.Should().BeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Attribute_exclusion_from_resource_definition_is_applied_for_omitted_query_string()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             Star star = _fakers.Star.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -357,12 +452,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
             responseDocument.SingleData.Attributes.Should().NotContainKey("isVisibleFromEarth");
             responseDocument.SingleData.Relationships.Should().NotBeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Attribute_exclusion_from_resource_definition_is_applied_for_fields_query_string()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             Star star = _fakers.Star.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -384,12 +490,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
             responseDocument.SingleData.Relationships.Should().BeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Queryable_parameter_handler_from_resource_definition_is_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<Moon> moons = _fakers.Moon.Generate(2);
 
             moons[0].SolarRadius = .5m;
@@ -412,12 +529,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(moons[1].StringId);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Queryable_parameter_handler_from_resource_definition_and_query_string_filter_are_applied()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<Moon> moons = _fakers.Moon.Generate(4);
 
             moons[0].Name = "Alpha1";
@@ -449,12 +575,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(moons[2].StringId);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Queryable_parameter_handler_from_resource_definition_is_not_applied_on_secondary_request()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             Planet planet = _fakers.Planet.Generate();
             planet.Moons = _fakers.Moon.Generate(1).ToHashSet();
 
@@ -479,6 +614,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             error.Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
             error.Detail.Should().Be("Query string parameter 'isLargerThanTheSun' cannot be used on a nested resource endpoint.");
             error.Source.Parameter.Should().Be("isLargerThanTheSun");
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters)
+            }, options => options.WithStrictOrdering());
         }
     }
 }

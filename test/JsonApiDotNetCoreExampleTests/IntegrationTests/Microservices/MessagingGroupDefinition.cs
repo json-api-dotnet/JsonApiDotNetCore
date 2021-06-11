@@ -16,19 +16,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
     {
         private readonly DbSet<DomainUser> _userSet;
         private readonly DbSet<DomainGroup> _groupSet;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new List<OutgoingMessage>();
 
         private string _beforeGroupName;
 
-        protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet)
+        protected MessagingGroupDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, DbSet<DomainGroup> groupSet,
+            ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
             _userSet = userSet;
             _groupSet = groupSet;
+            _hitCounter = hitCounter;
         }
 
         public override Task OnPrepareWriteAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
+
             if (operationKind == OperationKind.CreateResource)
             {
                 group.Id = Guid.NewGuid();
@@ -44,6 +49,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         public override async Task OnSetToManyRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync);
+
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
                 HashSet<Guid> rightUserIds = rightResourceIds.Select(resource => (Guid)resource.GetTypedId()).ToHashSet();
@@ -98,6 +105,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         public override async Task OnAddToRelationshipAsync(Guid groupId, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync);
+
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
                 HashSet<Guid> rightUserIds = rightResourceIds.Select(resource => (Guid)resource.GetTypedId()).ToHashSet();
@@ -138,6 +147,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         public override Task OnRemoveFromRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync);
+
             if (hasManyRelationship.Property.Name == nameof(DomainGroup.Users))
             {
                 HashSet<Guid> rightUserIds = rightResourceIds.Select(resource => (Guid)resource.GetTypedId()).ToHashSet();

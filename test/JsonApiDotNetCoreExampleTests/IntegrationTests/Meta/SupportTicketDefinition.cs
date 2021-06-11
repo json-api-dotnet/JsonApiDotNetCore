@@ -9,13 +9,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket>
     {
-        public SupportTicketDefinition(IResourceGraph resourceGraph)
+        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        public SupportTicketDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
+            _hitCounter = hitCounter;
         }
 
         public override IDictionary<string, object> GetMeta(SupportTicket resource)
         {
+            _hitCounter.TrackInvocation<SupportTicket>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
+
             if (resource.Description != null && resource.Description.StartsWith("Critical:", StringComparison.Ordinal))
             {
                 return new Dictionary<string, object>

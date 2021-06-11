@@ -149,7 +149,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         public async Task Can_filter_on_HasOne_relationship()
         {
             // Arrange
-            List<BlogPost> posts = _fakers.BlogPost.Generate(2);
+            List<BlogPost> posts = _fakers.BlogPost.Generate(3);
             posts[0].Author = _fakers.WebAccount.Generate();
             posts[0].Author.UserName = "Conner";
             posts[1].Author = _fakers.WebAccount.Generate();
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
                 await dbContext.SaveChangesAsync();
             });
 
-            const string route = "/blogPosts?include=author&filter=equals(author.userName,'Smith')";
+            const string route = "/blogPosts?include=author&filter=or(equals(author.userName,'Smith'),equals(author,null))";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -170,9 +170,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.ManyData.Should().ContainSingle(post => post.Id == posts[1].StringId);
+            responseDocument.ManyData.Should().ContainSingle(post => post.Id == posts[2].StringId);
 
+            responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(posts[1].Author.StringId);
         }
 
@@ -327,8 +329,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.Included.Should().HaveCount(1);
 
+            responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(blog.Posts[1].StringId);
         }
 
@@ -357,8 +359,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.Included.Should().HaveCount(1);
 
+            responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
         }
 
@@ -408,8 +410,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.Included.Should().HaveCount(1);
 
+            responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(posts[1].BlogPostLabels.First().Label.StringId);
         }
 
@@ -439,8 +441,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.Included.Should().HaveCount(2);
 
+            responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[1].StringId);
         }

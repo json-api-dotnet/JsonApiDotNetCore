@@ -10,6 +10,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -33,13 +34,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             {
                 services.AddResourceDefinition<OutboxUserDefinition>();
                 services.AddResourceDefinition<OutboxGroupDefinition>();
+
+                services.AddSingleton<ResourceDefinitionHitCounter>();
             });
+
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            hitCounter.Reset();
         }
 
         [Fact]
         public async Task Does_not_add_to_outbox_on_write_error()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             DomainUser existingUser = _fakers.DomainUser.Generate();
@@ -84,6 +92,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'domainUsers' with ID '{missingUserId}' in relationship 'users' does not exist.");
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnAddToRelationshipAsync),
+                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

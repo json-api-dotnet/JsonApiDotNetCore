@@ -28,19 +28,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddSingleton<LyricPermissionProvider>();
                 services.AddResourceDefinition<LyricTextDefinition>();
+
+                services.AddSingleton<LyricPermissionProvider>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
+
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            hitCounter.Reset();
         }
 
         [Fact]
         public async Task Hides_text_in_create_resource_with_side_effects()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
             provider.CanViewText = false;
-            provider.HitCount = 0;
 
             List<Lyric> newLyrics = _fakers.Lyric.Generate(2);
 
@@ -94,16 +100,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             responseDocument.Results[1].SingleData.Attributes["format"].Should().Be(newLyrics[1].Format);
             responseDocument.Results[1].SingleData.Attributes.Should().NotContainKey("text");
 
-            provider.HitCount.Should().Be(4);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Hides_text_in_update_resource_with_side_effects()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var provider = _testContext.Factory.Services.GetRequiredService<LyricPermissionProvider>();
             provider.CanViewText = false;
-            provider.HitCount = 0;
 
             List<Lyric> existingLyrics = _fakers.Lyric.Generate(2);
 
@@ -161,7 +174,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             responseDocument.Results[1].SingleData.Attributes["format"].Should().Be(existingLyrics[1].Format);
             responseDocument.Results[1].SingleData.Attributes.Should().NotContainKey("text");
 
-            provider.HitCount.Should().Be(4);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Lyric), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+            }, options => options.WithStrictOrdering());
         }
     }
 }

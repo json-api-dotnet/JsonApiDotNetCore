@@ -9,15 +9,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class StarDefinition : JsonApiResourceDefinition<Star>
     {
-        public StarDefinition(IResourceGraph resourceGraph)
+        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        public StarDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
+
+            _hitCounter = hitCounter;
         }
 
         public override SortExpression OnApplySort(SortExpression existingSort)
         {
+            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort);
+
             return existingSort ?? GetDefaultSortOrder();
         }
 
@@ -32,6 +38,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
         public override PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
         {
+            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination);
+
             var maxPageSize = new PageSize(5);
 
             if (existingPagination != null)
@@ -45,6 +53,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
         public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
         {
+            _hitCounter.TrackInvocation<Star>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet);
+
             // @formatter:keep_existing_linebreaks true
 
             return existingSparseFieldSet

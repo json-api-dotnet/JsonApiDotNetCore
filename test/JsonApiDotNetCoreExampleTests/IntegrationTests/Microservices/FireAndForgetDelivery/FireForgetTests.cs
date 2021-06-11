@@ -30,16 +30,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
                 services.AddResourceDefinition<FireForgetGroupDefinition>();
 
                 services.AddSingleton<MessageBroker>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
             });
 
             var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
             messageBroker.Reset();
+
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            hitCounter.Reset();
         }
 
         [Fact]
         public async Task Does_not_send_message_on_write_error()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             string missingUserId = Guid.NewGuid().ToString();
 
             string route = "/domainUsers/" + missingUserId;
@@ -57,7 +64,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{missingUserId}' does not exist.");
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().BeEmpty();
         }
 
@@ -65,6 +76,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Does_not_rollback_on_message_delivery_error()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
             messageBroker.SimulateFailure = true;
 
@@ -91,6 +104,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
             error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
             error.Title.Should().Be("Message delivery failed.");
             error.Detail.Should().BeNull();
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
+            messageBroker.SentMessages.Should().HaveCount(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

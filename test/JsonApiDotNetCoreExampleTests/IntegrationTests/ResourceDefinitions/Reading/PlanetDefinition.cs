@@ -16,18 +16,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
     public sealed class PlanetDefinition : JsonApiResourceDefinition<Planet>
     {
         private readonly IClientSettingsProvider _clientSettingsProvider;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
 
-        public PlanetDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider)
+        public PlanetDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
 
             _clientSettingsProvider = clientSettingsProvider;
+            _hitCounter = hitCounter;
         }
 
         public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
         {
+            _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
+
             if (_clientSettingsProvider.IsIncludePlanetMoonsBlocked &&
                 existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Planet.Moons)))
             {
@@ -42,6 +46,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
 
         public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
         {
+            _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter);
+
             if (_clientSettingsProvider.ArePlanetsWithPrivateNameHidden)
             {
                 ResourceContext resourceContext = ResourceGraph.GetResourceContext<Planet>();

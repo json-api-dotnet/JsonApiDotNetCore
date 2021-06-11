@@ -164,12 +164,15 @@ namespace JsonApiDotNetCore.Queries.Internal
                     // @formatter:wrap_chained_method_calls restore
 
                     ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
+                    bool isToManyRelationship = includeElement.Relationship is HasManyAttribute;
 
                     var child = new QueryLayer(resourceContext)
                     {
-                        Filter = GetFilter(expressionsInCurrentScope, resourceContext),
-                        Sort = GetSort(expressionsInCurrentScope, resourceContext),
-                        Pagination = ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext),
+                        Filter = isToManyRelationship ? GetFilter(expressionsInCurrentScope, resourceContext) : null,
+                        Sort = isToManyRelationship ? GetSort(expressionsInCurrentScope, resourceContext) : null,
+                        Pagination = isToManyRelationship
+                            ? ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext)
+                            : null,
                         Projection = GetProjectionForSparseAttributeSet(resourceContext)
                     };
 

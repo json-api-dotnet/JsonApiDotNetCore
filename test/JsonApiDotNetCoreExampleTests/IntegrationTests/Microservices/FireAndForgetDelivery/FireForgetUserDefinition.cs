@@ -12,16 +12,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
     public sealed class FireForgetUserDefinition : MessagingUserDefinition
     {
         private readonly MessageBroker _messageBroker;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
         private DomainUser _userToDelete;
 
-        public FireForgetUserDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker)
-            : base(resourceGraph, dbContext.Users)
+        public FireForgetUserDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
+            ResourceDefinitionHitCounter hitCounter)
+            : base(resourceGraph, dbContext.Users, hitCounter)
         {
             _messageBroker = messageBroker;
+            _hitCounter = hitCounter;
         }
 
         public override async Task OnWritingAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
+
             if (operationKind == OperationKind.DeleteResource)
             {
                 _userToDelete = await base.GetUserToDeleteAsync(user.Id, cancellationToken);
@@ -30,6 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
         public override Task OnWriteSucceededAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync);
+
             return FinishWriteAsync(user, operationKind, cancellationToken);
         }
 

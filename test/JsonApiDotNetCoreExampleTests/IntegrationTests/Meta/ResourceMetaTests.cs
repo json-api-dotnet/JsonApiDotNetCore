@@ -6,6 +6,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -26,13 +27,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddResourceDefinition<SupportTicketDefinition>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
             });
+
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            hitCounter.Reset();
         }
 
         [Fact]
         public async Task Returns_resource_meta_from_ResourceDefinition()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<SupportTicket> tickets = _fakers.SupportTicket.Generate(3);
             tickets[0].Description = "Critical: " + tickets[0].Description;
             tickets[2].Description = "Critical: " + tickets[2].Description;
@@ -56,12 +63,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             responseDocument.ManyData[0].Meta.Should().ContainKey("hasHighPriority");
             responseDocument.ManyData[1].Meta.Should().BeNull();
             responseDocument.ManyData[2].Meta.Should().ContainKey("hasHighPriority");
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta),
+                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta),
+                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Returns_resource_meta_from_ResourceDefinition_in_included_resources()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             ProductFamily family = _fakers.ProductFamily.Generate();
             family.Tickets = _fakers.SupportTicket.Generate(1);
             family.Tickets[0].Description = "Critical: " + family.Tickets[0].Description;
@@ -84,6 +100,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Meta.Should().ContainKey("hasHighPriority");
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(SupportTicket), ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta)
+            }, options => options.WithStrictOrdering());
         }
     }
 }
