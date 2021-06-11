@@ -12959,6 +12959,23 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.IsEnabled
   nameWithType: SparseFieldSetQueryStringParameterReader.IsEnabled
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore#QueryStrings#IQueryStringParameterReader#AllowEmptyValue
+  name: IQueryStringParameterReader.AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_JsonApiDotNetCore_QueryStrings_IQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore#QueryStrings#IQueryStringParameterReader#AllowEmptyValue
+  name.vb: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SparseFieldSetQueryStringParameterReader.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType.vb: SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore#QueryStrings#IQueryStringParameterReader#AllowEmptyValue*
+  name: IQueryStringParameterReader.AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_JsonApiDotNetCore_QueryStrings_IQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore#QueryStrings#IQueryStringParameterReader#AllowEmptyValue
+  isSpec: "True"
+  name.vb: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType: SparseFieldSetQueryStringParameterReader.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType.vb: SparseFieldSetQueryStringParameterReader.JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.Read(System.String,Microsoft.Extensions.Primitives.StringValues)
   name: Read(String, StringValues)
   href: api/JsonApiDotNetCore.QueryStrings.Internal.SparseFieldSetQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_SparseFieldSetQueryStringParameterReader_Read_System_String_Microsoft_Extensions_Primitives_StringValues_
@@ -13016,6 +13033,19 @@ references:
   commentId: T:JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader
   fullName: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader
   nameWithType: IQueryStringParameterReader
+- uid: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_IQueryStringParameterReader_AllowEmptyValue
+  commentId: P:JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  fullName: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType: IQueryStringParameterReader.AllowEmptyValue
+- uid: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue*
+  name: AllowEmptyValue
+  href: api/JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_IQueryStringParameterReader_AllowEmptyValue_
+  commentId: Overload:JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.AllowEmptyValue
+  nameWithType: IQueryStringParameterReader.AllowEmptyValue
 - uid: JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.CanRead(System.String)
   name: CanRead(String)
   href: api/JsonApiDotNetCore.QueryStrings.IQueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_IQueryStringParameterReader_CanRead_System_String_
@@ -18534,6 +18564,28 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.IFieldsToSerialize.ShouldSerialize
   nameWithType: IFieldsToSerialize.ShouldSerialize
+- uid: JsonApiDotNetCore.Serialization.IFingerprintGenerator
+  name: IFingerprintGenerator
+  href: api/JsonApiDotNetCore.Serialization.IFingerprintGenerator.html
+  commentId: T:JsonApiDotNetCore.Serialization.IFingerprintGenerator
+  fullName: JsonApiDotNetCore.Serialization.IFingerprintGenerator
+  nameWithType: IFingerprintGenerator
+- uid: JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate(System.Collections.Generic.IEnumerable{System.String})
+  name: Generate(IEnumerable<String>)
+  href: api/JsonApiDotNetCore.Serialization.IFingerprintGenerator.html#JsonApiDotNetCore_Serialization_IFingerprintGenerator_Generate_System_Collections_Generic_IEnumerable_System_String__
+  commentId: M:JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate(System.Collections.Generic.IEnumerable{System.String})
+  name.vb: Generate(IEnumerable(Of String))
+  fullName: JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate(System.Collections.Generic.IEnumerable<System.String>)
+  fullName.vb: JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate(System.Collections.Generic.IEnumerable(Of System.String))
+  nameWithType: IFingerprintGenerator.Generate(IEnumerable<String>)
+  nameWithType.vb: IFingerprintGenerator.Generate(IEnumerable(Of String))
+- uid: JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate*
+  name: Generate
+  href: api/JsonApiDotNetCore.Serialization.IFingerprintGenerator.html#JsonApiDotNetCore_Serialization_IFingerprintGenerator_Generate_
+  commentId: Overload:JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Serialization.IFingerprintGenerator.Generate
+  nameWithType: IFingerprintGenerator.Generate
 - uid: JsonApiDotNetCore.Serialization.IJsonApiDeserializer
   name: IJsonApiDeserializer
   href: api/JsonApiDotNetCore.Serialization.IJsonApiDeserializer.html
