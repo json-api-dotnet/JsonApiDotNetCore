@@ -39,17 +39,17 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
             {
-                if (string.IsNullOrEmpty(parameterValue))
-                {
-                    throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
-                        $"Missing value for '{parameterName}' query string parameter.");
-                }
-
                 IQueryStringParameterReader reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
 
                 if (reader != null)
                 {
                     _logger.LogDebug($"Query string parameter '{parameterName}' with value '{parameterValue}' was accepted by {reader.GetType().Name}.");
+
+                    if (!reader.AllowEmptyValue && string.IsNullOrEmpty(parameterValue))
+                    {
+                        throw new InvalidQueryStringParameterException(parameterName, "Missing query string parameter value.",
+                            $"Missing value for '{parameterName}' query string parameter.");
+                    }
 
                     if (!reader.IsEnabled(disableQueryStringAttributeNotNull))
                     {

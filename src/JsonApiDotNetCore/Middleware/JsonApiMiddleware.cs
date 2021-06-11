@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
@@ -77,6 +78,9 @@ namespace JsonApiDotNetCore.Middleware
 
                 httpContext.RegisterJsonApiRequest();
             }
+
+            // Workaround for bug https://github.com/dotnet/aspnetcore/issues/33394
+            httpContext.Features.Set<IQueryFeature>(new FixedQueryFeature(httpContext.Features));
 
             await _next(httpContext);
         }

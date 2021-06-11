@@ -580,6 +580,40 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
+        public async Task Can_select_empty_fieldset()
+        {
+            // Arrange
+            var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
+            store.Clear();
+
+            BlogPost post = _fakers.BlogPost.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.Add(post);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/blogPosts?fields[blogPosts]=";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
+            responseDocument.ManyData[0].Attributes.Should().BeNull();
+            responseDocument.ManyData[0].Relationships.Should().BeNull();
+
+            var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
+            postCaptured.Id.Should().Be(post.Id);
+            postCaptured.Url.Should().BeNull();
+        }
+
+        [Fact]
         public async Task Cannot_select_on_unknown_resource_type()
         {
             // Arrange
