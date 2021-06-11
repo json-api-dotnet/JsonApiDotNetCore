@@ -86,7 +86,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private async Task<string> GetRequestBodyAsync(Stream bodyStream)
         {
-            using var reader = new StreamReader(bodyStream);
+            using var reader = new StreamReader(bodyStream, leaveOpen: true);
             return await reader.ReadToEndAsync();
         }
 
