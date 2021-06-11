@@ -6,9 +6,9 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models;
 
-namespace JsonApiDotNetCoreExample.Definitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Definitions
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PassportHooksDefinition : LockableHooksDefinition<Passport>

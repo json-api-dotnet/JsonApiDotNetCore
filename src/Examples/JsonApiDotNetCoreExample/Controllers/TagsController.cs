@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public sealed class UsersController : JsonApiController<User>
+    public sealed class TagsController : JsonApiController<Tag>
     {
-        public UsersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<User> resourceService)
+        public TagsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Tag> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

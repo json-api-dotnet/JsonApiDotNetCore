@@ -3,8 +3,8 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Queries;
-using JsonApiDotNetCoreExample.Models;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Read
@@ -42,7 +42,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                     Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock) =
                 CreateTestObjects(todoDiscovery, personDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act
@@ -66,7 +66,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock,
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act
@@ -91,7 +91,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock,
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act
@@ -115,7 +115,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock,
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act
@@ -139,7 +139,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock,
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act
@@ -163,7 +163,7 @@ namespace UnitTests.ResourceHooks.Executor.Read
                 Mock<IResourceHookContainer<TodoItem>> todoResourceMock, Mock<IResourceHookContainer<Person>> ownerResourceMock,
                 Mock<IResourceHookContainer<Passport>> passportResourceMock) = CreateTestObjectsC(todoDiscovery, personDiscovery, passportDiscovery);
 
-            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeHolders"));
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Wrap(ToIncludeExpression("owner.passport", "assignee", "stakeholders"));
             constraintsMock.Setup(providers => providers.GetEnumerator()).Returns(constraintProviders.GetEnumerator());
 
             // Act

@@ -3,10 +3,9 @@ using System.Linq;
 using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Create
@@ -14,7 +13,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
     public sealed class BeforeCreateWithDbValuesTests : HooksTestsSetup
     {
         private const string Description = "DESCRIPTION";
-        private const string LastName = "NAME";
+        private const string Name = "NAME";
 
         private readonly ResourceHook[] _targetHooks =
         {
@@ -31,7 +30,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
 
         private readonly string _personId;
         private readonly IList<TodoItem> _todoList;
-        private readonly DbContextOptions<AppDbContext> _options;
+        private readonly DbContextOptions<HooksDbContext> _options;
 
         public BeforeCreateWithDbValuesTests()
         {
@@ -40,7 +39,7 @@ namespace UnitTests.ResourceHooks.Executor.Create
             _todoList[0].Id = 0;
             _todoList[0].Description = Description;
             Person person = _todoList[0].OneToOnePerson;
-            person.LastName = LastName;
+            person.Name = Name;
             _personId = person.Id.ToString();
             TodoItem implicitTodo = TodoFaker.Generate();
             implicitTodo.Id += 1000;

@@ -27,20 +27,27 @@ namespace JsonApiDotNetCoreExample.Startups
         {
             services.AddSingleton<ISystemClock, SystemClock>();
 
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(_connectionString));
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseNpgsql(_connectionString);
+#if DEBUG
+                options.EnableSensitiveDataLogging();
+                options.EnableDetailedErrors();
+#endif
+            });
 
-            services.AddJsonApi<AppDbContext>(ConfigureJsonApiOptions, discovery => discovery.AddCurrentAssembly());
-        }
-
-        private void ConfigureJsonApiOptions(JsonApiOptions options)
-        {
-            options.IncludeExceptionStackTraceInErrors = true;
-            options.Namespace = "api/v1";
-            options.DefaultPageSize = new PageSize(5);
-            options.IncludeTotalResourceCount = true;
-            options.ValidateModelState = true;
-            options.SerializerSettings.Formatting = Formatting.Indented;
-            options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            services.AddJsonApi<AppDbContext>(options =>
+            {
+                options.Namespace = "api/v1";
+                options.UseRelativeLinks = true;
+                options.ValidateModelState = true;
+                options.IncludeTotalResourceCount = true;
+                options.SerializerSettings.Formatting = Formatting.Indented;
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+#if DEBUG
+                options.IncludeExceptionStackTraceInErrors = true;
+#endif
+            }, discovery => discovery.AddCurrentAssembly());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

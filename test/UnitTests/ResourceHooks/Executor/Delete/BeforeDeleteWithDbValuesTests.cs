@@ -5,10 +5,9 @@ using JsonApiDotNetCore.Hooks.Internal;
 using JsonApiDotNetCore.Hooks.Internal.Discovery;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using UnitTests.ResourceHooks.Models;
 using Xunit;
 
 namespace UnitTests.ResourceHooks.Executor.Delete
@@ -22,7 +21,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
             ResourceHook.BeforeUpdateRelationship
         };
 
-        private readonly DbContextOptions<AppDbContext> _options;
+        private readonly DbContextOptions<HooksDbContext> _options;
         private readonly Person _person;
 
         public BeforeDeleteWithDbValuesTests()
@@ -39,7 +38,7 @@ namespace UnitTests.ResourceHooks.Executor.Delete
                 todo1
             };
 
-            _person.StakeHolderTodoItem = todo2;
+            _person.StakeholderTodoItem = todo2;
 
             _options = InitInMemoryDb(context =>
             {

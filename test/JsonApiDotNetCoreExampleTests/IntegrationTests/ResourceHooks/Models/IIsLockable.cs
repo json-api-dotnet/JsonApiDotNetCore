@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models
 {
     public interface IIsLockable
     {

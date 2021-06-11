@@ -18,25 +18,25 @@ namespace UnitTests.Middleware
     public sealed class JsonApiRequestTests
     {
         [Theory]
-        [InlineData("HEAD", "/articles", true, EndpointKind.Primary, true)]
-        [InlineData("HEAD", "/articles/1", false, EndpointKind.Primary, true)]
-        [InlineData("HEAD", "/articles/1/author", false, EndpointKind.Secondary, true)]
-        [InlineData("HEAD", "/articles/1/tags", true, EndpointKind.Secondary, true)]
-        [InlineData("HEAD", "/articles/1/relationships/author", false, EndpointKind.Relationship, true)]
-        [InlineData("HEAD", "/articles/1/relationships/tags", true, EndpointKind.Relationship, true)]
-        [InlineData("GET", "/articles", true, EndpointKind.Primary, true)]
-        [InlineData("GET", "/articles/1", false, EndpointKind.Primary, true)]
-        [InlineData("GET", "/articles/1/author", false, EndpointKind.Secondary, true)]
-        [InlineData("GET", "/articles/1/tags", true, EndpointKind.Secondary, true)]
-        [InlineData("GET", "/articles/1/relationships/author", false, EndpointKind.Relationship, true)]
-        [InlineData("GET", "/articles/1/relationships/tags", true, EndpointKind.Relationship, true)]
-        [InlineData("POST", "/articles", false, EndpointKind.Primary, false)]
-        [InlineData("POST", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
-        [InlineData("PATCH", "/articles/1", false, EndpointKind.Primary, false)]
-        [InlineData("PATCH", "/articles/1/relationships/author", false, EndpointKind.Relationship, false)]
-        [InlineData("PATCH", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
-        [InlineData("DELETE", "/articles/1", false, EndpointKind.Primary, false)]
-        [InlineData("DELETE", "/articles/1/relationships/tags", true, EndpointKind.Relationship, false)]
+        [InlineData("HEAD", "/todoItems", true, EndpointKind.Primary, true)]
+        [InlineData("HEAD", "/todoItems/1", false, EndpointKind.Primary, true)]
+        [InlineData("HEAD", "/todoItems/1/owner", false, EndpointKind.Secondary, true)]
+        [InlineData("HEAD", "/todoItems/1/tags", true, EndpointKind.Secondary, true)]
+        [InlineData("HEAD", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, true)]
+        [InlineData("HEAD", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, true)]
+        [InlineData("GET", "/todoItems", true, EndpointKind.Primary, true)]
+        [InlineData("GET", "/todoItems/1", false, EndpointKind.Primary, true)]
+        [InlineData("GET", "/todoItems/1/owner", false, EndpointKind.Secondary, true)]
+        [InlineData("GET", "/todoItems/1/tags", true, EndpointKind.Secondary, true)]
+        [InlineData("GET", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, true)]
+        [InlineData("GET", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, true)]
+        [InlineData("POST", "/todoItems", false, EndpointKind.Primary, false)]
+        [InlineData("POST", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
+        [InlineData("PATCH", "/todoItems/1", false, EndpointKind.Primary, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
+        [InlineData("DELETE", "/todoItems/1", false, EndpointKind.Primary, false)]
+        [InlineData("DELETE", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
         public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind,
             bool expectIsReadOnly)
         {
@@ -47,14 +47,14 @@ namespace UnitTests.Middleware
             };
 
             var graphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
-            graphBuilder.Add<Article>();
-            graphBuilder.Add<Author>();
+            graphBuilder.Add<TodoItem>();
+            graphBuilder.Add<Person>();
 
             IResourceGraph resourceGraph = graphBuilder.Build();
 
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
-            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(Article));
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(TodoItem));
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);
@@ -72,7 +72,7 @@ namespace UnitTests.Middleware
             request.IsReadOnly.Should().Be(expectIsReadOnly);
             request.BasePath.Should().BeEmpty();
             request.PrimaryResource.Should().NotBeNull();
-            request.PrimaryResource.PublicName.Should().Be("articles");
+            request.PrimaryResource.PublicName.Should().Be("todoItems");
         }
 
         private static void SetupRoutes(HttpContext httpContext, string requestMethod, string requestPath)

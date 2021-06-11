@@ -4,9 +4,9 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Hooks.Internal.Execution;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models;
 
-namespace JsonApiDotNetCoreExample.Definitions
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Definitions
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class TagHooksDefinition : ResourceHooksDefinition<Tag>

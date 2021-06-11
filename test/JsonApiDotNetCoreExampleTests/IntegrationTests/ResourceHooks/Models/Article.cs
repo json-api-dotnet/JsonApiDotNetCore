@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExample.Models
+namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Article : Identifiable
@@ -20,11 +20,5 @@ namespace JsonApiDotNetCoreExample.Models
         public ISet<Tag> Tags { get; set; }
 
         public ISet<ArticleTag> ArticleTags { get; set; }
-
-        [NotMapped]
-        [HasManyThrough(nameof(IdentifiableArticleTags))]
-        public ICollection<Tag> IdentifiableTags { get; set; }
-
-        public ICollection<IdentifiableArticleTag> IdentifiableArticleTags { get; set; }
     }
 }
