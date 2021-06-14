@@ -161,6 +161,63 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         }
 
         [Fact]
+        public async Task Can_get_primary_resources_with_empty_include()
+        {
+            // Arrange
+            List<Meeting> meetings = _fakers.Meeting.Generate(1);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<Meeting>();
+                dbContext.Meetings.AddRange(meetings);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/meetings/?include=attendees";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/?include=attendees"",
+    ""first"": ""http://localhost/meetings/?include=attendees""
+  },
+  ""data"": [
+    {
+      ""type"": ""meetings"",
+      ""id"": """ + meetings[0].StringId + @""",
+      ""attributes"": {
+        ""title"": """ + meetings[0].Title + @""",
+        ""startTime"": """ + meetings[0].StartTime.ToString("O") + @""",
+        ""duration"": """ + meetings[0].Duration + @""",
+        ""location"": {
+          ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meetings[0].Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+        }
+      },
+      ""relationships"": {
+        ""attendees"": {
+          ""links"": {
+            ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meetings[0].StringId + @"/attendees""
+          },
+          ""data"": []
+        }
+      },
+      ""links"": {
+        ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"""
+      }
+    }
+  ],
+  ""included"": []
+}");
+        }
+
+        [Fact]
         public async Task Can_get_primary_resource_by_ID()
         {
             // Arrange

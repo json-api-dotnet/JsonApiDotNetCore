@@ -180,11 +180,12 @@ namespace UnitTests.Serialization.Server
         {
             IFieldsToSerialize fields = GetSerializableFields();
             ILinkBuilder links = GetLinkBuilder();
+            IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
+            var queryStringAccessor = new FakeRequestQueryStringAccessor();
+            IResourceObjectBuilderSettingsProvider resourceObjectBuilderSettingsProvider = GetSerializerSettingsProvider();
 
-            IResourceDefinitionAccessor accessor = new Mock<IResourceDefinitionAccessor>().Object;
-
-            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), accessor,
-                GetSerializerSettingsProvider());
+            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor,
+                queryStringAccessor, resourceObjectBuilderSettingsProvider);
         }
 
         private sealed class AuthorChainInstances

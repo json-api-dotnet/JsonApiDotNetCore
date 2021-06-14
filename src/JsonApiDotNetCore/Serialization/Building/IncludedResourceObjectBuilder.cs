@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -19,22 +20,25 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceContextProvider resourceContextProvider,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IResourceObjectBuilderSettingsProvider settingsProvider)
+            IRequestQueryStringAccessor queryStringAccessor, IResourceObjectBuilderSettingsProvider settingsProvider)
             : base(resourceContextProvider, settingsProvider.Get())
         {
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
 
             _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
+            _queryStringAccessor = queryStringAccessor;
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
@@ -43,7 +47,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             if (_included.Any())
             {
-                // cleans relationship dictionaries and adds links of resources.
+                // Cleans relationship dictionaries and adds links of resources.
                 foreach (ResourceObject resourceObject in _included)
                 {
                     if (resourceObject.Relationships != null)
@@ -57,7 +61,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return _included.ToArray();
             }
 
-            return null;
+            return _queryStringAccessor.Query.ContainsKey("include") ? Array.Empty<ResourceObject>() : null;
         }
 
         private void UpdateRelationships(ResourceObject resourceObject)
