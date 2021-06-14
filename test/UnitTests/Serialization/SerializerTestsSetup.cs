@@ -6,6 +6,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
+using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -56,7 +57,7 @@ namespace UnitTests.Serialization
             IMetaBuilder meta = GetMetaBuilder(metaDict);
             ILinkBuilder link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
             IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
-            IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder();
+            IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder(inclusionChainArray != null);
             IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
             IResourceObjectBuilderSettingsProvider settingsProvider = GetSerializerSettingsProvider();
@@ -77,17 +78,23 @@ namespace UnitTests.Serialization
 
             ILinkBuilder link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
             IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
-            IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder();
+            IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder(inclusionChains != null);
             IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
 
             return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(),
                 GetSerializerSettingsProvider(), evaluatedIncludeCache);
         }
 
-        private IIncludedResourceObjectBuilder GetIncludedBuilder()
+        private IIncludedResourceObjectBuilder GetIncludedBuilder(bool hasIncludeQueryString)
         {
-            return new IncludedResourceObjectBuilder(GetSerializableFields(), GetLinkBuilder(), ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(),
-                GetResourceDefinitionAccessor(), GetSerializerSettingsProvider());
+            IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
+            ILinkBuilder linkBuilder = GetLinkBuilder();
+            IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
+            IRequestQueryStringAccessor queryStringAccessor = new FakeRequestQueryStringAccessor(hasIncludeQueryString ? "include=" : null);
+            IResourceObjectBuilderSettingsProvider resourceObjectBuilderSettingsProvider = GetSerializerSettingsProvider();
+
+            return new IncludedResourceObjectBuilder(fieldsToSerialize, linkBuilder, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(),
+                resourceDefinitionAccessor, queryStringAccessor, resourceObjectBuilderSettingsProvider);
         }
 
         protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
