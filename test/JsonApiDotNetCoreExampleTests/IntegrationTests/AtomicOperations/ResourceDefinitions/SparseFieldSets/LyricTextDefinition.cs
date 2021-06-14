@@ -9,16 +9,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
     public sealed class LyricTextDefinition : JsonApiResourceDefinition<Lyric, long>
     {
         private readonly LyricPermissionProvider _lyricPermissionProvider;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
 
-        public LyricTextDefinition(IResourceGraph resourceGraph, LyricPermissionProvider lyricPermissionProvider)
+        public LyricTextDefinition(IResourceGraph resourceGraph, LyricPermissionProvider lyricPermissionProvider, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
             _lyricPermissionProvider = lyricPermissionProvider;
+            _hitCounter = hitCounter;
         }
 
         public override SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
         {
-            _lyricPermissionProvider.HitCount++;
+            _hitCounter.TrackInvocation<Lyric>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet);
 
             return _lyricPermissionProvider.CanViewText
                 ? base.OnApplySparseFieldSet(existingSparseFieldSet)

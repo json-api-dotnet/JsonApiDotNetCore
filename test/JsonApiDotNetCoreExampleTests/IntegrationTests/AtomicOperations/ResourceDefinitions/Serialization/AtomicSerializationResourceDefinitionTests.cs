@@ -31,11 +31,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
             {
                 services.AddResourceDefinition<RecordCompanyDefinition>();
 
-                services.AddSingleton<AtomicSerializationHitCounter>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
             hitCounter.Reset();
         }
 
@@ -43,6 +43,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
         public async Task Transforms_on_create_resource_with_side_effects()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<RecordCompany> newCompanies = _fakers.RecordCompany.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -112,15 +114,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
                 companiesInDatabase[1].CountryOfResidence.Should().Be(newCompanies[1].CountryOfResidence);
             });
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
-            hitCounter.DeserializeCount.Should().Be(2);
-            hitCounter.SerializeCount.Should().Be(2);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Skips_on_create_resource_with_ToOne_relationship()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             RecordCompany existingCompany = _fakers.RecordCompany.Generate();
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
@@ -172,15 +180,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
 
             responseDocument.Results.Should().HaveCount(1);
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Transforms_on_update_resource_with_side_effects()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             List<RecordCompany> existingCompanies = _fakers.RecordCompany.Generate(2);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -250,15 +258,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
                 companiesInDatabase[1].CountryOfResidence.Should().Be(existingCompanies[1].CountryOfResidence);
             });
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
-            hitCounter.DeserializeCount.Should().Be(2);
-            hitCounter.SerializeCount.Should().Be(2);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Skips_on_update_resource_with_ToOne_relationship()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
             RecordCompany existingCompany = _fakers.RecordCompany.Generate();
 
@@ -309,15 +323,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
 
             responseDocument.Results.Should().HaveCount(1);
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_update_ToOne_relationship()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
             RecordCompany existingCompany = _fakers.RecordCompany.Generate();
 
@@ -359,9 +373,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Resour
 
             responseDocument.Should().BeEmpty();
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<AtomicSerializationHitCounter>();
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
     }
 }

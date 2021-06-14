@@ -14,19 +14,23 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
     public abstract class MessagingUserDefinition : JsonApiResourceDefinition<DomainUser, Guid>
     {
         private readonly DbSet<DomainUser> _userSet;
+        private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new List<OutgoingMessage>();
 
         private string _beforeLoginName;
         private string _beforeDisplayName;
 
-        protected MessagingUserDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet)
+        protected MessagingUserDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
         {
             _userSet = userSet;
+            _hitCounter = hitCounter;
         }
 
         public override Task OnPrepareWriteAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
+
             if (operationKind == OperationKind.CreateResource)
             {
                 user.Id = Guid.NewGuid();
@@ -43,6 +47,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         public override Task<IIdentifiable> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
             OperationKind operationKind, CancellationToken cancellationToken)
         {
+            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync);
+
             if (hasOneRelationship.Property.Name == nameof(DomainUser.Group))
             {
                 var afterGroupId = (Guid?)rightResourceId?.GetTypedId();

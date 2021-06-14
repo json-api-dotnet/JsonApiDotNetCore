@@ -24,7 +24,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
         private readonly TelevisionDbContext _dbContext;
         private readonly IJsonApiRequest _request;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly ResourceContext _broadcastContext;
 
         private DateTimeOffset? _storedArchivedAt;
 
@@ -35,7 +34,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             _dbContext = dbContext;
             _request = request;
             _constraintProviders = constraintProviders;
-            _broadcastContext = resourceGraph.GetResourceContext<TelevisionBroadcast>();
         }
 
         public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
@@ -46,8 +44,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
 
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
-                    AttrAttribute archivedAtAttribute =
-                        _broadcastContext.Attributes.Single(attr => attr.Property.Name == nameof(TelevisionBroadcast.ArchivedAt));
+                    AttrAttribute archivedAtAttribute = ResourceContext.Attributes.Single(attr => attr.Property.Name == nameof(TelevisionBroadcast.ArchivedAt));
 
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
@@ -71,7 +68,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
         {
             if (_request.IsCollection)
             {
-                if (_request.PrimaryResource == _broadcastContext || _request.SecondaryResource == _broadcastContext)
+                if (_request.PrimaryResource == ResourceContext || _request.SecondaryResource == ResourceContext)
                 {
                     return true;
                 }
@@ -97,7 +94,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
 
             foreach (IncludeElementExpression includeElement in includeElements)
             {
-                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType == _broadcastContext.ResourceType)
+                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType == ResourceContext.ResourceType)
                 {
                     return true;
                 }

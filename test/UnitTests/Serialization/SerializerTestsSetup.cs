@@ -5,6 +5,7 @@ using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -50,18 +51,19 @@ namespace UnitTests.Serialization
             RelationshipLinks relationshipLinks = null)
             where T : class, IIdentifiable
         {
+            IEnumerable<RelationshipAttribute>[] inclusionChainArray = inclusionChains?.ToArray();
+
             IMetaBuilder meta = GetMetaBuilder(metaDict);
             ILinkBuilder link = GetLinkBuilder(topLinks, resourceLinks, relationshipLinks);
-            IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChains);
+            IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder();
             IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
-
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
-
             IResourceObjectBuilderSettingsProvider settingsProvider = GetSerializerSettingsProvider();
+            IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
 
             var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor,
-                settingsProvider);
+                settingsProvider, evaluatedIncludeCache);
 
             var jsonApiOptions = new JsonApiOptions();
 
@@ -71,12 +73,15 @@ namespace UnitTests.Serialization
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null,
             ResourceLinks resourceLinks = null, RelationshipLinks relationshipLinks = null)
         {
+            IEnumerable<RelationshipAttribute>[] inclusionChainArray = inclusionChains?.ToArray();
+
             ILinkBuilder link = GetLinkBuilder(null, resourceLinks, relationshipLinks);
-            IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChains);
+            IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder();
+            IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
 
             return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(),
-                GetSerializerSettingsProvider());
+                GetSerializerSettingsProvider(), evaluatedIncludeCache);
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder()
@@ -140,6 +145,23 @@ namespace UnitTests.Serialization
 
             IQueryConstraintProvider includeConstraintProvider = mock.Object;
             return includeConstraintProvider.AsEnumerable();
+        }
+
+        private IEvaluatedIncludeCache GetEvaluatedIncludeCache(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null)
+        {
+            if (inclusionChains == null)
+            {
+                return new EvaluatedIncludeCache();
+            }
+
+            List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships.ToArray()))
+                .ToList();
+
+            IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
+
+            var evaluatedIncludeCache = new EvaluatedIncludeCache();
+            evaluatedIncludeCache.Set(includeExpression);
+            return evaluatedIncludeCache;
         }
 
         /// <summary>

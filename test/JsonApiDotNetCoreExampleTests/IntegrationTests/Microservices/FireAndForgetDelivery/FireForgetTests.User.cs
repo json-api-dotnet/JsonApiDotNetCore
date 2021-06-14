@@ -17,6 +17,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Create_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
             string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
 
@@ -45,10 +48,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
             responseDocument.SingleData.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.SingleData.Attributes["displayName"].Should().Be(newDisplayName);
 
-            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
             messageBroker.SentMessages.Should().HaveCount(1);
+
+            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content.UserId.Should().Be(newUserId);
@@ -60,6 +69,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Create_user_in_group_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
@@ -105,10 +117,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
             responseDocument.SingleData.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.SingleData.Attributes["displayName"].Should().BeNull();
 
-            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
             messageBroker.SentMessages.Should().HaveCount(2);
+
+            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content1.UserId.Should().Be(newUserId);
@@ -124,6 +143,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Update_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
@@ -159,7 +181,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserLoginNameChangedContent>();
@@ -177,6 +205,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Update_user_clear_group_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
@@ -218,7 +249,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
@@ -235,6 +273,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Update_user_add_to_group_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
@@ -280,7 +321,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
@@ -297,6 +345,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Update_user_move_to_group_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
@@ -344,7 +395,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
@@ -362,6 +420,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Delete_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -380,7 +441,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserDeletedContent>();
@@ -391,6 +457,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Delete_user_in_group_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
@@ -410,7 +479,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
@@ -425,6 +499,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Clear_group_from_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
@@ -449,7 +526,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
@@ -461,6 +545,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Assign_group_to_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
@@ -489,7 +576,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
@@ -501,6 +595,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
         public async Task Replace_group_for_user_sends_messages()
         {
             // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
@@ -531,7 +628,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             responseDocument.Should().BeEmpty();
 
-            var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+            }, options => options.WithStrictOrdering());
+
             messageBroker.SentMessages.Should().HaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserMovedToGroupContent>();

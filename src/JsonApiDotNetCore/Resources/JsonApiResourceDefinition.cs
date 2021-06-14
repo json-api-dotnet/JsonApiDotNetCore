@@ -37,11 +37,17 @@ namespace JsonApiDotNetCore.Resources
     {
         protected IResourceGraph ResourceGraph { get; }
 
+        /// <summary>
+        /// Provides metadata for the resource type <typeparamref name="TResource" />.
+        /// </summary>
+        protected ResourceContext ResourceContext { get; }
+
         public JsonApiResourceDefinition(IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             ResourceGraph = resourceGraph;
+            ResourceContext = resourceGraph.GetResourceContext<TResource>();
         }
 
         /// <inheritdoc />

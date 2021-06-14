@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -31,6 +32,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public IReadOnlyCollection<ResourceFieldChainExpression> GetRelationshipChains(IncludeExpression include)
         {
             ArgumentGuard.NotNull(include, nameof(include));
+
+            if (!include.Elements.Any())
+            {
+                return Array.Empty<ResourceFieldChainExpression>();
+            }
 
             var converter = new IncludeToChainsConverter();
             converter.Visit(include, null);

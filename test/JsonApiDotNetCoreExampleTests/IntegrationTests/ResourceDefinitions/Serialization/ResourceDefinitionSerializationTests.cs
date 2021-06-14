@@ -13,12 +13,13 @@ using Xunit;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
 {
-    public sealed class SerializationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+    public sealed class ResourceDefinitionSerializationTests
+        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
     {
         private readonly ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
         private readonly SerializationFakers _fakers = new SerializationFakers();
 
-        public SerializationTests(ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        public ResourceDefinitionSerializationTests(ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -30,12 +31,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
                 services.AddResourceDefinition<StudentDefinition>();
 
                 services.AddSingleton<IEncryptionService, AesEncryptionService>();
-                services.AddSingleton<SerializationHitCounter>();
+                services.AddSingleton<ResourceDefinitionHitCounter>();
 
                 services.AddScoped(typeof(IResourceChangeTracker<>), typeof(NeverSameResourceChangeTracker<>));
             });
 
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
             hitCounter.Reset();
         }
 
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             List<Student> students = _fakers.Student.Generate(2);
 
@@ -71,8 +72,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.ManyData[1].Attributes["socialSecurityNumber"]);
             socialSecurityNumber2.Should().Be(students[1].SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(2);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -80,7 +84,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             List<Scholarship> scholarships = _fakers.Scholarship.Generate(2);
             scholarships[0].Participants = _fakers.Student.Generate(2);
@@ -117,8 +121,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber4 = encryptionService.Decrypt((string)responseDocument.Included[3].Attributes["socialSecurityNumber"]);
             socialSecurityNumber4.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(4);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -126,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Student student = _fakers.Student.Generate();
 
@@ -149,8 +158,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -158,7 +169,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship scholarship = _fakers.Scholarship.Generate();
             scholarship.Participants = _fakers.Student.Generate(2);
@@ -185,8 +196,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.ManyData[1].Attributes["socialSecurityNumber"]);
             socialSecurityNumber2.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(2);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -194,7 +208,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship scholarship = _fakers.Scholarship.Generate();
             scholarship.PrimaryContact = _fakers.Student.Generate();
@@ -218,8 +232,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -227,7 +243,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship scholarship = _fakers.Scholarship.Generate();
             scholarship.PrimaryContact = _fakers.Student.Generate();
@@ -253,8 +269,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -262,7 +280,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             string newName = _fakers.Student.Generate().Name;
             string newSocialSecurityNumber = _fakers.Student.Generate().SocialSecurityNumber;
@@ -302,8 +320,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
                 studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
             });
 
-            hitCounter.DeserializeCount.Should().Be(1);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -311,7 +332,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Student existingStudent = _fakers.Student.Generate();
 
@@ -363,8 +384,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -372,7 +395,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Student existingStudent = _fakers.Student.Generate();
 
@@ -417,8 +440,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
                 studentInDatabase.SocialSecurityNumber.Should().Be(newSocialSecurityNumber);
             });
 
-            hitCounter.DeserializeCount.Should().Be(1);
-            hitCounter.SerializeCount.Should().Be(1);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -426,7 +452,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
         {
             // Arrange
             var encryptionService = _testContext.Factory.Services.GetRequiredService<IEncryptionService>();
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship existingScholarship = _fakers.Scholarship.Generate();
             existingScholarship.Participants = _fakers.Student.Generate(3);
@@ -489,15 +515,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Included[1].Attributes["socialSecurityNumber"]);
             socialSecurityNumber2.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(2);
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
+                (typeof(Student), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+            }, options => options.WithStrictOrdering());
         }
 
         [Fact]
         public async Task Skips_on_get_ToOne_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship scholarship = _fakers.Scholarship.Generate();
             scholarship.PrimaryContact = _fakers.Student.Generate();
@@ -519,15 +548,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(scholarship.PrimaryContact.StringId);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_get_ToMany_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship scholarship = _fakers.Scholarship.Generate();
             scholarship.Participants = _fakers.Student.Generate(2);
@@ -550,15 +578,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
             responseDocument.ManyData[0].Id.Should().Be(scholarship.Participants[0].StringId);
             responseDocument.ManyData[1].Id.Should().Be(scholarship.Participants[1].StringId);
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_update_ToOne_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship existingScholarship = _fakers.Scholarship.Generate();
             Student existingStudent = _fakers.Student.Generate();
@@ -588,15 +615,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
 
             responseDocument.Should().BeEmpty();
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_set_ToMany_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship existingScholarship = _fakers.Scholarship.Generate();
             List<Student> existingStudents = _fakers.Student.Generate(2);
@@ -635,15 +661,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
 
             responseDocument.Should().BeEmpty();
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_add_to_ToMany_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship existingScholarship = _fakers.Scholarship.Generate();
             List<Student> existingStudents = _fakers.Student.Generate(2);
@@ -682,15 +707,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
 
             responseDocument.Should().BeEmpty();
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Skips_on_remove_from_ToMany_relationship()
         {
             // Arrange
-            var hitCounter = _testContext.Factory.Services.GetRequiredService<SerializationHitCounter>();
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             Scholarship existingScholarship = _fakers.Scholarship.Generate();
             existingScholarship.Participants = _fakers.Student.Generate(2);
@@ -728,8 +752,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Ser
 
             responseDocument.Should().BeEmpty();
 
-            hitCounter.DeserializeCount.Should().Be(0);
-            hitCounter.SerializeCount.Should().Be(0);
+            hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
     }
 }

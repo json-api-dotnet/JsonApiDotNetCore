@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
 {
-    public sealed class CallableResourcesController : JsonApiController<CallableResource>
+    public sealed class StarsController : JsonApiController<Star>
     {
-        public CallableResourcesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<CallableResource> resourceService)
+        public StarsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Star> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

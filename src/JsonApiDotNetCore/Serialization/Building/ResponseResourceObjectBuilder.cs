@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
-using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -17,28 +16,31 @@ namespace JsonApiDotNetCore.Serialization.Building
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new IncludeChainConverter();
 
-        private readonly IIncludedResourceObjectBuilder _includedBuilder;
-        private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly ILinkBuilder _linkBuilder;
+        private readonly IIncludedResourceObjectBuilder _includedBuilder;
+        private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
+
         private RelationshipAttribute _requestRelationship;
 
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider settingsProvider)
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider settingsProvider,
+            IEvaluatedIncludeCache evaluatedIncludeCache)
             : base(resourceContextProvider, settingsProvider.Get())
         {
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
 
             _linkBuilder = linkBuilder;
             _includedBuilder = includedBuilder;
-            _constraintProviders = constraintProviders;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
-            _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
+            _evaluatedIncludeCache = evaluatedIncludeCache;
+            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
         public RelationshipEntry Build(IIdentifiable resource, RelationshipAttribute requestRelationship)
@@ -72,7 +74,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             RelationshipEntry relationshipEntry = null;
-            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = GetInclusionChain(relationship);
+            IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = GetInclusionChainsStartingWith(relationship);
 
             if (Equals(relationship, _requestRelationship) || relationshipChains.Any())
             {
@@ -116,35 +118,24 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Inspects the included relationship chains (see <see cref="IIncludeQueryStringParameterReader" /> to see if <paramref name="relationship" /> should be
-        /// included or not.
+        /// Inspects the included relationship chains and selects the ones that starts with the specified relationship.
         /// </summary>
-        private IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> GetInclusionChain(RelationshipAttribute relationship)
+        private IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> GetInclusionChainsStartingWith(RelationshipAttribute relationship)
         {
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
+            IncludeExpression include = _evaluatedIncludeCache.Get() ?? IncludeExpression.Empty;
+            IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(include);
 
-            ResourceFieldChainExpression[] chains = _constraintProviders
-                .SelectMany(provider => provider.GetConstraints())
-                .Select(expressionInScope => expressionInScope.Expression)
-                .OfType<IncludeExpression>()
-                .SelectMany(IncludeChainConverter.GetRelationshipChains)
-                .ToArray();
-
-            // @formatter:keep_existing_linebreaks restore
-            // @formatter:wrap_chained_method_calls restore
-
-            var inclusionChain = new List<IReadOnlyCollection<RelationshipAttribute>>();
+            var inclusionChains = new List<IReadOnlyCollection<RelationshipAttribute>>();
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
                 if (chain.Fields.First().Equals(relationship))
                 {
-                    inclusionChain.Add(chain.Fields.Cast<RelationshipAttribute>().ToArray());
+                    inclusionChains.Add(chain.Fields.Cast<RelationshipAttribute>().ToArray());
                 }
             }
 
-            return inclusionChain;
+            return inclusionChains;
         }
     }
 }

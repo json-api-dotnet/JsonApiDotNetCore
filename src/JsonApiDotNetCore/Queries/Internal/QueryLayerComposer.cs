@@ -20,11 +20,12 @@ namespace JsonApiDotNetCore.Queries.Internal
         private readonly IJsonApiOptions _options;
         private readonly IPaginationContext _paginationContext;
         private readonly ITargetedFields _targetedFields;
+        private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext,
-            ITargetedFields targetedFields)
+            ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache)
         {
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
 
             _constraintProviders = constraintProviders;
             _resourceContextProvider = resourceContextProvider;
@@ -39,6 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _options = options;
             _paginationContext = paginationContext;
             _targetedFields = targetedFields;
+            _evaluatedIncludeCache = evaluatedIncludeCache;
             _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
         }
 
@@ -71,6 +74,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             QueryLayer topLayer = ComposeTopLayer(constraints, requestResource);
             topLayer.Include = ComposeChildren(topLayer, constraints);
+
+            _evaluatedIncludeCache.Set(topLayer.Include);
 
             return topLayer;
         }
@@ -159,12 +164,15 @@ namespace JsonApiDotNetCore.Queries.Internal
                     // @formatter:wrap_chained_method_calls restore
 
                     ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
+                    bool isToManyRelationship = includeElement.Relationship is HasManyAttribute;
 
                     var child = new QueryLayer(resourceContext)
                     {
-                        Filter = GetFilter(expressionsInCurrentScope, resourceContext),
-                        Sort = GetSort(expressionsInCurrentScope, resourceContext),
-                        Pagination = ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext),
+                        Filter = isToManyRelationship ? GetFilter(expressionsInCurrentScope, resourceContext) : null,
+                        Sort = isToManyRelationship ? GetSort(expressionsInCurrentScope, resourceContext) : null,
+                        Pagination = isToManyRelationship
+                            ? ((JsonApiOptions)_options).DisableChildrenPagination ? null : GetPagination(expressionsInCurrentScope, resourceContext)
+                            : null,
                         Projection = GetProjectionForSparseAttributeSet(resourceContext)
                     };
 

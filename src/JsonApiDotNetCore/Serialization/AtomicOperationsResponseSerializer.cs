@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -21,6 +22,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly ILinkBuilder _linkBuilder;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
 
@@ -28,13 +30,15 @@ namespace JsonApiDotNetCore.Serialization
         public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
 
         public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
-            IFieldsToSerialize fieldsToSerialize, IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request, IJsonApiOptions options)
+            IFieldsToSerialize fieldsToSerialize, IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache,
+            IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
 
@@ -42,6 +46,7 @@ namespace JsonApiDotNetCore.Serialization
             _linkBuilder = linkBuilder;
             _fieldsToSerialize = fieldsToSerialize;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
+            _evaluatedIncludeCache = evaluatedIncludeCache;
             _request = request;
             _options = options;
         }
@@ -93,6 +98,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 _request.CopyFrom(operation.Request);
                 _fieldsToSerialize.ResetCache();
+                _evaluatedIncludeCache.Set(null);
 
                 _resourceDefinitionAccessor.OnSerialize(operation.Resource);
 
