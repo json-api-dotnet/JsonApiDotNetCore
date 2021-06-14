@@ -47,7 +47,7 @@ namespace TestBuildingBlocks
                 {
                     if (text.Length > 0)
                     {
-                        return JsonConvert.DeserializeObject<JObject>(text).ToString();
+                        return JsonConvert.DeserializeObject<JObject>(text)?.ToString();
                     }
                 }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
