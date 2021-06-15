@@ -47,7 +47,7 @@
   $('div[feature]#include').on('click', () => navigateTo('usage/reading/including-relationships.html'));
   $('div[feature]#security').on('click', () => navigateTo('usage/resources/attributes.html#capabilities'));
   $('div[feature]#validation').on('click', () => navigateTo('usage/options.html#enable-modelstate-validation'));
-  $('div[feature]#customizable').on('click', () => navigateTo('usage/resources/resource-definitions.html'));
+  $('div[feature]#customizable').on('click', () => navigateTo('usage/extensibility/resource-definitions.html'));
 
 
   const navigateTo = (url) => {
