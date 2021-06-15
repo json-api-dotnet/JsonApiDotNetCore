@@ -3,11 +3,24 @@
 _since v2.3.4_
 
 Resource definitions provide a resource-oriented way to handle custom business logic (irrespective of the originating endpoint).
-
 They are resolved from the dependency injection container, so you can inject dependencies in their constructor.
 
+In v4.2 we introduced an extension method that you can use to register your resource definition.
+
+**Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
+
+```c#
+public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddResourceDefinition<ArticleDefinition>();
+    }
+}
+```
+
 **Note:** Prior to the introduction of auto-discovery (in v3), you needed to register the
-`ResourceDefinition` on the container yourself:
+resource definition on the container yourself:
 
 ```c#
 services.AddScoped<ResourceDefinition<Product>, ProductResource>();
@@ -29,7 +42,7 @@ from Entity Framework Core `IQueryable` execution.
 There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.
 
-Note: to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]` on a resource class property.
+**Note:** to exclude attributes unconditionally, use `[Attr(Capabilities = ~AttrCapabilities.AllowView)]` on a resource class property.
 
 ```c#
 public class UserDefinition : JsonApiResourceDefinition<User>

@@ -1,10 +1,9 @@
 # The Resource Graph
 
-_NOTE: prior to v4 this was called the `ContextGraph`_
-
 The `ResourceGraph` is a map of all the JSON:API resources and their relationships that your API serves.
-
 It is built at app startup and available as a singleton through Dependency Injection.
+
+**Note:** Prior to v4 this was called the `ContextGraph`.
 
 ## Constructing The Graph
 

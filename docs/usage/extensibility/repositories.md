@@ -9,13 +9,15 @@ The repository should then be registered in Startup.cs.
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddScoped<IResourceRepository<Article>, ArticleRepository>();
+    services.AddScoped<IResourceReadRepository<Article>, ArticleRepository>();
+    services.AddScoped<IResourceWriteRepository<Article>, ArticleRepository>();
 }
 ```
 
 In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
-This is helpful when you implement a subset of the resource interfaces and want to register them all in one go.
+This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.
 
-Note: If you're using service discovery, this happens automatically.
+**Note:** If you're using [auto-discovery](~/usage/resource-graph.md#auto-discovery), this happens automatically.
 
 ```c#
 public class Startup
