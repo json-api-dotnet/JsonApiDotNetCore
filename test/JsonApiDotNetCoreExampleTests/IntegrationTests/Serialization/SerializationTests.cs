@@ -283,7 +283,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             var jObject = JsonConvert.DeserializeObject<JObject>(responseDocument);
-            string errorId = jObject["errors"].Should().NotBeNull().And.Subject.Select(element => (string)element["id"]).Single();
+            jObject.Should().NotBeNull();
+
+            string errorId = jObject!["errors"].Should().NotBeNull().And.Subject.Select(element => (string)element["id"]).Single();
 
             responseDocument.Should().BeJson(@"{
   ""errors"": [

@@ -77,7 +77,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             User responseUser = GetResponseDeserializer().DeserializeSingle<User>(responseDocument).Data;
             var document = JsonConvert.DeserializeObject<Document>(responseDocument);
 
-            document.SingleData.Attributes.Should().NotContainKey("password");
+            document.Should().NotBeNull();
+            document!.SingleData.Attributes.Should().NotContainKey("password");
             document.SingleData.Attributes["userName"].Should().Be(newUser.UserName);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
