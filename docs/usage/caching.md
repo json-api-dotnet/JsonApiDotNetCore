@@ -60,7 +60,7 @@ ETag: "356075D903B8FE8D9921201A7E7CD3F9"
 }
 ```
 
-Note: To just poll for changes (without fetching them), send a HEAD request instead:
+**Note:** To just poll for changes (without fetching them), send a HEAD request instead:
 
 ```http
 HEAD /articles?sort=-lastModifiedAt HTTP/1.1
