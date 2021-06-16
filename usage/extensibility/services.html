@@ -184,8 +184,8 @@ public class Startup
     }
 }
 </code></pre><p>In v3.0 we introduced an extension method that you can use to register a resource service on all of its JsonApiDotNetCore interfaces.
-This is helpful when you implement a subset of the resource interfaces and want to register them all in one go.</p>
-<p>Note: If you&#39;re using service discovery, this happens automatically.</p>
+This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
+<p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, this happens automatically.</p>
 <pre><code class="lang-c#">public class Startup
 {
     public void ConfigureServices(IServiceCollection services)

@@ -81,7 +81,7 @@ Likewise, <code>IResourceDefinition.OnSetToOneRelationshipAsync</code> is called
 <p>Customization can be done at any of these extensibility points. It is usually sufficient to place your business logic in a resource definition, but depending
 on your needs, you may want to replace other parts by deriving from the built-in classes and override virtual methods or call their protected base methods.</p>
 <h2 id="replacing-injected-services">Replacing injected services</h2>
-<p><strong>Note:</strong> If you are using auto-discovery, then resource services, repositories and resource definitions will be automatically registered for you.</p>
+<p><strong>Note:</strong> If you&#39;re using <a href="../resource-graph.html#auto-discovery">auto-discovery</a>, then resource services, repositories and resource definitions will be automatically registered for you.</p>
 <p>Replacing built-in services is done on a per-resource basis and can be done through dependency injection in your Startup.cs file.
 For convenience, extension methods are provided to register layers on all their implemented interfaces.</p>
 <pre><code class="lang-c#">// Startup.cs

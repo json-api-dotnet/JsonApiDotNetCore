@@ -105,7 +105,7 @@ ETag: &quot;356075D903B8FE8D9921201A7E7CD3F9&quot;
 {
   &quot;data&quot;: [ ... ]
 }
-</code></pre><p>Note: To just poll for changes (without fetching them), send a HEAD request instead:</p>
+</code></pre><p><strong>Note:</strong> To just poll for changes (without fetching them), send a HEAD request instead:</p>
 <pre><code class="lang-http">HEAD /articles?sort=-lastModifiedAt HTTP/1.1
 Host: localhost:5000
 If-None-Match: &quot;7FFF010786E2CE8FC901896E83870E00&quot;
