@@ -4,13 +4,9 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Client.Internal
 {
+    /// <summary>
     /// Base class for "single data" and "many data" deserialized responses.
-    /// TODO: Currently
-    /// <see cref="ResourceLinks" />
-    /// and
-    /// <see cref="RelationshipLinks" />
-    /// information is ignored by the serializer. This is out of scope for now because
-    /// it is not considered mission critical for v4.
+    /// </summary>
     [PublicAPI]
     public abstract class DeserializedResponseBase
     {
