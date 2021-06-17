@@ -85,6 +85,7 @@ public class Startup
 ## Compatibility
 
 A lot of changes were introduced in v4. The following chart should help you pick the best version, based on your environment.
+See also our [versioning policy](./VERSIONING_POLICY.md).
 
 | .NET Version      | EF Core Version | JsonApiDotNetCore Version |
 | ----------------- | --------------- | ------------------------- |
