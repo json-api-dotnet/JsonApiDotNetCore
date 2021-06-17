@@ -26,6 +26,6 @@
     <Rule Id="AV2230" Action="Info" />
     <Rule Id="AV2305" Action="None" />
     <Rule Id="AV2310" Action="Info" />
-    <Rule Id="AV2318" Action="Info" />
+    <Rule Id="AV2318" Action="Warning" />
   </Rules>
 </RuleSet>
