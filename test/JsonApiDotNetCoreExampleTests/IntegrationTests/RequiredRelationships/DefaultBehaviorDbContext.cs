@@ -27,6 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             builder.Entity<Order>()
                 .HasOne(order => order.Shipment)
                 .WithOne(shipment => shipment.Order)
+                // Without specifying "OrderId", the primary key will be used as a foreign key which would result in attempt to update the shipment identity when this relationship is patched.
                 .HasForeignKey<Shipment>("OrderId")
                 .IsRequired();
         }
