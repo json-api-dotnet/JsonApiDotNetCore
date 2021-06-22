@@ -24,10 +24,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                 .WithOne(order => order.Customer)
                 .IsRequired();
 
+            // By default, EF Core generates an identifying foreign key for a required 1-to-1 relationship.
+            // This means no foreign key column is generated, instead the primary keys point to each other directly.
+            // That mechanism does not make sense for JSON:API, because patching a relationship would result in
+            // also changing the identity of a resource. Naming the key explicitly forces to create a foreign key column.
             builder.Entity<Order>()
                 .HasOne(order => order.Shipment)
                 .WithOne(shipment => shipment.Order)
-                // Without specifying "OrderId", the primary key will be used as a foreign key which would result in attempt to update the shipment identity when this relationship is patched.
                 .HasForeignKey<Shipment>("OrderId")
                 .IsRequired();
         }
