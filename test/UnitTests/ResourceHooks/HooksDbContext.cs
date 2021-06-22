@@ -54,13 +54,13 @@ namespace UnitTests.ResourceHooks
             builder.Entity<Passport>()
                 .HasOne(passport => passport.Person)
                 .WithOne(person => person.Passport)
-                .HasForeignKey<Person>("PassportKey")
+                .HasForeignKey<Person>("PassportId")
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<TodoItem>()
                 .HasOne(todoItem => todoItem.OneToOnePerson)
                 .WithOne(person => person.OneToOneTodoItem)
-                .HasForeignKey<TodoItem>("OneToOnePersonKey");
+                .HasForeignKey<TodoItem>("OneToOnePersonId");
         }
     }
 }

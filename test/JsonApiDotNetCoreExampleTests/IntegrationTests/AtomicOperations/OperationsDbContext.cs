@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
             builder.Entity<MusicTrack>()
                 .HasOne(musicTrack => musicTrack.Lyric)
                 .WithOne(lyric => lyric.Track)
-                .HasForeignKey<MusicTrack>();
+                .HasForeignKey<MusicTrack>("LyricId");
         }
     }
 }

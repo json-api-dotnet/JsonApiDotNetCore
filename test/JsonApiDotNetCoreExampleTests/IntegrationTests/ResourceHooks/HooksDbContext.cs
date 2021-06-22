@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceHooks
             builder.Entity<Passport>()
                 .HasOne(passport => passport.Person)
                 .WithOne(person => person.Passport)
-                .HasForeignKey<Person>("PassportKey")
+                .HasForeignKey<Person>("PassportId")
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }
