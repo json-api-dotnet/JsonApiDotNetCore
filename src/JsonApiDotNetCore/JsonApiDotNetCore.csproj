@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>4.3.0</VersionPrefix>
+    <VersionPrefix>4.2.0</VersionPrefix>
     <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
