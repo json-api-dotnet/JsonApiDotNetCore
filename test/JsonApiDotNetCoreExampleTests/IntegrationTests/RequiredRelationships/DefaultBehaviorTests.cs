@@ -114,12 +114,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/customers/{existingOrder.Customer.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeNull();
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -148,12 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{existingOrder.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeNull();
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -422,10 +422,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{orderWithoutShipment.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -465,10 +467,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{orderWithoutShipment.Id}/relationships/shipment";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
