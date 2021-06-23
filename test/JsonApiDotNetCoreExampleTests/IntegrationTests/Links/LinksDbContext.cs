@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
             builder.Entity<Photo>()
                 .HasOne(photo => photo.Location)
                 .WithOne(location => location.Photo)
-                .HasForeignKey<Photo>("PhotoLocationKey");
+                .HasForeignKey<Photo>("LocationId");
         }
     }
 }

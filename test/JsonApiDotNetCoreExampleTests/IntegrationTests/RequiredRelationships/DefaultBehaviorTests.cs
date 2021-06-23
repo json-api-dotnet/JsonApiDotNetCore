@@ -5,6 +5,7 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
@@ -113,12 +114,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/customers/{existingOrder.Customer.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeNull();
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -147,12 +148,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{existingOrder.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Should().BeNull();
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -382,7 +383,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_reassign_dependent_side_of_OneToOne_relationship_with_identifying_foreign_key_through_primary_endpoint()
+        public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_primary_endpoint()
         {
             // Arrange
             Order orderWithShipment = _fakers.Orders.Generate();
@@ -421,21 +422,24 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{orderWithoutShipment.Id}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Should().BeEmpty();
 
-            Error error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                Shipment existingShipmentInDatabase =
+                    await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdOrDefaultAsync(orderWithShipment.Shipment.Id);
+
+                existingShipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
+            });
         }
 
         [Fact]
-        public async Task Cannot_reassign_dependent_side_of_OneToOne_relationship_with_identifying_foreign_key_through_relationship_endpoint()
+        public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_relationship_endpoint()
         {
             // Arrange
             Order orderWithShipment = _fakers.Orders.Generate();
@@ -463,17 +467,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             string route = $"/orders/{orderWithoutShipment.Id}/relationships/shipment";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Should().BeEmpty();
 
-            Error error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().StartWith("The property 'Id' on entity type 'Shipment' is part of a key and so cannot be modified or marked as modified.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                Shipment existingShipmentInDatabase =
+                    await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdOrDefaultAsync(orderWithShipment.Shipment.Id);
+
+                existingShipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
+            });
         }
     }
 }

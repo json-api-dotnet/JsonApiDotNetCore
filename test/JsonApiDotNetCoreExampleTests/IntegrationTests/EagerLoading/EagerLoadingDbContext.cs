@@ -22,13 +22,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
             builder.Entity<Building>()
                 .HasOne(building => building.PrimaryDoor)
                 .WithOne()
-                .HasForeignKey<Building>("PrimaryDoorKey")
+                .HasForeignKey<Building>("PrimaryDoorId")
                 .IsRequired();
 
             builder.Entity<Building>()
                 .HasOne(building => building.SecondaryDoor)
                 .WithOne()
-                .HasForeignKey<Building>("SecondaryDoorKey")
+                .HasForeignKey<Building>("SecondaryDoorId")
                 .IsRequired(false);
         }
     }

@@ -70,7 +70,15 @@ namespace JsonApiDotNetCore.Repositories
         {
             foreach (object resource in resources)
             {
-                _dbContext.Entry(resource).State = EntityState.Detached;
+                try
+                {
+                    _dbContext.Entry(resource).State = EntityState.Detached;
+                }
+                catch (InvalidOperationException)
+                {
+                    // If SaveChanges() threw due to a foreign key constraint violation, its exception is rethrown here.
+                    // We swallow this exception, to allow the originating error to propagate.
+                }
             }
         }
     }
