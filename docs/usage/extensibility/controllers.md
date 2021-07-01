@@ -88,18 +88,18 @@ public class ArticlesController : BaseJsonApiController<Article>
 
 ## Implicit Access By Service Injection
 
-Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable IResourceService implementation, so simply inject the implementation that is available.
+Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable `IResourceService` implementation, so simply inject the implementation that is available.
 
 As with the ActionFilter attributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.
 
-For more information about resource injection, see the next section titled Resource Services.
+For more information about resource service injection, see [Replacing injected services](~/usage/extensibility/layer-overview.md#replacing-injected-services) and [Resource Services](~/usage/extensibility/services.md).
 
 ```c#
 public class ReportsController : BaseJsonApiController<Report>
 {
     public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Report> resourceService)
-        : base(options, loggerFactory, resourceService)
+        IGetAllService<Report> getAllService)
+        : base(options, loggerFactory, getAllService)
     {
     }
 

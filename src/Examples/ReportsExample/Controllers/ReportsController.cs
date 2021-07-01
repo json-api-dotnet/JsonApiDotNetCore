@@ -12,8 +12,8 @@ namespace ReportsExample.Controllers
     [Route("api/[controller]")]
     public class ReportsController : BaseJsonApiController<Report>
     {
-        public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Report> getAll)
-            : base(options, loggerFactory, getAll)
+        public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Report> getAllService)
+            : base(options, loggerFactory, getAllService)
         {
         }
 
