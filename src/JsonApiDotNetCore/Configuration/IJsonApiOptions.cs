@@ -119,16 +119,6 @@ namespace JsonApiDotNetCore.Configuration
         bool AllowClientGeneratedIds { get; }
 
         /// <summary>
-        /// Whether or not resource hooks are enabled. This is currently an experimental feature and subject to change in future versions. Defaults to False.
-        /// </summary>
-        public bool EnableResourceHooks { get; }
-
-        /// <summary>
-        /// Whether or not database values should be included by default for resource hooks. Ignored if EnableResourceHooks is set to false. False by default.
-        /// </summary>
-        bool LoadDatabaseValues { get; }
-
-        /// <summary>
         /// Whether or not to produce an error on unknown query string parameters. False by default.
         /// </summary>
         bool AllowUnknownQueryStringParameters { get; }

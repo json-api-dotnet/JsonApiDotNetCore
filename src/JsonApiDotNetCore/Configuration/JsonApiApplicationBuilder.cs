@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.AtomicOperations.Processors;
-using JsonApiDotNetCore.Hooks;
-using JsonApiDotNetCore.Hooks.Internal;
-using JsonApiDotNetCore.Hooks.Internal.Discovery;
-using JsonApiDotNetCore.Hooks.Internal.Execution;
-using JsonApiDotNetCore.Hooks.Internal.Traversal;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Internal;
@@ -153,9 +148,6 @@ namespace JsonApiDotNetCore.Configuration
             AddQueryStringLayer();
             AddOperationsLayer();
 
-            AddResourceHooks();
-
-            _services.AddScoped<IGenericServiceFactory, GenericServiceFactory>();
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped<IPaginationContext, PaginationContext>();
             _services.AddScoped<IEvaluatedIncludeCache, EvaluatedIncludeCache>();
@@ -254,23 +246,6 @@ namespace JsonApiDotNetCore.Configuration
             where TElementToAdd : TCollectionElement
         {
             _services.AddScoped<TCollectionElement>(serviceProvider => serviceProvider.GetRequiredService<TElementToAdd>());
-        }
-
-        private void AddResourceHooks()
-        {
-            if (_options.EnableResourceHooks)
-            {
-                _services.AddSingleton(typeof(IHooksDiscovery<>), typeof(HooksDiscovery<>));
-                _services.AddScoped(typeof(IResourceHookContainer<>), typeof(ResourceHooksDefinition<>));
-                _services.AddTransient<IResourceHookExecutor, ResourceHookExecutor>();
-                _services.AddTransient<IHookContainerProvider, HookContainerProvider>();
-                _services.AddScoped<INodeNavigator, NodeNavigator>();
-                _services.AddScoped<IResourceHookExecutorFacade, ResourceHookExecutorFacade>();
-            }
-            else
-            {
-                _services.AddSingleton<IResourceHookExecutorFacade, NeverResourceHookExecutorFacade>();
-            }
         }
 
         private void AddSerializationLayer()

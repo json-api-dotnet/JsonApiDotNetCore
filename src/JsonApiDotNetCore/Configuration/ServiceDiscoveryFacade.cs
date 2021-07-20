@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Services;
@@ -134,11 +132,6 @@ namespace JsonApiDotNetCore.Configuration
                 AddServices(assembly, resourceDescriptor);
                 AddRepositories(assembly, resourceDescriptor);
                 AddResourceDefinitions(assembly, resourceDescriptor);
-
-                if (_options.EnableResourceHooks)
-                {
-                    AddResourceHookDefinitions(assembly, resourceDescriptor);
-                }
             }
         }
 
@@ -156,25 +149,6 @@ namespace JsonApiDotNetCore.Configuration
         private void AddResource(ResourceDescriptor resourceDescriptor)
         {
             _resourceGraphBuilder.Add(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
-        }
-
-        private void AddResourceHookDefinitions(Assembly assembly, ResourceDescriptor identifiable)
-        {
-            try
-            {
-                Type resourceDefinition = _typeLocator.GetDerivedGenericTypes(assembly, typeof(ResourceHooksDefinition<>), identifiable.ResourceType)
-                    .SingleOrDefault();
-
-                if (resourceDefinition != null)
-                {
-                    _services.AddScoped(typeof(ResourceHooksDefinition<>).MakeGenericType(identifiable.ResourceType), resourceDefinition);
-                }
-            }
-            catch (InvalidOperationException exception)
-            {
-                throw new InvalidConfigurationException($"Cannot define multiple ResourceHooksDefinition<> implementations for '{identifiable.ResourceType}'",
-                    exception);
-            }
         }
 
         private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)

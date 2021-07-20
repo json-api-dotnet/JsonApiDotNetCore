@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore
 {
-    internal class CollectionConverter
+    internal sealed class CollectionConverter
     {
         private static readonly Type[] HashSetCompatibleCollectionTypes =
         {

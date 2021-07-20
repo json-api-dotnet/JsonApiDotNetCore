@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -24,8 +23,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
         public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
         {
             _tenantProvider = tenantProvider;
         }
@@ -91,9 +90,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
     {
         public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
-            : base(tenantProvider, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
-                hookExecutor)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
+            : base(tenantProvider, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
         {
         }
     }

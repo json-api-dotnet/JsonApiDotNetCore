@@ -11,12 +11,9 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Services;
 using JsonApiDotNetCoreExample.Data;
 using JsonApiDotNetCoreExample.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -25,40 +22,6 @@ namespace UnitTests.Extensions
 {
     public sealed class ServiceCollectionExtensionsTests
     {
-        [Fact]
-        public void AddJsonApiInternals_Adds_All_Required_Services()
-        {
-            // Arrange
-            var services = new ServiceCollection();
-            services.AddLogging();
-            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
-            services.AddJsonApi<AppDbContext>();
-
-            // Act
-            // this is required because the DbContextResolver requires access to the current HttpContext
-            // to get the request scoped DbContext instance
-            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
-            ServiceProvider provider = services.BuildServiceProvider();
-
-            // Assert
-            var request = provider.GetRequiredService<IJsonApiRequest>() as JsonApiRequest;
-            Assert.NotNull(request);
-            var resourceGraph = provider.GetService<IResourceGraph>();
-            Assert.NotNull(resourceGraph);
-            request.PrimaryResource = resourceGraph.GetResourceContext<TodoItem>();
-            Assert.NotNull(provider.GetService<IResourceGraph>());
-            Assert.NotNull(provider.GetService<IDbContextResolver>());
-            Assert.NotNull(provider.GetService(typeof(IResourceRepository<TodoItem>)));
-            Assert.NotNull(provider.GetService<IResourceGraph>());
-            Assert.NotNull(provider.GetService<IHttpContextAccessor>());
-            Assert.NotNull(provider.GetService<IMetaBuilder>());
-            Assert.NotNull(provider.GetService<IJsonApiSerializerFactory>());
-            Assert.NotNull(provider.GetService<IJsonApiWriter>());
-            Assert.NotNull(provider.GetService<IJsonApiReader>());
-            Assert.NotNull(provider.GetService<IJsonApiDeserializer>());
-            Assert.NotNull(provider.GetService<IGenericServiceFactory>());
-        }
-
         [Fact]
         public void RegisterResource_DeviatingDbContextPropertyName_RegistersCorrectly()
         {
