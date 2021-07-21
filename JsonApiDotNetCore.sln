@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{02
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{076E1AE4-FD25-4684-B826-CAAE37FEA0AA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreExampleTests\JsonApiDotNetCoreExampleTests.csproj", "{CAF331F8-9255-4D72-A1A8-A54141E99F1E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFrameworkTests", "test\NoEntityFrameworkTests\NoEntityFrameworkTests.csproj", "{4F15A8F8-5BC6-45A1-BC51-03F921B726A4}"
@@ -35,8 +37,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReportsExample", "src\Examples\ReportsExample\ReportsExample.csproj", "{8BCFF95F-4850-427C-AEDB-B5B4F62B2C7B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCore", "src\JsonApiDotNetCore\JsonApiDotNetCore.csproj", "{21D27239-138D-4604-8E49-DCBE41BCE4C8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDbContextExample", "src\Examples\MultiDbContextExample\MultiDbContextExample.csproj", "{6CAFDDBE-00AB-4784-801B-AB419C3C3A26}"
 EndProject
