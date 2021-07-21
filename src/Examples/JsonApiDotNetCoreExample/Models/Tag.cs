@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -12,5 +13,8 @@ namespace JsonApiDotNetCoreExample.Models
         [MinLength(1)]
         [Attr]
         public string Name { get; set; }
+
+        [HasMany]
+        public ISet<TodoItem> TodoItems { get; set; }
     }
 }
