@@ -79,15 +79,10 @@
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ApplicationBuilderExtensions.html">ApplicationBuilderExtensions</a></h4>
       <section></section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.GenericServiceFactory.html">GenericServiceFactory</a></h4>
-      <section><p>Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime. This is only used by resource
-hooks and subject to be removed in a future version.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.InverseNavigationResolver.html">InverseNavigationResolver</a></h4>
       <section><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated in the configure phase of the
-application. When using a data access layer different from EF Core, and when using ResourceHooks that depend on the inverse navigation property
-(BeforeImplicitUpdateRelationship), you will need to override this service, or set <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>
-explicitly.</p>
+application. When using a data access layer different from EF Core, you will need to implement and register this service, or set
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a> explicitly.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.JsonApiOptions.html">JsonApiOptions</a></h4>
       <section><p>Global options that configure the behavior of JsonApiDotNetCore.</p>
@@ -116,15 +111,10 @@ in cases when we need to manually resolve services from the request scope (e.g. 
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IGenericServiceFactory.html">IGenericServiceFactory</a></h4>
-      <section><p>Represents the Service Locator design pattern. Used to obtain object instances for types are not known until runtime. This is only used by resource
-hooks and subject to be removed in a future version.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IInverseNavigationResolver.html">IInverseNavigationResolver</a></h4>
       <section><p>Responsible for populating <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>. This service is instantiated in the configure phase of the
-application. When using a data access layer different from EF Core, and when using ResourceHooks that depend on the inverse navigation property
-(BeforeImplicitUpdateRelationship), you will need to override this service, or set <a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a>
-explicitly.</p>
+application. When using a data access layer different from EF Core, you will need to implement and register this service, or set
+<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_InverseNavigationProperty">InverseNavigationProperty</a> explicitly.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></h4>
       <section><p>Global options that configure the behavior of JsonApiDotNetCore.</p>

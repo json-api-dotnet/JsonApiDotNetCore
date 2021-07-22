@@ -82,10 +82,9 @@ In simple cases, you can also just wrap the base implementation with your custom
     public TodoItemService(IResourceRepositoryAccessor repositoryAccessor,
         IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
         IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-        IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker,
-        IResourceHookExecutorFacade hookExecutor)
+        IResourceChangeTracker&lt;TodoItem&gt; resourceChangeTracker)
         : base(repositoryAccessor, queryLayerComposer, paginationContext, options,
-            loggerFactory, request, resourceChangeTracker, hookExecutor)
+            loggerFactory, request, resourceChangeTracker)
     {
         _notificationService = notificationService;
     }
@@ -224,7 +223,7 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/release/4.2.0/docs/usage/extensibility/services.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/services.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
