@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -27,8 +26,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
         public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
         {
             _systemClock = systemClock;
             _targetedFields = targetedFields;
@@ -120,9 +119,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
     {
         public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceHookExecutorFacade hookExecutor)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
             : base(systemClock, targetedFields, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, hookExecutor)
+                resourceChangeTracker)
         {
         }
     }

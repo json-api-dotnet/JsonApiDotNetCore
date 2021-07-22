@@ -59,12 +59,6 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowClientGeneratedIds { get; set; }
 
         /// <inheritdoc />
-        public bool EnableResourceHooks { get; set; }
-
-        /// <inheritdoc />
-        public bool LoadDatabaseValues { get; set; }
-
-        /// <inheritdoc />
         public bool AllowUnknownQueryStringParameters { get; set; }
 
         /// <inheritdoc />

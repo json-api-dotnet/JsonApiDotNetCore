@@ -1,6 +1,5 @@
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -34,14 +33,12 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
-            _services.AddScoped(_ => new Mock<IGenericServiceFactory>().Object);
             _services.AddScoped(_ => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
-            _services.AddScoped(_ => new Mock<IResourceHookExecutorFacade>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, LoggerFactory);
         }
@@ -132,25 +129,6 @@ namespace DiscoveryTests
 
             var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
             resourceDefinition.Should().BeOfType<TestResourceDefinition>();
-        }
-
-        [Fact]
-        public void Can_add_resource_hooks_definition_from_current_assembly_to_container()
-        {
-            // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
-            facade.AddCurrentAssembly();
-
-            _options.EnableResourceHooks = true;
-
-            // Act
-            facade.DiscoverInjectables();
-
-            // Assert
-            ServiceProvider services = _services.BuildServiceProvider();
-
-            var resourceHooksDefinition = services.GetRequiredService<ResourceHooksDefinition<TestResource>>();
-            resourceHooksDefinition.Should().BeOfType<TestResourceHooksDefinition>();
         }
     }
 }

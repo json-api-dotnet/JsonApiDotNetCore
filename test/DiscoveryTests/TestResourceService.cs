@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Hooks;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Repositories;
@@ -14,9 +13,8 @@ namespace DiscoveryTests
     public sealed class TestResourceService : JsonApiResourceService<TestResource>
     {
         public TestResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
-            IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TestResource> resourceChangeTracker,
-            IResourceHookExecutorFacade hookExecutor)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker, hookExecutor)
+            IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TestResource> resourceChangeTracker)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
         {
         }
     }
