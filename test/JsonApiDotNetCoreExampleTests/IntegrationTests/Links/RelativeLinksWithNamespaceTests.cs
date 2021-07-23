@@ -185,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         }
 
         [Fact]
-        public async Task Get_HasOne_relationship_returns_relative_links()
+        public async Task Get_ToOne_relationship_returns_relative_links()
         {
             // Arrange
             Photo photo = _fakers.Photo.Generate();
@@ -218,7 +218,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
         }
 
         [Fact]
-        public async Task Get_HasMany_relationship_returns_relative_links()
+        public async Task Get_ToMany_relationship_returns_relative_links()
         {
             // Arrange
             PhotoAlbum album = _fakers.PhotoAlbum.Generate();

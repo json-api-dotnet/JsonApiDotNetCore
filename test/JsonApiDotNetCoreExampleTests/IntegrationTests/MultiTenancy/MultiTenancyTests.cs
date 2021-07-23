@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_get_HasMany_relationship_for_other_parent_tenant()
+        public async Task Cannot_get_ToMany_relationship_for_other_parent_tenant()
         {
             // Arrange
             WebShop shop = _fakers.WebShop.Generate();
@@ -258,7 +258,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_get_HasOne_relationship_for_other_parent_tenant()
+        public async Task Cannot_get_ToOne_relationship_for_other_parent_tenant()
         {
             // Arrange
             WebProduct product = _fakers.WebProduct.Generate();
@@ -329,7 +329,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_create_resource_with_HasMany_relationship_to_other_tenant()
+        public async Task Cannot_create_resource_with_ToMany_relationship_to_other_tenant()
         {
             // Arrange
             WebProduct existingProduct = _fakers.WebProduct.Generate();
@@ -387,7 +387,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_create_resource_with_HasOne_relationship_to_other_tenant()
+        public async Task Cannot_create_resource_with_ToOne_relationship_to_other_tenant()
         {
             // Arrange
             WebShop existingShop = _fakers.WebShop.Generate();
@@ -534,7 +534,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_HasMany_relationship_to_other_tenant()
+        public async Task Cannot_update_resource_with_ToMany_relationship_to_other_tenant()
         {
             // Arrange
             WebShop existingShop = _fakers.WebShop.Generate();
@@ -590,7 +590,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_HasOne_relationship_to_other_tenant()
+        public async Task Cannot_update_resource_with_ToOne_relationship_to_other_tenant()
         {
             // Arrange
             WebProduct existingProduct = _fakers.WebProduct.Generate();
@@ -643,7 +643,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_HasMany_relationship_for_other_parent_tenant()
+        public async Task Cannot_update_ToMany_relationship_for_other_parent_tenant()
         {
             // Arrange
             WebShop existingShop = _fakers.WebShop.Generate();
@@ -678,7 +678,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_HasMany_relationship_to_other_tenant()
+        public async Task Cannot_update_ToMany_relationship_to_other_tenant()
         {
             // Arrange
             WebShop existingShop = _fakers.WebShop.Generate();
@@ -723,7 +723,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_HasOne_relationship_for_other_parent_tenant()
+        public async Task Cannot_update_ToOne_relationship_for_other_parent_tenant()
         {
             // Arrange
             WebProduct existingProduct = _fakers.WebProduct.Generate();
@@ -758,7 +758,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
         }
 
         [Fact]
-        public async Task Cannot_update_HasOne_relationship_to_other_tenant()
+        public async Task Cannot_update_ToOne_relationship_to_other_tenant()
         {
             // Arrange
             WebProduct existingProduct = _fakers.WebProduct.Generate();
