@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_HasOne_relationship()
+        public async Task Can_get_ManyToOne_relationship()
         {
             WorkItem workItem = _fakers.WorkItem.Generate();
             workItem.Assignee = _fakers.UserAccount.Generate();
@@ -52,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_empty_HasOne_relationship()
+        public async Task Can_get_empty_ManyToOne_relationship()
         {
             WorkItem workItem = _fakers.WorkItem.Generate();
 
@@ -74,7 +73,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_HasMany_relationship()
+        public async Task Can_get_OneToMany_relationship()
         {
             // Arrange
             UserAccount userAccount = _fakers.UserAccount.Generate();
@@ -108,7 +107,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_empty_HasMany_relationship()
+        public async Task Can_get_empty_OneToMany_relationship()
         {
             // Arrange
             UserAccount userAccount = _fakers.UserAccount.Generate();
@@ -131,22 +130,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_HasManyThrough_relationship()
+        public async Task Can_get_ManyToMany_relationship()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();
-
-            workItem.WorkItemTags = new List<WorkItemTag>
-            {
-                new()
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new()
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -164,19 +152,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 
             responseDocument.ManyData.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(0).Tag.StringId);
+            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes.Should().BeNull();
             item1.Relationships.Should().BeNull();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(1).Tag.StringId);
+            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes.Should().BeNull();
             item2.Relationships.Should().BeNull();
         }
 
         [Fact]
-        public async Task Can_get_empty_HasManyThrough_relationship()
+        public async Task Can_get_empty_ManyToMany_relationship()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();

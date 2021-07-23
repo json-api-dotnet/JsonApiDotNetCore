@@ -714,8 +714,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
                     .Include(workItem => workItem.Subscribers)
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .Include(workItem => workItem.Tags)
                     .FirstWithIdAsync(newWorkItemId);
 
                 // @formatter:keep_existing_linebreaks restore
@@ -729,8 +728,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
 
-                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
+                workItemInDatabase.Tags.Should().HaveCount(1);
+                workItemInDatabase.Tags.Single().Id.Should().Be(existingTag.Id);
             });
         }
     }

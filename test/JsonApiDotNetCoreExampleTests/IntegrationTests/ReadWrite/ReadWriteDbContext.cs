@@ -10,7 +10,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
     {
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkTag> WorkTags { get; set; }
-        public DbSet<WorkItemTag> WorkItemTags { get; set; }
         public DbSet<WorkItemGroup> Groups { get; set; }
         public DbSet<RgbColor> RgbColors { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
@@ -34,13 +33,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
                 .HasOne(workItemGroup => workItemGroup.Color)
                 .WithOne(color => color.Group)
                 .HasForeignKey<RgbColor>("GroupId");
-
-            builder.Entity<WorkItemTag>()
-                .HasKey(workItemTag => new
-                {
-                    workItemTag.ItemId,
-                    workItemTag.TagId
-                });
 
             builder.Entity<WorkItemToWorkItem>()
                 .HasKey(item => new

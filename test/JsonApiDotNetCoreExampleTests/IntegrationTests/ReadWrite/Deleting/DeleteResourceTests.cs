@@ -148,7 +148,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         }
 
         [Fact]
-        public async Task Can_delete_existing_resource_with_HasMany_relationship()
+        public async Task Can_delete_existing_resource_with_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -184,22 +184,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
         }
 
         [Fact]
-        public async Task Can_delete_resource_with_HasManyThrough_relationship()
+        public async Task Can_delete_resource_with_ManyToMany_relationship()
         {
             // Arrange
-            var existingWorkItemTag = new WorkItemTag
-            {
-                Item = _fakers.WorkItem.Generate(),
-                Tag = _fakers.WorkTag.Generate()
-            };
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.WorkItemTags.Add(existingWorkItemTag);
+                dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItemTag.Item.StringId;
+            string route = "/workItems/" + existingWorkItem.StringId;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -211,14 +208,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Deleting
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                WorkItem workItemsInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItemTag.Item.Id);
+                WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdOrDefaultAsync(existingWorkItem.Id);
 
-                workItemsInDatabase.Should().BeNull();
+                workItemInDatabase.Should().BeNull();
 
-                WorkItemTag workItemTagsInDatabase =
-                    await dbContext.WorkItemTags.FirstOrDefaultAsync(workItemTag => workItemTag.Item.Id == existingWorkItemTag.Item.Id);
+                WorkTag tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
 
-                workItemTagsInDatabase.Should().BeNull();
+                tagInDatabase.Should().NotBeNull();
             });
         }
     }

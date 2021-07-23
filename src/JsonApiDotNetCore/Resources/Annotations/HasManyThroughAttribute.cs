@@ -48,6 +48,11 @@ namespace JsonApiDotNetCore.Resources.Annotations
         private static readonly CollectionConverter CollectionConverter = new();
 
         /// <summary>
+        /// Always returns <c>true</c>.
+        /// </summary>
+        public override bool IsManyToMany => true;
+
+        /// <summary>
         /// The name of the join property on the parent resource. In the example described above, this would be "ArticleTags".
         /// </summary>
         public string ThroughPropertyName { get; }

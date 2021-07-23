@@ -33,11 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
         [HasMany]
         public ISet<UserAccount> Subscribers { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(WorkItemTags))]
+        [HasMany]
         public ISet<WorkTag> Tags { get; set; }
-
-        public ICollection<WorkItemTag> WorkItemTags { get; set; }
 
         [HasOne]
         public WorkItem Parent { get; set; }

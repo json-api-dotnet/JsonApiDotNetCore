@@ -18,5 +18,23 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [AttributeUsage(AttributeTargets.Property)]
     public class HasManyAttribute : RelationshipAttribute
     {
+        private static readonly CollectionConverter CollectionConverter = new();
+
+        /// <summary>
+        /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a many-to-many relationship.
+        /// </summary>
+        public virtual bool IsManyToMany
+        {
+            get
+            {
+                if (InverseNavigationProperty != null)
+                {
+                    Type elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
+                    return elementType != null;
+                }
+
+                return false;
+            }
+        }
     }
 }
