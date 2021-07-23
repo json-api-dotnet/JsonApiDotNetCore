@@ -888,14 +888,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-                {
-                    new()
-                    {
-                        FromItem = existingWorkItem
-                    }
-                };
-
+                existingWorkItem.RelatedFrom = ArrayFactory.Create(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -931,14 +924,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedFromItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedFromItems.Should().BeEmpty();
+                workItemInDatabase.RelatedFrom.Should().BeEmpty();
+                workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
         }
 
@@ -1047,16 +1041,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedToItems[0].FromItem.Id.Should().Be(existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems[0].ToItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedTo.Should().HaveCount(1);
+                workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
             });
         }
     }

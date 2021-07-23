@@ -1104,14 +1104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Parent = _fakers.WorkItem.Generate();
             existingWorkItem.Children = _fakers.WorkItem.Generate(1);
-
-            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
-            {
-                new()
-                {
-                    ToItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedTo = _fakers.WorkItem.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1179,8 +1172,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Parent)
                     .Include(workItem => workItem.Children)
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
@@ -1192,8 +1185,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 workItemInDatabase.Children.Should().HaveCount(1);
                 workItemInDatabase.Children.Single().Id.Should().Be(existingWorkItem.Id);
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedToItems.Single().ToItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom.Single().Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedTo.Should().HaveCount(1);
+                workItemInDatabase.RelatedTo.Single().Id.Should().Be(existingWorkItem.Id);
             });
         }
     }

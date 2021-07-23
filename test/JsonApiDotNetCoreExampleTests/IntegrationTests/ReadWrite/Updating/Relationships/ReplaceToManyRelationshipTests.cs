@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -777,14 +778,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-                {
-                    new()
-                    {
-                        FromItem = existingWorkItem
-                    }
-                };
-
+                existingWorkItem.RelatedFrom = ArrayFactory.Create(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -809,19 +803,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedFromItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedFromItems.Should().BeEmpty();
+                workItemInDatabase.RelatedFrom.Should().BeEmpty();
+                workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
         }
 
         [Fact]
-        public async Task Can_assign_cyclic_HasMany_relationship()
+        public async Task Can_assign_cyclic_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -903,16 +898,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedToItems[0].FromItem.Id.Should().Be(existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems[0].ToItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedTo.Should().HaveCount(1);
+                workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
             });
         }
     }

@@ -783,14 +783,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
-            {
-                new()
-                {
-                    ToItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedTo = _fakers.WorkItem.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -826,19 +819,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                int toItemId = existingWorkItem.RelatedToItems[0].ToItem.Id;
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom.Should().OnlyContain(workItem => workItem.Id == existingWorkItem.Id);
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(2);
-                workItemInDatabase.RelatedToItems.Should().OnlyContain(workItemToWorkItem => workItemToWorkItem.FromItem.Id == existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems.Should().ContainSingle(workItemToWorkItem => workItemToWorkItem.ToItem.Id == toItemId);
+                workItemInDatabase.RelatedTo.Should().HaveCount(2);
+                workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.Id);
+                workItemInDatabase.RelatedTo.Should().ContainSingle(workItem => workItem.Id == existingWorkItem.RelatedTo[0].Id);
             });
         }
     }

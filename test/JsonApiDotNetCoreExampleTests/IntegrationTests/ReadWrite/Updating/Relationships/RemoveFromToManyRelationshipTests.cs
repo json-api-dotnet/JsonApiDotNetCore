@@ -784,25 +784,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-            {
-                new()
-                {
-                    FromItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedFrom = _fakers.WorkItem.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems.Add(new WorkItemToWorkItem
-                {
-                    FromItem = existingWorkItem
-                });
-
+                existingWorkItem.RelatedFrom.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -834,15 +823,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedFromItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedFromItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedFromItems[0].FromItem.Id.Should().Be(existingWorkItem.RelatedFromItems[0].FromItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.RelatedFrom[0].Id);
+
+                workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
         }
     }
