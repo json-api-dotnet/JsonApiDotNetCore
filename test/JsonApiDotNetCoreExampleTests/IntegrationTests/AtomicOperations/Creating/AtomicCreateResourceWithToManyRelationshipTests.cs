@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         }
 
         [Fact]
-        public async Task Can_create_HasMany_relationship()
+        public async Task Can_create_OneToMany_relationship()
         {
             // Arrange
             List<Performer> existingPerformers = _fakers.Performer.Generate(2);
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         }
 
         [Fact]
-        public async Task Can_create_HasManyThrough_relationship()
+        public async Task Can_create_ManyToMany_relationship()
         {
             // Arrange
             List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(3);
@@ -184,21 +184,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(newPlaylistId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[2].Id);
+                playlistInDatabase.Tracks.Should().HaveCount(3);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[2].Id);
             });
         }
 
@@ -545,7 +536,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_HasMany_relationship()
+        public async Task Cannot_create_with_null_data_in_OneToMany_relationship()
         {
             // Arrange
             var requestBody = new
@@ -588,7 +579,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_HasManyThrough_relationship()
+        public async Task Cannot_create_with_null_data_in_ManyToMany_relationship()
         {
             // Arrange
             var requestBody = new

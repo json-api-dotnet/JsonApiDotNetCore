@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         }
 
         [Fact]
-        public async Task Can_delete_existing_resource_with_HasMany_relationship()
+        public async Task Can_delete_existing_resource_with_OneToMany_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -280,18 +280,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
         }
 
         [Fact]
-        public async Task Can_delete_existing_resource_with_HasManyThrough_relationship()
+        public async Task Can_delete_existing_resource_with_ManyToMany_relationship()
         {
             // Arrange
-            var existingPlaylistMusicTrack = new PlaylistMusicTrack
-            {
-                Playlist = _fakers.Playlist.Generate(),
-                MusicTrack = _fakers.MusicTrack.Generate()
-            };
+            Playlist existingPlaylist = _fakers.Playlist.Generate();
+            existingPlaylist.Tracks = _fakers.MusicTrack.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.PlaylistMusicTracks.Add(existingPlaylistMusicTrack);
+                dbContext.Playlists.Add(existingPlaylist);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -305,7 +302,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
                         @ref = new
                         {
                             type = "playlists",
-                            id = existingPlaylistMusicTrack.Playlist.StringId
+                            id = existingPlaylist.StringId
                         }
                     }
                 }
@@ -323,14 +320,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Deleti
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Playlist playlistInDatabase = await dbContext.Playlists.FirstWithIdOrDefaultAsync(existingPlaylistMusicTrack.Playlist.Id);
+                Playlist playlistInDatabase = await dbContext.Playlists.FirstWithIdOrDefaultAsync(existingPlaylist.Id);
 
                 playlistInDatabase.Should().BeNull();
 
-                PlaylistMusicTrack playlistTracksInDatabase = await dbContext.PlaylistMusicTracks.FirstOrDefaultAsync(playlistMusicTrack =>
-                    playlistMusicTrack.Playlist.Id == existingPlaylistMusicTrack.Playlist.Id);
+                MusicTrack trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(existingPlaylist.Tracks[0].Id);
 
-                playlistTracksInDatabase.Should().BeNull();
+                trackInDatabase.Should().NotBeNull();
             });
         }
 
