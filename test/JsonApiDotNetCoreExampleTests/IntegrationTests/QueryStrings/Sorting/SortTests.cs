@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         }
 
         [Fact]
-        public async Task Can_sort_on_HasMany_relationship()
+        public async Task Can_sort_on_OneToMany_relationship()
         {
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
@@ -173,30 +173,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         }
 
         [Fact]
-        public async Task Can_sort_on_HasManyThrough_relationship()
+        public async Task Can_sort_on_ManyToMany_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
-
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[0].Labels = _fakers.Label.Generate(1).ToHashSet();
+            posts[1].Labels = _fakers.Label.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -219,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         }
 
         [Fact]
-        public async Task Can_sort_in_scope_of_HasMany_relationship()
+        public async Task Can_sort_in_scope_of_OneToMany_relationship()
         {
             // Arrange
             WebAccount account = _fakers.WebAccount.Generate();
@@ -252,7 +234,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         }
 
         [Fact]
-        public async Task Can_sort_in_scope_of_HasMany_relationship_on_secondary_resource()
+        public async Task Can_sort_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
@@ -286,30 +268,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
         }
 
         [Fact]
-        public async Task Can_sort_in_scope_of_HasManyThrough_relationship()
+        public async Task Can_sort_in_scope_of_ManyToMany_relationship()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
-
-            post.BlogPostLabels.ElementAt(0).Label.Name = "B";
-            post.BlogPostLabels.ElementAt(1).Label.Name = "A";
-            post.BlogPostLabels.ElementAt(2).Label.Name = "C";
+            post.Labels = _fakers.Label.Generate(3).ToHashSet();
+            post.Labels.ElementAt(0).Name = "B";
+            post.Labels.ElementAt(1).Name = "A";
+            post.Labels.ElementAt(2).Name = "C";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -329,9 +295,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             responseDocument.SingleData.Id.Should().Be(post.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
-            responseDocument.Included[0].Id.Should().Be(post.BlogPostLabels.Skip(1).First().Label.StringId);
-            responseDocument.Included[1].Id.Should().Be(post.BlogPostLabels.Skip(0).First().Label.StringId);
-            responseDocument.Included[2].Id.Should().Be(post.BlogPostLabels.Skip(2).First().Label.StringId);
+            responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
+            responseDocument.Included[1].Id.Should().Be(post.Labels.ElementAt(0).StringId);
+            responseDocument.Included[2].Id.Should().Be(post.Labels.ElementAt(2).StringId);
         }
 
         [Fact]
@@ -388,20 +354,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             responseDocument.Included[2].Id.Should().Be(blogs[0].Posts[0].StringId);
 
             responseDocument.Included[3].Type.Should().Be("comments");
-            responseDocument.Included[3].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(2).First().StringId);
+            responseDocument.Included[3].Id.Should().Be(blogs[0].Posts[0].Comments.ElementAt(2).StringId);
 
             responseDocument.Included[4].Type.Should().Be("comments");
-            responseDocument.Included[4].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(0).First().StringId);
+            responseDocument.Included[4].Id.Should().Be(blogs[0].Posts[0].Comments.ElementAt(0).StringId);
 
             responseDocument.Included[5].Type.Should().Be("comments");
-            responseDocument.Included[5].Id.Should().Be(blogs[0].Posts[0].Comments.Skip(1).First().StringId);
+            responseDocument.Included[5].Id.Should().Be(blogs[0].Posts[0].Comments.ElementAt(1).StringId);
 
             responseDocument.Included[6].Type.Should().Be("blogPosts");
             responseDocument.Included[6].Id.Should().Be(blogs[0].Posts[3].StringId);
         }
 
         [Fact]
-        public async Task Can_sort_on_HasOne_relationship()
+        public async Task Can_sort_on_ManyToOne_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
@@ -470,8 +436,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Sorting
             responseDocument.Included.Should().HaveCount(5);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
-            responseDocument.Included[3].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(0).First().StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
+            responseDocument.Included[3].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(0).StringId);
             responseDocument.Included[4].Id.Should().Be(blogs[1].Owner.Posts[0].StringId);
         }
 

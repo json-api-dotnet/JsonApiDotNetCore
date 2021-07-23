@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         }
 
         [Fact]
-        public async Task Can_include_HasOne_relationships()
+        public async Task Can_include_ToOne_relationships()
         {
             // Arrange
             Comment comment = _fakers.Comment.Generate();
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         }
 
         [Fact]
-        public async Task Can_include_HasMany_relationship()
+        public async Task Can_include_OneToMany_relationship()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
@@ -227,18 +227,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         }
 
         [Fact]
-        public async Task Can_include_HasManyThrough_relationship()
+        public async Task Can_include_ManyToMany_relationship()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.Labels = _fakers.Label.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -260,23 +253,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("labels");
-            responseDocument.Included[0].Id.Should().Be(post.BlogPostLabels.Single().Label.StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(post.BlogPostLabels.Single().Label.Name);
+            responseDocument.Included[0].Id.Should().Be(post.Labels.Single().StringId);
+            responseDocument.Included[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
         }
 
         [Fact]
-        public async Task Can_include_HasManyThrough_relationship_in_secondary_resource()
+        public async Task Can_include_ManyToMany_relationship_on_secondary_endpoint()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.Labels = _fakers.Label.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -294,8 +280,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Type.Should().Be("labels");
-            responseDocument.ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(0).Label.StringId);
-            responseDocument.ManyData[0].Attributes["name"].Should().Be(post.BlogPostLabels.Single().Label.Name);
+            responseDocument.ManyData[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
+            responseDocument.ManyData[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
@@ -304,7 +290,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         }
 
         [Fact]
-        public async Task Can_include_chain_of_HasOne_relationships()
+        public async Task Can_include_chain_of_ToOne_relationships()
         {
             // Arrange
             Comment comment = _fakers.Comment.Generate();
@@ -346,7 +332,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Includes
         }
 
         [Fact]
-        public async Task Can_include_chain_of_HasMany_relationships()
+        public async Task Can_include_chain_of_OneToMany_relationships()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
