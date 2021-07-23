@@ -13,11 +13,11 @@ references:
   commentId: T:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
   fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction
   nameWithType: EntityFrameworkCoreTransaction
-- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction,Microsoft.EntityFrameworkCore.DbContext)
+- uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(IDbContextTransaction,DbContext)
   name: EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)
-  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_Microsoft_EntityFrameworkCore_DbContext_
-  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction,Microsoft.EntityFrameworkCore.DbContext)
-  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction, Microsoft.EntityFrameworkCore.DbContext)
+  href: api/JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.html#JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_IDbContextTransaction_DbContext_
+  commentId: M:JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(IDbContextTransaction,DbContext)
+  fullName: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)
   nameWithType: EntityFrameworkCoreTransaction.EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)
 - uid: JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor*
   name: EntityFrameworkCoreTransaction
@@ -3537,19 +3537,19 @@ references:
   commentId: T:JsonApiDotNetCore.Errors.InvalidModelStateException
   fullName: JsonApiDotNetCore.Errors.InvalidModelStateException
   nameWithType: InvalidModelStateException
-- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
+- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,NamingStrategy)
   name: InvalidModelStateException(ModelStateDictionary, Type, Boolean, NamingStrategy)
-  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateDictionary_System_Type_System_Boolean_Newtonsoft_Json_Serialization_NamingStrategy_
-  commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
-  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary, System.Type, System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
+  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateDictionary_System_Type_System_Boolean_NamingStrategy_
+  commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,NamingStrategy)
+  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary, System.Type, System.Boolean, NamingStrategy)
   nameWithType: InvalidModelStateException.InvalidModelStateException(ModelStateDictionary, Type, Boolean, NamingStrategy)
-- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
+- uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,NamingStrategy)
   name: InvalidModelStateException(IEnumerable<ModelStateViolation>, Boolean, NamingStrategy)
-  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Controllers_ModelStateViolation__System_Boolean_Newtonsoft_Json_Serialization_NamingStrategy_
-  commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,Newtonsoft.Json.Serialization.NamingStrategy)
+  href: api/JsonApiDotNetCore.Errors.InvalidModelStateException.html#JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Controllers_ModelStateViolation__System_Boolean_NamingStrategy_
+  commentId: M:JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,NamingStrategy)
   name.vb: InvalidModelStateException(IEnumerable(Of ModelStateViolation), Boolean, NamingStrategy)
-  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Controllers.ModelStateViolation>, System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
-  fullName.vb: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Controllers.ModelStateViolation), System.Boolean, Newtonsoft.Json.Serialization.NamingStrategy)
+  fullName: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Controllers.ModelStateViolation>, System.Boolean, NamingStrategy)
+  fullName.vb: JsonApiDotNetCore.Errors.InvalidModelStateException.InvalidModelStateException(System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Controllers.ModelStateViolation), System.Boolean, NamingStrategy)
   nameWithType: InvalidModelStateException.InvalidModelStateException(IEnumerable<ModelStateViolation>, Boolean, NamingStrategy)
   nameWithType.vb: InvalidModelStateException.InvalidModelStateException(IEnumerable(Of ModelStateViolation), Boolean, NamingStrategy)
 - uid: JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor*
@@ -9238,11 +9238,11 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder
   nameWithType: QueryableBuilder
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider,IModel,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
   name: QueryableBuilder(Expression, Type, Type, LambdaParameterNameFactory, IResourceFactory, IResourceContextProvider, IModel, LambdaScopeFactory)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Configuration_IResourceContextProvider_Microsoft_EntityFrameworkCore_Metadata_IModel_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScopeFactory_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider,Microsoft.EntityFrameworkCore.Metadata.IModel,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.QueryableBuilder(System.Linq.Expressions.Expression, System.Type, System.Type, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Configuration.IResourceContextProvider, Microsoft.EntityFrameworkCore.Metadata.IModel, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryableBuilder__ctor_System_Linq_Expressions_Expression_System_Type_System_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Configuration_IResourceContextProvider_IModel_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScopeFactory_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.#ctor(System.Linq.Expressions.Expression,System.Type,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider,IModel,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.QueryableBuilder(System.Linq.Expressions.Expression, System.Type, System.Type, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Configuration.IResourceContextProvider, IModel, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory)
   nameWithType: QueryableBuilder.QueryableBuilder(Expression, Type, Type, LambdaParameterNameFactory, IResourceFactory, IResourceContextProvider, IModel, LambdaScopeFactory)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryableBuilder.#ctor*
   name: QueryableBuilder
@@ -9468,11 +9468,11 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder
   nameWithType: SelectClauseBuilder
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,Microsoft.EntityFrameworkCore.Metadata.IModel,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,IModel,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider)
   name: SelectClauseBuilder(Expression, LambdaScope, IModel, Type, LambdaParameterNameFactory, IResourceFactory, IResourceContextProvider)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Microsoft_EntityFrameworkCore_Metadata_IModel_System_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Configuration_IResourceContextProvider_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,Microsoft.EntityFrameworkCore.Metadata.IModel,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.SelectClauseBuilder(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope, Microsoft.EntityFrameworkCore.Metadata.IModel, System.Type, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_SelectClauseBuilder__ctor_System_Linq_Expressions_Expression_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_IModel_System_Type_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_IResourceFactory_JsonApiDotNetCore_Configuration_IResourceContextProvider_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor(System.Linq.Expressions.Expression,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope,IModel,System.Type,JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.IResourceFactory,JsonApiDotNetCore.Configuration.IResourceContextProvider)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.SelectClauseBuilder(System.Linq.Expressions.Expression, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope, IModel, System.Type, JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, JsonApiDotNetCore.Resources.IResourceFactory, JsonApiDotNetCore.Configuration.IResourceContextProvider)
   nameWithType: SelectClauseBuilder.SelectClauseBuilder(Expression, LambdaScope, IModel, Type, LambdaParameterNameFactory, IResourceFactory, IResourceContextProvider)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.SelectClauseBuilder.#ctor*
   name: SelectClauseBuilder
@@ -11461,11 +11461,11 @@ references:
   commentId: T:JsonApiDotNetCore.Repositories.DbContextExtensions
   fullName: JsonApiDotNetCore.Repositories.DbContextExtensions
   nameWithType: DbContextExtensions
-- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
+- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
   name: GetTrackedIdentifiable(DbContext, IIdentifiable)
-  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedIdentifiable_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_
-  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
-  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(Microsoft.EntityFrameworkCore.DbContext, JsonApiDotNetCore.Resources.IIdentifiable)
+  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedIdentifiable_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable(DbContext, JsonApiDotNetCore.Resources.IIdentifiable)
   nameWithType: DbContextExtensions.GetTrackedIdentifiable(DbContext, IIdentifiable)
 - uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable*
   name: GetTrackedIdentifiable
@@ -11474,11 +11474,11 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedIdentifiable
   nameWithType: DbContextExtensions.GetTrackedIdentifiable
-- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
+- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
   name: GetTrackedOrAttach(DbContext, IIdentifiable)
-  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedOrAttach_Microsoft_EntityFrameworkCore_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_
-  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(Microsoft.EntityFrameworkCore.DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
-  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(Microsoft.EntityFrameworkCore.DbContext, JsonApiDotNetCore.Resources.IIdentifiable)
+  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_GetTrackedOrAttach_DbContext_JsonApiDotNetCore_Resources_IIdentifiable_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(DbContext,JsonApiDotNetCore.Resources.IIdentifiable)
+  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach(DbContext, JsonApiDotNetCore.Resources.IIdentifiable)
   nameWithType: DbContextExtensions.GetTrackedOrAttach(DbContext, IIdentifiable)
 - uid: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach*
   name: GetTrackedOrAttach
@@ -11487,11 +11487,11 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.GetTrackedOrAttach
   nameWithType: DbContextExtensions.GetTrackedOrAttach
-- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
+- uid: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(DbContext)
   name: ResetChangeTracker(DbContext)
-  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_ResetChangeTracker_Microsoft_EntityFrameworkCore_DbContext_
-  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
-  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(Microsoft.EntityFrameworkCore.DbContext)
+  href: api/JsonApiDotNetCore.Repositories.DbContextExtensions.html#JsonApiDotNetCore_Repositories_DbContextExtensions_ResetChangeTracker_DbContext_
+  commentId: M:JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(DbContext)
+  fullName: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker(DbContext)
   nameWithType: DbContextExtensions.ResetChangeTracker(DbContext)
 - uid: JsonApiDotNetCore.Repositories.DbContextExtensions.ResetChangeTracker*
   name: ResetChangeTracker
@@ -12349,11 +12349,11 @@ references:
   commentId: T:JsonApiDotNetCore.Repositories.PlaceholderResourceCollector
   fullName: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector
   nameWithType: PlaceholderResourceCollector
-- uid: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.#ctor(JsonApiDotNetCore.Resources.IResourceFactory,Microsoft.EntityFrameworkCore.DbContext)
+- uid: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.#ctor(JsonApiDotNetCore.Resources.IResourceFactory,DbContext)
   name: PlaceholderResourceCollector(IResourceFactory, DbContext)
-  href: api/JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.html#JsonApiDotNetCore_Repositories_PlaceholderResourceCollector__ctor_JsonApiDotNetCore_Resources_IResourceFactory_Microsoft_EntityFrameworkCore_DbContext_
-  commentId: M:JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.#ctor(JsonApiDotNetCore.Resources.IResourceFactory,Microsoft.EntityFrameworkCore.DbContext)
-  fullName: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.PlaceholderResourceCollector(JsonApiDotNetCore.Resources.IResourceFactory, Microsoft.EntityFrameworkCore.DbContext)
+  href: api/JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.html#JsonApiDotNetCore_Repositories_PlaceholderResourceCollector__ctor_JsonApiDotNetCore_Resources_IResourceFactory_DbContext_
+  commentId: M:JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.#ctor(JsonApiDotNetCore.Resources.IResourceFactory,DbContext)
+  fullName: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.PlaceholderResourceCollector(JsonApiDotNetCore.Resources.IResourceFactory, DbContext)
   nameWithType: PlaceholderResourceCollector.PlaceholderResourceCollector(IResourceFactory, DbContext)
 - uid: JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.#ctor*
   name: PlaceholderResourceCollector
@@ -15462,13 +15462,13 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Serialization.BaseSerializer.ResourceObjectBuilder
   nameWithType: BaseSerializer.ResourceObjectBuilder
-- uid: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object,Newtonsoft.Json.JsonSerializerSettings,System.Action{Newtonsoft.Json.JsonSerializer})
+- uid: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object,JsonSerializerSettings,System.Action{JsonSerializer})
   name: SerializeObject(Object, JsonSerializerSettings, Action<JsonSerializer>)
-  href: api/JsonApiDotNetCore.Serialization.BaseSerializer.html#JsonApiDotNetCore_Serialization_BaseSerializer_SerializeObject_System_Object_Newtonsoft_Json_JsonSerializerSettings_System_Action_Newtonsoft_Json_JsonSerializer__
-  commentId: M:JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object,Newtonsoft.Json.JsonSerializerSettings,System.Action{Newtonsoft.Json.JsonSerializer})
+  href: api/JsonApiDotNetCore.Serialization.BaseSerializer.html#JsonApiDotNetCore_Serialization_BaseSerializer_SerializeObject_System_Object_JsonSerializerSettings_System_Action_JsonSerializer__
+  commentId: M:JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object,JsonSerializerSettings,System.Action{JsonSerializer})
   name.vb: SerializeObject(Object, JsonSerializerSettings, Action(Of JsonSerializer))
-  fullName: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object, Newtonsoft.Json.JsonSerializerSettings, System.Action<Newtonsoft.Json.JsonSerializer>)
-  fullName.vb: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object, Newtonsoft.Json.JsonSerializerSettings, System.Action(Of Newtonsoft.Json.JsonSerializer))
+  fullName: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object, JsonSerializerSettings, System.Action<JsonSerializer>)
+  fullName.vb: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject(System.Object, JsonSerializerSettings, System.Action(Of JsonSerializer))
   nameWithType: BaseSerializer.SerializeObject(Object, JsonSerializerSettings, Action<JsonSerializer>)
   nameWithType.vb: BaseSerializer.SerializeObject(Object, JsonSerializerSettings, Action(Of JsonSerializer))
 - uid: JsonApiDotNetCore.Serialization.BaseSerializer.SerializeObject*
@@ -15915,11 +15915,11 @@ references:
   commentId: T:JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings
   fullName: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings
   nameWithType: ResourceObjectBuilderSettings
-- uid: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(Newtonsoft.Json.NullValueHandling,Newtonsoft.Json.DefaultValueHandling)
+- uid: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(NullValueHandling,DefaultValueHandling)
   name: ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
-  href: api/JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_Newtonsoft_Json_NullValueHandling_Newtonsoft_Json_DefaultValueHandling_
-  commentId: M:JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(Newtonsoft.Json.NullValueHandling,Newtonsoft.Json.DefaultValueHandling)
-  fullName: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(Newtonsoft.Json.NullValueHandling, Newtonsoft.Json.DefaultValueHandling)
+  href: api/JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.html#JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_NullValueHandling_DefaultValueHandling_
+  commentId: M:JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(NullValueHandling,DefaultValueHandling)
+  fullName: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
   nameWithType: ResourceObjectBuilderSettings.ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)
 - uid: JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor*
   name: ResourceObjectBuilderSettings
