@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Middleware
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
+    public sealed class AsyncJsonApiExceptionFilter : IAsyncJsonApiExceptionFilter
     {
         private readonly IExceptionHandler _exceptionHandler;
 

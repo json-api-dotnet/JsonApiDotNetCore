@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class InverseNavigationResolver : IInverseNavigationResolver
+    public sealed class InverseNavigationResolver : IInverseNavigationResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;

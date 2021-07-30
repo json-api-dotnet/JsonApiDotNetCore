@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class MetaBuilder : IMetaBuilder
+    public sealed class MetaBuilder : IMetaBuilder
     {
         private readonly IPaginationContext _paginationContext;
         private readonly IJsonApiOptions _options;

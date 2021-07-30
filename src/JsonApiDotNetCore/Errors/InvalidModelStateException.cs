@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Errors
     /// The error that is thrown when model state validation fails.
     /// </summary>
     [PublicAPI]
-    public class InvalidModelStateException : JsonApiException
+    public sealed class InvalidModelStateException : JsonApiException
     {
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, bool includeExceptionStackTraceInErrors,
             NamingStrategy namingStrategy)

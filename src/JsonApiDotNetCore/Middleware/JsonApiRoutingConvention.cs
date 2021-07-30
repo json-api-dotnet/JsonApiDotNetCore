@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Middleware
     /// public class SomeVeryCustomController<SomeResource> : CoreJsonApiController { } // => /someVeryCustoms/relationship/relatedResource
     /// ]]></example>
     [PublicAPI]
-    public class JsonApiRoutingConvention : IJsonApiRoutingConvention
+    public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceContextProvider _resourceContextProvider;

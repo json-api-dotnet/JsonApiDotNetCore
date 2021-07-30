@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class ResourceGraph : IResourceGraph
+    public sealed class ResourceGraph : IResourceGraph
     {
         private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
         private readonly IReadOnlyCollection<ResourceContext> _resources;
