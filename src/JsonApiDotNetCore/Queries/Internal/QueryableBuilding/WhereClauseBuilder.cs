@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
         }
 
-        public override Expression VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, Type argument)
+        public override Expression VisitHas(HasExpression expression, Type argument)
         {
             Expression property = Visit(expression.TargetCollection, argument);
 

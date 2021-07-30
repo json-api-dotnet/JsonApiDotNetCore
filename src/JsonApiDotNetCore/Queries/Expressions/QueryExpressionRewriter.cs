@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return null;
         }
 
-        public override QueryExpression VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, TArgument argument)
+        public override QueryExpression VisitHas(HasExpression expression, TArgument argument)
         {
             if (expression != null)
             {
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 {
                     FilterExpression newFilter = expression.Filter != null ? Visit(expression.Filter, argument) as FilterExpression : null;
 
-                    var newExpression = new CollectionNotEmptyExpression(newTargetCollection, newFilter);
+                    var newExpression = new HasExpression(newTargetCollection, newFilter);
                     return newExpression.Equals(expression) ? expression : newExpression;
                 }
             }

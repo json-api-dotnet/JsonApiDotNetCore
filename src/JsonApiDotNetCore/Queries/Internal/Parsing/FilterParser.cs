@@ -231,7 +231,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return new EqualsAnyOfExpression(targetAttribute, constants);
         }
 
-        protected CollectionNotEmptyExpression ParseHas()
+        protected HasExpression ParseHas()
         {
             EatText(Keywords.Has);
             EatSingleCharacterToken(TokenKind.OpenParen);
@@ -248,7 +248,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
-            return new CollectionNotEmptyExpression(targetCollection, filter);
+            return new HasExpression(targetCollection, filter);
         }
 
         private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)

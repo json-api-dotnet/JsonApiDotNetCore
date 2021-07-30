@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// Represents the "has" filter function, resulting from text such as: has(articles) or has(articles,equals(isHidden,'false'))
     /// </summary>
     [PublicAPI]
-    public class CollectionNotEmptyExpression : FilterExpression
+    public class HasExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetCollection { get; }
         public FilterExpression Filter { get; }
 
-        public CollectionNotEmptyExpression(ResourceFieldChainExpression targetCollection, FilterExpression filter)
+        public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression filter)
         {
             ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
 
@@ -24,7 +24,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
-            return visitor.VisitCollectionNotEmpty(this, argument);
+            return visitor.VisitHas(this, argument);
         }
 
         public override string ToString()
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (CollectionNotEmptyExpression)obj;
+            var other = (HasExpression)obj;
 
             return TargetCollection.Equals(other.TargetCollection) && Equals(Filter, other.Filter);
         }
