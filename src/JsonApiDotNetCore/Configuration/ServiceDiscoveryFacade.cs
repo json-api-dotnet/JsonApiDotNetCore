@@ -66,22 +66,18 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
-        private readonly IJsonApiOptions _options;
         private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
         private readonly TypeLocator _typeLocator = new();
 
-        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options,
-            ILoggerFactory loggerFactory)
+        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
         {
             ArgumentGuard.NotNull(services, nameof(services));
             ArgumentGuard.NotNull(resourceGraphBuilder, nameof(resourceGraphBuilder));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-            ArgumentGuard.NotNull(options, nameof(options));
 
             _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
             _services = services;
             _resourceGraphBuilder = resourceGraphBuilder;
-            _options = options;
         }
 
         /// <summary>

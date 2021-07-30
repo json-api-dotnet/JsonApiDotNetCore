@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// Gets the value of the resource property this attribute was declared on.
         /// </summary>
-        public virtual object GetValue(object resource)
+        public object GetValue(object resource)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// Sets the value of the resource property this attribute was declared on.
         /// </summary>
-        public virtual void SetValue(object resource, object newValue)
+        public void SetValue(object resource, object newValue)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 

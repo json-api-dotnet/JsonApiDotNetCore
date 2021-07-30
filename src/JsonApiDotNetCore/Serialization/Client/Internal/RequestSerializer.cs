@@ -93,7 +93,8 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
 
             if (AttributesToSerialize == null)
             {
-                return _resourceGraph.GetAttributes(currentResourceType);
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(currentResourceType);
+                return resourceContext.Attributes;
             }
 
             return AttributesToSerialize;

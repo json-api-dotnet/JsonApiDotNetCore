@@ -314,7 +314,7 @@ namespace JsonApiDotNetCore.Repositories
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
             TResource resource = collector.CreateForId<TResource, TId>(id);
 
-            foreach (RelationshipAttribute relationship in _resourceGraph.GetRelationships<TResource>())
+            foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceContext<TResource>().Relationships)
             {
                 // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
                 // entities into memory is required for successfully executing the selected deletion behavior.

@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Configuration
             var loggerFactory = _intermediateProvider.GetRequiredService<ILoggerFactory>();
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, loggerFactory);
-            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, loggerFactory);
+            _serviceDiscoveryFacade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, loggerFactory);
         }
 
         /// <summary>

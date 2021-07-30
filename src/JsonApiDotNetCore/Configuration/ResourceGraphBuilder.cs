@@ -202,26 +202,6 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
-        private Type TryGetThroughType(PropertyInfo throughProperty)
-        {
-            if (throughProperty.PropertyType.IsGenericType)
-            {
-                Type[] typeArguments = throughProperty.PropertyType.GetGenericArguments();
-
-                if (typeArguments.Length == 1)
-                {
-                    Type constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
-
-                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
-                    {
-                        return typeArguments[0];
-                    }
-                }
-            }
-
-            return null;
-        }
-
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
