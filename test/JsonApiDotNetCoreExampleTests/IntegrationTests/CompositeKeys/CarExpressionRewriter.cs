@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             return base.VisitComparison(expression, argument);
         }
 
-        public override QueryExpression VisitEqualsAnyOf(EqualsAnyOfExpression expression, object argument)
+        public override QueryExpression VisitAny(AnyExpression expression, object argument)
         {
             PropertyInfo property = expression.TargetAttribute.Fields.Last().Property;
 
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 return RewriteFilterOnCarStringIds(expression.TargetAttribute, carStringIds);
             }
 
-            return base.VisitEqualsAnyOf(expression, argument);
+            return base.VisitAny(expression, argument);
         }
 
         public override QueryExpression VisitMatchText(MatchTextExpression expression, object argument)

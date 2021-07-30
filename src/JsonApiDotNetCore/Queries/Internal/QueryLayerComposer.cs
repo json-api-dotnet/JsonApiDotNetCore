@@ -310,7 +310,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             else if (ids.Count > 1)
             {
                 List<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList();
-                filter = new EqualsAnyOfExpression(idChain, constants);
+                filter = new AnyExpression(idChain, constants);
             }
 
             // @formatter:keep_existing_linebreaks true

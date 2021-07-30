@@ -180,14 +180,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return null;
         }
 
-        public override QueryExpression VisitEqualsAnyOf(EqualsAnyOfExpression expression, TArgument argument)
+        public override QueryExpression VisitAny(AnyExpression expression, TArgument argument)
         {
             if (expression != null)
             {
                 var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
                 IReadOnlyCollection<LiteralConstantExpression> newConstants = VisitSequence(expression.Constants, argument);
 
-                var newExpression = new EqualsAnyOfExpression(newTargetAttribute, newConstants);
+                var newExpression = new AnyExpression(newTargetAttribute, newConstants);
                 return newExpression.Equals(expression) ? expression : newExpression;
             }
 

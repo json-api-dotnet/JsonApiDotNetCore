@@ -187,7 +187,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return new MatchTextExpression(targetAttribute, constant, matchKind);
         }
 
-        protected EqualsAnyOfExpression ParseAny()
+        protected AnyExpression ParseAny()
         {
             EatText(Keywords.Any);
             EatSingleCharacterToken(TokenKind.OpenParen);
@@ -228,7 +228,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 }
             }
 
-            return new EqualsAnyOfExpression(targetAttribute, constants);
+            return new AnyExpression(targetAttribute, constants);
         }
 
         protected HasExpression ParseHas()
