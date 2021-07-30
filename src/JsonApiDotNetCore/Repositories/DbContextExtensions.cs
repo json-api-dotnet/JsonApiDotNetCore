@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -58,12 +57,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
 
-            List<EntityEntry> entriesWithChanges = dbContext.ChangeTracker.Entries().ToList();
-
-            foreach (EntityEntry entry in entriesWithChanges)
-            {
-                entry.State = EntityState.Detached;
-            }
+            dbContext.ChangeTracker.Clear();
         }
     }
 }
