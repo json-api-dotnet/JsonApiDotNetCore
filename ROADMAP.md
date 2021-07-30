@@ -26,13 +26,13 @@ Aside from the list above, we have interest in the following topics. It's too so
 
 - Optimized delete to-many [#1030](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1030)
 - Improved paging links [#1010](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1010)
-- Extract annotations into separate package [#730](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/730)
-- Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
 - Auto-generated controllers [#732](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/732) [#365](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/365)
 - Configuration validation [#170](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170)
 - Optimistic concurrency [#1004](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1004)
-- Resource inheritance [#844](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844)
+- Extract annotations into separate package [#730](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/730)
 - OpenAPI (Swagger) [#259](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/259)
+- Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
+- Resource inheritance [#844](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844)
 - Idempotency
 
 ## Feedback
