@@ -61,18 +61,13 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
         {
-            return CreatePropertyExpressionForFieldChain(expression.Fields, LambdaScope.Accessor);
+            string[] components = expression.Fields
+                .Select(field => field is RelationshipAttribute relationship ? relationship.Property.Name : field.Property.Name).ToArray();
+
+            return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }
 
-        protected virtual MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
-        {
-            string[] components = chain.Select(field => field is RelationshipAttribute relationship ? relationship.RelationshipPath : field.Property.Name)
-                .ToArray();
-
-            return CreatePropertyExpressionFromComponents(source, components);
-        }
-
-        protected static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IReadOnlyCollection<string> components)
+        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IReadOnlyCollection<string> components)
         {
             MemberExpression property = null;
 

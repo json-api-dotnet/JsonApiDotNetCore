@@ -77,14 +77,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             NewExpression newExpression = _resourceFactory.CreateNewExpression(lambdaScope.Accessor.Type);
             Expression memberInit = Expression.MemberInit(newExpression, propertyAssignments);
 
-            if (lambdaScope.HasManyThrough != null)
-            {
-                MemberBinding outerPropertyAssignment = Expression.Bind(lambdaScope.HasManyThrough.RightProperty, memberInit);
-
-                NewExpression outerNewExpression = _resourceFactory.CreateNewExpression(lambdaScope.HasManyThrough.ThroughType);
-                memberInit = Expression.MemberInit(outerNewExpression, outerPropertyAssignment);
-            }
-
             if (!lambdaAccessorRequiresTestForNull)
             {
                 return memberInit;
@@ -104,9 +96,9 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             bool containsOnlyRelationships = resourceFieldSelectors.All(selector => selector.Key is RelationshipAttribute);
 
-            foreach (KeyValuePair<ResourceFieldAttribute, QueryLayer> fieldSelector in resourceFieldSelectors)
+            foreach ((ResourceFieldAttribute resourceField, QueryLayer queryLayer) in resourceFieldSelectors)
             {
-                var propertySelector = new PropertySelector(fieldSelector.Key, fieldSelector.Value);
+                var propertySelector = new PropertySelector(resourceField.Property, queryLayer);
 
                 if (propertySelector.Property.SetMethod != null)
                 {
@@ -155,8 +147,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (selector.NextLayer != null)
             {
-                var hasManyThrough = selector.OriginatingField as HasManyThroughAttribute;
-                var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory, hasManyThrough);
+                var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory);
 
                 assignmentRightHandSide = CreateAssignmentRightHandSideForLayer(selector.NextLayer, lambdaScope, propertyAccess,
                     selector.Property, lambdaScopeFactory);
@@ -238,7 +229,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private sealed class PropertySelector
         {
             public PropertyInfo Property { get; }
-            public ResourceFieldAttribute OriginatingField { get; }
             public QueryLayer NextLayer { get; }
 
             public PropertySelector(PropertyInfo property, QueryLayer nextLayer = null)
@@ -247,15 +237,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
                 Property = property;
                 NextLayer = nextLayer;
-            }
-
-            public PropertySelector(ResourceFieldAttribute field, QueryLayer nextLayer = null)
-            {
-                ArgumentGuard.NotNull(field, nameof(field));
-
-                OriginatingField = field;
-                NextLayer = nextLayer;
-                Property = field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty : field.Property;
             }
 
             public override string ToString()

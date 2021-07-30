@@ -75,10 +75,5 @@ namespace JsonApiDotNetCore.Configuration
         /// The resource type. Must implement <see cref="IIdentifiable" />.
         /// </param>
         IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
-
-        /// <summary>
-        /// Traverses the resource graph, looking for the inverse relationship of the specified <paramref name="relationship" />.
-        /// </summary>
-        RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
     }
 }

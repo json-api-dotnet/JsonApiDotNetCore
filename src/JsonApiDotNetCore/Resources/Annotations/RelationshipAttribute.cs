@@ -13,6 +13,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
     [PublicAPI]
     public abstract class RelationshipAttribute : ResourceFieldAttribute
     {
+        private protected static readonly CollectionConverter CollectionConverter = new();
+
         /// <summary>
         /// The property name of the EF Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed as a JSON:API relationship.
         /// </summary>
@@ -34,12 +36,9 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public PropertyInfo InverseNavigationProperty { get; set; }
 
         /// <summary>
-        /// The internal navigation property path to the related resource.
+        /// The parent resource type. This is the type of the class in which this attribute was used.
         /// </summary>
-        /// <remarks>
-        /// In all cases except for <see cref="HasManyThroughAttribute" /> relationships, this equals the property name.
-        /// </remarks>
-        public virtual string RelationshipPath => Property.Name;
+        public Type LeftType { get; internal set; }
 
         /// <summary>
         /// The child resource type. This does not necessarily match the navigation property type. In the case of a <see cref="HasManyAttribute" /> relationship,
@@ -47,15 +46,10 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// </summary>
         /// <example>
         /// <code><![CDATA[
-        /// public List<Tag> Tags { get; set; } // Type => Tag
+        /// public List<Tag> Tags { get; set; } // RightType == typeof(Tag)
         /// ]]></code>
         /// </example>
         public Type RightType { get; internal set; }
-
-        /// <summary>
-        /// The parent resource type. This is the type of the class in which this attribute was used.
-        /// </summary>
-        public Type LeftType { get; internal set; }
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.RelationshipLinks" /> object for this relationship. Defaults to

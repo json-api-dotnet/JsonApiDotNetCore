@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
@@ -72,8 +71,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             if (expression.Filter != null)
             {
-                var hasManyThrough = expression.TargetCollection.Fields.Last() as HasManyThroughAttribute;
-                var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory, hasManyThrough);
+                var lambdaScopeFactory = new LambdaScopeFactory(_nameFactory);
                 using LambdaScope lambdaScope = lambdaScopeFactory.CreateScope(elementType);
 
                 var builder = new WhereClauseBuilder(property, lambdaScope, typeof(Enumerable), _nameFactory);
@@ -291,17 +289,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             {
                 throw new InvalidQueryException("Query creation failed due to incompatible types.", exception);
             }
-        }
-
-        protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
-        {
-            string[] components = chain.Select(GetPropertyName).ToArray();
-            return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
-        }
-
-        private static string GetPropertyName(ResourceFieldAttribute field)
-        {
-            return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
 }

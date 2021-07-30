@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
 {
@@ -10,31 +12,36 @@ namespace JsonApiDotNetCore.Resources.Annotations
     /// <code><![CDATA[
     /// public class Author : Identifiable
     /// {
-    ///     [HasMany(PublicName = "articles")]
-    ///     public List<Article> Articles { get; set; }
+    ///     [HasMany]
+    ///     public ISet<Article> Articles { get; set; }
     /// }
     /// ]]></code>
     /// </example>
+    [PublicAPI]
     [AttributeUsage(AttributeTargets.Property)]
-    public class HasManyAttribute : RelationshipAttribute
+    public sealed class HasManyAttribute : RelationshipAttribute
     {
-        private static readonly CollectionConverter CollectionConverter = new();
+        private readonly Lazy<bool> _lazyIsManyToMany;
 
         /// <summary>
         /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a many-to-many relationship.
         /// </summary>
-        public virtual bool IsManyToMany
-        {
-            get
-            {
-                if (InverseNavigationProperty != null)
-                {
-                    Type elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
-                    return elementType != null;
-                }
+        public bool IsManyToMany => _lazyIsManyToMany.Value;
 
-                return false;
+        public HasManyAttribute()
+        {
+            _lazyIsManyToMany = new Lazy<bool>(EvaluateIsManyToMany, LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        private bool EvaluateIsManyToMany()
+        {
+            if (InverseNavigationProperty != null)
+            {
+                Type elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
+                return elementType != null;
             }
+
+            return false;
         }
     }
 }

@@ -99,20 +99,6 @@ namespace JsonApiDotNetCore.Configuration
             return GetResourceContext(type).Relationships;
         }
 
-        /// <inheritdoc />
-        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
-        {
-            ArgumentGuard.NotNull(relationship, nameof(relationship));
-
-            if (relationship.InverseNavigationProperty == null)
-            {
-                return null;
-            }
-
-            return GetResourceContext(relationship.RightType).Relationships
-                .SingleOrDefault(nextRelationship => nextRelationship.Property == relationship.InverseNavigationProperty);
-        }
-
         private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null,
             FieldFilterType type = FieldFilterType.None)
             where TResource : class, IIdentifiable

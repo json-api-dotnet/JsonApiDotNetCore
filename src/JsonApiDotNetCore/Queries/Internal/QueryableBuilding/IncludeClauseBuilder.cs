@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
             {
-                path = path == null ? relationship.RelationshipPath : path + "." + relationship.RelationshipPath;
+                path = path == null ? relationship.Property.Name : path + "." + relationship.Property.Name;
 
                 ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
                 result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);

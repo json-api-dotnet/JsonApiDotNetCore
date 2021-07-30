@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
@@ -72,18 +70,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Type[] typeArguments = ArrayFactory.Create(LambdaScope.Parameter.Type, keyType);
             return Expression.Call(_extensionType, operationName, typeArguments, source, keySelector);
-        }
-
-        protected override MemberExpression CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute> chain, Expression source)
-        {
-            string[] components = chain.Select(GetPropertyName).ToArray();
-            return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
-        }
-
-        private static string GetPropertyName(ResourceFieldAttribute field)
-        {
-            // In case of a HasManyThrough access (from count() function), we only need to look at the number of entries in the join table.
-            return field is HasManyThroughAttribute hasManyThrough ? hasManyThrough.ThroughProperty.Name : field.Property.Name;
         }
     }
 }
