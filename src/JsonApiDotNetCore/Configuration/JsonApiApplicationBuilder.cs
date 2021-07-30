@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -283,7 +284,12 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
             {
-                builder.Add(entityType.ClrType);
+#pragma warning disable EF1001 // Internal EF Core API usage.
+                if (entityType is not EntityType { IsImplicitlyCreatedJoinEntityType: true })
+#pragma warning restore EF1001 // Internal EF Core API usage.
+                {
+                    builder.Add(entityType.ClrType);
+                }
             }
         }
 
