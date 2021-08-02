@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -40,17 +41,18 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             SortElementExpression firstElement = ParseSortElement();
 
-            List<SortElementExpression> elements = firstElement.AsList();
+            ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>();
+            elementsBuilder.Add(firstElement);
 
             while (TokenStack.Any())
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 SortElementExpression nextElement = ParseSortElement();
-                elements.Add(nextElement);
+                elementsBuilder.Add(nextElement);
             }
 
-            return new SortExpression(elements);
+            return new SortExpression(elementsBuilder.ToImmutable());
         }
 
         protected SortElementExpression ParseSortElement()

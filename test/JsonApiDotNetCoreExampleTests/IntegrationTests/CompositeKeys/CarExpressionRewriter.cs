@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore;
@@ -27,7 +28,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             ResourceContext carResourceContext = resourceContextProvider.GetResourceContext<Car>();
 
             _regionIdAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.RegionId));
-
             _licensePlateAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.LicensePlate));
         }
 
@@ -121,25 +121,25 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public override QueryExpression VisitSort(SortExpression expression, object argument)
         {
-            var newSortElements = new List<SortElementExpression>();
+            ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(expression.Elements.Count);
 
             foreach (SortElementExpression sortElement in expression.Elements)
             {
                 if (IsSortOnCarId(sortElement))
                 {
                     ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _regionIdAttribute);
-                    newSortElements.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
+                    elementsBuilder.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
 
                     ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _licensePlateAttribute);
-                    newSortElements.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
+                    elementsBuilder.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
                 }
                 else
                 {
-                    newSortElements.Add(sortElement);
+                    elementsBuilder.Add(sortElement);
                 }
             }
 
-            return new SortExpression(newSortElements);
+            return new SortExpression(elementsBuilder.ToImmutable());
         }
 
         private static bool IsSortOnCarId(SortElementExpression sortElement)

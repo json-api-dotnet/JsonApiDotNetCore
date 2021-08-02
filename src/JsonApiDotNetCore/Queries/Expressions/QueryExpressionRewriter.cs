@@ -136,7 +136,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<SortElementExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<SortElementExpression> newElements = VisitList(expression.Elements, argument);
 
                 if (newElements.Count != 0)
                 {
@@ -316,6 +316,22 @@ namespace JsonApiDotNetCore.Queries.Expressions
             }
 
             return newElements;
+        }
+
+        protected virtual IImmutableList<TExpression> VisitList<TExpression>(IImmutableList<TExpression> elements, TArgument argument)
+            where TExpression : QueryExpression
+        {
+            ImmutableArray<TExpression>.Builder arrayBuilder = ImmutableArray.CreateBuilder<TExpression>(elements.Count);
+
+            foreach (TExpression element in elements)
+            {
+                if (Visit(element, argument) is TExpression newElement)
+                {
+                    arrayBuilder.Add(newElement);
+                }
+            }
+
+            return arrayBuilder.ToImmutable();
         }
     }
 }

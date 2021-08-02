@@ -461,7 +461,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (sort == null)
             {
                 AttrAttribute idAttribute = GetIdAttribute(resourceContext);
-                sort = new SortExpression(new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true).AsArray());
+                var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
+                sort = new SortExpression(ImmutableArray.Create(idAscendingSort));
             }
 
             return sort;

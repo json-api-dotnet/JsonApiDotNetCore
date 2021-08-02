@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
 
-            var sortElements = new List<SortElementExpression>();
+            ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
 
             foreach ((Expression<Func<TResource, dynamic>> keySelector, ListSortDirection sortDirection) in keySelectors)
             {
@@ -92,10 +93,10 @@ namespace JsonApiDotNetCore.Resources
                 AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
 
                 var sortElement = new SortElementExpression(new ResourceFieldChainExpression(attribute), isAscending);
-                sortElements.Add(sortElement);
+                elementsBuilder.Add(sortElement);
             }
 
-            return new SortExpression(sortElements);
+            return new SortExpression(elementsBuilder.ToImmutable());
         }
 
         /// <inheritdoc />

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class SortExpression : QueryExpression
     {
-        public IReadOnlyCollection<SortElementExpression> Elements { get; }
+        public IImmutableList<SortElementExpression> Elements { get; }
 
-        public SortExpression(IReadOnlyCollection<SortElementExpression> elements)
+        public SortExpression(IImmutableList<SortElementExpression> elements)
         {
             ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 

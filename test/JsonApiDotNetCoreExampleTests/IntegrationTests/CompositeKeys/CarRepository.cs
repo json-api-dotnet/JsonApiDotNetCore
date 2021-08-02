@@ -13,13 +13,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class CarRepository : EntityFrameworkCoreRepository<Car, string>
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly CarExpressionRewriter _writer;
 
         public CarRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
             IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
             : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
         {
-            _resourceGraph = resourceGraph;
+            _writer = new CarExpressionRewriter(resourceGraph);
         }
 
         protected override IQueryable<Car> ApplyQueryLayer(QueryLayer layer)
@@ -33,14 +33,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
             if (queryLayer.Filter != null)
             {
-                var writer = new CarExpressionRewriter(_resourceGraph);
-                queryLayer.Filter = (FilterExpression)writer.Visit(queryLayer.Filter, null);
+                queryLayer.Filter = (FilterExpression)_writer.Visit(queryLayer.Filter, null);
             }
 
             if (queryLayer.Sort != null)
             {
-                var writer = new CarExpressionRewriter(_resourceGraph);
-                queryLayer.Sort = (SortExpression)writer.Visit(queryLayer.Sort, null);
+                queryLayer.Sort = (SortExpression)_writer.Visit(queryLayer.Sort, null);
             }
 
             if (queryLayer.Projection != null)
