@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -23,10 +23,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// <summary>
         /// Resolves a chain of relationships that ends in a to-many relationship, for example: blogs.owner.articles.comments
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveToManyChain(ResourceContext resourceContext, string path,
+        public IImmutableList<ResourceFieldAttribute> ResolveToManyChain(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            var chain = new List<ResourceFieldAttribute>();
+            ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
             ResourceContext nextResourceContext = resourceContext;
@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 validateCallback?.Invoke(relationship, nextResourceContext, path);
 
-                chain.Add(relationship);
+                chainBuilder.Add(relationship);
                 nextResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             }
 
@@ -46,8 +46,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             validateCallback?.Invoke(lastToManyRelationship, nextResourceContext, path);
 
-            chain.Add(lastToManyRelationship);
-            return chain;
+            chainBuilder.Add(lastToManyRelationship);
+            return chainBuilder.ToImmutable();
         }
 
         /// <summary>
@@ -62,10 +62,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// articles.revisions.author
         /// </example>
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveRelationshipChain(ResourceContext resourceContext, string path,
+        public IImmutableList<ResourceFieldAttribute> ResolveRelationshipChain(ResourceContext resourceContext, string path,
             Action<RelationshipAttribute, ResourceContext, string> validateCallback = null)
         {
-            var chain = new List<ResourceFieldAttribute>();
+            ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
             ResourceContext nextResourceContext = resourceContext;
 
             foreach (string publicName in path.Split("."))
@@ -74,11 +74,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 validateCallback?.Invoke(relationship, nextResourceContext, path);
 
-                chain.Add(relationship);
+                chainBuilder.Add(relationship);
                 nextResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
             }
 
-            return chain;
+            return chainBuilder.ToImmutable();
         }
 
         /// <summary>
@@ -88,10 +88,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// </example>
         /// <example>name</example>
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceContext resourceContext, string path,
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttribute(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            var chain = new List<ResourceFieldAttribute>();
+            ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
             ResourceContext nextResourceContext = resourceContext;
@@ -102,7 +102,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
-                chain.Add(toOneRelationship);
+                chainBuilder.Add(toOneRelationship);
                 nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
             }
 
@@ -111,8 +111,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             validateCallback?.Invoke(lastAttribute, nextResourceContext, path);
 
-            chain.Add(lastAttribute);
-            return chain;
+            chainBuilder.Add(lastAttribute);
+            return chainBuilder.ToImmutable();
         }
 
         /// <summary>
@@ -124,10 +124,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// comments
         /// </example>
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceContext resourceContext, string path,
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInToMany(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            var chain = new List<ResourceFieldAttribute>();
+            ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
             ResourceContext nextResourceContext = resourceContext;
@@ -138,7 +138,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
-                chain.Add(toOneRelationship);
+                chainBuilder.Add(toOneRelationship);
                 nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
             }
 
@@ -148,8 +148,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             validateCallback?.Invoke(toManyRelationship, nextResourceContext, path);
 
-            chain.Add(toManyRelationship);
-            return chain;
+            chainBuilder.Add(toManyRelationship);
+            return chainBuilder.ToImmutable();
         }
 
         /// <summary>
@@ -161,10 +161,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// author.address
         /// </example>
         /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceContext resourceContext, string path,
+        public IImmutableList<ResourceFieldAttribute> ResolveToOneChainEndingInAttributeOrToOne(ResourceContext resourceContext, string path,
             Action<ResourceFieldAttribute, ResourceContext, string> validateCallback = null)
         {
-            var chain = new List<ResourceFieldAttribute>();
+            ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder = ImmutableArray.CreateBuilder<ResourceFieldAttribute>();
 
             string[] publicNameParts = path.Split(".");
             ResourceContext nextResourceContext = resourceContext;
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
-                chain.Add(toOneRelationship);
+                chainBuilder.Add(toOneRelationship);
                 nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
             }
 
@@ -191,8 +191,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             validateCallback?.Invoke(lastField, nextResourceContext, path);
 
-            chain.Add(lastField);
-            return chain;
+            chainBuilder.Add(lastField);
+            return chainBuilder.ToImmutable();
         }
 
         private RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)

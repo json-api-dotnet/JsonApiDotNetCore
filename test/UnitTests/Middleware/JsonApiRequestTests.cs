@@ -96,7 +96,7 @@ namespace UnitTests.Middleware
 
                 if (pathSegments.Length >= 3)
                 {
-                    feature.RouteValues["relationshipName"] = pathSegments.Last();
+                    feature.RouteValues["relationshipName"] = pathSegments[^1];
                 }
             }
 

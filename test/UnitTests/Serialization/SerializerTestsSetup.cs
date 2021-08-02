@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
@@ -140,8 +141,8 @@ namespace UnitTests.Serialization
 
             if (inclusionChains != null)
             {
-                List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships.ToArray()))
-                    .ToList();
+                List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships =>
+                    new ResourceFieldChainExpression(relationships.Cast<ResourceFieldAttribute>().ToImmutableArray())).ToList();
 
                 IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
                 expressionsInScope.Add(new ExpressionInScope(null, includeExpression));
@@ -161,8 +162,8 @@ namespace UnitTests.Serialization
                 return new EvaluatedIncludeCache();
             }
 
-            List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships => new ResourceFieldChainExpression(relationships.ToArray()))
-                .ToList();
+            List<ResourceFieldChainExpression> chains = inclusionChains.Select(relationships =>
+                new ResourceFieldChainExpression(relationships.Cast<ResourceFieldAttribute>().ToImmutableArray())).ToList();
 
             IncludeExpression includeExpression = IncludeChainConverter.FromRelationshipChains(chains);
 

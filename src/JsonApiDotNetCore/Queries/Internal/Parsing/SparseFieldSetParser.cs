@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
@@ -56,13 +55,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceContext, path);
 
             _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
 
-            return field.AsArray();
+            return ImmutableArray.Create(field);
         }
     }
 }

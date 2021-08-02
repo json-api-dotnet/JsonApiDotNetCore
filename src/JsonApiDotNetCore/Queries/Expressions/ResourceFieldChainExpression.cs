@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,16 +12,16 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class ResourceFieldChainExpression : IdentifierExpression
     {
-        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
+        public IImmutableList<ResourceFieldAttribute> Fields { get; }
 
         public ResourceFieldChainExpression(ResourceFieldAttribute field)
         {
             ArgumentGuard.NotNull(field, nameof(field));
 
-            Fields = field.AsArray();
+            Fields = ImmutableArray.Create(field);
         }
 
-        public ResourceFieldChainExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)
+        public ResourceFieldChainExpression(IImmutableList<ResourceFieldAttribute> fields)
         {
             ArgumentGuard.NotNullNorEmpty(fields, nameof(fields));
 

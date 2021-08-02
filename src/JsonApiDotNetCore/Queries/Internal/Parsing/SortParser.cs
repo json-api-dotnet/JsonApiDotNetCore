@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
@@ -77,7 +76,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return new SortElementExpression(targetAttribute, isAscending);
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         /// }
         /// ]]></code>
         /// </example>
-        public IncludeExpression FromRelationshipChains(IReadOnlyCollection<ResourceFieldChainExpression> chains)
+        public IncludeExpression FromRelationshipChains(IEnumerable<ResourceFieldChainExpression> chains)
         {
             ArgumentGuard.NotNull(chains, nameof(chains));
 
@@ -71,7 +72,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return elements.Any() ? new IncludeExpression(elements) : IncludeExpression.Empty;
         }
 
-        private static IReadOnlyCollection<IncludeElementExpression> ConvertChainsToElements(IReadOnlyCollection<ResourceFieldChainExpression> chains)
+        private static IReadOnlyCollection<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
         {
             var rootNode = new MutableIncludeNode(null);
 
@@ -137,10 +138,13 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             private void FlushChain(IncludeElementExpression expression)
             {
-                List<RelationshipAttribute> fieldsInChain = _parentRelationshipStack.Reverse().ToList();
-                fieldsInChain.Add(expression.Relationship);
+                ImmutableArray<ResourceFieldAttribute>.Builder chainBuilder =
+                    ImmutableArray.CreateBuilder<ResourceFieldAttribute>(_parentRelationshipStack.Count + 1);
 
-                Chains.Add(new ResourceFieldChainExpression(fieldsInChain));
+                chainBuilder.AddRange(_parentRelationshipStack.Reverse());
+                chainBuilder.Add(expression.Relationship);
+
+                Chains.Add(new ResourceFieldChainExpression(chainBuilder.ToImmutable()));
             }
         }
 

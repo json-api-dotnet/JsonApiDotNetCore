@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
@@ -158,7 +158,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                     OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
                 }
 
-                PropertyInfo leftProperty = leftChain.Fields.Last().Property;
+                PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
                 if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
@@ -216,7 +216,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
-            PropertyInfo targetAttributeProperty = targetAttribute.Fields.Last().Property;
+            PropertyInfo targetAttributeProperty = targetAttribute.Fields[^1].Property;
 
             if (targetAttributeProperty.Name == nameof(Identifiable.Id))
             {
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
-                filter = ParseFilterInHas((HasManyAttribute)targetCollection.Fields.Last());
+                filter = ParseFilterInHas((HasManyAttribute)targetCollection.Fields[^1]);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
@@ -332,7 +332,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return tempResource.GetTypedId().ToString();
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {

@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
             if (expression.Left is ResourceFieldChainExpression leftChain && expression.Right is LiteralConstantExpression rightConstant)
             {
-                PropertyInfo leftProperty = leftChain.Fields.Last().Property;
+                PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
                 if (IsCarId(leftProperty))
                 {
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public override QueryExpression VisitAny(AnyExpression expression, object argument)
         {
-            PropertyInfo property = expression.TargetAttribute.Fields.Last().Property;
+            PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
             if (IsCarId(property))
             {
@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         public override QueryExpression VisitMatchText(MatchTextExpression expression, object argument)
         {
-            PropertyInfo property = expression.TargetAttribute.Fields.Last().Property;
+            PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
             if (IsCarId(property))
             {
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
             if (sortElement.TargetAttribute != null)
             {
-                PropertyInfo property = sortElement.TargetAttribute.Fields.Last().Property;
+                PropertyInfo property = sortElement.TargetAttribute.Fields[^1].Property;
 
                 if (IsCarId(property))
                 {
@@ -159,8 +159,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         private static ResourceFieldChainExpression ReplaceLastAttributeInChain(ResourceFieldChainExpression resourceFieldChain, AttrAttribute attribute)
         {
-            List<ResourceFieldAttribute> fields = resourceFieldChain.Fields.ToList();
-            fields[^1] = attribute;
+            IImmutableList<ResourceFieldAttribute> fields = resourceFieldChain.Fields.SetItem(resourceFieldChain.Fields.Count - 1, attribute);
             return new ResourceFieldChainExpression(fields);
         }
     }

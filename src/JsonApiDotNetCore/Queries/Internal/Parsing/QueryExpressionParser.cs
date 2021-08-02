@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         /// <summary>
         /// Takes a dotted path and walks the resource graph to produce a chain of fields.
         /// </summary>
-        protected abstract IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
+        protected abstract IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements);
 
         protected virtual void Tokenize(string source)
         {
@@ -40,7 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
             {
-                IReadOnlyCollection<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value, chainRequirements);
+                IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value, chainRequirements);
 
                 if (chain.Any())
                 {
