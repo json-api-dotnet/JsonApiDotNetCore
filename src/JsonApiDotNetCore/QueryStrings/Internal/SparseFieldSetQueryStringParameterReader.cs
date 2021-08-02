@@ -21,7 +21,10 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
     {
         private readonly SparseFieldTypeParser _sparseFieldTypeParser;
         private readonly SparseFieldSetParser _sparseFieldSetParser;
-        private readonly Dictionary<ResourceContext, SparseFieldSetExpression> _sparseFieldTable = new();
+
+        private readonly ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder _sparseFieldTableBuilder =
+            ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
+
         private string _lastParameterName;
 
         /// <inheritdoc />
@@ -69,7 +72,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 ResourceContext targetResource = GetSparseFieldType(parameterName);
                 SparseFieldSetExpression sparseFieldSet = GetSparseFieldSet(parameterValue, targetResource);
 
-                _sparseFieldTable[targetResource] = sparseFieldSet;
+                _sparseFieldTableBuilder[targetResource] = sparseFieldSet;
             }
             catch (QueryParseException exception)
             {
@@ -99,8 +102,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual IReadOnlyCollection<ExpressionInScope> GetConstraints()
         {
-            return _sparseFieldTable.Any()
-                ? new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTable)).AsArray()
+            return _sparseFieldTableBuilder.Any()
+                ? new ExpressionInScope(null, new SparseFieldTableExpression(_sparseFieldTableBuilder.ToImmutable())).AsArray()
                 : Array.Empty<ExpressionInScope>();
         }
     }

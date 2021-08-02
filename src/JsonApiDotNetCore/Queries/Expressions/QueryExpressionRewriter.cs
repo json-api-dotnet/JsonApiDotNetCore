@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -198,7 +199,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
+                ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder newTable =
+                    ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
 
                 foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in expression.Table)
                 {
@@ -210,7 +212,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
                 if (newTable.Count > 0)
                 {
-                    var newExpression = new SparseFieldTableExpression(newTable);
+                    var newExpression = new SparseFieldTableExpression(newTable.ToImmutable());
                     return newExpression.Equals(expression) ? expression : newExpression;
                 }
             }
