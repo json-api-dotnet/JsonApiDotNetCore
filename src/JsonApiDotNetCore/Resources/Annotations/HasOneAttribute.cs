@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a one-to-one relationship.
         /// </summary>
-        public bool IsOneToOne => _lazyIsOneToOne.Value;
+        internal bool IsOneToOne => _lazyIsOneToOne.Value;
 
         public HasOneAttribute()
         {

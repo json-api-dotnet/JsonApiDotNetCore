@@ -26,7 +26,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         /// <summary>
         /// Inspects <see cref="RelationshipAttribute.InverseNavigationProperty" /> to determine if this is a many-to-many relationship.
         /// </summary>
-        public bool IsManyToMany => _lazyIsManyToMany.Value;
+        internal bool IsManyToMany => _lazyIsManyToMany.Value;
 
         public HasManyAttribute()
         {
