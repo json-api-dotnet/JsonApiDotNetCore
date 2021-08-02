@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -38,21 +39,21 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected SparseFieldSetExpression ParseSparseFieldSet()
         {
-            var fields = new Dictionary<string, ResourceFieldAttribute>();
+            ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
             while (TokenStack.Any())
             {
-                if (fields.Count > 0)
+                if (fieldSetBuilder.Count > 0)
                 {
                     EatSingleCharacterToken(TokenKind.Comma);
                 }
 
                 ResourceFieldChainExpression nextChain = ParseFieldChain(FieldChainRequirements.EndsInAttribute, "Field name expected.");
                 ResourceFieldAttribute nextField = nextChain.Fields.Single();
-                fields[nextField.PublicName] = nextField;
+                fieldSetBuilder.Add(nextField);
             }
 
-            return fields.Any() ? new SparseFieldSetExpression(fields.Values) : null;
+            return fieldSetBuilder.Any() ? new SparseFieldSetExpression(fieldSetBuilder.ToImmutable()) : null;
         }
 
         protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)

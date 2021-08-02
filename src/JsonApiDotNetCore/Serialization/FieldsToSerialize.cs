@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -44,9 +45,20 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
-            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
 
-            return fieldSet.OfType<AttrAttribute>().ToArray();
+            return SortAttributesInDeclarationOrder(fieldSet, resourceContext).ToArray();
+        }
+
+        private IEnumerable<AttrAttribute> SortAttributesInDeclarationOrder(IImmutableSet<ResourceFieldAttribute> fieldSet, ResourceContext resourceContext)
+        {
+            foreach (AttrAttribute attribute in resourceContext.Attributes)
+            {
+                if (fieldSet.Contains(attribute))
+                {
+                    yield return attribute;
+                }
+            }
         }
 
         /// <inheritdoc />

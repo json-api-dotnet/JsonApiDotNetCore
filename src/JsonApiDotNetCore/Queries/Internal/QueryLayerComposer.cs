@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -253,7 +254,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
         {
-            IReadOnlyCollection<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
+            IImmutableSet<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
 
             return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
@@ -269,7 +270,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             IncludeExpression innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
 
-            IReadOnlyCollection<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
+            IImmutableSet<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
 
             Dictionary<ResourceFieldAttribute, QueryLayer> primaryProjection =
                 primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
@@ -484,7 +485,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
 
             if (!fieldSet.Any())
             {

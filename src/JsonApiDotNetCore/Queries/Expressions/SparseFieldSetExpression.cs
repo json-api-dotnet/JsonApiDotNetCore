@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -12,9 +12,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class SparseFieldSetExpression : QueryExpression
     {
-        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
+        public IImmutableSet<ResourceFieldAttribute> Fields { get; }
 
-        public SparseFieldSetExpression(IReadOnlyCollection<ResourceFieldAttribute> fields)
+        public SparseFieldSetExpression(IImmutableSet<ResourceFieldAttribute> fields)
         {
             ArgumentGuard.NotNullNorEmpty(fields, nameof(fields));
 
@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override string ToString()
         {
-            return string.Join(",", Fields.Select(child => child.PublicName));
+            return string.Join(",", Fields.Select(child => child.PublicName).OrderBy(name => name));
         }
 
         public override bool Equals(object obj)
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (SparseFieldSetExpression)obj;
 
-            return Fields.SequenceEqual(other.Fields);
+            return Fields.SetEquals(other.Fields);
         }
 
         public override int GetHashCode()

@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -36,9 +35,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
-            fieldSet.Add(fieldToInclude);
-            return new SparseFieldSetExpression(fieldSet);
+            IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Add(fieldToInclude);
+            return new SparseFieldSetExpression(newSparseFieldSet);
         }
 
         public static SparseFieldSetExpression Excluding<TResource>(this SparseFieldSetExpression sparseFieldSet,
@@ -70,9 +68,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return sparseFieldSet;
             }
 
-            HashSet<ResourceFieldAttribute> fieldSet = sparseFieldSet.Fields.ToHashSet();
-            fieldSet.Remove(fieldToExclude);
-            return new SparseFieldSetExpression(fieldSet);
+            IImmutableSet<ResourceFieldAttribute> newSparseFieldSet = sparseFieldSet.Fields.Remove(fieldToExclude);
+            return new SparseFieldSetExpression(newSparseFieldSet);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -89,7 +90,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
                 AttrAttribute idAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Identifiable.Id));
-                return new SparseFieldSetExpression(ArrayFactory.Create(idAttribute));
+                return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
             }
 
             return sparseFieldSet;

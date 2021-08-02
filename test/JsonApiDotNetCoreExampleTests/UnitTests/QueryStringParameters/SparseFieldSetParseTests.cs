@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(caption,url,author)")]
+        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
         [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
         [InlineData("fields[blogs]", "id", "blogs(id)")]
         [InlineData("fields[blogs]", "", "blogs(id)")]

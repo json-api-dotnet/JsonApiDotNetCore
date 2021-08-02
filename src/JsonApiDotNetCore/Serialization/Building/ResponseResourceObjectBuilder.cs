@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -113,7 +114,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
 
-            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
             return fieldSet.Contains(relationship);
         }
 
