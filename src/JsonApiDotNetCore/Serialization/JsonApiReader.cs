@@ -258,14 +258,14 @@ namespace JsonApiDotNetCore.Serialization
                     throw new ToManyRelationshipRequiredException(_request.Relationship.PublicName);
                 }
 
-                if (model != null && !(model is IIdentifiable))
+                if (model is { } and not IIdentifiable)
                 {
                     throw new InvalidRequestBodyException("Expected single data element for to-one relationship.",
                         $"Expected single data element for '{_request.Relationship.PublicName}' relationship.", body);
                 }
             }
 
-            if (_request.Relationship is HasManyAttribute && !(model is IEnumerable<IIdentifiable>))
+            if (_request.Relationship is HasManyAttribute && model is not IEnumerable<IIdentifiable>)
             {
                 throw new InvalidRequestBodyException("Expected data[] element for to-many relationship.",
                     $"Expected data[] element for '{_request.Relationship.PublicName}' relationship.", body);

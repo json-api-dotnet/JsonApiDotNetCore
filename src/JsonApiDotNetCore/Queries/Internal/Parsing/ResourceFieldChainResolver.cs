@@ -213,7 +213,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
-            if (!(relationship is HasManyAttribute))
+            if (relationship is not HasManyAttribute)
             {
                 throw new QueryParseException(path == publicName
                     ? $"Relationship '{publicName}' must be a to-many relationship on resource '{resourceContext.PublicName}'."
@@ -227,7 +227,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             RelationshipAttribute relationship = GetRelationship(publicName, resourceContext, path);
 
-            if (!(relationship is HasOneAttribute))
+            if (relationship is not HasOneAttribute)
             {
                 throw new QueryParseException(path == publicName
                     ? $"Relationship '{publicName}' must be a to-one relationship on resource '{resourceContext.PublicName}'."

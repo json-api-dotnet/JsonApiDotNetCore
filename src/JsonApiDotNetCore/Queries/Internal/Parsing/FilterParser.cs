@@ -152,7 +152,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             if (leftTerm is ResourceFieldChainExpression leftChain)
             {
-                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && !(rightTerm is NullConstantExpression))
+                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && rightTerm is not NullConstantExpression)
                 {
                     // Run another pass over left chain to have it fail when chain ends in relationship.
                     OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);

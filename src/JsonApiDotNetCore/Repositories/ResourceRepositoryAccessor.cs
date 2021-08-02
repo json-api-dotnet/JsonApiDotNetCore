@@ -148,7 +148,7 @@ namespace JsonApiDotNetCore.Repositories
 
             if (_request.TransactionId != null)
             {
-                if (!(writeRepository is IRepositorySupportsTransaction repository))
+                if (writeRepository is not IRepositorySupportsTransaction repository)
                 {
                     ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
                     throw new MissingTransactionSupportException(resourceContext.PublicName);
