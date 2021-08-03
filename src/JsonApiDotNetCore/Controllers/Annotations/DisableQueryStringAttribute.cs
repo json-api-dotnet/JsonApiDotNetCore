@@ -22,14 +22,15 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     public sealed class DisableQueryStringAttribute : Attribute
     {
         public static readonly DisableQueryStringAttribute Empty = new(StandardQueryStringParameters.None);
-        public IReadOnlyCollection<string> ParameterNames { get; }
+
+        public IReadOnlySet<string> ParameterNames { get; }
 
         /// <summary>
         /// Disables one or more of the builtin query parameters for a controller.
         /// </summary>
         public DisableQueryStringAttribute(StandardQueryStringParameters parameters)
         {
-            var parameterNames = new List<string>();
+            var parameterNames = new HashSet<string>();
 
             foreach (StandardQueryStringParameters value in Enum.GetValues(typeof(StandardQueryStringParameters)))
             {
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         {
             ArgumentGuard.NotNullNorEmpty(parameterNames, nameof(parameterNames));
 
-            ParameterNames = parameterNames.Split(",").ToList();
+            ParameterNames = parameterNames.Split(",").ToHashSet();
         }
 
         public bool ContainsParameter(StandardQueryStringParameters parameter)
