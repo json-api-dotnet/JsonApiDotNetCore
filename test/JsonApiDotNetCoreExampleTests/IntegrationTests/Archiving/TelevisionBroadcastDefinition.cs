@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
         {
             if (_request.IsCollection)
             {
-                if (_request.PrimaryResource == ResourceContext || _request.SecondaryResource == ResourceContext)
+                if (ResourceContext.Equals(_request.PrimaryResource) || ResourceContext.Equals(_request.SecondaryResource))
                 {
                     return true;
                 }

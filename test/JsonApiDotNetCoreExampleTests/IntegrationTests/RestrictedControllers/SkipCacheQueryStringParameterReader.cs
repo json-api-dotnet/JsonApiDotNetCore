@@ -1,4 +1,3 @@
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Errors;

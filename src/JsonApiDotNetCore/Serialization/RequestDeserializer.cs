@@ -192,7 +192,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 ResourceContext resourceContextInRef = GetExistingResourceContext(operation.Ref.Type);
 
-                if (resourceContextInRef != primaryResourceContext)
+                if (!primaryResourceContext.Equals(resourceContextInRef))
                 {
                     throw new JsonApiSerializationException("Resource type mismatch between 'ref.type' and 'data.type' element.",
                         $"Expected resource of type '{resourceContextInRef.PublicName}' in 'data.type', instead of '{primaryResourceContext.PublicName}'.",

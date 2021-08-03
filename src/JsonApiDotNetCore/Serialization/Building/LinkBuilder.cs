@@ -149,14 +149,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value);
 
-                if (elementInTopScopeIndex != -1)
-                {
-                    elements = elements.SetItem(elementInTopScopeIndex, topPageSizeElement);
-                }
-                else
-                {
-                    elements = elements.Insert(0, topPageSizeElement);
-                }
+                elements = elementInTopScopeIndex != -1 ? elements.SetItem(elementInTopScopeIndex, topPageSizeElement) : elements.Insert(0, topPageSizeElement);
             }
             else
             {
