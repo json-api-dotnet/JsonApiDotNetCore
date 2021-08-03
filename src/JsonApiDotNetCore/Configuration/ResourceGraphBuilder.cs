@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Configuration
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
-        private readonly List<ResourceContext> _resources = new();
+        private readonly HashSet<ResourceContext> _resourceContexts = new();
         private readonly TypeLocator _typeLocator = new();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -34,20 +34,7 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public IResourceGraph Build()
         {
-            _resources.ForEach(SetResourceLinksOptions);
-            return new ResourceGraph(_resources);
-        }
-
-        private void SetResourceLinksOptions(ResourceContext resourceContext)
-        {
-            var attribute = (ResourceLinksAttribute)resourceContext.ResourceType.GetCustomAttribute(typeof(ResourceLinksAttribute));
-
-            if (attribute != null)
-            {
-                resourceContext.RelationshipLinks = attribute.RelationshipLinks;
-                resourceContext.ResourceLinks = attribute.ResourceLinks;
-                resourceContext.TopLevelLinks = attribute.TopLevelLinks;
-            }
+            return new ResourceGraph(_resourceContexts);
         }
 
         /// <summary>
@@ -102,7 +89,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            if (_resources.Any(resourceContext => resourceContext.ResourceType == resourceType))
+            if (_resourceContexts.Any(resourceContext => resourceContext.ResourceType == resourceType))
             {
                 return this;
             }
@@ -113,7 +100,7 @@ namespace JsonApiDotNetCore.Configuration
                 Type effectiveIdType = idType ?? _typeLocator.TryGetIdType(resourceType);
 
                 ResourceContext resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
-                _resources.Add(resourceContext);
+                _resourceContexts.Add(resourceContext);
             }
             else
             {
@@ -125,15 +112,16 @@ namespace JsonApiDotNetCore.Configuration
 
         private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType)
         {
-            return new()
-            {
-                PublicName = publicName,
-                ResourceType = resourceType,
-                IdentityType = idType,
-                Attributes = GetAttributes(resourceType),
-                Relationships = GetRelationships(resourceType),
-                EagerLoads = GetEagerLoads(resourceType)
-            };
+            IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceType);
+            IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceType);
+            IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceType);
+
+            var linksAttribute = (ResourceLinksAttribute)resourceType.GetCustomAttribute(typeof(ResourceLinksAttribute));
+
+            return linksAttribute == null
+                ? new ResourceContext(publicName, resourceType, idType, attributes, relationships, eagerLoads)
+                : new ResourceContext(publicName, resourceType, idType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
+                    linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
         }
 
         private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)

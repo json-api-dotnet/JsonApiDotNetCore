@@ -56,12 +56,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
         public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext
-            {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                TopLevelLinks = linksInResourceContext
-            };
+            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
+                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), linksInResourceContext);
 
             var options = new JsonApiOptions
             {
@@ -84,7 +80,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
                 TotalResourceCount = 10
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
@@ -157,12 +153,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
         public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext
-            {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                ResourceLinks = linksInResourceContext
-            };
+            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
+                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), resourceLinks: linksInResourceContext);
 
             var options = new JsonApiOptions
             {
@@ -171,7 +163,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
@@ -323,12 +315,8 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
             LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext
-            {
-                PublicName = nameof(ExampleResource),
-                ResourceType = typeof(ExampleResource),
-                RelationshipLinks = linksInResourceContext
-            };
+            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
+                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), relationshipLinks: linksInResourceContext);
 
             var options = new JsonApiOptions
             {
@@ -337,7 +325,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsArray());
+            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();

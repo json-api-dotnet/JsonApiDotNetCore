@@ -21,7 +21,15 @@ namespace JsonApiDotNetCore
 
         public static List<T> AsList<T>(this T element)
         {
-            return new()
+            return new List<T>
+            {
+                element
+            };
+        }
+
+        public static HashSet<T> AsHashSet<T>(this T element)
+        {
+            return new HashSet<T>
             {
                 element
             };

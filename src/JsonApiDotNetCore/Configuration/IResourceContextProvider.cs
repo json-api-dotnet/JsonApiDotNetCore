@@ -10,14 +10,14 @@ namespace JsonApiDotNetCore.Configuration
     public interface IResourceContextProvider
     {
         /// <summary>
-        /// Gets all registered resource contexts.
+        /// Gets the metadata for all registered resources.
         /// </summary>
-        IReadOnlyCollection<ResourceContext> GetResourceContexts();
+        IReadOnlySet<ResourceContext> GetResourceContexts();
 
         /// <summary>
-        /// Gets the resource metadata for the specified exposed resource name.
+        /// Gets the resource metadata for the resource that is publicly exposed by the specified name.
         /// </summary>
-        ResourceContext GetResourceContext(string resourceName);
+        ResourceContext GetResourceContext(string publicName);
 
         /// <summary>
         /// Gets the resource metadata for the specified resource type.
