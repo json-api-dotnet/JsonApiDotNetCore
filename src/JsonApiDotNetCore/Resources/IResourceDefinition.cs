@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The new set of includes. Return an empty collection to remove all inclusions (never return <c>null</c>).
         /// </returns>
-        IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes);
+        IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes);
 
         /// <summary>
         /// Enables to extend, replace or remove a filter that is being applied on a set of this resource type.

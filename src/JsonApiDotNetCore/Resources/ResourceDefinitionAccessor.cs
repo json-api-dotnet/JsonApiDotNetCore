@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -28,7 +29,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType, IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 

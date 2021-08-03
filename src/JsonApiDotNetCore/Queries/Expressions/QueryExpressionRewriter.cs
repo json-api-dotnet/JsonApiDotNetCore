@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
@@ -55,7 +53,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newTerms = VisitList(expression.Terms, argument);
+                IImmutableList<FilterExpression> newTerms = VisitList(expression.Terms, argument);
 
                 if (newTerms.Count == 1)
                 {
@@ -270,7 +268,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Elements, argument);
 
                 if (newElements.Count == 0)
                 {
@@ -288,7 +286,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Children, argument);
+                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Children, argument);
 
                 var newExpression = new IncludeElementExpression(expression.Relationship, newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -300,22 +298,6 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public override QueryExpression VisitQueryableHandler(QueryableHandlerExpression expression, TArgument argument)
         {
             return expression;
-        }
-
-        protected virtual IReadOnlyCollection<TExpression> VisitSequence<TExpression>(IEnumerable<TExpression> elements, TArgument argument)
-            where TExpression : QueryExpression
-        {
-            var newElements = new List<TExpression>();
-
-            foreach (TExpression element in elements)
-            {
-                if (Visit(element, argument) is TExpression newElement)
-                {
-                    newElements.Add(newElement);
-                }
-            }
-
-            return newElements;
         }
 
         protected virtual IImmutableList<TExpression> VisitList<TExpression>(IImmutableList<TExpression> elements, TArgument argument)

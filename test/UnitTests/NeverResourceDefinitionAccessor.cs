@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
@@ -11,7 +12,7 @@ namespace UnitTests
 {
     internal sealed class NeverResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
-        public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType, IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes)
         {
             return existingIncludes;
         }

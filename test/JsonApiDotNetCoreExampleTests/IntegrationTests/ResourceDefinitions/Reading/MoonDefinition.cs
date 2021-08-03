@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             _hitCounter = hitCounter;
         }
 
-        public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
         {
             _hitCounter.TrackInvocation<Moon>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
 
@@ -38,10 +38,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             RelationshipAttribute orbitsAroundRelationship =
                 ResourceContext.Relationships.Single(relationship => relationship.Property.Name == nameof(Moon.OrbitsAround));
 
-            return new List<IncludeElementExpression>(existingIncludes)
-            {
-                new(orbitsAroundRelationship)
-            };
+            return existingIncludes.Add(new IncludeElementExpression(orbitsAroundRelationship));
         }
 
         public override QueryStringParameterHandlers<Moon> OnRegisterQueryableHandlersForQueryStringParameters()

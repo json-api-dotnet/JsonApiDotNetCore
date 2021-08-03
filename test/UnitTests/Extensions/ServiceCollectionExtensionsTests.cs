@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -416,7 +417,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceDefinition : IResourceDefinition<IntResource>
         {
-            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }
@@ -504,7 +505,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class GuidResourceDefinition : IResourceDefinition<GuidResource, Guid>
         {
-            public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }

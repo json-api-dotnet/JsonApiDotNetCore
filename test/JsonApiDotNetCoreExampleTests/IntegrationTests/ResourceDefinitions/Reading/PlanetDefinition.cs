@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
             _hitCounter = hitCounter;
         }
 
-        public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
         {
             _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
 

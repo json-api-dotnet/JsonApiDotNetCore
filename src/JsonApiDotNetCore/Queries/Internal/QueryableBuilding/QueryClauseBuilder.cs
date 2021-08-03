@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }
 
-        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IReadOnlyCollection<string> components)
+        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
         {
             MemberExpression property = null;
 

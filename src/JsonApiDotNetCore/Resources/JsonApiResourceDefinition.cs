@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public virtual IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
         {
             return existingIncludes;
         }
