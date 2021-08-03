@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -55,9 +54,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Rea
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
                     new NullConstantExpression());
 
-                return existingFilter == null
-                    ? hasNoPrivateName
-                    : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(hasNoPrivateName, existingFilter));
+                return existingFilter == null ? hasNoPrivateName : new LogicalExpression(LogicalOperator.And, hasNoPrivateName, existingFilter);
             }
 
             return existingFilter;

@@ -310,19 +310,11 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
             else if (ids.Count > 1)
             {
-                ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToImmutableHashSet();
+                IImmutableSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToImmutableHashSet();
                 filter = new AnyExpression(idChain, constants);
             }
 
-            // @formatter:keep_existing_linebreaks true
-
-            return filter == null
-                ? existingFilter
-                : existingFilter == null
-                    ? filter
-                    : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(filter, existingFilter));
-
-            // @formatter:keep_existing_linebreaks restore
+            return filter == null ? existingFilter : existingFilter == null ? filter : new LogicalExpression(LogicalOperator.And, filter, existingFilter);
         }
 
         /// <inheritdoc />
@@ -442,9 +434,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            FilterExpression[] filters = expressionsInScope.OfType<FilterExpression>().ToArray();
-
-            FilterExpression filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
+            IImmutableList<FilterExpression> filters = expressionsInScope.OfType<FilterExpression>().ToImmutableArray();
+            FilterExpression filter = filters.Count > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
 
             return _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, filter);
         }

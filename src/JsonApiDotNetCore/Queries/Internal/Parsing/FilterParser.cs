@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reflection;
 using Humanizer;
@@ -106,28 +105,28 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatText(operatorName);
             EatSingleCharacterToken(TokenKind.OpenParen);
 
-            var terms = new List<FilterExpression>();
+            ImmutableArray<FilterExpression>.Builder termsBuilder = ImmutableArray.CreateBuilder<FilterExpression>();
 
             FilterExpression term = ParseFilter();
-            terms.Add(term);
+            termsBuilder.Add(term);
 
             EatSingleCharacterToken(TokenKind.Comma);
 
             term = ParseFilter();
-            terms.Add(term);
+            termsBuilder.Add(term);
 
             while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 term = ParseFilter();
-                terms.Add(term);
+                termsBuilder.Add(term);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
             var logicalOperator = Enum.Parse<LogicalOperator>(operatorName.Pascalize());
-            return new LogicalExpression(logicalOperator, terms);
+            return new LogicalExpression(logicalOperator, termsBuilder.ToImmutable());
         }
 
         protected ComparisonExpression ParseComparison(string operatorName)

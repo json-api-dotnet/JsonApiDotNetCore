@@ -130,7 +130,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             foreach (ResourceFieldChainExpression chain in chains)
             {
-                if (chain.Fields.First().Equals(relationship))
+                if (chain.Fields[0].Equals(relationship))
                 {
                     inclusionChains.Add(chain.Fields.Cast<RelationshipAttribute>().ToArray());
                 }

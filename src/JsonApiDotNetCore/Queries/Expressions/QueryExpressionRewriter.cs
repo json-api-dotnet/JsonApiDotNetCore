@@ -55,11 +55,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<FilterExpression> newTerms = VisitSequence(expression.Terms, argument);
+                var newTerms = VisitList(expression.Terms, argument);
 
                 if (newTerms.Count == 1)
                 {
-                    return newTerms.First();
+                    return newTerms[0];
                 }
 
                 if (newTerms.Count != 0)
