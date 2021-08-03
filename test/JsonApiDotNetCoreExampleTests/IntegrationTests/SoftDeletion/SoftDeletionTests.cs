@@ -279,7 +279,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_get_HasMany_relationship_for_soft_deleted_parent()
+        public async Task Cannot_get_ToMany_relationship_for_soft_deleted_parent()
         {
             // Arrange
             Company company = _fakers.Company.Generate();
@@ -309,7 +309,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Get_HasMany_relationship_excludes_soft_deleted()
+        public async Task Get_ToMany_relationship_excludes_soft_deleted()
         {
             // Arrange
             Company company = _fakers.Company.Generate();
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_get_HasOne_relationship_for_soft_deleted_parent()
+        public async Task Cannot_get_ToOne_relationship_for_soft_deleted_parent()
         {
             // Arrange
             Department department = _fakers.Department.Generate();
@@ -365,7 +365,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Get_HasOne_relationship_excludes_soft_deleted()
+        public async Task Get_ToOne_relationship_excludes_soft_deleted()
         {
             // Arrange
             Department department = _fakers.Department.Generate();
@@ -390,7 +390,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_create_resource_with_HasMany_relationship_to_soft_deleted()
+        public async Task Cannot_create_resource_with_ToMany_relationship_to_soft_deleted()
         {
             // Arrange
             Department existingDepartment = _fakers.Department.Generate();
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_create_resource_with_HasOne_relationship_to_soft_deleted()
+        public async Task Cannot_create_resource_with_ToOne_relationship_to_soft_deleted()
         {
             // Arrange
             Company existingCompany = _fakers.Company.Generate();
@@ -547,7 +547,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_HasMany_relationship_to_soft_deleted()
+        public async Task Cannot_update_resource_with_ToMany_relationship_to_soft_deleted()
         {
             // Arrange
             Company existingCompany = _fakers.Company.Generate();
@@ -603,7 +603,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_HasOne_relationship_to_soft_deleted()
+        public async Task Cannot_update_resource_with_ToOne_relationship_to_soft_deleted()
         {
             // Arrange
             Department existingDepartment = _fakers.Department.Generate();
@@ -654,7 +654,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_HasMany_relationship_for_soft_deleted_parent()
+        public async Task Cannot_update_ToMany_relationship_for_soft_deleted_parent()
         {
             // Arrange
             Company existingCompany = _fakers.Company.Generate();
@@ -689,7 +689,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_HasMany_relationship_to_soft_deleted()
+        public async Task Cannot_update_ToMany_relationship_to_soft_deleted()
         {
             // Arrange
             Company existingCompany = _fakers.Company.Generate();
@@ -734,7 +734,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_HasOne_relationship_for_soft_deleted_parent()
+        public async Task Cannot_update_ToOne_relationship_for_soft_deleted_parent()
         {
             // Arrange
             Department existingDepartment = _fakers.Department.Generate();
@@ -768,7 +768,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
         }
 
         [Fact]
-        public async Task Cannot_update_HasOne_relationship_to_soft_deleted()
+        public async Task Cannot_update_ToOne_relationship_to_soft_deleted()
         {
             // Arrange
             Department existingDepartment = _fakers.Department.Generate();

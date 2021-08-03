@@ -13,7 +13,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         public DbSet<Man> Men { get; set; }
         public DbSet<CompanyHealthInsurance> CompanyHealthInsurances { get; set; }
         public DbSet<ContentItem> ContentItems { get; set; }
-        public DbSet<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
 
         public InheritanceDbContext(DbContextOptions<InheritanceDbContext> options)
             : base(options)
@@ -36,13 +35,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
                 .HasDiscriminator<int>("Type")
                 .HasValue<Video>(1)
                 .HasValue<Book>(2);
-
-            builder.Entity<HumanFavoriteContentItem>()
-                .HasKey(item => new
-                {
-                    ContentPersonId = item.ContentItemId,
-                    PersonId = item.HumanId
-                });
         }
     }
 }

@@ -33,11 +33,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
         [HasMany]
         public ISet<UserAccount> Subscribers { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(WorkItemTags))]
+        [HasMany]
         public ISet<WorkTag> Tags { get; set; }
-
-        public ICollection<WorkItemTag> WorkItemTags { get; set; }
 
         [HasOne]
         public WorkItem Parent { get; set; }
@@ -45,18 +42,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
         [HasMany]
         public IList<WorkItem> Children { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(RelatedFromItems), LeftPropertyName = nameof(WorkItemToWorkItem.ToItem),
-            RightPropertyName = nameof(WorkItemToWorkItem.FromItem))]
+        [HasMany]
         public IList<WorkItem> RelatedFrom { get; set; }
 
-        public IList<WorkItemToWorkItem> RelatedFromItems { get; set; }
-
-        [NotMapped]
-        [HasManyThrough(nameof(RelatedToItems), LeftPropertyName = nameof(WorkItemToWorkItem.FromItem), RightPropertyName = nameof(WorkItemToWorkItem.ToItem))]
+        [HasMany]
         public IList<WorkItem> RelatedTo { get; set; }
-
-        public IList<WorkItemToWorkItem> RelatedToItems { get; set; }
 
         [HasOne]
         public WorkItemGroup Group { get; set; }

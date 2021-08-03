@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_on_HasOne_relationship()
+        public async Task Can_filter_on_ManyToOne_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(3);
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_on_HasMany_relationship()
+        public async Task Can_filter_on_OneToMany_relationship()
         {
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_on_HasMany_relationship_with_nested_condition()
+        public async Task Can_filter_on_OneToMany_relationship_with_nested_condition()
         {
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
@@ -234,18 +234,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_on_HasManyThrough_relationship()
+        public async Task Can_filter_on_ManyToMany_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[1].Labels = _fakers.Label.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -267,23 +260,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_on_HasManyThrough_relationship_with_nested_condition()
+        public async Task Can_filter_on_ManyToMany_relationship_with_nested_condition()
         {
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(2);
-            blogs[0].Posts = _fakers.BlogPost.Generate(1);
-            blogs[1].Posts = _fakers.BlogPost.Generate(1);
 
-            blogs[1].Posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = new Label
-                    {
-                        Color = LabelColor.Green
-                    }
-                }
-            };
+            blogs[0].Posts = _fakers.BlogPost.Generate(1);
+
+            blogs[1].Posts = _fakers.BlogPost.Generate(1);
+            blogs[1].Posts[0].Labels = _fakers.Label.Generate(1).ToHashSet();
+            blogs[1].Posts[0].Labels.ElementAt(0).Color = LabelColor.Green;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -305,7 +291,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_in_scope_of_HasMany_relationship()
+        public async Task Can_filter_in_scope_of_OneToMany_relationship()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
@@ -335,7 +321,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_in_scope_of_HasMany_relationship_on_secondary_resource()
+        public async Task Can_filter_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
@@ -365,29 +351,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Fact]
-        public async Task Can_filter_in_scope_of_HasManyThrough_relationship()
+        public async Task Can_filter_in_scope_of_ManyToMany_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
 
-            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[0].Labels = _fakers.Label.Generate(1).ToHashSet();
+            posts[0].Labels.ElementAt(0).Name = "Cold";
 
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
-
-            posts[0].BlogPostLabels.Single().Label.Name = "Cold";
-            posts[1].BlogPostLabels.Single().Label.Name = "Hot";
+            posts[1].Labels = _fakers.Label.Generate(1).ToHashSet();
+            posts[1].Labels.ElementAt(0).Name = "Hot";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -412,7 +385,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.ManyData.Should().HaveCount(2);
 
             responseDocument.Included.Should().HaveCount(1);
-            responseDocument.Included[0].Id.Should().Be(posts[1].BlogPostLabels.First().Label.StringId);
+            responseDocument.Included[0].Id.Should().Be(posts[1].Labels.First().StringId);
         }
 
         [Fact]
@@ -560,7 +533,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
         }
     }
 }

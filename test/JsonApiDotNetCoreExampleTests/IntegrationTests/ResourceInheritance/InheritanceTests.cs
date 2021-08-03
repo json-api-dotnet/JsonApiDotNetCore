@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -128,7 +126,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task Can_update_resource_through_primary_endpoint()
+        public async Task Can_update_resource()
         {
             // Arrange
             var existingMan = new Man
@@ -187,7 +185,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task Can_update_resource_with_ToOne_relationship_through_relationship_endpoint()
+        public async Task Can_assign_ToOne_relationship()
         {
             // Arrange
             var existingMan = new Man();
@@ -229,7 +227,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task Can_create_resource_with_ToMany_relationship()
+        public async Task Can_create_resource_with_OneToMany_relationship()
         {
             // Arrange
             var existingFather = new Man();
@@ -291,7 +289,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
         }
 
         [Fact]
-        public async Task Can_update_resource_with_ToMany_relationship_through_relationship_endpoint()
+        public async Task Can_assign_OneToMany_relationship()
         {
             // Arrange
             var existingChild = new Man();
@@ -396,25 +394,16 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Man manInDatabase = await dbContext.Men.Include(man => man.FavoriteContent).FirstWithIdAsync(newManId);
 
-                List<ContentItem> contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(favorite => favorite.Human.Id == newManId)
-                    .Select(favorite => favorite.ContentItem)
-                    .ToListAsync();
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                contentItems.Should().HaveCount(2);
-                contentItems.Should().ContainSingle(item => item is Book);
-                contentItems.Should().ContainSingle(item => item is Video);
+                manInDatabase.FavoriteContent.Should().HaveCount(2);
+                manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Book && item.Id == existingBook.Id);
+                manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Video && item.Id == existingVideo.Id);
             });
         }
 
         [Fact]
-        public async Task Can_update_resource_with_ManyToMany_relationship_through_relationship_endpoint()
+        public async Task Can_assign_ManyToMany_relationship()
         {
             // Arrange
             var existingBook = new Book();
@@ -423,7 +412,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                await dbContext.ClearTablesAsync<HumanFavoriteContentItem, Book, Video, Man>();
+                await dbContext.ClearTablesAsync<Book, Video, Man>();
                 dbContext.AddInRange(existingBook, existingVideo, existingMan);
                 await dbContext.SaveChangesAsync();
             });
@@ -457,20 +446,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Man manInDatabase = await dbContext.Men.Include(man => man.FavoriteContent).FirstWithIdAsync(existingMan.Id);
 
-                List<ContentItem> contentItems = await dbContext.HumanFavoriteContentItems
-                    .Where(favorite => favorite.Human.Id == existingMan.Id)
-                    .Select(favorite => favorite.ContentItem)
-                    .ToListAsync();
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                contentItems.Should().HaveCount(2);
-                contentItems.Should().ContainSingle(item => item is Book);
-                contentItems.Should().ContainSingle(item => item is Video);
+                manInDatabase.FavoriteContent.Should().HaveCount(2);
+                manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Book && item.Id == existingBook.Id);
+                manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Video && item.Id == existingVideo.Id);
             });
         }
     }

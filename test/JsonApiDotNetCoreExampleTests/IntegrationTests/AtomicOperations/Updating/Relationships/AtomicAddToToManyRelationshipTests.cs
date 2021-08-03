@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_add_to_HasOne_relationship()
+        public async Task Cannot_add_to_ManyToOne_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Can_add_to_HasMany_relationship()
+        public async Task Can_add_to_OneToMany_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -159,18 +159,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Can_add_to_HasManyThrough_relationship()
+        public async Task Can_add_to_ManyToMany_relationship()
         {
             // Arrange
             Playlist existingPlaylist = _fakers.Playlist.Generate();
-
-            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
-            {
-                new()
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
+            existingPlaylist.Tracks = _fakers.MusicTrack.Generate(1);
 
             List<MusicTrack> existingTracks = _fakers.MusicTrack.Generate(2);
 
@@ -236,23 +229,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(existingPlaylist.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                Guid initialTrackId = existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id;
-
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == initialTrackId);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
+                playlistInDatabase.Tracks.Should().HaveCount(3);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingPlaylist.Tracks[0].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
             });
         }
 

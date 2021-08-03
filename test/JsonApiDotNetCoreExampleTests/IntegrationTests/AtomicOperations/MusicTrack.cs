@@ -35,5 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 
         [HasMany]
         public IList<Performer> Performers { get; set; }
+
+        [HasMany]
+        public IList<Playlist> OccursIn { get; set; }
     }
 }

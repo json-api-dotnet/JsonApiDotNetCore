@@ -18,10 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
         [Attr]
         public bool IsArchived => false;
 
-        [NotMapped]
-        [HasManyThrough(nameof(PlaylistMusicTracks))]
+        [HasMany]
         public IList<MusicTrack> Tracks { get; set; }
-
-        public IList<PlaylistMusicTrack> PlaylistMusicTracks { get; set; }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.Extensions.Logging;
@@ -185,117 +184,22 @@ namespace JsonApiDotNetCore.Configuration
             var attributes = new List<RelationshipAttribute>();
             PropertyInfo[] properties = resourceType.GetProperties();
 
-            foreach (PropertyInfo prop in properties)
+            foreach (PropertyInfo property in properties)
             {
-                var attribute = (RelationshipAttribute)prop.GetCustomAttribute(typeof(RelationshipAttribute));
+                var attribute = (RelationshipAttribute)property.GetCustomAttribute(typeof(RelationshipAttribute));
 
-                if (attribute == null)
+                if (attribute != null)
                 {
-                    continue;
-                }
+                    attribute.Property = property;
+                    attribute.PublicName ??= FormatPropertyName(property);
+                    attribute.LeftType = resourceType;
+                    attribute.RightType = GetRelationshipType(attribute, property);
 
-                attribute.Property = prop;
-                attribute.PublicName ??= FormatPropertyName(prop);
-                attribute.RightType = GetRelationshipType(attribute, prop);
-                attribute.LeftType = resourceType;
-                attributes.Add(attribute);
-
-                if (attribute is HasManyThroughAttribute hasManyThroughAttribute)
-                {
-                    PropertyInfo throughProperty = properties.SingleOrDefault(property => property.Name == hasManyThroughAttribute.ThroughPropertyName);
-
-                    if (throughProperty == null)
-                    {
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
-                            $"Resource does not contain a property named '{hasManyThroughAttribute.ThroughPropertyName}'.");
-                    }
-
-                    Type throughType = TryGetThroughType(throughProperty);
-
-                    if (throughType == null)
-                    {
-                        throw new InvalidConfigurationException($"Invalid {nameof(HasManyThroughAttribute)} on '{resourceType}.{attribute.Property.Name}': " +
-                            $"Referenced property '{throughProperty.Name}' does not implement 'ICollection<T>'.");
-                    }
-
-                    // ICollection<ArticleTag>
-                    hasManyThroughAttribute.ThroughProperty = throughProperty;
-
-                    // ArticleTag
-                    hasManyThroughAttribute.ThroughType = throughType;
-
-                    PropertyInfo[] throughProperties = throughType.GetProperties();
-
-                    // ArticleTag.Article
-                    if (hasManyThroughAttribute.LeftPropertyName != null)
-                    {
-                        // In case of a self-referencing many-to-many relationship, the left property name must be specified.
-                        hasManyThroughAttribute.LeftProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.LeftPropertyName) ??
-                            throw new InvalidConfigurationException(
-                                $"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.LeftPropertyName}'.");
-                    }
-                    else
-                    {
-                        // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.LeftProperty =
-                            throughProperties.SingleOrDefault(property => property.PropertyType.IsAssignableFrom(resourceType)) ??
-                            throw new InvalidConfigurationException($"'{throughType}' does not contain a navigation property to type '{resourceType}'.");
-                    }
-
-                    // ArticleTag.ArticleId
-                    string leftIdPropertyName = hasManyThroughAttribute.LeftIdPropertyName ?? hasManyThroughAttribute.LeftProperty.Name + "Id";
-
-                    hasManyThroughAttribute.LeftIdProperty = throughProperties.SingleOrDefault(property => property.Name == leftIdPropertyName) ??
-                        throw new InvalidConfigurationException(
-                            $"'{throughType}' does not contain a relationship ID property to type '{resourceType}' with name '{leftIdPropertyName}'.");
-
-                    // ArticleTag.Tag
-                    if (hasManyThroughAttribute.RightPropertyName != null)
-                    {
-                        // In case of a self-referencing many-to-many relationship, the right property name must be specified.
-                        hasManyThroughAttribute.RightProperty = hasManyThroughAttribute.ThroughType.GetProperty(hasManyThroughAttribute.RightPropertyName) ??
-                            throw new InvalidConfigurationException(
-                                $"'{throughType}' does not contain a navigation property named '{hasManyThroughAttribute.RightPropertyName}'.");
-                    }
-                    else
-                    {
-                        // In case of a non-self-referencing many-to-many relationship, we just pick the single compatible type.
-                        hasManyThroughAttribute.RightProperty =
-                            throughProperties.SingleOrDefault(property => property.PropertyType == hasManyThroughAttribute.RightType) ??
-                            throw new InvalidConfigurationException(
-                                $"'{throughType}' does not contain a navigation property to type '{hasManyThroughAttribute.RightType}'.");
-                    }
-
-                    // ArticleTag.TagId
-                    string rightIdPropertyName = hasManyThroughAttribute.RightIdPropertyName ?? hasManyThroughAttribute.RightProperty.Name + "Id";
-
-                    hasManyThroughAttribute.RightIdProperty = throughProperties.SingleOrDefault(property => property.Name == rightIdPropertyName) ??
-                        throw new InvalidConfigurationException(
-                            $"'{throughType}' does not contain a relationship ID property to type '{hasManyThroughAttribute.RightType}' with name '{rightIdPropertyName}'.");
+                    attributes.Add(attribute);
                 }
             }
 
             return attributes;
-        }
-
-        private Type TryGetThroughType(PropertyInfo throughProperty)
-        {
-            if (throughProperty.PropertyType.IsGenericType)
-            {
-                Type[] typeArguments = throughProperty.PropertyType.GetGenericArguments();
-
-                if (typeArguments.Length == 1)
-                {
-                    Type constructedThroughType = typeof(ICollection<>).MakeGenericType(typeArguments[0]);
-
-                    if (throughProperty.PropertyType.IsOrImplementsInterface(constructedThroughType))
-                    {
-                        return typeArguments[0];
-                    }
-                }
-            }
-
-            return null;
         }
 
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)

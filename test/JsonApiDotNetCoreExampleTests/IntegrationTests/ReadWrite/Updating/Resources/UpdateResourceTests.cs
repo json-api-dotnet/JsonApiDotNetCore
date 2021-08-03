@@ -423,14 +423,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
 
             string newDescription = _fakers.WorkItem.Generate().Description;
 
@@ -470,13 +463,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingWorkItem.WorkItemTags.Single().Tag.StringId);
+            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("workTags");
-            responseDocument.Included[0].Id.Should().Be(existingWorkItem.WorkItemTags.Single().Tag.StringId);
+            responseDocument.Included[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["text"].Should().Be(existingWorkItem.WorkItemTags.Single().Tag.Text);
+            responseDocument.Included[0].Attributes["text"].Should().Be(existingWorkItem.Tags.Single().Text);
             responseDocument.Included[0].Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -1005,14 +998,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Assignee = _fakers.UserAccount.Generate();
             existingWorkItem.Subscribers = _fakers.UserAccount.Generate(1).ToHashSet();
-
-            existingWorkItem.WorkItemTags = new List<WorkItemTag>
-            {
-                new()
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
 
             List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
             WorkTag existingTag = _fakers.WorkTag.Generate();
@@ -1092,8 +1078,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Assignee)
                     .Include(workItem => workItem.Subscribers)
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
+                    .Include(workItem => workItem.Tags)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
@@ -1107,8 +1092,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 workItemInDatabase.Subscribers.Should().HaveCount(1);
                 workItemInDatabase.Subscribers.Single().Id.Should().Be(existingUserAccounts[1].Id);
 
-                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingTag.Id);
+                workItemInDatabase.Tags.Should().HaveCount(1);
+                workItemInDatabase.Tags.Single().Id.Should().Be(existingTag.Id);
             });
         }
 
@@ -1119,14 +1104,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
             existingWorkItem.Parent = _fakers.WorkItem.Generate();
             existingWorkItem.Children = _fakers.WorkItem.Generate(1);
-
-            existingWorkItem.RelatedToItems = new List<WorkItemToWorkItem>
-            {
-                new()
-                {
-                    ToItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedTo = _fakers.WorkItem.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1194,8 +1172,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 WorkItem workItemInDatabase = await dbContext.WorkItems
                     .Include(workItem => workItem.Parent)
                     .Include(workItem => workItem.Children)
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
@@ -1207,8 +1185,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 workItemInDatabase.Children.Should().HaveCount(1);
                 workItemInDatabase.Children.Single().Id.Should().Be(existingWorkItem.Id);
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedToItems.Single().ToItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom.Single().Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedTo.Should().HaveCount(1);
+                workItemInDatabase.RelatedTo.Single().Id.Should().Be(existingWorkItem.Id);
             });
         }
     }

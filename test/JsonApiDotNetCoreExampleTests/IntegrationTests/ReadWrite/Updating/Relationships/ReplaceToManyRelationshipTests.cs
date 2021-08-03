@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_clear_HasMany_relationship()
+        public async Task Can_clear_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -61,18 +62,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_clear_HasManyThrough_relationship()
+        public async Task Can_clear_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -97,23 +91,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-                WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstWithIdAsync(existingWorkItem.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                workItemInDatabase.WorkItemTags.Should().BeEmpty();
+                workItemInDatabase.Tags.Should().BeEmpty();
             });
         }
 
         [Fact]
-        public async Task Can_replace_HasMany_relationship_with_already_assigned_resources()
+        public async Task Can_replace_OneToMany_relationship_with_already_assigned_resources()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -165,22 +150,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_replace_HasManyThrough_relationship_with_already_assigned_resources()
+        public async Task Can_replace_ManyToMany_relationship_with_already_assigned_resources()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
 
             List<WorkTag> existingTags = _fakers.WorkTag.Generate(2);
 
@@ -198,7 +172,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                     new
                     {
                         type = "workTags",
-                        id = existingWorkItem.WorkItemTags.ElementAt(0).Tag.StringId
+                        id = existingWorkItem.Tags.ElementAt(0).StringId
                     },
                     new
                     {
@@ -225,21 +199,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-                WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstWithIdAsync(existingWorkItem.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(3);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
+                workItemInDatabase.Tags.Should().HaveCount(3);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingWorkItem.Tags.ElementAt(0).Id);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[0].Id);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[1].Id);
             });
         }
 
@@ -392,7 +357,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_replace_with_unknown_IDs_in_HasMany_relationship()
+        public async Task Cannot_replace_with_unknown_IDs_in_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -442,7 +407,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_replace_with_unknown_IDs_in_HasManyThrough_relationship()
+        public async Task Cannot_replace_with_unknown_IDs_in_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -695,7 +660,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_replace_with_null_data_in_HasMany_relationship()
+        public async Task Cannot_replace_with_null_data_in_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -728,7 +693,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_replace_with_null_data_in_HasManyThrough_relationship()
+        public async Task Cannot_replace_with_null_data_in_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -761,7 +726,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_clear_cyclic_HasMany_relationship()
+        public async Task Can_clear_cyclic_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -803,7 +768,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_clear_cyclic_HasManyThrough_relationship()
+        public async Task Can_clear_cyclic_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -813,14 +778,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-                {
-                    new()
-                    {
-                        FromItem = existingWorkItem
-                    }
-                };
-
+                existingWorkItem.RelatedFrom = ArrayFactory.Create(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -845,19 +803,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedFromItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedFromItems.Should().BeEmpty();
+                workItemInDatabase.RelatedFrom.Should().BeEmpty();
+                workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
         }
 
         [Fact]
-        public async Task Can_assign_cyclic_HasMany_relationship()
+        public async Task Can_assign_cyclic_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -900,7 +859,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_assign_cyclic_HasManyThrough_relationship()
+        public async Task Can_assign_cyclic_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -939,16 +898,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedToItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.ToItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedToItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedToItems[0].FromItem.Id.Should().Be(existingWorkItem.Id);
-                workItemInDatabase.RelatedToItems[0].ToItem.Id.Should().Be(existingWorkItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.Id);
+
+                workItemInDatabase.RelatedTo.Should().HaveCount(1);
+                workItemInDatabase.RelatedTo[0].Id.Should().Be(existingWorkItem.Id);
             });
         }
     }

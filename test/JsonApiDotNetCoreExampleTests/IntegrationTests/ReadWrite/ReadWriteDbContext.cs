@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
+// @formatter:keep_existing_linebreaks true
 
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 {
@@ -10,7 +11,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
     {
         public DbSet<WorkItem> WorkItems { get; set; }
         public DbSet<WorkTag> WorkTags { get; set; }
-        public DbSet<WorkItemTag> WorkItemTags { get; set; }
         public DbSet<WorkItemGroup> Groups { get; set; }
         public DbSet<RgbColor> RgbColors { get; set; }
         public DbSet<UserAccount> UserAccounts { get; set; }
@@ -35,29 +35,19 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
                 .WithOne(color => color.Group)
                 .HasForeignKey<RgbColor>("GroupId");
 
-            builder.Entity<WorkItemTag>()
-                .HasKey(workItemTag => new
-                {
-                    workItemTag.ItemId,
-                    workItemTag.TagId
-                });
+            builder.Entity<WorkItem>()
+                .HasOne(workItem => workItem.Parent)
+                .WithMany(workItem => workItem.Children);
 
-            builder.Entity<WorkItemToWorkItem>()
-                .HasKey(item => new
-                {
-                    item.FromItemId,
-                    item.ToItemId
-                });
-
-            builder.Entity<WorkItemToWorkItem>()
-                .HasOne(workItemToWorkItem => workItemToWorkItem.FromItem)
-                .WithMany(workItem => workItem.RelatedToItems)
-                .HasForeignKey(workItemToWorkItem => workItemToWorkItem.FromItemId);
-
-            builder.Entity<WorkItemToWorkItem>()
-                .HasOne(workItemToWorkItem => workItemToWorkItem.ToItem)
-                .WithMany(workItem => workItem.RelatedFromItems)
-                .HasForeignKey(workItemToWorkItem => workItemToWorkItem.ToItemId);
+            builder.Entity<WorkItem>()
+                .HasMany(workItem => workItem.RelatedFrom)
+                .WithMany(workItem => workItem.RelatedTo)
+                .UsingEntity<WorkItemToWorkItem>(right => right
+                        .HasOne(joinEntity => joinEntity.FromItem)
+                        .WithMany(),
+                    left => left
+                        .HasOne(joinEntity => joinEntity.ToItem)
+                        .WithMany());
         }
     }
 }

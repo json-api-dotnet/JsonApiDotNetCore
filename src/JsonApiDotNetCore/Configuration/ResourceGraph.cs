@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class ResourceGraph : IResourceGraph
+    public sealed class ResourceGraph : IResourceGraph
     {
         private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
         private readonly IReadOnlyCollection<ResourceContext> _resources;
@@ -47,6 +47,11 @@ namespace JsonApiDotNetCore.Configuration
                 : _resources.SingleOrDefault(resourceContext => resourceContext.ResourceType == resourceType);
         }
 
+        private bool IsLazyLoadingProxyForResourceType(Type resourceType)
+        {
+            return ProxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+        }
+
         /// <inheritdoc />
         public ResourceContext GetResourceContext<TResource>()
             where TResource : class, IIdentifiable
@@ -55,139 +60,97 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        public IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable
         {
-            return Getter(selector);
+            ArgumentGuard.NotNull(selector, nameof(selector));
+
+            return FilterFields<TResource, ResourceFieldAttribute>(selector);
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        public IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable
         {
-            return Getter(selector, FieldFilterType.Attribute).Cast<AttrAttribute>().ToArray();
+            ArgumentGuard.NotNull(selector, nameof(selector));
+
+            return FilterFields<TResource, AttrAttribute>(selector);
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        public IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable
         {
-            return Getter(selector, FieldFilterType.Relationship).Cast<RelationshipAttribute>().ToArray();
+            ArgumentGuard.NotNull(selector, nameof(selector));
+
+            return FilterFields<TResource, RelationshipAttribute>(selector);
         }
 
-        /// <inheritdoc />
-        public IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type)
-        {
-            ArgumentGuard.NotNull(type, nameof(type));
-
-            return GetResourceContext(type).Fields;
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyCollection<AttrAttribute> GetAttributes(Type type)
-        {
-            ArgumentGuard.NotNull(type, nameof(type));
-
-            return GetResourceContext(type).Attributes;
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type)
-        {
-            ArgumentGuard.NotNull(type, nameof(type));
-
-            return GetResourceContext(type).Relationships;
-        }
-
-        /// <inheritdoc />
-        public RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)
-        {
-            ArgumentGuard.NotNull(relationship, nameof(relationship));
-
-            if (relationship.InverseNavigationProperty == null)
-            {
-                return null;
-            }
-
-            return GetResourceContext(relationship.RightType).Relationships
-                .SingleOrDefault(nextRelationship => nextRelationship.Property == relationship.InverseNavigationProperty);
-        }
-
-        private IReadOnlyCollection<ResourceFieldAttribute> Getter<TResource>(Expression<Func<TResource, dynamic>> selector = null,
-            FieldFilterType type = FieldFilterType.None)
+        private IReadOnlyCollection<TField> FilterFields<TResource, TField>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable
+            where TField : ResourceFieldAttribute
         {
-            IReadOnlyCollection<ResourceFieldAttribute> available;
+            IReadOnlyCollection<TField> source = GetFieldsOfType<TResource, TField>();
+            var matches = new List<TField>();
 
-            if (type == FieldFilterType.Attribute)
+            foreach (string memberName in ToMemberNames(selector))
             {
-                available = GetResourceContext(typeof(TResource)).Attributes;
-            }
-            else if (type == FieldFilterType.Relationship)
-            {
-                available = GetResourceContext(typeof(TResource)).Relationships;
-            }
-            else
-            {
-                available = GetResourceContext(typeof(TResource)).Fields;
-            }
+                TField matchingField = source.FirstOrDefault(field => field.Property.Name == memberName);
 
-            if (selector == null)
-            {
-                return available;
+                if (matchingField == null)
+                {
+                    throw new ArgumentException($"Member '{memberName}' is not exposed as a JSON:API field.");
+                }
+
+                matches.Add(matchingField);
             }
 
-            var targeted = new List<ResourceFieldAttribute>();
+            return matches;
+        }
 
+        private IReadOnlyCollection<TKind> GetFieldsOfType<TResource, TKind>()
+            where TKind : ResourceFieldAttribute
+        {
+            ResourceContext resourceContext = GetResourceContext(typeof(TResource));
+
+            if (typeof(TKind) == typeof(AttrAttribute))
+            {
+                return (IReadOnlyCollection<TKind>)resourceContext.Attributes;
+            }
+
+            if (typeof(TKind) == typeof(RelationshipAttribute))
+            {
+                return (IReadOnlyCollection<TKind>)resourceContext.Relationships;
+            }
+
+            return (IReadOnlyCollection<TKind>)resourceContext.Fields;
+        }
+
+        private IEnumerable<string> ToMemberNames<TResource>(Expression<Func<TResource, dynamic>> selector)
+        {
             Expression selectorBody = RemoveConvert(selector.Body);
 
             if (selectorBody is MemberExpression memberExpression)
             {
                 // model => model.Field1
-                try
-                {
-                    targeted.Add(available.Single(field => field.Property.Name == memberExpression.Member.Name));
-                    return targeted;
-                }
-                catch (InvalidOperationException)
-                {
-                    ThrowNotExposedError(memberExpression.Member.Name, type);
-                }
-            }
 
-            if (selectorBody is NewExpression newExpression)
+                yield return memberExpression.Member.Name;
+            }
+            else if (selectorBody is NewExpression newExpression)
             {
                 // model => new { model.Field1, model.Field2 }
-                string memberName = null;
 
-                try
+                foreach (MemberInfo member in newExpression.Members ?? Enumerable.Empty<MemberInfo>())
                 {
-                    if (newExpression.Members == null)
-                    {
-                        return targeted;
-                    }
-
-                    foreach (MemberInfo member in newExpression.Members)
-                    {
-                        memberName = member.Name;
-                        targeted.Add(available.Single(field => field.Property.Name == memberName));
-                    }
-
-                    return targeted;
-                }
-                catch (InvalidOperationException)
-                {
-                    ThrowNotExposedError(memberName, type);
+                    yield return member.Name;
                 }
             }
-
-            throw new ArgumentException($"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
-                "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
-        }
-
-        private bool IsLazyLoadingProxyForResourceType(Type resourceType)
-        {
-            return ProxyTargetAccessorType?.IsAssignableFrom(resourceType) ?? false;
+            else
+            {
+                throw new ArgumentException(
+                    $"The expression '{selector}' should select a single property or select multiple properties into an anonymous type. " +
+                    "For example: 'article => article.Title' or 'article => new { article.Title, article.PageCount }'.");
+            }
         }
 
         private static Expression RemoveConvert(Expression expression)
@@ -205,18 +168,6 @@ namespace JsonApiDotNetCore.Configuration
                     return innerExpression;
                 }
             }
-        }
-
-        private void ThrowNotExposedError(string memberName, FieldFilterType type)
-        {
-            throw new ArgumentException($"{memberName} is not a JSON:API exposed {type:g}.");
-        }
-
-        private enum FieldFilterType
-        {
-            None,
-            Attribute,
-            Relationship
         }
     }
 }

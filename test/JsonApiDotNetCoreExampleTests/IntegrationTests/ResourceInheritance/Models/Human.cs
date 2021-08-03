@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -21,10 +20,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Mod
         [HasMany]
         public ICollection<Human> Parents { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(HumanFavoriteContentItems))]
+        [HasMany]
         public ICollection<ContentItem> FavoriteContent { get; set; }
-
-        public ICollection<HumanFavoriteContentItem> HumanFavoriteContentItems { get; set; }
     }
 }

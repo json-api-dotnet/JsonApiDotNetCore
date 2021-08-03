@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -226,7 +225,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
-        public async Task Can_select_fields_of_HasOne_relationship()
+        public async Task Can_select_fields_of_ManyToOne_relationship()
         {
             // Arrange
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
@@ -275,7 +274,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
-        public async Task Can_select_fields_of_HasMany_relationship()
+        public async Task Can_select_fields_of_OneToMany_relationship()
         {
             // Arrange
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
@@ -324,7 +323,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
-        public async Task Can_select_fields_of_HasMany_relationship_on_secondary_resource()
+        public async Task Can_select_fields_of_OneToMany_relationship_on_secondary_endpoint()
         {
             // Arrange
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
@@ -375,21 +374,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
         }
 
         [Fact]
-        public async Task Can_select_fields_of_HasManyThrough_relationship()
+        public async Task Can_select_fields_of_ManyToMany_relationship()
         {
             // Arrange
             var store = _testContext.Factory.Services.GetRequiredService<ResourceCaptureStore>();
             store.Clear();
 
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.Labels = _fakers.Label.Generate(1).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -409,22 +401,22 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.SparseFiel
             responseDocument.SingleData.Id.Should().Be(post.StringId);
             responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
             responseDocument.SingleData.Relationships["labels"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["labels"].ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(0).Label.StringId);
+            responseDocument.SingleData.Relationships["labels"].ManyData[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
             responseDocument.SingleData.Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["labels"].Links.Related.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["color"].Should().Be(post.BlogPostLabels.Single().Label.Color.ToString("G"));
+            responseDocument.Included[0].Attributes["color"].Should().Be(post.Labels.Single().Color.ToString("G"));
             responseDocument.Included[0].Relationships.Should().BeNull();
 
             var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
             postCaptured.Id.Should().Be(post.Id);
             postCaptured.Caption.Should().Be(post.Caption);
 
-            postCaptured.BlogPostLabels.Should().HaveCount(1);
-            postCaptured.BlogPostLabels.Single().Label.Color.Should().Be(post.BlogPostLabels.Single().Label.Color);
-            postCaptured.BlogPostLabels.Single().Label.Name.Should().BeNull();
+            postCaptured.Labels.Should().HaveCount(1);
+            postCaptured.Labels.Single().Color.Should().Be(post.Labels.Single().Color);
+            postCaptured.Labels.Single().Name.Should().BeNull();
         }
 
         [Fact]

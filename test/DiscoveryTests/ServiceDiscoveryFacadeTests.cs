@@ -47,7 +47,7 @@ namespace DiscoveryTests
         public void Can_add_resources_from_assembly_to_graph()
         {
             // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, LoggerFactory);
             facade.AddAssembly(typeof(Person).Assembly);
 
             // Act
@@ -67,7 +67,7 @@ namespace DiscoveryTests
         public void Can_add_resource_from_current_assembly_to_graph()
         {
             // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, LoggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -84,7 +84,7 @@ namespace DiscoveryTests
         public void Can_add_resource_service_from_current_assembly_to_container()
         {
             // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, LoggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -101,7 +101,7 @@ namespace DiscoveryTests
         public void Can_add_resource_repository_from_current_assembly_to_container()
         {
             // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, LoggerFactory);
             facade.AddCurrentAssembly();
 
             // Act
@@ -118,7 +118,7 @@ namespace DiscoveryTests
         public void Can_add_resource_definition_from_current_assembly_to_container()
         {
             // Arrange
-            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, _options, LoggerFactory);
+            var facade = new ServiceDiscoveryFacade(_services, _resourceGraphBuilder, LoggerFactory);
             facade.AddCurrentAssembly();
 
             // Act

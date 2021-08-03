@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Cannot_remove_from_HasOne_relationship()
+        public async Task Cannot_remove_from_ManyToOne_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Can_remove_from_HasMany_relationship()
+        public async Task Can_remove_from_OneToMany_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -158,26 +158,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
         }
 
         [Fact]
-        public async Task Can_remove_from_HasManyThrough_relationship()
+        public async Task Can_remove_from_ManyToMany_relationship()
         {
             // Arrange
             Playlist existingPlaylist = _fakers.Playlist.Generate();
-
-            existingPlaylist.PlaylistMusicTracks = new List<PlaylistMusicTrack>
-            {
-                new()
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new()
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new()
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
+            existingPlaylist.Tracks = _fakers.MusicTrack.Generate(3);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -204,7 +189,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             new
                             {
                                 type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[0].MusicTrack.StringId
+                                id = existingPlaylist.Tracks[0].StringId
                             }
                         }
                     },
@@ -222,7 +207,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             new
                             {
                                 type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[2].MusicTrack.StringId
+                                id = existingPlaylist.Tracks[2].StringId
                             }
                         }
                     }
@@ -241,21 +226,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(existingPlaylist.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingPlaylist.PlaylistMusicTracks[1].MusicTrack.Id);
+                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks[0].Id.Should().Be(existingPlaylist.Tracks[1].Id);
 
                 List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.ToListAsync();
+
                 tracksInDatabase.Should().HaveCount(3);
             });
         }

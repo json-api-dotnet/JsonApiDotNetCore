@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -9,7 +10,7 @@ namespace JsonApiDotNetCore.Configuration
 {
     /// <inheritdoc />
     [PublicAPI]
-    public class InverseNavigationResolver : IInverseNavigationResolver
+    public sealed class InverseNavigationResolver : IInverseNavigationResolver
     {
         private readonly IResourceContextProvider _resourceContextProvider;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
@@ -35,25 +36,37 @@ namespace JsonApiDotNetCore.Configuration
 
         private void Resolve(DbContext dbContext)
         {
-            foreach (ResourceContext resourceContext in _resourceContextProvider.GetResourceContexts())
+            foreach (ResourceContext resourceContext in _resourceContextProvider.GetResourceContexts().Where(context => context.Relationships.Any()))
             {
                 IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
 
                 if (entityType != null)
                 {
-                    ResolveRelationships(resourceContext.Relationships, entityType);
+                    IDictionary<string, INavigationBase> navigationMap = GetNavigations(entityType);
+                    ResolveRelationships(resourceContext.Relationships, navigationMap);
                 }
             }
         }
 
-        private void ResolveRelationships(IReadOnlyCollection<RelationshipAttribute> relationships, IEntityType entityType)
+        private static IDictionary<string, INavigationBase> GetNavigations(IEntityType entityType)
+        {
+            // @formatter:wrap_chained_method_calls chop_always
+
+            return entityType.GetNavigations()
+                .Cast<INavigationBase>()
+                .Concat(entityType.GetSkipNavigations())
+                .ToDictionary(navigation => navigation.Name);
+
+            // @formatter:wrap_chained_method_calls restore
+        }
+
+        private void ResolveRelationships(IReadOnlyCollection<RelationshipAttribute> relationships, IDictionary<string, INavigationBase> navigationMap)
         {
             foreach (RelationshipAttribute relationship in relationships)
             {
-                if (!(relationship is HasManyThroughAttribute))
+                if (navigationMap.TryGetValue(relationship.Property.Name, out INavigationBase navigation))
                 {
-                    INavigation inverseNavigation = entityType.FindNavigation(relationship.Property.Name)?.Inverse;
-                    relationship.InverseNavigationProperty = inverseNavigation?.PropertyInfo;
+                    relationship.InverseNavigationProperty = navigation.Inverse?.PropertyInfo;
                 }
             }
         }

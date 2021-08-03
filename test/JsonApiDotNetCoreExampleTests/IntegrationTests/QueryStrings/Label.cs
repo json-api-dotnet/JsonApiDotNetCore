@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -15,10 +14,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
         [Attr]
         public LabelColor Color { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(BlogPostLabels))]
+        [HasMany]
         public ISet<BlogPost> Posts { get; set; }
-
-        public ISet<BlogPostLabel> BlogPostLabels { get; set; }
     }
 }

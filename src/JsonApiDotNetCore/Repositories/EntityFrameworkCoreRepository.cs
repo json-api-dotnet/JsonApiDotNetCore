@@ -265,7 +265,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             bool relationshipIsRequired = false;
 
-            if (!(relationship is HasManyThroughAttribute))
+            if (relationship is not HasManyAttribute { IsManyToMany: true })
             {
                 INavigation navigation = TryGetNavigation(relationship);
                 relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
@@ -314,7 +314,7 @@ namespace JsonApiDotNetCore.Repositories
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
             TResource resource = collector.CreateForId<TResource, TId>(id);
 
-            foreach (RelationshipAttribute relationship in _resourceGraph.GetRelationships<TResource>())
+            foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceContext<TResource>().Relationships)
             {
                 // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
                 // entities into memory is required for successfully executing the selected deletion behavior.
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCore.Repositories
             INavigation navigation = TryGetNavigation(relationship);
             bool isClearOfForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
 
-            bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship);
+            bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship, navigation);
 
             return isClearOfForeignKeyRequired && !hasForeignKeyAtLeftSide;
         }
@@ -369,15 +369,9 @@ namespace JsonApiDotNetCore.Repositories
             return entityType?.FindNavigation(relationship.Property.Name);
         }
 
-        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship)
+        private bool HasForeignKeyAtLeftSide(RelationshipAttribute relationship, INavigation navigation)
         {
-            if (relationship is HasOneAttribute)
-            {
-                INavigation navigation = TryGetNavigation(relationship);
-                return navigation?.IsOnDependent ?? false;
-            }
-
-            return false;
+            return relationship is HasOneAttribute && navigation is { IsOnDependent: true };
         }
 
         /// <inheritdoc />
@@ -506,18 +500,7 @@ namespace JsonApiDotNetCore.Repositories
         private bool RequireLoadOfInverseRelationship(RelationshipAttribute relationship, object trackedValueToAssign)
         {
             // See https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/502.
-            return trackedValueToAssign != null && relationship.InverseNavigationProperty != null && IsOneToOneRelationship(relationship);
-        }
-
-        private bool IsOneToOneRelationship(RelationshipAttribute relationship)
-        {
-            if (relationship is HasOneAttribute hasOneRelationship)
-            {
-                Type elementType = _collectionConverter.TryGetCollectionElementType(hasOneRelationship.InverseNavigationProperty.PropertyType);
-                return elementType == null;
-            }
-
-            return false;
+            return trackedValueToAssign != null && relationship is HasOneAttribute { IsOneToOne: true };
         }
 
         protected virtual async Task SaveChangesAsync(CancellationToken cancellationToken)

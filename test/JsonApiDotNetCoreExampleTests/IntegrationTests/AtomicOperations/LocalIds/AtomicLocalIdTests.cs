@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         }
 
         [Fact]
-        public async Task Can_create_resource_with_ToOne_relationship_using_local_ID()
+        public async Task Can_create_resource_with_ManyToOne_relationship_using_local_ID()
         {
             // Arrange
             RecordCompany newCompany = _fakers.RecordCompany.Generate();
@@ -291,22 +291,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
-
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(newPlaylistId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(newTrackId);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Title.Should().Be(newTrackTitle);
+                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
+                playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
         }
 
@@ -653,7 +644,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         }
 
         [Fact]
-        public async Task Can_create_ToOne_relationship_using_local_ID()
+        public async Task Can_create_ManyToOne_relationship_using_local_ID()
         {
             // Arrange
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
@@ -936,22 +927,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
-
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(newPlaylistId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(newTrackId);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Title.Should().Be(newTrackTitle);
+                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
+                playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
         }
 
@@ -1187,22 +1169,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
-
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(newPlaylistId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(newTrackId);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Title.Should().Be(newTrackTitle);
+                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
+                playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
         }
 
@@ -1462,23 +1435,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
-
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(newPlaylistId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(newPlaylistId);
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(3);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[0].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == existingTracks[1].Id);
-                playlistInDatabase.PlaylistMusicTracks.Should().ContainSingle(playlistMusicTrack => playlistMusicTrack.MusicTrack.Id == newTrackId);
+                playlistInDatabase.Tracks.Should().HaveCount(3);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
+                playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == newTrackId);
             });
         }
 
@@ -1642,18 +1606,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
         {
             // Arrange
             Playlist existingPlaylist = _fakers.Playlist.Generate();
-
-            existingPlaylist.PlaylistMusicTracks = new[]
-            {
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                },
-                new PlaylistMusicTrack
-                {
-                    MusicTrack = _fakers.MusicTrack.Generate()
-                }
-            };
+            existingPlaylist.Tracks = _fakers.MusicTrack.Generate(2);
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
@@ -1714,7 +1667,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
                             new
                             {
                                 type = "musicTracks",
-                                id = existingPlaylist.PlaylistMusicTracks[1].MusicTrack.StringId
+                                id = existingPlaylist.Tracks[1].StringId
                             }
                         }
                     },
@@ -1763,19 +1716,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.LocalI
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                Playlist playlistInDatabase = await dbContext.Playlists
-                    .Include(playlist => playlist.PlaylistMusicTracks)
-                    .ThenInclude(playlistMusicTrack => playlistMusicTrack.MusicTrack)
-                    .FirstWithIdAsync(existingPlaylist.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                playlistInDatabase.PlaylistMusicTracks.Should().HaveCount(1);
-                playlistInDatabase.PlaylistMusicTracks[0].MusicTrack.Id.Should().Be(existingPlaylist.PlaylistMusicTracks[0].MusicTrack.Id);
+                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks[0].Id.Should().Be(existingPlaylist.Tracks[0].Id);
             });
         }
 

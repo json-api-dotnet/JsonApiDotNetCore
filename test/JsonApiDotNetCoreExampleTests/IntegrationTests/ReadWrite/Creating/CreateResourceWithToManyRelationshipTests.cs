@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Can_create_HasMany_relationship()
+        public async Task Can_create_OneToMany_relationship()
         {
             // Arrange
             List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Can_create_HasMany_relationship_with_include()
+        public async Task Can_create_OneToMany_relationship_with_include()
         {
             // Arrange
             List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Can_create_HasMany_relationship_with_include_and_secondary_fieldset()
+        public async Task Can_create_OneToMany_relationship_with_include_and_secondary_fieldset()
         {
             // Arrange
             List<UserAccount> existingUserAccounts = _fakers.UserAccount.Generate(2);
@@ -233,7 +233,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Can_create_HasManyThrough_relationship_with_include_and_fieldsets()
+        public async Task Can_create_ManyToMany_relationship_with_include_and_fieldsets()
         {
             // Arrange
             List<WorkTag> existingTags = _fakers.WorkTag.Generate(3);
@@ -312,21 +312,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(newWorkItemId);
 
-                WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstWithIdAsync(newWorkItemId);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(3);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[0].Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[1].Id);
-                workItemInDatabase.WorkItemTags.Should().ContainSingle(workItemTag => workItemTag.Tag.Id == existingTags[2].Id);
+                workItemInDatabase.Tags.Should().HaveCount(3);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[0].Id);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[1].Id);
+                workItemInDatabase.Tags.Should().ContainSingle(workTag => workTag.Id == existingTags[2].Id);
             });
         }
 
@@ -615,7 +606,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_HasMany_relationship()
+        public async Task Cannot_create_with_null_data_in_OneToMany_relationship()
         {
             // Arrange
             var requestBody = new
@@ -650,7 +641,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_HasManyThrough_relationship()
+        public async Task Cannot_create_with_null_data_in_ManyToMany_relationship()
         {
             // Arrange
             var requestBody = new

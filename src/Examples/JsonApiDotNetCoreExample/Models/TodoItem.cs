@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -28,10 +27,7 @@ namespace JsonApiDotNetCoreExample.Models
         [HasOne]
         public Person Assignee { get; set; }
 
-        [NotMapped]
-        [HasManyThrough(nameof(TodoItemTags))]
+        [HasMany]
         public ISet<Tag> Tags { get; set; }
-
-        public ISet<TodoItemTag> TodoItemTags { get; set; }
     }
 }

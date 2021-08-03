@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
@@ -15,9 +14,8 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public ParameterExpression Parameter { get; }
         public Expression Accessor { get; }
-        public HasManyThroughAttribute HasManyThrough { get; }
 
-        public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression accessorExpression, HasManyThroughAttribute hasManyThrough)
+        public LambdaScope(LambdaParameterNameFactory nameFactory, Type elementType, Expression accessorExpression)
         {
             ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
             ArgumentGuard.NotNull(elementType, nameof(elementType));
@@ -25,20 +23,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             _parameterNameScope = nameFactory.Create(elementType.Name);
             Parameter = Expression.Parameter(elementType, _parameterNameScope.Name);
 
-            if (accessorExpression != null)
-            {
-                Accessor = accessorExpression;
-            }
-            else if (hasManyThrough != null)
-            {
-                Accessor = Expression.Property(Parameter, hasManyThrough.RightProperty);
-            }
-            else
-            {
-                Accessor = Parameter;
-            }
-
-            HasManyThrough = hasManyThrough;
+            Accessor = accessorExpression ?? Parameter;
         }
 
         public void Dispose()

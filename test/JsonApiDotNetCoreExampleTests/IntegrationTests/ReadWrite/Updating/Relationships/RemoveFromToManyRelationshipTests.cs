@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_remove_from_HasOne_relationship()
+        public async Task Cannot_remove_from_ManyToOne_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_remove_from_HasMany_relationship_with_unassigned_existing_resource()
+        public async Task Can_remove_from_OneToMany_relationship_with_unassigned_existing_resource()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -118,22 +118,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_remove_from_HasManyThrough_relationship_with_unassigned_existing_resource()
+        public async Task Can_remove_from_ManyToMany_relationship_with_unassigned_existing_resource()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.WorkItemTags = new[]
-            {
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new WorkItemTag
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
 
             WorkTag existingTag = _fakers.WorkTag.Generate();
 
@@ -151,7 +140,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                     new
                     {
                         type = "workTags",
-                        id = existingWorkItem.WorkItemTags.ElementAt(1).Tag.StringId
+                        id = existingWorkItem.Tags.ElementAt(1).StringId
                     },
                     new
                     {
@@ -173,19 +162,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                // @formatter:wrap_chained_method_calls chop_always
-                // @formatter:keep_existing_linebreaks true
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
 
-                WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.WorkItemTags)
-                    .ThenInclude(workItemTag => workItemTag.Tag)
-                    .FirstWithIdAsync(existingWorkItem.Id);
-
-                // @formatter:keep_existing_linebreaks restore
-                // @formatter:wrap_chained_method_calls restore
-
-                workItemInDatabase.WorkItemTags.Should().HaveCount(1);
-                workItemInDatabase.WorkItemTags.Single().Tag.Id.Should().Be(existingWorkItem.WorkItemTags.ElementAt(0).Tag.Id);
+                workItemInDatabase.Tags.Should().HaveCount(1);
+                workItemInDatabase.Tags.Single().Id.Should().Be(existingWorkItem.Tags.ElementAt(0).Id);
 
                 List<WorkTag> tagsInDatabase = await dbContext.WorkTags.ToListAsync();
                 tagsInDatabase.Should().HaveCount(3);
@@ -342,7 +322,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_remove_unknown_IDs_from_HasMany_relationship()
+        public async Task Cannot_remove_unknown_IDs_from_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -392,7 +372,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_remove_unknown_IDs_from_HasManyThrough_relationship()
+        public async Task Cannot_remove_unknown_IDs_from_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -687,7 +667,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_remove_with_null_data_in_HasMany_relationship()
+        public async Task Cannot_remove_with_null_data_in_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -720,7 +700,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Cannot_remove_with_null_data_in_HasManyThrough_relationship()
+        public async Task Cannot_remove_with_null_data_in_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -753,7 +733,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_remove_self_from_cyclic_HasMany_relationship()
+        public async Task Can_remove_self_from_cyclic_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -800,29 +780,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
-        public async Task Can_remove_self_from_cyclic_HasManyThrough_relationship()
+        public async Task Can_remove_self_from_cyclic_ManyToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
-
-            existingWorkItem.RelatedFromItems = new List<WorkItemToWorkItem>
-            {
-                new()
-                {
-                    FromItem = _fakers.WorkItem.Generate()
-                }
-            };
+            existingWorkItem.RelatedFrom = _fakers.WorkItem.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 dbContext.WorkItems.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
 
-                existingWorkItem.RelatedFromItems.Add(new WorkItemToWorkItem
-                {
-                    FromItem = existingWorkItem
-                });
-
+                existingWorkItem.RelatedFrom.Add(existingWorkItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -854,15 +823,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
                 // @formatter:keep_existing_linebreaks true
 
                 WorkItem workItemInDatabase = await dbContext.WorkItems
-                    .Include(workItem => workItem.RelatedFromItems)
-                    .ThenInclude(workItemToWorkItem => workItemToWorkItem.FromItem)
+                    .Include(workItem => workItem.RelatedFrom)
+                    .Include(workItem => workItem.RelatedTo)
                     .FirstWithIdAsync(existingWorkItem.Id);
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.RelatedFromItems.Should().HaveCount(1);
-                workItemInDatabase.RelatedFromItems[0].FromItem.Id.Should().Be(existingWorkItem.RelatedFromItems[0].FromItem.Id);
+                workItemInDatabase.RelatedFrom.Should().HaveCount(1);
+                workItemInDatabase.RelatedFrom[0].Id.Should().Be(existingWorkItem.RelatedFrom[0].Id);
+
+                workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
         }
     }

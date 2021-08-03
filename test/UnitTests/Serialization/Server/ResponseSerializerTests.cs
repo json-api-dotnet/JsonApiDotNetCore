@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -109,8 +110,8 @@ namespace UnitTests.Serialization.Server
                 }
             };
 
-            List<IEnumerable<RelationshipAttribute>> chain = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>()
-                .Select(relationship => relationship.AsEnumerable()).ToList();
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext<MultipleRelationshipsPrincipalPart>();
+            List<IEnumerable<RelationshipAttribute>> chain = resourceContext.Relationships.Select(relationship => relationship.AsEnumerable()).ToList();
 
             ResponseSerializer<MultipleRelationshipsPrincipalPart> serializer = GetResponseSerializer<MultipleRelationshipsPrincipalPart>(chain);
 
@@ -186,7 +187,9 @@ namespace UnitTests.Serialization.Server
                 }
             };
 
-            List<List<RelationshipAttribute>> chains = ResourceGraph.GetRelationships<MultipleRelationshipsPrincipalPart>().Select(relationship =>
+            ResourceContext outerResourceContext = ResourceGraph.GetResourceContext<MultipleRelationshipsPrincipalPart>();
+
+            List<List<RelationshipAttribute>> chains = outerResourceContext.Relationships.Select(relationship =>
             {
                 List<RelationshipAttribute> chain = relationship.AsList();
 
@@ -195,7 +198,8 @@ namespace UnitTests.Serialization.Server
                     return chain;
                 }
 
-                chain.AddRange(ResourceGraph.GetRelationships<OneToManyDependent>());
+                ResourceContext innerResourceContext = ResourceGraph.GetResourceContext<OneToManyDependent>();
+                chain.AddRange(innerResourceContext.Relationships);
                 return chain;
             }).ToList();
 

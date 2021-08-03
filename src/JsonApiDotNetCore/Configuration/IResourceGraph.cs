@@ -18,67 +18,38 @@ namespace JsonApiDotNetCore.Configuration
         /// all exposed fields are returned.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource for which to retrieve fields.
+        /// The resource type for which to retrieve fields.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource e) => new { e.Field1, e.Field2 }
+        /// Should be of the form: (TResource r) => new { r.Field1, r.Field2 }
         /// </param>
-        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        IReadOnlyCollection<ResourceFieldAttribute> GetFields<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Gets all attributes for <typeparamref name="TResource" /> that are targeted by the selector. If no selector is provided, all exposed fields are
+        /// Gets all attributes for <typeparamref name="TResource" /> that are targeted by the selector. If no selector is provided, all exposed attributes are
         /// returned.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource for which to retrieve attributes.
+        /// The resource type for which to retrieve attributes.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource e) => new { e.Attribute1, e.Attribute2 }
+        /// Should be of the form: (TResource r) => new { r.Attribute1, r.Attribute2 }
         /// </param>
-        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        IReadOnlyCollection<AttrAttribute> GetAttributes<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable;
 
         /// <summary>
-        /// Gets all relationships for <typeparamref name="TResource" /> that are targeted by the selector. If no selector is provided, all exposed fields are
-        /// returned.
+        /// Gets all relationships for <typeparamref name="TResource" /> that are targeted by the selector. If no selector is provided, all exposed relationships
+        /// are returned.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource for which to retrieve relationships.
+        /// The resource type for which to retrieve relationships.
         /// </typeparam>
         /// <param name="selector">
-        /// Should be of the form: (TResource e) => new { e.Relationship1, e.Relationship2 }
+        /// Should be of the form: (TResource r) => new { r.Relationship1, r.Relationship2 }
         /// </param>
-        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector = null)
+        IReadOnlyCollection<RelationshipAttribute> GetRelationships<TResource>(Expression<Func<TResource, dynamic>> selector)
             where TResource : class, IIdentifiable;
-
-        /// <summary>
-        /// Gets all exposed fields (attributes and relationships) for the specified type.
-        /// </summary>
-        /// <param name="type">
-        /// The resource type. Must implement <see cref="IIdentifiable" />.
-        /// </param>
-        IReadOnlyCollection<ResourceFieldAttribute> GetFields(Type type);
-
-        /// <summary>
-        /// Gets all exposed attributes for the specified type.
-        /// </summary>
-        /// <param name="type">
-        /// The resource type. Must implement <see cref="IIdentifiable" />.
-        /// </param>
-        IReadOnlyCollection<AttrAttribute> GetAttributes(Type type);
-
-        /// <summary>
-        /// Gets all exposed relationships for the specified type.
-        /// </summary>
-        /// <param name="type">
-        /// The resource type. Must implement <see cref="IIdentifiable" />.
-        /// </param>
-        IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type type);
-
-        /// <summary>
-        /// Traverses the resource graph, looking for the inverse relationship of the specified <paramref name="relationship" />.
-        /// </summary>
-        RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship);
     }
 }

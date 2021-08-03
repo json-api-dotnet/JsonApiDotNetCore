@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_secondary_HasOne_resource()
+        public async Task Can_get_secondary_ManyToOne_resource()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_unknown_secondary_HasOne_resource()
+        public async Task Can_get_unknown_secondary_ManyToOne_resource()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_secondary_HasMany_resources()
+        public async Task Can_get_secondary_OneToMany_resources()
         {
             // Arrange
             UserAccount userAccount = _fakers.UserAccount.Generate();
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_unknown_secondary_HasMany_resource()
+        public async Task Can_get_unknown_secondary_OneToMany_resource()
         {
             // Arrange
             UserAccount userAccount = _fakers.UserAccount.Generate();
@@ -255,22 +255,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
         }
 
         [Fact]
-        public async Task Can_get_secondary_HasManyThrough_resources()
+        public async Task Can_get_secondary_ManyToMany_resources()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();
-
-            workItem.WorkItemTags = new List<WorkItemTag>
-            {
-                new()
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                },
-                new()
-                {
-                    Tag = _fakers.WorkTag.Generate()
-                }
-            };
+            workItem.Tags = _fakers.WorkTag.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -288,21 +277,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Fetching
 
             responseDocument.ManyData.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(0).Tag.StringId);
+            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
-            item1.Attributes["text"].Should().Be(workItem.WorkItemTags.ElementAt(0).Tag.Text);
-            item1.Attributes["isBuiltIn"].Should().Be(workItem.WorkItemTags.ElementAt(0).Tag.IsBuiltIn);
-            item1.Relationships.Should().BeNull();
+            item1.Attributes["text"].Should().Be(workItem.Tags.ElementAt(0).Text);
+            item1.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn);
+            item1.Relationships.Should().NotBeEmpty();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.WorkItemTags.ElementAt(1).Tag.StringId);
+            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
-            item2.Attributes["text"].Should().Be(workItem.WorkItemTags.ElementAt(1).Tag.Text);
-            item2.Attributes["isBuiltIn"].Should().Be(workItem.WorkItemTags.ElementAt(1).Tag.IsBuiltIn);
-            item2.Relationships.Should().BeNull();
+            item2.Attributes["text"].Should().Be(workItem.Tags.ElementAt(1).Text);
+            item2.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn);
+            item2.Relationships.Should().NotBeEmpty();
         }
 
         [Fact]
-        public async Task Can_get_unknown_secondary_HasManyThrough_resources()
+        public async Task Can_get_unknown_secondary_ManyToMany_resources()
         {
             // Arrange
             WorkItem workItem = _fakers.WorkItem.Generate();

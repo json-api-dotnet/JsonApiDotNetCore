@@ -458,7 +458,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         }
 
         [Fact]
-        public async Task Can_get_HasOne_relationship()
+        public async Task Can_get_ToOne_relationship()
         {
             // Arrange
             MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
@@ -491,7 +491,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
         }
 
         [Fact]
-        public async Task Can_get_HasMany_relationship()
+        public async Task Can_get_ToMany_relationship()
         {
             // Arrange
             Meeting meeting = _fakers.Meeting.Generate();

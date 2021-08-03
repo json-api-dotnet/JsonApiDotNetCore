@@ -10,7 +10,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
     {
         public DbSet<Playlist> Playlists { get; set; }
         public DbSet<MusicTrack> MusicTracks { get; set; }
-        public DbSet<PlaylistMusicTrack> PlaylistMusicTracks { get; set; }
         public DbSet<Lyric> Lyrics { get; set; }
         public DbSet<TextLanguage> TextLanguages { get; set; }
         public DbSet<Performer> Performers { get; set; }
@@ -23,17 +22,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<PlaylistMusicTrack>()
-                .HasKey(playlistMusicTrack => new
-                {
-                    playlistMusicTrack.PlaylistId,
-                    playlistMusicTrack.MusicTrackId
-                });
-
             builder.Entity<MusicTrack>()
                 .HasOne(musicTrack => musicTrack.Lyric)
                 .WithOne(lyric => lyric.Track)
                 .HasForeignKey<MusicTrack>("LyricId");
+
+            builder.Entity<MusicTrack>()
+                .HasMany(musicTrack => musicTrack.OccursIn)
+                .WithMany(playlist => playlist.Tracks);
         }
     }
 }

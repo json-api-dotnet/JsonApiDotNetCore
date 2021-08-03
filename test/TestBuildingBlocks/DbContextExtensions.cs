@@ -34,15 +34,6 @@ namespace TestBuildingBlocks
             await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2), typeof(TEntity3));
         }
 
-        public static async Task ClearTablesAsync<TEntity1, TEntity2, TEntity3, TEntity4>(this DbContext dbContext)
-            where TEntity1 : class
-            where TEntity2 : class
-            where TEntity3 : class
-            where TEntity4 : class
-        {
-            await ClearTablesAsync(dbContext, typeof(TEntity1), typeof(TEntity2), typeof(TEntity3), typeof(TEntity4));
-        }
-
         private static async Task ClearTablesAsync(this DbContext dbContext, params Type[] models)
         {
             foreach (Type model in models)

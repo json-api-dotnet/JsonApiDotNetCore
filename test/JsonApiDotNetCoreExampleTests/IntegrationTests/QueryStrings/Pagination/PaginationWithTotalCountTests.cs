@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Cannot_paginate_in_single_primary_resource()
+        public async Task Cannot_paginate_in_single_primary_endpoint()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Cannot_paginate_in_single_secondary_resource()
+        public async Task Cannot_paginate_in_single_secondary_endpoint()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Can_paginate_in_scope_of_HasMany_relationship()
+        public async Task Can_paginate_in_scope_of_OneToMany_relationship()
         {
             // Arrange
             List<Blog> blogs = _fakers.Blog.Generate(3);
@@ -201,7 +201,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Can_paginate_in_scope_of_HasMany_relationship_on_secondary_resource()
+        public async Task Can_paginate_in_scope_of_OneToMany_relationship_on_secondary_endpoint()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Can_paginate_HasMany_relationship_on_relationship_endpoint()
+        public async Task Can_paginate_OneToMany_relationship_on_relationship_endpoint()
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
@@ -267,34 +267,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Can_paginate_in_scope_of_HasManyThrough_relationship()
+        public async Task Can_paginate_in_scope_of_ManyToMany_relationship()
         {
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(2);
-
-            posts[0].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
-
-            posts[1].BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            posts[0].Labels = _fakers.Label.Generate(2).ToHashSet();
+            posts[1].Labels = _fakers.Label.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -319,8 +297,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.Included.Should().HaveCount(2);
 
-            responseDocument.Included[0].Id.Should().Be(posts[0].BlogPostLabels.Skip(1).First().Label.StringId);
-            responseDocument.Included[1].Id.Should().Be(posts[1].BlogPostLabels.Skip(1).First().Label.StringId);
+            responseDocument.Included[0].Id.Should().Be(posts[0].Labels.ElementAt(1).StringId);
+            responseDocument.Included[1].Id.Should().Be(posts[1].Labels.ElementAt(1).StringId);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be(HostPrefix + route);
@@ -331,22 +309,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
         }
 
         [Fact]
-        public async Task Can_paginate_HasManyThrough_relationship_on_relationship_endpoint()
+        public async Task Can_paginate_ManyToMany_relationship_on_relationship_endpoint()
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-
-            post.BlogPostLabels = new HashSet<BlogPostLabel>
-            {
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                },
-                new()
-                {
-                    Label = _fakers.Label.Generate()
-                }
-            };
+            post.Labels = _fakers.Label.Generate(2).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -364,7 +331,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(post.BlogPostLabels.ElementAt(1).Label.StringId);
+            responseDocument.ManyData[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be(HostPrefix + route);
@@ -405,7 +372,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
-            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.Skip(1).First().StringId);
+            responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
 
             const string linkPrefix = HostPrefix + "/blogs?include=owner.posts.comments";
 

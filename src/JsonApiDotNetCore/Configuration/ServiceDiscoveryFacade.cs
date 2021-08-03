@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Configuration
     /// Scans for types like resources, services, repositories and resource definitions in an assembly and registers them to the IoC container.
     /// </summary>
     [PublicAPI]
-    public class ServiceDiscoveryFacade
+    public sealed class ServiceDiscoveryFacade
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new()
         {
@@ -66,22 +66,18 @@ namespace JsonApiDotNetCore.Configuration
         private readonly ILogger<ServiceDiscoveryFacade> _logger;
         private readonly IServiceCollection _services;
         private readonly ResourceGraphBuilder _resourceGraphBuilder;
-        private readonly IJsonApiOptions _options;
         private readonly ResourceDescriptorAssemblyCache _assemblyCache = new();
         private readonly TypeLocator _typeLocator = new();
 
-        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, IJsonApiOptions options,
-            ILoggerFactory loggerFactory)
+        public ServiceDiscoveryFacade(IServiceCollection services, ResourceGraphBuilder resourceGraphBuilder, ILoggerFactory loggerFactory)
         {
             ArgumentGuard.NotNull(services, nameof(services));
             ArgumentGuard.NotNull(resourceGraphBuilder, nameof(resourceGraphBuilder));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
-            ArgumentGuard.NotNull(options, nameof(options));
 
             _logger = loggerFactory.CreateLogger<ServiceDiscoveryFacade>();
             _services = services;
             _resourceGraphBuilder = resourceGraphBuilder;
-            _options = options;
         }
 
         /// <summary>

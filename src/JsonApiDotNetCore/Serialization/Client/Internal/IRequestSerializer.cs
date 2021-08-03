@@ -13,14 +13,14 @@ namespace JsonApiDotNetCore.Serialization.Client.Internal
     public interface IRequestSerializer
     {
         /// <summary>
-        /// Sets the attributes that will be included in the serialized request body. You can use <see cref="IResourceGraph.GetAttributes{TResource}" /> to
-        /// conveniently access the desired <see cref="AttrAttribute" /> instances.
+        /// Sets the attributes that will be included in the serialized request body. You can use <see cref="IResourceContextProvider.GetResourceContext{T}()" />
+        /// to conveniently access the desired <see cref="AttrAttribute" /> instances.
         /// </summary>
         public IReadOnlyCollection<AttrAttribute> AttributesToSerialize { get; set; }
 
         /// <summary>
-        /// Sets the relationships that will be included in the serialized request body. You can use <see cref="IResourceGraph.GetRelationships" /> to
-        /// conveniently access the desired <see cref="RelationshipAttribute" /> instances.
+        /// Sets the relationships that will be included in the serialized request body. You can use
+        /// <see cref="IResourceContextProvider.GetResourceContext{T}()" /> to conveniently access the desired <see cref="RelationshipAttribute" /> instances.
         /// </summary>
         public IReadOnlyCollection<RelationshipAttribute> RelationshipsToSerialize { get; set; }
 
