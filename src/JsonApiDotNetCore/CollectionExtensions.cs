@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore
             return !source.Any();
         }
 
-        public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
+        public static int FindIndex<T>(this IReadOnlyList<T> source, Predicate<T> match)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(match, nameof(match));

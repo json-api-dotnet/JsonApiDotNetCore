@@ -244,7 +244,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<PaginationElementQueryStringValueExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<PaginationElementQueryStringValueExpression> newElements = VisitList(expression.Elements, argument);
 
                 var newExpression = new PaginationQueryStringValueExpression(newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;

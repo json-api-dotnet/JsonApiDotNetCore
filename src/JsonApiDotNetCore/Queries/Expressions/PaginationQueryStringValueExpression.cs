@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -11,9 +11,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class PaginationQueryStringValueExpression : QueryExpression
     {
-        public IReadOnlyCollection<PaginationElementQueryStringValueExpression> Elements { get; }
+        public IImmutableList<PaginationElementQueryStringValueExpression> Elements { get; }
 
-        public PaginationQueryStringValueExpression(IReadOnlyCollection<PaginationElementQueryStringValueExpression> elements)
+        public PaginationQueryStringValueExpression(IImmutableList<PaginationElementQueryStringValueExpression> elements)
         {
             ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 

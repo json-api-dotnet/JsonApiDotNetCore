@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             var context = new PaginationContext();
 
             foreach (PaginationElementQueryStringValueExpression element in _pageSizeConstraint?.Elements ??
-                Array.Empty<PaginationElementQueryStringValueExpression>())
+                ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
             {
                 MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
                 entry.PageSize = element.Value == 0 ? null : new PageSize(element.Value);
@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             }
 
             foreach (PaginationElementQueryStringValueExpression element in _pageNumberConstraint?.Elements ??
-                Array.Empty<PaginationElementQueryStringValueExpression>())
+                ImmutableArray<PaginationElementQueryStringValueExpression>.Empty)
             {
                 MutablePaginationEntry entry = context.ResolveEntryInScope(element.Scope);
                 entry.PageNumber = new PageNumber(element.Value);

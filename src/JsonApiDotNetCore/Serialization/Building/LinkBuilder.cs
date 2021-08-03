@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -141,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize, ResourceContext requestContext)
         {
-            IList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, requestContext);
+            IImmutableList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, requestContext);
             int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
 
             if (topPageSize != null)
@@ -150,18 +151,18 @@ namespace JsonApiDotNetCore.Serialization.Building
 
                 if (elementInTopScopeIndex != -1)
                 {
-                    elements[elementInTopScopeIndex] = topPageSizeElement;
+                    elements = elements.SetItem(elementInTopScopeIndex, topPageSizeElement);
                 }
                 else
                 {
-                    elements.Insert(0, topPageSizeElement);
+                    elements = elements.Insert(0, topPageSizeElement);
                 }
             }
             else
             {
                 if (elementInTopScopeIndex != -1)
                 {
-                    elements.RemoveAt(elementInTopScopeIndex);
+                    elements = elements.RemoveAt(elementInTopScopeIndex);
                 }
             }
 
@@ -171,17 +172,18 @@ namespace JsonApiDotNetCore.Serialization.Building
             return parameterValue == string.Empty ? null : parameterValue;
         }
 
-        private IList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue, ResourceContext requestResource)
+        private IImmutableList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue,
+            ResourceContext requestResource)
         {
             if (pageSizeParameterValue == null)
             {
-                return new List<PaginationElementQueryStringValueExpression>();
+                return ImmutableArray<PaginationElementQueryStringValueExpression>.Empty;
             }
 
             var parser = new PaginationParser(_resourceContextProvider);
             PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
-            return paginationExpression.Elements.ToList();
+            return paginationExpression.Elements;
         }
 
         private string GetLinkForPagination(int pageOffset, string pageSizeValue)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
@@ -39,20 +38,21 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected PaginationQueryStringValueExpression ParsePagination()
         {
-            var elements = new List<PaginationElementQueryStringValueExpression>();
+            ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
+                ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
 
             PaginationElementQueryStringValueExpression element = ParsePaginationElement();
-            elements.Add(element);
+            elementsBuilder.Add(element);
 
             while (TokenStack.Any())
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 element = ParsePaginationElement();
-                elements.Add(element);
+                elementsBuilder.Add(element);
             }
 
-            return new PaginationQueryStringValueExpression(elements);
+            return new PaginationQueryStringValueExpression(elementsBuilder.ToImmutable());
         }
 
         protected PaginationElementQueryStringValueExpression ParsePaginationElement()
