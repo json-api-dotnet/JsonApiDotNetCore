@@ -196,39 +196,52 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.Comma);
 
-            var constants = new List<LiteralConstantExpression>();
+            ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
             LiteralConstantExpression constant = ParseConstant();
-            constants.Add(constant);
+            constantsBuilder.Add(constant);
 
             EatSingleCharacterToken(TokenKind.Comma);
 
             constant = ParseConstant();
-            constants.Add(constant);
+            constantsBuilder.Add(constant);
 
             while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 constant = ParseConstant();
-                constants.Add(constant);
+                constantsBuilder.Add(constant);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
+
+            IImmutableSet<LiteralConstantExpression> constantSet = constantsBuilder.ToImmutable();
 
             PropertyInfo targetAttributeProperty = targetAttribute.Fields[^1].Property;
 
             if (targetAttributeProperty.Name == nameof(Identifiable.Id))
             {
-                for (int index = 0; index < constants.Count; index++)
-                {
-                    string stringId = constants[index].Value;
-                    string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
-                    constants[index] = new LiteralConstantExpression(id);
-                }
+                constantSet = DeObfuscateIdConstants(constantSet, targetAttributeProperty);
             }
 
-            return new AnyExpression(targetAttribute, constants);
+            return new AnyExpression(targetAttribute, constantSet);
+        }
+
+        private IImmutableSet<LiteralConstantExpression> DeObfuscateIdConstants(IImmutableSet<LiteralConstantExpression> constantSet,
+            PropertyInfo targetAttributeProperty)
+        {
+            ImmutableHashSet<LiteralConstantExpression>.Builder idConstantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
+
+            foreach (LiteralConstantExpression idConstant in constantSet)
+            {
+                string stringId = idConstant.Value;
+                string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
+
+                idConstantsBuilder.Add(new LiteralConstantExpression(id));
+            }
+
+            return idConstantsBuilder.ToImmutable();
         }
 
         protected HasExpression ParseHas()

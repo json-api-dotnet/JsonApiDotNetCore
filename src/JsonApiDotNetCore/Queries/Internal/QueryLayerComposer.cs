@@ -297,7 +297,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return new IncludeExpression(parentElement.AsArray());
         }
 
-        private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
+        private FilterExpression CreateFilterByIds<TId>(IReadOnlyCollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
         {
             var idChain = new ResourceFieldChainExpression(idAttribute);
 
@@ -310,7 +310,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
             else if (ids.Count > 1)
             {
-                List<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList();
+                ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToImmutableHashSet();
                 filter = new AnyExpression(idChain, constants);
             }
 

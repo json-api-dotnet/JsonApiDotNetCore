@@ -186,7 +186,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             if (expression != null)
             {
                 var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
-                IReadOnlyCollection<LiteralConstantExpression> newConstants = VisitSequence(expression.Constants, argument);
+                IImmutableSet<LiteralConstantExpression> newConstants = VisitSet(expression.Constants, argument);
 
                 var newExpression = new AnyExpression(newTargetAttribute, newConstants);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -332,6 +332,22 @@ namespace JsonApiDotNetCore.Queries.Expressions
             }
 
             return arrayBuilder.ToImmutable();
+        }
+
+        protected virtual IImmutableSet<TExpression> VisitSet<TExpression>(IImmutableSet<TExpression> elements, TArgument argument)
+            where TExpression : QueryExpression
+        {
+            ImmutableHashSet<TExpression>.Builder setBuilder = ImmutableHashSet.CreateBuilder<TExpression>();
+
+            foreach (TExpression element in elements)
+            {
+                if (Visit(element, argument) is TExpression newElement)
+                {
+                    setBuilder.Add(newElement);
+                }
+            }
+
+            return setBuilder.ToImmutable();
         }
     }
 }
