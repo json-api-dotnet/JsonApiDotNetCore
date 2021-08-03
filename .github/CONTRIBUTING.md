@@ -60,8 +60,8 @@ Please follow these steps to have your contribution considered by the maintainer
 
 We use [CSharpGuidelines](https://csharpcodingguidelines.com/) as our coding standard (with a few minor exceptions). Coding style is validated during PR build, where we inject an extra settings layer that promotes various suggestions to warning level. This ensures a high-quality codebase without interfering too much when editing code.
 You can run the following [PowerShell scripts](https://github.com/PowerShell/PowerShell/releases) locally:
-- `inspectcode.ps1`: Scans the code for style violations and opens the result in your web browser.
-- `cleanupcode.ps1` Reformats the entire codebase to match with our configured style.
+- `pwsh inspectcode.ps1`: Scans the code for style violations and opens the result in your web browser.
+- `pwsh cleanupcode.ps1`: Reformats the entire codebase to match with our configured style.
 
 Code inspection violations can be addressed in several ways, depending on the situation:
 - Types that are reported to be never instantiated (because the IoC container creates them dynamically) should be decorated with `[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]`.

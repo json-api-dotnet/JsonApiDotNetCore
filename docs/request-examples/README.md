@@ -15,5 +15,5 @@ curl -s http://localhost:14141/api/books
 [!code-json[RESPONSE](003_GET_Books-including-Author_Response.json)]
 ```
 
-3. Run `./generate-examples.ps1`
-4. Verify the results by running `docfx --serve`
+3. Run `pwsh ../generate-examples.ps1`
+4. Verify the results by running `pwsh ../build-dev.ps1`

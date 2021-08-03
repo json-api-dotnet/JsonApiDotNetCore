@@ -122,7 +122,7 @@ dotnet build
 Running tests locally requires access to a PostgreSQL database. If you have docker installed, this can be propped up via:
 
 ```bash
-run-docker-postgres.ps1
+pwsh run-docker-postgres.ps1
 ```
 
 And then to run the tests:
@@ -134,5 +134,5 @@ dotnet test
 Alternatively, to build and validate the code, run all tests, generate code coverage and produce the NuGet package:
 
 ```bash
-Build.ps1
+pwsh Build.ps1
 ```
