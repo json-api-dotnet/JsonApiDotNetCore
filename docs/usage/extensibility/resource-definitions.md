@@ -202,8 +202,8 @@ public class EmployeeDefinition : JsonApiResourceDefinition<Employee>
     {
     }
 
-    public override IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(
-        IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+    public override IImmutableList<IncludeElementExpression> OnApplyIncludes(
+        IImmutableList<IncludeElementExpression> existingIncludes)
     {
         if (existingIncludes.Any(include =>
             include.Relationship.Property.Name == nameof(Employee.Manager)))
