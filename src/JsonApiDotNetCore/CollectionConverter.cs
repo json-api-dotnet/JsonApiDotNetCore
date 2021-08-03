@@ -8,13 +8,14 @@ namespace JsonApiDotNetCore
 {
     internal sealed class CollectionConverter
     {
-        private static readonly Type[] HashSetCompatibleCollectionTypes =
+        private static readonly ISet<Type> HashSetCompatibleCollectionTypes = new HashSet<Type>
         {
             typeof(HashSet<>),
-            typeof(ICollection<>),
             typeof(ISet<>),
-            typeof(IEnumerable<>),
-            typeof(IReadOnlyCollection<>)
+            typeof(IReadOnlySet<>),
+            typeof(ICollection<>),
+            typeof(IReadOnlyCollection<>),
+            typeof(IEnumerable<>)
         };
 
         /// <summary>
@@ -49,15 +50,14 @@ namespace JsonApiDotNetCore
         {
             if (collectionType.IsInterface && collectionType.IsGenericType)
             {
-                Type genericTypeDefinition = collectionType.GetGenericTypeDefinition();
+                Type openCollectionType = collectionType.GetGenericTypeDefinition();
 
-                if (genericTypeDefinition == typeof(ICollection<>) || genericTypeDefinition == typeof(ISet<>) ||
-                    genericTypeDefinition == typeof(IEnumerable<>) || genericTypeDefinition == typeof(IReadOnlyCollection<>))
+                if (HashSetCompatibleCollectionTypes.Contains(openCollectionType))
                 {
                     return typeof(HashSet<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
                 }
 
-                if (genericTypeDefinition == typeof(IList<>) || genericTypeDefinition == typeof(IReadOnlyList<>))
+                if (openCollectionType == typeof(IList<>) || openCollectionType == typeof(IReadOnlyList<>))
                 {
                     return typeof(List<>).MakeGenericType(collectionType.GenericTypeArguments[0]);
                 }
