@@ -101,55 +101,6 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L69">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(System.Type)">GetAttributes(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets all exposed attributes for the specified type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;AttrAttribute&gt; GetAttributes(Type type)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">type</span></td>
-        <td><p>The resource type. Must implement <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes%60%601(System.Linq.Expressions.Expression%7BSystem.Func%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -157,13 +108,13 @@
   </span>
   <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"><p>Gets all attributes for <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> that are targeted by the selector. If no selector is provided, all exposed fields are
+  <div class="markdown level1 summary"><p>Gets all attributes for <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> that are targeted by the selector. If no selector is provided, all exposed attributes are
 returned.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;AttrAttribute&gt; GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector = null)
+    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;AttrAttribute&gt; GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -179,7 +130,7 @@ returned.</p>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource e) =&gt; new { e.Attribute1, e.Attribute2 }</p>
+        <td><p>Should be of the form: (TResource r) =&gt; new { r.Attribute1, r.Attribute2 }</p>
 </td>
       </tr>
     </tbody>
@@ -210,57 +161,8 @@ returned.</p>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource for which to retrieve attributes.</p>
+        <td><p>The resource type for which to retrieve attributes.</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L61">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetFields*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(System.Type)">GetFields(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets all exposed fields (attributes and relationships) for the specified type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;ResourceFieldAttribute&gt; GetFields(Type type)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">type</span></td>
-        <td><p>The resource type. Must implement <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html">ResourceFieldAttribute</a>&gt;</td>
-        <td></td>
       </tr>
     </tbody>
   </table>
@@ -279,7 +181,7 @@ all exposed fields are returned.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;ResourceFieldAttribute&gt; GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector = null)
+    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;ResourceFieldAttribute&gt; GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -295,7 +197,7 @@ all exposed fields are returned.</p>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource e) =&gt; new { e.Field1, e.Field2 }</p>
+        <td><p>Should be of the form: (TResource r) =&gt; new { r.Field1, r.Field2 }</p>
 </td>
       </tr>
     </tbody>
@@ -326,105 +228,8 @@ all exposed fields are returned.</p>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource for which to retrieve fields.</p>
+        <td><p>The resource type for which to retrieve fields.</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetInverseRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L82">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetInverseRelationship_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetInverseRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)">GetInverseRelationship(RelationshipAttribute)</h4>
-  <div class="markdown level1 summary"><p>Traverses the resource graph, looking for the inverse relationship of the specified <code data-dev-comment-type="paramref" class="paramref">relationship</code>.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">RelationshipAttribute GetInverseRelationship(RelationshipAttribute relationship)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
-        <td><span class="parametername">relationship</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L77">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships(System.Type)">GetRelationships(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets all exposed relationships for the specified type.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;RelationshipAttribute&gt; GetRelationships(Type type)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">type</span></td>
-        <td><p>The resource type. Must implement <a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
-        <td></td>
       </tr>
     </tbody>
   </table>
@@ -437,13 +242,13 @@ all exposed fields are returned.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">GetRelationships&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
-  <div class="markdown level1 summary"><p>Gets all relationships for <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> that are targeted by the selector. If no selector is provided, all exposed fields are
-returned.</p>
+  <div class="markdown level1 summary"><p>Gets all relationships for <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code> that are targeted by the selector. If no selector is provided, all exposed relationships
+are returned.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;RelationshipAttribute&gt; GetRelationships&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector = null)
+    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;RelationshipAttribute&gt; GetRelationships&lt;TResource&gt;(Expression&lt;Func&lt;TResource, dynamic&gt;&gt; selector)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -459,7 +264,7 @@ returned.</p>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource e) =&gt; new { e.Relationship1, e.Relationship2 }</p>
+        <td><p>Should be of the form: (TResource r) =&gt; new { r.Relationship1, r.Relationship2 }</p>
 </td>
       </tr>
     </tbody>
@@ -490,7 +295,7 @@ returned.</p>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource for which to retrieve relationships.</p>
+        <td><p>The resource type for which to retrieve relationships.</p>
 </td>
       </tr>
     </tbody>

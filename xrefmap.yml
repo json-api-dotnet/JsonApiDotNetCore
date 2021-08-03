@@ -1290,12 +1290,6 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.IResourceGraph
   fullName: JsonApiDotNetCore.Configuration.IResourceGraph
   nameWithType: IResourceGraph
-- uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(System.Type)
-  name: GetAttributes(Type)
-  href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(System.Type)
-  nameWithType: IResourceGraph.GetAttributes(Type)
 - uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes*
   name: GetAttributes
   href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_
@@ -1312,12 +1306,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes(Of TResource)(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
   nameWithType: IResourceGraph.GetAttributes<TResource>(Expression<Func<TResource, Object>>)
   nameWithType.vb: IResourceGraph.GetAttributes(Of TResource)(Expression(Of Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(System.Type)
-  name: GetFields(Type)
-  href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(System.Type)
-  nameWithType: IResourceGraph.GetFields(Type)
 - uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetFields*
   name: GetFields
   href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_
@@ -1334,25 +1322,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.IResourceGraph.GetFields(Of TResource)(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
   nameWithType: IResourceGraph.GetFields<TResource>(Expression<Func<TResource, Object>>)
   nameWithType.vb: IResourceGraph.GetFields(Of TResource)(Expression(Of Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  name: GetInverseRelationship(RelationshipAttribute)
-  href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetInverseRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
-  commentId: M:JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  fullName: JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  nameWithType: IResourceGraph.GetInverseRelationship(RelationshipAttribute)
-- uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship*
-  name: GetInverseRelationship
-  href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetInverseRelationship_
-  commentId: Overload:JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.IResourceGraph.GetInverseRelationship
-  nameWithType: IResourceGraph.GetInverseRelationship
-- uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships(System.Type)
-  name: GetRelationships(Type)
-  href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships(System.Type)
-  nameWithType: IResourceGraph.GetRelationships(Type)
 - uid: JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships*
   name: GetRelationships
   href: api/JsonApiDotNetCore.Configuration.IResourceGraph.html#JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_
@@ -2024,12 +1993,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Configuration.ResourceGraph.ResourceGraph
   nameWithType: ResourceGraph.ResourceGraph
-- uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetAttributes(System.Type)
-  name: GetAttributes(Type)
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetAttributes_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraph.GetAttributes(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraph.GetAttributes(System.Type)
-  nameWithType: ResourceGraph.GetAttributes(Type)
 - uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetAttributes*
   name: GetAttributes
   href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetAttributes_
@@ -2046,12 +2009,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraph.GetAttributes(Of TResource)(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
   nameWithType: ResourceGraph.GetAttributes<TResource>(Expression<Func<TResource, Object>>)
   nameWithType.vb: ResourceGraph.GetAttributes(Of TResource)(Expression(Of Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetFields(System.Type)
-  name: GetFields(Type)
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetFields_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraph.GetFields(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraph.GetFields(System.Type)
-  nameWithType: ResourceGraph.GetFields(Type)
 - uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetFields*
   name: GetFields
   href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetFields_
@@ -2068,25 +2025,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Configuration.ResourceGraph.GetFields(Of TResource)(System.Linq.Expressions.Expression(Of System.Func(Of TResource, System.Object)))
   nameWithType: ResourceGraph.GetFields<TResource>(Expression<Func<TResource, Object>>)
   nameWithType.vb: ResourceGraph.GetFields(Of TResource)(Expression(Of Func(Of TResource, Object)))
-- uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  name: GetInverseRelationship(RelationshipAttribute)
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetInverseRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)
-  nameWithType: ResourceGraph.GetInverseRelationship(RelationshipAttribute)
-- uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship*
-  name: GetInverseRelationship
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetInverseRelationship_
-  commentId: Overload:JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraph.GetInverseRelationship
-  nameWithType: ResourceGraph.GetInverseRelationship
-- uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetRelationships(System.Type)
-  name: GetRelationships(Type)
-  href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetRelationships_System_Type_
-  commentId: M:JsonApiDotNetCore.Configuration.ResourceGraph.GetRelationships(System.Type)
-  fullName: JsonApiDotNetCore.Configuration.ResourceGraph.GetRelationships(System.Type)
-  nameWithType: ResourceGraph.GetRelationships(Type)
 - uid: JsonApiDotNetCore.Configuration.ResourceGraph.GetRelationships*
   name: GetRelationships
   href: api/JsonApiDotNetCore.Configuration.ResourceGraph.html#JsonApiDotNetCore_Configuration_ResourceGraph_GetRelationships_
@@ -2305,12 +2243,12 @@ references:
   commentId: T:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade
   nameWithType: ServiceDiscoveryFacade
-- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory)
-  name: ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, IJsonApiOptions, ILoggerFactory)
-  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_
-  commentId: M:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory)
-  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory)
-  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, IJsonApiOptions, ILoggerFactory)
+- uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
+  name: ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
+  href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_Microsoft_Extensions_DependencyInjection_IServiceCollection_JsonApiDotNetCore_Configuration_ResourceGraphBuilder_Microsoft_Extensions_Logging_ILoggerFactory_
+  commentId: M:JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,JsonApiDotNetCore.Configuration.ResourceGraphBuilder,Microsoft.Extensions.Logging.ILoggerFactory)
+  fullName: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.ServiceDiscoveryFacade(Microsoft.Extensions.DependencyInjection.IServiceCollection, JsonApiDotNetCore.Configuration.ResourceGraphBuilder, Microsoft.Extensions.Logging.ILoggerFactory)
+  nameWithType: ServiceDiscoveryFacade.ServiceDiscoveryFacade(IServiceCollection, ResourceGraphBuilder, ILoggerFactory)
 - uid: JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.#ctor*
   name: ServiceDiscoveryFacade
   href: api/JsonApiDotNetCore.Configuration.ServiceDiscoveryFacade.html#JsonApiDotNetCore_Configuration_ServiceDiscoveryFacade__ctor_
@@ -9061,12 +8999,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope
   nameWithType: LambdaScope
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,System.Type,System.Linq.Expressions.Expression,JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  name: LambdaScope(LambdaParameterNameFactory, Type, Expression, HasManyThroughAttribute)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope__ctor_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_System_Type_System_Linq_Expressions_Expression_JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,System.Type,System.Linq.Expressions.Expression,JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.LambdaScope(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, System.Type, System.Linq.Expressions.Expression, JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  nameWithType: LambdaScope.LambdaScope(LambdaParameterNameFactory, Type, Expression, HasManyThroughAttribute)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,System.Type,System.Linq.Expressions.Expression)
+  name: LambdaScope(LambdaParameterNameFactory, Type, Expression)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope__ctor_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_System_Type_System_Linq_Expressions_Expression_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,System.Type,System.Linq.Expressions.Expression)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.LambdaScope(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, System.Type, System.Linq.Expressions.Expression)
+  nameWithType: LambdaScope.LambdaScope(LambdaParameterNameFactory, Type, Expression)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.#ctor*
   name: LambdaScope
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope__ctor_
@@ -9100,19 +9038,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.Dispose
   nameWithType: LambdaScope.Dispose
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough
-  name: HasManyThrough
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_HasManyThrough
-  commentId: P:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough
-  nameWithType: LambdaScope.HasManyThrough
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough*
-  name: HasManyThrough
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_HasManyThrough_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.HasManyThrough
-  nameWithType: LambdaScope.HasManyThrough
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.Parameter
   name: Parameter
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScope.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScope_Parameter
@@ -9132,12 +9057,12 @@ references:
   commentId: T:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory
   nameWithType: LambdaScopeFactory
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  name: LambdaScopeFactory(LambdaParameterNameFactory, HasManyThroughAttribute)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScopeFactory__ctor_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory,JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.LambdaScopeFactory(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory, JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute)
-  nameWithType: LambdaScopeFactory.LambdaScopeFactory(LambdaParameterNameFactory, HasManyThroughAttribute)
+- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  name: LambdaScopeFactory(LambdaParameterNameFactory)
+  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScopeFactory__ctor_JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaParameterNameFactory_
+  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.#ctor(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.LambdaScopeFactory(JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaParameterNameFactory)
+  nameWithType: LambdaScopeFactory.LambdaScopeFactory(LambdaParameterNameFactory)
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.#ctor*
   name: LambdaScopeFactory
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.LambdaScopeFactory.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_LambdaScopeFactory__ctor_
@@ -9190,22 +9115,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.ApplyOrderBy
   nameWithType: OrderClauseBuilder.ApplyOrderBy
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name: CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_OrderClauseBuilder_CreatePropertyExpressionForFieldChain_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__System_Linq_Expressions_Expression_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name.vb: CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute>, System.Linq.Expressions.Expression)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute), System.Linq.Expressions.Expression)
-  nameWithType: OrderClauseBuilder.CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  nameWithType.vb: OrderClauseBuilder.CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain*
-  name: CreatePropertyExpressionForFieldChain
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_OrderClauseBuilder_CreatePropertyExpressionForFieldChain_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.CreatePropertyExpressionForFieldChain
-  nameWithType: OrderClauseBuilder.CreatePropertyExpressionForFieldChain
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.VisitSort(JsonApiDotNetCore.Queries.Expressions.SortExpression,System.Linq.Expressions.Expression)
   name: VisitSort(SortExpression, Expression)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.OrderClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_OrderClauseBuilder_VisitSort_JsonApiDotNetCore_Queries_Expressions_SortExpression_System_Linq_Expressions_Expression_
@@ -9358,42 +9267,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder(Of TArgument).QueryClauseBuilder
   nameWithType: QueryClauseBuilder<TArgument>.QueryClauseBuilder
   nameWithType.vb: QueryClauseBuilder(Of TArgument).QueryClauseBuilder
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name: CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreatePropertyExpressionForFieldChain_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__System_Linq_Expressions_Expression_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name.vb: CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder<TArgument>.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute>, System.Linq.Expressions.Expression)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder(Of TArgument).CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute), System.Linq.Expressions.Expression)
-  nameWithType: QueryClauseBuilder<TArgument>.CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  nameWithType.vb: QueryClauseBuilder(Of TArgument).CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionForFieldChain*
-  name: CreatePropertyExpressionForFieldChain
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreatePropertyExpressionForFieldChain_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionForFieldChain
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder<TArgument>.CreatePropertyExpressionForFieldChain
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder(Of TArgument).CreatePropertyExpressionForFieldChain
-  nameWithType: QueryClauseBuilder<TArgument>.CreatePropertyExpressionForFieldChain
-  nameWithType.vb: QueryClauseBuilder(Of TArgument).CreatePropertyExpressionForFieldChain
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionFromComponents(System.Linq.Expressions.Expression,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name: CreatePropertyExpressionFromComponents(Expression, IReadOnlyCollection<String>)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreatePropertyExpressionFromComponents_System_Linq_Expressions_Expression_System_Collections_Generic_IReadOnlyCollection_System_String__
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionFromComponents(System.Linq.Expressions.Expression,System.Collections.Generic.IReadOnlyCollection{System.String})
-  name.vb: CreatePropertyExpressionFromComponents(Expression, IReadOnlyCollection(Of String))
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder<TArgument>.CreatePropertyExpressionFromComponents(System.Linq.Expressions.Expression, System.Collections.Generic.IReadOnlyCollection<System.String>)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder(Of TArgument).CreatePropertyExpressionFromComponents(System.Linq.Expressions.Expression, System.Collections.Generic.IReadOnlyCollection(Of System.String))
-  nameWithType: QueryClauseBuilder<TArgument>.CreatePropertyExpressionFromComponents(Expression, IReadOnlyCollection<String>)
-  nameWithType.vb: QueryClauseBuilder(Of TArgument).CreatePropertyExpressionFromComponents(Expression, IReadOnlyCollection(Of String))
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionFromComponents*
-  name: CreatePropertyExpressionFromComponents
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreatePropertyExpressionFromComponents_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreatePropertyExpressionFromComponents
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder<TArgument>.CreatePropertyExpressionFromComponents
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder(Of TArgument).CreatePropertyExpressionFromComponents
-  nameWithType: QueryClauseBuilder<TArgument>.CreatePropertyExpressionFromComponents
-  nameWithType.vb: QueryClauseBuilder(Of TArgument).CreatePropertyExpressionFromComponents
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder`1.CreateTupleAccessExpressionForConstant(System.Object,System.Type)
   name: CreateTupleAccessExpressionForConstant(Object, Type)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_QueryClauseBuilder_1_CreateTupleAccessExpressionForConstant_System_Object_System_Type_
@@ -9574,22 +9447,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.ApplyWhere
   nameWithType: WhereClauseBuilder.ApplyWhere
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name: CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_CreatePropertyExpressionForFieldChain_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_ResourceFieldAttribute__System_Linq_Expressions_Expression_
-  commentId: M:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute},System.Linq.Expressions.Expression)
-  name.vb: CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection<JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute>, System.Linq.Expressions.Expression)
-  fullName.vb: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain(System.Collections.Generic.IReadOnlyCollection(Of JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute), System.Linq.Expressions.Expression)
-  nameWithType: WhereClauseBuilder.CreatePropertyExpressionForFieldChain(IReadOnlyCollection<ResourceFieldAttribute>, Expression)
-  nameWithType.vb: WhereClauseBuilder.CreatePropertyExpressionForFieldChain(IReadOnlyCollection(Of ResourceFieldAttribute), Expression)
-- uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain*
-  name: CreatePropertyExpressionForFieldChain
-  href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_CreatePropertyExpressionForFieldChain_
-  commentId: Overload:JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.CreatePropertyExpressionForFieldChain
-  nameWithType: WhereClauseBuilder.CreatePropertyExpressionForFieldChain
 - uid: JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.VisitCollectionNotEmpty(JsonApiDotNetCore.Queries.Expressions.CollectionNotEmptyExpression,System.Type)
   name: VisitCollectionNotEmpty(CollectionNotEmptyExpression, Type)
   href: api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html#JsonApiDotNetCore_Queries_Internal_QueryableBuilding_WhereClauseBuilder_VisitCollectionNotEmpty_JsonApiDotNetCore_Queries_Expressions_CollectionNotEmptyExpression_System_Type_
@@ -12787,239 +12644,38 @@ references:
   commentId: T:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute
   nameWithType: HasManyAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute
-  name: HasManyThroughAttribute
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html
-  commentId: T:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute
-  nameWithType: HasManyThroughAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor(System.String)
-  name: HasManyThroughAttribute(String)
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute__ctor_System_String_
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor(System.String)
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.HasManyThroughAttribute(System.String)
-  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute(String)
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor*
-  name: HasManyThroughAttribute
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.#ctor
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
+  name: HasManyAttribute()
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.HasManyAttribute()
+  nameWithType: HasManyAttribute.HasManyAttribute()
+- uid: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor*
+  name: HasManyAttribute
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyAttribute__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.#ctor
   isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.HasManyThroughAttribute
-  nameWithType: HasManyThroughAttribute.HasManyThroughAttribute
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
-  name: Equals(Object)
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_System_Object_
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals(System.Object)
-  nameWithType: HasManyThroughAttribute.Equals(Object)
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals*
-  name: Equals
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_Equals_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.Equals
-  nameWithType: HasManyThroughAttribute.Equals
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
-  name: GetHashCode()
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode()
-  nameWithType: HasManyThroughAttribute.GetHashCode()
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode*
-  name: GetHashCode
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetHashCode_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetHashCode
-  nameWithType: HasManyThroughAttribute.GetHashCode
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)
-  name: GetValue(Object)
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_System_Object_
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue(System.Object)
-  nameWithType: HasManyThroughAttribute.GetValue(Object)
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue*
-  name: GetValue
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_GetValue_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.GetValue
-  nameWithType: HasManyThroughAttribute.GetValue
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty
-  name: LeftIdProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdProperty
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty
-  nameWithType: HasManyThroughAttribute.LeftIdProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty*
-  name: LeftIdProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdProperty_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdProperty
-  nameWithType: HasManyThroughAttribute.LeftIdProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName
-  name: LeftIdPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdPropertyName
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName
-  nameWithType: HasManyThroughAttribute.LeftIdPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName*
-  name: LeftIdPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftIdPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftIdPropertyName
-  nameWithType: HasManyThroughAttribute.LeftIdPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty
-  name: LeftProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty
-  nameWithType: HasManyThroughAttribute.LeftProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty*
-  name: LeftProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftProperty_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftProperty
-  nameWithType: HasManyThroughAttribute.LeftProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName
-  name: LeftPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftPropertyName
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName
-  nameWithType: HasManyThroughAttribute.LeftPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName*
-  name: LeftPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_LeftPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.LeftPropertyName
-  nameWithType: HasManyThroughAttribute.LeftPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath
-  name: RelationshipPath
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RelationshipPath
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath
-  nameWithType: HasManyThroughAttribute.RelationshipPath
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath*
-  name: RelationshipPath
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RelationshipPath_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RelationshipPath
-  nameWithType: HasManyThroughAttribute.RelationshipPath
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty
-  name: RightIdProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdProperty
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty
-  nameWithType: HasManyThroughAttribute.RightIdProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty*
-  name: RightIdProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdProperty_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdProperty
-  nameWithType: HasManyThroughAttribute.RightIdProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName
-  name: RightIdPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdPropertyName
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName
-  nameWithType: HasManyThroughAttribute.RightIdPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName*
-  name: RightIdPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightIdPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightIdPropertyName
-  nameWithType: HasManyThroughAttribute.RightIdPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty
-  name: RightProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty
-  nameWithType: HasManyThroughAttribute.RightProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty*
-  name: RightProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightProperty_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightProperty
-  nameWithType: HasManyThroughAttribute.RightProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName
-  name: RightPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightPropertyName
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName
-  nameWithType: HasManyThroughAttribute.RightPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName*
-  name: RightPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_RightPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.RightPropertyName
-  nameWithType: HasManyThroughAttribute.RightPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue(System.Object,System.Object)
-  name: SetValue(Object, Object)
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_SetValue_System_Object_System_Object_
-  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue(System.Object,System.Object)
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue(System.Object, System.Object)
-  nameWithType: HasManyThroughAttribute.SetValue(Object, Object)
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue*
-  name: SetValue
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_SetValue_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.SetValue
-  nameWithType: HasManyThroughAttribute.SetValue
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
-  name: ThroughProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughProperty
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
-  nameWithType: HasManyThroughAttribute.ThroughProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty*
-  name: ThroughProperty
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughProperty_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughProperty
-  nameWithType: HasManyThroughAttribute.ThroughProperty
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
-  name: ThroughPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
-  nameWithType: HasManyThroughAttribute.ThroughPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName*
-  name: ThroughPropertyName
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughPropertyName_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughPropertyName
-  nameWithType: HasManyThroughAttribute.ThroughPropertyName
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
-  name: ThroughType
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
-  nameWithType: HasManyThroughAttribute.ThroughType
-- uid: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType*
-  name: ThroughType
-  href: api/JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasManyThroughAttribute_ThroughType_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyThroughAttribute.ThroughType
-  nameWithType: HasManyThroughAttribute.ThroughType
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.HasManyAttribute
+  nameWithType: HasManyAttribute.HasManyAttribute
 - uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   name: HasOneAttribute
   href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html
   commentId: T:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute
   nameWithType: HasOneAttribute
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
+  name: HasOneAttribute()
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor
+  commentId: M:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute()
+  nameWithType: HasOneAttribute.HasOneAttribute()
+- uid: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor*
+  name: HasOneAttribute
+  href: api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html#JsonApiDotNetCore_Resources_Annotations_HasOneAttribute__ctor_
+  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.#ctor
+  isSpec: "True"
+  fullName: JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.HasOneAttribute
+  nameWithType: HasOneAttribute.HasOneAttribute
 - uid: JsonApiDotNetCore.Resources.Annotations.LinkTypes
   name: LinkTypes
   href: api/JsonApiDotNetCore.Resources.Annotations.LinkTypes.html
@@ -13159,19 +12815,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.Links
   nameWithType: RelationshipAttribute.Links
-- uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath
-  name: RelationshipPath
-  href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RelationshipPath
-  commentId: P:JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath
-  fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath
-  nameWithType: RelationshipAttribute.RelationshipPath
-- uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath*
-  name: RelationshipPath
-  href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RelationshipPath_
-  commentId: Overload:JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RelationshipPath
-  nameWithType: RelationshipAttribute.RelationshipPath
 - uid: JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.RightType
   name: RightType
   href: api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html#JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_RightType
