@@ -60,8 +60,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue,
-            CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
         {
             await AssertRightResourcesExistAsync(rightValue, cancellationToken);
 

@@ -106,8 +106,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId leftId, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
             dynamic repository = GetWriteRepository(typeof(TResource));

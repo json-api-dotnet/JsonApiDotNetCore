@@ -41,8 +41,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public Type LeftType { get; internal set; }
 
         /// <summary>
-        /// The type this relationship points to. This does not necessarily match the relationship property type. In the case of a <see cref="HasManyAttribute" /> relationship,
-        /// this value will be the collection element type.
+        /// The type this relationship points to. This does not necessarily match the relationship property type. In the case of a
+        /// <see cref="HasManyAttribute" /> relationship, this value will be the collection element type.
         /// </summary>
         /// <example>
         /// <code><![CDATA[

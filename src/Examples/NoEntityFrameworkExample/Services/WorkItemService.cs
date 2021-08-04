@@ -73,8 +73,7 @@ namespace NoEntityFrameworkExample.Services
             return workItems.Single();
         }
 
-        public Task AddToToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        public Task AddToToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

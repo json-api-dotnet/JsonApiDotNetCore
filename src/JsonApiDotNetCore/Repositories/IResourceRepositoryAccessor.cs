@@ -75,8 +75,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.RemoveFromToManyRelationshipAsync" />.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync<TResource>(TResource leftResource, ISet<IIdentifiable> rightResourceIds,
-            CancellationToken cancellationToken)
+        Task RemoveFromToManyRelationshipAsync<TResource>(TResource leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
     }
 }

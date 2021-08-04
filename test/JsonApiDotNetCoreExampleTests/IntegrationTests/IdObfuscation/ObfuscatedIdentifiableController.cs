@@ -69,8 +69,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object rightValue,
-            CancellationToken cancellationToken)
+        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object rightValue, CancellationToken cancellationToken)
         {
             int idValue = _codec.Decode(id);
             return base.PatchRelationshipAsync(idValue, relationshipName, rightValue, cancellationToken);
