@@ -18,27 +18,27 @@ namespace UnitTests.Middleware
     public sealed class JsonApiRequestTests
     {
         [Theory]
-        [InlineData("HEAD", "/todoItems", true, EndpointKind.Primary, true)]
-        [InlineData("HEAD", "/todoItems/1", false, EndpointKind.Primary, true)]
-        [InlineData("HEAD", "/todoItems/1/owner", false, EndpointKind.Secondary, true)]
-        [InlineData("HEAD", "/todoItems/1/tags", true, EndpointKind.Secondary, true)]
-        [InlineData("HEAD", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, true)]
-        [InlineData("HEAD", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, true)]
-        [InlineData("GET", "/todoItems", true, EndpointKind.Primary, true)]
-        [InlineData("GET", "/todoItems/1", false, EndpointKind.Primary, true)]
-        [InlineData("GET", "/todoItems/1/owner", false, EndpointKind.Secondary, true)]
-        [InlineData("GET", "/todoItems/1/tags", true, EndpointKind.Secondary, true)]
-        [InlineData("GET", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, true)]
-        [InlineData("GET", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, true)]
-        [InlineData("POST", "/todoItems", false, EndpointKind.Primary, false)]
-        [InlineData("POST", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
-        [InlineData("PATCH", "/todoItems/1", false, EndpointKind.Primary, false)]
-        [InlineData("PATCH", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, false)]
-        [InlineData("PATCH", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
-        [InlineData("DELETE", "/todoItems/1", false, EndpointKind.Primary, false)]
-        [InlineData("DELETE", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, false)]
+        [InlineData("HEAD", "/todoItems", true, EndpointKind.Primary, null, true)]
+        [InlineData("HEAD", "/todoItems/1", false, EndpointKind.Primary, null, true)]
+        [InlineData("HEAD", "/todoItems/1/owner", false, EndpointKind.Secondary, null, true)]
+        [InlineData("HEAD", "/todoItems/1/tags", true, EndpointKind.Secondary, null, true)]
+        [InlineData("HEAD", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, null, true)]
+        [InlineData("HEAD", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, null, true)]
+        [InlineData("GET", "/todoItems", true, EndpointKind.Primary, null, true)]
+        [InlineData("GET", "/todoItems/1", false, EndpointKind.Primary, null, true)]
+        [InlineData("GET", "/todoItems/1/owner", false, EndpointKind.Secondary, null, true)]
+        [InlineData("GET", "/todoItems/1/tags", true, EndpointKind.Secondary, null, true)]
+        [InlineData("GET", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, null, true)]
+        [InlineData("GET", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, null, true)]
+        [InlineData("POST", "/todoItems", false, EndpointKind.Primary, OperationKind.CreateResource, false)]
+        [InlineData("POST", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.AddToRelationship, false)]
+        [InlineData("PATCH", "/todoItems/1", false, EndpointKind.Primary, OperationKind.UpdateResource, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, OperationKind.SetRelationship, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.SetRelationship, false)]
+        [InlineData("DELETE", "/todoItems/1", false, EndpointKind.Primary, OperationKind.DeleteResource, false)]
+        [InlineData("DELETE", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.RemoveFromRelationship, false)]
         public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind,
-            bool expectIsReadOnly)
+            OperationKind? expectOperationKind, bool expectIsReadOnly)
         {
             // Arrange
             var options = new JsonApiOptions
@@ -69,6 +69,7 @@ namespace UnitTests.Middleware
             // Assert
             request.IsCollection.Should().Be(expectIsCollection);
             request.Kind.Should().Be(expectKind);
+            request.OperationKind.Should().Be(expectOperationKind);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
             request.PrimaryResource.Should().NotBeNull();
             request.PrimaryResource.PublicName.Should().Be("todoItems");

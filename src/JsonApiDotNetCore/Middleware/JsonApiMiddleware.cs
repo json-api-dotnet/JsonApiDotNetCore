@@ -212,7 +212,6 @@ namespace JsonApiDotNetCore.Middleware
             IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
         {
             request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
-            request.Kind = EndpointKind.Primary;
             request.PrimaryResource = primaryResourceContext;
             request.PrimaryId = GetPrimaryRequestId(routeValues);
 
@@ -222,6 +221,17 @@ namespace JsonApiDotNetCore.Middleware
             {
                 request.Kind = IsRouteForRelationship(routeValues) ? EndpointKind.Relationship : EndpointKind.Secondary;
 
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
+                request.OperationKind =
+                    httpRequest.Method == HttpMethod.Post.Method ? OperationKind.AddToRelationship :
+                    httpRequest.Method == HttpMethod.Patch.Method ? OperationKind.SetRelationship :
+                    httpRequest.Method == HttpMethod.Delete.Method ? OperationKind.RemoveFromRelationship : null;
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
+
                 RelationshipAttribute requestRelationship =
                     primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == relationshipName);
 
@@ -230,6 +240,21 @@ namespace JsonApiDotNetCore.Middleware
                     request.Relationship = requestRelationship;
                     request.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
                 }
+            }
+            else
+            {
+                request.Kind = EndpointKind.Primary;
+
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
+                request.OperationKind =
+                    httpRequest.Method == HttpMethod.Post.Method ? OperationKind.CreateResource :
+                    httpRequest.Method == HttpMethod.Patch.Method ? OperationKind.UpdateResource :
+                    httpRequest.Method == HttpMethod.Delete.Method ? OperationKind.DeleteResource : null;
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
             }
 
             bool isGetAll = request.PrimaryId == null && request.IsReadOnly;

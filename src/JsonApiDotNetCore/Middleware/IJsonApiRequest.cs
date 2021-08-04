@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Middleware
         bool IsReadOnly { get; }
 
         /// <summary>
-        /// In case of an atomic:operations request, this indicates the kind of operation currently being processed.
+        /// In case of a non-readonly request, this indicates the kind of write operation currently being processed.
         /// </summary>
         OperationKind? OperationKind { get; }
 
