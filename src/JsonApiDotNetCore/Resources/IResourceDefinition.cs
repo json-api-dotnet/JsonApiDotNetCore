@@ -32,8 +32,7 @@ namespace JsonApiDotNetCore.Resources
     /// The resource identifier type.
     /// </typeparam>
     [PublicAPI]
-    // ReSharper disable once TypeParameterCanBeVariant -- Justification: making TId contravariant is a breaking change.
-    public interface IResourceDefinition<TResource, TId>
+    public interface IResourceDefinition<TResource, in TId>
         where TResource : class, IIdentifiable<TId>
     {
         /// <summary>
