@@ -416,12 +416,6 @@ namespace JsonApiDotNetCore.Queries.Internal
             };
         }
 
-        /// <inheritdoc />
-        public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-        {
-            return _resourceDefinitionAccessor;
-        }
-
         protected virtual IImmutableList<IncludeElementExpression> GetIncludeElements(IImmutableList<IncludeElementExpression> includeElements,
             ResourceContext resourceContext)
         {

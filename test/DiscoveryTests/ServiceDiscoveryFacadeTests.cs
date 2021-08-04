@@ -39,6 +39,7 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
             _services.AddScoped(_ => new Mock<IQueryLayerComposer>().Object);
             _services.AddScoped(_ => new Mock<IResourceRepositoryAccessor>().Object);
+            _services.AddScoped(_ => new Mock<IResourceDefinitionAccessor>().Object);
 
             _resourceGraphBuilder = new ResourceGraphBuilder(_options, LoggerFactory);
         }

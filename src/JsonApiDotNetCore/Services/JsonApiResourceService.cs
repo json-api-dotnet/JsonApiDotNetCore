@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Services
 
         public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-            IResourceChangeTracker<TResource> resourceChangeTracker)
+            IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             ArgumentGuard.NotNull(repositoryAccessor, nameof(repositoryAccessor));
             ArgumentGuard.NotNull(queryLayerComposer, nameof(queryLayerComposer));
@@ -44,6 +44,7 @@ namespace JsonApiDotNetCore.Services
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(resourceChangeTracker, nameof(resourceChangeTracker));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _repositoryAccessor = repositoryAccessor;
             _queryLayerComposer = queryLayerComposer;
@@ -51,11 +52,8 @@ namespace JsonApiDotNetCore.Services
             _options = options;
             _request = request;
             _resourceChangeTracker = resourceChangeTracker;
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _traceWriter = new TraceLogWriter<JsonApiResourceService<TResource, TId>>(loggerFactory);
-
-#pragma warning disable 612 // Method is obsolete
-            _resourceDefinitionAccessor = queryLayerComposer.GetResourceDefinitionAccessor();
-#pragma warning restore 612
         }
 
         /// <inheritdoc />
@@ -477,8 +475,9 @@ namespace JsonApiDotNetCore.Services
     {
         public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
             IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-            IResourceChangeTracker<TResource> resourceChangeTracker)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
+            IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+                resourceDefinitionAccessor)
         {
         }
     }
