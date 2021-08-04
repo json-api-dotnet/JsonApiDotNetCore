@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Returns a compatible collection type that can be instantiated, for example IList{Article} -> List{Article} or ISet{Article} -> HashSet{Article}
         /// </summary>
-        public Type ToConcreteCollectionType(Type collectionType)
+        private Type ToConcreteCollectionType(Type collectionType)
         {
             if (collectionType.IsInterface && collectionType.IsGenericType)
             {

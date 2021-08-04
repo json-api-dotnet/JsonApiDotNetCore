@@ -59,11 +59,11 @@ namespace JsonApiDotNetCore.Middleware
                     return;
                 }
 
-                SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, options, resourceContextProvider, httpContext.Request);
+                SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceContextProvider, httpContext.Request);
 
                 httpContext.RegisterJsonApiRequest();
             }
-            else if (IsOperationsRequest(routeValues))
+            else if (IsRouteForOperations(routeValues))
             {
                 if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) ||
                     !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerSettings))
@@ -209,7 +209,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext, RouteValueDictionary routeValues,
-            IJsonApiOptions options, IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
+            IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
         {
             request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
             request.Kind = EndpointKind.Primary;
@@ -252,7 +252,7 @@ namespace JsonApiDotNetCore.Middleware
             return actionName.EndsWith("Relationship", StringComparison.Ordinal);
         }
 
-        private static bool IsOperationsRequest(RouteValueDictionary routeValues)
+        private static bool IsRouteForOperations(RouteValueDictionary routeValues)
         {
             string actionName = (string)routeValues["action"];
             return actionName == "PostOperations";
