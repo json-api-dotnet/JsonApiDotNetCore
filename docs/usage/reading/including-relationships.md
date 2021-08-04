@@ -62,7 +62,7 @@ which is equivalent to:
 GET /api/articles?include=author&include=author.livingAddress&include=author.livingAddress.country
 ```
 
-This can be used on nested endpoints too:
+This can be used on secondary endpoints too:
 
 ```http
 GET /api/blogs/1/articles?include=author.livingAddress.country

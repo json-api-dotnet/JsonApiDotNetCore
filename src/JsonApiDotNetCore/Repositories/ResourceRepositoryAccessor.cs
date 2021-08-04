@@ -98,29 +98,29 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+        public async Task SetRelationshipAsync<TResource>(TResource leftResource, object rightValue, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.SetRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
+            await repository.SetRelationshipAsync(leftResource, rightValue, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds,
+        public async Task AddToToManyRelationshipAsync<TResource, TId>(TId leftId, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.AddToToManyRelationshipAsync(primaryId, secondaryResourceIds, cancellationToken);
+            await repository.AddToToManyRelationshipAsync(leftId, rightResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
+        public async Task RemoveFromToManyRelationshipAsync<TResource>(TResource leftResource, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             dynamic repository = GetWriteRepository(typeof(TResource));
-            await repository.RemoveFromToManyRelationshipAsync(primaryResource, secondaryResourceIds, cancellationToken);
+            await repository.RemoveFromToManyRelationshipAsync(leftResource, rightResourceIds, cancellationToken);
         }
 
         protected virtual object ResolveReadRepository(Type resourceType)

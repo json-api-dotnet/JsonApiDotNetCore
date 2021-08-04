@@ -113,14 +113,14 @@ namespace JsonApiDotNetCore.Services
             TResource primaryResource = primaryResources.SingleOrDefault();
             AssertPrimaryResourceExists(primaryResource);
 
-            object secondaryResourceOrResources = _request.Relationship.GetValue(primaryResource);
+            object rightValue = _request.Relationship.GetValue(primaryResource);
 
-            if (secondaryResourceOrResources is ICollection secondaryResources && secondaryLayer.Pagination?.PageSize?.Value == secondaryResources.Count)
+            if (rightValue is ICollection rightResources && secondaryLayer.Pagination?.PageSize?.Value == rightResources.Count)
             {
                 _paginationContext.IsPageFull = true;
             }
 
-            return secondaryResourceOrResources;
+            return rightValue;
         }
 
         /// <inheritdoc />
@@ -241,64 +241,64 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public virtual async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
-                primaryId,
-                secondaryResourceIds
+                leftId,
+                rightResourceIds
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
-            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            if (secondaryResourceIds.Any() && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
+            if (rightResourceIds.Any() && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
             {
                 // In the case of a many-to-many relationship, creating a duplicate entry in the join table results in a
                 // unique constraint violation. We avoid that by excluding already-existing entries from the set in advance.
-                await RemoveExistingIdsFromSecondarySetAsync(primaryId, secondaryResourceIds, manyToManyRelationship, cancellationToken);
+                await RemoveExistingIdsFromRelationshipRightSideAsync(manyToManyRelationship, leftId, rightResourceIds, cancellationToken);
             }
 
             try
             {
-                await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(primaryId, secondaryResourceIds, cancellationToken);
+                await _repositoryAccessor.AddToToManyRelationshipAsync<TResource, TId>(leftId, rightResourceIds, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-                await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+                _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
                 throw;
             }
         }
 
-        private async Task RemoveExistingIdsFromSecondarySetAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, HasManyAttribute hasManyRelationship,
-            CancellationToken cancellationToken)
+        private async Task RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, TId leftId,
+            ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
-            QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, primaryId, secondaryResourceIds);
-            IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
+            QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, leftId, rightResourceIds);
+            IReadOnlyCollection<TResource> leftResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
-            TResource primaryResource = primaryResources.FirstOrDefault();
-            AssertPrimaryResourceExists(primaryResource);
+            TResource leftResource = leftResources.FirstOrDefault();
+            AssertPrimaryResourceExists(leftResource);
 
-            object rightValue = _request.Relationship.GetValue(primaryResource);
+            object rightValue = _request.Relationship.GetValue(leftResource);
             ICollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
-            secondaryResourceIds.ExceptWith(existingRightResourceIds);
+            rightResourceIds.ExceptWith(existingRightResourceIds);
         }
 
-        protected async Task AssertRightResourcesExistAsync(object rightResourceIds, CancellationToken cancellationToken)
+        protected async Task AssertRightResourcesExistAsync(object rightValue, CancellationToken cancellationToken)
         {
-            ICollection<IIdentifiable> secondaryResourceIds = _collectionConverter.ExtractResources(rightResourceIds);
+            ICollection<IIdentifiable> rightResourceIds = _collectionConverter.ExtractResources(rightValue);
 
-            if (secondaryResourceIds.Any())
+            if (rightResourceIds.Any())
             {
-                QueryLayer queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, secondaryResourceIds);
+                QueryLayer queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, rightResourceIds);
 
                 List<MissingResourceInRelationship> missingResources =
-                    await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, secondaryResourceIds, cancellationToken)
+                    await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, rightResourceIds, cancellationToken)
                         .ToListAsync(cancellationToken);
 
                 if (missingResources.Any())
@@ -347,30 +347,30 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
+        public virtual async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
-                primaryId,
+                leftId,
                 relationshipName,
-                secondaryResourceIds
+                rightValue
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
             await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.SetRelationship, cancellationToken);
 
             try
             {
-                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
+                await _repositoryAccessor.SetRelationshipAsync(resourceFromDatabase, rightValue, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+                await AssertRightResourcesExistAsync(rightValue, cancellationToken);
                 throw;
             }
         }
@@ -395,28 +395,28 @@ namespace JsonApiDotNetCore.Services
         }
 
         /// <inheritdoc />
-        public virtual async Task RemoveFromToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public virtual async Task RemoveFromToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
-                primaryId,
+                leftId,
                 relationshipName,
-                secondaryResourceIds
+                rightResourceIds
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
-            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(primaryId, cancellationToken);
+            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
             await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.RemoveFromRelationship, cancellationToken);
 
-            await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+            await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
 
-            await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, secondaryResourceIds, cancellationToken);
+            await _repositoryAccessor.RemoveFromToManyRelationshipAsync(resourceFromDatabase, rightResourceIds, cancellationToken);
         }
 
         protected async Task<TResource> GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)

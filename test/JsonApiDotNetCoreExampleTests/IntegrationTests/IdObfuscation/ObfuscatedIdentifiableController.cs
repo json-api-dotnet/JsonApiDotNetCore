@@ -54,11 +54,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpPost("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public Task<IActionResult> PostRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             int idValue = _codec.Decode(id);
-            return base.PostRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
+            return base.PostRelationshipAsync(idValue, relationshipName, rightResourceIds, cancellationToken);
         }
 
         [HttpPatch("{id}")]
@@ -69,11 +69,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object secondaryResourceIds,
+        public Task<IActionResult> PatchRelationshipAsync(string id, string relationshipName, [FromBody] object rightValue,
             CancellationToken cancellationToken)
         {
             int idValue = _codec.Decode(id);
-            return base.PatchRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
+            return base.PatchRelationshipAsync(idValue, relationshipName, rightValue, cancellationToken);
         }
 
         [HttpDelete("{id}")]
@@ -84,11 +84,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
         }
 
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public Task<IActionResult> DeleteRelationshipAsync(string id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             int idValue = _codec.Decode(id);
-            return base.DeleteRelationshipAsync(idValue, relationshipName, secondaryResourceIds, cancellationToken);
+            return base.DeleteRelationshipAsync(idValue, relationshipName, rightResourceIds, cancellationToken);
         }
     }
 }

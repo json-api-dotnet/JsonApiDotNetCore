@@ -36,12 +36,12 @@ namespace JsonApiDotNetCore.Resources.Annotations
         public PropertyInfo InverseNavigationProperty { get; set; }
 
         /// <summary>
-        /// The parent resource type. This is the type of the class in which this attribute was used.
+        /// The containing type in which this relationship is declared.
         /// </summary>
         public Type LeftType { get; internal set; }
 
         /// <summary>
-        /// The child resource type. This does not necessarily match the navigation property type. In the case of a <see cref="HasManyAttribute" /> relationship,
+        /// The type this relationship points to. This does not necessarily match the relationship property type. In the case of a <see cref="HasManyAttribute" /> relationship,
         /// this value will be the collection element type.
         /// </summary>
         /// <example>

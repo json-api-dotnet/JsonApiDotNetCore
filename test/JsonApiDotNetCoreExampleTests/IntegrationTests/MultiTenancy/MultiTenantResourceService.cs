@@ -60,21 +60,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds,
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue,
             CancellationToken cancellationToken)
         {
-            await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+            await AssertRightResourcesExistAsync(rightValue, cancellationToken);
 
-            await base.SetRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.SetRelationshipAsync(leftId, relationshipName, rightValue, cancellationToken);
         }
 
-        public override async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public override async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-            await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+            _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+            await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
 
-            await base.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
         }
 
         public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)

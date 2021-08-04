@@ -57,16 +57,16 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Performs a complete replacement of the relationship in the underlying data store.
         /// </summary>
-        Task SetRelationshipAsync(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken);
+        Task SetRelationshipAsync(TResource leftResource, object rightValue, CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.
         /// </summary>
-        Task AddToToManyRelationshipAsync(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken);
+        Task AddToToManyRelationshipAsync(TId leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken);
 
         /// <summary>
         /// Removes resources from a to-many relationship in the underlying data store.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken);
+        Task RemoveFromToManyRelationshipAsync(TResource leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken);
     }
 }

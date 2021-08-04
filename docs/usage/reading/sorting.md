@@ -34,9 +34,9 @@ GET /api/blogs?sort=count(articles) HTTP/1.1
 
 This sorts the list of blogs by their number of articles.
 
-## Nesting
+## Secondary endpoints
 
-Sorting can be used on nested endpoints, such as:
+Sorting can be used on secondary endpoints, such as:
 
 ```http
 GET /api/blogs/1/articles?sort=caption HTTP/1.1

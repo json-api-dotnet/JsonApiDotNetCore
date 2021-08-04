@@ -220,7 +220,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task AddToToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+            public Task AddToToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
@@ -231,7 +231,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(int primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(int leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -241,7 +241,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task RemoveFromToManyRelationshipAsync(int primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+            public Task RemoveFromToManyRelationshipAsync(int leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
@@ -276,7 +276,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task AddToToManyRelationshipAsync(Guid primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+            public Task AddToToManyRelationshipAsync(Guid leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
@@ -287,7 +287,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(Guid primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(Guid leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -297,7 +297,7 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task RemoveFromToManyRelationshipAsync(Guid primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+            public Task RemoveFromToManyRelationshipAsync(Guid leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
@@ -342,17 +342,17 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(IntResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(IntResource leftResource, object rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+            public Task AddToToManyRelationshipAsync(int leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task RemoveFromToManyRelationshipAsync(IntResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
+            public Task RemoveFromToManyRelationshipAsync(IntResource leftResource, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
@@ -397,17 +397,17 @@ namespace UnitTests.Extensions
                 throw new NotImplementedException();
             }
 
-            public Task SetRelationshipAsync(GuidResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+            public Task SetRelationshipAsync(GuidResource leftResource, object rightValue, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task AddToToManyRelationshipAsync(Guid primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+            public Task AddToToManyRelationshipAsync(Guid leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
 
-            public Task RemoveFromToManyRelationshipAsync(GuidResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
+            public Task RemoveFromToManyRelationshipAsync(GuidResource leftResource, ISet<IIdentifiable> rightResourceIds,
                 CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();

@@ -264,39 +264,39 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <inheritdoc />
-        public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
+        public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
-            ArgumentGuard.NotNull(parent, nameof(parent));
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
 
             var links = new RelationshipLinks();
-            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(parent.GetType());
+            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(leftResource.GetType());
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Self, relationship, leftResourceContext))
             {
-                links.Self = GetLinkForRelationshipSelf(parent.StringId, relationship);
+                links.Self = GetLinkForRelationshipSelf(leftResource.StringId, relationship);
             }
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Related, relationship, leftResourceContext))
             {
-                links.Related = GetLinkForRelationshipRelated(parent.StringId, relationship);
+                links.Related = GetLinkForRelationshipRelated(leftResource.StringId, relationship);
             }
 
             return links.HasValue() ? links : null;
         }
 
-        private string GetLinkForRelationshipSelf(string primaryId, RelationshipAttribute relationship)
+        private string GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
         {
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+            IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
         }
 
-        private string GetLinkForRelationshipRelated(string primaryId, RelationshipAttribute relationship)
+        private string GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
         {
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+            IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetSecondaryControllerActionName, routeValues);
         }

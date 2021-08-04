@@ -133,11 +133,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            string resourceName = ResourceContextProvider.GetResourceContext(resource.GetType()).PublicName;
+            string publicName = ResourceContextProvider.GetResourceContext(resource.GetType()).PublicName;
 
             return new ResourceIdentifierObject
             {
-                Type = resourceName,
+                Type = publicName,
                 Id = resource.StringId
             };
         }
