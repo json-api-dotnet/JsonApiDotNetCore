@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Middleware
         public bool IsReadOnly { get; set; }
 
         /// <inheritdoc />
-        public OperationKind? OperationKind { get; set; }
+        public WriteOperationKind? WriteOperation { get; set; }
 
         /// <inheritdoc />
         public string TransactionId { get; set; }
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Middleware
             Relationship = other.Relationship;
             IsCollection = other.IsCollection;
             IsReadOnly = other.IsReadOnly;
-            OperationKind = other.OperationKind;
+            WriteOperation = other.WriteOperation;
             TransactionId = other.TransactionId;
         }
     }

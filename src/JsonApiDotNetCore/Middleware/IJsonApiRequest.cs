@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// In case of a non-readonly request, this indicates the kind of write operation currently being processed.
         /// </summary>
-        OperationKind? OperationKind { get; }
+        WriteOperationKind? WriteOperation { get; }
 
         /// <summary>
         /// In case of an atomic:operations request, identifies the overarching transaction.

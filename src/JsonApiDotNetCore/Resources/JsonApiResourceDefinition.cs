@@ -124,21 +124,21 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnPrepareWriteAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.FromResult(rightResourceId);
         }
 
         /// <inheritdoc />
         public virtual Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -158,13 +158,13 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnWritingAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnWriteSucceededAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

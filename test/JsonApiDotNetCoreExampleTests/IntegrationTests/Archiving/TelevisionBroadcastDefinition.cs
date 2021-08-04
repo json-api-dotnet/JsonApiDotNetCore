@@ -112,27 +112,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             return walker.HasFilterOnArchivedAt;
         }
 
-        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.UpdateResource)
+            if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 _storedArchivedAt = broadcast.ArchivedAt;
             }
 
-            return base.OnPrepareWriteAsync(broadcast, operationKind, cancellationToken);
+            return base.OnPrepareWriteAsync(broadcast, writeOperation, cancellationToken);
         }
 
-        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 AssertIsNotArchived(broadcast);
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 AssertIsNotShiftingArchiveDate(broadcast);
             }
-            else if (operationKind == OperationKind.DeleteResource)
+            else if (writeOperation == WriteOperationKind.DeleteResource)
             {
                 TelevisionBroadcast broadcastToDelete =
                     await _dbContext.Broadcasts.FirstOrDefaultAsync(resource => resource.Id == broadcast.Id, cancellationToken);
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
                 }
             }
 
-            await base.OnWritingAsync(broadcast, operationKind, cancellationToken);
+            await base.OnWritingAsync(broadcast, writeOperation, cancellationToken);
         }
 
         [AssertionMethod]

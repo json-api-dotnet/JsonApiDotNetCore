@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Services
 
         protected virtual async Task InitializeResourceAsync(TResource resourceForDatabase, CancellationToken cancellationToken)
         {
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, OperationKind.CreateResource, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
         }
 
         protected async Task AssertResourcesToAssignInRelationshipsExistAsync(TResource primaryResource, CancellationToken cancellationToken)
@@ -298,8 +298,7 @@ namespace JsonApiDotNetCore.Services
                 QueryLayer queryLayer = _queryLayerComposer.ComposeForGetRelationshipRightIds(_request.Relationship, rightResourceIds);
 
                 List<MissingResourceInRelationship> missingResources =
-                    await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, rightResourceIds, cancellationToken)
-                        .ToListAsync(cancellationToken);
+                    await GetMissingRightResourcesAsync(queryLayer, _request.Relationship, rightResourceIds, cancellationToken).ToListAsync(cancellationToken);
 
                 if (missingResources.Any())
                 {
@@ -326,7 +325,7 @@ namespace JsonApiDotNetCore.Services
 
             _resourceChangeTracker.SetInitiallyStoredAttributeValues(resourceFromDatabase);
 
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.UpdateResource, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.UpdateResource, cancellationToken);
 
             try
             {
@@ -362,7 +361,7 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.SetRelationship, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.SetRelationship, cancellationToken);
 
             try
             {
@@ -412,7 +411,7 @@ namespace JsonApiDotNetCore.Services
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
 
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, OperationKind.RemoveFromRelationship, cancellationToken);
+            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
             await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
 

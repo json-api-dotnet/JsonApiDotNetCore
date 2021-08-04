@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         private void ValidateOperation(OperationContainer operation)
         {
-            if (operation.Kind == OperationKind.CreateResource)
+            if (operation.Kind == WriteOperationKind.CreateResource)
             {
                 DeclareLocalId(operation.Resource);
             }
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                 AssertLocalIdIsAssigned(secondaryResource);
             }
 
-            if (operation.Kind == OperationKind.CreateResource)
+            if (operation.Kind == WriteOperationKind.CreateResource)
             {
                 AssignLocalId(operation);
             }

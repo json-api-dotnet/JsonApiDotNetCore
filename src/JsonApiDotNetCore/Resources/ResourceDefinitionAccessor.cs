@@ -95,30 +95,30 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public async Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public async Task OnPrepareWriteAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnPrepareWriteAsync(resource, operationKind, cancellationToken);
+            await resourceDefinition.OnPrepareWriteAsync(resource, writeOperation, cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(leftResource, nameof(leftResource));
             ArgumentGuard.NotNull(hasOneRelationship, nameof(hasOneRelationship));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            return await resourceDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, rightResourceId, operationKind, cancellationToken);
+            return await resourceDefinition.OnSetToOneRelationshipAsync(leftResource, hasOneRelationship, rightResourceId, writeOperation, cancellationToken);
         }
 
         /// <inheritdoc />
         public async Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship,
-            ISet<IIdentifiable> rightResourceIds, OperationKind operationKind, CancellationToken cancellationToken)
+            ISet<IIdentifiable> rightResourceIds, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(leftResource, nameof(leftResource));
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCore.Resources
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, operationKind, cancellationToken);
+            await resourceDefinition.OnSetToManyRelationshipAsync(leftResource, hasManyRelationship, rightResourceIds, writeOperation, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -155,23 +155,23 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public async Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public async Task OnWritingAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnWritingAsync(resource, operationKind, cancellationToken);
+            await resourceDefinition.OnWritingAsync(resource, writeOperation, cancellationToken);
         }
 
         /// <inheritdoc />
-        public async Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public async Task OnWriteSucceededAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
             dynamic resourceDefinition = ResolveResourceDefinition(typeof(TResource));
-            await resourceDefinition.OnWriteSucceededAsync(resource, operationKind, cancellationToken);
+            await resourceDefinition.OnWriteSucceededAsync(resource, writeOperation, cancellationToken);
         }
 
         /// <inheritdoc />

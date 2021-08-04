@@ -147,16 +147,16 @@ namespace JsonApiDotNetCore.Resources
         /// <param name="resource">
         /// The original resource retrieved from the underlying data store, or a freshly instantiated resource in case of a POST resource request.
         /// </param>
-        /// <param name="operationKind">
-        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
-        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.SetRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
-        /// Note this intentionally excludes <see cref="OperationKind.DeleteResource" /> and <see cref="OperationKind.AddToRelationship" />, because for those
-        /// endpoints no resource is retrieved upfront.
+        /// <param name="writeOperation">
+        /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
+        /// <see cref="WriteOperationKind.UpdateResource" />, <see cref="WriteOperationKind.SetRelationship" /> and
+        /// <see cref="WriteOperationKind.RemoveFromRelationship" />. Note this intentionally excludes <see cref="WriteOperationKind.DeleteResource" /> and
+        /// <see cref="WriteOperationKind.AddToRelationship" />, because for those endpoints no resource is retrieved upfront.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+        Task OnPrepareWriteAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes before setting (or clearing) the resource at the right side of a to-one relationship.
@@ -174,9 +174,9 @@ namespace JsonApiDotNetCore.Resources
         /// <param name="rightResourceId">
         /// The new resource identifier (or <c>null</c> to clear the relationship), coming from the request.
         /// </param>
-        /// <param name="operationKind">
-        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
-        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
+        /// <param name="writeOperation">
+        /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
+        /// <see cref="WriteOperationKind.UpdateResource" /> and <see cref="WriteOperationKind.SetRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
@@ -185,7 +185,7 @@ namespace JsonApiDotNetCore.Resources
         /// The replacement resource identifier, or <c>null</c> to clear the relationship. Returns <paramref name="rightResourceId" /> by default.
         /// </returns>
         Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
-            OperationKind operationKind, CancellationToken cancellationToken);
+            WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
@@ -203,15 +203,15 @@ namespace JsonApiDotNetCore.Resources
         /// <param name="rightResourceIds">
         /// The set of resource identifiers to replace any existing set with, coming from the request.
         /// </param>
-        /// <param name="operationKind">
-        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
-        /// <see cref="OperationKind.UpdateResource" /> and <see cref="OperationKind.SetRelationship" />.
+        /// <param name="writeOperation">
+        /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
+        /// <see cref="WriteOperationKind.UpdateResource" /> and <see cref="WriteOperationKind.SetRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
         Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken);
+            WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes before adding resources to the right side of a to-many relationship, as part of a POST relationship request.
@@ -273,19 +273,19 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         /// <param name="resource">
         /// The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
-        /// the changes from the incoming request. Exception: In case <paramref name="operationKind" /> is <see cref="OperationKind.DeleteResource" /> or
-        /// <see cref="OperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable{T}.Id" /> property set, because for
-        /// those endpoints no resource is retrieved upfront.
+        /// the changes from the incoming request. Exception: In case <paramref name="writeOperation" /> is <see cref="WriteOperationKind.DeleteResource" /> or
+        /// <see cref="WriteOperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable{T}.Id" /> property set, because
+        /// for those endpoints no resource is retrieved upfront.
         /// </param>
-        /// <param name="operationKind">
-        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
-        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
-        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// <param name="writeOperation">
+        /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
+        /// <see cref="WriteOperationKind.UpdateResource" />, <see cref="WriteOperationKind.DeleteResource" />, <see cref="WriteOperationKind.SetRelationship" />
+        /// , <see cref="WriteOperationKind.AddToRelationship" /> and <see cref="WriteOperationKind.RemoveFromRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+        Task OnWritingAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes after successfully writing the changed resource to the underlying data store, as part of a write request.
@@ -296,15 +296,15 @@ namespace JsonApiDotNetCore.Resources
         /// <param name="resource">
         /// The resource as written to the underlying data store.
         /// </param>
-        /// <param name="operationKind">
-        /// Identifies from which endpoint this method was called. Possible values: <see cref="OperationKind.CreateResource" />,
-        /// <see cref="OperationKind.UpdateResource" />, <see cref="OperationKind.DeleteResource" />, <see cref="OperationKind.SetRelationship" />,
-        /// <see cref="OperationKind.AddToRelationship" /> and <see cref="OperationKind.RemoveFromRelationship" />.
+        /// <param name="writeOperation">
+        /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
+        /// <see cref="WriteOperationKind.UpdateResource" />, <see cref="WriteOperationKind.DeleteResource" />, <see cref="WriteOperationKind.SetRelationship" />
+        /// , <see cref="WriteOperationKind.AddToRelationship" /> and <see cref="WriteOperationKind.RemoveFromRelationship" />.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken);
+        Task OnWriteSucceededAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes after a resource has been deserialized from an incoming request body.

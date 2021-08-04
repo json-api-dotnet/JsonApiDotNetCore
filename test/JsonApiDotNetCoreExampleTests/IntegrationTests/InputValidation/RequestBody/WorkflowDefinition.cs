@@ -42,9 +42,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.Request
         {
         }
 
-        public override Task OnPrepareWriteAsync(Workflow resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnPrepareWriteAsync(Workflow resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.UpdateResource)
+            if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 _previousStage = resource.Stage;
             }
@@ -52,13 +52,13 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.Request
             return Task.CompletedTask;
         }
 
-        public override Task OnWritingAsync(Workflow resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnWritingAsync(Workflow resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 AssertHasValidInitialStage(resource);
             }
-            else if (operationKind == OperationKind.UpdateResource && resource.Stage != _previousStage)
+            else if (writeOperation == WriteOperationKind.UpdateResource && resource.Stage != _previousStage)
             {
                 AssertCanTransitionToStage(_previousStage, resource.Stage);
             }

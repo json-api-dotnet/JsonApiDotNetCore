@@ -21,11 +21,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Transacti
             _outboxMessageSet = dbContext.OutboxMessages;
         }
 
-        public override Task OnWritingAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnWritingAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
 
-            return FinishWriteAsync(group, operationKind, cancellationToken);
+            return FinishWriteAsync(group, writeOperation, cancellationToken);
         }
 
         protected override async Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken)

@@ -224,10 +224,10 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                request.OperationKind =
-                    httpRequest.Method == HttpMethod.Post.Method ? OperationKind.AddToRelationship :
-                    httpRequest.Method == HttpMethod.Patch.Method ? OperationKind.SetRelationship :
-                    httpRequest.Method == HttpMethod.Delete.Method ? OperationKind.RemoveFromRelationship : null;
+                request.WriteOperation =
+                    httpRequest.Method == HttpMethod.Post.Method ? WriteOperationKind.AddToRelationship :
+                    httpRequest.Method == HttpMethod.Patch.Method ? WriteOperationKind.SetRelationship :
+                    httpRequest.Method == HttpMethod.Delete.Method ? WriteOperationKind.RemoveFromRelationship : null;
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
@@ -248,10 +248,10 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:wrap_chained_method_calls chop_always
                 // @formatter:keep_existing_linebreaks true
 
-                request.OperationKind =
-                    httpRequest.Method == HttpMethod.Post.Method ? OperationKind.CreateResource :
-                    httpRequest.Method == HttpMethod.Patch.Method ? OperationKind.UpdateResource :
-                    httpRequest.Method == HttpMethod.Delete.Method ? OperationKind.DeleteResource : null;
+                request.WriteOperation =
+                    httpRequest.Method == HttpMethod.Post.Method ? WriteOperationKind.CreateResource :
+                    httpRequest.Method == HttpMethod.Patch.Method ? WriteOperationKind.UpdateResource :
+                    httpRequest.Method == HttpMethod.Delete.Method ? WriteOperationKind.DeleteResource : null;
 
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore

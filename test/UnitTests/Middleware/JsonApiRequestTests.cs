@@ -30,15 +30,15 @@ namespace UnitTests.Middleware
         [InlineData("GET", "/todoItems/1/tags", true, EndpointKind.Secondary, null, true)]
         [InlineData("GET", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, null, true)]
         [InlineData("GET", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, null, true)]
-        [InlineData("POST", "/todoItems", false, EndpointKind.Primary, OperationKind.CreateResource, false)]
-        [InlineData("POST", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.AddToRelationship, false)]
-        [InlineData("PATCH", "/todoItems/1", false, EndpointKind.Primary, OperationKind.UpdateResource, false)]
-        [InlineData("PATCH", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, OperationKind.SetRelationship, false)]
-        [InlineData("PATCH", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.SetRelationship, false)]
-        [InlineData("DELETE", "/todoItems/1", false, EndpointKind.Primary, OperationKind.DeleteResource, false)]
-        [InlineData("DELETE", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, OperationKind.RemoveFromRelationship, false)]
+        [InlineData("POST", "/todoItems", false, EndpointKind.Primary, WriteOperationKind.CreateResource, false)]
+        [InlineData("POST", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, WriteOperationKind.AddToRelationship, false)]
+        [InlineData("PATCH", "/todoItems/1", false, EndpointKind.Primary, WriteOperationKind.UpdateResource, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/owner", false, EndpointKind.Relationship, WriteOperationKind.SetRelationship, false)]
+        [InlineData("PATCH", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, WriteOperationKind.SetRelationship, false)]
+        [InlineData("DELETE", "/todoItems/1", false, EndpointKind.Primary, WriteOperationKind.DeleteResource, false)]
+        [InlineData("DELETE", "/todoItems/1/relationships/tags", true, EndpointKind.Relationship, WriteOperationKind.RemoveFromRelationship, false)]
         public async Task Sets_request_properties_correctly(string requestMethod, string requestPath, bool expectIsCollection, EndpointKind expectKind,
-            OperationKind? expectOperationKind, bool expectIsReadOnly)
+            WriteOperationKind? expectWriteOperation, bool expectIsReadOnly)
         {
             // Arrange
             var options = new JsonApiOptions
@@ -69,7 +69,7 @@ namespace UnitTests.Middleware
             // Assert
             request.IsCollection.Should().Be(expectIsCollection);
             request.Kind.Should().Be(expectKind);
-            request.OperationKind.Should().Be(expectOperationKind);
+            request.WriteOperation.Should().Be(expectWriteOperation);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
             request.PrimaryResource.Should().NotBeNull();
             request.PrimaryResource.PublicName.Should().Be("todoItems");

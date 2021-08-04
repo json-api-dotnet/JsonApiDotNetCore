@@ -13,12 +13,12 @@ namespace JsonApiDotNetCore.Resources
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
-        public OperationKind Kind { get; }
+        public WriteOperationKind Kind { get; }
         public IIdentifiable Resource { get; }
         public ITargetedFields TargetedFields { get; }
         public IJsonApiRequest Request { get; }
 
-        public OperationContainer(OperationKind kind, IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
+        public OperationContainer(WriteOperationKind kind, IIdentifiable resource, ITargetedFields targetedFields, IJsonApiRequest request)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
