@@ -103,14 +103,6 @@ namespace JsonApiDotNetCore.Repositories
 
             ArgumentGuard.NotNull(layer, nameof(layer));
 
-            QueryLayer rewrittenLayer = layer;
-
-            if (EntityFrameworkCoreSupport.Version.Major < 5)
-            {
-                var writer = new MemoryLeakDetectionBugRewriter();
-                rewrittenLayer = writer.Rewrite(layer);
-            }
-
             IQueryable<TResource> source = GetAll();
 
             // @formatter:wrap_chained_method_calls chop_always
@@ -136,7 +128,7 @@ namespace JsonApiDotNetCore.Repositories
             var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph,
                 _dbContext.Model);
 
-            Expression expression = builder.ApplyQuery(rewrittenLayer);
+            Expression expression = builder.ApplyQuery(layer);
             return source.Provider.CreateQuery<TResource>(expression);
         }
 

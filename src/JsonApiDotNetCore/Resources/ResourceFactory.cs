@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Resources
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        internal static bool HasSingleConstructorWithoutParameters(Type type)
+        private static bool HasSingleConstructorWithoutParameters(Type type)
         {
             ConstructorInfo[] constructors = type.GetConstructors().Where(constructor => !constructor.IsStatic).ToArray();
 
