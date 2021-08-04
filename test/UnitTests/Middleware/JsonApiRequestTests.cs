@@ -70,7 +70,6 @@ namespace UnitTests.Middleware
             request.IsCollection.Should().Be(expectIsCollection);
             request.Kind.Should().Be(expectKind);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
-            request.BasePath.Should().BeEmpty();
             request.PrimaryResource.Should().NotBeNull();
             request.PrimaryResource.PublicName.Should().Be("todoItems");
         }

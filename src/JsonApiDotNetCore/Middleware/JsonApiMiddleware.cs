@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -13,7 +11,6 @@ using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Net.Http.Headers;
@@ -218,7 +215,6 @@ namespace JsonApiDotNetCore.Middleware
             request.Kind = EndpointKind.Primary;
             request.PrimaryResource = primaryResourceContext;
             request.PrimaryId = GetPrimaryRequestId(routeValues);
-            request.BasePath = GetBasePath(primaryResourceContext.PublicName, options, httpRequest);
 
             string relationshipName = GetRelationshipNameForSecondaryRequest(routeValues);
 
@@ -245,58 +241,6 @@ namespace JsonApiDotNetCore.Middleware
             return routeValues.TryGetValue("id", out object id) ? (string)id : null;
         }
 
-        private static string GetBasePath(string resourceName, IJsonApiOptions options, HttpRequest httpRequest)
-        {
-            var builder = new StringBuilder();
-
-            if (!options.UseRelativeLinks)
-            {
-                builder.Append(httpRequest.Scheme);
-                builder.Append("://");
-                builder.Append(httpRequest.Host);
-            }
-
-            if (httpRequest.PathBase.HasValue)
-            {
-                builder.Append(httpRequest.PathBase);
-            }
-
-            string customRoute = GetCustomRoute(resourceName, options.Namespace, httpRequest.HttpContext);
-
-            if (!string.IsNullOrEmpty(customRoute))
-            {
-                builder.Append('/');
-                builder.Append(customRoute);
-            }
-            else if (!string.IsNullOrEmpty(options.Namespace))
-            {
-                builder.Append('/');
-                builder.Append(options.Namespace);
-            }
-
-            return builder.ToString();
-        }
-
-        private static string GetCustomRoute(string resourceName, string apiNamespace, HttpContext httpContext)
-        {
-            if (resourceName != null)
-            {
-                Endpoint endpoint = httpContext.GetEndpoint();
-                var routeAttribute = endpoint?.Metadata.GetMetadata<RouteAttribute>();
-
-                if (routeAttribute != null && httpContext.Request.Path.Value != null)
-                {
-                    List<string> trimmedComponents = httpContext.Request.Path.Value.Trim('/').Split('/').ToList();
-                    int resourceNameIndex = trimmedComponents.FindIndex(component => component == resourceName);
-                    string[] newComponents = trimmedComponents.Take(resourceNameIndex).ToArray();
-                    string customRoute = string.Join('/', newComponents);
-                    return customRoute == apiNamespace ? null : customRoute;
-                }
-            }
-
-            return null;
-        }
-
         private static string GetRelationshipNameForSecondaryRequest(RouteValueDictionary routeValues)
         {
             return routeValues.TryGetValue("relationshipName", out object routeValue) ? (string)routeValue : null;
@@ -318,7 +262,6 @@ namespace JsonApiDotNetCore.Middleware
         {
             request.IsReadOnly = false;
             request.Kind = EndpointKind.AtomicOperations;
-            request.BasePath = GetBasePath(null, options, httpRequest);
         }
     }
 }
