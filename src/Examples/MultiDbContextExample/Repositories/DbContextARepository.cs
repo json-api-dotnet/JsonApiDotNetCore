@@ -14,8 +14,9 @@ namespace MultiDbContextExample.Repositories
         where TResource : class, IIdentifiable<int>
     {
         public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> contextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
         }
     }

@@ -34,32 +34,31 @@ namespace JsonApiDotNetCore.Repositories
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>> _traceWriter;
 
         /// <inheritdoc />
         public virtual string TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId.ToString();
 
         public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
-            ArgumentGuard.NotNull(contextResolver, nameof(contextResolver));
-            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(contextResolver, nameof(contextResolver));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
+            ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _targetedFields = targetedFields;
+            _dbContext = contextResolver.GetContext();
             _resourceGraph = resourceGraph;
             _resourceFactory = resourceFactory;
             _constraintProviders = constraintProviders;
-            _dbContext = contextResolver.GetContext();
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _traceWriter = new TraceLogWriter<EntityFrameworkCoreRepository<TResource, TId>>(loggerFactory);
-
-#pragma warning disable 612 // Method is obsolete
-            _resourceDefinitionAccessor = resourceFactory.GetResourceDefinitionAccessor();
-#pragma warning restore 612
         }
 
         /// <inheritdoc />
@@ -533,8 +532,9 @@ namespace JsonApiDotNetCore.Repositories
         where TResource : class, IIdentifiable<int>
     {
         public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory)
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
         }
     }

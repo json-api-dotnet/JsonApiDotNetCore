@@ -29,22 +29,20 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields,
-            IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options)
+            IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor)
             : base(resourceContextProvider, resourceFactory)
         {
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _targetedFields = targetedFields;
             _httpContextAccessor = httpContextAccessor;
             _request = request;
             _options = options;
-
-#pragma warning disable 612 // Method is obsolete
-            _resourceDefinitionAccessor = resourceFactory.GetResourceDefinitionAccessor();
-#pragma warning restore 612
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
         }
 
         /// <inheritdoc />

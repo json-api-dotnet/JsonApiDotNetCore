@@ -20,12 +20,6 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-        {
-            return _serviceProvider.GetRequiredService<IResourceDefinitionAccessor>();
-        }
-
-        /// <inheritdoc />
         public IIdentifiable CreateInstance(Type resourceType)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
