@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Serialization
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 
             string url = context.HttpContext.Request.GetEncodedUrl();
-            _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
+            _traceWriter.LogMessage(() => $"Received {context.HttpContext.Request.Method} request at '{url}' with body: <<{body}>>");
 
             object model = null;
 
