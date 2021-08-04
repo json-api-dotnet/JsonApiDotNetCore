@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     /// Used on an ASP.NET Core controller class to indicate which query string parameters are blocked.
     /// </summary>
     /// <example><![CDATA[
-    /// [DisableQueryString(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
+    /// [DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
     /// public class CustomersController : JsonApiController<Customer> { }
     /// ]]></example>
     /// <example><![CDATA[
@@ -21,20 +21,20 @@ namespace JsonApiDotNetCore.Controllers.Annotations
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface)]
     public sealed class DisableQueryStringAttribute : Attribute
     {
-        public static readonly DisableQueryStringAttribute Empty = new(StandardQueryStringParameters.None);
+        public static readonly DisableQueryStringAttribute Empty = new(JsonApiQueryStringParameters.None);
 
         public IReadOnlySet<string> ParameterNames { get; }
 
         /// <summary>
         /// Disables one or more of the builtin query parameters for a controller.
         /// </summary>
-        public DisableQueryStringAttribute(StandardQueryStringParameters parameters)
+        public DisableQueryStringAttribute(JsonApiQueryStringParameters parameters)
         {
             var parameterNames = new HashSet<string>();
 
-            foreach (StandardQueryStringParameters value in Enum.GetValues(typeof(StandardQueryStringParameters)))
+            foreach (JsonApiQueryStringParameters value in Enum.GetValues(typeof(JsonApiQueryStringParameters)))
             {
-                if (value != StandardQueryStringParameters.None && value != StandardQueryStringParameters.All && parameters.HasFlag(value))
+                if (value != JsonApiQueryStringParameters.None && value != JsonApiQueryStringParameters.All && parameters.HasFlag(value))
                 {
                     parameterNames.Add(value.ToString());
                 }
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
 
         /// <summary>
         /// It is allowed to use a comma-separated list of strings to indicate which query parameters should be disabled, because the user may have defined
-        /// custom query parameters that are not included in the <see cref="StandardQueryStringParameters" /> enum.
+        /// custom query parameters that are not included in the <see cref="JsonApiQueryStringParameters" /> enum.
         /// </summary>
         public DisableQueryStringAttribute(string parameterNames)
         {
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
             ParameterNames = parameterNames.Split(",").ToHashSet();
         }
 
-        public bool ContainsParameter(StandardQueryStringParameters parameter)
+        public bool ContainsParameter(JsonApiQueryStringParameters parameter)
         {
             string name = parameter.ToString();
             return ParameterNames.Contains(name);

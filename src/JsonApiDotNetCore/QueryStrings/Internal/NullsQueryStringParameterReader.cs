@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
             return _options.AllowQueryStringOverrideForSerializerNullValueHandling &&
-                !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Nulls);
+                !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Nulls);
         }
 
         /// <inheritdoc />

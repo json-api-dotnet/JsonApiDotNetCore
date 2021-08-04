@@ -43,11 +43,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData(StandardQueryStringParameters.Filter, false)]
-        [InlineData(StandardQueryStringParameters.All, false)]
-        [InlineData(StandardQueryStringParameters.None, true)]
-        [InlineData(StandardQueryStringParameters.Page, true)]
-        public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
+        [InlineData(JsonApiQueryStringParameters.Filter, false)]
+        [InlineData(JsonApiQueryStringParameters.All, false)]
+        [InlineData(JsonApiQueryStringParameters.None, true)]
+        [InlineData(JsonApiQueryStringParameters.Page, true)]
+        public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
             bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
