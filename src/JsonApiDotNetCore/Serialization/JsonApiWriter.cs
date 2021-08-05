@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -46,6 +47,8 @@ namespace JsonApiDotNetCore.Serialization
         public async Task WriteAsync(OutputFormatterWriteContext context)
         {
             ArgumentGuard.NotNull(context, nameof(context));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body");
 
             HttpRequest request = context.HttpContext.Request;
             HttpResponse response = context.HttpContext.Response;

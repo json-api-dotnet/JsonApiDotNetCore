@@ -1,5 +1,6 @@
 using System;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -14,10 +16,14 @@ namespace JsonApiDotNetCoreExample.Startups
 {
     public sealed class Startup : EmptyStartup
     {
+        private readonly ICodeTimerSession _codeTimingSession;
         private readonly string _connectionString;
 
         public Startup(IConfiguration configuration)
         {
+            _codeTimingSession = new DefaultCodeTimerSession();
+            CodeTimingSessionManager.Capture(_codeTimingSession);
+
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
             _connectionString = configuration["Data:DefaultConnection"].Replace("###", postgresPassword);
         }
@@ -25,43 +31,67 @@ namespace JsonApiDotNetCoreExample.Startups
         // This method gets called by the runtime. Use this method to add services to the container.
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ISystemClock, SystemClock>();
-
-            services.AddDbContext<AppDbContext>(options =>
+            using (CodeTimingSessionManager.Current.Measure("Configure other (startup)"))
             {
-                options.UseNpgsql(_connectionString);
-#if DEBUG
-                options.EnableSensitiveDataLogging();
-                options.EnableDetailedErrors();
-#endif
-            });
+                services.AddSingleton<ISystemClock, SystemClock>();
 
-            services.AddJsonApi<AppDbContext>(options =>
-            {
-                options.Namespace = "api/v1";
-                options.UseRelativeLinks = true;
-                options.ValidateModelState = true;
-                options.IncludeTotalResourceCount = true;
-                options.SerializerSettings.Formatting = Formatting.Indented;
-                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                services.AddDbContext<AppDbContext>(options =>
+                {
+                    options.UseNpgsql(_connectionString);
 #if DEBUG
-                options.IncludeExceptionStackTraceInErrors = true;
+                    options.EnableSensitiveDataLogging();
+                    options.EnableDetailedErrors();
 #endif
-            }, discovery => discovery.AddCurrentAssembly());
+                });
+
+                using (CodeTimingSessionManager.Current.Measure("Configure JSON:API (startup)"))
+                {
+                    services.AddJsonApi<AppDbContext>(options =>
+                    {
+                        options.Namespace = "api/v1";
+                        options.UseRelativeLinks = true;
+                        options.ValidateModelState = true;
+                        options.IncludeTotalResourceCount = true;
+                        options.SerializerSettings.Formatting = Formatting.Indented;
+                        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+#if DEBUG
+                        options.IncludeExceptionStackTraceInErrors = true;
+#endif
+                    }, discovery => discovery.AddCurrentAssembly());
+                }
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
+        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
         {
-            using (IServiceScope scope = app.ApplicationServices.CreateScope())
+            ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
+
+            using (CodeTimingSessionManager.Current.Measure("Initialize other (startup)"))
             {
-                var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                appDbContext.Database.EnsureCreated();
+                using (IServiceScope scope = app.ApplicationServices.CreateScope())
+                {
+                    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                    appDbContext.Database.EnsureCreated();
+                }
+
+                app.UseRouting();
+
+                using (CodeTimingSessionManager.Current.Measure("Initialize JSON:API (startup)"))
+                {
+                    app.UseJsonApi();
+                }
+
+                app.UseEndpoints(endpoints => endpoints.MapControllers());
             }
 
-            app.UseRouting();
-            app.UseJsonApi();
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            if (CodeTimingSessionManager.IsEnabled)
+            {
+                string timingResults = CodeTimingSessionManager.Current.GetResults();
+                logger.LogInformation($"Measurement results for application startup:{Environment.NewLine}{timingResults}");
+            }
+
+            _codeTimingSession.Dispose();
         }
     }
 }

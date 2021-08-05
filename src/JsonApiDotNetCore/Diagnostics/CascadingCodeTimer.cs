@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Diagnostics
         }
 
         /// <inheritdoc />
-        public string GetResult()
+        public string GetResults()
         {
             int paddingLength = GetPaddingLength();
 

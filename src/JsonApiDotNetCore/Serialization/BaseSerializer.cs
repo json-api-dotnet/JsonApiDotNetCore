@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -43,6 +44,8 @@ namespace JsonApiDotNetCore.Serialization
         protected Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes,
             IReadOnlyCollection<RelationshipAttribute> relationships)
         {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Serializer.Build (single)");
+
             if (resource == null)
             {
                 return new Document();
@@ -75,6 +78,8 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(resources, nameof(resources));
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Serializer.Build (list)");
+
             var data = new List<ResourceObject>();
 
             foreach (IIdentifiable resource in resources)
@@ -91,6 +96,8 @@ namespace JsonApiDotNetCore.Serialization
         protected string SerializeObject(object value, JsonSerializerSettings defaultSettings, Action<JsonSerializer> changeSerializer = null)
         {
             ArgumentGuard.NotNull(defaultSettings, nameof(defaultSettings));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Newtonsoft.Serialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
             var serializer = JsonSerializer.CreateDefault(defaultSettings);
             changeSerializer?.Invoke(serializer);

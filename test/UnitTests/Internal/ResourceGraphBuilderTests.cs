@@ -31,7 +31,7 @@ namespace UnitTests.Internal
         public void Adding_DbContext_Members_That_Do_Not_Implement_IIdentifiable_Logs_Warning()
         {
             // Arrange
-            var loggerFactory = new FakeLoggerFactory();
+            var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
             resourceGraphBuilder.Add(typeof(TestContext));
 

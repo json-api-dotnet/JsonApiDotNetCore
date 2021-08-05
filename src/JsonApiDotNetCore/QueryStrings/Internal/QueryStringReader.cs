@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers.Annotations;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
@@ -35,6 +37,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute)
         {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Parse query string");
+
             DisableQueryStringAttribute disableQueryStringAttributeNotNull = disableQueryStringAttribute ?? DisableQueryStringAttribute.Empty;
 
             foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)

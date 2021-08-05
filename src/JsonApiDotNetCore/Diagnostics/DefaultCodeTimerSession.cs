@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.Diagnostics
     /// General code timing session management. Can be used with async/wait, but it cannot distinguish between concurrently running threads, so you'll need
     /// to pass an <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
     /// </summary>
-    internal sealed class DefaultCodeTimerSession : ICodeTimerSession
+    public sealed class DefaultCodeTimerSession : ICodeTimerSession
     {
         private readonly AsyncLocal<ICodeTimer> _codeTimerInContext = new();
 

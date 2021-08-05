@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -46,6 +47,8 @@ namespace JsonApiDotNetCore.Serialization
         public async Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
             ArgumentGuard.NotNull(context, nameof(context));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Read request body");
 
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 

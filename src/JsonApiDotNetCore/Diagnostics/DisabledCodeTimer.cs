@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Diagnostics
             return this;
         }
 
-        public string GetResult()
+        public string GetResults()
         {
             return string.Empty;
         }

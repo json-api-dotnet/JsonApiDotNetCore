@@ -22,24 +22,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
 
             testContext.UseController<AuditEntriesController>();
 
-            FakeLoggerFactory loggerFactory = null;
+            var loggerFactory = new FakeLoggerFactory(LogLevel.Trace);
 
             testContext.ConfigureLogging(options =>
             {
-                loggerFactory = new FakeLoggerFactory();
-
                 options.ClearProviders();
                 options.AddProvider(loggerFactory);
                 options.SetMinimumLevel(LogLevel.Trace);
-                options.AddFilter((_, _) => true);
             });
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {
-                if (loggerFactory != null)
-                {
-                    services.AddSingleton(_ => loggerFactory);
-                }
+                services.AddSingleton(loggerFactory);
             });
         }
 

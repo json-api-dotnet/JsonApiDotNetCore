@@ -620,6 +620,7 @@ $left$ = $right$;</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/ReplacePattern/@EntryValue">$collection$.IsNullOrEmpty()</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/SearchPattern/@EntryValue">$collection$ == null || !$collection$.Any()</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/StructuralSearch/Pattern/=B3D9EE6B4EC62A4F961EB15F9ADEC2C6/Severity/@EntryValue">WARNING</s:String>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=appsettings/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Assignee/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Injectables/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=linebreaks/@EntryIndexedValue">True</s:Boolean>

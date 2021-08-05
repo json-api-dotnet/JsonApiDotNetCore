@@ -9,9 +9,9 @@ namespace JsonApiDotNetCore.Diagnostics
     /// Provides access to the "current" measurement, which removes the need to pass along a <see cref="CascadingCodeTimer" /> instance through the entire
     /// call chain.
     /// </summary>
-    internal static class CodeTimingSessionManager
+    public static class CodeTimingSessionManager
     {
-        private static readonly bool IsEnabled;
+        public static readonly bool IsEnabled;
         private static ICodeTimerSession _session;
 
         public static ICodeTimer Current
@@ -38,6 +38,7 @@ namespace JsonApiDotNetCore.Diagnostics
 #endif
         }
 
+        // ReSharper disable once UnusedMember.Local
         private static bool IsRunningInTest()
         {
             const string testAssemblyName = "xunit.core";

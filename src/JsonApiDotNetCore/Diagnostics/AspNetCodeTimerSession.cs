@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Diagnostics
@@ -8,7 +9,8 @@ namespace JsonApiDotNetCore.Diagnostics
     /// Can be used with async/wait, but it cannot distinguish between concurrently running threads within a single HTTP request, so you'll need to pass an
     /// <see cref="CascadingCodeTimer" /> instance through the entire call chain in that case.
     /// </summary>
-    internal sealed class AspNetCodeTimerSession : ICodeTimerSession
+    [PublicAPI]
+    public sealed class AspNetCodeTimerSession : ICodeTimerSession
     {
         private const string HttpContextItemKey = "CascadingCodeTimer:Session";
 

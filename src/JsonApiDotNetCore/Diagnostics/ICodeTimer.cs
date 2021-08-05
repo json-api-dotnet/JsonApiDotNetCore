@@ -5,7 +5,7 @@ namespace JsonApiDotNetCore.Diagnostics
     /// <summary>
     /// Records execution times for code blocks.
     /// </summary>
-    internal interface ICodeTimer : IDisposable
+    public interface ICodeTimer : IDisposable
     {
         /// <summary>
         /// Starts recording the duration of a code block. Wrap this call in a <c>using</c> statement, so the recording stops when the return value goes out of
@@ -22,6 +22,6 @@ namespace JsonApiDotNetCore.Diagnostics
         /// <summary>
         /// Returns intermediate or final results.
         /// </summary>
-        string GetResult();
+        string GetResults();
     }
 }
