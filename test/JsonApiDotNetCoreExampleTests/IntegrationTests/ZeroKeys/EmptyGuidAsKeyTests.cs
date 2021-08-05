@@ -330,7 +330,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             string route = $"/games/{existingGame.StringId}/relationships/maps";

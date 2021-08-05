@@ -30,7 +30,7 @@ namespace UnitTests.Serialization
 
         protected Document CreateDocumentWithRelationships(string primaryType)
         {
-            return new()
+            return new Document
             {
                 Data = new ResourceObject
                 {
@@ -67,7 +67,7 @@ namespace UnitTests.Serialization
 
         protected Document CreateTestResourceDocument()
         {
-            return new()
+            return new Document
             {
                 Data = new ResourceObject
                 {

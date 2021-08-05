@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             {
                                 performers = new
                                 {
-                                    data = new object[0]
+                                    data = Array.Empty<object>()
                                 }
                             }
                         }
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             {
                                 tracks = new
                                 {
-                                    data = new object[0]
+                                    data = Array.Empty<object>()
                                 }
                             }
                         }

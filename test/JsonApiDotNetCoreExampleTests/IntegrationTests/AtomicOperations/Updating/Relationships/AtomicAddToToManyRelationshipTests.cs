@@ -927,7 +927,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
                             id = existingTrack.StringId,
                             relationship = "performers"
                         },
-                        data = new object[0]
+                        data = Array.Empty<object>()
                     }
                 }
             };

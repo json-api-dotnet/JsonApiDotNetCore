@@ -22,7 +22,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages
 
         public static OutgoingMessage CreateFromContent(IMessageContent content)
         {
-            return new()
+            return new OutgoingMessage
             {
                 Type = content.GetType().Name,
                 FormatVersion = content.FormatVersion,

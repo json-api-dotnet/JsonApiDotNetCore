@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -82,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Mixed
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new object[0]
+                atomic__operations = Array.Empty<object>()
             };
 
             const string route = "/operations";
