@@ -8,10 +8,7 @@
                 }
             ],
             "dest": "api",
-            "disableGitFeatures": false,
-            "properties": {
-                "targetFramework": "netcoreapp3.1"
-            }
+            "disableGitFeatures": false
         }
     ],
     "build": {
