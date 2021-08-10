@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore
 
         public static List<T> AsList<T>(this T element)
         {
-            return new List<T>
+            return new()
             {
                 element
             };
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore
 
         public static HashSet<T> AsHashSet<T>(this T element)
         {
-            return new HashSet<T>
+            return new()
             {
                 element
             };

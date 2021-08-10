@@ -135,17 +135,9 @@ namespace UnitTests.Middleware
 
         private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id = null)
         {
-            var context = new DefaultHttpContext
-            {
-                Request =
-                {
-                    Path = new PathString(path)
-                },
-                Response =
-                {
-                    Body = new MemoryStream()
-                }
-            };
+            var context = new DefaultHttpContext();
+            context.Request.Path = new PathString(path);
+            context.Response.Body = new MemoryStream();
 
             var feature = new RouteValuesFeature
             {

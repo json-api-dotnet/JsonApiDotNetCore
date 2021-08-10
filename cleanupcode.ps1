@@ -8,10 +8,10 @@ if ($LASTEXITCODE -ne 0) {
     throw "Tool restore failed with exit code $LASTEXITCODE"
 }
 
-dotnet restore
+dotnet build -c Release
 
 if ($LASTEXITCODE -ne 0) {
-    throw "Package restore failed with exit code $LASTEXITCODE"
+    throw "Build failed with exit code $LASTEXITCODE"
 }
 
 dotnet regitlint -s JsonApiDotNetCore.sln --print-command --jb --profile --jb --profile='\"JADNC Full Cleanup\"' --jb --properties:Configuration=Release --jb --verbosity=WARN
