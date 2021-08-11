@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
             new Faker<WorkItem>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(workItem => workItem.Description, faker => faker.Lorem.Sentence())
-                .RuleFor(workItem => workItem.DueAt, faker => faker.Date.Future())
+                .RuleFor(workItem => workItem.DueAt, faker => faker.Date.Future()
+                    .TruncateToWholeMilliseconds())
                 .RuleFor(workItem => workItem.Priority, faker => faker.PickRandom<WorkItemPriority>()));
 
         private readonly Lazy<Faker<WorkTag>> _lazyWorkTagFaker = new(() =>

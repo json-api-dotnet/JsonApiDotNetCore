@@ -35,7 +35,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInje
                 new Faker<GiftCertificate>()
                     .UseSeed(GetFakerSeed())
                     .CustomInstantiator(_ => new GiftCertificate(ResolveDbContext()))
-                    .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset()));
+                    .RuleFor(giftCertificate => giftCertificate.IssueDate, faker => faker.Date.PastOffset()
+                        .TruncateToWholeMilliseconds()));
         }
 
         private InjectionDbContext ResolveDbContext()
