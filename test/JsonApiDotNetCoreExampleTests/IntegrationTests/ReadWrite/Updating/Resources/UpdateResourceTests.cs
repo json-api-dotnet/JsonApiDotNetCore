@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
@@ -28,6 +29,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             testContext.UseController<WorkItemGroupsController>();
             testContext.UseController<UserAccountsController>();
             testContext.UseController<RgbColorsController>();
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
+                services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
+            });
         }
 
         [Fact]
@@ -202,7 +209,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
             responseDocument.SingleData.Id.Should().Be(existingGroup.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(newName);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newName + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
             responseDocument.SingleData.Attributes["isPublic"].Should().Be(existingGroup.IsPublic);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
@@ -210,7 +217,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(existingGroup.Id);
 
-                groupInDatabase.Name.Should().Be(newName);
+                groupInDatabase.Name.Should().Be(newName + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
                 groupInDatabase.IsPublic.Should().Be(existingGroup.IsPublic);
             });
 
@@ -349,17 +356,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
-            responseDocument.SingleData.Attributes.Should().ContainKey("concurrencyToken");
+            responseDocument.SingleData.Attributes["isImportant"].Should().Be(false);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Description.Should().Be(newDescription);
+                workItemInDatabase.Description.Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
                 workItemInDatabase.DueAt.Should().BeNull();
                 workItemInDatabase.Priority.Should().Be(existingWorkItem.Priority);
             });
@@ -404,7 +411,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
             responseDocument.SingleData.Relationships.Should().BeNull();
 
@@ -412,7 +419,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Description.Should().Be(newDescription);
+                workItemInDatabase.Description.Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
                 workItemInDatabase.DueAt.Should().BeNull();
                 workItemInDatabase.Priority.Should().Be(existingWorkItem.Priority);
             });
@@ -459,7 +466,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
@@ -476,7 +483,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             {
                 WorkItem workItemInDatabase = await dbContext.WorkItems.FirstWithIdAsync(existingWorkItem.Id);
 
-                workItemInDatabase.Description.Should().Be(newDescription);
+                workItemInDatabase.Description.Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
                 workItemInDatabase.DueAt.Should().BeNull();
                 workItemInDatabase.Priority.Should().Be(existingWorkItem.Priority);
             });
@@ -817,7 +824,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     id = existingWorkItem.StringId,
                     attributes = new
                     {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
+                        isImportant = true
                     }
                 }
             };
@@ -835,7 +842,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Changing the value of 'concurrencyToken' is not allowed. - Request body:");
+            error.Detail.Should().StartWith("Changing the value of 'isImportant' is not allowed. - Request body:");
         }
 
         [Fact]
@@ -858,7 +865,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     id = existingWorkItem.StringId,
                     attributes = new
                     {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
+                        isDeprecated = true
                     }
                 }
             };
@@ -876,7 +883,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'concurrencyToken' is read-only. - Request body:");
+            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
         }
 
         [Fact]
@@ -1067,7 +1074,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
+            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -1084,7 +1091,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                workItemInDatabase.Description.Should().Be(newDescription);
+                workItemInDatabase.Description.Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
 
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[0].Id);

@@ -57,11 +57,9 @@ namespace JsonApiDotNetCore.Resources
         private void AddSecondaryResources(RelationshipAttribute relationship, HashSet<IIdentifiable> secondaryResources)
         {
             object rightValue = relationship.GetValue(Resource);
+            ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
-            foreach (IIdentifiable rightResource in CollectionConverter.ExtractResources(rightValue))
-            {
-                secondaryResources.Add(rightResource);
-            }
+            secondaryResources.AddRange(rightResources);
         }
     }
 }

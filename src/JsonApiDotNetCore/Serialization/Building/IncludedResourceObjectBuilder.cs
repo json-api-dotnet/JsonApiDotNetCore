@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private void UpdateRelationships(ResourceObject resourceObject)
         {
-            foreach (string relationshipName in resourceObject.Relationships.Keys.ToArray())
+            foreach (string relationshipName in resourceObject.Relationships.Keys)
             {
                 ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
                 RelationshipAttribute relationship = resourceContext.Relationships.Single(rel => rel.PublicName == relationshipName);

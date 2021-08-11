@@ -21,10 +21,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 
         [NotMapped]
         [Attr(Capabilities = ~(AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange))]
-        public Guid ConcurrencyToken
+        public bool IsImportant
         {
-            get => Guid.NewGuid();
-            set => _ = value;
+            get => Priority == WorkItemPriority.High;
+            set => Priority = value ? WorkItemPriority.High : throw new NotSupportedException();
         }
 
         [HasOne]

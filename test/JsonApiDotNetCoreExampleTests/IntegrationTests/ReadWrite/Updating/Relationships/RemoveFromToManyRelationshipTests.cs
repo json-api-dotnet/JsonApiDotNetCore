@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -24,6 +31,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             _testContext = testContext;
 
             testContext.UseController<WorkItemsController>();
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddSingleton<IResourceDefinition<WorkItem>, RemoveExtraFromWorkItemDefinition>();
+            });
+
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            workItemDefinition.Reset();
         }
 
         [Fact]
@@ -119,6 +134,59 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
         }
 
         [Fact]
+        public async Task Can_remove_from_OneToMany_relationship_with_extra_removals_from_resource_definition()
+        {
+            // Arrange
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Subscribers = _fakers.UserAccount.Generate(3).ToHashSet();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<UserAccount>();
+                dbContext.AddInRange(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            workItemDefinition.ExtraSubscribersIdsToRemove.Add(existingWorkItem.Subscribers.ElementAt(2).Id);
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "userAccounts",
+                        id = existingWorkItem.Subscribers.ElementAt(0).StringId
+                    }
+                }
+            };
+
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            workItemDefinition.PreloadedSubscribers.Should().HaveCount(1);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Subscribers).FirstWithIdAsync(existingWorkItem.Id);
+
+                workItemInDatabase.Subscribers.Should().HaveCount(1);
+                workItemInDatabase.Subscribers.Single().Id.Should().Be(existingWorkItem.Subscribers.ElementAt(1).Id);
+
+                List<UserAccount> userAccountsInDatabase = await dbContext.UserAccounts.ToListAsync();
+                userAccountsInDatabase.Should().HaveCount(3);
+            });
+        }
+
+        [Fact]
         public async Task Can_remove_from_ManyToMany_relationship_with_unassigned_existing_resource()
         {
             // Arrange
@@ -160,6 +228,59 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
             responseDocument.Should().BeEmpty();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                WorkItem workItemInDatabase = await dbContext.WorkItems.Include(workItem => workItem.Tags).FirstWithIdAsync(existingWorkItem.Id);
+
+                workItemInDatabase.Tags.Should().HaveCount(1);
+                workItemInDatabase.Tags.Single().Id.Should().Be(existingWorkItem.Tags.ElementAt(0).Id);
+
+                List<WorkTag> tagsInDatabase = await dbContext.WorkTags.ToListAsync();
+                tagsInDatabase.Should().HaveCount(3);
+            });
+        }
+
+        [Fact]
+        public async Task Can_remove_from_ManyToMany_relationship_with_extra_removals_from_resource_definition()
+        {
+            // Arrange
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            existingWorkItem.Tags = _fakers.WorkTag.Generate(3).ToHashSet();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<WorkTag>();
+                dbContext.AddInRange(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            workItemDefinition.ExtraTagIdsToRemove.Add(existingWorkItem.Tags.ElementAt(2).Id);
+
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workTags",
+                        id = existingWorkItem.Tags.ElementAt(1).StringId
+                    }
+                }
+            };
+
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
+
+            responseDocument.Should().BeEmpty();
+
+            workItemDefinition.PreloadedTags.Should().HaveCount(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -836,6 +957,79 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Rela
 
                 workItemInDatabase.RelatedTo.Should().BeEmpty();
             });
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+        private sealed class RemoveExtraFromWorkItemDefinition : JsonApiResourceDefinition<WorkItem>
+        {
+            // Enables to verify that not the full relationship was loaded upfront.
+            public ISet<UserAccount> PreloadedSubscribers { get; } = new HashSet<UserAccount>(IdentifiableComparer.Instance);
+            public ISet<WorkTag> PreloadedTags { get; } = new HashSet<WorkTag>(IdentifiableComparer.Instance);
+
+            // Enables to verify that adding extra IDs for removal from ResourceDefinition works correctly.
+            public ISet<long> ExtraSubscribersIdsToRemove { get; } = new HashSet<long>();
+            public ISet<int> ExtraTagIdsToRemove { get; } = new HashSet<int>();
+
+            public RemoveExtraFromWorkItemDefinition(IResourceGraph resourceGraph)
+                : base(resourceGraph)
+            {
+            }
+
+            public void Reset()
+            {
+                PreloadedSubscribers.Clear();
+                PreloadedTags.Clear();
+
+                ExtraSubscribersIdsToRemove.Clear();
+                ExtraTagIdsToRemove.Clear();
+            }
+
+            public override Task OnRemoveFromRelationshipAsync(WorkItem workItem, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
+                CancellationToken cancellationToken)
+            {
+                if (hasManyRelationship.Property.Name == nameof(WorkItem.Subscribers))
+                {
+                    RemoveFromSubscribers(workItem, rightResourceIds);
+                }
+                else if (hasManyRelationship.Property.Name == nameof(WorkItem.Tags))
+                {
+                    RemoveFromTags(workItem, rightResourceIds);
+                }
+
+                return Task.CompletedTask;
+            }
+
+            private void RemoveFromSubscribers(WorkItem workItem, ISet<IIdentifiable> rightResourceIds)
+            {
+                if (!workItem.Subscribers.IsNullOrEmpty())
+                {
+                    PreloadedSubscribers.AddRange(workItem.Subscribers);
+                }
+
+                foreach (long subscriberId in ExtraSubscribersIdsToRemove)
+                {
+                    rightResourceIds.Add(new UserAccount
+                    {
+                        Id = subscriberId
+                    });
+                }
+            }
+
+            private void RemoveFromTags(WorkItem workItem, ISet<IIdentifiable> rightResourceIds)
+            {
+                if (!workItem.Tags.IsNullOrEmpty())
+                {
+                    PreloadedTags.AddRange(workItem.Tags);
+                }
+
+                foreach (int tagId in ExtraTagIdsToRemove)
+                {
+                    rightResourceIds.Add(new WorkTag
+                    {
+                        Id = tagId
+                    });
+                }
+            }
         }
     }
 }

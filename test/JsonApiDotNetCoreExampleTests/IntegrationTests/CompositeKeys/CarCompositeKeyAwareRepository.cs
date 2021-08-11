@@ -11,18 +11,20 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class CarRepository : EntityFrameworkCoreRepository<Car, string>
+    public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>
+        where TResource : class, IIdentifiable<TId>
     {
         private readonly CarExpressionRewriter _writer;
 
-        public CarRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-            IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
             : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
             _writer = new CarExpressionRewriter(resourceGraph);
         }
 
-        protected override IQueryable<Car> ApplyQueryLayer(QueryLayer layer)
+        protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
         {
             RecursiveRewriteFilterInLayer(layer);
 
@@ -48,6 +50,18 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                     RecursiveRewriteFilterInLayer(nextLayer);
                 }
             }
+        }
+    }
+
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    public class CarCompositeKeyAwareRepository<TResource> : CarCompositeKeyAwareRepository<TResource, int>, IResourceRepository<TResource>
+        where TResource : class, IIdentifiable<int>
+    {
+        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
+            IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+        {
         }
     }
 }

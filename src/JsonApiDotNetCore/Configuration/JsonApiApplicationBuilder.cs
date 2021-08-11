@@ -284,13 +284,18 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
             {
-#pragma warning disable EF1001 // Internal EF Core API usage.
-                if (entityType is not EntityType { IsImplicitlyCreatedJoinEntityType: true })
-#pragma warning restore EF1001 // Internal EF Core API usage.
+                if (!IsImplicitManyToManyJoinEntity(entityType))
                 {
                     builder.Add(entityType.ClrType);
                 }
             }
+        }
+
+        private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
+        {
+#pragma warning disable EF1001 // Internal EF Core API usage.
+            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
+#pragma warning restore EF1001 // Internal EF Core API usage.
         }
 
         public void Dispose()

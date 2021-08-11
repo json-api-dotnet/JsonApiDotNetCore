@@ -27,6 +27,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             testContext.UseController<WorkItemGroupsController>();
             testContext.UseController<RgbColorsController>();
 
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingWorkItemGroupDefinition>();
+            });
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowClientGeneratedIds = true;
         }
@@ -62,14 +67,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
             responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be(newGroup.Name);
+                groupInDatabase.Name.Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
             });
 
             PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -108,14 +113,14 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             responseDocument.SingleData.Type.Should().Be("workItemGroups");
             responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
+            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
             responseDocument.SingleData.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be(newGroup.Name);
+                groupInDatabase.Name.Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
             });
 
             PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));

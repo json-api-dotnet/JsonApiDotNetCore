@@ -573,7 +573,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync),
                 (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRemoveFromRelationshipAsync),
                 (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
                 (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
