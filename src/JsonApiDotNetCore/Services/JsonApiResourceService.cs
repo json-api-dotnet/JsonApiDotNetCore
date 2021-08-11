@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Services
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Create resource");
 
             TResource resourceFromRequest = resource;
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+            _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
             TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resource.Id, cancellationToken);
 
@@ -334,7 +334,7 @@ namespace JsonApiDotNetCore.Services
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Update resource");
 
             TResource resourceFromRequest = resource;
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+            _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
 

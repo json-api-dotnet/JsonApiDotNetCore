@@ -12,7 +12,7 @@ namespace TestBuildingBlocks
         {
         }
 
-        public void SetRequestedAttributeValues(TResource resource)
+        public void SetRequestAttributeValues(TResource resource)
         {
         }
 

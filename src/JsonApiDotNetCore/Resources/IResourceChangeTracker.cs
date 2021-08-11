@@ -15,7 +15,7 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Sets the (subset of) exposed resource attributes from the POST or PATCH request.
         /// </summary>
-        void SetRequestedAttributeValues(TResource resource);
+        void SetRequestAttributeValues(TResource resource);
 
         /// <summary>
         /// Sets the exposed resource attributes as stored in database, after applying the POST or PATCH operation.
