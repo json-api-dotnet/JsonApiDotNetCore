@@ -114,7 +114,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Resources_JsonApiResourceDefinition_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefinition&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public class JsonApiResourceDefinition&lt;TResource, TId&gt; : IResourceDefinition&lt;TResource, TId&gt; where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -748,9 +749,9 @@ related resources and linking them.
         <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
         <td><span class="parametername">writeOperation</span></td>
         <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a> and
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>. Note this intentionally excludes <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> and
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, because for those endpoints no resource is retrieved upfront.</p>
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>. Note this intentionally excludes
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> and
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>
@@ -841,7 +842,8 @@ Implementing this method enables to perform validations and make changes to <cod
         <td><span class="xref">TResource</span></td>
         <td><span class="parametername">leftResource</span></td>
         <td><p>The original resource as retrieved from the underlying data store. The indication &quot;left&quot; specifies that <code data-dev-comment-type="paramref" class="paramref">hasManyRelationship</code> is
-declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>. Be aware that for performance reasons, not the full relationship is populated, but only the subset of
+resources to be removed.</p>
 </td>
       </tr>
       <tr>
@@ -1177,9 +1179,9 @@ Another use case is to add a notification message to an outbox table, which gets
         <td><span class="xref">TResource</span></td>
         <td><span class="parametername">resource</span></td>
         <td><p>The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
-the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> or
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, this is an empty object with only the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because
-for those endpoints no resource is retrieved upfront.</p>
+the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> or <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>, this is an empty object with only
+the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>

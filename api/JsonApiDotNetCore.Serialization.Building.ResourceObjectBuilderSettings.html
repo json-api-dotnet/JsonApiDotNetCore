@@ -109,24 +109,25 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ResourceObjectBuilderSettings</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class ResourceObjectBuilderSettings</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_NullValueHandling_DefaultValueHandling_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.%23ctor(NullValueHandling%2CDefaultValueHandling)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_Newtonsoft_Json_NullValueHandling_Newtonsoft_Json_DefaultValueHandling_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.%23ctor(Newtonsoft.Json.NullValueHandling%2CNewtonsoft.Json.DefaultValueHandling)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Building/ResourceObjectBuilderSettings.cs/#L16">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_" data-uid="JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_NullValueHandling_DefaultValueHandling_" data-uid="JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(NullValueHandling,DefaultValueHandling)">ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)</h4>
+  <h4 id="JsonApiDotNetCore_Serialization_Building_ResourceObjectBuilderSettings__ctor_Newtonsoft_Json_NullValueHandling_Newtonsoft_Json_DefaultValueHandling_" data-uid="JsonApiDotNetCore.Serialization.Building.ResourceObjectBuilderSettings.#ctor(Newtonsoft.Json.NullValueHandling,Newtonsoft.Json.DefaultValueHandling)">ResourceObjectBuilderSettings(NullValueHandling, DefaultValueHandling)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettings(NullValueHandling serializerNullValueHandling = null, DefaultValueHandling serializerDefaultValueHandling = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceObjectBuilderSettings(NullValueHandling serializerNullValueHandling = NullValueHandling.Include, DefaultValueHandling serializerDefaultValueHandling = DefaultValueHandling.Include)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -139,12 +140,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NullValueHandling</span></td>
+        <td><span class="xref">Newtonsoft.Json.NullValueHandling</span></td>
         <td><span class="parametername">serializerNullValueHandling</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">DefaultValueHandling</span></td>
+        <td><span class="xref">Newtonsoft.Json.DefaultValueHandling</span></td>
         <td><span class="parametername">serializerDefaultValueHandling</span></td>
         <td></td>
       </tr>
@@ -177,7 +178,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DefaultValueHandling</span></td>
+        <td><span class="xref">Newtonsoft.Json.DefaultValueHandling</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -207,7 +208,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">NullValueHandling</span></td>
+        <td><span class="xref">Newtonsoft.Json.NullValueHandling</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -113,7 +113,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Configuration_JsonApiOptions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class JsonApiOptions : IJsonApiOptions</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class JsonApiOptions : IJsonApiOptions</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -158,7 +159,7 @@ a resource with a defined ID. False by default.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerDefaultValueHandling" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerDefaultValueHandling">AllowQueryStringOverrideForSerializerDefaultValueHandling</h4>
-  <div class="markdown level1 summary"><p>Determines whether the <see cref="!:JsonSerializerSettings.DefaultValueHandling"></see> serialization setting can be controlled using a query string
+  <div class="markdown level1 summary"><p>Determines whether the <span class="xref">Newtonsoft.Json.JsonSerializerSettings.DefaultValueHandling</span> serialization setting can be controlled using a query string
 parameter. False by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -190,7 +191,7 @@ parameter. False by default.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_AllowQueryStringOverrideForSerializerNullValueHandling" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.AllowQueryStringOverrideForSerializerNullValueHandling">AllowQueryStringOverrideForSerializerNullValueHandling</h4>
-  <div class="markdown level1 summary"><p>Determines whether the <see cref="!:JsonSerializerSettings.NullValueHandling"></see> serialization setting can be controlled using a query string
+  <div class="markdown level1 summary"><p>Determines whether the <span class="xref">Newtonsoft.Json.JsonSerializerSettings.NullValueHandling</span> serialization setting can be controlled using a query string
 parameter. False by default.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -660,7 +661,7 @@ setting can be overruled per resource type by adding <a class="xref" href="JsonA
   </span>
   <a id="JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings_" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerSettings*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_JsonApiOptions_SerializerSettings" data-uid="JsonApiDotNetCore.Configuration.JsonApiOptions.SerializerSettings">SerializerSettings</h4>
-  <div class="markdown level1 summary"><p>Specifies the settings that are used by the <see cref="!:JsonSerializer"></see>. Note that at some places a few settings are ignored, to ensure JSON:API
+  <div class="markdown level1 summary"><p>Specifies the settings that are used by the <span class="xref">Newtonsoft.Json.JsonSerializer</span>. Note that at some places a few settings are ignored, to ensure JSON:API
 spec compliance.
 <example>
 The next example changes the naming convention to kebab casing.<p>
@@ -685,7 +686,7 @@ The next example changes the naming convention to kebab casing.<p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">JsonSerializerSettings</span></td>
+        <td><span class="xref">Newtonsoft.Json.JsonSerializerSettings</span></td>
         <td></td>
       </tr>
     </tbody>

@@ -116,7 +116,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Queries_Internal_Parsing_QueryExpressionParser_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class QueryExpressionParser</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public abstract class QueryExpressionParser</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Queries_Internal_Parsing_QueryExpressionParser_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>Uses a tokenizer to populate a stack of tokens, which is then manipulated from the various parsing routines for subexpressions. Implementations

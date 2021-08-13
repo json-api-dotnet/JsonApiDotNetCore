@@ -83,7 +83,7 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.DbContextExtensions.html">DbContextExtensions</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.DbContextResolver-1.html">DbContextResolver&lt;TDbContext&gt;</a></h4>
-      <section><p>Provides a method to resolve a <see cref="!:DbContext"></see>.</p>
+      <section><p>Provides a method to resolve a <span class="xref">Microsoft.EntityFrameworkCore.DbContext</span>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-1.html">EntityFrameworkCoreRepository&lt;TResource&gt;</a></h4>
       <section><p>Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.</p>
@@ -91,18 +91,13 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html">EntityFrameworkCoreRepository&lt;TResource, TId&gt;</a></h4>
       <section><p>Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Repositories.PlaceholderResourceCollector.html">PlaceholderResourceCollector</a></h4>
-      <section><p>Creates placeholder resource instances (with only their ID property set), which are added to the Entity Framework Core change tracker so they can be
-used in relationship updates without fetching the resource. On disposal, the created placeholders are detached, leaving the change tracker in a clean
-state for reuse.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html">ResourceRepositoryAccessor</a></h4>
       <section><p>Retrieves an <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-2.html">IResourceRepository&lt;TResource, TId&gt;</a> instance from the D/I container and invokes a method on it.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.IDbContextResolver.html">IDbContextResolver</a></h4>
-      <section><p>Provides a method to resolve a <see cref="!:DbContext"></see>.</p>
+      <section><p>Provides a method to resolve a <span class="xref">Microsoft.EntityFrameworkCore.DbContext</span>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.html">IRepositorySupportsTransaction</a></h4>
       <section><p>Used to indicate that an <a class="xref" href="JsonApiDotNetCore.Repositories.IResourceRepository-1.html">IResourceRepository&lt;TResource&gt;</a> supports execution inside a transaction.</p>

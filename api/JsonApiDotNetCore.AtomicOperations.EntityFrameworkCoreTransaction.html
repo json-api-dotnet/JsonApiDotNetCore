@@ -114,19 +114,20 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction, IAsyncDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class EntityFrameworkCoreTransaction : IOperationsTransaction, IAsyncDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_IDbContextTransaction_DbContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.%23ctor(IDbContextTransaction%2CDbContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_Microsoft_EntityFrameworkCore_DbContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.%23ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction%2CMicrosoft.EntityFrameworkCore.DbContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/AtomicOperations/EntityFrameworkCoreTransaction.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_" data-uid="JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_IDbContextTransaction_DbContext_" data-uid="JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(IDbContextTransaction,DbContext)">EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)</h4>
+  <h4 id="JsonApiDotNetCore_AtomicOperations_EntityFrameworkCoreTransaction__ctor_Microsoft_EntityFrameworkCore_Storage_IDbContextTransaction_Microsoft_EntityFrameworkCore_DbContext_" data-uid="JsonApiDotNetCore.AtomicOperations.EntityFrameworkCoreTransaction.#ctor(Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction,Microsoft.EntityFrameworkCore.DbContext)">EntityFrameworkCoreTransaction(IDbContextTransaction, DbContext)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -144,12 +145,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">IDbContextTransaction</span></td>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction</span></td>
         <td><span class="parametername">transaction</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">DbContext</span></td>
+        <td><span class="xref">Microsoft.EntityFrameworkCore.DbContext</span></td>
         <td><span class="parametername">dbContext</span></td>
         <td></td>
       </tr>

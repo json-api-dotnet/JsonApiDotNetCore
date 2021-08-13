@@ -79,7 +79,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Services_IAddToRelationshipService_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IAddToRelationshipService&lt;TResource, in TId&gt;
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public interface IAddToRelationshipService&lt;TResource, in TId&gt;
     where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>

@@ -88,9 +88,9 @@
     <h5>Implements</h5>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IActionFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IOrderedFilter</span></div>
-    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
   </div>
   <div class="inheritedMembers">
@@ -99,16 +99,16 @@
       <a class="xref" href="JsonApiDotNetCore.Controllers.Annotations.HttpRestrictAttribute.html#JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_OnActionExecutionAsync_Microsoft_AspNetCore_Mvc_Filters_ActionExecutingContext_Microsoft_AspNetCore_Mvc_Filters_ActionExecutionDelegate_">HttpRestrictAttribute.OnActionExecutionAsync(ActionExecutingContext, ActionExecutionDelegate)</a>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)</span>
-    </div>
-    <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)</span>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)</span>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)</span>
     </div>
     <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)</span>
     </div>
     <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext, Microsoft.AspNetCore.Mvc.Filters.ResultExecutionDelegate)</span>
@@ -247,7 +247,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Controllers_Annotations_HttpReadOnlyAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class HttpReadOnlyAttribute : HttpRestrictAttribute, IActionFilter, IAsyncActionFilter, IAsyncResultFilter, IOrderedFilter, IResultFilter, IFilterMetadata</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class HttpReadOnlyAttribute : HttpRestrictAttribute, IActionFilter, IAsyncActionFilter, IResultFilter, IAsyncResultFilter, IOrderedFilter, IFilterMetadata</code></pre>
   </div>
   <h5 id="JsonApiDotNetCore_Controllers_Annotations_HttpReadOnlyAttribute_examples"><strong>Examples</strong></h5>
   <p>[HttpReadOnly]
@@ -297,13 +298,13 @@ public class ArticlesController : BaseJsonApiController&lt;Article&gt;
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span>
   </div>
   <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span>
+  </div>
+  <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span>
   </div>
   <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IOrderedFilter</span>
-  </div>
-  <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span>
   </div>
   <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>

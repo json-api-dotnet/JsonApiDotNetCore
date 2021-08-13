@@ -80,7 +80,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceDefinition&lt;TResource, in TId&gt;
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public interface IResourceDefinition&lt;TResource, in TId&gt;
     where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
@@ -490,7 +491,7 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnDeserialize__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnDeserialize(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L323">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L324">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnDeserialize_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnDeserialize*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnDeserialize__0_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnDeserialize(`0)">OnDeserialize(TResource)</h4>
@@ -563,9 +564,9 @@ related resources and linking them.
         <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
         <td><span class="parametername">writeOperation</span></td>
         <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a> and
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>. Note this intentionally excludes <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> and
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, because for those endpoints no resource is retrieved upfront.</p>
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>. Note this intentionally excludes
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> and
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>
@@ -646,7 +647,7 @@ private static IQueryable&lt;Model> FilterByHighRisk(IQueryable&lt;Model> source
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRemoveFromRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnRemoveFromRelationshipAsync(%600%2CJsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L257">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L258">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRemoveFromRelationshipAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRemoveFromRelationshipAsync*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnRemoveFromRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnRemoveFromRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},System.Threading.CancellationToken)">OnRemoveFromRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, CancellationToken)</h4>
@@ -674,7 +675,8 @@ Implementing this method enables to perform validations and make changes to <cod
         <td><span class="xref">TResource</span></td>
         <td><span class="parametername">leftResource</span></td>
         <td><p>The original resource as retrieved from the underlying data store. The indication &quot;left&quot; specifies that <code data-dev-comment-type="paramref" class="paramref">hasManyRelationship</code> is
-declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>.</p>
+declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TResource</code>. Be aware that for performance reasons, not the full relationship is populated, but only the subset of
+resources to be removed.</p>
 </td>
       </tr>
       <tr>
@@ -717,7 +719,7 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSerialize__0_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnSerialize(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L339">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L340">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSerialize_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSerialize*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSerialize__0_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSerialize(`0)">OnSerialize(TResource)</h4>
@@ -908,7 +910,7 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWriteSucceededAsync(%600%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L307">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L308">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnWriteSucceededAsync(TResource, WriteOperationKind, CancellationToken)</h4>
@@ -974,7 +976,7 @@ Implementing this method enables to run additional logic, for example enqueue a 
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWritingAsync(%600%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L288">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L289">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync*"></a>
   <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnWritingAsync(TResource, WriteOperationKind, CancellationToken)</h4>
@@ -1010,9 +1012,9 @@ Another use case is to add a notification message to an outbox table, which gets
         <td><span class="xref">TResource</span></td>
         <td><span class="parametername">resource</span></td>
         <td><p>The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
-the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> or
-<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, this is an empty object with only the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because
-for those endpoints no resource is retrieved upfront.</p>
+the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> or <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>, this is an empty object with only
+the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>

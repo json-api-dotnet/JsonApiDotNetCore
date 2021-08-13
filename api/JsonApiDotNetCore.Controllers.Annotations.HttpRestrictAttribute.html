@@ -90,24 +90,24 @@
     <h5>Implements</h5>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IActionFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span></div>
+    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IOrderedFilter</span></div>
-    <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span></div>
     <div><span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)</span>
-    </div>
-    <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext)</span>
     </div>
     <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)</span>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnActionExecuted(Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext)</span>
     </div>
     <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuting(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext)</span>
+    </div>
+    <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecuted(Microsoft.AspNetCore.Mvc.Filters.ResultExecutedContext)</span>
     </div>
     <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.OnResultExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ResultExecutingContext, Microsoft.AspNetCore.Mvc.Filters.ResultExecutionDelegate)</span>
@@ -246,7 +246,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Controllers_Annotations_HttpRestrictAttribute_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class HttpRestrictAttribute : ActionFilterAttribute, IActionFilter, IAsyncActionFilter, IAsyncResultFilter, IOrderedFilter, IResultFilter, IFilterMetadata</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class HttpRestrictAttribute : ActionFilterAttribute, IActionFilter, IAsyncActionFilter, IResultFilter, IAsyncResultFilter, IOrderedFilter, IFilterMetadata</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -344,13 +344,13 @@
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncActionFilter</span>
   </div>
   <div>
+      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span>
+  </div>
+  <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IAsyncResultFilter</span>
   </div>
   <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IOrderedFilter</span>
-  </div>
-  <div>
-      <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IResultFilter</span>
   </div>
   <div>
       <span class="xref">Microsoft.AspNetCore.Mvc.Filters.IFilterMetadata</span>
