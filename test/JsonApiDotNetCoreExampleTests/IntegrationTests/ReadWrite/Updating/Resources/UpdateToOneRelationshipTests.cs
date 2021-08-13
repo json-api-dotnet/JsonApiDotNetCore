@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             testContext.UseController<WorkItemsController>();
             testContext.UseController<WorkItemGroupsController>();
             testContext.UseController<RgbColorsController>();
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
+            });
         }
 
         [Fact]
@@ -111,11 +117,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             string route = "/workItemGroups/" + existingGroup.StringId;
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Should().BeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -341,7 +347,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
+            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
@@ -407,7 +413,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
+            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
 

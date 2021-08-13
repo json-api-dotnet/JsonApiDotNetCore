@@ -23,14 +23,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             new Faker<TelevisionBroadcast>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(broadcast => broadcast.Title, faker => faker.Lorem.Sentence())
-                .RuleFor(broadcast => broadcast.AiredAt, faker => faker.Date.PastOffset())
-                .RuleFor(broadcast => broadcast.ArchivedAt, faker => faker.Date.RecentOffset()));
+                .RuleFor(broadcast => broadcast.AiredAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds())
+                .RuleFor(broadcast => broadcast.ArchivedAt, faker => faker.Date.RecentOffset()
+                    .TruncateToWholeMilliseconds()));
 
         private readonly Lazy<Faker<BroadcastComment>> _lazyBroadcastCommentFaker = new(() =>
             new Faker<BroadcastComment>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
-                .RuleFor(comment => comment.CreatedAt, faker => faker.Date.PastOffset()));
+                .RuleFor(comment => comment.CreatedAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds()));
 
         public Faker<TelevisionNetwork> TelevisionNetwork => _lazyTelevisionNetworkFaker.Value;
         public Faker<TelevisionStation> TelevisionStation => _lazyTelevisionStationFaker.Value;

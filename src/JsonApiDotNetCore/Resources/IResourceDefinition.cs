@@ -149,9 +149,9 @@ namespace JsonApiDotNetCore.Resources
         /// </param>
         /// <param name="writeOperation">
         /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,
-        /// <see cref="WriteOperationKind.UpdateResource" />, <see cref="WriteOperationKind.SetRelationship" /> and
-        /// <see cref="WriteOperationKind.RemoveFromRelationship" />. Note this intentionally excludes <see cref="WriteOperationKind.DeleteResource" /> and
-        /// <see cref="WriteOperationKind.AddToRelationship" />, because for those endpoints no resource is retrieved upfront.
+        /// <see cref="WriteOperationKind.UpdateResource" /> and <see cref="WriteOperationKind.SetRelationship" />. Note this intentionally excludes
+        /// <see cref="WriteOperationKind.DeleteResource" />, <see cref="WriteOperationKind.AddToRelationship" /> and
+        /// <see cref="WriteOperationKind.RemoveFromRelationship" />, because for those endpoints no resource is retrieved upfront.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
@@ -243,7 +243,8 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         /// <param name="leftResource">
         /// The original resource as retrieved from the underlying data store. The indication "left" specifies that <paramref name="hasManyRelationship" /> is
-        /// declared on <typeparamref name="TResource" />.
+        /// declared on <typeparamref name="TResource" />. Be aware that for performance reasons, not the full relationship is populated, but only the subset of
+        /// resources to be removed.
         /// </param>
         /// <param name="hasManyRelationship">
         /// The to-many relationship being removed from.
@@ -273,9 +274,9 @@ namespace JsonApiDotNetCore.Resources
         /// </summary>
         /// <param name="resource">
         /// The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
-        /// the changes from the incoming request. Exception: In case <paramref name="writeOperation" /> is <see cref="WriteOperationKind.DeleteResource" /> or
-        /// <see cref="WriteOperationKind.AddToRelationship" />, this is an empty object with only the <see cref="Identifiable{T}.Id" /> property set, because
-        /// for those endpoints no resource is retrieved upfront.
+        /// the changes from the incoming request. Exception: In case <paramref name="writeOperation" /> is <see cref="WriteOperationKind.DeleteResource" />,
+        /// <see cref="WriteOperationKind.AddToRelationship" /> or <see cref="WriteOperationKind.RemoveFromRelationship" />, this is an empty object with only
+        /// the <see cref="Identifiable{T}.Id" /> property set, because for those endpoints no resource is retrieved upfront.
         /// </param>
         /// <param name="writeOperation">
         /// Identifies the logical write operation for which this method was called. Possible values: <see cref="WriteOperationKind.CreateResource" />,

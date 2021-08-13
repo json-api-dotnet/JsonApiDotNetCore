@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
@@ -28,6 +29,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
+                services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
+
                 services.AddSingleton<IResponseMeta, AtomicResponseMeta>();
             });
         }

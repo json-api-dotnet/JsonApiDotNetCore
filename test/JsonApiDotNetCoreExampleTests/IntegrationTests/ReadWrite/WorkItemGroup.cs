@@ -18,7 +18,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
 
         [NotMapped]
         [Attr]
-        public Guid ConcurrencyToken => Guid.NewGuid();
+        public bool IsDeprecated => Name != null && Name.StartsWith("DEPRECATED:", StringComparison.OrdinalIgnoreCase);
 
         [HasOne]
         public RgbColor Color { get; set; }

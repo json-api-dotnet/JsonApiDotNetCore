@@ -70,5 +70,16 @@ namespace JsonApiDotNetCore
 
             return true;
         }
+
+        public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> itemsToAdd)
+        {
+            ArgumentGuard.NotNull(source, nameof(source));
+            ArgumentGuard.NotNull(itemsToAdd, nameof(itemsToAdd));
+
+            foreach (T item in itemsToAdd)
+            {
+                source.Add(item);
+            }
+        }
     }
 }

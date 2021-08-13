@@ -21,7 +21,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
             new Faker<Meeting>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(meeting => meeting.Title, faker => faker.Lorem.Word())
-                .RuleFor(meeting => meeting.StartTime, faker => TruncateToWholeMilliseconds(faker.Date.FutureOffset()))
+                .RuleFor(meeting => meeting.StartTime, faker => faker.Date.FutureOffset()
+                    .TruncateToWholeMilliseconds())
                 .RuleFor(meeting => meeting.Duration, faker => faker.PickRandom(MeetingDurations))
                 .RuleFor(meeting => meeting.Latitude, faker => faker.Address.Latitude())
                 .RuleFor(meeting => meeting.Longitude, faker => faker.Address.Longitude()));
@@ -33,13 +34,5 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
 
         public Faker<Meeting> Meeting => _lazyMeetingFaker.Value;
         public Faker<MeetingAttendee> MeetingAttendee => _lazyMeetingAttendeeFaker.Value;
-
-        private static DateTimeOffset TruncateToWholeMilliseconds(DateTimeOffset value)
-        {
-            long ticksToSubtract = value.DateTime.Ticks % TimeSpan.TicksPerMillisecond;
-            long ticksInWholeMilliseconds = value.DateTime.Ticks - ticksToSubtract;
-
-            return new DateTimeOffset(new DateTime(ticksInWholeMilliseconds), value.Offset);
-        }
     }
 }

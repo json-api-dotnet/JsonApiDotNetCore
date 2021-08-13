@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Services
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Create resource");
 
             TResource resourceFromRequest = resource;
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+            _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
             TResource resourceForDatabase = await _repositoryAccessor.GetForCreateAsync<TResource, TId>(resource.Id, cancellationToken);
 
@@ -290,16 +290,24 @@ namespace JsonApiDotNetCore.Services
         private async Task RemoveExistingIdsFromRelationshipRightSideAsync(HasManyAttribute hasManyRelationship, TId leftId,
             ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
+            TResource leftResource = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
+
+            object rightValue = _request.Relationship.GetValue(leftResource);
+            ICollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
+
+            rightResourceIds.ExceptWith(existingRightResourceIds);
+        }
+
+        private async Task<TResource> GetForHasManyUpdateAsync(HasManyAttribute hasManyRelationship, TId leftId, ISet<IIdentifiable> rightResourceIds,
+            CancellationToken cancellationToken)
+        {
             QueryLayer queryLayer = _queryLayerComposer.ComposeForHasMany(hasManyRelationship, leftId, rightResourceIds);
             IReadOnlyCollection<TResource> leftResources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
             TResource leftResource = leftResources.FirstOrDefault();
             AssertPrimaryResourceExists(leftResource);
 
-            object rightValue = _request.Relationship.GetValue(leftResource);
-            ICollection<IIdentifiable> existingRightResourceIds = _collectionConverter.ExtractResources(rightValue);
-
-            rightResourceIds.ExceptWith(existingRightResourceIds);
+            return leftResource;
         }
 
         protected async Task AssertRightResourcesExistAsync(object rightValue, CancellationToken cancellationToken)
@@ -334,7 +342,7 @@ namespace JsonApiDotNetCore.Services
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Update resource");
 
             TResource resourceFromRequest = resource;
-            _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
+            _resourceChangeTracker.SetRequestAttributeValues(resourceFromRequest);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(id, cancellationToken);
 
@@ -429,10 +437,9 @@ namespace JsonApiDotNetCore.Services
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
             AssertHasRelationship(_request.Relationship, relationshipName);
+            var hasManyRelationship = (HasManyAttribute)_request.Relationship;
 
-            TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
-
-            await _resourceDefinitionAccessor.OnPrepareWriteAsync(resourceFromDatabase, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+            TResource resourceFromDatabase = await GetForHasManyUpdateAsync(hasManyRelationship, leftId, rightResourceIds, cancellationToken);
 
             await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
 

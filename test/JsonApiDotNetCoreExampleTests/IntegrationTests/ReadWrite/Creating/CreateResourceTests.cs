@@ -524,7 +524,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                     type = "workItems",
                     attributes = new
                     {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
+                        isImportant = true
                     }
                 }
             };
@@ -542,7 +542,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Setting the initial value of 'concurrencyToken' is not allowed. - Request body:");
+            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body:");
         }
 
         [Fact]
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
                     type = "workItemGroups",
                     attributes = new
                     {
-                        concurrencyToken = "274E1D9A-91BE-4A42-B648-CA75E8B2945E"
+                        isDeprecated = false
                     }
                 }
             };
@@ -574,7 +574,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'concurrencyToken' is read-only. - Request body:");
+            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
         }
 
         [Fact]

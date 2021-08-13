@@ -30,7 +30,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
                 .RuleFor(musicTrack => musicTrack.Title, faker => faker.Lorem.Word())
                 .RuleFor(musicTrack => musicTrack.LengthInSeconds, faker => faker.Random.Decimal(3 * 60, 5 * 60))
                 .RuleFor(musicTrack => musicTrack.Genre, faker => faker.Lorem.Word())
-                .RuleFor(musicTrack => musicTrack.ReleasedAt, faker => faker.Date.PastOffset()));
+                .RuleFor(musicTrack => musicTrack.ReleasedAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds()));
 
         private readonly Lazy<Faker<Lyric>> _lazyLyricFaker = new(() =>
             new Faker<Lyric>()
@@ -47,7 +48,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
             new Faker<Performer>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(performer => performer.ArtistName, faker => faker.Name.FullName())
-                .RuleFor(performer => performer.BornAt, faker => faker.Date.PastOffset()));
+                .RuleFor(performer => performer.BornAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds()));
 
         private readonly Lazy<Faker<RecordCompany>> _lazyRecordCompanyFaker = new(() =>
             new Faker<RecordCompany>()

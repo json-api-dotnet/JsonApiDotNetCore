@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             _testContext = testContext;
 
             testContext.UseController<WorkItemsController>();
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingWorkItemDefinition>();
+            });
         }
 
         [Fact]
@@ -300,7 +306,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(existingWorkItem.Description);
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);

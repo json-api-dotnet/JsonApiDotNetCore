@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
             new Faker<AuditEntry>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(auditEntry => auditEntry.UserName, faker => faker.Internet.UserName())
-                .RuleFor(auditEntry => auditEntry.CreatedAt, faker => faker.Date.PastOffset()));
+                .RuleFor(auditEntry => auditEntry.CreatedAt, faker => faker.Date.PastOffset()
+                    .TruncateToWholeMilliseconds()));
 
         public Faker<AuditEntry> AuditEntry => _lazyAuditEntryFaker.Value;
     }

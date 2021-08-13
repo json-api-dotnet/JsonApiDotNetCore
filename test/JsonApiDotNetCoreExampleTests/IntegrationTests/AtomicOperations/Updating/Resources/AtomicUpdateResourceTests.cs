@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCoreExample.Controllers;
 using JsonApiDotNetCoreExampleTests.Startups;
@@ -28,6 +29,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
 
             // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
             testContext.UseController<TextLanguagesController>();
+
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
+            });
         }
 
         [Fact]
@@ -424,15 +430,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Updati
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
-            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newIsoCode);
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("concurrencyToken");
+            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newIsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
+            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("isRightToLeft");
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 TextLanguage languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(existingLanguage.Id);
 
-                languageInDatabase.IsoCode.Should().Be(newIsoCode);
+                languageInDatabase.IsoCode.Should().Be(newIsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
             });
         }
 

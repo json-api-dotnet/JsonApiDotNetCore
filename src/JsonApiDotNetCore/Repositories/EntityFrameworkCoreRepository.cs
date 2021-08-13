@@ -182,8 +182,6 @@ namespace JsonApiDotNetCore.Repositories
 
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Create resource");
 
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-
             foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(resourceFromRequest);
@@ -191,7 +189,7 @@ namespace JsonApiDotNetCore.Repositories
                 object rightValueEvaluated = await VisitSetRelationshipAsync(resourceForDatabase, relationship, rightValue, WriteOperationKind.CreateResource,
                     cancellationToken);
 
-                await UpdateRelationshipAsync(relationship, resourceForDatabase, rightValueEvaluated, collector, cancellationToken);
+                await UpdateRelationshipAsync(relationship, resourceForDatabase, rightValueEvaluated, cancellationToken);
             }
 
             foreach (AttrAttribute attribute in _targetedFields.Attributes)
@@ -207,6 +205,8 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync(cancellationToken);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceForDatabase, WriteOperationKind.CreateResource, cancellationToken);
+
+            _dbContext.ResetChangeTracker();
         }
 
         private async Task<object> VisitSetRelationshipAsync(TResource leftResource, RelationshipAttribute relationship, object rightValue,
@@ -254,8 +254,6 @@ namespace JsonApiDotNetCore.Repositories
 
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Update resource");
 
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-
             foreach (RelationshipAttribute relationship in _targetedFields.Relationships)
             {
                 object rightValue = relationship.GetValue(resourceFromRequest);
@@ -265,7 +263,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightValueEvaluated);
 
-                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, collector, cancellationToken);
+                await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
             }
 
             foreach (AttrAttribute attribute in _targetedFields.Attributes)
@@ -278,17 +276,20 @@ namespace JsonApiDotNetCore.Repositories
             await SaveChangesAsync(cancellationToken);
 
             await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceFromDatabase, WriteOperationKind.UpdateResource, cancellationToken);
+
+            _dbContext.ResetChangeTracker();
         }
 
         protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object rightValue)
         {
-            bool relationshipIsRequired = false;
-
-            if (relationship is not HasManyAttribute { IsManyToMany: true })
+            if (relationship is HasManyAttribute { IsManyToMany: true })
             {
-                INavigation navigation = TryGetNavigation(relationship);
-                relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
+                // Many-to-many relationships cannot be required.
+                return;
             }
+
+            INavigation navigation = TryGetNavigation(relationship);
+            bool relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
 
             bool relationshipIsBeingCleared = relationship is HasManyAttribute hasManyRelationship
                 ? IsToManyRelationshipBeingCleared(hasManyRelationship, leftResource, rightValue)
@@ -326,14 +327,13 @@ namespace JsonApiDotNetCore.Repositories
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Delete resource");
 
             // This enables OnWritingAsync() to fetch the resource, which adds it to the change tracker.
-            // If so, we'll reuse the tracked resource instead of a placeholder resource.
-            var emptyResource = _resourceFactory.CreateInstance<TResource>();
-            emptyResource.Id = id;
+            // If so, we'll reuse the tracked resource instead of this placeholder resource.
+            var placeholderResource = _resourceFactory.CreateInstance<TResource>();
+            placeholderResource.Id = id;
 
-            await _resourceDefinitionAccessor.OnWritingAsync(emptyResource, WriteOperationKind.DeleteResource, cancellationToken);
+            await _resourceDefinitionAccessor.OnWritingAsync(placeholderResource, WriteOperationKind.DeleteResource, cancellationToken);
 
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            TResource resource = collector.CreateForId<TResource, TId>(id);
+            var resourceTracked = (TResource)_dbContext.GetTrackedOrAttach(placeholderResource);
 
             foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceContext<TResource>().Relationships)
             {
@@ -341,16 +341,16 @@ namespace JsonApiDotNetCore.Repositories
                 // entities into memory is required for successfully executing the selected deletion behavior.
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
-                    NavigationEntry navigation = GetNavigationEntry(resource, relationship);
+                    NavigationEntry navigation = GetNavigationEntry(resourceTracked, relationship);
                     await navigation.LoadAsync(cancellationToken);
                 }
             }
 
-            _dbContext.Remove(resource);
+            _dbContext.Remove(resourceTracked);
 
             await SaveChangesAsync(cancellationToken);
 
-            await _resourceDefinitionAccessor.OnWriteSucceededAsync(resource, WriteOperationKind.DeleteResource, cancellationToken);
+            await _resourceDefinitionAccessor.OnWriteSucceededAsync(resourceTracked, WriteOperationKind.DeleteResource, cancellationToken);
         }
 
         private NavigationEntry GetNavigationEntry(TResource resource, RelationshipAttribute relationship)
@@ -413,8 +413,7 @@ namespace JsonApiDotNetCore.Repositories
 
             AssertIsNotClearingRequiredRelationship(relationship, leftResource, rightValueEvaluated);
 
-            using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-            await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, collector, cancellationToken);
+            await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
 
             await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.SetRelationship, cancellationToken);
 
@@ -442,16 +441,18 @@ namespace JsonApiDotNetCore.Repositories
 
             if (rightResourceIds.Any())
             {
-                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-                TResource leftResource = collector.CreateForId<TResource, TId>(leftId);
+                var leftPlaceholderResource = _resourceFactory.CreateInstance<TResource>();
+                leftPlaceholderResource.Id = leftId;
 
-                await UpdateRelationshipAsync(relationship, leftResource, rightResourceIds, collector, cancellationToken);
+                var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftPlaceholderResource);
 
-                await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.AddToRelationship, cancellationToken);
+                await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIds, cancellationToken);
+
+                await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
 
                 await SaveChangesAsync(cancellationToken);
 
-                await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResource, WriteOperationKind.AddToRelationship, cancellationToken);
+                await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.AddToRelationship, cancellationToken);
             }
         }
 
@@ -470,35 +471,62 @@ namespace JsonApiDotNetCore.Repositories
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
+            HashSet<IIdentifiable> rightResourceIdsToRemove = rightResourceIds.ToHashSet(IdentifiableComparer.Instance);
 
-            await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIds, cancellationToken);
+            await _resourceDefinitionAccessor.OnRemoveFromRelationshipAsync(leftResource, relationship, rightResourceIdsToRemove, cancellationToken);
 
-            if (rightResourceIds.Any())
+            if (rightResourceIdsToRemove.Any())
             {
+                var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftResource);
+
+                // Make EF Core believe any additional resources added from ResourceDefinition already exist in database.
+                IIdentifiable[] extraResourceIdsToRemove = rightResourceIdsToRemove.Where(rightId => !rightResourceIds.Contains(rightId)).ToArray();
+
                 object rightValueStored = relationship.GetValue(leftResource);
 
-                HashSet<IIdentifiable> rightResourceIdsToStore =
-                    _collectionConverter.ExtractResources(rightValueStored).ToHashSet(IdentifiableComparer.Instance);
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
 
-                rightResourceIdsToStore.ExceptWith(rightResourceIds);
+                IIdentifiable[] rightResourceIdsStored = _collectionConverter
+                    .ExtractResources(rightValueStored)
+                    .Concat(extraResourceIdsToRemove)
+                    .Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource))
+                    .ToArray();
 
-                AssertIsNotClearingRequiredRelationship(relationship, leftResource, rightResourceIdsToStore);
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
 
-                using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
-                await UpdateRelationshipAsync(relationship, leftResource, rightResourceIdsToStore, collector, cancellationToken);
+                rightValueStored = _collectionConverter.CopyToTypedCollection(rightResourceIdsStored, relationship.Property.PropertyType);
+                relationship.SetValue(leftResource, rightValueStored);
 
-                await _resourceDefinitionAccessor.OnWritingAsync(leftResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+                MarkRelationshipAsLoaded(leftResource, relationship);
+
+                HashSet<IIdentifiable> rightResourceIdsToStore = rightResourceIdsStored.ToHashSet(IdentifiableComparer.Instance);
+                rightResourceIdsToStore.ExceptWith(rightResourceIdsToRemove);
+
+                AssertIsNotClearingRequiredRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
+
+                await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
+
+                await _resourceDefinitionAccessor.OnWritingAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
 
                 await SaveChangesAsync(cancellationToken);
 
-                await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResource, WriteOperationKind.RemoveFromRelationship, cancellationToken);
+                await _resourceDefinitionAccessor.OnWriteSucceededAsync(leftResourceTracked, WriteOperationKind.RemoveFromRelationship, cancellationToken);
             }
         }
 
-        protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign,
-            PlaceholderResourceCollector collector, CancellationToken cancellationToken)
+        private void MarkRelationshipAsLoaded(TResource leftResource, RelationshipAttribute relationship)
         {
-            object trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType, collector);
+            EntityEntry<TResource> leftEntry = _dbContext.Entry(leftResource);
+            CollectionEntry rightCollectionEntry = leftEntry.Collection(relationship.Property.Name);
+            rightCollectionEntry.IsLoaded = true;
+        }
+
+        protected async Task UpdateRelationshipAsync(RelationshipAttribute relationship, TResource leftResource, object valueToAssign,
+            CancellationToken cancellationToken)
+        {
+            object trackedValueToAssign = EnsureRelationshipValueToAssignIsTracked(valueToAssign, relationship.Property.PropertyType);
 
             if (RequireLoadOfInverseRelationship(relationship, trackedValueToAssign))
             {
@@ -511,7 +539,7 @@ namespace JsonApiDotNetCore.Repositories
             relationship.SetValue(leftResource, trackedValueToAssign);
         }
 
-        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType, PlaceholderResourceCollector collector)
+        private object EnsureRelationshipValueToAssignIsTracked(object rightValue, Type relationshipPropertyType)
         {
             if (rightValue == null)
             {
@@ -519,7 +547,7 @@ namespace JsonApiDotNetCore.Repositories
             }
 
             ICollection<IIdentifiable> rightResources = _collectionConverter.ExtractResources(rightValue);
-            IIdentifiable[] rightResourcesTracked = rightResources.Select(collector.CaptureExisting).ToArray();
+            IIdentifiable[] rightResourcesTracked = rightResources.Select(rightResource => _dbContext.GetTrackedOrAttach(rightResource)).ToArray();
 
             return rightValue is IEnumerable
                 ? _collectionConverter.CopyToTypedCollection(rightResourcesTracked, relationshipPropertyType)
@@ -550,6 +578,8 @@ namespace JsonApiDotNetCore.Repositories
                     // to determine error cause. This fails when a failed transaction is still in progress.
                     await _dbContext.Database.CurrentTransaction.RollbackAsync(cancellationToken);
                 }
+
+                _dbContext.ResetChangeTracker();
 
                 throw new DataStoreUpdateException(exception);
             }

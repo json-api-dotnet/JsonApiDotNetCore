@@ -29,6 +29,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             // These routes need to be registered in ASP.NET for rendering links to resource/relationship endpoints.
             testContext.UseController<TextLanguagesController>();
 
+            testContext.ConfigureServicesAfterStartup(services =>
+            {
+                services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
+            });
+
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowClientGeneratedIds = true;
         }
@@ -72,15 +77,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
-            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newLanguage.IsoCode);
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("concurrencyToken");
+            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newLanguage.IsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
+            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("isRightToLeft");
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 TextLanguage languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(newLanguage.Id);
 
-                languageInDatabase.IsoCode.Should().Be(newLanguage.IsoCode);
+                languageInDatabase.IsoCode.Should().Be(newLanguage.IsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
             });
         }
 
@@ -105,7 +110,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Creati
                             attributes = new
                             {
                                 title = newTrack.Title,
-                                lengthInSeconds = newTrack.LengthInSeconds
+                                lengthInSeconds = newTrack.LengthInSeconds,
+                                releasedAt = newTrack.ReleasedAt
                             }
                         }
                     }

@@ -23,7 +23,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
             new Faker<Shipment>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(shipment => shipment.TrackAndTraceCode, faker => faker.Commerce.Ean13())
-                .RuleFor(shipment => shipment.ShippedAt, faker => faker.Date.Past()));
+                .RuleFor(shipment => shipment.ShippedAt, faker => faker.Date.Past()
+                    .TruncateToWholeMilliseconds()));
 
         public Faker<Order> Orders => _orderFaker.Value;
         public Faker<Customer> Customers => _customerFaker.Value;

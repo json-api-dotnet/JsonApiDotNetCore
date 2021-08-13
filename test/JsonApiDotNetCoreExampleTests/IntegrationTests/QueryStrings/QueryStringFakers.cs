@@ -31,7 +31,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             new Faker<Comment>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(comment => comment.Text, faker => faker.Lorem.Paragraph())
-                .RuleFor(comment => comment.CreatedAt, faker => faker.Date.Past()));
+                .RuleFor(comment => comment.CreatedAt, faker => faker.Date.Past()
+                    .TruncateToWholeMilliseconds()));
 
         private readonly Lazy<Faker<WebAccount>> _lazyWebAccountFaker = new(() =>
             new Faker<WebAccount>()
@@ -57,7 +58,8 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
             new Faker<Appointment>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(appointment => appointment.Title, faker => faker.Random.Word())
-                .RuleFor(appointment => appointment.StartTime, faker => faker.Date.FutureOffset())
+                .RuleFor(appointment => appointment.StartTime, faker => faker.Date.FutureOffset()
+                    .TruncateToWholeMilliseconds())
                 .RuleFor(appointment => appointment.EndTime, (faker, appointment) => appointment.StartTime.AddHours(faker.Random.Double(1, 4))));
 
         public Faker<Blog> Blog => _lazyBlogFaker.Value;
