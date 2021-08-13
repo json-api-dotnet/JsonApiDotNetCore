@@ -120,18 +120,18 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceGraph__ctor_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Configuration_ResourceContext__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceGraph.%23ctor(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Configuration.ResourceContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceGraph__ctor_IReadOnlySet_JsonApiDotNetCore_Configuration_ResourceContext__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceGraph.%23ctor(IReadOnlySet%7BJsonApiDotNetCore.Configuration.ResourceContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceGraph.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceGraph__ctor_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_ResourceGraph__ctor_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Configuration_ResourceContext__" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.#ctor(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Configuration.ResourceContext})">ResourceGraph(IReadOnlyCollection&lt;ResourceContext&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Configuration_ResourceGraph__ctor_IReadOnlySet_JsonApiDotNetCore_Configuration_ResourceContext__" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.#ctor(IReadOnlySet{JsonApiDotNetCore.Configuration.ResourceContext})">ResourceGraph(IReadOnlySet&lt;ResourceContext&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceGraph(IReadOnlyCollection&lt;ResourceContext&gt; resources)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceGraph(IReadOnlySet&lt;ResourceContext&gt; resourceContexts)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -144,8 +144,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>&gt;</td>
-        <td><span class="parametername">resources</span></td>
+        <td><span class="xref">IReadOnlySet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>&gt;</td>
+        <td><span class="parametername">resourceContexts</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -362,12 +362,12 @@ are returned.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceGraph_GetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.GetResourceContext*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceGraph_GetResourceContext_System_String_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.GetResourceContext(System.String)">GetResourceContext(String)</h4>
-  <div class="markdown level1 summary"><p>Gets the resource metadata for the specified exposed resource name.</p>
+  <div class="markdown level1 summary"><p>Gets the resource metadata for the resource that is publicly exposed by the specified name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(string resourceName)</code></pre>
+    <pre><code class="lang-csharp hljs">public ResourceContext GetResourceContext(string publicName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -381,7 +381,7 @@ are returned.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">resourceName</span></td>
+        <td><span class="parametername">publicName</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -505,12 +505,12 @@ are returned.</p>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceGraph_GetResourceContexts_" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.GetResourceContexts*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceGraph_GetResourceContexts" data-uid="JsonApiDotNetCore.Configuration.ResourceGraph.GetResourceContexts">GetResourceContexts()</h4>
-  <div class="markdown level1 summary"><p>Gets all registered resource contexts.</p>
+  <div class="markdown level1 summary"><p>Gets the metadata for all registered resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;ResourceContext&gt; GetResourceContexts()</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlySet&lt;ResourceContext&gt; GetResourceContexts()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -522,7 +522,7 @@ are returned.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>&gt;</td>
+        <td><span class="xref">IReadOnlySet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>

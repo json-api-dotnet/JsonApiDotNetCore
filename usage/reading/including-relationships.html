@@ -117,7 +117,7 @@ This allows you to include data across relationships by using a period-delimited
 <pre><code class="lang-http">GET /api/articles?include=author.livingAddress.country
 </code></pre><p>which is equivalent to:</p>
 <pre><code class="lang-http">GET /api/articles?include=author&amp;include=author.livingAddress&amp;include=author.livingAddress.country
-</code></pre><p>This can be used on nested endpoints too:</p>
+</code></pre><p>This can be used on secondary endpoints too:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?include=author.livingAddress.country
 </code></pre></article>
           </div>

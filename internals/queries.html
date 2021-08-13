@@ -85,7 +85,7 @@
 </li>
 <li><code>QueryLayerComposer</code> (used from <code>JsonApiResourceService</code>) collects all query constraints.<ul>
 <li>It combines them with default options and <code>IResourceDefinition</code> overrides and composes a tree of <code>QueryLayer</code> objects.</li>
-<li>It lifts the tree for nested endpoints like /blogs/1/articles and rewrites includes.</li>
+<li>It lifts the tree for secondary endpoints like /blogs/1/articles and rewrites includes.</li>
 <li><code>JsonApiResourceService</code> contains no more usage of <code>IQueryable</code>.</li>
 </ul>
 </li>

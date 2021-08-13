@@ -84,13 +84,7 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <span class="xref">System.Object.Equals(System.Object)</span>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
-    </div>
-    <div>
-      <span class="xref">System.Object.GetHashCode()</span>
     </div>
     <div>
       <span class="xref">System.Object.GetType()</span>
@@ -106,8 +100,82 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Configuration_ResourceContext_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ResourceContext</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class ResourceContext</code></pre>
   </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext__ctor_System_String_System_Type_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute__JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.%23ctor(System.String%2CSystem.Type%2CSystem.Type%2CSystem.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Resources.Annotations.AttrAttribute%7D%2CSystem.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%7D%2CSystem.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute%7D%2CJsonApiDotNetCore.Resources.Annotations.LinkTypes%2CJsonApiDotNetCore.Resources.Annotations.LinkTypes%2CJsonApiDotNetCore.Resources.Annotations.LinkTypes)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L80">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Configuration_ResourceContext__ctor_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.#ctor*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_ResourceContext__ctor_System_String_System_Type_System_Type_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_AttrAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute__System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Resources_Annotations_EagerLoadAttribute__JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_JsonApiDotNetCore_Resources_Annotations_LinkTypes_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.#ctor(System.String,System.Type,System.Type,System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.AttrAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute},System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute},JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes,JsonApiDotNetCore.Resources.Annotations.LinkTypes)">ResourceContext(String, Type, Type, IReadOnlyCollection&lt;AttrAttribute&gt;, IReadOnlyCollection&lt;RelationshipAttribute&gt;, IReadOnlyCollection&lt;EagerLoadAttribute&gt;, LinkTypes, LinkTypes, LinkTypes)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ResourceContext(string publicName, Type resourceType, Type identityType, IReadOnlyCollection&lt;AttrAttribute&gt; attributes, IReadOnlyCollection&lt;RelationshipAttribute&gt; relationships, IReadOnlyCollection&lt;EagerLoadAttribute&gt; eagerLoads, LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured, LinkTypes relationshipLinks = LinkTypes.NotConfigured)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">publicName</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">resourceType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">identityType</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html">AttrAttribute</a>&gt;</td>
+        <td><span class="parametername">attributes</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a>&gt;</td>
+        <td><span class="parametername">relationships</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute.html">EagerLoadAttribute</a>&gt;</td>
+        <td><span class="parametername">eagerLoads</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
+        <td><span class="parametername">topLevelLinks</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
+        <td><span class="parametername">resourceLinks</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.LinkTypes.html">LinkTypes</a></td>
+        <td><span class="parametername">relationshipLinks</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -124,7 +192,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;AttrAttribute&gt; Attributes { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;AttrAttribute&gt; Attributes { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -155,7 +223,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;EagerLoadAttribute&gt; EagerLoads { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;EagerLoadAttribute&gt; EagerLoads { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -217,7 +285,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Type IdentityType { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Type IdentityType { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -248,7 +316,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string PublicName { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string PublicName { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -315,7 +383,7 @@ relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annota
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;RelationshipAttribute&gt; Relationships { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;RelationshipAttribute&gt; Relationships { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -381,7 +449,7 @@ relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annota
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Type ResourceType { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Type ResourceType { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -437,10 +505,91 @@ relationship by setting <a class="xref" href="JsonApiDotNetCore.Resources.Annota
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_Equals_System_Object_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L108">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Configuration_ResourceContext_Equals_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.Equals*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_Equals_System_Object_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><span class="parametername">obj</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.Equals(System.Object)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_GetHashCode.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L127">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Configuration_ResourceContext_GetHashCode_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.GetHashCode*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_GetHashCode" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.GetHashCode()</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_ResourceContext_ToString.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.ResourceContext.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L80">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/ResourceContext.cs/#L103">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_ResourceContext_ToString_" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ToString*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_ResourceContext_ToString" data-uid="JsonApiDotNetCore.Configuration.ResourceContext.ToString">ToString()</h4>

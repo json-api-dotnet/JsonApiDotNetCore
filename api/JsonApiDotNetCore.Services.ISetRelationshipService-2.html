@@ -117,7 +117,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,8 +131,8 @@
     <tbody>
       <tr>
         <td><span class="xref">TId</span></td>
-        <td><span class="parametername">primaryId</span></td>
-        <td><p>The identifier of the primary resource.</p>
+        <td><span class="parametername">leftId</span></td>
+        <td><p>Identifies the left side of the relationship.</p>
 </td>
       </tr>
       <tr>
@@ -143,7 +143,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightValue</span></td>
         <td><p>The resource or set of resources to assign to the relationship.</p>
 </td>
       </tr>

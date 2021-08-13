@@ -98,7 +98,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task AddToToManyRelationshipAsync&lt;TResource, TId&gt;(TId primaryId, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)
+    <pre><code class="lang-csharp hljs">Task AddToToManyRelationshipAsync&lt;TResource, TId&gt;(TId leftId, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)
     where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -113,12 +113,12 @@
     <tbody>
       <tr>
         <td><span class="xref">TId</span></td>
-        <td><span class="parametername">primaryId</span></td>
+        <td><span class="parametername">leftId</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
       <tr>
@@ -661,7 +661,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task RemoveFromToManyRelationshipAsync&lt;TResource&gt;(TResource primaryResource, ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)
+    <pre><code class="lang-csharp hljs">Task RemoveFromToManyRelationshipAsync&lt;TResource&gt;(TResource leftResource, ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -676,12 +676,12 @@
     <tbody>
       <tr>
         <td><span class="xref">TResource</span></td>
-        <td><span class="parametername">primaryResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightResourceIds</span></td>
         <td></td>
       </tr>
       <tr>
@@ -735,7 +735,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync&lt;TResource&gt;(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+    <pre><code class="lang-csharp hljs">Task SetRelationshipAsync&lt;TResource&gt;(TResource leftResource, object rightValue, CancellationToken cancellationToken)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -750,12 +750,12 @@
     <tbody>
       <tr>
         <td><span class="xref">TResource</span></td>
-        <td><span class="parametername">primaryResource</span></td>
+        <td><span class="parametername">leftResource</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightValue</span></td>
         <td></td>
       </tr>
       <tr>

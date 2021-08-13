@@ -895,7 +895,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -910,7 +910,7 @@
       <tr>
         <td><span class="xref">TId</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The identifier of the primary resource.</p>
+        <td><p>Identifies the left side of the relationship.</p>
 </td>
       </tr>
       <tr>
@@ -921,7 +921,7 @@
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightResourceIds</span></td>
         <td><p>The set of resources to remove from the relationship.</p>
 </td>
       </tr>
@@ -1239,7 +1239,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1254,7 +1254,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
       <tr>
         <td><span class="xref">TId</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The identifier of the primary resource.</p>
+        <td><p>Identifies the left side of the relationship.</p>
 </td>
       </tr>
       <tr>
@@ -1265,7 +1265,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
       </tr>
       <tr>
         <td><span class="xref">System.Object</span></td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightValue</span></td>
         <td><p>The resource or set of resources to assign to the relationship.</p>
 </td>
       </tr>
@@ -1359,7 +1359,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; secondaryResourceIds, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public virtual async Task&lt;IActionResult&gt; PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet&lt;IIdentifiable&gt; rightResourceIds, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1374,7 +1374,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
       <tr>
         <td><span class="xref">TId</span></td>
         <td><span class="parametername">id</span></td>
-        <td><p>The identifier of the primary resource.</p>
+        <td><p>Identifies the left side of the relationship.</p>
 </td>
       </tr>
       <tr>
@@ -1385,7 +1385,7 @@ relationships are replaced. Example: PATCH /articles/1 HTTP/1.1</p>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.ISet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Resources.IIdentifiable.html">IIdentifiable</a>&gt;</td>
-        <td><span class="parametername">secondaryResourceIds</span></td>
+        <td><span class="parametername">rightResourceIds</span></td>
         <td><p>The set of resources to add to the relationship.</p>
 </td>
       </tr>

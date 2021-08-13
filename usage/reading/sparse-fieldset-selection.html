@@ -71,10 +71,10 @@
 
 <p>As an alternative to returning all fields (attributes and relationships) from a resource, the <code>fields[]</code> query string parameter can be used to select a subset.
 Put the resource type to apply the fieldset on between the brackets.
-This can be used on the resource being requested, as well as on nested endpoints and/or included resources.</p>
-<p>Top-level example:</p>
+This can be used on primary and secondary endpoints. The selection is applied on both primary and included resources.</p>
+<p>Primary endpoint example:</p>
 <pre><code class="lang-http">GET /articles?fields[articles]=title,body,comments HTTP/1.1
-</code></pre><p>Nested endpoint example:</p>
+</code></pre><p>Secondary endpoint example:</p>
 <pre><code class="lang-http">GET /api/blogs/1/articles?fields[articles]=title,body,comments HTTP/1.1
 </code></pre><p>When combined with the <code>include</code> query string parameter, a subset of related fields can be specified too.</p>
 <p>Example for an included HasOne relationship:</p>

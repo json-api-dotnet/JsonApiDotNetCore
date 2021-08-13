@@ -80,7 +80,7 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IResourceDefinition&lt;TResource, TId&gt;
+    <pre><code class="lang-csharp hljs">public interface IResourceDefinition&lt;TResource, in TId&gt;
     where TResource : class, IIdentifiable&lt;TId&gt;</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
@@ -277,19 +277,19 @@ Implementing this method enables to perform validations and make changes to <cod
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection%7BJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Immutable.IImmutableList%7BJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Generic_IReadOnlyCollection_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Generic.IReadOnlyCollection{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">OnApplyIncludes(IReadOnlyCollection&lt;IncludeElementExpression&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Immutable.IImmutableList{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">OnApplyIncludes(IImmutableList&lt;IncludeElementExpression&gt;)</h4>
   <div class="markdown level1 summary"><p>Enables to extend, replace or remove includes that are being applied on this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlyCollection&lt;IncludeElementExpression&gt; OnApplyIncludes(IReadOnlyCollection&lt;IncludeElementExpression&gt; existingIncludes)</code></pre>
+    <pre><code class="lang-csharp hljs">IImmutableList&lt;IncludeElementExpression&gt; OnApplyIncludes(IImmutableList&lt;IncludeElementExpression&gt; existingIncludes)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -302,7 +302,7 @@ Implementing this method enables to perform validations and make changes to <cod
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableList</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
         <td><span class="parametername">existingIncludes</span></td>
         <td><p>An optional existing set of includes, coming from query string. Never <code>null</code>, but may be empty.</p>
 </td>
@@ -319,7 +319,7 @@ Implementing this method enables to perform validations and make changes to <cod
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlyCollection</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableList</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
         <td><p>The new set of includes. Return an empty collection to remove all inclusions (never return <code>null</code>).</p>
 </td>
       </tr>
@@ -521,13 +521,13 @@ properties whose value depends on a field that is not in the sparse fieldset.</p
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnPrepareWriteAsync(%600%2CJsonApiDotNetCore.Middleware.OperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnPrepareWriteAsync(%600%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L159">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnPrepareWriteAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnPrepareWriteAsync(`0,JsonApiDotNetCore.Middleware.OperationKind,System.Threading.CancellationToken)">OnPrepareWriteAsync(TResource, OperationKind, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnPrepareWriteAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnPrepareWriteAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnPrepareWriteAsync(TResource, WriteOperationKind, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Executes after the original version of the resource has been retrieved from the underlying data store, as part of a write request.
 <p>
 Implementing this method enables to perform validations and make changes to <code data-dev-comment-type="paramref" class="paramref">resource</code>, before the fields from the request are
@@ -541,7 +541,7 @@ related resources and linking them.
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task OnPrepareWriteAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -560,12 +560,12 @@ related resources and linking them.
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html">OperationKind</a></td>
-        <td><span class="parametername">operationKind</span></td>
-        <td><p>Identifies from which endpoint this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_RemoveFromRelationship">RemoveFromRelationship</a>.
-Note this intentionally excludes <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_DeleteResource">DeleteResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship">AddToRelationship</a>, because for those
-endpoints no resource is retrieved upfront.</p>
+        <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
+        <td><span class="parametername">writeOperation</span></td>
+        <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a> and
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>. Note this intentionally excludes <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> and
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, because for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>
@@ -748,13 +748,13 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnSetToManyRelationshipAsync(%600%2CJsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CJsonApiDotNetCore.Middleware.OperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnSetToManyRelationshipAsync(%600%2CJsonApiDotNetCore.Resources.Annotations.HasManyAttribute%2CSystem.Collections.Generic.ISet%7BJsonApiDotNetCore.Resources.IIdentifiable%7D%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L213">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToManyRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToManyRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},JsonApiDotNetCore.Middleware.OperationKind,System.Threading.CancellationToken)">OnSetToManyRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, OperationKind, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToManyRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasManyAttribute_System_Collections_Generic_ISet_JsonApiDotNetCore_Resources_IIdentifiable__JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToManyRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasManyAttribute,System.Collections.Generic.ISet{JsonApiDotNetCore.Resources.IIdentifiable},JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnSetToManyRelationshipAsync(TResource, HasManyAttribute, ISet&lt;IIdentifiable&gt;, WriteOperationKind, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Executes before setting the resources at the right side of a to-many relationship. This replaces on existing set.
 <p>
 Implementing this method enables to perform validations and make changes to <code data-dev-comment-type="paramref" class="paramref">rightResourceIds</code>, before the relationship is updated.
@@ -763,7 +763,7 @@ Implementing this method enables to perform validations and make changes to <cod
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet&lt;IIdentifiable&gt; rightResourceIds, OperationKind operationKind, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet&lt;IIdentifiable&gt; rightResourceIds, WriteOperationKind writeOperation, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -795,10 +795,10 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html">OperationKind</a></td>
-        <td><span class="parametername">operationKind</span></td>
-        <td><p>Identifies from which endpoint this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</a>.</p>
+        <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
+        <td><span class="parametername">writeOperation</span></td>
+        <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>.</p>
 </td>
       </tr>
       <tr>
@@ -826,13 +826,13 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnSetToOneRelationshipAsync(%600%2CJsonApiDotNetCore.Resources.Annotations.HasOneAttribute%2CJsonApiDotNetCore.Resources.IIdentifiable%2CJsonApiDotNetCore.Middleware.OperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnSetToOneRelationshipAsync(%600%2CJsonApiDotNetCore.Resources.Annotations.HasOneAttribute%2CJsonApiDotNetCore.Resources.IIdentifiable%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L187">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToOneRelationshipAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToOneRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasOneAttribute,JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Middleware.OperationKind,System.Threading.CancellationToken)">OnSetToOneRelationshipAsync(TResource, HasOneAttribute, IIdentifiable, OperationKind, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnSetToOneRelationshipAsync__0_JsonApiDotNetCore_Resources_Annotations_HasOneAttribute_JsonApiDotNetCore_Resources_IIdentifiable_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnSetToOneRelationshipAsync(`0,JsonApiDotNetCore.Resources.Annotations.HasOneAttribute,JsonApiDotNetCore.Resources.IIdentifiable,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnSetToOneRelationshipAsync(TResource, HasOneAttribute, IIdentifiable, WriteOperationKind, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Executes before setting (or clearing) the resource at the right side of a to-one relationship.
 <p>
 Implementing this method enables to perform validations and change <code data-dev-comment-type="paramref" class="paramref">rightResourceId</code>, before the relationship is updated.
@@ -841,7 +841,7 @@ Implementing this method enables to perform validations and change <code data-de
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IIdentifiable&gt; OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IIdentifiable&gt; OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -873,10 +873,10 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html">OperationKind</a></td>
-        <td><span class="parametername">operationKind</span></td>
-        <td><p>Identifies from which endpoint this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</a>.</p>
+        <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
+        <td><span class="parametername">writeOperation</span></td>
+        <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>.</p>
 </td>
       </tr>
       <tr>
@@ -905,13 +905,13 @@ declared on <code data-dev-comment-type="typeparamref" class="typeparamref">TRes
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWriteSucceededAsync(%600%2CJsonApiDotNetCore.Middleware.OperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWriteSucceededAsync(%600%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L307">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync(`0,JsonApiDotNetCore.Middleware.OperationKind,System.Threading.CancellationToken)">OnWriteSucceededAsync(TResource, OperationKind, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWriteSucceededAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWriteSucceededAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnWriteSucceededAsync(TResource, WriteOperationKind, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Executes after successfully writing the changed resource to the underlying data store, as part of a write request.
 <p>
 Implementing this method enables to run additional logic, for example enqueue a notification message on a service bus.
@@ -920,7 +920,7 @@ Implementing this method enables to run additional logic, for example enqueue a 
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task OnWriteSucceededAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -939,11 +939,11 @@ Implementing this method enables to run additional logic, for example enqueue a 
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html">OperationKind</a></td>
-        <td><span class="parametername">operationKind</span></td>
-        <td><p>Identifies from which endpoint this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship">AddToRelationship</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_RemoveFromRelationship">RemoveFromRelationship</a>.</p>
+        <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
+        <td><span class="parametername">writeOperation</span></td>
+        <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>
+, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>.</p>
 </td>
       </tr>
       <tr>
@@ -971,13 +971,13 @@ Implementing this method enables to run additional logic, for example enqueue a 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWritingAsync(%600%2CJsonApiDotNetCore.Middleware.OperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnWritingAsync(%600%2CJsonApiDotNetCore.Middleware.WriteOperationKind%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L288">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_OperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync(`0,JsonApiDotNetCore.Middleware.OperationKind,System.Threading.CancellationToken)">OnWritingAsync(TResource, OperationKind, CancellationToken)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnWritingAsync__0_JsonApiDotNetCore_Middleware_WriteOperationKind_System_Threading_CancellationToken_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnWritingAsync(`0,JsonApiDotNetCore.Middleware.WriteOperationKind,System.Threading.CancellationToken)">OnWritingAsync(TResource, WriteOperationKind, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Executes before writing the changed resource to the underlying data store, as part of a write request.
 <p>
 Implementing this method enables to perform validations and make changes to <code data-dev-comment-type="paramref" class="paramref">resource</code>, after the fields from the request have been
@@ -994,7 +994,7 @@ Another use case is to add a notification message to an outbox table, which gets
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task OnWritingAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1010,17 +1010,17 @@ Another use case is to add a notification message to an outbox table, which gets
         <td><span class="xref">TResource</span></td>
         <td><span class="parametername">resource</span></td>
         <td><p>The original resource retrieved from the underlying data store (or a freshly instantiated resource in case of a POST resource request), updated with
-the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">operationKind</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_DeleteResource">DeleteResource</a> or
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship">AddToRelationship</a>, this is an empty object with only the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because for
-those endpoints no resource is retrieved upfront.</p>
+the changes from the incoming request. Exception: In case <code data-dev-comment-type="paramref" class="paramref">writeOperation</code> is <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a> or
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a>, this is an empty object with only the <a class="xref" href="JsonApiDotNetCore.Resources.Identifiable-1.html#JsonApiDotNetCore_Resources_Identifiable_1_Id">Id</a> property set, because
+for those endpoints no resource is retrieved upfront.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html">OperationKind</a></td>
-        <td><span class="parametername">operationKind</span></td>
-        <td><p>Identifies from which endpoint this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_CreateResource">CreateResource</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_SetRelationship">SetRelationship</a>,
-<a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_AddToRelationship">AddToRelationship</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.OperationKind.html#JsonApiDotNetCore_Middleware_OperationKind_RemoveFromRelationship">RemoveFromRelationship</a>.</p>
+        <td><a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html">WriteOperationKind</a></td>
+        <td><span class="parametername">writeOperation</span></td>
+        <td><p>Identifies the logical write operation for which this method was called. Possible values: <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_CreateResource">CreateResource</a>,
+<a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_UpdateResource">UpdateResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_DeleteResource">DeleteResource</a>, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_SetRelationship">SetRelationship</a>
+, <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_AddToRelationship">AddToRelationship</a> and <a class="xref" href="JsonApiDotNetCore.Middleware.WriteOperationKind.html#JsonApiDotNetCore_Middleware_WriteOperationKind_RemoveFromRelationship">RemoveFromRelationship</a>.</p>
 </td>
       </tr>
       <tr>
@@ -1057,7 +1057,7 @@ those endpoints no resource is retrieved upfront.</p>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L33" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L34" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
