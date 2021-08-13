@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Diagnostics
                 // The most important thing is to prevent switching between CPU cores or processors. Switching dismisses the cache, etc. and has a huge performance impact on the test.
                 Process.GetCurrentProcess().ProcessorAffinity = new IntPtr(2);
 
-                // To get the CPU core more exclusively, we must prevent that other threads can use this CPU core. We set our process and thread priority to achieve this.
+                // To get the CPU core more exclusively, we must prevent that other processes can use this CPU core. We set our process priority to achieve this.
                 // Note we should NOT set the thread priority, because async/await usage makes the code jump between pooled threads (depending on Synchronization Context).
                 Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
             }
