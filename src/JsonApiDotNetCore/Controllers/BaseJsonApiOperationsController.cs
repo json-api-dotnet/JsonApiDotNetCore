@@ -132,7 +132,7 @@ namespace JsonApiDotNetCore.Controllers
 
                 foreach (OperationContainer operation in operations)
                 {
-                    if (operation.Kind == OperationKind.CreateResource && operation.Resource.StringId != null)
+                    if (operation.Kind == WriteOperationKind.CreateResource && operation.Resource.StringId != null)
                     {
                         throw new ResourceIdInCreateResourceNotAllowedException(index);
                     }
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCore.Controllers
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind == OperationKind.CreateResource || operation.Kind == OperationKind.UpdateResource)
+                if (operation.Kind == WriteOperationKind.CreateResource || operation.Kind == WriteOperationKind.UpdateResource)
                 {
                     _targetedFields.Attributes = operation.TargetedFields.Attributes;
                     _targetedFields.Relationships = operation.TargetedFields.Relationships;

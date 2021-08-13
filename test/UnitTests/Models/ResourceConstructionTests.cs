@@ -16,6 +16,7 @@ namespace UnitTests.Models
     {
         private readonly Mock<IJsonApiRequest> _requestMock;
         private readonly Mock<IHttpContextAccessor> _mockHttpContextAccessor;
+        private readonly Mock<IResourceDefinitionAccessor> _resourceDefinitionAccessorMock = new();
 
         public ResourceConstructionTests()
         {
@@ -37,7 +38,7 @@ namespace UnitTests.Models
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
             var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options);
+                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {
@@ -70,7 +71,7 @@ namespace UnitTests.Models
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
             var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options);
+                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {
@@ -105,7 +106,7 @@ namespace UnitTests.Models
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
             var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options);
+                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {

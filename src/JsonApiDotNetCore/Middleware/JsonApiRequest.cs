@@ -12,9 +12,6 @@ namespace JsonApiDotNetCore.Middleware
         public EndpointKind Kind { get; set; }
 
         /// <inheritdoc />
-        public string BasePath { get; set; }
-
-        /// <inheritdoc />
         public string PrimaryId { get; set; }
 
         /// <inheritdoc />
@@ -33,7 +30,7 @@ namespace JsonApiDotNetCore.Middleware
         public bool IsReadOnly { get; set; }
 
         /// <inheritdoc />
-        public OperationKind? OperationKind { get; set; }
+        public WriteOperationKind? WriteOperation { get; set; }
 
         /// <inheritdoc />
         public string TransactionId { get; set; }
@@ -44,16 +41,13 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(other, nameof(other));
 
             Kind = other.Kind;
-#pragma warning disable CS0618 // Type or member is obsolete
-            BasePath = other.BasePath;
-#pragma warning restore CS0618 // Type or member is obsolete
             PrimaryId = other.PrimaryId;
             PrimaryResource = other.PrimaryResource;
             SecondaryResource = other.SecondaryResource;
             Relationship = other.Relationship;
             IsCollection = other.IsCollection;
             IsReadOnly = other.IsReadOnly;
-            OperationKind = other.OperationKind;
+            WriteOperation = other.WriteOperation;
             TransactionId = other.TransactionId;
         }
     }

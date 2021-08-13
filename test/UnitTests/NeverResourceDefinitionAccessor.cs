@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
@@ -11,7 +12,7 @@ namespace UnitTests
 {
     internal sealed class NeverResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
-        public IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType, IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes)
         {
             return existingIncludes;
         }
@@ -46,21 +47,21 @@ namespace UnitTests
             return null;
         }
 
-        public Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public Task OnPrepareWriteAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
         }
 
         public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.FromResult(rightResourceId);
         }
 
         public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
@@ -80,13 +81,13 @@ namespace UnitTests
             return Task.CompletedTask;
         }
 
-        public Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public Task OnWritingAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;
         }
 
-        public Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public Task OnWriteSucceededAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable
         {
             return Task.CompletedTask;

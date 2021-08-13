@@ -21,10 +21,5 @@ namespace UnitTests
         {
             return Expression.New(resourceType);
         }
-
-        public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-        {
-            return new NeverResourceDefinitionAccessor();
-        }
     }
 }

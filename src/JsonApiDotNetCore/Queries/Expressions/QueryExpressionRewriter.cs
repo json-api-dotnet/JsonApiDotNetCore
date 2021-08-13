@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
@@ -54,11 +53,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<FilterExpression> newTerms = VisitSequence(expression.Terms, argument);
+                IImmutableList<FilterExpression> newTerms = VisitList(expression.Terms, argument);
 
                 if (newTerms.Count == 1)
                 {
-                    return newTerms.First();
+                    return newTerms[0];
                 }
 
                 if (newTerms.Count != 0)
@@ -85,7 +84,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return null;
         }
 
-        public override QueryExpression VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, TArgument argument)
+        public override QueryExpression VisitHas(HasExpression expression, TArgument argument)
         {
             if (expression != null)
             {
@@ -93,7 +92,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 {
                     FilterExpression newFilter = expression.Filter != null ? Visit(expression.Filter, argument) as FilterExpression : null;
 
-                    var newExpression = new CollectionNotEmptyExpression(newTargetCollection, newFilter);
+                    var newExpression = new HasExpression(newTargetCollection, newFilter);
                     return newExpression.Equals(expression) ? expression : newExpression;
                 }
             }
@@ -135,7 +134,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<SortElementExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<SortElementExpression> newElements = VisitList(expression.Elements, argument);
 
                 if (newElements.Count != 0)
                 {
@@ -180,14 +179,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return null;
         }
 
-        public override QueryExpression VisitEqualsAnyOf(EqualsAnyOfExpression expression, TArgument argument)
+        public override QueryExpression VisitAny(AnyExpression expression, TArgument argument)
         {
             if (expression != null)
             {
                 var newTargetAttribute = Visit(expression.TargetAttribute, argument) as ResourceFieldChainExpression;
-                IReadOnlyCollection<LiteralConstantExpression> newConstants = VisitSequence(expression.Constants, argument);
+                IImmutableSet<LiteralConstantExpression> newConstants = VisitSet(expression.Constants, argument);
 
-                var newExpression = new EqualsAnyOfExpression(newTargetAttribute, newConstants);
+                var newExpression = new AnyExpression(newTargetAttribute, newConstants);
                 return newExpression.Equals(expression) ? expression : newExpression;
             }
 
@@ -198,7 +197,8 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                var newTable = new Dictionary<ResourceContext, SparseFieldSetExpression>();
+                ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder newTable =
+                    ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
 
                 foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in expression.Table)
                 {
@@ -210,7 +210,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
                 if (newTable.Count > 0)
                 {
-                    var newExpression = new SparseFieldTableExpression(newTable);
+                    var newExpression = new SparseFieldTableExpression(newTable.ToImmutable());
                     return newExpression.Equals(expression) ? expression : newExpression;
                 }
             }
@@ -242,7 +242,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<PaginationElementQueryStringValueExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<PaginationElementQueryStringValueExpression> newElements = VisitList(expression.Elements, argument);
 
                 var newExpression = new PaginationQueryStringValueExpression(newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -268,7 +268,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Elements, argument);
+                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Elements, argument);
 
                 if (newElements.Count == 0)
                 {
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IReadOnlyCollection<IncludeElementExpression> newElements = VisitSequence(expression.Children, argument);
+                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Children, argument);
 
                 var newExpression = new IncludeElementExpression(expression.Relationship, newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;
@@ -300,20 +300,36 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return expression;
         }
 
-        protected virtual IReadOnlyCollection<TExpression> VisitSequence<TExpression>(IEnumerable<TExpression> elements, TArgument argument)
+        protected virtual IImmutableList<TExpression> VisitList<TExpression>(IImmutableList<TExpression> elements, TArgument argument)
             where TExpression : QueryExpression
         {
-            var newElements = new List<TExpression>();
+            ImmutableArray<TExpression>.Builder arrayBuilder = ImmutableArray.CreateBuilder<TExpression>(elements.Count);
 
             foreach (TExpression element in elements)
             {
                 if (Visit(element, argument) is TExpression newElement)
                 {
-                    newElements.Add(newElement);
+                    arrayBuilder.Add(newElement);
                 }
             }
 
-            return newElements;
+            return arrayBuilder.ToImmutable();
+        }
+
+        protected virtual IImmutableSet<TExpression> VisitSet<TExpression>(IImmutableSet<TExpression> elements, TArgument argument)
+            where TExpression : QueryExpression
+        {
+            ImmutableHashSet<TExpression>.Builder setBuilder = ImmutableHashSet.CreateBuilder<TExpression>();
+
+            foreach (TExpression element in elements)
+            {
+                if (Visit(element, argument) is TExpression newElement)
+                {
+                    setBuilder.Add(newElement);
+                }
+            }
+
+            return setBuilder.ToImmutable();
         }
     }
 }

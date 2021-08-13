@@ -1,9 +1,10 @@
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Lists the functional operation kinds of a resource request or an atomic:operations request.
+    /// Lists the functional write operations, originating from a POST/PATCH/DELETE request against a single resource/relationship or a POST request against
+    /// a list of operations.
     /// </summary>
-    public enum OperationKind
+    public enum WriteOperationKind
     {
         /// <summary>
         /// Create a new resource with attributes, relationships or both.

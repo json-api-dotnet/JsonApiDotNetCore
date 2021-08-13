@@ -27,15 +27,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
             _hitCounter = hitCounter;
         }
 
-        public override Task OnPrepareWriteAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnPrepareWriteAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
 
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 user.Id = Guid.NewGuid();
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 _beforeLoginName = user.LoginName;
                 _beforeDisplayName = user.DisplayName;
@@ -45,7 +45,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         }
 
         public override Task<IIdentifiable> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync);
 
@@ -90,9 +90,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
             return Task.FromResult(rightResourceId);
         }
 
-        protected async Task FinishWriteAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
+        protected async Task FinishWriteAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 var message = OutgoingMessage.CreateFromContent(new UserCreatedContent
                 {
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
 
                 await FlushMessageAsync(message, cancellationToken);
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 if (_beforeLoginName != user.LoginName)
                 {
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
                     await FlushMessageAsync(message, cancellationToken);
                 }
             }
-            else if (operationKind == OperationKind.DeleteResource)
+            else if (writeOperation == WriteOperationKind.DeleteResource)
             {
                 DomainUser userToDelete = await GetUserToDeleteAsync(user.Id, cancellationToken);
 

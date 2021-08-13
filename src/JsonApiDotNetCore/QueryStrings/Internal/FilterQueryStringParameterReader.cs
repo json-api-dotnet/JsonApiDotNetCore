@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -23,8 +24,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IJsonApiOptions _options;
         private readonly QueryStringParameterScopeParser _scopeParser;
         private readonly FilterParser _filterParser;
-        private readonly List<FilterExpression> _filtersInGlobalScope = new();
-        private readonly Dictionary<ResourceFieldChainExpression, List<FilterExpression>> _filtersPerScope = new();
+        private readonly ImmutableArray<FilterExpression>.Builder _filtersInGlobalScope = ImmutableArray.CreateBuilder<FilterExpression>();
+        private readonly Dictionary<ResourceFieldChainExpression, ImmutableArray<FilterExpression>.Builder> _filtersPerScope = new();
 
         private string _lastParameterName;
 
@@ -53,7 +54,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             ArgumentGuard.NotNull(disableQueryStringAttribute, nameof(disableQueryStringAttribute));
 
-            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(StandardQueryStringParameters.Filter);
+            return !IsAtomicOperationsRequest && !disableQueryStringAttribute.ContainsParameter(JsonApiQueryStringParameters.Filter);
         }
 
         /// <inheritdoc />
@@ -142,7 +143,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             {
                 if (!_filtersPerScope.ContainsKey(scope))
                 {
-                    _filtersPerScope[scope] = new List<FilterExpression>();
+                    _filtersPerScope[scope] = ImmutableArray.CreateBuilder<FilterExpression>();
                 }
 
                 _filtersPerScope[scope].Add(filter);
@@ -159,18 +160,18 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (_filtersInGlobalScope.Any())
             {
-                FilterExpression filter = MergeFilters(_filtersInGlobalScope);
+                FilterExpression filter = MergeFilters(_filtersInGlobalScope.ToImmutable());
                 yield return new ExpressionInScope(null, filter);
             }
 
-            foreach ((ResourceFieldChainExpression scope, List<FilterExpression> filters) in _filtersPerScope)
+            foreach ((ResourceFieldChainExpression scope, ImmutableArray<FilterExpression>.Builder filtersBuilder) in _filtersPerScope)
             {
-                FilterExpression filter = MergeFilters(filters);
+                FilterExpression filter = MergeFilters(filtersBuilder.ToImmutable());
                 yield return new ExpressionInScope(scope, filter);
             }
         }
 
-        private static FilterExpression MergeFilters(IReadOnlyCollection<FilterExpression> filters)
+        private static FilterExpression MergeFilters(IImmutableList<FilterExpression> filters)
         {
             return filters.Count > 1 ? new LogicalExpression(LogicalOperator.Or, filters) : filters.First();
         }

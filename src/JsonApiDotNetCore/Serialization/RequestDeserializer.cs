@@ -29,22 +29,20 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
         public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields,
-            IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options)
+            IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor)
             : base(resourceContextProvider, resourceFactory)
         {
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _targetedFields = targetedFields;
             _httpContextAccessor = httpContextAccessor;
             _request = request;
             _options = options;
-
-#pragma warning disable 612 // Method is obsolete
-            _resourceDefinitionAccessor = resourceFactory.GetResourceDefinitionAccessor();
-#pragma warning restore 612
+            _resourceDefinitionAccessor = resourceDefinitionAccessor;
         }
 
         /// <inheritdoc />
@@ -111,24 +109,25 @@ namespace JsonApiDotNetCore.Serialization
 
             AssertHasNoHref(operation);
 
-            OperationKind kind = GetOperationKind(operation);
+            WriteOperationKind writeOperation = GetWriteOperationKind(operation);
 
-            switch (kind)
+            switch (writeOperation)
             {
-                case OperationKind.CreateResource:
-                case OperationKind.UpdateResource:
+                case WriteOperationKind.CreateResource:
+                case WriteOperationKind.UpdateResource:
                 {
-                    return ParseForCreateOrUpdateResourceOperation(operation, kind);
+                    return ParseForCreateOrUpdateResourceOperation(operation, writeOperation);
                 }
-                case OperationKind.DeleteResource:
+                case WriteOperationKind.DeleteResource:
                 {
-                    return ParseForDeleteResourceOperation(operation, kind);
+                    return ParseForDeleteResourceOperation(operation, writeOperation);
                 }
             }
 
-            bool requireToManyRelationship = kind == OperationKind.AddToRelationship || kind == OperationKind.RemoveFromRelationship;
+            bool requireToManyRelationship =
+                writeOperation == WriteOperationKind.AddToRelationship || writeOperation == WriteOperationKind.RemoveFromRelationship;
 
-            return ParseForRelationshipOperation(operation, kind, requireToManyRelationship);
+            return ParseForRelationshipOperation(operation, writeOperation, requireToManyRelationship);
         }
 
         [AssertionMethod]
@@ -140,7 +139,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private OperationKind GetOperationKind(AtomicOperationObject operation)
+        private WriteOperationKind GetWriteOperationKind(AtomicOperationObject operation)
         {
             switch (operation.Code)
             {
@@ -152,11 +151,11 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    return operation.Ref == null ? OperationKind.CreateResource : OperationKind.AddToRelationship;
+                    return operation.Ref == null ? WriteOperationKind.CreateResource : WriteOperationKind.AddToRelationship;
                 }
                 case AtomicOperationCode.Update:
                 {
-                    return operation.Ref?.Relationship != null ? OperationKind.SetRelationship : OperationKind.UpdateResource;
+                    return operation.Ref?.Relationship != null ? WriteOperationKind.SetRelationship : WriteOperationKind.UpdateResource;
                 }
                 case AtomicOperationCode.Remove:
                 {
@@ -165,19 +164,19 @@ namespace JsonApiDotNetCore.Serialization
                         throw new JsonApiSerializationException("The 'ref' element is required.", null, atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    return operation.Ref.Relationship != null ? OperationKind.RemoveFromRelationship : OperationKind.DeleteResource;
+                    return operation.Ref.Relationship != null ? WriteOperationKind.RemoveFromRelationship : WriteOperationKind.DeleteResource;
                 }
             }
 
             throw new NotSupportedException($"Unknown operation code '{operation.Code}'.");
         }
 
-        private OperationContainer ParseForCreateOrUpdateResourceOperation(AtomicOperationObject operation, OperationKind kind)
+        private OperationContainer ParseForCreateOrUpdateResourceOperation(AtomicOperationObject operation, WriteOperationKind writeOperation)
         {
             ResourceObject resourceObject = GetRequiredSingleDataForResourceOperation(operation);
 
             AssertElementHasType(resourceObject, "data");
-            AssertElementHasIdOrLid(resourceObject, "data", kind != OperationKind.CreateResource);
+            AssertElementHasIdOrLid(resourceObject, "data", writeOperation != WriteOperationKind.CreateResource);
 
             ResourceContext primaryResourceContext = GetExistingResourceContext(resourceObject.Type);
 
@@ -192,7 +191,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 ResourceContext resourceContextInRef = GetExistingResourceContext(operation.Ref.Type);
 
-                if (resourceContextInRef != primaryResourceContext)
+                if (!primaryResourceContext.Equals(resourceContextInRef))
                 {
                     throw new JsonApiSerializationException("Resource type mismatch between 'ref.type' and 'data.type' element.",
                         $"Expected resource of type '{resourceContextInRef.PublicName}' in 'data.type', instead of '{primaryResourceContext.PublicName}'.",
@@ -205,11 +204,8 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
-#pragma warning disable CS0618 // Type or member is obsolete
-                BasePath = _request.BasePath,
-#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryResource = primaryResourceContext,
-                OperationKind = kind
+                WriteOperation = writeOperation
             };
 
             _request.CopyFrom(request);
@@ -229,7 +225,7 @@ namespace JsonApiDotNetCore.Serialization
 
             AssertResourceIdIsNotTargeted(targetedFields);
 
-            return new OperationContainer(kind, primaryResource, targetedFields, request);
+            return new OperationContainer(writeOperation, primaryResource, targetedFields, request);
         }
 
         private ResourceObject GetRequiredSingleDataForResourceOperation(AtomicOperationObject operation)
@@ -315,7 +311,7 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private OperationContainer ParseForDeleteResourceOperation(AtomicOperationObject operation, OperationKind kind)
+        private OperationContainer ParseForDeleteResourceOperation(AtomicOperationObject operation, WriteOperationKind writeOperation)
         {
             AssertElementHasType(operation.Ref, "ref");
             AssertElementHasIdOrLid(operation.Ref, "ref", true);
@@ -331,18 +327,15 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
-#pragma warning disable CS0618 // Type or member is obsolete
-                BasePath = _request.BasePath,
-#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryId = primaryResource.StringId,
                 PrimaryResource = primaryResourceContext,
-                OperationKind = kind
+                WriteOperation = writeOperation
             };
 
-            return new OperationContainer(kind, primaryResource, new TargetedFields(), request);
+            return new OperationContainer(writeOperation, primaryResource, new TargetedFields(), request);
         }
 
-        private OperationContainer ParseForRelationshipOperation(AtomicOperationObject operation, OperationKind kind, bool requireToMany)
+        private OperationContainer ParseForRelationshipOperation(AtomicOperationObject operation, WriteOperationKind writeOperation, bool requireToMany)
         {
             AssertElementHasType(operation.Ref, "ref");
             AssertElementHasIdOrLid(operation.Ref, "ref", true);
@@ -368,15 +361,12 @@ namespace JsonApiDotNetCore.Serialization
             var request = new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations,
-#pragma warning disable CS0618 // Type or member is obsolete
-                BasePath = _request.BasePath,
-#pragma warning restore CS0618 // Type or member is obsolete
                 PrimaryId = primaryResource.StringId,
                 PrimaryResource = primaryResourceContext,
                 SecondaryResource = secondaryResourceContext,
                 Relationship = relationship,
                 IsCollection = relationship is HasManyAttribute,
-                OperationKind = kind
+                WriteOperation = writeOperation
             };
 
             _request.CopyFrom(request);
@@ -391,7 +381,7 @@ namespace JsonApiDotNetCore.Serialization
                 Relationships = _targetedFields.Relationships.ToHashSet()
             };
 
-            return new OperationContainer(kind, primaryResource, targetedFields, request);
+            return new OperationContainer(writeOperation, primaryResource, targetedFields, request);
         }
 
         private RelationshipAttribute GetExistingRelationship(AtomicReference reference, ResourceContext resourceContext)
@@ -522,14 +512,14 @@ namespace JsonApiDotNetCore.Serialization
         private bool IsCreatingResource()
         {
             return _request.Kind == EndpointKind.AtomicOperations
-                ? _request.OperationKind == OperationKind.CreateResource
+                ? _request.WriteOperation == WriteOperationKind.CreateResource
                 : _request.Kind == EndpointKind.Primary && _httpContextAccessor.HttpContext!.Request.Method == HttpMethod.Post.Method;
         }
 
         private bool IsUpdatingResource()
         {
             return _request.Kind == EndpointKind.AtomicOperations
-                ? _request.OperationKind == OperationKind.UpdateResource
+                ? _request.WriteOperation == WriteOperationKind.UpdateResource
                 : _request.Kind == EndpointKind.Primary && _httpContextAccessor.HttpContext!.Request.Method == HttpMethod.Patch.Method;
         }
     }

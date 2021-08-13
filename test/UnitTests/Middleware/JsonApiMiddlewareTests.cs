@@ -167,24 +167,18 @@ namespace UnitTests.Middleware
         {
             var mockGraph = new Mock<IResourceGraph>();
 
-            var resourceContext = new ResourceContext
-            {
-                PublicName = resourceName,
-                IdentityType = typeof(string)
-            };
+            var resourceContext = new ResourceContext(resourceName, typeof(object), typeof(string), Array.Empty<AttrAttribute>(),
+                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>());
 
             ISetupSequentialResult<ResourceContext> seq = mockGraph.SetupSequence(resourceGraph => resourceGraph.GetResourceContext(It.IsAny<Type>()))
                 .Returns(resourceContext);
 
             if (includeRelationship)
             {
-                var relResourceContext = new ResourceContext
-                {
-                    PublicName = "todoItems",
-                    IdentityType = typeof(string)
-                };
+                var relatedContext = new ResourceContext("todoItems", typeof(object), typeof(string), Array.Empty<AttrAttribute>(),
+                    Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>());
 
-                seq.Returns(relResourceContext);
+                seq.Returns(relatedContext);
             }
 
             return mockGraph;

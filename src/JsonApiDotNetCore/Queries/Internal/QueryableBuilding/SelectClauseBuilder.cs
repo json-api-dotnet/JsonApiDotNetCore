@@ -6,7 +6,6 @@ using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -185,25 +184,6 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 _entityModel, lambdaScopeFactory);
 
             Expression layerExpression = builder.ApplyQuery(layer);
-
-            // Earlier versions of EF Core 3.x failed to understand `query.ToHashSet()`, so we emit `new HashSet(query)` instead.
-            // Interestingly, EF Core 5 RC1 fails to understand `new HashSet(query)`, so we emit `query.ToHashSet()` instead.
-            // https://github.com/dotnet/efcore/issues/22902
-
-            if (EntityFrameworkCoreSupport.Version.Major < 5)
-            {
-                Type enumerableOfElementType = typeof(IEnumerable<>).MakeGenericType(elementType);
-                Type typedCollection = CollectionConverter.ToConcreteCollectionType(collectionProperty.PropertyType);
-
-                ConstructorInfo typedCollectionConstructor = typedCollection.GetConstructor(enumerableOfElementType.AsArray());
-
-                if (typedCollectionConstructor == null)
-                {
-                    throw new InvalidOperationException($"Constructor on '{typedCollection.Name}' that accepts '{enumerableOfElementType.Name}' not found.");
-                }
-
-                return Expression.New(typedCollectionConstructor, layerExpression);
-            }
 
             string operationName = CollectionConverter.TypeCanContainHashSet(collectionProperty.PropertyType) ? "ToHashSet" : "ToList";
             return CopyCollectionExtensionMethodCall(layerExpression, operationName, elementType);

@@ -23,8 +23,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
         public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+                resourceDefinitionAccessor)
         {
             _tenantProvider = tenantProvider;
         }
@@ -59,21 +60,20 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds,
-            CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
         {
-            await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+            await AssertRightResourcesExistAsync(rightValue, cancellationToken);
 
-            await base.SetRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.SetRelationshipAsync(leftId, relationshipName, rightValue, cancellationToken);
         }
 
-        public override async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public override async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
-            await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+            _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+            await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
 
-            await base.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
         }
 
         public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)
@@ -90,8 +90,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
     {
         public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
-            : base(tenantProvider, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(tenantProvider, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+                resourceDefinitionAccessor)
         {
         }
     }

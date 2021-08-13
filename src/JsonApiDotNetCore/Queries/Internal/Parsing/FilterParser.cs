@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using System.Reflection;
 using Humanizer;
 using JetBrains.Annotations;
@@ -106,28 +105,28 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatText(operatorName);
             EatSingleCharacterToken(TokenKind.OpenParen);
 
-            var terms = new List<FilterExpression>();
+            ImmutableArray<FilterExpression>.Builder termsBuilder = ImmutableArray.CreateBuilder<FilterExpression>();
 
             FilterExpression term = ParseFilter();
-            terms.Add(term);
+            termsBuilder.Add(term);
 
             EatSingleCharacterToken(TokenKind.Comma);
 
             term = ParseFilter();
-            terms.Add(term);
+            termsBuilder.Add(term);
 
             while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 term = ParseFilter();
-                terms.Add(term);
+                termsBuilder.Add(term);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
             var logicalOperator = Enum.Parse<LogicalOperator>(operatorName.Pascalize());
-            return new LogicalExpression(logicalOperator, terms);
+            return new LogicalExpression(logicalOperator, termsBuilder.ToImmutable());
         }
 
         protected ComparisonExpression ParseComparison(string operatorName)
@@ -152,13 +151,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             if (leftTerm is ResourceFieldChainExpression leftChain)
             {
-                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && !(rightTerm is NullConstantExpression))
+                if (leftChainRequirements.HasFlag(FieldChainRequirements.EndsInToOne) && rightTerm is not NullConstantExpression)
                 {
                     // Run another pass over left chain to have it fail when chain ends in relationship.
                     OnResolveFieldChain(leftChain.ToString(), FieldChainRequirements.EndsInAttribute);
                 }
 
-                PropertyInfo leftProperty = leftChain.Fields.Last().Property;
+                PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
                 if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
@@ -187,7 +186,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return new MatchTextExpression(targetAttribute, constant, matchKind);
         }
 
-        protected EqualsAnyOfExpression ParseAny()
+        protected AnyExpression ParseAny()
         {
             EatText(Keywords.Any);
             EatSingleCharacterToken(TokenKind.OpenParen);
@@ -196,42 +195,55 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.Comma);
 
-            var constants = new List<LiteralConstantExpression>();
+            ImmutableHashSet<LiteralConstantExpression>.Builder constantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
 
             LiteralConstantExpression constant = ParseConstant();
-            constants.Add(constant);
+            constantsBuilder.Add(constant);
 
             EatSingleCharacterToken(TokenKind.Comma);
 
             constant = ParseConstant();
-            constants.Add(constant);
+            constantsBuilder.Add(constant);
 
             while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 constant = ParseConstant();
-                constants.Add(constant);
+                constantsBuilder.Add(constant);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
-            PropertyInfo targetAttributeProperty = targetAttribute.Fields.Last().Property;
+            IImmutableSet<LiteralConstantExpression> constantSet = constantsBuilder.ToImmutable();
+
+            PropertyInfo targetAttributeProperty = targetAttribute.Fields[^1].Property;
 
             if (targetAttributeProperty.Name == nameof(Identifiable.Id))
             {
-                for (int index = 0; index < constants.Count; index++)
-                {
-                    string stringId = constants[index].Value;
-                    string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
-                    constants[index] = new LiteralConstantExpression(id);
-                }
+                constantSet = DeObfuscateIdConstants(constantSet, targetAttributeProperty);
             }
 
-            return new EqualsAnyOfExpression(targetAttribute, constants);
+            return new AnyExpression(targetAttribute, constantSet);
         }
 
-        protected CollectionNotEmptyExpression ParseHas()
+        private IImmutableSet<LiteralConstantExpression> DeObfuscateIdConstants(IImmutableSet<LiteralConstantExpression> constantSet,
+            PropertyInfo targetAttributeProperty)
+        {
+            ImmutableHashSet<LiteralConstantExpression>.Builder idConstantsBuilder = ImmutableHashSet.CreateBuilder<LiteralConstantExpression>();
+
+            foreach (LiteralConstantExpression idConstant in constantSet)
+            {
+                string stringId = idConstant.Value;
+                string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
+
+                idConstantsBuilder.Add(new LiteralConstantExpression(id));
+            }
+
+            return idConstantsBuilder.ToImmutable();
+        }
+
+        protected HasExpression ParseHas()
         {
             EatText(Keywords.Has);
             EatSingleCharacterToken(TokenKind.OpenParen);
@@ -243,12 +255,12 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
-                filter = ParseFilterInHas((HasManyAttribute)targetCollection.Fields.Last());
+                filter = ParseFilterInHas((HasManyAttribute)targetCollection.Fields[^1]);
             }
 
             EatSingleCharacterToken(TokenKind.CloseParen);
 
-            return new CollectionNotEmptyExpression(targetCollection, filter);
+            return new HasExpression(targetCollection, filter);
         }
 
         private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)
@@ -332,7 +344,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return tempResource.GetTypedId().ToString();
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {

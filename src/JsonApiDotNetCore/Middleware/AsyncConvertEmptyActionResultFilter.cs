@@ -16,7 +16,7 @@ namespace JsonApiDotNetCore.Middleware
 
             if (context.HttpContext.IsJsonApiRequest())
             {
-                if (!(context.Result is ObjectResult objectResult) || objectResult.Value == null)
+                if (context.Result is not ObjectResult objectResult || objectResult.Value == null)
                 {
                     if (context.Result is IStatusCodeActionResult statusCodeResult)
                     {

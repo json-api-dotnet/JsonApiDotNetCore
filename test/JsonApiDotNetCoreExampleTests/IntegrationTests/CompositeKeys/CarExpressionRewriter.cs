@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore;
@@ -27,7 +28,6 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             ResourceContext carResourceContext = resourceContextProvider.GetResourceContext<Car>();
 
             _regionIdAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.RegionId));
-
             _licensePlateAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.LicensePlate));
         }
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
         {
             if (expression.Left is ResourceFieldChainExpression leftChain && expression.Right is LiteralConstantExpression rightConstant)
             {
-                PropertyInfo leftProperty = leftChain.Fields.Last().Property;
+                PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
                 if (IsCarId(leftProperty))
                 {
@@ -51,9 +51,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             return base.VisitComparison(expression, argument);
         }
 
-        public override QueryExpression VisitEqualsAnyOf(EqualsAnyOfExpression expression, object argument)
+        public override QueryExpression VisitAny(AnyExpression expression, object argument)
         {
-            PropertyInfo property = expression.TargetAttribute.Fields.Last().Property;
+            PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
             if (IsCarId(property))
             {
@@ -61,12 +61,12 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 return RewriteFilterOnCarStringIds(expression.TargetAttribute, carStringIds);
             }
 
-            return base.VisitEqualsAnyOf(expression, argument);
+            return base.VisitAny(expression, argument);
         }
 
         public override QueryExpression VisitMatchText(MatchTextExpression expression, object argument)
         {
-            PropertyInfo property = expression.TargetAttribute.Fields.Last().Property;
+            PropertyInfo property = expression.TargetAttribute.Fields[^1].Property;
 
             if (IsCarId(property))
             {
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         private QueryExpression RewriteFilterOnCarStringIds(ResourceFieldChainExpression existingCarIdChain, IEnumerable<string> carStringIds)
         {
-            var outerTerms = new List<FilterExpression>();
+            ImmutableArray<FilterExpression>.Builder outerTermsBuilder = ImmutableArray.CreateBuilder<FilterExpression>();
 
             foreach (string carStringId in carStringIds)
             {
@@ -93,10 +93,10 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
                 };
 
                 FilterExpression keyComparison = CreateEqualityComparisonOnCompositeKey(existingCarIdChain, tempCar.RegionId, tempCar.LicensePlate);
-                outerTerms.Add(keyComparison);
+                outerTermsBuilder.Add(keyComparison);
             }
 
-            return outerTerms.Count == 1 ? outerTerms[0] : new LogicalExpression(LogicalOperator.Or, outerTerms);
+            return outerTermsBuilder.Count == 1 ? outerTermsBuilder[0] : new LogicalExpression(LogicalOperator.Or, outerTermsBuilder.ToImmutable());
         }
 
         private FilterExpression CreateEqualityComparisonOnCompositeKey(ResourceFieldChainExpression existingCarIdChain, long regionIdValue,
@@ -112,41 +112,37 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
             var licensePlateComparison = new ComparisonExpression(ComparisonOperator.Equals, licensePlateChain,
                 new LiteralConstantExpression(licensePlateValue));
 
-            return new LogicalExpression(LogicalOperator.And, new[]
-            {
-                regionIdComparison,
-                licensePlateComparison
-            });
+            return new LogicalExpression(LogicalOperator.And, regionIdComparison, licensePlateComparison);
         }
 
         public override QueryExpression VisitSort(SortExpression expression, object argument)
         {
-            var newSortElements = new List<SortElementExpression>();
+            ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(expression.Elements.Count);
 
             foreach (SortElementExpression sortElement in expression.Elements)
             {
                 if (IsSortOnCarId(sortElement))
                 {
                     ResourceFieldChainExpression regionIdSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _regionIdAttribute);
-                    newSortElements.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
+                    elementsBuilder.Add(new SortElementExpression(regionIdSort, sortElement.IsAscending));
 
                     ResourceFieldChainExpression licensePlateSort = ReplaceLastAttributeInChain(sortElement.TargetAttribute, _licensePlateAttribute);
-                    newSortElements.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
+                    elementsBuilder.Add(new SortElementExpression(licensePlateSort, sortElement.IsAscending));
                 }
                 else
                 {
-                    newSortElements.Add(sortElement);
+                    elementsBuilder.Add(sortElement);
                 }
             }
 
-            return new SortExpression(newSortElements);
+            return new SortExpression(elementsBuilder.ToImmutable());
         }
 
         private static bool IsSortOnCarId(SortElementExpression sortElement)
         {
             if (sortElement.TargetAttribute != null)
             {
-                PropertyInfo property = sortElement.TargetAttribute.Fields.Last().Property;
+                PropertyInfo property = sortElement.TargetAttribute.Fields[^1].Property;
 
                 if (IsCarId(property))
                 {
@@ -159,8 +155,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
 
         private static ResourceFieldChainExpression ReplaceLastAttributeInChain(ResourceFieldChainExpression resourceFieldChain, AttrAttribute attribute)
         {
-            List<ResourceFieldAttribute> fields = resourceFieldChain.Fields.ToList();
-            fields[^1] = attribute;
+            IImmutableList<ResourceFieldAttribute> fields = resourceFieldChain.Fields.SetItem(resourceFieldChain.Fields.Count - 1, attribute);
             return new ResourceFieldChainExpression(fields);
         }
     }

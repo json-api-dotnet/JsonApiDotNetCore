@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -38,20 +38,21 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected PaginationQueryStringValueExpression ParsePagination()
         {
-            var elements = new List<PaginationElementQueryStringValueExpression>();
+            ImmutableArray<PaginationElementQueryStringValueExpression>.Builder elementsBuilder =
+                ImmutableArray.CreateBuilder<PaginationElementQueryStringValueExpression>();
 
             PaginationElementQueryStringValueExpression element = ParsePaginationElement();
-            elements.Add(element);
+            elementsBuilder.Add(element);
 
             while (TokenStack.Any())
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
                 element = ParsePaginationElement();
-                elements.Add(element);
+                elementsBuilder.Add(element);
             }
 
-            return new PaginationQueryStringValueExpression(elements);
+            return new PaginationQueryStringValueExpression(elementsBuilder.ToImmutable());
         }
 
         protected PaginationElementQueryStringValueExpression ParsePaginationElement()
@@ -105,7 +106,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return null;
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             return ChainResolver.ResolveToManyChain(_resourceContextInScope, path, _validateSingleFieldCallback);
         }

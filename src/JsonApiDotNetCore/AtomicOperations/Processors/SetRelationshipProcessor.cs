@@ -29,10 +29,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var primaryId = (TId)operation.Resource.GetTypedId();
+            var leftId = (TId)operation.Resource.GetTypedId();
             object rightValue = GetRelationshipRightValue(operation);
 
-            await _service.SetRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, rightValue, cancellationToken);
+            await _service.SetRelationshipAsync(leftId, operation.Request.Relationship.PublicName, rightValue, cancellationToken);
 
             return null;
         }

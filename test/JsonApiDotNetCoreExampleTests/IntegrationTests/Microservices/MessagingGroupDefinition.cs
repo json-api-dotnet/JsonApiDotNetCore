@@ -30,15 +30,15 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
             _hitCounter = hitCounter;
         }
 
-        public override Task OnPrepareWriteAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnPrepareWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnPrepareWriteAsync);
 
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 group.Id = Guid.NewGuid();
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 _beforeGroupName = group.Name;
             }
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
         }
 
         public override async Task OnSetToManyRelationshipAsync(DomainGroup group, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainGroup>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToManyRelationshipAsync);
 
@@ -168,9 +168,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
             return Task.CompletedTask;
         }
 
-        protected async Task FinishWriteAsync(DomainGroup group, OperationKind operationKind, CancellationToken cancellationToken)
+        protected async Task FinishWriteAsync(DomainGroup group, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 var message = OutgoingMessage.CreateFromContent(new GroupCreatedContent
                 {
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
 
                 await FlushMessageAsync(message, cancellationToken);
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 if (_beforeGroupName != group.Name)
                 {
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
                     await FlushMessageAsync(message, cancellationToken);
                 }
             }
-            else if (operationKind == OperationKind.DeleteResource)
+            else if (writeOperation == WriteOperationKind.DeleteResource)
             {
                 DomainGroup groupToDelete = await GetGroupToDeleteAsync(group.Id, cancellationToken);
 

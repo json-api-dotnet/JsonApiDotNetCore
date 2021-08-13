@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
 {
     [NoHttpDelete]
-    [DisableQueryString(StandardQueryStringParameters.Sort | StandardQueryStringParameters.Page)]
+    [DisableQueryString(JsonApiQueryStringParameters.Sort | JsonApiQueryStringParameters.Page)]
     public sealed class BlockingHttpDeleteController : JsonApiController<Sofa>
     {
         public BlockingHttpDeleteController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Sofa> resourceService)

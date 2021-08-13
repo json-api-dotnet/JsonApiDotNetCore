@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using Humanizer;
@@ -14,9 +14,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class LogicalExpression : FilterExpression
     {
         public LogicalOperator Operator { get; }
-        public IReadOnlyCollection<FilterExpression> Terms { get; }
+        public IImmutableList<FilterExpression> Terms { get; }
 
-        public LogicalExpression(LogicalOperator @operator, IReadOnlyCollection<FilterExpression> terms)
+        public LogicalExpression(LogicalOperator @operator, params FilterExpression[] terms)
+            : this(@operator, terms.ToImmutableArray())
+        {
+        }
+
+        public LogicalExpression(LogicalOperator @operator, IImmutableList<FilterExpression> terms)
         {
             ArgumentGuard.NotNull(terms, nameof(terms));
 

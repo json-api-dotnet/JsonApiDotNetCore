@@ -63,20 +63,19 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.SetRelationshipAsync" />.
         /// </summary>
-        Task SetRelationshipAsync<TResource>(TResource primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+        Task SetRelationshipAsync<TResource>(TResource leftResource, object rightValue, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.AddToToManyRelationshipAsync" /> for the specified resource type.
         /// </summary>
-        Task AddToToManyRelationshipAsync<TResource, TId>(TId primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        Task AddToToManyRelationshipAsync<TResource, TId>(TId leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable<TId>;
 
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.RemoveFromToManyRelationshipAsync" />.
         /// </summary>
-        Task RemoveFromToManyRelationshipAsync<TResource>(TResource primaryResource, ISet<IIdentifiable> secondaryResourceIds,
-            CancellationToken cancellationToken)
+        Task RemoveFromToManyRelationshipAsync<TResource>(TResource leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
     }
 }

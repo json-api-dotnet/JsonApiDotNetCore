@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -141,27 +142,20 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private string ChangeTopPageSize(string pageSizeParameterValue, PageSize topPageSize, ResourceContext requestContext)
         {
-            IList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, requestContext);
+            IImmutableList<PaginationElementQueryStringValueExpression> elements = ParsePageSizeExpression(pageSizeParameterValue, requestContext);
             int elementInTopScopeIndex = elements.FindIndex(expression => expression.Scope == null);
 
             if (topPageSize != null)
             {
                 var topPageSizeElement = new PaginationElementQueryStringValueExpression(null, topPageSize.Value);
 
-                if (elementInTopScopeIndex != -1)
-                {
-                    elements[elementInTopScopeIndex] = topPageSizeElement;
-                }
-                else
-                {
-                    elements.Insert(0, topPageSizeElement);
-                }
+                elements = elementInTopScopeIndex != -1 ? elements.SetItem(elementInTopScopeIndex, topPageSizeElement) : elements.Insert(0, topPageSizeElement);
             }
             else
             {
                 if (elementInTopScopeIndex != -1)
                 {
-                    elements.RemoveAt(elementInTopScopeIndex);
+                    elements = elements.RemoveAt(elementInTopScopeIndex);
                 }
             }
 
@@ -171,17 +165,18 @@ namespace JsonApiDotNetCore.Serialization.Building
             return parameterValue == string.Empty ? null : parameterValue;
         }
 
-        private IList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue, ResourceContext requestResource)
+        private IImmutableList<PaginationElementQueryStringValueExpression> ParsePageSizeExpression(string pageSizeParameterValue,
+            ResourceContext requestResource)
         {
             if (pageSizeParameterValue == null)
             {
-                return new List<PaginationElementQueryStringValueExpression>();
+                return ImmutableArray<PaginationElementQueryStringValueExpression>.Empty;
             }
 
             var parser = new PaginationParser(_resourceContextProvider);
             PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
-            return paginationExpression.Elements.ToList();
+            return paginationExpression.Elements;
         }
 
         private string GetLinkForPagination(int pageOffset, string pageSizeValue)
@@ -269,39 +264,39 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <inheritdoc />
-        public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable parent)
+        public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
-            ArgumentGuard.NotNull(parent, nameof(parent));
+            ArgumentGuard.NotNull(leftResource, nameof(leftResource));
 
             var links = new RelationshipLinks();
-            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(parent.GetType());
+            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(leftResource.GetType());
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Self, relationship, leftResourceContext))
             {
-                links.Self = GetLinkForRelationshipSelf(parent.StringId, relationship);
+                links.Self = GetLinkForRelationshipSelf(leftResource.StringId, relationship);
             }
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Related, relationship, leftResourceContext))
             {
-                links.Related = GetLinkForRelationshipRelated(parent.StringId, relationship);
+                links.Related = GetLinkForRelationshipRelated(leftResource.StringId, relationship);
             }
 
             return links.HasValue() ? links : null;
         }
 
-        private string GetLinkForRelationshipSelf(string primaryId, RelationshipAttribute relationship)
+        private string GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
         {
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+            IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
         }
 
-        private string GetLinkForRelationshipRelated(string primaryId, RelationshipAttribute relationship)
+        private string GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
         {
             string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
-            IDictionary<string, object> routeValues = GetRouteValues(primaryId, relationship.PublicName);
+            IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetSecondaryControllerActionName, routeValues);
         }

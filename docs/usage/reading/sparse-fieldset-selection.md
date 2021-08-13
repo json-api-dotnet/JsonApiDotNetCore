@@ -2,15 +2,15 @@
 
 As an alternative to returning all fields (attributes and relationships) from a resource, the `fields[]` query string parameter can be used to select a subset.
 Put the resource type to apply the fieldset on between the brackets.
-This can be used on the resource being requested, as well as on nested endpoints and/or included resources.
+This can be used on primary and secondary endpoints. The selection is applied on both primary and included resources.
 
-Top-level example:
+Primary endpoint example:
 
 ```http
 GET /articles?fields[articles]=title,body,comments HTTP/1.1
 ```
 
-Nested endpoint example:
+Secondary endpoint example:
 
 ```http
 GET /api/blogs/1/articles?fields[articles]=title,body,comments HTTP/1.1

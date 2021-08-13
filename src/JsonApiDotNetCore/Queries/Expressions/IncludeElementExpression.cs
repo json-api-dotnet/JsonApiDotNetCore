@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
@@ -14,14 +14,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class IncludeElementExpression : QueryExpression
     {
         public RelationshipAttribute Relationship { get; }
-        public IReadOnlyCollection<IncludeElementExpression> Children { get; }
+        public IImmutableList<IncludeElementExpression> Children { get; }
 
         public IncludeElementExpression(RelationshipAttribute relationship)
-            : this(relationship, Array.Empty<IncludeElementExpression>())
+            : this(relationship, ImmutableArray<IncludeElementExpression>.Empty)
         {
         }
 
-        public IncludeElementExpression(RelationshipAttribute relationship, IReadOnlyCollection<IncludeElementExpression> children)
+        public IncludeElementExpression(RelationshipAttribute relationship, IImmutableList<IncludeElementExpression> children)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(children, nameof(children));

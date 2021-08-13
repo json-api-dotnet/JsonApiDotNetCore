@@ -43,11 +43,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData(StandardQueryStringParameters.Filter, false)]
-        [InlineData(StandardQueryStringParameters.All, false)]
-        [InlineData(StandardQueryStringParameters.None, true)]
-        [InlineData(StandardQueryStringParameters.Page, true)]
-        public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
+        [InlineData(JsonApiQueryStringParameters.Filter, false)]
+        [InlineData(JsonApiQueryStringParameters.All, false)]
+        [InlineData(JsonApiQueryStringParameters.None, true)]
+        [InlineData(JsonApiQueryStringParameters.Page, true)]
+        public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
             bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
@@ -131,7 +131,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter", "contains(title,'this')", null, "contains(title,'this')")]
         [InlineData("filter", "startsWith(title,'this')", null, "startsWith(title,'this')")]
         [InlineData("filter", "endsWith(title,'this')", null, "endsWith(title,'this')")]
-        [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'this','that','there')")]
+        [InlineData("filter", "any(title,'this','that','there')", null, "any(title,'that','there','this')")]
         [InlineData("filter", "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))", null,
             "and(contains(title,'sales'),contains(title,'marketing'),contains(title,'advertising'))")]
         [InlineData("filter[posts]", "or(and(not(equals(author.userName,null)),not(equals(author.displayName,null))),not(has(comments,startsWith(text,'A'))))",

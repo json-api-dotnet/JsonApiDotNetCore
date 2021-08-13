@@ -211,36 +211,36 @@ namespace JsonApiDotNetCore.Controllers
         /// Adds resources to a to-many relationship. Example: POST /articles/1/revisions HTTP/1.1
         /// </summary>
         /// <param name="id">
-        /// The identifier of the primary resource.
+        /// Identifies the left side of the relationship.
         /// </param>
         /// <param name="relationshipName">
         /// The relationship to add resources to.
         /// </param>
-        /// <param name="secondaryResourceIds">
+        /// <param name="rightResourceIds">
         /// The set of resources to add to the relationship.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public virtual async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
                 id,
                 relationshipName,
-                secondaryResourceIds
+                rightResourceIds
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
-            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             if (_addToRelationship == null)
             {
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
             }
 
-            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            await _addToRelationship.AddToToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
 
             return NoContent();
         }
@@ -279,25 +279,25 @@ namespace JsonApiDotNetCore.Controllers
         /// /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
         /// <param name="id">
-        /// The identifier of the primary resource.
+        /// Identifies the left side of the relationship.
         /// </param>
         /// <param name="relationshipName">
         /// The relationship for which to perform a complete replacement.
         /// </param>
-        /// <param name="secondaryResourceIds">
+        /// <param name="rightValue">
         /// The resource or set of resources to assign to the relationship.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds,
+        public virtual async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
                 id,
                 relationshipName,
-                secondaryResourceIds
+                rightValue
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
@@ -307,7 +307,7 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Patch);
             }
 
-            await _setRelationship.SetRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            await _setRelationship.SetRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
 
             return NoContent();
         }
@@ -336,36 +336,36 @@ namespace JsonApiDotNetCore.Controllers
         /// Removes resources from a to-many relationship. Example: DELETE /articles/1/relationships/revisions HTTP/1.1
         /// </summary>
         /// <param name="id">
-        /// The identifier of the primary resource.
+        /// Identifies the left side of the relationship.
         /// </param>
         /// <param name="relationshipName">
         /// The relationship to remove resources from.
         /// </param>
-        /// <param name="secondaryResourceIds">
+        /// <param name="rightResourceIds">
         /// The set of resources to remove from the relationship.
         /// </param>
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public virtual async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
                 id,
                 relationshipName,
-                secondaryResourceIds
+                rightResourceIds
             });
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
-            ArgumentGuard.NotNull(secondaryResourceIds, nameof(secondaryResourceIds));
+            ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
             if (_removeFromRelationship == null)
             {
                 throw new RequestMethodNotAllowedException(HttpMethod.Delete);
             }
 
-            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            await _removeFromRelationship.RemoveFromToManyRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
 
             return NoContent();
         }

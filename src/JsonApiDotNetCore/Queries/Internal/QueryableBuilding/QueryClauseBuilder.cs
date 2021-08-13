@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JsonApiDotNetCore.Queries.Expressions;
-using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 {
@@ -61,13 +60,12 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitResourceFieldChain(ResourceFieldChainExpression expression, TArgument argument)
         {
-            string[] components = expression.Fields
-                .Select(field => field is RelationshipAttribute relationship ? relationship.Property.Name : field.Property.Name).ToArray();
+            string[] components = expression.Fields.Select(field => field.Property.Name).ToArray();
 
             return CreatePropertyExpressionFromComponents(LambdaScope.Accessor, components);
         }
 
-        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IReadOnlyCollection<string> components)
+        private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
         {
             MemberExpression property = null;
 

@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
@@ -11,12 +11,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
     /// Represents the "any" filter function, resulting from text such as: any(name,'Jack','Joe')
     /// </summary>
     [PublicAPI]
-    public class EqualsAnyOfExpression : FilterExpression
+    public class AnyExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetAttribute { get; }
-        public IReadOnlyCollection<LiteralConstantExpression> Constants { get; }
+        public IImmutableSet<LiteralConstantExpression> Constants { get; }
 
-        public EqualsAnyOfExpression(ResourceFieldChainExpression targetAttribute, IReadOnlyCollection<LiteralConstantExpression> constants)
+        public AnyExpression(ResourceFieldChainExpression targetAttribute, IImmutableSet<LiteralConstantExpression> constants)
         {
             ArgumentGuard.NotNull(targetAttribute, nameof(targetAttribute));
             ArgumentGuard.NotNull(constants, nameof(constants));
@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
-            return visitor.VisitEqualsAnyOf(this, argument);
+            return visitor.VisitAny(this, argument);
         }
 
         public override string ToString()
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             builder.Append('(');
             builder.Append(TargetAttribute);
             builder.Append(',');
-            builder.Append(string.Join(",", Constants.Select(constant => constant.ToString())));
+            builder.Append(string.Join(",", Constants.Select(constant => constant.ToString()).OrderBy(value => value)));
             builder.Append(')');
 
             return builder.ToString();
@@ -61,9 +61,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 return false;
             }
 
-            var other = (EqualsAnyOfExpression)obj;
+            var other = (AnyExpression)obj;
 
-            return TargetAttribute.Equals(other.TargetAttribute) && Constants.SequenceEqual(other.Constants);
+            return TargetAttribute.Equals(other.TargetAttribute) && Constants.SetEquals(other.Constants);
         }
 
         public override int GetHashCode()

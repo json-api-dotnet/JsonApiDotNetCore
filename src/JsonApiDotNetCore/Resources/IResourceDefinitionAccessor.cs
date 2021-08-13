@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> for the specified resource type.
         /// </summary>
-        IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(Type resourceType, IReadOnlyCollection<IncludeElementExpression> existingIncludes);
+        IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyFilter" /> for the specified resource type.
@@ -53,21 +54,21 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnPrepareWriteAsync" /> for the specified resource.
         /// </summary>
-        Task OnPrepareWriteAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        Task OnPrepareWriteAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSetToOneRelationshipAsync" /> for the specified resource.
         /// </summary>
         public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnSetToManyRelationshipAsync" /> for the specified resource.
         /// </summary>
         public Task OnSetToManyRelationshipAsync<TResource>(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -87,13 +88,13 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnWritingAsync" /> for the specified resource.
         /// </summary>
-        Task OnWritingAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        Task OnWritingAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnWriteSucceededAsync" /> for the specified resource.
         /// </summary>
-        Task OnWriteSucceededAsync<TResource>(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        Task OnWriteSucceededAsync<TResource>(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>

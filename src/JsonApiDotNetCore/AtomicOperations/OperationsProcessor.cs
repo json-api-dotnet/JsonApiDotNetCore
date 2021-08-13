@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         protected void TrackLocalIdsForOperation(OperationContainer operation)
         {
-            if (operation.Kind == OperationKind.CreateResource)
+            if (operation.Kind == WriteOperationKind.CreateResource)
             {
                 DeclareLocalId(operation.Resource);
             }

@@ -26,8 +26,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
         public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
+            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
+                resourceDefinitionAccessor)
         {
             _systemClock = systemClock;
             _targetedFields = targetedFields;
@@ -58,31 +59,30 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId primaryId, string relationshipName, object secondaryResourceIds,
-            CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
         {
             if (IsSoftDeletable(_request.Relationship.RightType))
             {
-                await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+                await AssertRightResourcesExistAsync(rightValue, cancellationToken);
             }
 
-            await base.SetRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.SetRelationshipAsync(leftId, relationshipName, rightValue, cancellationToken);
         }
 
-        public override async Task AddToToManyRelationshipAsync(TId primaryId, string relationshipName, ISet<IIdentifiable> secondaryResourceIds,
+        public override async Task AddToToManyRelationshipAsync(TId leftId, string relationshipName, ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
             if (IsSoftDeletable(typeof(TResource)))
             {
-                _ = await GetPrimaryResourceByIdAsync(primaryId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
             }
 
             if (IsSoftDeletable(_request.Relationship.RightType))
             {
-                await AssertRightResourcesExistAsync(secondaryResourceIds, cancellationToken);
+                await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
             }
 
-            await base.AddToToManyRelationshipAsync(primaryId, relationshipName, secondaryResourceIds, cancellationToken);
+            await base.AddToToManyRelationshipAsync(leftId, relationshipName, rightResourceIds, cancellationToken);
         }
 
         public override async Task DeleteAsync(TId id, CancellationToken cancellationToken)
@@ -119,9 +119,9 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
     {
         public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
             IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker)
+            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
             : base(systemClock, targetedFields, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker)
+                resourceChangeTracker, resourceDefinitionAccessor)
         {
         }
     }

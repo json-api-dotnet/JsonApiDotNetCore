@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Immutable;
 using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -13,9 +12,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class SparseFieldTableExpression : QueryExpression
     {
-        public IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> Table { get; }
+        public IImmutableDictionary<ResourceContext, SparseFieldSetExpression> Table { get; }
 
-        public SparseFieldTableExpression(IReadOnlyDictionary<ResourceContext, SparseFieldSetExpression> table)
+        public SparseFieldTableExpression(IImmutableDictionary<ResourceContext, SparseFieldSetExpression> table)
         {
             ArgumentGuard.NotNullNorEmpty(table, nameof(table), "entries");
 
@@ -61,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (SparseFieldTableExpression)obj;
 
-            return Table.SequenceEqual(other.Table);
+            return Table.DictionaryEqual(other.Table);
         }
 
         public override int GetHashCode()

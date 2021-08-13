@@ -16,11 +16,12 @@ namespace UnitTests.Serialization.Server
         private readonly RequestDeserializer _deserializer;
         private readonly Mock<ITargetedFields> _fieldsManagerMock = new();
         private readonly Mock<IJsonApiRequest> _requestMock = new();
+        private readonly Mock<IResourceDefinitionAccessor> _resourceDefinitionAccessorMock = new();
 
         public RequestDeserializerTests()
         {
             _deserializer = new RequestDeserializer(ResourceGraph, new TestResourceFactory(), _fieldsManagerMock.Object, MockHttpContextAccessor.Object,
-                _requestMock.Object, new JsonApiOptions());
+                _requestMock.Object, new JsonApiOptions(), _resourceDefinitionAccessorMock.Object);
         }
 
         [Fact]

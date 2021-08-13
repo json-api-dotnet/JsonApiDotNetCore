@@ -40,10 +40,10 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPost("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public override async Task<IActionResult> PostRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            return await base.PostRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            return await base.PostRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -55,10 +55,10 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object secondaryResourceIds,
+        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
             CancellationToken cancellationToken)
         {
-            return await base.PatchRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            return await base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -70,10 +70,10 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpDelete("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> secondaryResourceIds,
+        public override async Task<IActionResult> DeleteRelationshipAsync(TId id, string relationshipName, [FromBody] ISet<IIdentifiable> rightResourceIds,
             CancellationToken cancellationToken)
         {
-            return await base.DeleteRelationshipAsync(id, relationshipName, secondaryResourceIds, cancellationToken);
+            return await base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
         }
     }
 

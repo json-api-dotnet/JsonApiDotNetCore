@@ -26,10 +26,10 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
-            var primaryId = (TId)operation.Resource.GetTypedId();
-            ISet<IIdentifiable> secondaryResourceIds = operation.GetSecondaryResources();
+            var leftId = (TId)operation.Resource.GetTypedId();
+            ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();
 
-            await _service.RemoveFromToManyRelationshipAsync(primaryId, operation.Request.Relationship.PublicName, secondaryResourceIds, cancellationToken);
+            await _service.RemoveFromToManyRelationshipAsync(leftId, operation.Request.Relationship.PublicName, rightResourceIds, cancellationToken);
 
             return null;
         }

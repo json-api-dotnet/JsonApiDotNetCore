@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -13,18 +12,6 @@ namespace JsonApiDotNetCore.Middleware
         /// Routing information, based on the path of the request URL.
         /// </summary>
         public EndpointKind Kind { get; }
-
-        /// <summary>
-        /// The request URL prefix. This may be an absolute or relative path, depending on <see cref="IJsonApiOptions.UseRelativeLinks" />.
-        /// </summary>
-        /// <example>
-        /// <code><![CDATA[
-        /// Absolute: https://example.com/api/v1
-        /// Relative: /api/v1
-        /// ]]></code>
-        /// </example>
-        [Obsolete("This value is calculated for backwards compatibility, but it is no longer used and will be removed in a future version.")]
-        string BasePath { get; }
 
         /// <summary>
         /// The ID of the primary (top-level) resource for this request. This would be null in "/blogs", "123" in "/blogs/123" or "/blogs/123/author".
@@ -59,9 +46,9 @@ namespace JsonApiDotNetCore.Middleware
         bool IsReadOnly { get; }
 
         /// <summary>
-        /// In case of an atomic:operations request, this indicates the kind of operation currently being processed.
+        /// In case of a non-readonly request, this indicates the kind of write operation currently being processed.
         /// </summary>
-        OperationKind? OperationKind { get; }
+        WriteOperationKind? WriteOperation { get; }
 
         /// <summary>
         /// In case of an atomic:operations request, identifies the overarching transaction.

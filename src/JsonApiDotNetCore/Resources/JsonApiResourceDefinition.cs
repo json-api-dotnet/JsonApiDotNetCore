@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -51,7 +52,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual IReadOnlyCollection<IncludeElementExpression> OnApplyIncludes(IReadOnlyCollection<IncludeElementExpression> existingIncludes)
+        public virtual IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
         {
             return existingIncludes;
         }
@@ -84,7 +85,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
 
-            var sortElements = new List<SortElementExpression>();
+            ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
 
             foreach ((Expression<Func<TResource, dynamic>> keySelector, ListSortDirection sortDirection) in keySelectors)
             {
@@ -92,10 +93,10 @@ namespace JsonApiDotNetCore.Resources
                 AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
 
                 var sortElement = new SortElementExpression(new ResourceFieldChainExpression(attribute), isAscending);
-                sortElements.Add(sortElement);
+                elementsBuilder.Add(sortElement);
             }
 
-            return new SortExpression(sortElements);
+            return new SortExpression(elementsBuilder.ToImmutable());
         }
 
         /// <inheritdoc />
@@ -123,21 +124,21 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task OnPrepareWriteAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnPrepareWriteAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, OperationKind operationKind, CancellationToken cancellationToken)
+            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.FromResult(rightResourceId);
         }
 
         /// <inheritdoc />
         public virtual Task OnSetToManyRelationshipAsync(TResource leftResource, HasManyAttribute hasManyRelationship, ISet<IIdentifiable> rightResourceIds,
-            OperationKind operationKind, CancellationToken cancellationToken)
+            WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
@@ -157,13 +158,13 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task OnWritingAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnWritingAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public virtual Task OnWriteSucceededAsync(TResource resource, OperationKind operationKind, CancellationToken cancellationToken)
+        public virtual Task OnWriteSucceededAsync(TResource resource, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

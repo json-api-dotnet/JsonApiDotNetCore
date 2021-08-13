@@ -48,17 +48,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transa
             throw new NotImplementedException();
         }
 
-        public Task SetRelationshipAsync(Performer primaryResource, object secondaryResourceIds, CancellationToken cancellationToken)
+        public Task SetRelationshipAsync(Performer leftResource, object rightValue, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task AddToToManyRelationshipAsync(int primaryId, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public Task AddToToManyRelationshipAsync(int leftId, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task RemoveFromToManyRelationshipAsync(Performer primaryResource, ISet<IIdentifiable> secondaryResourceIds, CancellationToken cancellationToken)
+        public Task RemoveFromToManyRelationshipAsync(Performer leftResource, ISet<IIdentifiable> rightResourceIds, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

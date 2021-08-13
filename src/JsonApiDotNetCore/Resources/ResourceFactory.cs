@@ -20,12 +20,6 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-        {
-            return _serviceProvider.GetRequiredService<IResourceDefinitionAccessor>();
-        }
-
-        /// <inheritdoc />
         public IIdentifiable CreateInstance(Type resourceType)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
@@ -111,7 +105,7 @@ namespace JsonApiDotNetCore.Resources
             return Expression.Property(tupleCreateCall, "Item1");
         }
 
-        internal static bool HasSingleConstructorWithoutParameters(Type type)
+        private static bool HasSingleConstructorWithoutParameters(Type type)
         {
             ConstructorInfo[] constructors = type.GetConstructors().Where(constructor => !constructor.IsStatic).ToArray();
 

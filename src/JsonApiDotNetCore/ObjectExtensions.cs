@@ -26,5 +26,13 @@ namespace JsonApiDotNetCore
                 element
             };
         }
+
+        public static HashSet<T> AsHashSet<T>(this T element)
+        {
+            return new()
+            {
+                element
+            };
+        }
     }
 }

@@ -39,11 +39,11 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData(StandardQueryStringParameters.Fields, false)]
-        [InlineData(StandardQueryStringParameters.All, false)]
-        [InlineData(StandardQueryStringParameters.None, true)]
-        [InlineData(StandardQueryStringParameters.Filter, true)]
-        public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool expectIsEnabled)
+        [InlineData(JsonApiQueryStringParameters.Fields, false)]
+        [InlineData(JsonApiQueryStringParameters.All, false)]
+        [InlineData(JsonApiQueryStringParameters.None, true)]
+        [InlineData(JsonApiQueryStringParameters.Filter, true)]
+        public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool expectIsEnabled)
         {
             // Act
             bool isEnabled = _reader.IsEnabled(new DisableQueryStringAttribute(parametersDisabled));
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(caption,url,author)")]
+        [InlineData("fields[blogPosts]", "caption,url,author", "blogPosts(author,caption,url)")]
         [InlineData("fields[blogPosts]", "author,comments,labels", "blogPosts(author,comments,labels)")]
         [InlineData("fields[blogs]", "id", "blogs(id)")]
         [InlineData("fields[blogs]", "", "blogs(id)")]

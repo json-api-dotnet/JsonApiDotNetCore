@@ -44,37 +44,37 @@ namespace JsonApiDotNetCore.AtomicOperations
             return (IOperationProcessor)_serviceProvider.GetRequiredService(processorType);
         }
 
-        private static Type GetProcessorInterface(OperationKind kind)
+        private static Type GetProcessorInterface(WriteOperationKind writeOperation)
         {
-            switch (kind)
+            switch (writeOperation)
             {
-                case OperationKind.CreateResource:
+                case WriteOperationKind.CreateResource:
                 {
                     return typeof(ICreateProcessor<,>);
                 }
-                case OperationKind.UpdateResource:
+                case WriteOperationKind.UpdateResource:
                 {
                     return typeof(IUpdateProcessor<,>);
                 }
-                case OperationKind.DeleteResource:
+                case WriteOperationKind.DeleteResource:
                 {
                     return typeof(IDeleteProcessor<,>);
                 }
-                case OperationKind.SetRelationship:
+                case WriteOperationKind.SetRelationship:
                 {
                     return typeof(ISetRelationshipProcessor<,>);
                 }
-                case OperationKind.AddToRelationship:
+                case WriteOperationKind.AddToRelationship:
                 {
                     return typeof(IAddToRelationshipProcessor<,>);
                 }
-                case OperationKind.RemoveFromRelationship:
+                case WriteOperationKind.RemoveFromRelationship:
                 {
                     return typeof(IRemoveFromRelationshipProcessor<,>);
                 }
                 default:
                 {
-                    throw new NotSupportedException($"Unknown operation kind '{kind}'.");
+                    throw new NotSupportedException($"Unknown write operation kind '{writeOperation}'.");
                 }
             }
         }

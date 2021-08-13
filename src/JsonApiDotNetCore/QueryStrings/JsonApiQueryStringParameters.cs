@@ -7,7 +7,7 @@ namespace JsonApiDotNetCore.QueryStrings
     /// Lists query string parameters used by <see cref="DisableQueryStringAttribute" />.
     /// </summary>
     [Flags]
-    public enum StandardQueryStringParameters
+    public enum JsonApiQueryStringParameters
     {
         None = 0,
         Filter = 1,

@@ -78,7 +78,7 @@ namespace UnitTests.Builders
             // Assert
             ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
             Assert.Equal("relatedResource", resource.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(relationship => !(relationship is HasOneAttribute)).PublicName);
+            Assert.Equal("relatedResources", resource.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
         }
 
         private sealed class NonDbResource : Identifiable

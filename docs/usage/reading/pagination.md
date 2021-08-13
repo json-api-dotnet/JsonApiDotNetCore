@@ -6,9 +6,7 @@ Resources can be paginated. This request would fetch the second page of 10 artic
 GET /articles?page[size]=10&page[number]=2 HTTP/1.1
 ```
 
-## Nesting
-
-Pagination can be used on nested endpoints, such as:
+Pagination can be used on secondary endpoints, such as:
 
 ```http
 GET /blogs/1/articles?page[number]=2 HTTP/1.1

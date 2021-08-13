@@ -23,21 +23,21 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndFo
             _hitCounter = hitCounter;
         }
 
-        public override async Task OnWritingAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
+        public override async Task OnWritingAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
 
-            if (operationKind == OperationKind.DeleteResource)
+            if (writeOperation == WriteOperationKind.DeleteResource)
             {
                 _userToDelete = await base.GetUserToDeleteAsync(user.Id, cancellationToken);
             }
         }
 
-        public override Task OnWriteSucceededAsync(DomainUser user, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnWriteSucceededAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync);
 
-            return FinishWriteAsync(user, operationKind, cancellationToken);
+            return FinishWriteAsync(user, writeOperation, cancellationToken);
         }
 
         protected override Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken)

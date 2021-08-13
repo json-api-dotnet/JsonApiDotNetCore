@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -54,19 +54,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             throw new QueryParseException("Resource type expected.");
         }
 
-        private ResourceContext GetResourceContext(string resourceName)
+        private ResourceContext GetResourceContext(string publicName)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(publicName);
 
             if (resourceContext == null)
             {
-                throw new QueryParseException($"Resource type '{resourceName}' does not exist.");
+                throw new QueryParseException($"Resource type '{publicName}' does not exist.");
             }
 
             return resourceContext;
         }
 
-        protected override IReadOnlyCollection<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
+        protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             throw new NotSupportedException();
         }

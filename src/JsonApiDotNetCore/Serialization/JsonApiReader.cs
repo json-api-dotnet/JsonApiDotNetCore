@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Serialization
             string body = await GetRequestBodyAsync(context.HttpContext.Request.Body);
 
             string url = context.HttpContext.Request.GetEncodedUrl();
-            _traceWriter.LogMessage(() => $"Received request at '{url}' with body: <<{body}>>");
+            _traceWriter.LogMessage(() => $"Received {context.HttpContext.Request.Method} request at '{url}' with body: <<{body}>>");
 
             object model = null;
 
@@ -258,14 +258,14 @@ namespace JsonApiDotNetCore.Serialization
                     throw new ToManyRelationshipRequiredException(_request.Relationship.PublicName);
                 }
 
-                if (model != null && !(model is IIdentifiable))
+                if (model is { } and not IIdentifiable)
                 {
                     throw new InvalidRequestBodyException("Expected single data element for to-one relationship.",
                         $"Expected single data element for '{_request.Relationship.PublicName}' relationship.", body);
                 }
             }
 
-            if (_request.Relationship is HasManyAttribute && !(model is IEnumerable<IIdentifiable>))
+            if (_request.Relationship is HasManyAttribute && model is not IEnumerable<IIdentifiable>)
             {
                 throw new InvalidRequestBodyException("Expected data[] element for to-many relationship.",
                     $"Expected data[] element for '{_request.Relationship.PublicName}' relationship.", body);

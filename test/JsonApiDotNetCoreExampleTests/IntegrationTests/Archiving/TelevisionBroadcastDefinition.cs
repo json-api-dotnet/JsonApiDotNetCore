@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -45,14 +44,11 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
                     AttrAttribute archivedAtAttribute = ResourceContext.Attributes.Single(attr => attr.Property.Name == nameof(TelevisionBroadcast.ArchivedAt));
-
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());
 
-                    return existingFilter == null
-                        ? isUnarchived
-                        : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(existingFilter, isUnarchived));
+                    return existingFilter == null ? isUnarchived : new LogicalExpression(LogicalOperator.And, existingFilter, isUnarchived);
                 }
             }
 
@@ -68,7 +64,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
         {
             if (_request.IsCollection)
             {
-                if (_request.PrimaryResource == ResourceContext || _request.SecondaryResource == ResourceContext)
+                if (ResourceContext.Equals(_request.PrimaryResource) || ResourceContext.Equals(_request.SecondaryResource))
                 {
                     return true;
                 }
@@ -116,27 +112,27 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
             return walker.HasFilterOnArchivedAt;
         }
 
-        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        public override Task OnPrepareWriteAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.UpdateResource)
+            if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 _storedArchivedAt = broadcast.ArchivedAt;
             }
 
-            return base.OnPrepareWriteAsync(broadcast, operationKind, cancellationToken);
+            return base.OnPrepareWriteAsync(broadcast, writeOperation, cancellationToken);
         }
 
-        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, OperationKind operationKind, CancellationToken cancellationToken)
+        public override async Task OnWritingAsync(TelevisionBroadcast broadcast, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            if (operationKind == OperationKind.CreateResource)
+            if (writeOperation == WriteOperationKind.CreateResource)
             {
                 AssertIsNotArchived(broadcast);
             }
-            else if (operationKind == OperationKind.UpdateResource)
+            else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 AssertIsNotShiftingArchiveDate(broadcast);
             }
-            else if (operationKind == OperationKind.DeleteResource)
+            else if (writeOperation == WriteOperationKind.DeleteResource)
             {
                 TelevisionBroadcast broadcastToDelete =
                     await _dbContext.Broadcasts.FirstOrDefaultAsync(resource => resource.Id == broadcast.Id, cancellationToken);
@@ -147,7 +143,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
                 }
             }
 
-            await base.OnWritingAsync(broadcast, operationKind, cancellationToken);
+            await base.OnWritingAsync(broadcast, writeOperation, cancellationToken);
         }
 
         [AssertionMethod]
@@ -192,7 +188,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
 
             public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object argument)
             {
-                if (expression.Fields.First().Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
+                if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
                 {
                     HasFilterOnArchivedAt = true;
                 }

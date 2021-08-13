@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return DefaultVisit(expression, argument);
         }
 
-        public virtual TResult VisitCollectionNotEmpty(CollectionNotEmptyExpression expression, TArgument argument)
+        public virtual TResult VisitHas(HasExpression expression, TArgument argument)
         {
             return DefaultVisit(expression, argument);
         }
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return DefaultVisit(expression, argument);
         }
 
-        public virtual TResult VisitEqualsAnyOf(EqualsAnyOfExpression expression, TArgument argument)
+        public virtual TResult VisitAny(AnyExpression expression, TArgument argument)
         {
             return DefaultVisit(expression, argument);
         }

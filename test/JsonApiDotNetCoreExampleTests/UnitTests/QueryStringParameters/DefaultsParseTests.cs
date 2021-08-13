@@ -34,15 +34,15 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         }
 
         [Theory]
-        [InlineData(StandardQueryStringParameters.Defaults, false, false)]
-        [InlineData(StandardQueryStringParameters.Defaults, true, false)]
-        [InlineData(StandardQueryStringParameters.All, false, false)]
-        [InlineData(StandardQueryStringParameters.All, true, false)]
-        [InlineData(StandardQueryStringParameters.None, false, false)]
-        [InlineData(StandardQueryStringParameters.None, true, true)]
-        [InlineData(StandardQueryStringParameters.Filter, false, false)]
-        [InlineData(StandardQueryStringParameters.Filter, true, true)]
-        public void Reader_Is_Enabled(StandardQueryStringParameters parametersDisabled, bool allowOverride, bool expectIsEnabled)
+        [InlineData(JsonApiQueryStringParameters.Defaults, false, false)]
+        [InlineData(JsonApiQueryStringParameters.Defaults, true, false)]
+        [InlineData(JsonApiQueryStringParameters.All, false, false)]
+        [InlineData(JsonApiQueryStringParameters.All, true, false)]
+        [InlineData(JsonApiQueryStringParameters.None, false, false)]
+        [InlineData(JsonApiQueryStringParameters.None, true, true)]
+        [InlineData(JsonApiQueryStringParameters.Filter, false, false)]
+        [InlineData(JsonApiQueryStringParameters.Filter, true, true)]
+        public void Reader_Is_Enabled(JsonApiQueryStringParameters parametersDisabled, bool allowOverride, bool expectIsEnabled)
         {
             // Arrange
             var options = new JsonApiOptions

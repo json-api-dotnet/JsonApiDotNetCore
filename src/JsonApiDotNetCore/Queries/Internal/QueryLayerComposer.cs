@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -124,7 +125,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            IReadOnlyCollection<IncludeElementExpression> includeElements =
+            IImmutableList<IncludeElementExpression> includeElements =
                 ProcessIncludeSet(include.Elements, topLayer, new List<RelationshipAttribute>(), constraints);
 
             return !ReferenceEquals(includeElements, include.Elements)
@@ -132,13 +133,13 @@ namespace JsonApiDotNetCore.Queries.Internal
                 : include;
         }
 
-        private IReadOnlyCollection<IncludeElementExpression> ProcessIncludeSet(IReadOnlyCollection<IncludeElementExpression> includeElements,
-            QueryLayer parentLayer, ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
+        private IImmutableList<IncludeElementExpression> ProcessIncludeSet(IImmutableList<IncludeElementExpression> includeElements, QueryLayer parentLayer,
+            ICollection<RelationshipAttribute> parentRelationshipChain, ICollection<ExpressionInScope> constraints)
         {
-            IReadOnlyCollection<IncludeElementExpression> includeElementsEvaluated =
-                GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? Array.Empty<IncludeElementExpression>();
+            IImmutableList<IncludeElementExpression> includeElementsEvaluated =
+                GetIncludeElements(includeElements, parentLayer.ResourceContext) ?? ImmutableArray<IncludeElementExpression>.Empty;
 
-            var updatesInChildren = new Dictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>>();
+            var updatesInChildren = new Dictionary<IncludeElementExpression, IImmutableList<IncludeElementExpression>>();
 
             foreach (IncludeElementExpression includeElement in includeElementsEvaluated)
             {
@@ -180,7 +181,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
                     if (includeElement.Children.Any())
                     {
-                        IReadOnlyCollection<IncludeElementExpression> updatedChildren =
+                        IImmutableList<IncludeElementExpression> updatedChildren =
                             ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
 
                         if (!ReferenceEquals(includeElement.Children, updatedChildren))
@@ -194,18 +195,19 @@ namespace JsonApiDotNetCore.Queries.Internal
             return !updatesInChildren.Any() ? includeElementsEvaluated : ApplyIncludeElementUpdates(includeElementsEvaluated, updatesInChildren);
         }
 
-        private static IReadOnlyCollection<IncludeElementExpression> ApplyIncludeElementUpdates(IEnumerable<IncludeElementExpression> includeElements,
-            IDictionary<IncludeElementExpression, IReadOnlyCollection<IncludeElementExpression>> updatesInChildren)
+        private static IImmutableList<IncludeElementExpression> ApplyIncludeElementUpdates(IImmutableList<IncludeElementExpression> includeElements,
+            IDictionary<IncludeElementExpression, IImmutableList<IncludeElementExpression>> updatesInChildren)
         {
-            List<IncludeElementExpression> newIncludeElements = includeElements.ToList();
+            ImmutableArray<IncludeElementExpression>.Builder newElementsBuilder = ImmutableArray.CreateBuilder<IncludeElementExpression>(includeElements.Count);
+            newElementsBuilder.AddRange(includeElements);
 
-            foreach ((IncludeElementExpression existingElement, IReadOnlyCollection<IncludeElementExpression> updatedChildren) in updatesInChildren)
+            foreach ((IncludeElementExpression existingElement, IImmutableList<IncludeElementExpression> updatedChildren) in updatesInChildren)
             {
-                int existingIndex = newIncludeElements.IndexOf(existingElement);
-                newIncludeElements[existingIndex] = new IncludeElementExpression(existingElement.Relationship, updatedChildren);
+                int existingIndex = newElementsBuilder.IndexOf(existingElement);
+                newElementsBuilder[existingIndex] = new IncludeElementExpression(existingElement.Relationship, updatedChildren);
             }
 
-            return newIncludeElements;
+            return newElementsBuilder.ToImmutable();
         }
 
         /// <inheritdoc />
@@ -253,7 +255,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IDictionary<ResourceFieldAttribute, QueryLayer> GetProjectionForRelationship(ResourceContext secondaryResourceContext)
         {
-            IReadOnlyCollection<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
+            IImmutableSet<AttrAttribute> secondaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(secondaryResourceContext);
 
             return secondaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
         }
@@ -269,7 +271,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             IncludeExpression innerInclude = secondaryLayer.Include;
             secondaryLayer.Include = null;
 
-            IReadOnlyCollection<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
+            IImmutableSet<AttrAttribute> primaryAttributeSet = _sparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(primaryResourceContext);
 
             Dictionary<ResourceFieldAttribute, QueryLayer> primaryProjection =
                 primaryAttributeSet.ToDictionary(key => (ResourceFieldAttribute)key, _ => (QueryLayer)null);
@@ -293,10 +295,10 @@ namespace JsonApiDotNetCore.Queries.Internal
                 ? new IncludeElementExpression(secondaryRelationship, relativeInclude.Elements)
                 : new IncludeElementExpression(secondaryRelationship);
 
-            return new IncludeExpression(parentElement.AsArray());
+            return new IncludeExpression(ImmutableArray.Create(parentElement));
         }
 
-        private FilterExpression CreateFilterByIds<TId>(ICollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
+        private FilterExpression CreateFilterByIds<TId>(IReadOnlyCollection<TId> ids, AttrAttribute idAttribute, FilterExpression existingFilter)
         {
             var idChain = new ResourceFieldChainExpression(idAttribute);
 
@@ -309,19 +311,11 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
             else if (ids.Count > 1)
             {
-                List<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToList();
-                filter = new EqualsAnyOfExpression(idChain, constants);
+                ImmutableHashSet<LiteralConstantExpression> constants = ids.Select(id => new LiteralConstantExpression(id.ToString())).ToImmutableHashSet();
+                filter = new AnyExpression(idChain, constants);
             }
 
-            // @formatter:keep_existing_linebreaks true
-
-            return filter == null
-                ? existingFilter
-                : existingFilter == null
-                    ? filter
-                    : new LogicalExpression(LogicalOperator.And, ArrayFactory.Create(filter, existingFilter));
-
-            // @formatter:keep_existing_linebreaks restore
+            return filter == null ? existingFilter : existingFilter == null ? filter : new LogicalExpression(LogicalOperator.And, filter, existingFilter);
         }
 
         /// <inheritdoc />
@@ -329,8 +323,8 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             ArgumentGuard.NotNull(primaryResource, nameof(primaryResource));
 
-            IncludeElementExpression[] includeElements = _targetedFields.Relationships
-                .Select(relationship => new IncludeElementExpression(relationship)).ToArray();
+            ImmutableArray<IncludeElementExpression> includeElements = _targetedFields.Relationships
+                .Select(relationship => new IncludeElementExpression(relationship)).ToImmutableArray();
 
             AttrAttribute primaryIdAttribute = GetIdAttribute(primaryResource);
 
@@ -405,7 +399,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             return new QueryLayer(leftResourceContext)
             {
-                Include = new IncludeExpression(new IncludeElementExpression(hasManyRelationship).AsArray()),
+                Include = new IncludeExpression(ImmutableArray.Create(new IncludeElementExpression(hasManyRelationship))),
                 Filter = leftFilter,
                 Projection = new Dictionary<ResourceFieldAttribute, QueryLayer>
                 {
@@ -422,13 +416,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             };
         }
 
-        /// <inheritdoc />
-        public IResourceDefinitionAccessor GetResourceDefinitionAccessor()
-        {
-            return _resourceDefinitionAccessor;
-        }
-
-        protected virtual IReadOnlyCollection<IncludeElementExpression> GetIncludeElements(IReadOnlyCollection<IncludeElementExpression> includeElements,
+        protected virtual IImmutableList<IncludeElementExpression> GetIncludeElements(IImmutableList<IncludeElementExpression> includeElements,
             ResourceContext resourceContext)
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
@@ -441,8 +429,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            FilterExpression[] filters = expressionsInScope.OfType<FilterExpression>().ToArray();
-
+            ImmutableArray<FilterExpression> filters = expressionsInScope.OfType<FilterExpression>().ToImmutableArray();
             FilterExpression filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
 
             return _resourceDefinitionAccessor.OnApplyFilter(resourceContext.ResourceType, filter);
@@ -460,7 +447,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             if (sort == null)
             {
                 AttrAttribute idAttribute = GetIdAttribute(resourceContext);
-                sort = new SortExpression(new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true).AsArray());
+                var idAscendingSort = new SortElementExpression(new ResourceFieldChainExpression(idAttribute), true);
+                sort = new SortExpression(ImmutableArray.Create(idAscendingSort));
             }
 
             return sort;
@@ -484,7 +472,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            IReadOnlyCollection<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForQuery(resourceContext);
 
             if (!fieldSet.Any())
             {

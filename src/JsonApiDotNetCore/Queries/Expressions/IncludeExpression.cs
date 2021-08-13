@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -15,9 +16,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public static readonly IncludeExpression Empty = new();
 
-        public IReadOnlyCollection<IncludeElementExpression> Elements { get; }
+        public IImmutableList<IncludeElementExpression> Elements { get; }
 
-        public IncludeExpression(IReadOnlyCollection<IncludeElementExpression> elements)
+        public IncludeExpression(IImmutableList<IncludeElementExpression> elements)
         {
             ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         private IncludeExpression()
         {
-            Elements = Array.Empty<IncludeElementExpression>();
+            Elements = ImmutableArray<IncludeElementExpression>.Empty;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
