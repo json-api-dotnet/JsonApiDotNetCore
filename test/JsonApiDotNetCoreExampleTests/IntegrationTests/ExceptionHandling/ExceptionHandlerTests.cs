@@ -27,23 +27,17 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
             testContext.UseController<ThrowingArticlesController>();
             testContext.UseController<ConsumerArticlesController>();
 
-            FakeLoggerFactory loggerFactory = null;
+            var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
 
             testContext.ConfigureLogging(options =>
             {
-                loggerFactory = new FakeLoggerFactory();
-
                 options.ClearProviders();
                 options.AddProvider(loggerFactory);
-                options.SetMinimumLevel(LogLevel.Warning);
             });
 
             testContext.ConfigureServicesBeforeStartup(services =>
             {
-                if (loggerFactory != null)
-                {
-                    services.AddSingleton(_ => loggerFactory);
-                }
+                services.AddSingleton(loggerFactory);
             });
 
             testContext.ConfigureServicesAfterStartup(services =>

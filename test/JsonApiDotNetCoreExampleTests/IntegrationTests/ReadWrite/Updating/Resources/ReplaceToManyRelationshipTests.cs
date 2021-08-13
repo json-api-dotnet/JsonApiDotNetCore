@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -48,7 +49,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     {
                         subscribers = new
                         {
-                            data = new object[0]
+                            data = Array.Empty<object>()
                         }
                     }
                 }
@@ -95,7 +96,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     {
                         tags = new
                         {
-                            data = new object[0]
+                            data = Array.Empty<object>()
                         }
                     }
                 }
@@ -853,7 +854,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     {
                         children = new
                         {
-                            data = new object[0]
+                            data = Array.Empty<object>()
                         }
                     }
                 }
@@ -902,7 +903,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
                     {
                         relatedFrom = new
                         {
-                            data = new object[0]
+                            data = Array.Empty<object>()
                         }
                     }
                 }

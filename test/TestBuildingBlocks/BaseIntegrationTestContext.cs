@@ -80,8 +80,10 @@ namespace TestBuildingBlocks
                         // This is fixed in EF Core 6, tracked at https://github.com/dotnet/efcore/issues/21234.
                         builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
 
+#if DEBUG
                     options.EnableSensitiveDataLogging();
                     options.EnableDetailedErrors();
+#endif
                 });
             });
 
@@ -147,25 +149,40 @@ namespace TestBuildingBlocks
 
             protected override IHostBuilder CreateHostBuilder()
             {
-                return Host.CreateDefaultBuilder(null).ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.ConfigureLogging(options =>
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
+                return Host.CreateDefaultBuilder(null)
+                    .ConfigureAppConfiguration(builder =>
+                    {
+                        // For tests asserting on log output, we discard the logging settings from appsettings.json.
+                        // But using appsettings.json for all other tests makes it easy to quickly toggle when debugging.
+                        if (_loggingConfiguration != null)
+                        {
+                            builder.Sources.Clear();
+                        }
+                    })
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder.ConfigureServices(services =>
+                        {
+                            _beforeServicesConfiguration?.Invoke(services);
+                        });
+
+                        webBuilder.UseStartup<TStartup>();
+
+                        webBuilder.ConfigureServices(services =>
+                        {
+                            _afterServicesConfiguration?.Invoke(services);
+                        });
+                    })
+                    .ConfigureLogging(options =>
                     {
                         _loggingConfiguration?.Invoke(options);
                     });
 
-                    webBuilder.ConfigureServices(services =>
-                    {
-                        _beforeServicesConfiguration?.Invoke(services);
-                    });
-
-                    webBuilder.UseStartup<TStartup>();
-
-                    webBuilder.ConfigureServices(services =>
-                    {
-                        _afterServicesConfiguration?.Invoke(services);
-                    });
-                });
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
             }
         }
     }

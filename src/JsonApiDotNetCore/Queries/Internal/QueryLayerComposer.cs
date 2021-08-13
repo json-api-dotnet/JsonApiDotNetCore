@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -83,6 +84,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private QueryLayer ComposeTopLayer(IEnumerable<ExpressionInScope> constraints, ResourceContext resourceContext)
         {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Top-level query composition");
+
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
 
@@ -113,6 +116,8 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private IncludeExpression ComposeChildren(QueryLayer topLayer, ICollection<ExpressionInScope> constraints)
         {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Nested query composition");
+
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
 

@@ -11,9 +11,9 @@ namespace TestBuildingBlocks
     {
         public FakeLogger Logger { get; }
 
-        public FakeLoggerFactory()
+        public FakeLoggerFactory(LogLevel minimumLevel)
         {
-            Logger = new FakeLogger();
+            Logger = new FakeLogger(minimumLevel);
         }
 
         public ILogger CreateLogger(string categoryName)
@@ -31,13 +31,19 @@ namespace TestBuildingBlocks
 
         public sealed class FakeLogger : ILogger
         {
+            private readonly LogLevel _minimumLevel;
             private readonly ConcurrentBag<FakeLogMessage> _messages = new();
 
             public IReadOnlyCollection<FakeLogMessage> Messages => _messages;
 
+            public FakeLogger(LogLevel minimumLevel)
+            {
+                _minimumLevel = minimumLevel;
+            }
+
             public bool IsEnabled(LogLevel logLevel)
             {
-                return true;
+                return _minimumLevel != LogLevel.None && logLevel >= _minimumLevel;
             }
 
             public void Clear()
@@ -47,8 +53,11 @@ namespace TestBuildingBlocks
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
-                string message = formatter(state, exception);
-                _messages.Add(new FakeLogMessage(logLevel, message));
+                if (IsEnabled(logLevel))
+                {
+                    string message = formatter(state, exception);
+                    _messages.Add(new FakeLogMessage(logLevel, message));
+                }
             }
 
             public IDisposable BeginScope<TState>(TState state)
@@ -66,6 +75,11 @@ namespace TestBuildingBlocks
             {
                 LogLevel = logLevel;
                 Text = text;
+            }
+
+            public override string ToString()
+            {
+                return $"[{LogLevel.ToString().ToUpperInvariant()}] {Text}";
             }
         }
     }

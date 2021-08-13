@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -71,8 +72,15 @@ namespace JsonApiDotNetCore.Repositories
 
             ArgumentGuard.NotNull(layer, nameof(layer));
 
-            IQueryable<TResource> query = ApplyQueryLayer(layer);
-            return await query.ToListAsync(cancellationToken);
+            using (CodeTimingSessionManager.Current.Measure("Repository - Get resource(s)"))
+            {
+                IQueryable<TResource> query = ApplyQueryLayer(layer);
+
+                using (CodeTimingSessionManager.Current.Measure("Execute SQL (data)", MeasurementSettings.ExcludeDatabaseInPercentages))
+                {
+                    return await query.ToListAsync(cancellationToken);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -83,15 +91,22 @@ namespace JsonApiDotNetCore.Repositories
                 topFilter
             });
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-
-            var layer = new QueryLayer(resourceContext)
+            using (CodeTimingSessionManager.Current.Measure("Repository - Count resources"))
             {
-                Filter = topFilter
-            };
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
 
-            IQueryable<TResource> query = ApplyQueryLayer(layer);
-            return await query.CountAsync(cancellationToken);
+                var layer = new QueryLayer(resourceContext)
+                {
+                    Filter = topFilter
+                };
+
+                IQueryable<TResource> query = ApplyQueryLayer(layer);
+
+                using (CodeTimingSessionManager.Current.Measure("Execute SQL (count)", MeasurementSettings.ExcludeDatabaseInPercentages))
+                {
+                    return await query.CountAsync(cancellationToken);
+                }
+            }
         }
 
         protected virtual IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
@@ -103,33 +118,40 @@ namespace JsonApiDotNetCore.Repositories
 
             ArgumentGuard.NotNull(layer, nameof(layer));
 
-            IQueryable<TResource> source = GetAll();
-
-            // @formatter:wrap_chained_method_calls chop_always
-            // @formatter:keep_existing_linebreaks true
-
-            QueryableHandlerExpression[] queryableHandlers = _constraintProviders
-                .SelectMany(provider => provider.GetConstraints())
-                .Where(expressionInScope => expressionInScope.Scope == null)
-                .Select(expressionInScope => expressionInScope.Expression)
-                .OfType<QueryableHandlerExpression>()
-                .ToArray();
-
-            // @formatter:keep_existing_linebreaks restore
-            // @formatter:wrap_chained_method_calls restore
-
-            foreach (QueryableHandlerExpression queryableHandler in queryableHandlers)
+            using (CodeTimingSessionManager.Current.Measure("Convert QueryLayer to System.Expression"))
             {
-                source = queryableHandler.Apply(source);
+                IQueryable<TResource> source = GetAll();
+
+                // @formatter:wrap_chained_method_calls chop_always
+                // @formatter:keep_existing_linebreaks true
+
+                QueryableHandlerExpression[] queryableHandlers = _constraintProviders
+                    .SelectMany(provider => provider.GetConstraints())
+                    .Where(expressionInScope => expressionInScope.Scope == null)
+                    .Select(expressionInScope => expressionInScope.Expression)
+                    .OfType<QueryableHandlerExpression>()
+                    .ToArray();
+
+                // @formatter:keep_existing_linebreaks restore
+                // @formatter:wrap_chained_method_calls restore
+
+                foreach (QueryableHandlerExpression queryableHandler in queryableHandlers)
+                {
+                    source = queryableHandler.Apply(source);
+                }
+
+                var nameFactory = new LambdaParameterNameFactory();
+
+                var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph,
+                    _dbContext.Model);
+
+                Expression expression = builder.ApplyQuery(layer);
+
+                using (CodeTimingSessionManager.Current.Measure("Convert System.Expression to IQueryable"))
+                {
+                    return source.Provider.CreateQuery<TResource>(expression);
+                }
             }
-
-            var nameFactory = new LambdaParameterNameFactory();
-
-            var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph,
-                _dbContext.Model);
-
-            Expression expression = builder.ApplyQuery(layer);
-            return source.Provider.CreateQuery<TResource>(expression);
         }
 
         protected virtual IQueryable<TResource> GetAll()
@@ -157,6 +179,8 @@ namespace JsonApiDotNetCore.Repositories
 
             ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
             ArgumentGuard.NotNull(resourceForDatabase, nameof(resourceForDatabase));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Create resource");
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -210,6 +234,8 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual async Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
         {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Get resource for update");
+
             IReadOnlyCollection<TResource> resources = await GetAsync(queryLayer, cancellationToken);
             return resources.FirstOrDefault();
         }
@@ -225,6 +251,8 @@ namespace JsonApiDotNetCore.Repositories
 
             ArgumentGuard.NotNull(resourceFromRequest, nameof(resourceFromRequest));
             ArgumentGuard.NotNull(resourceFromDatabase, nameof(resourceFromDatabase));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Update resource");
 
             using var collector = new PlaceholderResourceCollector(_resourceFactory, _dbContext);
 
@@ -294,6 +322,8 @@ namespace JsonApiDotNetCore.Repositories
             {
                 id
             });
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Delete resource");
 
             // This enables OnWritingAsync() to fetch the resource, which adds it to the change tracker.
             // If so, we'll reuse the tracked resource instead of a placeholder resource.
@@ -374,6 +404,8 @@ namespace JsonApiDotNetCore.Repositories
                 rightValue
             });
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Set relationship");
+
             RelationshipAttribute relationship = _targetedFields.Relationships.Single();
 
             object rightValueEvaluated =
@@ -401,6 +433,8 @@ namespace JsonApiDotNetCore.Repositories
             });
 
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Add to to-many relationship");
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
@@ -432,6 +466,8 @@ namespace JsonApiDotNetCore.Repositories
             });
 
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
             var relationship = (HasManyAttribute)_targetedFields.Relationships.Single();
 
@@ -502,6 +538,8 @@ namespace JsonApiDotNetCore.Repositories
 
             try
             {
+                using IDisposable _ = CodeTimingSessionManager.Current.Measure("Persist EF Core changes", MeasurementSettings.ExcludeDatabaseInPercentages);
+
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
             catch (Exception exception) when (exception is DbUpdateException || exception is InvalidOperationException)

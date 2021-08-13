@@ -669,7 +669,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";

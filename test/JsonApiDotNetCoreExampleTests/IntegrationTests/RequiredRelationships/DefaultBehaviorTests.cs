@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -277,7 +278,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
                     {
                         orders = new
                         {
-                            data = new object[0]
+                            data = Array.Empty<object>()
                         }
                     }
                 }
@@ -317,7 +318,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";

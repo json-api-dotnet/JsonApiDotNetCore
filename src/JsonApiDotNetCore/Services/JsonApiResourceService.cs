@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -61,6 +62,8 @@ namespace JsonApiDotNetCore.Services
         {
             _traceWriter.LogMethodStart();
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get resources");
+
             if (_options.IncludeTotalResourceCount)
             {
                 FilterExpression topFilter = _queryLayerComposer.GetTopFilterFromConstraints(_request.PrimaryResource);
@@ -91,6 +94,8 @@ namespace JsonApiDotNetCore.Services
                 id
             });
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get single resource");
+
             return await GetPrimaryResourceByIdAsync(id, TopFieldSelection.PreserveExisting, cancellationToken);
         }
 
@@ -102,6 +107,8 @@ namespace JsonApiDotNetCore.Services
                 id,
                 relationshipName
             });
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get secondary resource(s)");
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
@@ -134,6 +141,8 @@ namespace JsonApiDotNetCore.Services
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Get relationship");
+
             AssertHasRelationship(_request.Relationship, relationshipName);
 
             QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
@@ -156,6 +165,8 @@ namespace JsonApiDotNetCore.Services
             });
 
             ArgumentGuard.NotNull(resource, nameof(resource));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Create resource");
 
             TResource resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
@@ -253,6 +264,8 @@ namespace JsonApiDotNetCore.Services
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Add to to-many relationship");
+
             AssertHasRelationship(_request.Relationship, relationshipName);
 
             if (rightResourceIds.Any() && _request.Relationship is HasManyAttribute { IsManyToMany: true } manyToManyRelationship)
@@ -268,7 +281,7 @@ namespace JsonApiDotNetCore.Services
             }
             catch (DataStoreUpdateException)
             {
-                _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
                 throw;
             }
@@ -318,6 +331,8 @@ namespace JsonApiDotNetCore.Services
 
             ArgumentGuard.NotNull(resource, nameof(resource));
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Update resource");
+
             TResource resourceFromRequest = resource;
             _resourceChangeTracker.SetRequestedAttributeValues(resourceFromRequest);
 
@@ -357,6 +372,8 @@ namespace JsonApiDotNetCore.Services
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Service - Set relationship");
+
             AssertHasRelationship(_request.Relationship, relationshipName);
 
             TResource resourceFromDatabase = await GetPrimaryResourceForUpdateAsync(leftId, cancellationToken);
@@ -382,13 +399,15 @@ namespace JsonApiDotNetCore.Services
                 id
             });
 
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Delete resource");
+
             try
             {
                 await _repositoryAccessor.DeleteAsync<TResource, TId>(id, cancellationToken);
             }
             catch (DataStoreUpdateException)
             {
-                _ = await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                await GetPrimaryResourceByIdAsync(id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
                 throw;
             }
         }
@@ -406,6 +425,8 @@ namespace JsonApiDotNetCore.Services
 
             ArgumentGuard.NotNullNorEmpty(relationshipName, nameof(relationshipName));
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
+
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Repository - Remove from to-many relationship");
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 

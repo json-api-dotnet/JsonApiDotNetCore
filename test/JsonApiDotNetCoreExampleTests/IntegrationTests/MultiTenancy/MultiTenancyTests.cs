@@ -658,7 +658,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             string route = $"/nld/shops/{existingShop.StringId}/relationships/products";

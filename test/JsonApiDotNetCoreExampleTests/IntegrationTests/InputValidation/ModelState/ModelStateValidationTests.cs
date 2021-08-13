@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -923,7 +924,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelSt
 
             var requestBody = new
             {
-                data = new object[0]
+                data = Array.Empty<object>()
             };
 
             string route = $"/systemDirectories/{directory.StringId}/relationships/files";
