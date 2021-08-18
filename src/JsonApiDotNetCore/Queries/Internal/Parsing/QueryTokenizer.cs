@@ -87,7 +87,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                     }
                     else
                     {
-                        if (_textBuffer.Length == 0 && ch == ' ')
+                        if (_textBuffer.Length == 0 && ch == ' ' && !_isInQuotedSection)
                         {
                             throw new QueryParseException("Unexpected whitespace.");
                         }
