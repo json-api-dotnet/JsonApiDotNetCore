@@ -67,6 +67,7 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
         [InlineData("filter[posts]", "equals(author,'some')", "Attribute 'author' does not exist on resource 'blogPosts'.")]
         [InlineData("filter[posts]", "lessThan(author,null)", "Attribute 'author' does not exist on resource 'blogPosts'.")]
         [InlineData("filter", " ", "Unexpected whitespace.")]
+        [InlineData("filter", "contains(owner.displayName, )", "Unexpected whitespace.")]
         [InlineData("filter", "some", "Filter function expected.")]
         [InlineData("filter", "equals", "( expected.")]
         [InlineData("filter", "equals'", "Unexpected ' outside text.")]
