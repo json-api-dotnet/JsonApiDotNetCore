@@ -37,10 +37,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
 
                 services.AddResourceDefinition<MusicTrackReleaseDefinition>();
             });
-
-            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
-            options.AllowQueryStringOverrideForSerializerDefaultValueHandling = true;
-            options.AllowQueryStringOverrideForSerializerNullValueHandling = true;
         }
 
         [Fact]
@@ -348,94 +344,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
                 "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
 
             error.Source.Parameter.Should().Be("isRecentlyReleased");
-        }
-
-        [Fact]
-        public async Task Can_use_defaults_on_operations_endpoint()
-        {
-            // Arrange
-            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            decimal? newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
-
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle,
-                                lengthInSeconds = newTrackLength
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/operations?defaults=false";
-
-            // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
-        }
-
-        [Fact]
-        public async Task Can_use_nulls_on_operations_endpoint()
-        {
-            // Arrange
-            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            decimal? newTrackLength = _fakers.MusicTrack.Generate().LengthInSeconds;
-
-            var requestBody = new
-            {
-                atomic__operations = new object[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            attributes = new
-                            {
-                                title = newTrackTitle,
-                                lengthInSeconds = newTrackLength
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/operations?nulls=false";
-
-            // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTrackLength);
         }
     }
 }

@@ -27,9 +27,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectBuilderSettingsProvider settingsProvider,
-            IEvaluatedIncludeCache evaluatedIncludeCache)
-            : base(resourceContextProvider, settingsProvider.Get())
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IEvaluatedIncludeCache evaluatedIncludeCache)
+            : base(resourceContextProvider, options)
         {
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));

@@ -61,15 +61,13 @@ namespace UnitTests.Serialization
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder(inclusionChainArray != null);
             IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
-            IResourceObjectBuilderSettingsProvider settingsProvider = GetSerializerSettingsProvider();
             IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
+            var options = new JsonApiOptions();
 
             var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor,
-                settingsProvider, evaluatedIncludeCache);
+                options, evaluatedIncludeCache);
 
-            var jsonApiOptions = new JsonApiOptions();
-
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor, jsonApiOptions);
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor, options);
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null,
@@ -81,9 +79,10 @@ namespace UnitTests.Serialization
             IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder(inclusionChains != null);
             IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
+            var options = new JsonApiOptions();
 
-            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(),
-                GetSerializerSettingsProvider(), evaluatedIncludeCache);
+            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(), options,
+                evaluatedIncludeCache);
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder(bool hasIncludeQueryString)
@@ -92,17 +91,10 @@ namespace UnitTests.Serialization
             ILinkBuilder linkBuilder = GetLinkBuilder();
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
             IRequestQueryStringAccessor queryStringAccessor = new FakeRequestQueryStringAccessor(hasIncludeQueryString ? "include=" : null);
-            IResourceObjectBuilderSettingsProvider resourceObjectBuilderSettingsProvider = GetSerializerSettingsProvider();
+            var options = new JsonApiOptions();
 
             return new IncludedResourceObjectBuilder(fieldsToSerialize, linkBuilder, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(),
-                resourceDefinitionAccessor, queryStringAccessor, resourceObjectBuilderSettingsProvider);
-        }
-
-        protected IResourceObjectBuilderSettingsProvider GetSerializerSettingsProvider()
-        {
-            var mock = new Mock<IResourceObjectBuilderSettingsProvider>();
-            mock.Setup(provider => provider.Get()).Returns(new ResourceObjectBuilderSettings());
-            return mock.Object;
+                resourceDefinitionAccessor, queryStringAccessor, options);
         }
 
         private IResourceDefinitionAccessor GetResourceDefinitionAccessor()

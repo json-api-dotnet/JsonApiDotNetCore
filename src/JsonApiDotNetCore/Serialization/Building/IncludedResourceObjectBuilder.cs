@@ -26,8 +26,8 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceContextProvider resourceContextProvider,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IRequestQueryStringAccessor queryStringAccessor, IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceContextProvider, settingsProvider.Get())
+            IRequestQueryStringAccessor queryStringAccessor, IJsonApiOptions options)
+            : base(resourceContextProvider, options)
         {
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));

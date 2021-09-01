@@ -182,10 +182,10 @@ namespace UnitTests.Serialization.Server
             ILinkBuilder links = GetLinkBuilder();
             IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var queryStringAccessor = new FakeRequestQueryStringAccessor();
-            IResourceObjectBuilderSettingsProvider resourceObjectBuilderSettingsProvider = GetSerializerSettingsProvider();
+            var options = new JsonApiOptions();
 
             return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor,
-                queryStringAccessor, resourceObjectBuilderSettingsProvider);
+                queryStringAccessor, options);
         }
 
         private sealed class AuthorChainInstances

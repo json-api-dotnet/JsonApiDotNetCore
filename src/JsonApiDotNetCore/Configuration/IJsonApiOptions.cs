@@ -129,18 +129,6 @@ namespace JsonApiDotNetCore.Configuration
         bool EnableLegacyFilterNotation { get; }
 
         /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.NullValueHandling" /> serialization setting can be controlled using a query string
-        /// parameter. False by default.
-        /// </summary>
-        bool AllowQueryStringOverrideForSerializerNullValueHandling { get; }
-
-        /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.DefaultValueHandling" /> serialization setting can be controlled using a query string
-        /// parameter. False by default.
-        /// </summary>
-        bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; }
-
-        /// <summary>
         /// Controls how many levels deep includes are allowed to be nested. For example, MaximumIncludeDepth=1 would allow ?include=articles but not
         /// ?include=articles.revisions. <c>null</c> by default, which means unconstrained.
         /// </summary>

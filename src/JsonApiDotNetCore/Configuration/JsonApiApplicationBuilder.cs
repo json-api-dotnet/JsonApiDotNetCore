@@ -218,8 +218,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<ISortQueryStringParameterReader, SortQueryStringParameterReader>();
             _services.AddScoped<ISparseFieldSetQueryStringParameterReader, SparseFieldSetQueryStringParameterReader>();
             _services.AddScoped<IPaginationQueryStringParameterReader, PaginationQueryStringParameterReader>();
-            _services.AddScoped<IDefaultsQueryStringParameterReader, DefaultsQueryStringParameterReader>();
-            _services.AddScoped<INullsQueryStringParameterReader, NullsQueryStringParameterReader>();
             _services.AddScoped<IResourceDefinitionQueryableParameterReader, ResourceDefinitionQueryableParameterReader>();
 
             RegisterDependentService<IQueryStringParameterReader, IIncludeQueryStringParameterReader>();
@@ -227,8 +225,6 @@ namespace JsonApiDotNetCore.Configuration
             RegisterDependentService<IQueryStringParameterReader, ISortQueryStringParameterReader>();
             RegisterDependentService<IQueryStringParameterReader, ISparseFieldSetQueryStringParameterReader>();
             RegisterDependentService<IQueryStringParameterReader, IPaginationQueryStringParameterReader>();
-            RegisterDependentService<IQueryStringParameterReader, IDefaultsQueryStringParameterReader>();
-            RegisterDependentService<IQueryStringParameterReader, INullsQueryStringParameterReader>();
             RegisterDependentService<IQueryStringParameterReader, IResourceDefinitionQueryableParameterReader>();
 
             RegisterDependentService<IQueryConstraintProvider, IIncludeQueryStringParameterReader>();
@@ -253,7 +249,6 @@ namespace JsonApiDotNetCore.Configuration
         {
             _services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
             _services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
-            _services.AddScoped<IResourceObjectBuilderSettingsProvider, ResourceObjectBuilderSettingsProvider>();
             _services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
             _services.AddScoped<ILinkBuilder, LinkBuilder>();
             _services.AddScoped<IResponseMeta, EmptyResponseMeta>();

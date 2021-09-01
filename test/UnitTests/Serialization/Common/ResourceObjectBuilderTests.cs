@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -15,7 +16,7 @@ namespace UnitTests.Serialization.Common
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(ResourceGraph, new ResourceObjectBuilderSettings());
+            _builder = new ResourceObjectBuilder(ResourceGraph, new JsonApiOptions());
         }
 
         [Fact]

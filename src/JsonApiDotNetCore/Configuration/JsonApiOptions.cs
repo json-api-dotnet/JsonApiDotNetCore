@@ -65,12 +65,6 @@ namespace JsonApiDotNetCore.Configuration
         public bool EnableLegacyFilterNotation { get; set; }
 
         /// <inheritdoc />
-        public bool AllowQueryStringOverrideForSerializerNullValueHandling { get; set; }
-
-        /// <inheritdoc />
-        public bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; set; }
-
-        /// <inheritdoc />
         public int? MaximumIncludeDepth { get; set; }
 
         /// <inheritdoc />

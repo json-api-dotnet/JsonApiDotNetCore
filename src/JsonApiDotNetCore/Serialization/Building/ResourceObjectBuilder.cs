@@ -15,17 +15,17 @@ namespace JsonApiDotNetCore.Serialization.Building
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         private static readonly CollectionConverter CollectionConverter = new();
+        private readonly IJsonApiOptions _options;
 
-        private readonly ResourceObjectBuilderSettings _settings;
         protected IResourceContextProvider ResourceContextProvider { get; }
 
-        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
         {
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
-            ArgumentGuard.NotNull(settings, nameof(settings));
+            ArgumentGuard.NotNull(options, nameof(options));
 
             ResourceContextProvider = resourceContextProvider;
-            _settings = settings;
+            _options = options;
         }
 
         /// <inheritdoc />
@@ -169,12 +169,12 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 object value = attr.GetValue(resource);
 
-                if (_settings.SerializerNullValueHandling == NullValueHandling.Ignore && value == null)
+                if (_options.SerializerSettings.NullValueHandling == NullValueHandling.Ignore && value == null)
                 {
                     return;
                 }
 
-                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore &&
+                if (_options.SerializerSettings.DefaultValueHandling == DefaultValueHandling.Ignore &&
                     Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
                 {
                     return;
