@@ -14,7 +14,7 @@ namespace TestBuildingBlocks
     {
         public static HttpResponseMessageAssertions Should(this HttpResponseMessage instance)
         {
-            return new(instance);
+            return new HttpResponseMessageAssertions(instance);
         }
 
         public sealed class HttpResponseMessageAssertions : ReferenceTypeAssertions<HttpResponseMessage, HttpResponseMessageAssertions>
