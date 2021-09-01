@@ -32,7 +32,7 @@ namespace JsonApiDotNetCore.Controllers.Annotations
         {
             var parameterNames = new HashSet<string>();
 
-            foreach (JsonApiQueryStringParameters value in Enum.GetValues(typeof(JsonApiQueryStringParameters)))
+            foreach (JsonApiQueryStringParameters value in Enum.GetValues<JsonApiQueryStringParameters>())
             {
                 if (value != JsonApiQueryStringParameters.None && value != JsonApiQueryStringParameters.All && parameters.HasFlag(value))
                 {
