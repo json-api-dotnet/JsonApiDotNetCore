@@ -9,7 +9,6 @@ using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
-using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -24,10 +23,10 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDeserializer
     {
         private protected static readonly CollectionConverter CollectionConverter = new();
+        private Document _document;
 
         protected IResourceContextProvider ResourceContextProvider { get; }
         protected IResourceFactory ResourceFactory { get; }
-        protected Document Document { get; set; }
 
         protected int? AtomicOperationIndex { get; set; }
 
@@ -45,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization
         /// depending on the type of deserializer.
         /// </summary>
         /// <remarks>
-        /// See the implementation of this method in <see cref="ResponseDeserializer" /> and <see cref="RequestDeserializer" /> for examples.
+        /// See the implementation of this method in <see cref="RequestDeserializer" /> for usage.
         /// </remarks>
         /// <param name="resource">
         /// The resource that was constructed from the document's body.
@@ -65,24 +64,24 @@ namespace JsonApiDotNetCore.Serialization
             using (CodeTimingSessionManager.Current.Measure("Newtonsoft.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
             {
                 JToken bodyJToken = LoadJToken(body);
-                Document = bodyJToken.ToObject<Document>();
+                _document = bodyJToken.ToObject<Document>();
             }
 
-            if (Document != null)
+            if (_document != null)
             {
-                if (Document.IsManyData)
+                if (_document.IsManyData)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (list)"))
                     {
-                        return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                        return _document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                     }
                 }
 
-                if (Document.SingleData != null)
+                if (_document.SingleData != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (single)"))
                     {
-                        return ParseResourceObject(Document.SingleData);
+                        return ParseResourceObject(_document.SingleData);
                     }
                 }
             }
@@ -102,8 +101,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">
         /// Exposed attributes for <paramref name="resource" />.
         /// </param>
-        protected IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues,
-            IReadOnlyCollection<AttrAttribute> attributes)
+        private IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(attributes, nameof(attributes));
@@ -144,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipAttributes">
         /// Exposed relationships for <paramref name="resource" />.
         /// </param>
-        protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues,
+        private IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues,
             IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
