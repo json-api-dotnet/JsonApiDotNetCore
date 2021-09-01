@@ -30,7 +30,7 @@ Aside from the list above, we have interest in the following topics. It's too so
 - Configuration validation [#170](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/170)
 - Optimistic concurrency [#1004](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1004)
 - Extract annotations into separate package [#730](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/730)
-- OpenAPI (Swagger) [#259](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/259)
+- OpenAPI (Swagger) [#1046](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/1046)
 - Fluent API [#776](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/776)
 - Resource inheritance [#844](https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/844)
 - Idempotency
