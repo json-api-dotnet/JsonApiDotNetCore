@@ -132,7 +132,7 @@ Content-Type: application/vnd.api+json;ext=&quot;https://jsonapi.org/ext/atomic&
     }
   ]
 }
-</code></pre><p>For example requests, see our suite of tests in JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.</p>
+</code></pre><p>For example requests, see our suite of tests in JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.</p>
 <h2 id="configuration">Configuration</h2>
 <p>The maximum number of operations per request defaults to 10, which you can change from Startup.cs:</p>
 <pre><code class="lang-c#">services.AddJsonApi(options =&gt; options.MaximumOperationsPerRequest = 250);
