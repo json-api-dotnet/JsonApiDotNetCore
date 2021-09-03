@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
+namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [ApiController]
     [DisableRoutingConvention]

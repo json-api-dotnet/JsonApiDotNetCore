@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class RestrictionDbContext : DbContext

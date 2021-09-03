@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class TelevisionDbContext : DbContext

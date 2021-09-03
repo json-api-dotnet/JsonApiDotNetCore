@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class FilterDbContext : DbContext

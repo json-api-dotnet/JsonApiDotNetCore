@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SerializationDbContext : DbContext

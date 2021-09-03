@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ContentNegotiation
+namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 {
     public sealed class PoliciesController : JsonApiController<Policy>
     {

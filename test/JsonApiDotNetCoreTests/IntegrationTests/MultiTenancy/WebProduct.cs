@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WebProduct : Identifiable

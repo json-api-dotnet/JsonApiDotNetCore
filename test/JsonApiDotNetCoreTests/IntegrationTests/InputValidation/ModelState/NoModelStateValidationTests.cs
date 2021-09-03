@@ -3,17 +3,16 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelState
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
-    public sealed class NoModelStateValidationTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext>>
+    public sealed class NoModelStateValidationTests : IClassFixture<IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
 
-        public NoModelStateValidationTests(ExampleIntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
+        public NoModelStateValidationTests(IntegrationTestContext<TestableStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
         {
             _testContext = testContext;
 

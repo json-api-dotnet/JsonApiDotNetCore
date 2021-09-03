@@ -7,21 +7,19 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample.Controllers;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {
-    public sealed class AtomicResponseMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
+    public sealed class AtomicResponseMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();
 
-        public AtomicResponseMetaTests(ExampleIntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicResponseMetaTests(IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 

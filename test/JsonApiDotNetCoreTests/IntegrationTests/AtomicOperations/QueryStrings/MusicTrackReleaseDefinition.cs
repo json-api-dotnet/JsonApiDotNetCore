@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.QueryStrings
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.QueryStrings
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackReleaseDefinition : JsonApiResourceDefinition<MusicTrack, Guid>

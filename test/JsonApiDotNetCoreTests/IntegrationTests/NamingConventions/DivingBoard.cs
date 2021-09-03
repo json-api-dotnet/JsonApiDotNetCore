@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DivingBoard : Identifiable

@@ -5,19 +5,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndForgetDelivery
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery
 {
-    public sealed partial class FireForgetTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext>>
+    public sealed partial class FireForgetTests : IClassFixture<IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> _testContext;
         private readonly DomainFakers _fakers = new();
 
-        public FireForgetTests(ExampleIntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> testContext)
+        public FireForgetTests(IntegrationTestContext<TestableStartup<FireForgetDbContext>, FireForgetDbContext> testContext)
         {
             _testContext = testContext;
 

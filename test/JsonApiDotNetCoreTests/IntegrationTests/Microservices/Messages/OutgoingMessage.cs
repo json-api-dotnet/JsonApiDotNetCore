@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OutgoingMessage

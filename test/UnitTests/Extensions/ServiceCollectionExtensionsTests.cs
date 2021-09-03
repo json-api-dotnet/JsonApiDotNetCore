@@ -13,8 +13,6 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Services;
-using JsonApiDotNetCoreExample.Data;
-using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -29,8 +27,8 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
-            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
-            services.AddJsonApi<AppDbContext>();
+            services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
+            services.AddJsonApi<TestDbContext>();
 
             // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
@@ -169,12 +167,12 @@ namespace UnitTests.Extensions
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
-            services.AddDbContext<TestContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
             services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
 
             // Act
-            services.AddJsonApi<TestContext>();
+            services.AddJsonApi<TestDbContext>();
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
@@ -589,14 +587,20 @@ namespace UnitTests.Extensions
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TestContext : DbContext
+        private sealed class TestDbContext : DbContext
         {
             public DbSet<IntResource> Resource { get; set; }
+            public DbSet<Person> People { get; set; }
 
-            public TestContext(DbContextOptions<TestContext> options)
+            public TestDbContext(DbContextOptions<TestDbContext> options)
                 : base(options)
             {
             }
+        }
+
+        [UsedImplicitly(ImplicitUseKindFlags.Access)]
+        private sealed class Person : Identifiable
+        {
         }
     }
 }

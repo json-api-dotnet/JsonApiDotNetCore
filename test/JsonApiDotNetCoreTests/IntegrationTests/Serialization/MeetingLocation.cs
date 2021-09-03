@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     public sealed class MeetingLocation
     {

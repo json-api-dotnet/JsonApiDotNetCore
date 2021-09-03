@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.ModelState
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SystemFile : Identifiable

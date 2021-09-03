@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class StarDefinition : JsonApiResourceDefinition<Star>

@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Table : Identifiable

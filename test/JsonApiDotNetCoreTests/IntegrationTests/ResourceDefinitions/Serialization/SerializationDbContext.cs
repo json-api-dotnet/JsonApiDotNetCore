@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SerializationDbContext : DbContext

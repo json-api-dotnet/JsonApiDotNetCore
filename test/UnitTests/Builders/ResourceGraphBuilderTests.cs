@@ -20,9 +20,9 @@ namespace UnitTests.Builders
             // Arrange
             var services = new ServiceCollection();
             services.AddLogging();
-            services.AddDbContext<TestContext>();
+            services.AddDbContext<TestDbContext>();
 
-            services.AddJsonApi<TestContext>(resources: builder => builder.Add<NonDbResource>("nonDbResources"));
+            services.AddJsonApi<TestDbContext>(resources: builder => builder.Add<NonDbResource>("nonDbResources"));
 
             // Act
             ServiceProvider container = services.BuildServiceProvider();
@@ -90,7 +90,7 @@ namespace UnitTests.Builders
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TestContext : DbContext
+        private sealed class TestDbContext : DbContext
         {
             public DbSet<DbResource> DbResources { get; set; }
 

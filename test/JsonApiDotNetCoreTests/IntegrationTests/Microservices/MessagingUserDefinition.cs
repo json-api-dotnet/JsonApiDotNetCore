@@ -6,10 +6,10 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
     public abstract class MessagingUserDefinition : JsonApiResourceDefinition<DomainUser, Guid>
     {

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ArtGallery : Identifiable

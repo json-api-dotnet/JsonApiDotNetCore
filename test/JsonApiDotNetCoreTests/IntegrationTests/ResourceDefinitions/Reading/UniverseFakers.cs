@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     internal sealed class UniverseFakers : FakerContainer
     {

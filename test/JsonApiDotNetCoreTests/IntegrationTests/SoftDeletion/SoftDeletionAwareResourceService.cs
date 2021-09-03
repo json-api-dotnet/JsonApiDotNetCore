@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
+namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public class SoftDeletionAwareResourceService<TResource, TId> : JsonApiResourceService<TResource, TId>

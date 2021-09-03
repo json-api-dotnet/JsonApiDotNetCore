@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
+namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class CustomRouteDbContext : DbContext

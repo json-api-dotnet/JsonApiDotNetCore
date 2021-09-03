@@ -7,20 +7,19 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ExceptionHandlerTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
+    public sealed class ExceptionHandlerTests : IClassFixture<IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> _testContext;
 
-        public ExceptionHandlerTests(ExampleIntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
+        public ExceptionHandlerTests(IntegrationTestContext<TestableStartup<ErrorDbContext>, ErrorDbContext> testContext)
         {
             _testContext = testContext;
 

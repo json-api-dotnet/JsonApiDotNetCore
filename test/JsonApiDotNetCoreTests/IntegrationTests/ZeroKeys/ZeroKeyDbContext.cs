@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ZeroKeyDbContext : DbContext

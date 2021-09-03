@@ -1,12 +1,12 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TestBuildingBlocks;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class HostingStartup<TDbContext> : TestableStartup<TDbContext>

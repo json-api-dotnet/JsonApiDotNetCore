@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     internal sealed class TestClientSettingsProvider : IClientSettingsProvider
     {

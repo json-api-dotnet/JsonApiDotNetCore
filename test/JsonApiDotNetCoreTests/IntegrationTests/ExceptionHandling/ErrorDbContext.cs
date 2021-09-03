@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ErrorDbContext : DbContext

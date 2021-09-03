@@ -20,7 +20,7 @@ namespace UnitTests.Internal
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
-            resourceGraphBuilder.Add(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestDbContext));
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
@@ -33,7 +33,7 @@ namespace UnitTests.Internal
             // Arrange
             var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
-            resourceGraphBuilder.Add(typeof(TestContext));
+            resourceGraphBuilder.Add(typeof(TestDbContext));
 
             // Act
             resourceGraphBuilder.Build();
@@ -42,7 +42,7 @@ namespace UnitTests.Internal
             Assert.Single(loggerFactory.Logger.Messages);
             Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages.Single().LogLevel);
 
-            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestContext' does not implement 'IIdentifiable'.",
+            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestDbContext' does not implement 'IIdentifiable'.",
                 loggerFactory.Logger.Messages.Single().Text);
         }
 
@@ -84,7 +84,7 @@ namespace UnitTests.Internal
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TestContext : DbContext
+        private sealed class TestDbContext : DbContext
         {
             public DbSet<Foo> Foos { get; set; }
         }

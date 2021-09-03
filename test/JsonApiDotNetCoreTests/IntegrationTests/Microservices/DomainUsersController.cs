@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
     public sealed class DomainUsersController : JsonApiController<DomainUser, Guid>
     {

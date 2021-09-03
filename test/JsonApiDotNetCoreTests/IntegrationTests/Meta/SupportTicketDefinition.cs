@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket>

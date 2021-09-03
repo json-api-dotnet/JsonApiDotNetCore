@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     /// <summary>
     /// Used to simulate side effects that occur in the database while saving, typically caused by database triggers.

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     public sealed class MeetingAttendeesController : JsonApiController<MeetingAttendee, Guid>
     {

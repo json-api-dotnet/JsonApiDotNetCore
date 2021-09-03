@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [DisableRoutingConvention]
     [Route("{countryCode}/products")]

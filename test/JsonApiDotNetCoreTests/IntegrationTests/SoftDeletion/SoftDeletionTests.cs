@@ -9,23 +9,22 @@ using FluentAssertions.Common;
 using FluentAssertions.Extensions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
+namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
-    public sealed class SoftDeletionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
+    public sealed class SoftDeletionTests : IClassFixture<IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext>>
     {
         private static readonly DateTimeOffset SoftDeletionTime = 1.January(2001).ToDateTimeOffset();
 
-        private readonly ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> _testContext;
         private readonly SoftDeletionFakers _fakers = new();
 
-        public SoftDeletionTests(ExampleIntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext)
+        public SoftDeletionTests(IntegrationTestContext<TestableStartup<SoftDeletionDbContext>, SoftDeletionDbContext> testContext)
         {
             _testContext = testContext;
 

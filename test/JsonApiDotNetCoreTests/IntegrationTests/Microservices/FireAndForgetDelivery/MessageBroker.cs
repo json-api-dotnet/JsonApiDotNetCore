@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndForgetDelivery
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery
 {
     public sealed class MessageBroker
     {

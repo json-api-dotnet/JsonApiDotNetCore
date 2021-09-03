@@ -6,20 +6,19 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     public sealed class ResourceDefinitionSerializationTests
-        : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
+        : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
         private readonly SerializationFakers _fakers = new();
 
-        public ResourceDefinitionSerializationTests(ExampleIntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
+        public ResourceDefinitionSerializationTests(IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> testContext)
         {
             _testContext = testContext;
 

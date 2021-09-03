@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.Links
+namespace JsonApiDotNetCoreTests.UnitTests.Links
 {
     public sealed class LinkInclusionTests
     {

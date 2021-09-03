@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public interface IHasTenant

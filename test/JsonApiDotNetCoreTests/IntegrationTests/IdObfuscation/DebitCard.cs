@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DebitCard : ObfuscatedIdentifiable

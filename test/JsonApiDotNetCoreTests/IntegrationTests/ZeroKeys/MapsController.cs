@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 {
     public sealed class MapsController : JsonApiController<Map, Guid?>
     {

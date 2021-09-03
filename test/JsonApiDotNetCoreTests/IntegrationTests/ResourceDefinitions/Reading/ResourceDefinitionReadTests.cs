@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Reading
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
-    public sealed class ResourceDefinitionReadTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext>>
+    public sealed class ResourceDefinitionReadTests : IClassFixture<IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> _testContext;
         private readonly UniverseFakers _fakers = new();
 
-        public ResourceDefinitionReadTests(ExampleIntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)
+        public ResourceDefinitionReadTests(IntegrationTestContext<TestableStartup<UniverseDbContext>, UniverseDbContext> testContext)
         {
             _testContext = testContext;
 

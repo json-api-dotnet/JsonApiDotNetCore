@@ -6,7 +6,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     internal sealed class SerializationFakers : FakerContainer
     {

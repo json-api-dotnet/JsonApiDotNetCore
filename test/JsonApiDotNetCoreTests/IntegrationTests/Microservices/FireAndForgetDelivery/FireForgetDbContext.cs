@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndForgetDelivery
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class FireForgetDbContext : DbContext

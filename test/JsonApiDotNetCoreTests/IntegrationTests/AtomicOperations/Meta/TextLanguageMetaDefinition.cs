@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class TextLanguageMetaDefinition : ImplicitlyChangingTextLanguageDefinition

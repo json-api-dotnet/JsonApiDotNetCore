@@ -9,7 +9,7 @@ using JsonApiDotNetCore.QueryStrings.Internal;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 {
     public sealed class DefaultsParseTests
     {

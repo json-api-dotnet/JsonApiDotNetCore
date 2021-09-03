@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkItemToWorkItem

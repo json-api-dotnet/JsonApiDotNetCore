@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transactions
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackRepository : EntityFrameworkCoreRepository<MusicTrack, Guid>

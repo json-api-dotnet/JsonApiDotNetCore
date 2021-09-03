@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ZeroKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Game : Identifiable<int?>

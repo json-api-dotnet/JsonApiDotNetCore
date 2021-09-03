@@ -9,18 +9,17 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterOperatorTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
+    public sealed class FilterOperatorTests : IClassFixture<IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
-        public FilterOperatorTests(ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
+        public FilterOperatorTests(IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
         {
             _testContext = testContext;
 

@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RequiredRelationships
+namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 {
     internal sealed class DefaultBehaviorFakers : FakerContainer
     {

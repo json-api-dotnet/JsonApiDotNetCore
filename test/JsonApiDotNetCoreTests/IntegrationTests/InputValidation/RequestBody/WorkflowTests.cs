@@ -4,17 +4,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
-    public sealed class WorkflowTests : IClassFixture<ExampleIntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext>>
+    public sealed class WorkflowTests : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
+        private readonly IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> _testContext;
 
-        public WorkflowTests(ExampleIntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
+        public WorkflowTests(IntegrationTestContext<ModelStateValidationStartup<WorkflowDbContext>, WorkflowDbContext> testContext)
         {
             _testContext = testContext;
 

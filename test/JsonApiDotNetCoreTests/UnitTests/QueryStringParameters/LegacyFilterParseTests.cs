@@ -9,10 +9,10 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings;
+using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 {
     public sealed class LegacyFilterParseTests : BaseParseTests
     {

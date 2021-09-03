@@ -2,13 +2,16 @@ using System;
 using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
-using JsonApiDotNetCoreExample.Startups;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.Configuration
+namespace JsonApiDotNetCoreTests.UnitTests.Configuration
 {
     public sealed class DependencyContainerRegistrationTests
     {
@@ -72,7 +75,10 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Configuration
         {
             IHostBuilder hostBuilder = Host.CreateDefaultBuilder().ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseStartup<Startup>();
+                webBuilder.ConfigureServices(services =>
+                    services.AddDbContext<DependencyContainerRegistrationDbContext>(options => options.UseInMemoryDatabase("db")));
+
+                webBuilder.UseStartup<TestableStartup<DependencyContainerRegistrationDbContext>>();
 
                 webBuilder.UseDefaultServiceProvider(options =>
                 {
@@ -117,6 +123,24 @@ namespace JsonApiDotNetCoreExampleTests.UnitTests.Configuration
             {
                 ArgumentGuard.NotNull(serviceA, nameof(serviceA));
             }
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class DependencyContainerRegistrationDbContext : DbContext
+        {
+            public DbSet<Resource> Resources { get; set; }
+
+            public DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
+                : base(options)
+            {
+            }
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class Resource : Identifiable
+        {
+            [Attr]
+            public string Field { get; set; }
         }
     }
 }

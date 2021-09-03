@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.TransactionalOutboxPattern
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern
 {
     public sealed partial class OutboxTests
     {

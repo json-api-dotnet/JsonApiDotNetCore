@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class LyricTextDefinition : JsonApiResourceDefinition<Lyric, long>
