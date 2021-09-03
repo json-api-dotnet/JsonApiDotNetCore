@@ -5,19 +5,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
         private readonly SupportFakers _fakers = new();
 
-        public ResourceMetaTests(ExampleIntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResourceMetaTests(IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
         {
             _testContext = testContext;
 

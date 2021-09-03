@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
+namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class LinksDbContext : DbContext

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ProductFamily : Identifiable

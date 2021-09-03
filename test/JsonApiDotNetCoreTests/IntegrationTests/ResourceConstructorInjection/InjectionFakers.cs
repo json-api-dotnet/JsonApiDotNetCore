@@ -7,7 +7,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
     internal sealed class InjectionFakers : FakerContainer
     {

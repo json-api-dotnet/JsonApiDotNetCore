@@ -1,9 +1,11 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,30 +19,27 @@ namespace TestBuildingBlocks
     /// before/after each test). See <see href="https://xunit.net/docs/shared-context" /> for details on shared context usage.
     /// </summary>
     /// <typeparam name="TStartup">
-    /// The server Startup class, which can be defined in the test project.
-    /// </typeparam>
-    /// <typeparam name="TRemoteStartup">
-    /// The base class for <typeparamref name="TStartup" />, which MUST be defined in the API project.
+    /// The server Startup class, which can be defined in the test project or API project.
     /// </typeparam>
     /// <typeparam name="TDbContext">
-    /// The EF Core database context, which can be defined in the test project.
+    /// The EF Core database context, which can be defined in the test project or API project.
     /// </typeparam>
-    public abstract class BaseIntegrationTestContext<TStartup, TRemoteStartup, TDbContext> : IntegrationTest, IDisposable
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+    public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDisposable
         where TStartup : class
-        where TRemoteStartup : class
         where TDbContext : DbContext
     {
-        private readonly Lazy<WebApplicationFactory<TRemoteStartup>> _lazyFactory;
+        private readonly Lazy<WebApplicationFactory<TStartup>> _lazyFactory;
         private readonly TestControllerProvider _testControllerProvider = new();
         private Action<ILoggingBuilder> _loggingConfiguration;
         private Action<IServiceCollection> _beforeServicesConfiguration;
         private Action<IServiceCollection> _afterServicesConfiguration;
 
-        public WebApplicationFactory<TRemoteStartup> Factory => _lazyFactory.Value;
+        public WebApplicationFactory<TStartup> Factory => _lazyFactory.Value;
 
-        protected BaseIntegrationTestContext()
+        public IntegrationTestContext()
         {
-            _lazyFactory = new Lazy<WebApplicationFactory<TRemoteStartup>>(CreateFactory);
+            _lazyFactory = new Lazy<WebApplicationFactory<TStartup>>(CreateFactory);
         }
 
         public void UseController<TController>()
@@ -54,7 +53,7 @@ namespace TestBuildingBlocks
             return Factory.CreateClient();
         }
 
-        private WebApplicationFactory<TRemoteStartup> CreateFactory()
+        private WebApplicationFactory<TStartup> CreateFactory()
         {
             string postgresPassword = Environment.GetEnvironmentVariable("PGPASSWORD") ?? "postgres";
             string dbConnectionString = $"Host=localhost;Port=5432;Database=JsonApiTest-{Guid.NewGuid():N};User ID=postgres;Password={postgresPassword}";
@@ -89,11 +88,16 @@ namespace TestBuildingBlocks
 
             factory.ConfigureServicesAfterStartup(_afterServicesConfiguration);
 
-            using IServiceScope scope = factory.Services.CreateScope();
+            // We have placed an appsettings.json in the TestBuildingBlock project folder and set the content root to there. Note that controllers
+            // are not discovered in the content root but are registered manually using IntegrationTestContext.UseController.
+            WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
+                factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot("test/" + nameof(TestBuildingBlocks)));
+
+            using IServiceScope scope = factoryWithConfiguredContentRoot.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
             dbContext.Database.EnsureCreated();
 
-            return factory;
+            return factoryWithConfiguredContentRoot;
         }
 
         public void Dispose()
@@ -126,7 +130,7 @@ namespace TestBuildingBlocks
             await asyncAction(dbContext);
         }
 
-        private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TRemoteStartup>
+        private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TStartup>
         {
             private Action<ILoggingBuilder> _loggingConfiguration;
             private Action<IServiceCollection> _beforeServicesConfiguration;

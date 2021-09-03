@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public class CarCompositeKeyAwareRepository<TResource, TId> : EntityFrameworkCoreRepository<TResource, TId>

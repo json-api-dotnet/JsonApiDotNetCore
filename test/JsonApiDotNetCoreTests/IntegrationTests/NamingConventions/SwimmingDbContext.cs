@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SwimmingDbContext : DbContext

@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     public sealed class TextLanguagesController : JsonApiController<TextLanguage, Guid>
     {

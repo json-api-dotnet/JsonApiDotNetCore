@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     public sealed class WorkflowsController : JsonApiController<Workflow, Guid>
     {

@@ -11,7 +11,7 @@ using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 {
     public sealed class SortParseTests : BaseParseTests
     {

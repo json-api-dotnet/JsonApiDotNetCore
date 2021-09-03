@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Comment : Identifiable

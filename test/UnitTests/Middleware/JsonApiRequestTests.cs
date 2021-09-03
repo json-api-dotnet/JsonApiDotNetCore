@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCoreExample.Models;
+using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -114,6 +117,28 @@ namespace UnitTests.Middleware
             };
 
             httpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, new EndpointMetadataCollection(controllerActionDescriptor), null));
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
+        private sealed class Person : Identifiable
+        {
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class Tag : Identifiable
+        {
+            [HasMany]
+            public ISet<TodoItem> TodoItems { get; set; }
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class TodoItem : Identifiable
+        {
+            [HasOne]
+            public Person Owner { get; set; }
+
+            [HasMany]
+            public ISet<Tag> Tags { get; set; }
         }
     }
 }

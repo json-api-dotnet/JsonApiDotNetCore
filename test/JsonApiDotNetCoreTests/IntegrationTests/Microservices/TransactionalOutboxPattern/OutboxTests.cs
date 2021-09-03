@@ -7,23 +7,22 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
-using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.TransactionalOutboxPattern
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern
 {
     // Implements the Transactional Outbox Microservices pattern, described at: https://microservices.io/patterns/data/transactional-outbox.html
 
-    public sealed partial class OutboxTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext>>
+    public sealed partial class OutboxTests : IClassFixture<IntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext> _testContext;
         private readonly DomainFakers _fakers = new();
 
-        public OutboxTests(ExampleIntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext> testContext)
+        public OutboxTests(IntegrationTestContext<TestableStartup<OutboxDbContext>, OutboxDbContext> testContext)
         {
             _testContext = testContext;
 

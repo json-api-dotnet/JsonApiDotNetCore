@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class MusicTrackMetaDefinition : JsonApiResourceDefinition<MusicTrack, Guid>

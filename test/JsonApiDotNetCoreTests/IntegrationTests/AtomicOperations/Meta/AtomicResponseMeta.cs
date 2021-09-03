@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using JsonApiDotNetCore.Serialization;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {
     public sealed class AtomicResponseMeta : IResponseMeta
     {

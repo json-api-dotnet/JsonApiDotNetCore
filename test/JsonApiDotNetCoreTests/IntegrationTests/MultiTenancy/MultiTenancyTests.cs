@@ -6,24 +6,23 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
-    public sealed class MultiTenancyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext>>
+    public sealed class MultiTenancyTests : IClassFixture<IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext>>
     {
         private static readonly Guid ThisTenantId = RouteTenantProvider.TenantRegistry["nld"];
         private static readonly Guid OtherTenantId = RouteTenantProvider.TenantRegistry["ita"];
 
-        private readonly ExampleIntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> _testContext;
         private readonly MultiTenancyFakers _fakers = new();
 
-        public MultiTenancyTests(ExampleIntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> testContext)
+        public MultiTenancyTests(IntegrationTestContext<TestableStartup<MultiTenancyDbContext>, MultiTenancyDbContext> testContext)
         {
             _testContext = testContext;
 

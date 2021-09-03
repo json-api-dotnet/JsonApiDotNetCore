@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Meta
+namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SupportDbContext : DbContext

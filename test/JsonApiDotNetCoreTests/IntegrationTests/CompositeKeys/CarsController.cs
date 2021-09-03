@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     public sealed class CarsController : JsonApiController<Car, string>
     {

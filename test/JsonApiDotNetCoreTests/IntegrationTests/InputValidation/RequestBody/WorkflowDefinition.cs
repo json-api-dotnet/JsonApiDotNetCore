@@ -10,7 +10,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class WorkflowDefinition : JsonApiResourceDefinition<Workflow, Guid>

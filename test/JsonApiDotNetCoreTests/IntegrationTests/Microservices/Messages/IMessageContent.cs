@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
 {
     public interface IMessageContent
     {

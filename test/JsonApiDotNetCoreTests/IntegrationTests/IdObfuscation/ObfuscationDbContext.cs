@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ObfuscationDbContext : DbContext

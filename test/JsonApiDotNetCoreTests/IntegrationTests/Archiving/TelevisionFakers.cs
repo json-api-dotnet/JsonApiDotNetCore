@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     internal sealed class TelevisionFakers : FakerContainer
     {

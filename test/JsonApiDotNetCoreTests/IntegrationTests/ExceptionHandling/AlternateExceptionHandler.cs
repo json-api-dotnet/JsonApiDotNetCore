@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     public sealed class AlternateExceptionHandler : ExceptionHandler
     {

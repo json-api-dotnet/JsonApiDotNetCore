@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     /// <summary>
     /// Rewrites an expression tree, updating all references to <see cref="Car.Id" /> with the combination of <see cref="Car.RegionId" /> and

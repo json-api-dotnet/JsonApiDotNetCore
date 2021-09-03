@@ -1,6 +1,6 @@
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     public abstract class ObfuscatedIdentifiable : Identifiable
     {

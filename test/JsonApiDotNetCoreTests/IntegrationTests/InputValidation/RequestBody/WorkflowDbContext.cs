@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.InputValidation.RequestBody
+namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkflowDbContext : DbContext

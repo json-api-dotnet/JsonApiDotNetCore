@@ -3,18 +3,17 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
+namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
-    public sealed class LinkInclusionTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
+    public sealed class LinkInclusionTests : IClassFixture<IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new();
 
-        public LinkInclusionTests(ExampleIntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
+        public LinkInclusionTests(IntegrationTestContext<TestableStartup<LinksDbContext>, LinksDbContext> testContext)
         {
             _testContext = testContext;
 

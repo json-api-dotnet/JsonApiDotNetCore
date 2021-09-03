@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class UserLoginNameChangedContent : IMessageContent

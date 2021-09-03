@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
+namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ActionResultDbContext : DbContext

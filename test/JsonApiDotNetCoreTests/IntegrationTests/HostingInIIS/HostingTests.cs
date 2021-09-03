@@ -7,16 +7,16 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
-    public sealed class HostingTests : IClassFixture<ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
+    public sealed class HostingTests : IClassFixture<IntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
-        private readonly ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> _testContext;
+        private readonly IntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> _testContext;
         private readonly HostingFakers _fakers = new();
 
-        public HostingTests(ExampleIntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
+        public HostingTests(IntegrationTestContext<HostingStartup<HostingDbContext>, HostingDbContext> testContext)
         {
             _testContext = testContext;
 

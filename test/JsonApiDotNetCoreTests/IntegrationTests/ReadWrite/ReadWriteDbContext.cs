@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ReadWriteDbContext : DbContext

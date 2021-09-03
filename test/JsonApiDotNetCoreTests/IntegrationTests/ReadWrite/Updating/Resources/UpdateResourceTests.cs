@@ -9,19 +9,18 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Resources
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 {
-    public sealed class UpdateResourceTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
+    public sealed class UpdateResourceTests : IClassFixture<IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> _testContext;
         private readonly ReadWriteFakers _fakers = new();
 
-        public UpdateResourceTests(ExampleIntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
+        public UpdateResourceTests(IntegrationTestContext<TestableStartup<ReadWriteDbContext>, ReadWriteDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -359,7 +358,7 @@ namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite.Updating.Reso
             responseDocument.SingleData.Attributes["description"].Should().Be(newDescription + ImplicitlyChangingWorkItemDefinition.Suffix);
             responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
             responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
-            responseDocument.SingleData.Attributes["isImportant"].Should().Be(false);
+            responseDocument.SingleData.Attributes["isImportant"].Should().Be(existingWorkItem.IsImportant);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

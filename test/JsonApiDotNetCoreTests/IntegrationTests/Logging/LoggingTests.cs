@@ -3,20 +3,19 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
+namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
+    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
         private readonly AuditFakers _fakers = new();
 
-        public LoggingTests(ExampleIntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
+        public LoggingTests(IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
         {
             _testContext = testContext;
 

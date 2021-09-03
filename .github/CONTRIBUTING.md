@@ -34,7 +34,7 @@ Explain the problem and include additional details to help maintainers reproduce
 This section guides you through submitting an enhancement suggestion, including completely new features and minor improvements to existing functionality. Following these guidelines helps maintainers and the community understand your suggestion and find related suggestions.
 
 Before creating enhancement suggestions:
-- Check the [documentation](https://www.jsonapi.net/usage/resources/index.html) and [integration tests](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreExampleTests/IntegrationTests) for existing features. You might discover the enhancement is already available.
+- Check the [documentation](https://www.jsonapi.net/usage/resources/index.html) and [integration tests](https://github.com/json-api-dotnet/JsonApiDotNetCore/tree/master/test/JsonApiDotNetCoreTests/IntegrationTests) for existing features. You might discover the enhancement is already available.
 - Perform a search to see if the feature has already been reported. If it has and the issue is still open, add a comment to the existing issue instead of opening a new one.
 
 When you are creating an enhancement suggestion, please include as many details as possible. Fill in the template, including the steps that you imagine you would take if the feature you're requesting existed.

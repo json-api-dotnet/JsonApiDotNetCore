@@ -1,5 +1,4 @@
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCoreExample.Startups;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +7,12 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace JsonApiDotNetCoreExampleTests.Startups
+namespace TestBuildingBlocks
 {
-    public class TestableStartup<TDbContext> : EmptyStartup
+    public class TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
-        public override void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddJsonApi<TDbContext>(SetJsonApiOptions);
         }
@@ -25,7 +24,7 @@ namespace JsonApiDotNetCoreExampleTests.Startups
             options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+        public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
         {
             app.UseRouting();
             app.UseJsonApi();

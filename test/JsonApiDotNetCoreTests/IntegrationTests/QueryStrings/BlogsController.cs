@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     public sealed class BlogsController : JsonApiController<Blog>
     {

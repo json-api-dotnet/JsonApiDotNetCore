@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
+namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]

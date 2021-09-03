@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted", "src\Examples\GettingStarted\GettingStarted.csproj", "{067FFD7A-C66B-473D-8471-37F5C95DF61C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreExampleTests", "test\JsonApiDotNetCoreTests\JsonApiDotNetCoreExampleTests.csproj", "{CAF331F8-9255-4D72-A1A8-A54141E99F1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonApiDotNetCoreTests", "test\JsonApiDotNetCoreTests\JsonApiDotNetCoreTests.csproj", "{CAF331F8-9255-4D72-A1A8-A54141E99F1E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NoEntityFrameworkTests", "test\NoEntityFrameworkTests\NoEntityFrameworkTests.csproj", "{4F15A8F8-5BC6-45A1-BC51-03F921B726A4}"
 EndProject

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class TelevisionBroadcast : Identifiable

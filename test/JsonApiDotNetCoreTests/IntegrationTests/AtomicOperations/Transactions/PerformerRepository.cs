@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Transactions
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class PerformerRepository : IResourceRepository<Performer>

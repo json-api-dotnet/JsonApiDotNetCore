@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests
+namespace JsonApiDotNetCoreTests.IntegrationTests
 {
     /// <summary>
     /// This is used solely in our tests, so we can assert which calls were made.

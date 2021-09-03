@@ -1,9 +1,9 @@
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings;
+using JsonApiDotNetCoreTests.IntegrationTests.QueryStrings;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 {
     public abstract class BaseParseTests
     {

@@ -7,14 +7,14 @@ using JsonApiDotNetCore.Serialization.Objects;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
-    public sealed class KebabCasingTests : IClassFixture<ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
+    public sealed class KebabCasingTests : IClassFixture<IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
+        private readonly IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
         private readonly SwimmingFakers _fakers = new();
 
-        public KebabCasingTests(ExampleIntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
+        public KebabCasingTests(IntegrationTestContext<KebabCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
         {
             _testContext = testContext;
 

@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Logging
+namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class AuditDbContext : DbContext

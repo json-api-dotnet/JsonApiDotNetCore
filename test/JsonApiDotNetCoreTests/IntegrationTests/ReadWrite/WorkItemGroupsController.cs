@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 {
     public sealed class WorkItemGroupsController : JsonApiController<WorkItemGroup, Guid>
     {
