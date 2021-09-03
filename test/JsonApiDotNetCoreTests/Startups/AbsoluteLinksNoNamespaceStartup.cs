@@ -1,8 +1,9 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
+using TestBuildingBlocks;
 
-namespace JsonApiDotNetCoreExampleTests.Startups
+namespace JsonApiDotNetCoreTests.Startups
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class AbsoluteLinksNoNamespaceStartup<TDbContext> : TestableStartup<TDbContext>

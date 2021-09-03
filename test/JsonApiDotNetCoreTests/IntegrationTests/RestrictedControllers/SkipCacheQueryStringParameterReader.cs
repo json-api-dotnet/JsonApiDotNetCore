@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.QueryStrings;
 using Microsoft.Extensions.Primitives;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     public sealed class SkipCacheQueryStringParameterReader : IQueryStringParameterReader
     {

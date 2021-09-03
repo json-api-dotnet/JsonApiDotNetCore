@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
     internal sealed class SwimmingFakers : FakerContainer
     {

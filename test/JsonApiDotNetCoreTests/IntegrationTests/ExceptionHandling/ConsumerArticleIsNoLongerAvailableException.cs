@@ -2,7 +2,7 @@ using System.Net;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Serialization.Objects;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ExceptionHandling
+namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     internal sealed class ConsumerArticleIsNoLongerAvailableException : JsonApiException
     {

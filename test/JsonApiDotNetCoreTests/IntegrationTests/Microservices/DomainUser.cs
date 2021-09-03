@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DomainUser : Identifiable<Guid>

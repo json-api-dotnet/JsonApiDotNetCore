@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class StudentDefinition : JsonApiResourceDefinition<Student>

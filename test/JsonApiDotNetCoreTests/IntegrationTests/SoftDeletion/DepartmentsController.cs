@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
+namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     public sealed class DepartmentsController : JsonApiController<Department>
     {

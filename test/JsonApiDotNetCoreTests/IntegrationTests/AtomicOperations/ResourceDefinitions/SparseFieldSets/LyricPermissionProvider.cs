@@ -1,4 +1,4 @@
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
 {
     public sealed class LyricPermissionProvider
     {

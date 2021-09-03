@@ -3,7 +3,7 @@ using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InjectionDbContext : DbContext

@@ -3,21 +3,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExample.Controllers;
-using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.ModelStateValidation
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateValidation
 {
     public sealed class AtomicModelStateValidationTests
-        : IClassFixture<ExampleIntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext>>
+        : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();
 
-        public AtomicModelStateValidationTests(ExampleIntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> testContext)
+        public AtomicModelStateValidationTests(IntegrationTestContext<ModelStateValidationStartup<OperationsDbContext>, OperationsDbContext> testContext)
         {
             _testContext = testContext;
 

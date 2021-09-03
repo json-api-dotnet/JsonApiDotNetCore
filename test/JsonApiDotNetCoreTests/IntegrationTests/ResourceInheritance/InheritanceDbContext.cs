@@ -1,10 +1,10 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance.Models;
+using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceInheritance
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class InheritanceDbContext : DbContext

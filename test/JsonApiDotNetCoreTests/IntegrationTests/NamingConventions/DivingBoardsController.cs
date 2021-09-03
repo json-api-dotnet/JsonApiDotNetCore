@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.NamingConventions
+namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
     public sealed class DivingBoardsController : JsonApiController<DivingBoard>
     {

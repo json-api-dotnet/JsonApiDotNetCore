@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
+namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
     public sealed class ToothbrushesController : BaseToothbrushesController
     {

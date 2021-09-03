@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Controllers.Annotations;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.RestrictedControllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     [NoHttpPost]
     public sealed class BlockingHttpPostController : JsonApiController<Table>

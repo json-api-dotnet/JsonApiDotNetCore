@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class MultiTenancyDbContext : DbContext

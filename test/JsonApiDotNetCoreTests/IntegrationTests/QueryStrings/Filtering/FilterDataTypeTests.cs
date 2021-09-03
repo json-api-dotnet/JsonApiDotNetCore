@@ -9,18 +9,17 @@ using FluentAssertions.Extensions;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings.Filtering
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 {
-    public sealed class FilterDataTypeTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
+    public sealed class FilterDataTypeTests : IClassFixture<IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> _testContext;
 
-        public FilterDataTypeTests(ExampleIntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
+        public FilterDataTypeTests(IntegrationTestContext<TestableStartup<FilterDbContext>, FilterDbContext> testContext)
         {
             _testContext = testContext;
 

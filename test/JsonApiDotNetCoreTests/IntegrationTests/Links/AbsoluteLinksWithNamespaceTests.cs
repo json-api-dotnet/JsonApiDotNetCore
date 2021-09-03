@@ -6,22 +6,22 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
+using JsonApiDotNetCoreTests.Startups;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Links
+namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     public sealed class AbsoluteLinksWithNamespaceTests
-        : IClassFixture<ExampleIntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
+        : IClassFixture<IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext>>
     {
         private const string HostPrefix = "http://localhost";
 
-        private readonly ExampleIntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
+        private readonly IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> _testContext;
         private readonly LinksFakers _fakers = new();
 
-        public AbsoluteLinksWithNamespaceTests(ExampleIntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> testContext)
+        public AbsoluteLinksWithNamespaceTests(IntegrationTestContext<AbsoluteLinksInApiNamespaceStartup<LinksDbContext>, LinksDbContext> testContext)
         {
             _testContext = testContext;
 

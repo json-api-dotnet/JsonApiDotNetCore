@@ -1,6 +1,6 @@
 using System;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     public interface ITenantProvider
     {

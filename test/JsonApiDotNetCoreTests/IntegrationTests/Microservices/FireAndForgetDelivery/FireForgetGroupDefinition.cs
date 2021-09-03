@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.FireAndForgetDelivery
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDelivery
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class FireForgetGroupDefinition : MessagingGroupDefinition

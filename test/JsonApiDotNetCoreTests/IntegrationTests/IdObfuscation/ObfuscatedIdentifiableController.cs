@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     public abstract class ObfuscatedIdentifiableController<TResource> : BaseJsonApiController<TResource>
         where TResource : class, IIdentifiable<int>

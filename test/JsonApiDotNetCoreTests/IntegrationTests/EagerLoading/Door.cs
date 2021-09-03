@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
+namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Door

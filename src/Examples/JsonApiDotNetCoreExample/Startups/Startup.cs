@@ -14,7 +14,7 @@ using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample.Startups
 {
-    public sealed class Startup : EmptyStartup
+    public sealed class Startup
     {
         private readonly ICodeTimerSession _codeTimingSession;
         private readonly string _connectionString;
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreExample.Startups
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public override void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             using (CodeTimingSessionManager.Current.Measure("Configure other (startup)"))
             {
@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreExample.Startups
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public override void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)
         {
             ILogger<Startup> logger = loggerFactory.CreateLogger<Startup>();
 

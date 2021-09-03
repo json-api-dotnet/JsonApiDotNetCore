@@ -15,7 +15,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast>

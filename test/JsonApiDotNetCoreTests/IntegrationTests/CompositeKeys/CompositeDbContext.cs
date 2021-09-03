@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class CompositeDbContext : DbContext

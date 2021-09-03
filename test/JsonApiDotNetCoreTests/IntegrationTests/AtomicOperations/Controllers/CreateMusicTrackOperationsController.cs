@@ -13,7 +13,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations.Controllers
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 {
     [DisableRoutingConvention]
     [Route("/operations/musicTracks/create")]

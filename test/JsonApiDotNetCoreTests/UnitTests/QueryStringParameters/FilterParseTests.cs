@@ -13,7 +13,7 @@ using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.UnitTests.QueryStringParameters
+namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 {
     public sealed class FilterParseTests : BaseParseTests
     {

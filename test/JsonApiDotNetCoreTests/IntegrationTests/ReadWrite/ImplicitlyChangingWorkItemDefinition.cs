@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ReadWrite
+namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 {
     /// <summary>
     /// Used to simulate side effects that occur in the database while saving, typically caused by database triggers.

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.MultiTenancy
+namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     internal sealed class RouteTenantProvider : ITenantProvider
     {

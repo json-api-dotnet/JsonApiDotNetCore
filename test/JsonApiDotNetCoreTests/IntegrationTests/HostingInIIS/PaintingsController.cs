@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
     [DisableRoutingConvention]
     [Route("custom/path/to/paintings-of-the-world")]

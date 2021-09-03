@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Meeting : Identifiable<Guid>

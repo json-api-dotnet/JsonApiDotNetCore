@@ -5,7 +5,7 @@ using TestBuildingBlocks;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.IdObfuscation
+namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     internal sealed class ObfuscationFakers : FakerContainer
     {

@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceDefinitions.Serialization
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     public sealed class ScholarshipsController : JsonApiController<Scholarship>
     {

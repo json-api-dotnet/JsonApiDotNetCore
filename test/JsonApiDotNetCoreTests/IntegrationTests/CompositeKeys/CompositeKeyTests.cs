@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
-    public sealed class CompositeKeyTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
+    public sealed class CompositeKeyTests : IClassFixture<IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> _testContext;
 
-        public CompositeKeyTests(ExampleIntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
+        public CompositeKeyTests(IntegrationTestContext<TestableStartup<CompositeDbContext>, CompositeDbContext> testContext)
         {
             _testContext = testContext;
 

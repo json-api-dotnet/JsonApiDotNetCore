@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CompositeKeys
+namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Dealership : Identifiable

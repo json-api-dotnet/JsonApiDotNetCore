@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.HostingInIIS
+namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class HostingDbContext : DbContext

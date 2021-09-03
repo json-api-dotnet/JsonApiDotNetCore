@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
-using JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.Messages;
+using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Microservices.TransactionalOutboxPattern
+namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOutboxPattern
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OutboxDbContext : DbContext

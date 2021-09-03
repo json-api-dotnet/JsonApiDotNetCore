@@ -7,18 +7,17 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreExampleTests.Startups;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.Archiving
+namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
-    public sealed class ArchiveTests : IClassFixture<ExampleIntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext>>
+    public sealed class ArchiveTests : IClassFixture<IntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext>>
     {
-        private readonly ExampleIntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext> _testContext;
         private readonly TelevisionFakers _fakers = new();
 
-        public ArchiveTests(ExampleIntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext> testContext)
+        public ArchiveTests(IntegrationTestContext<TestableStartup<TelevisionDbContext>, TelevisionDbContext> testContext)
         {
             _testContext = testContext;
 

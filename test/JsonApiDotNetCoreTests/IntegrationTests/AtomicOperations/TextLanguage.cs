@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class TextLanguage : Identifiable<Guid>

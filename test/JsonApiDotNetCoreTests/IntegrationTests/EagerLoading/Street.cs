@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
+namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Street : Identifiable

@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.EagerLoading
+namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class BuildingRepository : EntityFrameworkCoreRepository<Building>

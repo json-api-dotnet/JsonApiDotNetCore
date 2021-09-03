@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ControllerActionResults
+namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Toothbrush : Identifiable

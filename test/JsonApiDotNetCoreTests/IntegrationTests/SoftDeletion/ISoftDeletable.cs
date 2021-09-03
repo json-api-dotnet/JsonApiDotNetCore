@@ -1,7 +1,7 @@
 using System;
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.SoftDeletion
+namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public interface ISoftDeletable

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 // @formatter:wrap_chained_method_calls chop_always
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.AtomicOperations
+namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OperationsDbContext : DbContext

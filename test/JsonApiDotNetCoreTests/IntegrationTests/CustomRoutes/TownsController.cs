@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.CustomRoutes
+namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [DisableRoutingConvention]
     [Route("world-api/civilization/popular/towns")]

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.QueryStrings
+namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum LabelColor

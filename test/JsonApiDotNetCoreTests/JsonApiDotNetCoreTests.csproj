@@ -10,13 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="$(EFCoreVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
   </ItemGroup>
 </Project>

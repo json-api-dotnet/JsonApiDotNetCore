@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Authentication;
 
-namespace JsonApiDotNetCoreExampleTests.IntegrationTests.ResourceConstructorInjection
+namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class GiftCertificate : Identifiable
