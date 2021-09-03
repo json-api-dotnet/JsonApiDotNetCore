@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
-                    AttrAttribute archivedAtAttribute = ResourceContext.Attributes.Single(attr => attr.Property.Name == nameof(TelevisionBroadcast.ArchivedAt));
+                    AttrAttribute archivedAtAttribute = ResourceContext.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());

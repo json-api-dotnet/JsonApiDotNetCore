@@ -142,7 +142,7 @@ namespace UnitTests.Serialization.Common
             {
                 TestResource resource = action();
 
-                PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+                PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").GetAttributeByPublicName(member).Property;
                 object deserializedValue = pi.GetValue(resource);
 
                 if (member == "intField")

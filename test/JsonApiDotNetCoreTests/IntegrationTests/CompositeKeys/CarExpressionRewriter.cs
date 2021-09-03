@@ -27,8 +27,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         {
             ResourceContext carResourceContext = resourceContextProvider.GetResourceContext<Car>();
 
-            _regionIdAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.RegionId));
-            _licensePlateAttribute = carResourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Car.LicensePlate));
+            _regionIdAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.RegionId));
+            _licensePlateAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.LicensePlate));
         }
 
         public override QueryExpression VisitComparison(ComparisonExpression expression, object argument)

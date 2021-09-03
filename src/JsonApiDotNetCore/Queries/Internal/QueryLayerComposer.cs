@@ -493,7 +493,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private static AttrAttribute GetIdAttribute(ResourceContext resourceContext)
         {
-            return resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            return resourceContext.GetAttributeByPropertyName(nameof(Identifiable.Id));
         }
     }
 }

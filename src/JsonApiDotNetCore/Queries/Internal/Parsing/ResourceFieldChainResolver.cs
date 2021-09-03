@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
         {
-            RelationshipAttribute relationship = resourceContext.Relationships.FirstOrDefault(nextRelationship => nextRelationship.PublicName == publicName);
+            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(publicName);
 
             if (relationship == null)
             {
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
         {
-            AttrAttribute attribute = resourceContext.Attributes.FirstOrDefault(nextAttribute => nextAttribute.PublicName == publicName);
+            AttrAttribute attribute = resourceContext.TryGetAttributeByPublicName(publicName);
 
             if (attribute == null)
             {

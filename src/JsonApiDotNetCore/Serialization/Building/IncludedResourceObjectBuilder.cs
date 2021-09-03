@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             foreach (string relationshipName in resourceObject.Relationships.Keys)
             {
                 ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
-                RelationshipAttribute relationship = resourceContext.Relationships.Single(rel => rel.PublicName == relationshipName);
+                RelationshipAttribute relationship = resourceContext.GetRelationshipByPublicName(relationshipName);
 
                 if (!IsRelationshipInSparseFieldSet(relationship))
                 {

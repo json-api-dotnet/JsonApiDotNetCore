@@ -166,8 +166,7 @@ namespace UnitTests.Serialization.Server
 
             foreach (string requestedRelationship in splitPath)
             {
-                RelationshipAttribute relationship =
-                    resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == requestedRelationship);
+                RelationshipAttribute relationship = resourceContext.GetRelationshipByPublicName(requestedRelationship);
 
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);

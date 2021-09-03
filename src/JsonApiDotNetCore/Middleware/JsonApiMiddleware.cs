@@ -252,8 +252,7 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                RelationshipAttribute requestRelationship =
-                    primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == relationshipName);
+                RelationshipAttribute requestRelationship = primaryResourceContext.TryGetRelationshipByPublicName(relationshipName);
 
                 if (requestRelationship != null)
                 {

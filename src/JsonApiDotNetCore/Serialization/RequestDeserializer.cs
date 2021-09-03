@@ -392,7 +392,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private RelationshipAttribute GetExistingRelationship(AtomicReference reference, ResourceContext resourceContext)
         {
-            RelationshipAttribute relationship = resourceContext.Relationships.FirstOrDefault(attribute => attribute.PublicName == reference.Relationship);
+            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(reference.Relationship);
 
             if (relationship == null)
             {

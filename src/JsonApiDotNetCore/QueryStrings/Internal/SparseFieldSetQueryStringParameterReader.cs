@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (sparseFieldSet == null)
             {
                 // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
-                AttrAttribute idAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Identifiable.Id));
+                AttrAttribute idAttribute = resourceContext.GetAttributeByPropertyName(nameof(Identifiable.Id));
                 return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
             }
 
