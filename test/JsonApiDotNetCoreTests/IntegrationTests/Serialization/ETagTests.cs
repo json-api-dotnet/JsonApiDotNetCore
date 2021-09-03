@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Returns_no_ETag_for_failed_GET_request()
         {
             // Arrange
-            const string route = "/meetings/99999999";
+            string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);

@@ -315,7 +315,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -1800,7 +1800,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -1809,7 +1809,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "musicTracks",
-                            lid = "doesNotExist"
+                            lid = Unknown.LocalId
                         }
                     }
                 }
@@ -1828,7 +1828,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1846,7 +1846,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -1855,7 +1855,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "musicTracks",
-                            lid = "doesNotExist",
+                            lid = Unknown.LocalId,
                             attributes = new
                             {
                             }
@@ -1877,7 +1877,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1903,7 +1903,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -1920,7 +1920,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                             new
                             {
                                 type = "performers",
-                                lid = "doesNotExist"
+                                lid = Unknown.LocalId
                             }
                         }
                     }
@@ -1940,7 +1940,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1958,7 +1958,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -1974,7 +1974,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                                     data = new
                                     {
                                         type = "recordCompanies",
-                                        lid = "doesNotExist"
+                                        lid = Unknown.LocalId
                                     }
                                 }
                             }
@@ -1996,7 +1996,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -2014,7 +2014,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2032,7 +2032,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                                         new
                                         {
                                             type = "musicTracks",
-                                            lid = "doesNotExist"
+                                            lid = Unknown.LocalId
                                         }
                                     }
                                 }
@@ -2055,7 +2055,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
-            error.Detail.Should().Be("Server-generated value for local ID 'doesNotExist' is not available at this point.");
+            error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -2075,7 +2075,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2134,7 +2134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2191,7 +2191,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2259,7 +2259,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2327,7 +2327,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new
@@ -2398,7 +2398,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         @ref = new
                         {
                             type = "lyrics",
-                            id = 99999999
+                            id = Unknown.StringId.For<Lyric, long>()
                         }
                     },
                     new

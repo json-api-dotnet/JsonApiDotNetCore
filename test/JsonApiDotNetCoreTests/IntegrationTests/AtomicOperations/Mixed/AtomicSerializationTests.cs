@@ -38,8 +38,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Includes_version_with_ext_on_operations_endpoint()
         {
             // Arrange
-            const int newArtistId = 12345;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            Performer newPerformer = _fakers.Performer.Generate();
+            newPerformer.Id = Unknown.TypedId.Int32;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -56,10 +56,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         data = new
                         {
                             type = "performers",
-                            id = newArtistId,
+                            id = newPerformer.StringId,
                             attributes = new
                             {
-                                artistName = newArtistName
+                                artistName = newPerformer.ArtistName
                             }
                         }
                     }
@@ -85,13 +85,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
     {
       ""data"": {
         ""type"": ""performers"",
-        ""id"": """ + newArtistId + @""",
+        ""id"": """ + newPerformer.StringId + @""",
         ""attributes"": {
-          ""artistName"": """ + newArtistName + @""",
+          ""artistName"": """ + newPerformer.ArtistName + @""",
           ""bornAt"": ""0001-01-01T01:00:00+01:00""
         },
         ""links"": {
-          ""self"": ""http://localhost/performers/" + newArtistId + @"""
+          ""self"": ""http://localhost/performers/" + newPerformer.StringId + @"""
         }
       }
     }

@@ -285,8 +285,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                 {
                                     data = new
                                     {
-                                        type = "doesNotExist",
-                                        id = 12345678
+                                        type = Unknown.ResourceType,
+                                        id = Unknown.StringId.Int32
                                     }
                                 }
                             }
@@ -324,7 +324,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         public async Task Cannot_create_resource_with_client_generated_ID()
         {
             // Arrange
-            string newTitle = _fakers.MusicTrack.Generate().Title;
+            MusicTrack newTrack = _fakers.MusicTrack.Generate();
+            newTrack.Id = Guid.NewGuid();
 
             var requestBody = new
             {
@@ -336,10 +337,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                         data = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = newTrack.StringId,
                             attributes = new
                             {
-                                title = newTitle
+                                title = newTrack.Title
                             }
                         }
                     }
@@ -515,7 +516,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                         op = "add",
                         data = new
                         {
-                            type = "doesNotExist"
+                            type = Unknown.ResourceType
                         }
                     }
                 }
@@ -534,7 +535,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 

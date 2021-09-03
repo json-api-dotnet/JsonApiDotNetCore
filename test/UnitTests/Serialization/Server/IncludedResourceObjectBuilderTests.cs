@@ -111,7 +111,7 @@ namespace UnitTests.Serialization.Server
             IList<ResourceObject> result = builder.Build();
             Assert.Single(result);
             Assert.Equal(person.Name, result[0].Attributes["name"]);
-            Assert.Equal(person.Id.ToString(), result[0].Id);
+            Assert.Equal(person.StringId, result[0].Id);
         }
 
         private Song GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)

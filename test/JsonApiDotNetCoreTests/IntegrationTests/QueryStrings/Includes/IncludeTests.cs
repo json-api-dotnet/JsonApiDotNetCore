@@ -550,7 +550,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_relationship()
         {
             // Arrange
-            const string route = "/webAccounts?include=doesNotExist";
+            string route = $"/webAccounts?include={Unknown.Relationship}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -563,7 +563,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -571,7 +571,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_nested_relationship()
         {
             // Arrange
-            const string route = "/blogs?include=posts.doesNotExist";
+            string route = $"/blogs?include=posts.{Unknown.Relationship}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -584,7 +584,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
             error.Source.Parameter.Should().Be("include");
         }
 

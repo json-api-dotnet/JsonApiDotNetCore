@@ -238,8 +238,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                 {
                                     data = new
                                     {
-                                        type = "doesNotExist",
-                                        id = 12345678
+                                        type = Unknown.ResourceType,
+                                        id = Unknown.StringId.Int32
                                     }
                                 }
                             }
@@ -587,12 +587,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         op = "update",
                         @ref = new
                         {
-                            id = 12345678
+                            id = Unknown.StringId.For<Performer, int>()
                         },
                         data = new
                         {
                             type = "performers",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Performer, int>(),
                             attributes = new
                             {
                             },
@@ -639,7 +639,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "performers",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Performer, int>(),
                             attributes = new
                             {
                             },
@@ -682,13 +682,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         @ref = new
                         {
                             type = "performers",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Performer, int>(),
                             lid = "local-1"
                         },
                         data = new
                         {
                             type = "performers",
-                            id = 12345678,
+                            id = Unknown.StringId.AltFor<Performer, int>(),
                             attributes = new
                             {
                             },
@@ -762,7 +762,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         op = "update",
                         data = new
                         {
-                            id = 12345678,
+                            id = Unknown.StringId.Int32,
                             attributes = new
                             {
                             },
@@ -847,7 +847,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "performers",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Performer, int>(),
                             lid = "local-1",
                             attributes = new
                             {
@@ -943,12 +943,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         @ref = new
                         {
                             type = "performers",
-                            id = 12345678
+                            id = Unknown.StringId.For<Performer, int>()
                         },
                         data = new
                         {
                             type = "playlists",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             attributes = new
                             {
                             },
@@ -981,6 +981,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         public async Task Cannot_update_on_resource_ID_mismatch_between_ref_and_data()
         {
             // Arrange
+            string performerId1 = Unknown.StringId.For<Performer, int>();
+            string performerId2 = Unknown.StringId.AltFor<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -991,12 +994,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         @ref = new
                         {
                             type = "performers",
-                            id = 12345678
+                            id = performerId1
                         },
                         data = new
                         {
                             type = "performers",
-                            id = 87654321,
+                            id = performerId2,
                             attributes = new
                             {
                             },
@@ -1021,7 +1024,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource ID mismatch between 'ref.id' and 'data.id' element.");
-            error.Detail.Should().Be("Expected resource with ID '12345678' in 'data.id', instead of '87654321'.");
+            error.Detail.Should().Be($"Expected resource with ID '{performerId1}' in 'data.id', instead of '{performerId2}'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1077,6 +1080,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         public async Task Cannot_update_on_mixture_of_ID_and_local_ID_between_ref_and_data()
         {
             // Arrange
+            string performerId = Unknown.StringId.For<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -1087,7 +1092,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         @ref = new
                         {
                             type = "performers",
-                            id = "12345678"
+                            id = performerId
                         },
                         data = new
                         {
@@ -1117,7 +1122,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.id' and 'data.lid' element.");
-            error.Detail.Should().Be("Expected resource with ID '12345678' in 'data.id', instead of 'local-1' in 'data.lid'.");
+            error.Detail.Should().Be($"Expected resource with ID '{performerId}' in 'data.id', instead of 'local-1' in 'data.lid'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1125,6 +1130,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         public async Task Cannot_update_on_mixture_of_local_ID_and_ID_between_ref_and_data()
         {
             // Arrange
+            string performerId = Unknown.StringId.For<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -1140,7 +1147,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "performers",
-                            id = "12345678",
+                            id = performerId,
                             attributes = new
                             {
                             },
@@ -1165,7 +1172,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.lid' and 'data.id' element.");
-            error.Detail.Should().Be("Expected resource with local ID 'local-1' in 'data.lid', instead of '12345678' in 'data.id'.");
+            error.Detail.Should().Be($"Expected resource with local ID 'local-1' in 'data.lid', instead of '{performerId}' in 'data.id'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1182,8 +1189,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         op = "update",
                         data = new
                         {
-                            type = "doesNotExist",
-                            id = 12345678,
+                            type = Unknown.ResourceType,
+                            id = Unknown.StringId.Int32,
                             attributes = new
                             {
                             },
@@ -1208,7 +1215,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1216,6 +1223,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         public async Task Cannot_update_resource_for_unknown_ID()
         {
             // Arrange
+            string performerId = Unknown.StringId.For<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -1226,7 +1235,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "performers",
-                            id = 99999999,
+                            id = performerId,
                             attributes = new
                             {
                             },
@@ -1251,7 +1260,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'performers' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1259,7 +1268,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         public async Task Cannot_update_resource_for_incompatible_ID()
         {
             // Arrange
-            string guid = Guid.NewGuid().ToString();
+            string guid = Unknown.StringId.Guid;
 
             var requestBody = new
             {

@@ -432,7 +432,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
                         data = new
                         {
                             type = "playlists",
-                            id = 99999999,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             attributes = new
                             {
                                 name = (string)null

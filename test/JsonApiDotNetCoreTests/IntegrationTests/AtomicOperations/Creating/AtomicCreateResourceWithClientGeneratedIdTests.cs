@@ -191,7 +191,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         public async Task Cannot_create_resource_for_incompatible_ID()
         {
             // Arrange
-            string guid = Guid.NewGuid().ToString();
+            string guid = Unknown.StringId.Guid;
 
             var requestBody = new
             {
@@ -243,7 +243,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                         data = new
                         {
                             type = "lyrics",
-                            id = 12345678,
+                            id = Unknown.StringId.For<Lyric, long>(),
                             lid = "local-1"
                         }
                     }

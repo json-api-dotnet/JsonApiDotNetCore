@@ -152,8 +152,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 12345678
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.Int32
                             }
                         }
                     }
@@ -607,7 +607,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             {
                 data = new
                 {
-                    type = "doesNotExist",
+                    type = Unknown.ResourceType,
                     id = existingWorkItem.StringId
                 }
             };
@@ -625,7 +625,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -685,7 +685,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 }
             };
 
-            string route = $"/doesNotExist/{existingWorkItem.StringId}";
+            string route = $"/{Unknown.ResourceType}/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -700,16 +700,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
         public async Task Cannot_update_resource_on_unknown_resource_ID_in_url()
         {
             // Arrange
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
             var requestBody = new
             {
                 data = new
                 {
                     type = "workItems",
-                    id = 99999999
+                    id = workItemId
                 }
             };
 
-            const string route = "/workItems/99999999";
+            string route = $"/workItems/{workItemId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -722,7 +724,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -935,7 +937,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                     id = existingWorkItem.StringId,
                     attributes = new
                     {
-                        id = existingWorkItem.Id + 123456
+                        id = Unknown.StringId.For<WorkItem, int>()
                     }
                 }
             };

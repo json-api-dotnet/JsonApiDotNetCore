@@ -279,7 +279,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                 {
                                     data = new
                                     {
-                                        id = 12345678
+                                        id = Unknown.StringId.For<Lyric, long>()
                                     }
                                 }
                             }
@@ -325,8 +325,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                 {
                                     data = new
                                     {
-                                        type = "doesNotExist",
-                                        id = 12345678
+                                        type = Unknown.ResourceType,
+                                        id = Unknown.StringId.For<Lyric, long>()
                                     }
                                 }
                             }
@@ -348,7 +348,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -402,6 +402,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         public async Task Cannot_create_with_unknown_relationship_ID()
         {
             // Arrange
+            string lyricId = Unknown.StringId.For<Lyric, long>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -419,7 +421,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                     data = new
                                     {
                                         type = "lyrics",
-                                        id = 12345678
+                                        id = lyricId
                                     }
                                 }
                             }
@@ -441,7 +443,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'lyrics' with ID '12345678' in relationship 'lyric' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'lyrics' with ID '{lyricId}' in relationship 'lyric' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -466,7 +468,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                     data = new
                                     {
                                         type = "playlists",
-                                        id = 12345678
+                                        id = Unknown.StringId.For<Playlist, long>()
                                     }
                                 }
                             }
@@ -594,7 +596,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                         new
                                         {
                                             type = "lyrics",
-                                            id = 12345678
+                                            id = Unknown.StringId.For<Lyric, long>()
                                         }
                                     }
                                 }

@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "games",
-                    id = 0
+                    id = "0"
                 }
             };
 
@@ -376,7 +376,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                     new
                     {
                         type = "games",
-                        id = 0
+                        id = "0"
                     }
                 }
             };
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                     new
                     {
                         type = "games",
-                        id = 0
+                        id = "0"
                     }
                 }
             };
@@ -474,7 +474,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                     new
                     {
                         type = "games",
-                        id = 0
+                        id = "0"
                     }
                 }
             };
@@ -521,7 +521,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                     new
                     {
                         type = "games",
-                        id = 0
+                        id = "0"
                     }
                 }
             };

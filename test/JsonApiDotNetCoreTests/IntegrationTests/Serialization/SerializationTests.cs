@@ -66,7 +66,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Returns_no_body_for_failed_HEAD_request()
         {
             // Arrange
-            const string route = "/meetings/99999999";
+            string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
@@ -271,9 +271,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Cannot_get_unknown_primary_resource_by_ID()
         {
             // Arrange
-            var unknownId = Guid.NewGuid();
+            string meetingId = Unknown.StringId.For<Meeting, Guid>();
 
-            string route = $"/meetings/{unknownId}";
+            string route = $"/meetings/{meetingId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
       ""id"": """ + errorId + @""",
       ""status"": ""404"",
       ""title"": ""The requested resource does not exist."",
-      ""detail"": ""Resource of type 'meetings' with ID '" + unknownId + @"' does not exist.""
+      ""detail"": ""Resource of type 'meetings' with ID '" + meetingId + @"' does not exist.""
     }
   ]
 }");

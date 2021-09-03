@@ -309,8 +309,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 12345678
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.Int32
                             }
                         }
                     }
@@ -434,7 +434,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             {
                 data = new
                 {
-                    type = "doesNotExist",
+                    type = Unknown.ResourceType,
                     attributes = new
                     {
                     }
@@ -454,7 +454,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -472,7 +472,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            const string route = "/doesNotExist";
+            const string route = "/" + Unknown.ResourceType;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);

@@ -444,7 +444,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_unknown_scope()
         {
             // Arrange
-            const string route = "/webAccounts?sort[doesNotExist]=id";
+            string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -457,15 +457,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            error.Source.Parameter.Should().Be("sort[doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be($"sort[{Unknown.Relationship}]");
         }
 
         [Fact]
         public async Task Cannot_sort_in_unknown_nested_scope()
         {
             // Arrange
-            const string route = "/webAccounts?sort[posts.doesNotExist]=id";
+            string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -478,8 +478,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            error.Source.Parameter.Should().Be("sort[posts.doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be($"sort[posts.{Unknown.Relationship}]");
         }
 
         [Fact]

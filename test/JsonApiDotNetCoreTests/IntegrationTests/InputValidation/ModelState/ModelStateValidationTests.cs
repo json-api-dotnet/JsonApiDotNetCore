@@ -485,7 +485,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = -1,
+                    id = "-1",
                     attributes = new
                     {
                         name = "Repositories"
@@ -499,7 +499,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemDirectories",
-                                    id = -1
+                                    id = "-1"
                                 }
                             }
                         }

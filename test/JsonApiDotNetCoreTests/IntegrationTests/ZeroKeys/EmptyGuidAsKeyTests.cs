@@ -157,7 +157,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty,
+                    id = "00000000-0000-0000-0000-000000000000",
                     attributes = new
                     {
                         name = newName
@@ -244,7 +244,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty
+                    id = "00000000-0000-0000-0000-000000000000"
                 }
             };
 
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty
+                    id = "00000000-0000-0000-0000-000000000000"
                 }
             };
 

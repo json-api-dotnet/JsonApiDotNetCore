@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/customers/{existingOrder.Customer.Id}";
+            string route = $"/customers/{existingOrder.Customer.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/orders/{existingOrder.Id}";
+            string route = $"/orders/{existingOrder.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.Id,
+                    id = existingOrder.StringId,
                     type = "orders",
                     relationships = new
                     {
@@ -198,7 +198,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/orders/{existingOrder.Id}";
+            string route = $"/orders/{existingOrder.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 data = (object)null
             };
 
-            string route = $"/orders/{existingOrder.Id}/relationships/customer";
+            string route = $"/orders/{existingOrder.StringId}/relationships/customer";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.Customer.Id,
+                    id = existingOrder.Customer.StringId,
                     type = "customers",
                     relationships = new
                     {
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}";
+            string route = $"/customers/{existingOrder.Customer.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -320,7 +320,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 data = Array.Empty<object>()
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
+            string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -359,12 +359,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                     new
                     {
                         type = "orders",
-                        id = existingOrder.Id
+                        id = existingOrder.StringId
                     }
                 }
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
+            string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
@@ -403,7 +403,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithoutShipment.Id,
+                    id = orderWithoutShipment.StringId,
                     type = "orders",
                     relationships = new
                     {
@@ -411,7 +411,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                         {
                             data = new
                             {
-                                id = orderWithShipment.Shipment.Id,
+                                id = orderWithShipment.Shipment.StringId,
                                 type = "shipments"
                             }
                         }
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/orders/{orderWithoutShipment.Id}";
+            string route = $"/orders/{orderWithoutShipment.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -459,12 +459,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithShipment.Shipment.Id,
+                    id = orderWithShipment.Shipment.StringId,
                     type = "shipments"
                 }
             };
 
-            string route = $"/orders/{orderWithoutShipment.Id}/relationships/shipment";
+            string route = $"/orders/{orderWithoutShipment.StringId}/relationships/shipment";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

@@ -608,7 +608,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
         public async Task Cannot_select_on_unknown_resource_type()
         {
             // Arrange
-            const string route = "/webAccounts?fields[doesNotExist]=id";
+            string route = $"/webAccounts?fields[{Unknown.ResourceType}]=id";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -621,8 +621,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified fieldset is invalid.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
-            error.Source.Parameter.Should().Be("fields[doesNotExist]");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.Parameter.Should().Be($"fields[{Unknown.ResourceType}]");
         }
 
         [Fact]

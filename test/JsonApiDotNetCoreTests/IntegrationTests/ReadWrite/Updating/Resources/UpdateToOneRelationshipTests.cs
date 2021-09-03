@@ -293,9 +293,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                int itemId = existingUserAccounts[0].AssignedItems.ElementAt(1).Id;
+                int workItemId = existingUserAccounts[0].AssignedItems.ElementAt(1).Id;
 
-                WorkItem workItemInDatabase2 = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(itemId);
+                WorkItem workItemInDatabase2 = await dbContext.WorkItems.Include(workItem => workItem.Assignee).FirstWithIdAsync(workItemId);
 
                 workItemInDatabase2.Assignee.Should().NotBeNull();
                 workItemInDatabase2.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
@@ -456,7 +456,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                         {
                             data = new
                             {
-                                id = 99999999
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -503,8 +503,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 99999999
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -524,7 +524,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -586,6 +586,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 await dbContext.SaveChangesAsync();
             });
 
+            string userAccountId = Unknown.StringId.For<UserAccount, long>();
+
             var requestBody = new
             {
                 data = new
@@ -599,7 +601,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                             data = new
                             {
                                 type = "userAccounts",
-                                id = 99999999
+                                id = userAccountId
                             }
                         }
                     }
@@ -619,7 +621,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'userAccounts' with ID '99999999' in relationship 'assignee' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId}' in relationship 'assignee' does not exist.");
         }
 
         [Fact]

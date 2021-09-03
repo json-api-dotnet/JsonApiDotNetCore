@@ -29,7 +29,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
         {
             if (writeOperation is not WriteOperationKind.DeleteResource)
             {
-                string statement = $"Update \"TextLanguages\" SET \"IsoCode\" = '{resource.IsoCode}{Suffix}' WHERE \"Id\" = '{resource.Id}'";
+                string statement = $"Update \"TextLanguages\" SET \"IsoCode\" = '{resource.IsoCode}{Suffix}' WHERE \"Id\" = '{resource.StringId}'";
                 await _dbContext.Database.ExecuteSqlRawAsync(statement, cancellationToken);
             }
         }

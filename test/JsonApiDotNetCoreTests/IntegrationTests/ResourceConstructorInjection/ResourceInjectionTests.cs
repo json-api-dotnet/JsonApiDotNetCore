@@ -296,7 +296,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
-            const string route = "/postOffices/99999999";
+            string officeId = Unknown.StringId.For<PostOffice, int>();
+
+            string route = $"/postOffices/{officeId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -309,7 +311,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'postOffices' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'postOffices' with ID '{officeId}' does not exist.");
         }
 
         [Fact]

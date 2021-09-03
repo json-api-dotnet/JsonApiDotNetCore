@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resources_for_unknown_type()
         {
             // Arrange
-            const string route = "/doesNotExist";
+            const string route = "/" + Unknown.ResourceType;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resource_for_unknown_type()
         {
             // Arrange
-            const string route = "/doesNotExist/99999999";
+            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -124,7 +124,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resource_for_unknown_ID()
         {
             // Arrange
-            const string route = "/workItems/99999999";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -137,7 +139,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -316,7 +318,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_secondary_resource_for_unknown_primary_type()
         {
             // Arrange
-            const string route = "/doesNotExist/99999999/assignee";
+            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}/assignee";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -331,7 +333,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_secondary_resource_for_unknown_primary_ID()
         {
             // Arrange
-            const string route = "/workItems/99999999/assignee";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}/assignee";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -344,7 +348,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -360,7 +364,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/workItems/{workItem.StringId}/doesNotExist";
+            string route = $"/workItems/{workItem.StringId}/{Unknown.Relationship}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -373,7 +377,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
+            error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
         }
     }
 }

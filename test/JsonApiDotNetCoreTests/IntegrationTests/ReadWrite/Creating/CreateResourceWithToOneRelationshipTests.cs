@@ -298,7 +298,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                id = 12345678
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -336,8 +336,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 12345678
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -357,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -402,6 +402,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_with_unknown_relationship_ID()
         {
             // Arrange
+            string userAccountId = Unknown.StringId.For<UserAccount, long>();
+
             var requestBody = new
             {
                 data = new
@@ -414,7 +416,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                             data = new
                             {
                                 type = "userAccounts",
-                                id = 12345678
+                                id = userAccountId
                             }
                         }
                     }
@@ -434,7 +436,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'userAccounts' with ID '12345678' in relationship 'assignee' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId}' in relationship 'assignee' does not exist.");
         }
 
         [Fact]

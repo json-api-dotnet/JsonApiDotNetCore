@@ -421,7 +421,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                             {
                                 new
                                 {
-                                    id = 99999999
+                                    id = Unknown.StringId.For<UserAccount, long>()
                                 }
                             }
                         }
@@ -471,8 +471,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                             {
                                 new
                                 {
-                                    type = "doesNotExist",
-                                    id = 99999999
+                                    type = Unknown.ResourceType,
+                                    id = Unknown.StringId.For<UserAccount, long>()
                                 }
                             }
                         }
@@ -493,7 +493,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -558,6 +558,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 await dbContext.SaveChangesAsync();
             });
 
+            string userAccountId1 = Unknown.StringId.For<UserAccount, long>();
+            string userAccountId2 = Unknown.StringId.AltFor<UserAccount, long>();
+
+            string tagId1 = Unknown.StringId.For<WorkTag, int>();
+            string tagId2 = Unknown.StringId.AltFor<WorkTag, int>();
+
             var requestBody = new
             {
                 data = new
@@ -573,12 +579,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                                 new
                                 {
                                     type = "userAccounts",
-                                    id = 88888888
+                                    id = userAccountId1
                                 },
                                 new
                                 {
                                     type = "userAccounts",
-                                    id = 99999999
+                                    id = userAccountId2
                                 }
                             }
                         },
@@ -589,12 +595,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                                 new
                                 {
                                     type = "workTags",
-                                    id = 88888888
+                                    id = tagId1
                                 },
                                 new
                                 {
                                     type = "workTags",
-                                    id = 99999999
+                                    id = tagId2
                                 }
                             }
                         }
@@ -615,22 +621,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             Error error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
-            error1.Detail.Should().Be("Related resource of type 'userAccounts' with ID '88888888' in relationship 'subscribers' does not exist.");
+            error1.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId1}' in relationship 'subscribers' does not exist.");
 
             Error error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
-            error2.Detail.Should().Be("Related resource of type 'userAccounts' with ID '99999999' in relationship 'subscribers' does not exist.");
+            error2.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId2}' in relationship 'subscribers' does not exist.");
 
             Error error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error3.Title.Should().Be("A related resource does not exist.");
-            error3.Detail.Should().Be("Related resource of type 'workTags' with ID '88888888' in relationship 'tags' does not exist.");
+            error3.Detail.Should().Be($"Related resource of type 'workTags' with ID '{tagId1}' in relationship 'tags' does not exist.");
 
             Error error4 = responseDocument.Errors[3];
             error4.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error4.Title.Should().Be("A related resource does not exist.");
-            error4.Detail.Should().Be("Related resource of type 'workTags' with ID '99999999' in relationship 'tags' does not exist.");
+            error4.Detail.Should().Be($"Related resource of type 'workTags' with ID '{tagId2}' in relationship 'tags' does not exist.");
         }
 
         [Fact]

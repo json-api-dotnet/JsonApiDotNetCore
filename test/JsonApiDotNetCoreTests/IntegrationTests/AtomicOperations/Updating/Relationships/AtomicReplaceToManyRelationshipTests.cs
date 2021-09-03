@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -318,7 +317,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         op = "update",
                         @ref = new
                         {
-                            id = 99999999,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             relationship = "tracks"
                         }
                     }
@@ -355,8 +354,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         op = "update",
                         @ref = new
                         {
-                            type = "doesNotExist",
-                            id = 99999999,
+                            type = Unknown.ResourceType,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             relationship = "tracks"
                         }
                     }
@@ -376,7 +375,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -429,6 +428,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                 await dbContext.SaveChangesAsync();
             });
 
+            string companyId = Unknown.StringId.For<RecordCompany, short>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -439,7 +440,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "recordCompanies",
-                            id = 9999,
+                            id = companyId,
                             relationship = "tracks"
                         },
                         data = new[]
@@ -467,7 +468,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'recordCompanies' with ID '9999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'recordCompanies' with ID '{companyId}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -475,7 +476,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
         public async Task Cannot_replace_for_incompatible_ID_in_ref()
         {
             // Arrange
-            string guid = Guid.NewGuid().ToString();
+            string guid = Unknown.StringId.Guid;
 
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
@@ -541,7 +542,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             lid = "local-1",
                             relationship = "performers"
                         }
@@ -580,8 +581,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "performers",
-                            id = 99999999,
-                            relationship = "doesNotExist"
+                            id = Unknown.StringId.For<Performer, int>(),
+                            relationship = Unknown.Relationship
                         }
                     }
                 }
@@ -600,7 +601,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The referenced relationship does not exist.");
-            error.Detail.Should().Be("Resource of type 'performers' does not contain a relationship named 'doesNotExist'.");
+            error.Detail.Should().Be($"Resource of type 'performers' does not contain a relationship named '{Unknown.Relationship}'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -665,14 +666,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "playlists",
-                            id = 99999999,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             relationship = "tracks"
                         },
                         data = new[]
                         {
                             new
                             {
-                                id = Guid.NewGuid().ToString()
+                                id = Unknown.StringId.For<MusicTrack, Guid>()
                             }
                         }
                     }
@@ -710,15 +711,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationship = "performers"
                         },
                         data = new[]
                         {
                             new
                             {
-                                type = "doesNotExist",
-                                id = 99999999
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.For<Performer, int>()
                             }
                         }
                     }
@@ -738,7 +739,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -756,7 +757,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationship = "performers"
                         },
                         data = new[]
@@ -801,7 +802,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                         @ref = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationship = "performers"
                         },
                         data = new[]
@@ -809,7 +810,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                             new
                             {
                                 type = "performers",
-                                id = 99999999,
+                                id = Unknown.StringId.For<Performer, int>(),
                                 lid = "local-1"
                             }
                         }
@@ -839,7 +840,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
         {
             // Arrange
             RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-            Guid[] trackIds = ArrayFactory.Create(Guid.NewGuid(), Guid.NewGuid());
+
+            string[] trackIds =
+            {
+                Unknown.StringId.For<MusicTrack, Guid>(),
+                Unknown.StringId.AltFor<MusicTrack, Guid>()
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -865,12 +871,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                             new
                             {
                                 type = "musicTracks",
-                                id = trackIds[0].ToString()
+                                id = trackIds[0]
                             },
                             new
                             {
                                 type = "musicTracks",
-                                id = trackIds[1].ToString()
+                                id = trackIds[1]
                             }
                         }
                     }
@@ -984,7 +990,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
                             new
                             {
                                 type = "playlists",
-                                id = 88888888
+                                id = Unknown.StringId.For<Playlist, long>()
                             }
                         }
                     }

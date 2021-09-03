@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
@@ -358,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "playlists",
-                            id = 99999999,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             relationships = new
                             {
                                 tracks = new
@@ -367,7 +366,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                     {
                                         new
                                         {
-                                            id = Guid.NewGuid().ToString()
+                                            id = Unknown.StringId.For<MusicTrack, Guid>()
                                         }
                                     }
                                 }
@@ -408,7 +407,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationships = new
                             {
                                 performers = new
@@ -417,8 +416,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                     {
                                         new
                                         {
-                                            type = "doesNotExist",
-                                            id = 99999999
+                                            type = Unknown.ResourceType,
+                                            id = Unknown.StringId.For<Performer, int>()
                                         }
                                     }
                                 }
@@ -441,7 +440,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -459,7 +458,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationships = new
                             {
                                 performers = new
@@ -509,7 +508,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                         data = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             relationships = new
                             {
                                 performers = new
@@ -519,7 +518,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                         new
                                         {
                                             type = "performers",
-                                            id = 99999999,
+                                            id = Unknown.StringId.For<Performer, int>(),
                                             lid = "local-1"
                                         }
                                     }
@@ -552,7 +551,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         {
             // Arrange
             RecordCompany existingCompany = _fakers.RecordCompany.Generate();
-            Guid[] trackIds = ArrayFactory.Create(Guid.NewGuid(), Guid.NewGuid());
+
+            string[] trackIds =
+            {
+                Unknown.StringId.For<MusicTrack, Guid>(),
+                Unknown.StringId.AltFor<MusicTrack, Guid>()
+            };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -580,12 +584,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                         new
                                         {
                                             type = "musicTracks",
-                                            id = trackIds[0].ToString()
+                                            id = trackIds[0]
                                         },
                                         new
                                         {
                                             type = "musicTracks",
-                                            id = trackIds[1].ToString()
+                                            id = trackIds[1]
                                         }
                                     }
                                 }
@@ -650,7 +654,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                                         new
                                         {
                                             type = "playlists",
-                                            id = 88888888
+                                            id = Unknown.StringId.For<Playlist, long>()
                                         }
                                     }
                                 }

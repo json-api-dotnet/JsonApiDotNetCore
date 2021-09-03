@@ -212,7 +212,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                     {
                                         new
                                         {
-                                            id = 12345678
+                                            id = Unknown.StringId.For<Performer, int>()
                                         }
                                     }
                                 }
@@ -261,8 +261,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                     {
                                         new
                                         {
-                                            type = "doesNotExist",
-                                            id = 12345678
+                                            type = Unknown.ResourceType,
+                                            id = Unknown.StringId.For<Performer, int>()
                                         }
                                     }
                                 }
@@ -285,7 +285,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -344,6 +344,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Arrange
             string newTitle = _fakers.MusicTrack.Generate().Title;
 
+            string performerId1 = Unknown.StringId.For<Performer, int>();
+            string performerId2 = Unknown.StringId.AltFor<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -367,12 +370,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                         new
                                         {
                                             type = "performers",
-                                            id = 12345678
+                                            id = performerId1
                                         },
                                         new
                                         {
                                             type = "performers",
-                                            id = 87654321
+                                            id = performerId2
                                         }
                                     }
                                 }
@@ -395,13 +398,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             Error error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
-            error1.Detail.Should().Be("Related resource of type 'performers' with ID '12345678' in relationship 'performers' does not exist.");
+            error1.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId1}' in relationship 'performers' does not exist.");
             error1.Source.Pointer.Should().Be("/atomic:operations[0]");
 
             Error error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
-            error2.Detail.Should().Be("Related resource of type 'performers' with ID '87654321' in relationship 'performers' does not exist.");
+            error2.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId2}' in relationship 'performers' does not exist.");
             error2.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -428,7 +431,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                                         new
                                         {
                                             type = "playlists",
-                                            id = 12345678
+                                            id = Unknown.StringId.For<Playlist, long>()
                                         }
                                     }
                                 }

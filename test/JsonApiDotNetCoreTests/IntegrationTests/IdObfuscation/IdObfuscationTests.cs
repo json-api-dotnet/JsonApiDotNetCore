@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             });
 
             var codec = new HexadecimalCodec();
-            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(99999999)}')";
+            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(Unknown.TypedId.Int32)}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -453,7 +453,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         {
             // Arrange
             var codec = new HexadecimalCodec();
-            string stringId = codec.Encode(99999999);
+            string stringId = codec.Encode(Unknown.TypedId.Int32);
 
             string route = $"/bankAccounts/{stringId}";
 

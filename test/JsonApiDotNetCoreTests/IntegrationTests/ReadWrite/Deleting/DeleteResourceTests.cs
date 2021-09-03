@@ -59,7 +59,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
         public async Task Cannot_delete_missing_resource()
         {
             // Arrange
-            const string route = "/workItems/99999999";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -72,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]

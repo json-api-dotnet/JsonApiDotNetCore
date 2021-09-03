@@ -46,9 +46,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
             var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-            string missingUserId = Guid.NewGuid().ToString();
+            string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
-            string route = $"/domainUsers/{missingUserId}";
+            string route = $"/domainUsers/{unknownUserId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{missingUserId}' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{unknownUserId}' does not exist.");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

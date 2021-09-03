@@ -36,6 +36,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
                 await dbContext.ClearTablesAsync<Performer, MusicTrack>();
             });
 
+            string performerId = Unknown.StringId.For<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new object[]
@@ -72,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
                                         new
                                         {
                                             type = "performers",
-                                            id = 99999999
+                                            id = performerId
                                         }
                                     }
                                 }
@@ -95,7 +97,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'performers' with ID '99999999' in relationship 'performers' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId}' in relationship 'performers' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

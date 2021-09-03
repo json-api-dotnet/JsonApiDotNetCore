@@ -386,7 +386,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_scope()
         {
             // Arrange
-            const string route = "/webAccounts?page[number]=doesNotExist:1";
+            string route = $"/webAccounts?page[number]={Unknown.Relationship}:1";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -399,7 +399,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -407,7 +407,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         public async Task Cannot_paginate_in_unknown_nested_scope()
         {
             // Arrange
-            const string route = "/webAccounts?page[size]=posts.doesNotExist:1";
+            string route = $"/webAccounts?page[size]=posts.{Unknown.Relationship}:1";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             Error error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
             error.Source.Parameter.Should().Be("page[size]");
         }
 
