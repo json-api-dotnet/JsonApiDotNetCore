@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 Title = "Resource type mismatch between request body and endpoint URL.",
                 Detail = $"Expected resource of type '{expected.PublicName}' in {method} request body at endpoint " +
-                    $"'{requestPath}', instead of '{actual?.PublicName}'."
+                    $"'{requestPath}', instead of '{actual.PublicName}'."
             })
         {
         }

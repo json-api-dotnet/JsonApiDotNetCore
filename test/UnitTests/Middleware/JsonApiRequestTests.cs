@@ -52,6 +52,7 @@ namespace UnitTests.Middleware
             var graphBuilder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
             graphBuilder.Add<TodoItem>();
             graphBuilder.Add<Person>();
+            graphBuilder.Add<Tag>();
 
             IResourceGraph resourceGraph = graphBuilder.Build();
 

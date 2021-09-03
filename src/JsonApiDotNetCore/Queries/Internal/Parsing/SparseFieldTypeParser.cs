@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceContext GetResourceContext(string publicName)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(publicName);
+            ResourceContext resourceContext = _resourceContextProvider.TryGetResourceContext(publicName);
 
             if (resourceContext == null)
             {

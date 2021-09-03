@@ -32,6 +32,19 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext GetResourceContext(string publicName)
         {
+            ResourceContext resourceContext = TryGetResourceContext(publicName);
+
+            if (resourceContext == null)
+            {
+                throw new InvalidOperationException($"Resource type '{publicName}' does not exist.");
+            }
+
+            return resourceContext;
+        }
+
+        /// <inheritdoc />
+        public ResourceContext TryGetResourceContext(string publicName)
+        {
             ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
 
             return _resourceContexts.SingleOrDefault(resourceContext => resourceContext.PublicName == publicName);
@@ -39,6 +52,19 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <inheritdoc />
         public ResourceContext GetResourceContext(Type resourceType)
+        {
+            ResourceContext resourceContext = TryGetResourceContext(resourceType);
+
+            if (resourceContext == null)
+            {
+                throw new InvalidOperationException($"Resource of type '{resourceType.Name}' does not exist.");
+            }
+
+            return resourceContext;
+        }
+
+        /// <inheritdoc />
+        public ResourceContext TryGetResourceContext(Type resourceType)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 

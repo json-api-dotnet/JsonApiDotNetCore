@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected ResourceContext GetExistingResourceContext(string publicName)
         {
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(publicName);
+            ResourceContext resourceContext = ResourceContextProvider.TryGetResourceContext(publicName);
 
             if (resourceContext == null)
             {

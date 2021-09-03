@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Middleware
 
                     if (resourceType != null)
                     {
-                        ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                        ResourceContext resourceContext = _resourceContextProvider.TryGetResourceContext(resourceType);
 
                         if (resourceContext != null)
                         {
