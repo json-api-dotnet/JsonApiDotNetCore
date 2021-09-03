@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
             where T : IMessageContent
         {
             string namespacePrefix = typeof(IMessageContent).Namespace;
-            var contentType = System.Type.GetType(namespacePrefix + "." + Type, true);
+            var contentType = System.Type.GetType($"{namespacePrefix}.{Type}", true);
 
             return (T)JsonConvert.DeserializeObject(Content, contentType);
         }

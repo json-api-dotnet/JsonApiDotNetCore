@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
         {
             if (writeOperation is not WriteOperationKind.DeleteResource)
             {
-                string statement = "Update \"WorkItems\" SET \"Description\" = '" + resource.Description + Suffix + "' WHERE \"Id\" = '" + resource.Id + "'";
+                string statement = $"Update \"WorkItems\" SET \"Description\" = '{resource.Description}{Suffix}' WHERE \"Id\" = '{resource.Id}'";
                 await _dbContext.Database.ExecuteSqlRawAsync(statement, cancellationToken);
             }
         }

@@ -37,7 +37,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
                 return (HttpStatusCode)statusCodes[0];
             }
 
-            int statusCode = int.Parse(statusCodes.Max().ToString()[0] + "00");
+            int statusCode = int.Parse($"{statusCodes.Max().ToString()[0]}00");
             return (HttpStatusCode)statusCode;
         }
     }

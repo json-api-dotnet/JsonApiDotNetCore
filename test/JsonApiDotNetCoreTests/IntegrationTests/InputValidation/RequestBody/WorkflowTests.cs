@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 }
             };
 
-            string route = "/workflows/" + existingWorkflow.StringId;
+            string route = $"/workflows/{existingWorkflow.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 }
             };
 
-            string route = "/workflows/" + existingWorkflow.StringId;
+            string route = $"/workflows/{existingWorkflow.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

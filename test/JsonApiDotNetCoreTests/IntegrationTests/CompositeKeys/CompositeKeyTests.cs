@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/cars/" + car.StringId;
+            string route = $"/cars/{car.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            string route = "/engines/" + existingEngine.StringId;
+            string route = $"/engines/{existingEngine.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -290,7 +290,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            string route = "/engines/" + existingEngine.StringId;
+            string route = $"/engines/{existingEngine.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -557,7 +557,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/cars/" + existingCar.StringId;
+            string route = $"/cars/{existingCar.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

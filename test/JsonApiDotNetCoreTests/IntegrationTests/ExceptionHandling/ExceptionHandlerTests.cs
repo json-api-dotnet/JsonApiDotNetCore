@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             var consumerArticle = new ConsumerArticle
             {
-                Code = ConsumerArticleService.UnavailableArticlePrefix + "123"
+                Code = $"{ConsumerArticleService.UnavailableArticlePrefix}123"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/consumerArticles/" + consumerArticle.StringId;
+            string route = $"/consumerArticles/{consumerArticle.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/throwingArticles/" + throwingArticle.StringId;
+            string route = $"/throwingArticles/{throwingArticle.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

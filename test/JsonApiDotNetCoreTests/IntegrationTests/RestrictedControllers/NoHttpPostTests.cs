@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            string route = "/tables/" + existingTable.StringId;
+            string route = $"/tables/{existingTable.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/tables/" + existingTable.StringId;
+            string route = $"/tables/{existingTable.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);

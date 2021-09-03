@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             public override string ToString()
             {
-                return "Property: " + (NextLayer != null ? Property.Name + "..." : Property.Name);
+                return $"Property: {(NextLayer != null ? $"{Property.Name}..." : Property.Name)}";
             }
         }
     }

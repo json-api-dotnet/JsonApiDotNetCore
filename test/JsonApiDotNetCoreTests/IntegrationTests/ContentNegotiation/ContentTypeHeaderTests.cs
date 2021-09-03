@@ -179,7 +179,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; profile=something";
+            string contentType = $"{HeaderConstants.MediaType}; profile=something";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
@@ -213,7 +213,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; ext=something";
+            string contentType = $"{HeaderConstants.MediaType}; ext=something";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
@@ -281,7 +281,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; charset=ISO-8859-4";
+            string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
@@ -315,7 +315,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; unknown=unexpected";
+            string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =

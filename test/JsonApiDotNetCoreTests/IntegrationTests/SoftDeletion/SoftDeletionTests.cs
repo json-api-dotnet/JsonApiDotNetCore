@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/departments/" + department.StringId;
+            string route = $"/departments/{department.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -529,7 +529,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 }
             };
 
-            string route = "/companies/" + existingCompany.StringId;
+            string route = $"/companies/{existingCompany.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -583,7 +583,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 }
             };
 
-            string route = "/companies/" + existingCompany.StringId;
+            string route = $"/companies/{existingCompany.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -636,7 +636,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 }
             };
 
-            string route = "/departments/" + existingDepartment.StringId;
+            string route = $"/departments/{existingDepartment.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -992,7 +992,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/companies/" + existingCompany.StringId;
+            string route = $"/companies/{existingCompany.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -1024,7 +1024,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/departments/" + existingDepartment.StringId;
+            string route = $"/departments/{existingDepartment.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

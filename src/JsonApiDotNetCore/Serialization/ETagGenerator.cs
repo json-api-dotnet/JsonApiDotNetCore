@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization
         public EntityTagHeaderValue Generate(string requestUrl, string responseBody)
         {
             string fingerprint = _fingerprintGenerator.Generate(ArrayFactory.Create(requestUrl, responseBody));
-            string eTagValue = "\"" + fingerprint + "\"";
+            string eTagValue = $"\"{fingerprint}\"";
 
             return EntityTagHeaderValue.Parse(eTagValue);
         }

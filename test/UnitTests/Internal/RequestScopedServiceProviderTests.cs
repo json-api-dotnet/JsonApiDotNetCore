@@ -24,7 +24,7 @@ namespace UnitTests.Internal
             // Assert
             var exception = Assert.Throws<InvalidOperationException>(action);
 
-            Assert.StartsWith("Cannot resolve scoped service " + $"'{serviceType.FullName}' outside the context of an HTTP request.", exception.Message);
+            Assert.StartsWith($"Cannot resolve scoped service '{serviceType.FullName}' outside the context of an HTTP request.", exception.Message);
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Itself)]

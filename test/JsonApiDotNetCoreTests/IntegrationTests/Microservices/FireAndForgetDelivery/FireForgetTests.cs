@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             string missingUserId = Guid.NewGuid().ToString();
 
-            string route = "/domainUsers/" + missingUserId;
+            string route = $"/domainUsers/{missingUserId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

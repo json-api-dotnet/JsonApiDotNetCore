@@ -68,8 +68,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
                 else if (!_options.AllowUnknownQueryStringParameters)
                 {
                     throw new InvalidQueryStringParameterException(parameterName, "Unknown query string parameter.",
-                        $"Query string parameter '{parameterName}' is unknown. " +
-                        $"Set '{nameof(IJsonApiOptions.AllowUnknownQueryStringParameters)}' to 'true' in options to ignore unknown parameters.");
+                        $"Query string parameter '{parameterName}' is unknown. Set '{nameof(IJsonApiOptions.AllowUnknownQueryStringParameters)}' " +
+                        "to 'true' in options to ignore unknown parameters.");
                 }
             }
         }

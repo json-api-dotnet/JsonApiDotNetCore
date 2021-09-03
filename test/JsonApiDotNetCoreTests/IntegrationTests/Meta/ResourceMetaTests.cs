@@ -40,8 +40,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             List<SupportTicket> tickets = _fakers.SupportTicket.Generate(3);
-            tickets[0].Description = "Critical: " + tickets[0].Description;
-            tickets[2].Description = "Critical: " + tickets[2].Description;
+            tickets[0].Description = $"Critical: {tickets[0].Description}";
+            tickets[2].Description = $"Critical: {tickets[2].Description}";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 
             ProductFamily family = _fakers.ProductFamily.Generate();
             family.Tickets = _fakers.SupportTicket.Generate(1);
-            family.Tickets[0].Description = "Critical: " + family.Tickets[0].Description;
+            family.Tickets[0].Description = $"Critical: {family.Tickets[0].Description}";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

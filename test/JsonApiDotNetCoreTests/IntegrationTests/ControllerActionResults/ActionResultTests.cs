@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/toothbrushes/" + toothbrush.StringId;
+            string route = $"/toothbrushes/{toothbrush.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_empty_ActionResult_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.EmptyActionResultId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.EmptyActionResultId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ActionResult_with_error_object_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithErrorObjectId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithErrorObjectId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -87,7 +87,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Cannot_convert_ActionResult_with_string_parameter_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithStringParameter;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithStringParameter}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_object_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorObjectId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorObjectId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_objects_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorCollectionId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorCollectionId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

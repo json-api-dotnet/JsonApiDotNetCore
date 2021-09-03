@@ -62,13 +62,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             string newWorkItemId = responseDocument.SingleData.Id;
-            httpResponse.Headers.Location.Should().Be("/workItems/" + newWorkItemId);
+            httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
 
             responseDocument.Links.Self.Should().Be("http://localhost/workItems");
             responseDocument.Links.First.Should().BeNull();
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be("http://localhost" + httpResponse.Headers.Location);
+            responseDocument.SingleData.Links.Self.Should().Be($"http://localhost{httpResponse.Headers.Location}");
         }
 
         [Fact]

@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             }
 
             string stringValue = value.ToString();
-            return 'x' + ToHexString(stringValue);
+            return $"x{ToHexString(stringValue)}";
         }
 
         private static string ToHexString(string value)

@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Errors
 
         public IReadOnlyList<Error> Errors { get; }
 
-        public override string Message => "Errors = " + JsonConvert.SerializeObject(Errors, ErrorSerializerSettings);
+        public override string Message => $"Errors = {JsonConvert.SerializeObject(Errors, ErrorSerializerSettings)}";
 
         public JsonApiException(Error error, Exception innerException = null)
             : base(null, innerException)

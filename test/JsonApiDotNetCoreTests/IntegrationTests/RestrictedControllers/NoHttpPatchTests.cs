@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            string route = "/chairs/" + existingChair.StringId;
+            string route = $"/chairs/{existingChair.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/chairs/" + existingChair.StringId;
+            string route = $"/chairs/{existingChair.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);

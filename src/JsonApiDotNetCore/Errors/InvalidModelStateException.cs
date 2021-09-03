@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Errors
             else
             {
                 string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
-                string attributePath = violation.Prefix + attributeName;
+                string attributePath = $"{violation.Prefix}{attributeName}";
 
                 yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
             }

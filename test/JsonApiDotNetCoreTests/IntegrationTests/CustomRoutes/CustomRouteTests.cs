@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/world-api/civilization/popular/towns/" + town.StringId;
+            string route = $"/world-api/civilization/popular/towns/{town.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -52,10 +52,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             responseDocument.SingleData.Attributes["name"].Should().Be(town.Name);
             responseDocument.SingleData.Attributes["latitude"].Should().Be(town.Latitude);
             responseDocument.SingleData.Attributes["longitude"].Should().Be(town.Longitude);
-            responseDocument.SingleData.Relationships["civilians"].Links.Self.Should().Be(HostPrefix + route + "/relationships/civilians");
-            responseDocument.SingleData.Relationships["civilians"].Links.Related.Should().Be(HostPrefix + route + "/civilians");
-            responseDocument.SingleData.Links.Self.Should().Be(HostPrefix + route);
-            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.SingleData.Relationships["civilians"].Links.Self.Should().Be($"{HostPrefix}{route}/relationships/civilians");
+            responseDocument.SingleData.Relationships["civilians"].Links.Related.Should().Be($"{HostPrefix}{route}/civilians");
+            responseDocument.SingleData.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         }
 
         [Fact]

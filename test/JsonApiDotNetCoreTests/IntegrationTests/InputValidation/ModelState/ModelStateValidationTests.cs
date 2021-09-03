@@ -361,7 +361,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -401,7 +401,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -559,7 +559,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -670,7 +670,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -729,7 +729,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -783,7 +783,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -830,7 +830,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
+            string route = $"/systemDirectories/{directory.StringId}/relationships/parent";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -886,7 +886,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
+            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

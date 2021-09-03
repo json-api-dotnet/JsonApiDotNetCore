@@ -33,7 +33,7 @@ namespace TestBuildingBlocks
                 if (Subject.StatusCode != statusCode)
                 {
                     string responseText = GetFormattedContentAsync(Subject).Result;
-                    Subject.StatusCode.Should().Be(statusCode, "response body returned was:\n" + responseText);
+                    Subject.StatusCode.Should().Be(statusCode, $"response body returned was:\n{responseText}");
                 }
 
                 return new AndConstraint<HttpResponseMessageAssertions>(this);

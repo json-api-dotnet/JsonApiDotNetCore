@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/buildings/" + building.StringId;
+            string route = $"/buildings/{building.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/streets/" + street.StringId;
+            string route = $"/streets/{street.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 }
             };
 
-            string route = "/buildings/" + existingBuilding.StringId;
+            string route = $"/buildings/{existingBuilding.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -343,7 +343,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/buildings/" + existingBuilding.StringId;
+            string route = $"/buildings/{existingBuilding.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

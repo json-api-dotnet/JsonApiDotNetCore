@@ -56,7 +56,7 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/api/v1/workItems/" + workItem.StringId;
+            string route = $"/api/v1/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -122,7 +122,7 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/api/v1/workItems/" + workItem.StringId;
+            string route = $"/api/v1/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await ExecuteDeleteAsync<string>(route);

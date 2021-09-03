@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = MaximumPageNumber - 1;
-            string route = "/blogs?page[number]=" + pageNumber;
+            string route = $"/blogs?page[number]={pageNumber}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -47,7 +47,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = MaximumPageNumber;
-            string route = "/blogs?page[number]=" + pageNumber;
+            string route = $"/blogs?page[number]={pageNumber}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageNumber = MaximumPageNumber + 1;
-            string route = "/blogs?page[number]=" + pageNumber;
+            string route = $"/blogs?page[number]={pageNumber}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = MaximumPageSize - 1;
-            string route = "/blogs?page[size]=" + pageSize;
+            string route = $"/blogs?page[size]={pageSize}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = MaximumPageSize;
-            string route = "/blogs?page[size]=" + pageSize;
+            string route = $"/blogs?page[size]={pageSize}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -132,7 +132,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             const int pageSize = MaximumPageSize + 1;
-            string route = "/blogs?page[size]=" + pageSize;
+            string route = $"/blogs?page[size]={pageSize}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

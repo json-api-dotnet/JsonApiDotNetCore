@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/students/" + student.StringId;
+            string route = $"/students/{student.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
                 }
             };
 
-            string route = "/students/" + existingStudent.StringId;
+            string route = $"/students/{existingStudent.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);

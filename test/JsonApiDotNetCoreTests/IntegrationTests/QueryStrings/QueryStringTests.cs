@@ -76,7 +76,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = false;
 
-            string route = "calendars?" + parameterName + "=";
+            string route = $"calendars?{parameterName}=";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);

@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/moons/" + moon.StringId;
+            string route = $"/moons/{moon.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

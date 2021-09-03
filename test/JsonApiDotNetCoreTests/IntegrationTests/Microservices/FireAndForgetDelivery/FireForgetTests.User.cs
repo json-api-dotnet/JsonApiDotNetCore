@@ -171,7 +171,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -311,7 +311,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -385,7 +385,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -469,7 +469,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

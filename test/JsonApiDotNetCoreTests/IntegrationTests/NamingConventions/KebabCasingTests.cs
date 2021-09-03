@@ -121,13 +121,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             responseDocument.SingleData.Attributes["is-indoor"].Should().Be(newPool.IsIndoor);
 
             int newPoolId = int.Parse(responseDocument.SingleData.Id);
-            string poolLink = route + $"/{newPoolId}";
+            string poolLink = $"{route}/{newPoolId}";
 
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be(poolLink + "/relationships/water-slides");
-            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be(poolLink + "/water-slides");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be(poolLink + "/relationships/diving-boards");
-            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be(poolLink + "/diving-boards");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Self.Should().Be($"{poolLink}/relationships/water-slides");
+            responseDocument.SingleData.Relationships["water-slides"].Links.Related.Should().Be($"{poolLink}/water-slides");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Self.Should().Be($"{poolLink}/relationships/diving-boards");
+            responseDocument.SingleData.Relationships["diving-boards"].Links.Related.Should().Be($"{poolLink}/diving-boards");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -184,7 +184,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
                 }
             };
 
-            string route = "/public-api/diving-boards/" + existingBoard.StringId;
+            string route = $"/public-api/diving-boards/{existingBoard.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);

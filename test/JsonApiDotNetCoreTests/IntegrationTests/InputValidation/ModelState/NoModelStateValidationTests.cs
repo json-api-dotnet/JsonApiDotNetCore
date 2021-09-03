@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

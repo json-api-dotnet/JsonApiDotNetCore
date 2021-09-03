@@ -116,10 +116,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; q=0.3"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; q=0.3"));
             };
 
             // Act
@@ -158,10 +158,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + ";ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
             };
 
             // Act
@@ -180,9 +180,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType));
             };
 

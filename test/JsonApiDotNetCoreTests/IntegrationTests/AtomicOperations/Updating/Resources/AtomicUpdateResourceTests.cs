@@ -428,7 +428,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
-            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be(newIsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
+            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be($"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
             responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("isRightToLeft");
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
 
@@ -436,7 +436,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             {
                 TextLanguage languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(existingLanguage.Id);
 
-                languageInDatabase.IsoCode.Should().Be(newIsoCode + ImplicitlyChangingTextLanguageDefinition.Suffix);
+                languageInDatabase.IsoCode.Should().Be($"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
             });
         }
 

@@ -51,11 +51,11 @@ namespace TestBuildingBlocks
                 // In that case, we recursively delete all related data, which is slow.
                 try
                 {
-                    await dbContext.Database.ExecuteSqlRawAsync("delete from \"" + tableName + "\"");
+                    await dbContext.Database.ExecuteSqlRawAsync($"delete from \"{tableName}\"");
                 }
                 catch (PostgresException)
                 {
-                    await dbContext.Database.ExecuteSqlRawAsync("truncate table \"" + tableName + "\" cascade");
+                    await dbContext.Database.ExecuteSqlRawAsync($"truncate table \"{tableName}\" cascade");
                 }
             }
         }

@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/nld/shops/" + shop.StringId;
+            string route = $"/nld/shops/{shop.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
@@ -468,7 +468,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/nld/products/" + existingProduct.StringId;
+            string route = $"/nld/products/{existingProduct.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -516,7 +516,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/nld/products/" + existingProduct.StringId;
+            string route = $"/nld/products/{existingProduct.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -572,7 +572,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/nld/shops/" + existingShop.StringId;
+            string route = $"/nld/shops/{existingShop.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -625,7 +625,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 }
             };
 
-            string route = "/nld/products/" + existingProduct.StringId;
+            string route = $"/nld/products/{existingProduct.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -943,7 +943,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/nld/products/" + existingProduct.StringId;
+            string route = $"/nld/products/{existingProduct.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -975,7 +975,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/nld/products/" + existingProduct.StringId;
+            string route = $"/nld/products/{existingProduct.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
@@ -1025,15 +1025,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Links.Self.Should().Be(shopLink);
-            responseDocument.ManyData[0].Relationships["products"].Links.Self.Should().Be(shopLink + "/relationships/products");
-            responseDocument.ManyData[0].Relationships["products"].Links.Related.Should().Be(shopLink + "/products");
+            responseDocument.ManyData[0].Relationships["products"].Links.Self.Should().Be($"{shopLink}/relationships/products");
+            responseDocument.ManyData[0].Relationships["products"].Links.Related.Should().Be($"{shopLink}/products");
 
             string productLink = $"/nld/products/{shop.Products[0].StringId}";
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(productLink);
-            responseDocument.Included[0].Relationships["shop"].Links.Self.Should().Be(productLink + "/relationships/shop");
-            responseDocument.Included[0].Relationships["shop"].Links.Related.Should().Be(productLink + "/shop");
+            responseDocument.Included[0].Relationships["shop"].Links.Self.Should().Be($"{productLink}/relationships/shop");
+            responseDocument.Included[0].Relationships["shop"].Links.Related.Should().Be($"{productLink}/shop");
         }
     }
 }

@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.Should().HaveCount(2);
 
-            string languageLink = HostPrefix + "/textLanguages/" + existingLanguage.StringId;
+            string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
             ResourceObject singleData1 = responseDocument.Results[0].SingleData;
             singleData1.Should().NotBeNull();
@@ -96,10 +96,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             singleData1.Links.Self.Should().Be(languageLink);
             singleData1.Relationships.Should().NotBeEmpty();
             singleData1.Relationships["lyrics"].Links.Should().NotBeNull();
-            singleData1.Relationships["lyrics"].Links.Self.Should().Be(languageLink + "/relationships/lyrics");
-            singleData1.Relationships["lyrics"].Links.Related.Should().Be(languageLink + "/lyrics");
+            singleData1.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
+            singleData1.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
 
-            string companyLink = HostPrefix + "/recordCompanies/" + existingCompany.StringId;
+            string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
 
             ResourceObject singleData2 = responseDocument.Results[1].SingleData;
             singleData2.Should().NotBeNull();
@@ -107,8 +107,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             singleData2.Links.Self.Should().Be(companyLink);
             singleData2.Relationships.Should().NotBeEmpty();
             singleData2.Relationships["tracks"].Links.Should().NotBeNull();
-            singleData2.Relationships["tracks"].Links.Self.Should().Be(companyLink + "/relationships/tracks");
-            singleData2.Relationships["tracks"].Links.Related.Should().Be(companyLink + "/tracks");
+            singleData2.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
+            singleData2.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
         }
 
         [Fact]

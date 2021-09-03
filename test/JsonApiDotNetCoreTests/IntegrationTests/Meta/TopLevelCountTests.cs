@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
                 }
             };
 
-            string route = "/supportTickets/" + existingTicket.StringId;
+            string route = $"/supportTickets/{existingTicket.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);

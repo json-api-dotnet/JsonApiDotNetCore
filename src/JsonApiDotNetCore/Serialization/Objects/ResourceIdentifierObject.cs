@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
             var builder = new StringBuilder();
 
             WriteMembers(builder);
-            builder.Insert(0, GetType().Name + ": ");
+            builder.Insert(0, $"{GetType().Name}: ");
 
             return builder.ToString();
         }

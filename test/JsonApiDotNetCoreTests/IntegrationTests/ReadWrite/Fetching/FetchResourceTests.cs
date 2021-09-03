@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + workItem.StringId;
+            string route = $"/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);

@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/debitCards/" + card.StringId;
+            string route = $"/debitCards/{card.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -307,7 +307,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 }
             };
 
-            string route = "/bankAccounts/" + existingAccount.StringId;
+            string route = $"/bankAccounts/{existingAccount.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -430,7 +430,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/bankAccounts/" + existingAccount.StringId;
+            string route = $"/bankAccounts/{existingAccount.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -455,7 +455,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             var codec = new HexadecimalCodec();
             string stringId = codec.Encode(99999999);
 
-            string route = "/bankAccounts/" + stringId;
+            string route = $"/bankAccounts/{stringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

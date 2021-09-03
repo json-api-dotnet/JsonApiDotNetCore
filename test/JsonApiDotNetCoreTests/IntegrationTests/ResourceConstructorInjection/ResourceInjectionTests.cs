@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/giftCertificates/" + certificate.StringId;
+            string route = $"/giftCertificates/{certificate.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 }
             };
 
-            string route = "/postOffices/" + existingOffice.StringId;
+            string route = $"/postOffices/{existingOffice.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -274,7 +274,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/postOffices/" + existingOffice.StringId;
+            string route = $"/postOffices/{existingOffice.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

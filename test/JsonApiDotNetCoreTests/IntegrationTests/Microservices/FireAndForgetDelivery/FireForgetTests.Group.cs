@@ -180,7 +180,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -264,7 +264,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -313,7 +313,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -351,7 +351,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

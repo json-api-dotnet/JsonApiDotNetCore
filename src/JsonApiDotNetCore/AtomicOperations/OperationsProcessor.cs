@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (Error error in exception.Errors)
                 {
-                    error.Source.Pointer = $"/atomic:operations[{results.Count}]" + error.Source.Pointer;
+                    error.Source.Pointer = $"/atomic:operations[{results.Count}]{error.Source.Pointer}";
                 }
 
                 throw;

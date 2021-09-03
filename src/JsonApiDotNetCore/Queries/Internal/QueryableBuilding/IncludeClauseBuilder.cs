@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
             {
-                path = path == null ? relationship.Property.Name : path + "." + relationship.Property.Name;
+                path = path == null ? relationship.Property.Name : $"{path}.{relationship.Property.Name}";
 
                 ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
                 result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (EagerLoadAttribute eagerLoad in eagerLoads)
             {
-                string path = pathPrefix != null ? pathPrefix + "." + eagerLoad.Property.Name : eagerLoad.Property.Name;
+                string path = pathPrefix != null ? $"{pathPrefix}.{eagerLoad.Property.Name}" : eagerLoad.Property.Name;
                 result = IncludeExtensionMethodCall(result, path);
 
                 result = ApplyEagerLoads(result, eagerLoad.Children, path);

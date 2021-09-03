@@ -44,7 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -498,7 +498,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 }
             };
 
-            string route = "/televisionBroadcasts/" + existingBroadcast.StringId;
+            string route = $"/televisionBroadcasts/{existingBroadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -541,7 +541,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 }
             };
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -586,7 +586,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 }
             };
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
@@ -614,7 +614,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -645,7 +645,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/televisionBroadcasts/" + broadcast.StringId;
+            string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);

@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/meetings/" + meeting.StringId;
+            string route = $"/meetings/{meeting.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteHeadAsync<string>(route);
@@ -228,7 +228,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/meetings/" + meeting.StringId;
+            string route = $"/meetings/{meeting.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -273,7 +273,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Arrange
             var unknownId = Guid.NewGuid();
 
-            string route = "/meetings/" + unknownId;
+            string route = $"/meetings/{unknownId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -622,7 +622,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
                 }
             };
 
-            string route = "/meetingAttendees/" + existingAttendee.StringId;
+            string route = $"/meetingAttendees/{existingAttendee.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
                 }
             };
 
-            string route = "/meetings/" + existingMeeting.StringId;
+            string route = $"/meetings/{existingMeeting.StringId}";
 
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
@@ -198,7 +198,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
             Action<HttpRequestHeaders> setRequestHeaders2 = headers =>
             {
-                headers.IfNoneMatch.ParseAdd("\"12345\", W/\"67890\", " + responseETag);
+                headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
             };
 
             // Act

@@ -163,7 +163,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            string route = "/men/" + existingMan.StringId;
+            string route = $"/men/{existingMan.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

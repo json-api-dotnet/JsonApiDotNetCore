@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/rgbColors/" + existingColor.StringId;
+            string route = $"/rgbColors/{existingColor.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItemGroups/" + existingGroup.StringId;
+            string route = $"/workItemGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
