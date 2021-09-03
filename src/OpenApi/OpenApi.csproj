@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.2.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    </ItemGroup>
+
+</Project>
