@@ -14,19 +14,28 @@ namespace JsonApiDotNetCore.Configuration
     public sealed class ResourceGraph : IResourceGraph
     {
         private static readonly Type ProxyTargetAccessorType = Type.GetType("Castle.DynamicProxy.IProxyTargetAccessor, Castle.Core");
-        private readonly IReadOnlySet<ResourceContext> _resourceContexts;
+
+        private readonly IReadOnlySet<ResourceContext> _resourceContextSet;
+        private readonly Dictionary<Type, ResourceContext> _resourceContextsByType = new();
+        private readonly Dictionary<string, ResourceContext> _resourceContextsByPublicName = new();
 
         public ResourceGraph(IReadOnlySet<ResourceContext> resourceContexts)
         {
             ArgumentGuard.NotNull(resourceContexts, nameof(resourceContexts));
 
-            _resourceContexts = resourceContexts;
+            _resourceContextSet = resourceContexts;
+
+            foreach (ResourceContext resourceContext in resourceContexts)
+            {
+                _resourceContextsByType.Add(resourceContext.ResourceType, resourceContext);
+                _resourceContextsByPublicName.Add(resourceContext.PublicName, resourceContext);
+            }
         }
 
         /// <inheritdoc />
         public IReadOnlySet<ResourceContext> GetResourceContexts()
         {
-            return _resourceContexts;
+            return _resourceContextSet;
         }
 
         /// <inheritdoc />
@@ -47,7 +56,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
 
-            return _resourceContexts.SingleOrDefault(resourceContext => resourceContext.PublicName == publicName);
+            return _resourceContextsByPublicName.TryGetValue(publicName, out ResourceContext resourceContext) ? resourceContext : null;
         }
 
         /// <inheritdoc />
@@ -68,9 +77,8 @@ namespace JsonApiDotNetCore.Configuration
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            return IsLazyLoadingProxyForResourceType(resourceType)
-                ? _resourceContexts.SingleOrDefault(resourceContext => resourceContext.ResourceType == resourceType.BaseType)
-                : _resourceContexts.SingleOrDefault(resourceContext => resourceContext.ResourceType == resourceType);
+            Type typeToFind = IsLazyLoadingProxyForResourceType(resourceType) ? resourceType.BaseType : resourceType;
+            return _resourceContextsByType.TryGetValue(typeToFind!, out ResourceContext resourceContext) ? resourceContext : null;
         }
 
         private bool IsLazyLoadingProxyForResourceType(Type resourceType)
