@@ -4,7 +4,7 @@ image:
 
 version: '{build}'
 
-stack: postgresql
+stack: postgresql 13.4
 
 environment:
   PGUSER: postgres
@@ -34,7 +34,7 @@ for:
     only:
     - image: Visual Studio 2019
   services:
-  - postgresql101
+  - postgresql134
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
@@ -92,7 +92,18 @@ for:
       appveyor_repo_tag: true
 
 build_script:
-- pwsh: dotnet --version
-- pwsh: .\Build.ps1
+- pwsh: |
+    Write-Output ".NET version:"
+    dotnet --version
+
+    Write-Output "PostgreSQL version:"
+    if ($IsWindows) {
+        . "${env:ProgramFiles}\PostgreSQL\13\bin\psql" --version
+    }
+    else {
+        psql --version
+    }
+
+    .\Build.ps1
 
 test: off
