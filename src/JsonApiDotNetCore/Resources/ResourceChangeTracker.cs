@@ -12,21 +12,21 @@ namespace JsonApiDotNetCore.Resources
         where TResource : class, IIdentifiable
     {
         private readonly IJsonApiOptions _options;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ITargetedFields _targetedFields;
 
         private IDictionary<string, string> _initiallyStoredAttributeValues;
         private IDictionary<string, string> _requestAttributeValues;
         private IDictionary<string, string> _finallyStoredAttributeValues;
 
-        public ResourceChangeTracker(IJsonApiOptions options, IResourceContextProvider resourceContextProvider, ITargetedFields targetedFields)
+        public ResourceChangeTracker(IJsonApiOptions options, IResourceGraph resourceGraph, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(options, nameof(options));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
             _options = options;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _targetedFields = targetedFields;
         }
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
             _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext<TResource>();
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
             _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
         }
 

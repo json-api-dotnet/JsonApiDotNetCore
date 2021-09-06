@@ -30,11 +30,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         bool IQueryStringParameterReader.AllowEmptyValue => true;
 
-        public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
-            : base(request, resourceContextProvider)
+        public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+            : base(request, resourceGraph)
         {
-            _sparseFieldTypeParser = new SparseFieldTypeParser(resourceContextProvider);
-            _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleField);
+            _sparseFieldTypeParser = new SparseFieldTypeParser(resourceGraph);
+            _sparseFieldSetParser = new SparseFieldSetParser(resourceGraph, ValidateSingleField);
         }
 
         protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)

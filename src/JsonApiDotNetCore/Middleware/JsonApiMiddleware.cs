@@ -41,13 +41,13 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task InvokeAsync(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options,
-            IJsonApiRequest request, IResourceContextProvider resourceContextProvider, ILogger<JsonApiMiddleware> logger)
+            IJsonApiRequest request, IResourceGraph resourceGraph, ILogger<JsonApiMiddleware> logger)
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(logger, nameof(logger));
 
             using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Middleware
                 }
 
                 RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-                ResourceContext primaryResourceContext = TryCreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceContextProvider);
+                ResourceContext primaryResourceContext = TryCreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceGraph);
 
                 if (primaryResourceContext != null)
                 {
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCore.Middleware
                         return;
                     }
 
-                    SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceContextProvider, httpContext.Request);
+                    SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceGraph, httpContext.Request);
 
                     httpContext.RegisterJsonApiRequest();
                 }
@@ -118,7 +118,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static ResourceContext TryCreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,
-            IResourceContextProvider resourceContextProvider)
+            IResourceGraph resourceGraph)
         {
             Endpoint endpoint = httpContext.GetEndpoint();
             var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (resourceType != null)
                 {
-                    return resourceContextProvider.GetResourceContext(resourceType);
+                    return resourceGraph.GetResourceContext(resourceType);
                 }
             }
 
@@ -229,7 +229,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext, RouteValueDictionary routeValues,
-            IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
+            IResourceGraph resourceGraph, HttpRequest httpRequest)
         {
             request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
             request.PrimaryResource = primaryResourceContext;
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCore.Middleware
                 if (requestRelationship != null)
                 {
                     request.Relationship = requestRelationship;
-                    request.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+                    request.SecondaryResource = resourceGraph.GetResourceContext(requestRelationship.RightType);
                 }
             }
             else

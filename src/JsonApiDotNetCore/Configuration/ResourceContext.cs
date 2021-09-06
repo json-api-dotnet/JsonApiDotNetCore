@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Provides metadata for a resource, such as its attributes and relationships.
+    /// Metadata about the shape of a JSON:API resource in the resource graph.
     /// </summary>
     [PublicAPI]
     public sealed class ResourceContext

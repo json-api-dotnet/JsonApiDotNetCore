@@ -19,19 +19,18 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private readonly Expression _source;
         private readonly ResourceContext _resourceContext;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
-        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceContext resourceContext,
-            IResourceContextProvider resourceContextProvider)
+        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceContext resourceContext, IResourceGraph resourceGraph)
             : base(lambdaScope)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _source = source;
             _resourceContext = resourceContext;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public Expression ApplyInclude(IncludeExpression include)
@@ -62,7 +61,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             {
                 path = path == null ? relationship.Property.Name : $"{path}.{relationship.Property.Name}";
 
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
                 result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);
             }
 

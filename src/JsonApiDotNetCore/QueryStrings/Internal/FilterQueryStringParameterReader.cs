@@ -29,15 +29,15 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private string _lastParameterName;
 
-        public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory,
+        public FilterQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IResourceFactory resourceFactory,
             IJsonApiOptions options)
-            : base(request, resourceContextProvider)
+            : base(request, resourceGraph)
         {
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
-            _filterParser = new FilterParser(resourceContextProvider, resourceFactory, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
+            _filterParser = new FilterParser(resourceGraph, resourceFactory, ValidateSingleField);
         }
 
         protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)

@@ -25,17 +25,17 @@ namespace JsonApiDotNetCore.Serialization
         private protected static readonly CollectionConverter CollectionConverter = new();
         private Document _document;
 
-        protected IResourceContextProvider ResourceContextProvider { get; }
+        protected IResourceGraph ResourceGraph { get; }
         protected IResourceFactory ResourceFactory { get; }
 
         protected int? AtomicOperationIndex { get; set; }
 
-        protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
+        protected BaseDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
-            ResourceContextProvider = resourceContextProvider;
+            ResourceGraph = resourceGraph;
             ResourceFactory = resourceFactory;
         }
 
@@ -221,7 +221,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected ResourceContext GetExistingResourceContext(string publicName)
         {
-            ResourceContext resourceContext = ResourceContextProvider.TryGetResourceContext(publicName);
+            ResourceContext resourceContext = ResourceGraph.TryGetResourceContext(publicName);
 
             if (resourceContext == null)
             {

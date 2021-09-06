@@ -17,14 +17,14 @@ namespace JsonApiDotNetCore.Serialization.Building
         private static readonly CollectionConverter CollectionConverter = new();
         private readonly IJsonApiOptions _options;
 
-        protected IResourceContextProvider ResourceContextProvider { get; }
+        protected IResourceGraph ResourceGraph { get; }
 
-        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
+        public ResourceObjectBuilder(IResourceGraph resourceGraph, IJsonApiOptions options)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(options, nameof(options));
 
-            ResourceContextProvider = resourceContextProvider;
+            ResourceGraph = resourceGraph;
             _options = options;
         }
 
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
             var resourceObject = new ResourceObject
@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            string publicName = ResourceContextProvider.GetResourceContext(resource.GetType()).PublicName;
+            string publicName = ResourceGraph.GetResourceContext(resource.GetType()).PublicName;
 
             return new ResourceIdentifierObject
             {

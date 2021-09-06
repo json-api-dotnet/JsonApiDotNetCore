@@ -28,10 +28,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private readonly Type _extensionType;
         private readonly LambdaParameterNameFactory _nameFactory;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
         public SelectClauseBuilder(Expression source, LambdaScope lambdaScope, IModel entityModel, Type extensionType, LambdaParameterNameFactory nameFactory,
-            IResourceFactory resourceFactory, IResourceContextProvider resourceContextProvider)
+            IResourceFactory resourceFactory, IResourceGraph resourceGraph)
             : base(lambdaScope)
         {
             ArgumentGuard.NotNull(source, nameof(source));
@@ -39,14 +39,14 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             ArgumentGuard.NotNull(extensionType, nameof(extensionType));
             ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _source = source;
             _entityModel = entityModel;
             _extensionType = extensionType;
             _nameFactory = nameFactory;
             _resourceFactory = resourceFactory;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public Expression ApplySelect(IDictionary<ResourceFieldAttribute, QueryLayer> selectors, ResourceContext resourceContext)
@@ -180,7 +180,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             MemberExpression propertyExpression = Expression.Property(lambdaScope.Accessor, collectionProperty);
 
-            var builder = new QueryableBuilder(propertyExpression, elementType, typeof(Enumerable), _nameFactory, _resourceFactory, _resourceContextProvider,
+            var builder = new QueryableBuilder(propertyExpression, elementType, typeof(Enumerable), _nameFactory, _resourceFactory, _resourceGraph,
                 _entityModel, lambdaScopeFactory);
 
             Expression layerExpression = builder.ApplyQuery(layer);

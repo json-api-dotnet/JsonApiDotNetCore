@@ -32,18 +32,18 @@ namespace JsonApiDotNetCore.Middleware
     public sealed class JsonApiRoutingConvention : IJsonApiRoutingConvention
     {
         private readonly IJsonApiOptions _options;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly Dictionary<string, string> _registeredControllerNameByTemplate = new();
         private readonly Dictionary<Type, ResourceContext> _resourceContextPerControllerTypeMap = new();
         private readonly Dictionary<ResourceContext, ControllerModel> _controllerPerResourceContextMap = new();
 
-        public JsonApiRoutingConvention(IJsonApiOptions options, IResourceContextProvider resourceContextProvider)
+        public JsonApiRoutingConvention(IJsonApiOptions options, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(options, nameof(options));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _options = options;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
             if (_controllerPerResourceContextMap.TryGetValue(resourceContext, out ControllerModel controllerModel))
 
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Middleware
 
                     if (resourceType != null)
                     {
-                        ResourceContext resourceContext = _resourceContextProvider.TryGetResourceContext(resourceType);
+                        ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(resourceType);
 
                         if (resourceContext != null)
                         {

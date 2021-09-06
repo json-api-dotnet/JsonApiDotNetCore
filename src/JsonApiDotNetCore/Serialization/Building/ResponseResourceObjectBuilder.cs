@@ -26,9 +26,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         private RelationshipAttribute _requestRelationship;
 
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
-            IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IEvaluatedIncludeCache evaluatedIncludeCache)
-            : base(resourceContextProvider, options)
+            IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph, IResourceDefinitionAccessor resourceDefinitionAccessor,
+            IJsonApiOptions options, IEvaluatedIncludeCache evaluatedIncludeCache)
+            : base(resourceGraph, options)
         {
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)
         {
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(relationship.LeftType);
 
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
             return fieldSet.Contains(relationship);

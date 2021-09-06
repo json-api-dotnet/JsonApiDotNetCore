@@ -24,10 +24,10 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
-        public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceContextProvider resourceContextProvider,
+        public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
             IRequestQueryStringAccessor queryStringAccessor, IJsonApiOptions options)
-            : base(resourceContextProvider, options)
+            : base(resourceGraph, options)
         {
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             foreach (string relationshipName in resourceObject.Relationships.Keys)
             {
-                ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
+                ResourceContext resourceContext = ResourceGraph.GetResourceContext(resourceObject.Type);
                 RelationshipAttribute relationship = resourceContext.GetRelationshipByPublicName(relationshipName);
 
                 if (!IsRelationshipInSparseFieldSet(relationship))
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)
         {
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(relationship.LeftType);
 
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
             return fieldSet.Contains(relationship);
@@ -202,7 +202,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         private ResourceObject TryGetBuiltResourceObjectFor(IIdentifiable resource)
         {
             Type resourceType = resource.GetType();
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(resourceType);
 
             return _included.SingleOrDefault(resourceObject => resourceObject.Type == resourceContext.PublicName && resourceObject.Id == resource.StringId);
         }

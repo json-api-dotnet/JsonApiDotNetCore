@@ -29,9 +29,9 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiOptions _options;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
 
-        public RequestDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory, ITargetedFields targetedFields,
+        public RequestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory, ITargetedFields targetedFields,
             IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(resourceContextProvider, resourceFactory)
+            : base(resourceGraph, resourceFactory)
         {
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
@@ -362,7 +362,7 @@ namespace JsonApiDotNetCore.Serialization
                     $"Relationship '{operation.Ref.Relationship}' must be a to-many relationship.", atomicOperationIndex: AtomicOperationIndex);
             }
 
-            ResourceContext secondaryResourceContext = ResourceContextProvider.GetResourceContext(relationship.RightType);
+            ResourceContext secondaryResourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
 
             var request = new JsonApiRequest
             {

@@ -23,9 +23,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         private readonly AttrAttribute _regionIdAttribute;
         private readonly AttrAttribute _licensePlateAttribute;
 
-        public CarExpressionRewriter(IResourceContextProvider resourceContextProvider)
+        public CarExpressionRewriter(IResourceGraph resourceGraph)
         {
-            ResourceContext carResourceContext = resourceContextProvider.GetResourceContext<Car>();
+            ResourceContext carResourceContext = resourceGraph.GetResourceContext<Car>();
 
             _regionIdAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.RegionId));
             _licensePlateAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.LicensePlate));

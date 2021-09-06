@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Queries.Internal
     {
         private readonly CollectionConverter _collectionConverter = new();
         private readonly IEnumerable<IQueryConstraintProvider> _constraintProviders;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IJsonApiOptions _options;
         private readonly IPaginationContext _paginationContext;
@@ -25,12 +25,12 @@ namespace JsonApiDotNetCore.Queries.Internal
         private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
-        public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceContextProvider resourceContextProvider,
+        public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext,
             ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache)
         {
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
 
             _constraintProviders = constraintProviders;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _options = options;
             _paginationContext = paginationContext;
@@ -169,7 +169,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                     // @formatter:keep_existing_linebreaks restore
                     // @formatter:wrap_chained_method_calls restore
 
-                    ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(includeElement.Relationship.RightType);
+                    ResourceContext resourceContext = _resourceGraph.GetResourceContext(includeElement.Relationship.RightType);
                     bool isToManyRelationship = includeElement.Relationship is HasManyAttribute;
 
                     var child = new QueryLayer(resourceContext)
@@ -367,7 +367,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
-            ResourceContext rightResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+            ResourceContext rightResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             AttrAttribute rightIdAttribute = GetIdAttribute(rightResourceContext);
 
             object[] typedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
@@ -392,10 +392,10 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
             ArgumentGuard.NotNull(rightResourceIds, nameof(rightResourceIds));
 
-            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.LeftType);
+            ResourceContext leftResourceContext = _resourceGraph.GetResourceContext(hasManyRelationship.LeftType);
             AttrAttribute leftIdAttribute = GetIdAttribute(leftResourceContext);
 
-            ResourceContext rightResourceContext = _resourceContextProvider.GetResourceContext(hasManyRelationship.RightType);
+            ResourceContext rightResourceContext = _resourceGraph.GetResourceContext(hasManyRelationship.RightType);
             AttrAttribute rightIdAttribute = GetIdAttribute(rightResourceContext);
             object[] rightTypedIds = rightResourceIds.Select(resource => resource.GetTypedId()).ToArray();
 

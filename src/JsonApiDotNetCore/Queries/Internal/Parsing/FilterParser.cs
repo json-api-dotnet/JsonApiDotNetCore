@@ -13,19 +13,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class FilterParser : QueryExpressionParser
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;
 
-        public FilterParser(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory,
+        public FilterParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory,
             Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
-            : base(resourceContextProvider)
+            : base(resourceGraph)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _resourceFactory = resourceFactory;
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
@@ -268,7 +268,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             ResourceContext outerScopeBackup = _resourceContextInScope;
 
             Type innerResourceType = hasManyRelationship.RightType;
-            _resourceContextInScope = _resourceContextProvider.GetResourceContext(innerResourceType);
+            _resourceContextInScope = _resourceGraph.GetResourceContext(innerResourceType);
 
             FilterExpression filter = ParseFilter();
 

@@ -21,9 +21,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         protected Stack<Token> TokenStack { get; private set; }
         private protected ResourceFieldChainResolver ChainResolver { get; }
 
-        protected QueryExpressionParser(IResourceContextProvider resourceContextProvider)
+        protected QueryExpressionParser(IResourceGraph resourceGraph)
         {
-            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
+            ChainResolver = new ResourceFieldChainResolver(resourceGraph);
         }
 
         /// <summary>

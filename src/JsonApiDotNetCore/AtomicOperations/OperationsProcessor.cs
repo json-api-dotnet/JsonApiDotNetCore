@@ -19,28 +19,28 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IOperationProcessorAccessor _operationProcessorAccessor;
         private readonly IOperationsTransactionFactory _operationsTransactionFactory;
         private readonly ILocalIdTracker _localIdTracker;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly LocalIdValidator _localIdValidator;
 
         public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor, IOperationsTransactionFactory operationsTransactionFactory,
-            ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider, IJsonApiRequest request, ITargetedFields targetedFields)
+            ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(operationProcessorAccessor, nameof(operationProcessorAccessor));
             ArgumentGuard.NotNull(operationsTransactionFactory, nameof(operationsTransactionFactory));
             ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
             _operationProcessorAccessor = operationProcessorAccessor;
             _operationsTransactionFactory = operationsTransactionFactory;
             _localIdTracker = localIdTracker;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _request = request;
             _targetedFields = targetedFields;
-            _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceContextProvider);
+            _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceGraph);
         }
 
         /// <inheritdoc />
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
                 _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
             }
         }
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
                 resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
             }
         }

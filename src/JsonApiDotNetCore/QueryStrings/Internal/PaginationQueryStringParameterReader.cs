@@ -25,13 +25,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private PaginationQueryStringValueExpression _pageSizeConstraint;
         private PaginationQueryStringValueExpression _pageNumberConstraint;
 
-        public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
-            : base(request, resourceContextProvider)
+        public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
+            : base(request, resourceGraph)
         {
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _paginationParser = new PaginationParser(resourceContextProvider);
+            _paginationParser = new PaginationParser(resourceGraph);
         }
 
         /// <inheritdoc />

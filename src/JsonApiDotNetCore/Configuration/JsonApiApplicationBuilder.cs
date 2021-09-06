@@ -184,7 +184,6 @@ namespace JsonApiDotNetCore.Configuration
 
             _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
             _services.AddScoped<IResourceFactory, ResourceFactory>();
-            _services.AddSingleton<IResourceContextProvider>(sp => sp.GetRequiredService<IResourceGraph>());
         }
 
         private void AddRepositoryLayer()
