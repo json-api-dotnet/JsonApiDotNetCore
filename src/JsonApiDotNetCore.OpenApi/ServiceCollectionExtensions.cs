@@ -1,9 +1,8 @@
 using System;
-using JsonApiDotNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace OpenApi
+namespace JsonApiDotNetCore.OpenApi
 {
     public static class ServiceCollectionExtensions
     {

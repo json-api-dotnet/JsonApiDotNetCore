@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Airplane : Identifiable<int>
+    public sealed class Airplane : Identifiable
     {
         [Attr]
         public int SeatingCapacity { get; set; }

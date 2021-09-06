@@ -11,7 +11,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
-        <ProjectReference Include="..\..\src\OpenApi\OpenApi.csproj" />
+        <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
         <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
     </ItemGroup>
 

@@ -1,11 +1,11 @@
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using OpenApi;
 using TestBuildingBlocks;
 
 namespace OpenApiTests

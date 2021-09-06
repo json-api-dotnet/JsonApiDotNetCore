@@ -1,9 +1,8 @@
 using System.Linq;
-using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace OpenApi
+namespace JsonApiDotNetCore.OpenApi
 {
     internal sealed class OpenApiEndpointConvention : IActionModelConvention
     {

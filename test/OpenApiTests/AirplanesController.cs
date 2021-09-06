@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OpenApiTests
 {
-    public sealed class AirplanesController : JsonApiController<Airplane, int>
+    public sealed class AirplanesController : JsonApiController<Airplane>
     {
         public AirplanesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Airplane, int> resourceService)
             : base(options, loggerFactory, resourceService)

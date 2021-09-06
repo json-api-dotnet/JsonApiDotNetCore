@@ -44,7 +44,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiDbContextTests", "test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestBuildingBlocks", "test\TestBuildingBlocks\TestBuildingBlocks.csproj", "{210FD61E-FF5D-4CEE-8E0D-C739ECCCBA21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApi", "src\OpenApi\OpenApi.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonApiDotNetCore.OpenApi", "src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj", "{71287D6F-6C3B-44B4-9FCA-E78FE3F02289}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenApiTests", "test\OpenApiTests\OpenApiTests.csproj", "{B693DE14-BB28-496F-AB39-B4E674ABCA80}"
 EndProject
