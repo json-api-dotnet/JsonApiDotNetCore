@@ -937,7 +937,7 @@
             "type": "string",
             "nullable": true
           },
-          "plannedDeparture": {
+          "departsAt": {
             "type": "string",
             "format": "date-time"
           }

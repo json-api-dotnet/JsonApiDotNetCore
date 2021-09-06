@@ -93,6 +93,14 @@ function CreateNuGetPackage {
     CheckLastExitCode
 }
 
+function LoadBaseBranchIfNotMaster(){
+    if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
+        git fetch origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
+    }
+}
+
+LoadBaseBranchIfNotMaster
+
 dotnet tool restore
 CheckLastExitCode
 
