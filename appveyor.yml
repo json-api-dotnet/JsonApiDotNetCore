@@ -15,6 +15,7 @@ environment:
 branches:
   only:
   - master
+  - openapi
   - develop
   - unstable
   - /release\/.+/
@@ -36,6 +37,12 @@ for:
   services:
   - postgresql101
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
+  clone_script:
+    # This ensures the base branch is loaded which is required for regitlint to run.
+    - ps: |
+        git clone --branch=$env:APPVEYOR_REPO_BRANCH git@github.com:$env:APPVEYOR_REPO_NAME.git $env:APPVEYOR_BUILD_FOLDER
+        git fetch -q origin +refs/pull/$env:APPVEYOR_PULL_REQUEST_NUMBER/merge:
+        git checkout -qf FETCH_HEAD
   before_build:
     - pwsh: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {

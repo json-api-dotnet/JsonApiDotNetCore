@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Update="xunit.runner.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Examples\JsonApiDotNetCoreExample\JsonApiDotNetCoreExample.csproj" />
+        <ProjectReference Include="..\..\src\OpenApi\OpenApi.csproj" />
+        <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="openapi.json" />
+    </ItemGroup>
+</Project>
