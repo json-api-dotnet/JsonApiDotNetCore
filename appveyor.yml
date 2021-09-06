@@ -20,6 +20,13 @@ branches:
   - unstable
   - /release\/.+/
 
+# This ensures the base branch is loaded which is required for regitlint to run.
+clone_script:
+  - ps: |
+      git clone -q --branch=$env:APPVEYOR_REPO_BRANCH https://github.com/$env:APPVEYOR_REPO_NAME.git $env:APPVEYOR_BUILD_FOLDER
+      git fetch -q origin +refs/pull/$env:APPVEYOR_PULL_REQUEST_NUMBER/merge:
+      git checkout -qf FETCH_HEAD
+
 pull_requests:
   do_not_increment_build_number: true
 
@@ -36,12 +43,6 @@ for:
     - image: Visual Studio 2019
   services:
   - postgresql101
-  # This ensures the base branch is loaded which is required for regitlint to run.
-  clone_script:
-    - ps: |
-        git clone --branch=$env:APPVEYOR_REPO_BRANCH git@github.com:$env:APPVEYOR_REPO_NAME.git $env:APPVEYOR_BUILD_FOLDER
-        git fetch -q origin +refs/pull/$env:APPVEYOR_PULL_REQUEST_NUMBER/merge:
-        git checkout -qf FETCH_HEAD
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
