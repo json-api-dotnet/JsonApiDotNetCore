@@ -93,6 +93,19 @@ function CreateNuGetPackage {
     CheckLastExitCode
 }
 
+function LoadOpenApiBranchIfRequired {
+    if ($env:APPVEYOR_REPO_BRANCH -eq "openapi") {
+        git fetch origin openapi:openapi
+    }
+
+    $test = git rev-parse "$env:APPVEYOR_REPO_BRANCH"
+    CheckLastExitCode
+    Write-Output "YAY :)"
+}
+
+LoadOpenApiBranchIfRequired
+
+
 dotnet tool restore
 CheckLastExitCode
 
