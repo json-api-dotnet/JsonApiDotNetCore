@@ -1,17 +1,17 @@
 # Installation
 
-Click [here](https://www.nuget.org/packages/JsonApiDotnetCore/) for the latest NuGet version.
+Click [here](https://www.nuget.org/packages/JsonApiDotNetCore/) for the latest NuGet version.
 
 ### CLI
 
 ```
-dotnet add package JsonApiDotnetCore
+dotnet add package JsonApiDotNetCore
 ```
 
 ### Visual Studio
 
 ```powershell
-Install-Package JsonApiDotnetCore
+Install-Package JsonApiDotNetCore
 ```
 
 ### *.csproj
