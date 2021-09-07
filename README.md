@@ -1,5 +1,5 @@
 <p align="center">
-<img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotnetCore/master/logo.png" />
+<img src ="https://raw.githubusercontent.com/json-api-dotnet/JsonApiDotNetCore/master/logo.png" />
 </p>
 
 # JsonApiDotNetCore
