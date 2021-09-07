@@ -1,5 +1,5 @@
+using System.Text.Json;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
 {
@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
             string namespacePrefix = typeof(IMessageContent).Namespace;
             var contentType = System.Type.GetType($"{namespacePrefix}.{Type}", true);
 
-            return (T)JsonConvert.DeserializeObject(Content, contentType);
+            return (T)JsonSerializer.Deserialize(Content, contentType);
         }
 
         public static OutgoingMessage CreateFromContent(IMessageContent content)
@@ -26,7 +26,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
             {
                 Type = content.GetType().Name,
                 FormatVersion = content.FormatVersion,
-                Content = JsonConvert.SerializeObject(content)
+                Content = JsonSerializer.Serialize(content, content.GetType())
             };
         }
     }
