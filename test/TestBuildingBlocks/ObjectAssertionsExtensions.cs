@@ -1,10 +1,10 @@
 using System;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Numeric;
 using FluentAssertions.Primitives;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace TestBuildingBlocks
 {
@@ -13,9 +13,10 @@ namespace TestBuildingBlocks
     {
         private const decimal NumericPrecision = 0.00000000001M;
 
-        private static readonly JsonSerializerSettings DeserializationSettings = new()
+        private static readonly JsonSerializerOptions SerializerOptions = new()
         {
-            Formatting = Formatting.Indented
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
         /// <summary>
@@ -69,11 +70,11 @@ namespace TestBuildingBlocks
         [CustomAssertion]
         public static void BeJson(this StringAssertions source, string expected, string because = "", params object[] becauseArgs)
         {
-            var sourceToken = JsonConvert.DeserializeObject<JToken>(source.Subject, DeserializationSettings);
-            var expectedToken = JsonConvert.DeserializeObject<JToken>(expected, DeserializationSettings);
+            var sourceToken = JsonSerializer.Deserialize<JsonElement>(source.Subject, SerializerOptions);
+            var expectedToken = JsonSerializer.Deserialize<JsonElement>(expected, SerializerOptions);
 
-            string sourceText = sourceToken?.ToString();
-            string expectedText = expectedToken?.ToString();
+            string sourceText = sourceToken.ToString();
+            string expectedText = expectedToken.ToString();
 
             sourceText.Should().Be(expectedText, because, becauseArgs);
         }

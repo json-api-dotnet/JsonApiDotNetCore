@@ -18,6 +18,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     public sealed class SerializationTests : IClassFixture<IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext>>
     {
+        private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
         private readonly IntegrationTestContext<TestableStartup<SerializationDbContext>, SerializationDbContext> _testContext;
         private readonly SerializationFakers _fakers = new();
 
@@ -110,7 +112,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
       ""id"": """ + meetings[0].StringId + @""",
       ""attributes"": {
         ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString("O") + @""",
+        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
         ""duration"": """ + meetings[0].Duration + @""",
         ""location"": {
           ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
@@ -191,7 +193,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
       ""id"": """ + meetings[0].StringId + @""",
       ""attributes"": {
         ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString("O") + @""",
+        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
         ""duration"": """ + meetings[0].Duration + @""",
         ""location"": {
           ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
@@ -245,7 +247,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""id"": """ + meeting.StringId + @""",
     ""attributes"": {
       ""title"": """ + meeting.Title + @""",
-      ""startTime"": """ + meeting.StartTime.ToString("O") + @""",
+      ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
       ""duration"": """ + meeting.Duration + @""",
       ""location"": {
         ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
@@ -328,7 +330,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""id"": """ + attendee.Meeting.StringId + @""",
     ""attributes"": {
       ""title"": """ + attendee.Meeting.Title + @""",
-      ""startTime"": """ + attendee.Meeting.StartTime.ToString("O") + @""",
+      ""startTime"": """ + attendee.Meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
       ""duration"": """ + attendee.Meeting.Duration + @""",
       ""location"": {
         ""lat"": " + attendee.Meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
@@ -575,7 +577,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""id"": """ + newMeeting.StringId + @""",
     ""attributes"": {
       ""title"": """ + newMeeting.Title + @""",
-      ""startTime"": """ + newMeeting.StartTime.ToString("O") + @""",
+      ""startTime"": """ + newMeeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
       ""duration"": """ + newMeeting.Duration + @""",
       ""location"": {
         ""lat"": " + newMeeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
