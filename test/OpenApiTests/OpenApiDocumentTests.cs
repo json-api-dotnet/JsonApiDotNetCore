@@ -23,7 +23,7 @@ namespace OpenApiTests
             // Arrange
             string embeddedResourceName = $"{nameof(OpenApiTests)}.swagger.json";
             string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
-            string requestUrl = "swagger/v1/swagger.json";
+            const string requestUrl = "swagger/v1/swagger.json";
 
             // Act
             string actualDocument = await GetAsync(requestUrl);
