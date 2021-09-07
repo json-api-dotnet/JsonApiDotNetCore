@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-      <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreAppVersion)</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+  </ItemGroup>
 </Project>
