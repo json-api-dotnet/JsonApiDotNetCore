@@ -30,3 +30,5 @@
 ## [Resource Repositories](extensibility/repositories.md)
 ## [Middleware](extensibility/middleware.md)
 ## [Query Strings](extensibility/query-strings.md)
+
+# [OpenAPI](openapi.md)
