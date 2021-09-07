@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Errors
 {
@@ -13,15 +15,16 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public class JsonApiException : Exception
     {
-        private static readonly JsonSerializerSettings ErrorSerializerSettings = new()
+        private static readonly JsonSerializerOptions SerializerOptions = new()
         {
-            NullValueHandling = NullValueHandling.Ignore,
-            Formatting = Formatting.Indented
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public IReadOnlyList<Error> Errors { get; }
 
-        public override string Message => $"Errors = {JsonConvert.SerializeObject(Errors, ErrorSerializerSettings)}";
+        public override string Message => $"Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
 
         public JsonApiException(Error error, Exception innerException = null)
             : base(null, innerException)
