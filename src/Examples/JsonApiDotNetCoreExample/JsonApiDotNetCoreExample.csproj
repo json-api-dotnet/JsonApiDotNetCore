@@ -11,5 +11,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
 </Project>
