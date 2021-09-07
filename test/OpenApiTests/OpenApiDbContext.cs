@@ -16,11 +16,5 @@ namespace OpenApiTests
             : base(options)
         {
         }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<Airplane>()
-                .HasMany(airplane => airplane.Flights);
-        }
     }
 }
