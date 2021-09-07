@@ -47,8 +47,6 @@ namespace JsonApiDotNetCoreExample
 
                 IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
 
-                services.AddOpenApi(mvcBuilder);
-
                 using (CodeTimingSessionManager.Current.Measure("Configure JSON:API (startup)"))
                 {
                     services.AddJsonApi<AppDbContext>(options =>
@@ -64,6 +62,8 @@ namespace JsonApiDotNetCoreExample
 #endif
                     }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
                 }
+
+                services.AddOpenApi(mvcBuilder);
             }
         }
 
@@ -82,13 +82,13 @@ namespace JsonApiDotNetCoreExample
 
                 app.UseRouting();
 
-                app.UseSwagger();
-                app.UseSwaggerUI();
-
                 using (CodeTimingSessionManager.Current.Measure("Initialize JSON:API (startup)"))
                 {
                     app.UseJsonApi();
                 }
+
+                app.UseSwagger();
+                app.UseSwaggerUI();
 
                 app.UseEndpoints(endpoints => endpoints.MapControllers());
             }

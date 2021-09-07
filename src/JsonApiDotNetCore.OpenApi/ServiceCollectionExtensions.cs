@@ -6,14 +6,14 @@ namespace JsonApiDotNetCore.OpenApi
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder builder, Action<SwaggerGenOptions> setupSwaggerGenAction = null)
+        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder mvcBuilder, Action<SwaggerGenOptions> setupSwaggerGenAction = null)
         {
             ArgumentGuard.NotNull(services, nameof(services));
-            ArgumentGuard.NotNull(builder, nameof(builder));
+            ArgumentGuard.NotNull(mvcBuilder, nameof(mvcBuilder));
 
-            builder.AddApiExplorer();
+            mvcBuilder.AddApiExplorer();
 
-            builder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention()));
+            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention()));
 
             services.AddSwaggerGen(setupSwaggerGenAction);
         }

@@ -4,18 +4,18 @@ You can describe your API with an OpenAPI specification using the [Swashbuckle](
 
 ## Installation
 
-Install the `JsonApiDotnetCore.OpenApi` NuGet package.
+Install the `JsonApiDotNetCore.OpenApi` NuGet package.
 
 ### CLI
 
 ```
-dotnet add package JsonApiDotnetCore.OpenApi
+dotnet add package JsonApiDotNetCore.OpenApi
 ```
 
 ### Visual Studio
 
 ```powershell
-Install-Package JsonApiDotnetCore.OpenApi
+Install-Package JsonApiDotNetCore.OpenApi
 ```
 
 ### *.csproj
@@ -23,7 +23,7 @@ Install-Package JsonApiDotnetCore.OpenApi
 ```xml
 <ItemGroup>
   <!-- Be sure to check NuGet for the latest version # -->
-  <PackageReference Include="JsonApiDotnetCore.OpenApi" Version="4.0.0" />
+  <PackageReference Include="JsonApiDotNetCore.OpenApi" Version="4.0.0" />
 </ItemGroup>
 ```
 
@@ -58,7 +58,7 @@ public class Startup
 
 By default, the OpenAPI specification will be available at `http://localhost:<port>/swagger/v1/swagger.json`.
 
-Swashbuckle also ships with [SwaggerUI](https://swagger.io/tools/swagger-ui/), tooling for a generated documentation page. This can be enabled by adding the following to your `Startup` class. 
+Swashbuckle also ships with [SwaggerUI](https://swagger.io/tools/swagger-ui/), tooling for a generated documentation page. This can be enabled by installing the `Swashbuckle.AspNetCore.SwaggerUI` NuGet package and adding the following to your `Startup` class.
 
 ```c#
 // Startup.cs
