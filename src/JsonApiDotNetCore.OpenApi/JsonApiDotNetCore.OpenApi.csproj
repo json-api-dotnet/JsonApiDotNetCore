@@ -4,12 +4,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
+    <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
 </Project>
