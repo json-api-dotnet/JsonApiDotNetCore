@@ -4,8 +4,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
     <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -45,9 +45,9 @@ namespace JsonApiDotNetCoreExample
 #endif
                 });
 
-                IMvcCoreBuilder mvcCoreBuilder = services.AddMvcCore();
+                IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
 
-                services.AddOpenApi(mvcCoreBuilder);
+                services.AddOpenApi(mvcBuilder);
 
                 using (CodeTimingSessionManager.Current.Measure("Configure JSON:API (startup)"))
                 {
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreExample
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
 #endif
-                    }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcCoreBuilder);
+                    }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
                 }
             }
         }

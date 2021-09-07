@@ -36,11 +36,11 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
-        IMvcCoreBuilder builder = services.AddMvcCore();
-        services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
+        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+        services.AddJsonApi<AppDbContext>(mvcBuilder: mvcBuilder);
 
 	    // Adds the Swashbuckle integration.
-	    services.AddOpenApi(builder);
+	    services.AddOpenApi(mvcBuilder);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
