@@ -4,7 +4,7 @@
     <AspNetCoreVersion>5.0.*</AspNetCoreVersion>
     <EFCoreVersion>5.0.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
-    <SwashbuckleVersion>6.1.*</SwashbuckleVersion>
+    <SwashbuckleVersion>6.2.*</SwashbuckleVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
