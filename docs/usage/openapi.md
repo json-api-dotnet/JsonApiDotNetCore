@@ -39,7 +39,7 @@ public class Startup
         IMvcCoreBuilder builder = services.AddMvcCore();
         services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
 
-	    // Adds the Swashbuckle integration
+	    // Adds the Swashbuckle integration.
 	    services.AddOpenApi(builder);
     }
 
@@ -48,7 +48,7 @@ public class Startup
         app.UseRouting();
         app.UseJsonApi();
         
-        // Adds the Swashbuckle middleware
+        // Adds the Swashbuckle middleware.
         app.UseSwagger();
 
         app.UseEndpoints(endpoints => endpoints.MapControllers());
