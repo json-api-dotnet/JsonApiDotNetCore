@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace JsonApiDotNetCoreExample.Startups
+namespace JsonApiDotNetCoreExample
 {
     public sealed class Startup
     {

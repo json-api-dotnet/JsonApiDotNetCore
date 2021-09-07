@@ -93,13 +93,14 @@ function CreateNuGetPackage {
     CheckLastExitCode
 }
 
-function LoadBaseBranchIfNotMaster(){
-    if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
-        git fetch origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
+# In a PR the base branch needs to be fetched in order for regitlint to work.
+function FetchBaseBranchIfNotMaster(){
+    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -And $env:APPVEYOR_REPO_BRANCH -ne "master"){
+        git fetch -q origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
     }
 }
 
-LoadBaseBranchIfNotMaster
+FetchBaseBranchIfNotMaster
 
 dotnet tool restore
 CheckLastExitCode

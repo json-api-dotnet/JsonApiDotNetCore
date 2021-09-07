@@ -6,7 +6,7 @@ namespace JsonApiDotNetCore.OpenApi
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder builder, Action<SwaggerGenOptions> setupSwaggerGenAction)
+        public static void AddOpenApi(this IServiceCollection services, IMvcCoreBuilder builder, Action<SwaggerGenOptions> setupSwaggerGenAction = null)
         {
             ArgumentGuard.NotNull(services, nameof(services));
             ArgumentGuard.NotNull(builder, nameof(builder));

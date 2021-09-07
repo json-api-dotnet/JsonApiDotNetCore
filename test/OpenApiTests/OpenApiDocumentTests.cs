@@ -18,12 +18,12 @@ namespace OpenApiTests
         }
 
         [Fact]
-        public async Task Retrieved_document_should_match_expected_document()
+        public async Task Retrieved_document_matches_expected_document()
         {
             // Arrange
             string embeddedResourceName = $"{nameof(OpenApiTests)}.openapi.json";
             string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
-            string requestUrl = $"swagger/{nameof(OpenApiTests)}/swagger.json";
+            string requestUrl = $"swagger/{OpenApiStartup<OpenApiDbContext>.OpenApiDocumentName}/swagger.json";
 
             // Act
             string actualDocument = await GetAsync(requestUrl);

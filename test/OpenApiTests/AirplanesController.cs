@@ -7,7 +7,7 @@ namespace OpenApiTests
 {
     public sealed class AirplanesController : JsonApiController<Airplane>
     {
-        public AirplanesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Airplane, int> resourceService)
+        public AirplanesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Airplane> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }
