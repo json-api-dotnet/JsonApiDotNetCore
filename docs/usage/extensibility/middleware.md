@@ -27,7 +27,7 @@ public class Startup
     {
         services.AddSingleton<CustomAsyncQueryStringActionFilter>();
 
-        IMvcCoreBuilder builder = services.AddMvcCore();
+        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
         services.AddJsonApi<AppDbContext>(mvcBuilder: builder);
 
         // Ensure this call is placed after the AddJsonApi call.

@@ -1,6 +1,7 @@
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
+using JsonApiDotNetCore.OpenApi;
 using JsonApiDotNetCoreExample.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -44,6 +45,8 @@ namespace JsonApiDotNetCoreExample
 #endif
                 });
 
+                IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+
                 using (CodeTimingSessionManager.Current.Measure("Configure JSON:API (startup)"))
                 {
                     services.AddJsonApi<AppDbContext>(options =>
@@ -57,8 +60,10 @@ namespace JsonApiDotNetCoreExample
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
 #endif
-                    }, discovery => discovery.AddCurrentAssembly());
+                    }, discovery => discovery.AddCurrentAssembly(), mvcBuilder: mvcBuilder);
                 }
+
+                services.AddOpenApi(mvcBuilder);
             }
         }
 
@@ -81,6 +86,9 @@ namespace JsonApiDotNetCoreExample
                 {
                     app.UseJsonApi();
                 }
+
+                app.UseSwagger();
+                app.UseSwaggerUI();
 
                 app.UseEndpoints(endpoints => endpoints.MapControllers());
             }

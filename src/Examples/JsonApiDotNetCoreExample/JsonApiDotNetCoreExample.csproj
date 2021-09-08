@@ -5,10 +5,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
+    <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="$(EFCoreVersion)" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(NpgsqlPostgreSQLVersion)" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
 </Project>

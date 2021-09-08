@@ -85,13 +85,24 @@ function CreateNuGetPackage {
 
     if ([string]::IsNullOrWhitespace($versionSuffix)) {
         dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
+        dotnet pack .\src\JsonApiDotNetCore.OpenApi -c Release -o .\artifacts
     }
     else {
         dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$versionSuffix
+        dotnet pack .\src\JsonApiDotNetCore.OpenApi -c Release -o .\artifacts --version-suffix=$versionSuffix
     }
 
     CheckLastExitCode
 }
+
+# In a PR the base branch needs to be fetched in order for regitlint to work.
+function FetchBaseBranchIfNotMaster(){
+    if ($env:APPVEYOR_PULL_REQUEST_NUMBER -And $env:APPVEYOR_REPO_BRANCH -ne "master"){
+        git fetch -q origin ${env:APPVEYOR_REPO_BRANCH}:${env:APPVEYOR_REPO_BRANCH}
+    }
+}
+
+FetchBaseBranchIfNotMaster
 
 dotnet tool restore
 CheckLastExitCode
