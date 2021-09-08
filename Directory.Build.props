@@ -5,6 +5,7 @@
     <EFCoreVersion>5.0.*</EFCoreVersion>
     <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
     <SwashbuckleVersion>6.2.*</SwashbuckleVersion>
+    <JsonApiDotNetCoreVersionPrefix>4.2.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
