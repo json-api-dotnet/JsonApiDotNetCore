@@ -100,7 +100,6 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void UpdateProducesResponseTypeAttribute(ActionDescriptor endpoint, Type responseTypeToSet)
         {
-            // TODO: is this check really adding anything? is the "else" ever hit, and if so, is that even meaningful?
             if (ProducesJsonApiResponseBody(endpoint))
             {
                 var producesResponse = endpoint.GetFilterMetadata<ProducesResponseTypeAttribute>();

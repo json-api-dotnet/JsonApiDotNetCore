@@ -5,179 +5,202 @@
     "version": "1.0"
   },
   "paths": {
-    "/airplanes": {
+    "/api/v1/airplanes": {
       "get": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "get-airplane-collection",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "head-airplane-collection",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "post-airplane",
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/Airplane"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Airplane"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Airplane"
+                "$ref": "#/components/schemas/airplane-post-request-document"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                }
+              }
+            }
+          },
+          "204": {
             "description": "Success"
           }
         }
       }
     },
-    "/airplanes/{id}": {
+    "/api/v1/airplanes/{id}": {
       "get": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "get-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "head-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                }
+              }
+            }
           }
         }
       },
       "patch": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "patch-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/Airplane"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Airplane"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Airplane"
+                "$ref": "#/components/schemas/airplane-patch-request-document"
               }
             }
           }
         },
         "responses": {
           "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-primary-response-document"
+                }
+              }
+            }
+          },
+          "204": {
             "description": "Success"
           }
         }
       },
       "delete": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "delete-airplane",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
       }
     },
-    "/airplanes/{id}/{relationshipName}": {
+    "/api/v1/airplanes/{id}/flights": {
       "get": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "get-airplane-flights",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -187,26 +210,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "head-airplane-flights",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -216,28 +238,27 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-collection-response-document"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/airplanes/{id}/relationships/{relationshipName}": {
+    "/api/v1/airplanes/{id}/relationships/flights": {
       "get": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "get-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -247,26 +268,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-identifier-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "head-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -276,26 +296,25 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-identifier-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "post-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -305,57 +324,27 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
+                "$ref": "#/components/schemas/to-many-flight-request-data"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
       },
       "patch": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "patch-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -365,39 +354,27 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {}
-            },
-            "text/json": {
-              "schema": {}
-            },
-            "application/*+json": {
-              "schema": {}
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-many-flight-request-data"
+              }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
       },
       "delete": {
         "tags": [
-          "Airplanes"
+          "airplanes"
         ],
+        "operationId": "delete-airplane-flights-relationship",
         "parameters": [
           {
             "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
             "in": "path",
             "required": true,
             "schema": {
@@ -407,98 +384,217 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
+                "$ref": "#/components/schemas/to-many-flight-request-data"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
       }
     },
-    "/flights": {
+    "/api/v1/flights": {
       "get": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "get-flight-collection",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "head-flight-collection",
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "post": {
         "tags": [
-          "Flights"
+          "flights"
+        ],
+        "operationId": "post-flight",
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/flight-post-request-document"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-primary-response-document"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-primary-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-primary-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "patch-flight",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/Flight"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Flight"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Flight"
+                "$ref": "#/components/schemas/flight-patch-request-document"
               }
             }
           }
         },
         "responses": {
           "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-primary-response-document"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "delete-flight",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
             "description": "Success"
           }
         }
       }
     },
-    "/flights/{id}": {
+    "/api/v1/flights/{id}/flight-attendants": {
       "get": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "get-flight-flight-attendants",
         "parameters": [
           {
             "name": "id",
@@ -512,14 +608,22 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
+                }
+              }
+            }
           }
         }
       },
       "head": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "head-flight-flight-attendants",
         "parameters": [
           {
             "name": "id",
@@ -533,14 +637,113 @@
         ],
         "responses": {
           "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/relationships/flight-attendants": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-flight-attendants-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-flight-attendants-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "post-flight-flight-attendants-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
             "description": "Success"
           }
         }
       },
       "patch": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "patch-flight-flight-attendants-relationship",
         "parameters": [
           {
             "name": "id",
@@ -554,33 +757,24 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "$ref": "#/components/schemas/Flight"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Flight"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/Flight"
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
       },
       "delete": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "delete-flight-flight-attendants-relationship",
         "parameters": [
           {
             "name": "id",
@@ -589,199 +783,149 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/flights/{id}/{relationshipName}": {
-      "get": {
-        "tags": [
-          "Flights"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "Flights"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/flights/{id}/relationships/{relationshipName}": {
-      "get": {
-        "tags": [
-          "Flights"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "Flights"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Flights"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
             }
           }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/purser": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-purser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-purser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/relationships/purser": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-purser-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-purser-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-response-document"
+                }
+              }
+            }
           }
         }
       },
       "patch": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "patch-flight-purser-relationship",
         "parameters": [
           {
             "name": "id",
@@ -791,39 +935,30 @@
               "type": "integer",
               "format": "int32"
             }
-          },
-          {
-            "name": "relationshipName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
-              "schema": {}
-            },
-            "text/json": {
-              "schema": {}
-            },
-            "application/*+json": {
-              "schema": {}
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-one-flight-attendant-request-data"
+              }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
-      },
-      "delete": {
+      }
+    },
+    "/api/v1/flights/{id}/servicing-airplane": {
+      "get": {
         "tags": [
-          "Flights"
+          "flights"
         ],
+        "operationId": "get-flight-servicing-airplane",
         "parameters": [
           {
             "name": "id",
@@ -833,49 +968,137 @@
               "type": "integer",
               "format": "int32"
             }
-          },
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-servicing-airplane",
+        "parameters": [
           {
-            "name": "relationshipName",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-secondary-response-document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/relationships/servicing-airplane": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-servicing-airplane-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-identifier-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-servicing-airplane-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/airplane-identifier-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "patch-flight-servicing-airplane-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "application/vnd.api+json": {
               "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "uniqueItems": true,
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/IIdentifiable"
-                }
+                "$ref": "#/components/schemas/to-one-airplane-request-data"
               }
             }
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Success"
           }
         }
@@ -884,76 +1107,801 @@
   },
   "components": {
     "schemas": {
-      "Airplane": {
+      "airplane-attributes-in-response": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "stringId": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-collection-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
           },
-          "localId": {
-            "type": "string",
-            "nullable": true
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
           },
-          "seatingCapacity": {
-            "type": "integer",
-            "format": "int32"
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
           },
-          "manufacturedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "flights": {
-            "uniqueItems": true,
+          "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Flight"
-            },
-            "nullable": true
+              "$ref": "#/components/schemas/airplane-data-in-response"
+            }
           }
         },
         "additionalProperties": false
       },
-      "Flight": {
+      "airplane-data-in-patch-request": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/airplanes-resource-type"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-data-in-post-request": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/airplanes-resource-type"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-data-in-response": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/airplanes-resource-type"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/airplane-attributes-in-response"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-object"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-identifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-identifier-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/airplane-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-patch-request-document": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/airplane-data-in-patch-request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-post-request-document": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/airplane-data-in-post-request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-primary-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
+          "data": {
+            "$ref": "#/components/schemas/airplane-data-in-response"
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplane-secondary-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/airplane-data-in-response"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "airplanes-resource-type": {
+        "enum": [
+          "airplanes"
+        ],
+        "type": "string"
+      },
+      "flight-attendant-attributes-in-response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-collection-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-attendant-data-in-response"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-data-in-response": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/flight-attendants-resource-type"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/flight-attendant-attributes-in-response"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-object"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-identifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-identifier-collection-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-attendant-identifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-identifier-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-document"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendant-secondary-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-data-in-response"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-attendants-resource-type": {
+        "enum": [
+          "flight-attendants"
+        ],
+        "type": "string"
+      },
+      "flight-attributes-in-response": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
-          },
-          "stringId": {
-            "type": "string",
-            "nullable": true
-          },
-          "localId": {
-            "type": "string",
-            "nullable": true
-          },
-          "destination": {
-            "type": "string",
-            "nullable": true
-          },
-          "departsAt": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
       },
-      "IIdentifiable": {
+      "flight-collection-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
         "type": "object",
         "properties": {
-          "stringId": {
-            "type": "string",
-            "nullable": true
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
           },
-          "localId": {
-            "type": "string",
-            "nullable": true
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-collection-document"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-data-in-response"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-data-in-patch-request": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/flights-resource-type"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-data-in-post-request": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/flights-resource-type"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-data-in-response": {
+        "required": [
+          "id",
+          "links",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/flights-resource-type"
+          },
+          "id": {
+            "type": "string"
+          },
+          "attributes": {
+            "$ref": "#/components/schemas/flight-attributes-in-response"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-object"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-identifier": {
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-identifier-collection-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-identifier-collection-document"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-identifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-patch-request-document": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/flight-data-in-patch-request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-post-request-document": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/flight-data-in-post-request"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flight-primary-response-document": {
+        "required": [
+          "data",
+          "links"
+        ],
+        "type": "object",
+        "properties": {
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "jsonapi": {
+            "$ref": "#/components/schemas/jsonapi-object"
+          },
+          "links": {
+            "$ref": "#/components/schemas/links-in-resource-document"
+          },
+          "data": {
+            "$ref": "#/components/schemas/flight-data-in-response"
+          }
+        },
+        "additionalProperties": false
+      },
+      "flights-resource-type": {
+        "enum": [
+          "flights"
+        ],
+        "type": "string"
+      },
+      "jsonapi-object": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "ext": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "profile": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-collection-document": {
+        "required": [
+          "first",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-document": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-identifier-collection-document": {
+        "required": [
+          "first",
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          },
+          "first": {
+            "type": "string"
+          },
+          "last": {
+            "type": "string"
+          },
+          "prev": {
+            "type": "string"
+          },
+          "next": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-identifier-document": {
+        "required": [
+          "related",
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          },
+          "describedby": {
+            "type": "string"
+          },
+          "related": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "links-in-resource-object": {
+        "required": [
+          "self"
+        ],
+        "type": "object",
+        "properties": {
+          "self": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "null-value": {
+        "not": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array"
+            }
+          ],
+          "items": {}
+        },
+        "nullable": true
+      },
+      "to-many-flight-attendant-request-data": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-attendant-identifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "to-many-flight-request-data": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/flight-identifier"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "to-one-airplane-request-data": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/airplane-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "to-one-flight-attendant-request-data": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/flight-attendant-identifier"
+              },
+              {
+                "$ref": "#/components/schemas/null-value"
+              }
+            ]
           }
         },
         "additionalProperties": false
