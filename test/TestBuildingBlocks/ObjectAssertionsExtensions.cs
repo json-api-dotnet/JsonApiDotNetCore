@@ -14,6 +14,7 @@ namespace TestBuildingBlocks
     public static class ObjectAssertionsExtensions
     {
         private const decimal NumericPrecision = 0.00000000001M;
+        private static readonly TimeSpan TimePrecision = TimeSpan.FromMilliseconds(20);
 
         private static readonly JsonWriterOptions JsonWriterOptions = new()
         {
@@ -40,8 +41,19 @@ namespace TestBuildingBlocks
                 }
 
                 // We lose a little bit of precision (milliseconds) on roundtrip through PostgreSQL database.
-                value.Should().BeCloseTo(expected.Value, because: because, becauseArgs: becauseArgs);
+                value.Should().BeCloseTo(expected.Value, TimePrecision, because, becauseArgs);
             }
+        }
+
+        /// <summary>
+        /// Same as <see cref="DateTimeOffsetAssertions{TAssertions}.BeCloseTo(DateTimeOffset, TimeSpan, string, object[])" />, but with default precision.
+        /// </summary>
+        [CustomAssertion]
+        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeOffsetAssertions<TAssertions> parent, DateTimeOffset nearbyTime,
+            string because = "", params object[] becauseArgs)
+            where TAssertions : DateTimeOffsetAssertions<TAssertions>
+        {
+            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
         }
 
         /// <summary>

@@ -19,8 +19,8 @@ namespace TestBuildingBlocks
             protected override string Identifier => "response";
 
             public HttpResponseMessageAssertions(HttpResponseMessage instance)
+                : base(instance)
             {
-                Subject = instance;
             }
 
             // ReSharper disable once UnusedMethodReturnValue.Global
