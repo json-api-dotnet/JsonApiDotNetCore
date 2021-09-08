@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
+using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
@@ -88,14 +90,21 @@ namespace JsonApiDotNetCore.Middleware
                 ApplyOptions(error, exception);
             }
 
-            return new ErrorDocument(errors);
+            return new ErrorDocument
+            {
+                Errors = errors.ToList()
+            };
         }
 
         private void ApplyOptions(ErrorObject error, Exception exception)
         {
             Exception resultException = exception is InvalidModelStateException ? null : exception;
 
-            error.Meta.IncludeExceptionStackTrace(_options.IncludeExceptionStackTraceInErrors ? resultException : null);
+            if (resultException != null && _options.IncludeExceptionStackTraceInErrors)
+            {
+                error.Meta ??= new Dictionary<string, object>();
+                error.Meta.IncludeExceptionStackTrace(resultException);
+            }
         }
     }
 }

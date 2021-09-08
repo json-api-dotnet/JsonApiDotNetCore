@@ -209,6 +209,11 @@ namespace JsonApiDotNetCore.Middleware
             httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int)error.StatusCode;
 
+            var errorDocument = new ErrorDocument
+            {
+                Errors = error.AsList()
+            };
+
             var serializer = JsonSerializer.CreateDefault(serializerSettings);
             serializer.ApplyErrorSettings();
 
@@ -218,7 +223,7 @@ namespace JsonApiDotNetCore.Middleware
                 await using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
                 {
                     using var jsonWriter = new JsonTextWriter(streamWriter);
-                    serializer.Serialize(jsonWriter, new ErrorDocument(error));
+                    serializer.Serialize(jsonWriter, errorDocument);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);

@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Unexpected end of content while loading JObject.");
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: No operations found.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Error converting value \"merge\" to type");
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

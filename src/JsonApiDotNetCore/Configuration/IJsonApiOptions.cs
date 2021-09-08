@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Configuration
         bool IncludeJsonApiVersion { get; }
 
         /// <summary>
-        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorMeta" /> objects. False by default.
+        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorObject.Meta" />. False by default.
         /// </summary>
         bool IncludeExceptionStackTraceInErrors { get; }
 

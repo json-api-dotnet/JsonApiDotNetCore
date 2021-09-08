@@ -424,7 +424,10 @@ namespace UnitTests.Serialization.Server
                 Detail = "detail"
             };
 
-            var errorDocument = new ErrorDocument(error);
+            var errorDocument = new ErrorDocument
+            {
+                Errors = error.AsList()
+            };
 
             string expectedJson = JsonConvert.SerializeObject(new
             {

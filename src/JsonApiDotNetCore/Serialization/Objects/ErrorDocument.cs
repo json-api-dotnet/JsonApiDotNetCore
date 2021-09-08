@@ -1,34 +1,22 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using JetBrains.Annotations;
+using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
-    [PublicAPI]
+    /// <summary>
+    /// See https://jsonapi.org/format/1.1/#document-top-level.
+    /// </summary>
     public sealed class ErrorDocument
     {
-        public IReadOnlyList<ErrorObject> Errors { get; }
+        [JsonProperty("errors")]
+        public IList<ErrorObject> Errors { get; set; }
 
-        public ErrorDocument()
-            : this(Array.Empty<ErrorObject>())
-        {
-        }
+        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        public IDictionary<string, object> Meta { get; set; }
 
-        public ErrorDocument(ErrorObject error)
-            : this(error.AsEnumerable())
-        {
-        }
-
-        public ErrorDocument(IEnumerable<ErrorObject> errors)
-        {
-            ArgumentGuard.NotNull(errors, nameof(errors));
-
-            Errors = errors.ToList();
-        }
-
-        public HttpStatusCode GetErrorStatusCode()
+        internal HttpStatusCode GetErrorStatusCode()
         {
             int[] statusCodes = Errors.Select(error => (int)error.StatusCode).Distinct().ToArray();
 

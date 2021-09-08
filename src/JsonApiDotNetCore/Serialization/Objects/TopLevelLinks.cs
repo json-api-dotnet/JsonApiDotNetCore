@@ -3,71 +3,35 @@ using Newtonsoft.Json;
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// See links section in https://jsonapi.org/format/#document-top-level.
+    /// See "links" in https://jsonapi.org/format/1.1/#document-top-level.
     /// </summary>
     public sealed class TopLevelLinks
     {
-        [JsonProperty("self")]
+        [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
         public string Self { get; set; }
 
-        [JsonProperty("related")]
+        [JsonProperty("related", NullValueHandling = NullValueHandling.Ignore)]
         public string Related { get; set; }
 
-        [JsonProperty("describedby")]
+        [JsonProperty("describedby", NullValueHandling = NullValueHandling.Ignore)]
         public string DescribedBy { get; set; }
 
-        [JsonProperty("first")]
+        [JsonProperty("first", NullValueHandling = NullValueHandling.Ignore)]
         public string First { get; set; }
 
-        [JsonProperty("last")]
+        [JsonProperty("last", NullValueHandling = NullValueHandling.Ignore)]
         public string Last { get; set; }
 
-        [JsonProperty("prev")]
+        [JsonProperty("prev", NullValueHandling = NullValueHandling.Ignore)]
         public string Prev { get; set; }
 
-        [JsonProperty("next")]
+        [JsonProperty("next", NullValueHandling = NullValueHandling.Ignore)]
         public string Next { get; set; }
-
-        // http://www.newtonsoft.com/json/help/html/ConditionalProperties.htm
-        public bool ShouldSerializeSelf()
-        {
-            return !string.IsNullOrEmpty(Self);
-        }
-
-        public bool ShouldSerializeRelated()
-        {
-            return !string.IsNullOrEmpty(Related);
-        }
-
-        public bool ShouldSerializeDescribedBy()
-        {
-            return !string.IsNullOrEmpty(DescribedBy);
-        }
-
-        public bool ShouldSerializeFirst()
-        {
-            return !string.IsNullOrEmpty(First);
-        }
-
-        public bool ShouldSerializeLast()
-        {
-            return !string.IsNullOrEmpty(Last);
-        }
-
-        public bool ShouldSerializePrev()
-        {
-            return !string.IsNullOrEmpty(Prev);
-        }
-
-        public bool ShouldSerializeNext()
-        {
-            return !string.IsNullOrEmpty(Next);
-        }
 
         internal bool HasValue()
         {
-            return ShouldSerializeSelf() || ShouldSerializeRelated() || ShouldSerializeDescribedBy() || ShouldSerializeFirst() || ShouldSerializeLast() ||
-                ShouldSerializePrev() || ShouldSerializeNext();
+            return !string.IsNullOrEmpty(Self) || !string.IsNullOrEmpty(Related) || !string.IsNullOrEmpty(DescribedBy) || !string.IsNullOrEmpty(First) ||
+                !string.IsNullOrEmpty(Last) || !string.IsNullOrEmpty(Prev) || !string.IsNullOrEmpty(Next);
         }
     }
 }

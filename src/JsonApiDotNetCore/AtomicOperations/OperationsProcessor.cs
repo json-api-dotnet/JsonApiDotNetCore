@@ -79,6 +79,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (ErrorObject error in exception.Errors)
                 {
+                    error.Source ??= new ErrorSource();
                     error.Source.Pointer = $"/atomic:operations[{results.Count}]{error.Source.Pointer}";
                 }
 
@@ -92,7 +93,7 @@ namespace JsonApiDotNetCore.AtomicOperations
                 {
                     Title = "An unhandled error occurred while processing an operation in this request.",
                     Detail = exception.Message,
-                    Source =
+                    Source = new ErrorSource
                     {
                         Pointer = $"/atomic:operations[{results.Count}]"
                     }

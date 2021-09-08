@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     public sealed class AtomicOperationObject : ExposableData<ResourceObject>
     {
         [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object> Meta { get; set; }
 
         [JsonProperty("op")]
         [JsonConverter(typeof(StringEnumConverter))]

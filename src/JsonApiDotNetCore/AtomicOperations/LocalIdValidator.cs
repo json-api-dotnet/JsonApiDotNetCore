@@ -47,6 +47,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             {
                 foreach (ErrorObject error in exception.Errors)
                 {
+                    error.Source ??= new ErrorSource();
                     error.Source.Pointer = $"/atomic:operations[{operationIndex}]{error.Source.Pointer}";
                 }
 

@@ -1,8 +1,11 @@
-using System.Text;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    /// <summary>
+    /// See https://jsonapi.org/format/1.1/#document-resource-identifier-objects.
+    /// </summary>
     public class ResourceIdentifierObject
     {
         [JsonProperty("type", Order = -4)]
@@ -14,37 +17,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty("lid", NullValueHandling = NullValueHandling.Ignore, Order = -2)]
         public string Lid { get; set; }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-
-            WriteMembers(builder);
-            builder.Insert(0, $"{GetType().Name}: ");
-
-            return builder.ToString();
-        }
-
-        protected virtual void WriteMembers(StringBuilder builder)
-        {
-            WriteMember(builder, "type", Type);
-            WriteMember(builder, "id", Id);
-            WriteMember(builder, "lid", Lid);
-        }
-
-        protected static void WriteMember(StringBuilder builder, string memberName, string memberValue)
-        {
-            if (memberValue != null)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append(", ");
-                }
-
-                builder.Append(memberName);
-                builder.Append("=\"");
-                builder.Append(memberValue);
-                builder.Append('"');
-            }
-        }
+        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        public IDictionary<string, object> Meta { get; set; }
     }
 }

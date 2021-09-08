@@ -704,7 +704,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
         }
 
         [Fact]

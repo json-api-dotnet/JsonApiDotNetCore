@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 {
                     Title = "Invalid workflow stage.",
                     Detail = $"Initial stage of workflow must be '{WorkflowStage.Created}'.",
-                    Source =
+                    Source = new ErrorSource
                     {
                         Pointer = "/data/attributes/stage"
                     }
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 {
                     Title = "Invalid workflow stage.",
                     Detail = $"Cannot transition from '{fromStage}' to '{toStage}'.",
-                    Source =
+                    Source = new ErrorSource
                     {
                         Pointer = "/data/attributes/stage"
                     }

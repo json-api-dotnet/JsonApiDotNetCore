@@ -2,17 +2,14 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    /// <summary>
+    /// See "links" in https://jsonapi.org/format/1.1/#document-resource-object-relationships.
+    /// </summary>
     public sealed class RelationshipLinks
     {
-        /// <summary>
-        /// See "links" bulletin at https://jsonapi.org/format/#document-resource-object-relationships.
-        /// </summary>
         [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
         public string Self { get; set; }
 
-        /// <summary>
-        /// See https://jsonapi.org/format/#document-resource-object-related-resource-links.
-        /// </summary>
         [JsonProperty("related", NullValueHandling = NullValueHandling.Ignore)]
         public string Related { get; set; }
 

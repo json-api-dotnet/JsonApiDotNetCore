@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,10 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(errors, nameof(errors));
 
-            var document = new ErrorDocument(errors);
+            var document = new ErrorDocument
+            {
+                Errors = errors.ToList()
+            };
 
             return new ObjectResult(document)
             {

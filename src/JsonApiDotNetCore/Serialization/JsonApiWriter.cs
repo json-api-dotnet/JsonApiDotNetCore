@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -131,12 +132,18 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (contextObject is IEnumerable<ErrorObject> errors)
             {
-                return new ErrorDocument(errors);
+                return new ErrorDocument
+                {
+                    Errors = errors.ToList()
+                };
             }
 
             if (contextObject is ErrorObject error)
             {
-                return new ErrorDocument(error);
+                return new ErrorDocument
+                {
+                    Errors = error.AsList()
+                };
             }
 
             return contextObject;

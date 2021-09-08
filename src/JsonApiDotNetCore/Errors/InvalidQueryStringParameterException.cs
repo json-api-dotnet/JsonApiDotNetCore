@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 Title = genericMessage,
                 Detail = specificMessage,
-                Source =
+                Source = new ErrorSource
                 {
                     Parameter = queryParameterName
                 }

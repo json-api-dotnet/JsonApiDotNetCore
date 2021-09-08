@@ -108,6 +108,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 foreach (ErrorObject error in requestException.Errors)
                 {
+                    error.Source ??= new ErrorSource();
                     error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
                 }
             }

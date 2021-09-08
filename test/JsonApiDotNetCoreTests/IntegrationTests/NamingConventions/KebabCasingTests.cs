@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Meta.Data.Should().ContainKey("stack-trace");
+            error.Meta.Should().ContainKey("stack-trace");
         }
 
         [Fact]

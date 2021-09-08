@@ -2,12 +2,15 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    /// <summary>
+    /// See "links" in https://jsonapi.org/format/1.1/#error-objects.
+    /// </summary>
     public sealed class ErrorLinks
     {
-        /// <summary>
-        /// A URL that leads to further details about this particular occurrence of the problem.
-        /// </summary>
-        [JsonProperty]
+        [JsonProperty("about", NullValueHandling = NullValueHandling.Ignore)]
         public string About { get; set; }
+
+        [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
+        public string Type { get; set; }
     }
 }

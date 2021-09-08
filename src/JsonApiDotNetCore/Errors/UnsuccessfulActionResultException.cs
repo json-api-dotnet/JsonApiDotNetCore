@@ -43,6 +43,7 @@ namespace JsonApiDotNetCore.Errors
 
             if (!string.IsNullOrWhiteSpace(problemDetails.Type))
             {
+                error.Links ??= new ErrorLinks();
                 error.Links.About = problemDetails.Type;
             }
 
