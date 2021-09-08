@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using FluentAssertions;
@@ -13,9 +15,9 @@ namespace TestBuildingBlocks
     {
         private const decimal NumericPrecision = 0.00000000001M;
 
-        private static readonly JsonSerializerOptions SerializerOptions = new()
+        private static readonly JsonWriterOptions JsonWriterOptions = new()
         {
-            WriteIndented = true,
+            Indented = true,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
@@ -70,13 +72,23 @@ namespace TestBuildingBlocks
         [CustomAssertion]
         public static void BeJson(this StringAssertions source, string expected, string because = "", params object[] becauseArgs)
         {
-            var sourceToken = JsonSerializer.Deserialize<JsonElement>(source.Subject, SerializerOptions);
-            var expectedToken = JsonSerializer.Deserialize<JsonElement>(expected, SerializerOptions);
+            using JsonDocument sourceJson = JsonDocument.Parse(source.Subject);
+            using JsonDocument expectedJson = JsonDocument.Parse(expected);
 
-            string sourceText = sourceToken.ToString();
-            string expectedText = expectedToken.ToString();
+            string sourceText = ToJsonString(sourceJson);
+            string expectedText = ToJsonString(expectedJson);
 
             sourceText.Should().Be(expectedText, because, becauseArgs);
+        }
+
+        private static string ToJsonString(JsonDocument document)
+        {
+            using var stream = new MemoryStream();
+            var writer = new Utf8JsonWriter(stream, JsonWriterOptions);
+
+            document.WriteTo(writer);
+            writer.Flush();
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
     }
 }
