@@ -23,6 +23,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             {
                 NamingStrategy = new DefaultNamingStrategy()
             };
+
+            options.SerializerOptions.PropertyNamingPolicy = null;
+            options.SerializerOptions.DictionaryKeyPolicy = null;
         }
     }
 }

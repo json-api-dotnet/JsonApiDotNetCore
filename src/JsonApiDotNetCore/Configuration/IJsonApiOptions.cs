@@ -1,9 +1,9 @@
 using System;
 using System.Data;
+using System.Text.Json;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -12,15 +12,6 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public interface IJsonApiOptions
     {
-        internal NamingStrategy SerializerNamingStrategy
-        {
-            get
-            {
-                var contractResolver = SerializerSettings.ContractResolver as DefaultContractResolver;
-                return contractResolver?.NamingStrategy ?? JsonApiOptions.DefaultNamingStrategy;
-            }
-        }
-
         /// <summary>
         /// The URL prefix to use for exposed endpoints.
         /// </summary>
@@ -145,19 +136,19 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         IsolationLevel? TransactionIsolationLevel { get; }
 
+        JsonSerializerSettings SerializerSettings { get; }
+
         /// <summary>
-        /// Specifies the settings that are used by the <see cref="JsonSerializer" />. Note that at some places a few settings are ignored, to ensure JSON:API
-        /// spec compliance.
+        /// Specifies the settings that are used by the <see cref="System.Text.Json.JsonSerializer" />. Note that at some places a few settings are ignored, to
+        /// ensure JSON:API spec compliance.
+        /// </summary>
         /// <example>
-        /// The next example changes the naming convention to kebab casing.
+        /// The next example sets the naming convention to camel casing.
         /// <code><![CDATA[
-        /// options.SerializerSettings.ContractResolver = new DefaultContractResolver
-        /// {
-        ///     NamingStrategy = new KebabCaseNamingStrategy()
-        /// };
+        /// options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        /// options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
         /// ]]></code>
         /// </example>
-        /// </summary>
-        JsonSerializerSettings SerializerSettings { get; }
+        JsonSerializerOptions SerializerOptions { get; }
     }
 }

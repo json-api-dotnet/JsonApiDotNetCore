@@ -4,12 +4,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Errors
 {
@@ -20,13 +20,13 @@ namespace JsonApiDotNetCore.Errors
     public sealed class InvalidModelStateException : JsonApiException
     {
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, bool includeExceptionStackTraceInErrors,
-            NamingStrategy namingStrategy)
-            : this(FromModelStateDictionary(modelState, resourceType), includeExceptionStackTraceInErrors, namingStrategy)
+            JsonNamingPolicy namingPolicy)
+            : this(FromModelStateDictionary(modelState, resourceType), includeExceptionStackTraceInErrors, namingPolicy)
         {
         }
 
-        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors, NamingStrategy namingStrategy)
-            : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingStrategy))
+        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors, JsonNamingPolicy namingPolicy)
+            : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingPolicy))
         {
         }
 
@@ -55,16 +55,15 @@ namespace JsonApiDotNetCore.Errors
         }
 
         private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors,
-            NamingStrategy namingStrategy)
+            JsonNamingPolicy namingPolicy)
         {
             ArgumentGuard.NotNull(violations, nameof(violations));
-            ArgumentGuard.NotNull(namingStrategy, nameof(namingStrategy));
 
-            return violations.SelectMany(violation => FromModelStateViolation(violation, includeExceptionStackTraceInErrors, namingStrategy));
+            return violations.SelectMany(violation => FromModelStateViolation(violation, includeExceptionStackTraceInErrors, namingPolicy));
         }
 
         private static IEnumerable<Error> FromModelStateViolation(ModelStateViolation violation, bool includeExceptionStackTraceInErrors,
-            NamingStrategy namingStrategy)
+            JsonNamingPolicy namingPolicy)
         {
             if (violation.Error.Exception is JsonApiException jsonApiException)
             {
@@ -75,21 +74,27 @@ namespace JsonApiDotNetCore.Errors
             }
             else
             {
-                string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingStrategy);
+                string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingPolicy);
                 string attributePath = $"{violation.Prefix}{attributeName}";
 
                 yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
             }
         }
 
-        private static string GetDisplayNameForProperty(string propertyName, Type resourceType, NamingStrategy namingStrategy)
+        private static string GetDisplayNameForProperty(string propertyName, Type resourceType, JsonNamingPolicy namingPolicy)
         {
             PropertyInfo property = resourceType.GetProperty(propertyName);
 
             if (property != null)
             {
                 var attrAttribute = property.GetCustomAttribute<AttrAttribute>();
-                return attrAttribute?.PublicName ?? namingStrategy.GetPropertyName(property.Name, false);
+
+                if (attrAttribute?.PublicName != null)
+                {
+                    return attrAttribute.PublicName;
+                }
+
+                return namingPolicy != null ? namingPolicy.ConvertName(property.Name) : property.Name;
             }
 
             return propertyName;

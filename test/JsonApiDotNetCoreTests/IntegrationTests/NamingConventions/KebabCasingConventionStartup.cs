@@ -23,6 +23,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             {
                 NamingStrategy = new KebabCaseNamingStrategy()
             };
+
+            options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
+            options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
         }
     }
 }
