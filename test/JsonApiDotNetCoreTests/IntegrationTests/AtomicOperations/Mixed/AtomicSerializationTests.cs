@@ -12,6 +12,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 {
     public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
+        private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();
 
@@ -59,7 +61,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                             id = newPerformer.StringId,
                             attributes = new
                             {
-                                artistName = newPerformer.ArtistName
+                                artistName = newPerformer.ArtistName,
+                                bornAt = newPerformer.BornAt
                             }
                         }
                     }
@@ -88,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
         ""id"": """ + newPerformer.StringId + @""",
         ""attributes"": {
           ""artistName"": """ + newPerformer.ArtistName + @""",
-          ""bornAt"": ""0001-01-01T01:00:00+01:00""
+          ""bornAt"": """ + newPerformer.BornAt.ToString(JsonDateTimeOffsetFormatSpecifier) + @"""
         },
         ""links"": {
           ""self"": ""http://localhost/performers/" + newPerformer.StringId + @"""
