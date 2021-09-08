@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{unknownUserId}' does not exist.");
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
             error.Title.Should().Be("Message delivery failed.");
             error.Detail.Should().BeNull();

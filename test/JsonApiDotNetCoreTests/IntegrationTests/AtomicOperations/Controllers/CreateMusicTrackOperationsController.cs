@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
             {
                 if (operation.Kind != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
                 {
-                    throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                    throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                     {
                         Title = "Unsupported combination of operation code and resource type at this endpoint.",
                         Detail = "This endpoint can only be used to create resources of type 'musicTracks'.",

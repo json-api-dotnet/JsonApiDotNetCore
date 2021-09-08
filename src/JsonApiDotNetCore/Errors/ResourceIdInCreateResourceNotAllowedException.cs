@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class ResourceIdInCreateResourceNotAllowedException : JsonApiException
     {
         public ResourceIdInCreateResourceNotAllowedException(int? atomicOperationIndex = null)
-            : base(new Error(HttpStatusCode.Forbidden)
+            : base(new ErrorObject(HttpStatusCode.Forbidden)
             {
                 Title = atomicOperationIndex == null
                     ? "Specifying the resource ID in POST requests is not allowed."

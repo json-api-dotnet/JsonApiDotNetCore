@@ -9,14 +9,14 @@ namespace JsonApiDotNetCore.Controllers
     /// </summary>
     public abstract class CoreJsonApiController : ControllerBase
     {
-        protected IActionResult Error(Error error)
+        protected IActionResult Error(ErrorObject error)
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
             return Error(error.AsEnumerable());
         }
 
-        protected IActionResult Error(IEnumerable<Error> errors)
+        protected IActionResult Error(IEnumerable<ErrorObject> errors)
         {
             ArgumentGuard.NotNull(errors, nameof(errors));
 

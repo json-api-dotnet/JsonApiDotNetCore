@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request exceeds the maximum number of operations.");
             error.Detail.Should().Be("The number of operations in this request (3) is higher than 2.");

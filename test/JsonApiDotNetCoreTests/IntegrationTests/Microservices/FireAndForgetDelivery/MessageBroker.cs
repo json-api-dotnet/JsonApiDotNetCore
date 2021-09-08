@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             if (SimulateFailure)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.ServiceUnavailable)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.ServiceUnavailable)
                 {
                     Title = "Message delivery failed."
                 });

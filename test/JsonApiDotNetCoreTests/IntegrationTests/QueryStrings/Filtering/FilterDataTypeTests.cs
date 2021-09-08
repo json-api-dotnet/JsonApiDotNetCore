@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Query creation failed due to incompatible types.");
             error.Detail.Should().Be("Failed to convert 'ABC' of type 'String' to type 'Int32'.");

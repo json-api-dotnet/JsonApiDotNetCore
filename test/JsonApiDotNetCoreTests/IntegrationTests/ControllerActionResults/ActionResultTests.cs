@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("NotFound");
             error.Detail.Should().BeNull();
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("No toothbrush with that ID exists.");
             error.Detail.Should().BeNull();
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Data being returned must be errors or resources.");
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadGateway);
             error.Title.Should().BeNull();
             error.Detail.Should().BeNull();
@@ -137,17 +137,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error1.Title.Should().BeNull();
             error1.Detail.Should().BeNull();
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             error2.Title.Should().BeNull();
             error2.Detail.Should().BeNull();
 
-            Error error3 = responseDocument.Errors[2];
+            ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.ExpectationFailed);
             error3.Title.Should().Be("This is not a very great request.");
             error3.Detail.Should().BeNull();

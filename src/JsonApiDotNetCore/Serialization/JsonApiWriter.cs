@@ -129,12 +129,12 @@ namespace JsonApiDotNetCore.Serialization
 
         private static object WrapErrors(object contextObject)
         {
-            if (contextObject is IEnumerable<Error> errors)
+            if (contextObject is IEnumerable<ErrorObject> errors)
             {
                 return new ErrorDocument(errors);
             }
 
-            if (contextObject is Error error)
+            if (contextObject is ErrorObject error)
             {
                 return new ErrorDocument(error);
             }

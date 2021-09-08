@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Errors
         {
         }
 
-        private static Error CreateError(MissingResourceInRelationship missingResourceInRelationship)
+        private static ErrorObject CreateError(MissingResourceInRelationship missingResourceInRelationship)
         {
             return new(HttpStatusCode.NotFound)
             {

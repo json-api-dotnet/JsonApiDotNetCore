@@ -618,7 +618,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified fieldset is invalid.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
@@ -641,7 +641,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Retrieving the requested attribute is not allowed.");
             error.Detail.Should().Be("Retrieving the attribute 'password' is not allowed.");

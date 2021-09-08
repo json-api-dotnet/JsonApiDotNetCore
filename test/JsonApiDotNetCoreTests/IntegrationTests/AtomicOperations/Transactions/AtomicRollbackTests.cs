@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'performers' with ID '{performerId}' in relationship 'performers' does not exist.");

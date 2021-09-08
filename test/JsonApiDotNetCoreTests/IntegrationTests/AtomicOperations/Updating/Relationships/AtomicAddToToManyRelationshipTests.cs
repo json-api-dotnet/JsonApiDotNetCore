@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted in 'add' operations.");
             error.Detail.Should().Be("Relationship 'ownedBy' must be a to-many relationship.");
@@ -260,7 +260,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
             error.Detail.Should().BeNull();
@@ -297,7 +297,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.type' element is required.");
             error.Detail.Should().BeNull();
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -428,7 +428,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'recordCompanies' with ID '{companyId}' does not exist.");
@@ -467,7 +467,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -504,7 +504,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.relationship' element is required.");
             error.Detail.Should().BeNull();
@@ -542,7 +542,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The referenced relationship does not exist.");
             error.Detail.Should().Be($"Resource of type 'performers' does not contain a relationship named '{Unknown.Relationship}'.");
@@ -589,7 +589,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().Be("Expected data[] element for 'performers' relationship.");
@@ -634,7 +634,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data[].type' element is required.");
             error.Detail.Should().BeNull();
@@ -680,7 +680,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
@@ -725,7 +725,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
             error.Detail.Should().BeNull();
@@ -772,7 +772,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data[].id' or 'data[].lid' element is required.");
             error.Detail.Should().BeNull();
@@ -837,13 +837,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
             error1.Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[0]}' in relationship 'tracks' does not exist.");
             error1.Source.Pointer.Should().Be("/atomic:operations[0]");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
             error2.Detail.Should().Be($"Related resource of type 'musicTracks' with ID '{trackIds[1]}' in relationship 'tracks' does not exist.");
@@ -897,7 +897,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.relationship' and 'data[].type' element.");
             error.Detail.Should().Be("Expected resource of type 'performers' in 'data[].type', instead of 'playlists'.");

@@ -464,7 +464,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Television broadcasts cannot be created in archived state.");
             error.Detail.Should().BeNull();
@@ -596,7 +596,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Archive date of television broadcasts cannot be shifted. Unarchive it first.");
             error.Detail.Should().BeNull();
@@ -655,7 +655,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Television broadcasts must first be archived before they can be deleted.");
             error.Detail.Should().BeNull();

@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Invalid ID value.");
             error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
@@ -465,7 +465,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");

@@ -23,7 +23,7 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void Build_RelationshipNotIncludedAndLinksEnabled_RelationshipEntryWithLinks()
+        public void Build_RelationshipNotIncludedAndLinksEnabled_RelationshipObjectWithLinks()
         {
             // Arrange
             var resource = new OneToManyPrincipal
@@ -37,10 +37,10 @@ namespace UnitTests.Serialization.Server
             ResourceObject resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipEntry entry));
-            Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
-            Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
-            Assert.False(entry.IsPopulated);
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
+            Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", relationshipObject.Links.Self);
+            Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", relationshipObject.Links.Related);
+            Assert.False(relationshipObject.IsPopulated);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace UnitTests.Serialization.Server
         }
 
         [Fact]
-        public void Build_RelationshipIncludedAndLinksDisabled_RelationshipEntryWithData()
+        public void Build_RelationshipIncludedAndLinksDisabled_RelationshipObjectWithData()
         {
             // Arrange
             var resource = new OneToManyPrincipal
@@ -83,14 +83,14 @@ namespace UnitTests.Serialization.Server
             ResourceObject resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipEntry entry));
-            Assert.Null(entry.Links);
-            Assert.True(entry.IsPopulated);
-            Assert.Equal("20", entry.ManyData.Single().Id);
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
+            Assert.Null(relationshipObject.Links);
+            Assert.True(relationshipObject.IsPopulated);
+            Assert.Equal("20", relationshipObject.ManyData.Single().Id);
         }
 
         [Fact]
-        public void Build_RelationshipIncludedAndLinksEnabled_RelationshipEntryWithDataAndLinks()
+        public void Build_RelationshipIncludedAndLinksEnabled_RelationshipObjectWithDataAndLinks()
         {
             // Arrange
             var resource = new OneToManyPrincipal
@@ -112,11 +112,11 @@ namespace UnitTests.Serialization.Server
             ResourceObject resourceObject = builder.Build(resource, relationships: _relationshipsForBuild);
 
             // Assert
-            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipEntry entry));
-            Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", entry.Links.Self);
-            Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", entry.Links.Related);
-            Assert.True(entry.IsPopulated);
-            Assert.Equal("20", entry.ManyData.Single().Id);
+            Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
+            Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", relationshipObject.Links.Self);
+            Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", relationshipObject.Links.Related);
+            Assert.True(relationshipObject.IsPopulated);
+            Assert.Equal("20", relationshipObject.ManyData.Single().Id);
         }
     }
 }

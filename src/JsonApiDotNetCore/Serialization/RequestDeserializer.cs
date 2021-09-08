@@ -488,7 +488,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="data">
         /// Relationship data for <paramref name="resource" />. Is null when <paramref name="field" /> is not a <see cref="RelationshipAttribute" />.
         /// </param>
-        protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
+        protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null)
         {
             bool isCreatingResource = IsCreatingResource();
             bool isUpdatingResource = IsUpdatingResource();

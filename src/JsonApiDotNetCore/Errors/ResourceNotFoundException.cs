@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class ResourceNotFoundException : JsonApiException
     {
         public ResourceNotFoundException(string resourceId, string resourceType)
-            : base(new Error(HttpStatusCode.NotFound)
+            : base(new ErrorObject(HttpStatusCode.NotFound)
             {
                 Title = "The requested resource does not exist.",
                 Detail = $"Resource of type '{resourceType}' with ID '{resourceId}' does not exist."

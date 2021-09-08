@@ -9,19 +9,19 @@ namespace JsonApiDotNetCore.Serialization.Objects
     [PublicAPI]
     public sealed class ErrorDocument
     {
-        public IReadOnlyList<Error> Errors { get; }
+        public IReadOnlyList<ErrorObject> Errors { get; }
 
         public ErrorDocument()
-            : this(Array.Empty<Error>())
+            : this(Array.Empty<ErrorObject>())
         {
         }
 
-        public ErrorDocument(Error error)
+        public ErrorDocument(ErrorObject error)
             : this(error.AsEnumerable())
         {
         }
 
-        public ErrorDocument(IEnumerable<Error> errors)
+        public ErrorDocument(IEnumerable<ErrorObject> errors)
         {
             ArgumentGuard.NotNull(errors, nameof(errors));
 

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class ToManyRelationshipRequiredException : JsonApiException
     {
         public ToManyRelationshipRequiredException(string relationshipName)
-            : base(new Error(HttpStatusCode.Forbidden)
+            : base(new ErrorObject(HttpStatusCode.Forbidden)
             {
                 Title = "Only to-many relationships can be updated through this endpoint.",
                 Detail = $"Relationship '{relationshipName}' must be a to-many relationship."

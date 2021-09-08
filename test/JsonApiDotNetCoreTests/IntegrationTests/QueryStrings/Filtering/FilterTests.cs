@@ -40,7 +40,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
             error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");

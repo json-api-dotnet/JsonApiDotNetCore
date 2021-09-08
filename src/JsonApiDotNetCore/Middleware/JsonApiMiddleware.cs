@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.PreconditionFailed)
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.PreconditionFailed)
                 {
                     Title = "Detection of mid-air edit collisions using ETags is not supported."
                 });
@@ -146,7 +146,7 @@ namespace JsonApiDotNetCore.Middleware
             // Justification: Workaround for https://github.com/dotnet/aspnetcore/issues/32097 (fixed in .NET 6)
             if (contentType != null && contentType != allowedContentType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
                     Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
@@ -192,7 +192,7 @@ namespace JsonApiDotNetCore.Middleware
 
             if (!seenCompatibleMediaType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
+                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
                     Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
@@ -204,7 +204,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, Error error)
+        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, ErrorObject error)
         {
             httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int)error.StatusCode;

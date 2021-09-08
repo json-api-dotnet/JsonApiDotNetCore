@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (JsonApiException exception)
             {
-                foreach (Error error in exception.Errors)
+                foreach (ErrorObject error in exception.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{results.Count}]{error.Source.Pointer}";
                 }
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             catch (Exception exception)
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
-                throw new JsonApiException(new Error(HttpStatusCode.InternalServerError)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "An unhandled error occurred while processing an operation in this request.",
                     Detail = exception.Message,

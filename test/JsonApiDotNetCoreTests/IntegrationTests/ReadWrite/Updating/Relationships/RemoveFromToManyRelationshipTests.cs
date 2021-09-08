@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Only to-many relationships can be updated through this endpoint.");
             error.Detail.Should().Be("Relationship 'assignee' must be a to-many relationship.");
@@ -316,7 +316,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -356,7 +356,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
@@ -396,7 +396,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
@@ -435,7 +435,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             error.Detail.Should().StartWith("Request body: <<");
@@ -483,12 +483,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
             error1.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId1}' in relationship 'subscribers' does not exist.");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
             error2.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId2}' in relationship 'subscribers' does not exist.");
@@ -536,12 +536,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error1.Title.Should().Be("A related resource does not exist.");
             error1.Detail.Should().Be($"Related resource of type 'workTags' with ID '{tagId1}' in relationship 'tags' does not exist.");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error2.Title.Should().Be("A related resource does not exist.");
             error2.Detail.Should().Be($"Related resource of type 'workTags' with ID '{tagId2}' in relationship 'tags' does not exist.");
@@ -619,7 +619,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
@@ -659,7 +659,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
             error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
@@ -700,7 +700,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
 
@@ -821,7 +821,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().StartWith("Expected data[] element for 'subscribers' relationship. - Request body: <<");
@@ -854,7 +854,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");

@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
 
-        public RelationshipEntry Build(IIdentifiable resource, RelationshipAttribute requestRelationship)
+        public RelationshipObject Build(IIdentifiable resource, RelationshipAttribute requestRelationship)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(requestRelationship, nameof(requestRelationship));
@@ -64,23 +64,24 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds the values of the relationships object on a resource object. The server serializer only populates the "data" member when the relationship is
-        /// included, and adds links unless these are turned off. This means that if a relationship is not included and links are turned off, the entry would be
-        /// completely empty, ie { }, which is not conform JSON:API spec. In that case we return null which will omit the entry from the output.
+        /// Builds a <see cref="RelationshipObject" /> for the specified relationship on a resource. The serializer only populates the "data" member when the
+        /// relationship is included, and adds links unless these are turned off. This means that if a relationship is not included and links are turned off, the
+        /// object would be completely empty, ie { }, which is not conform JSON:API spec. In that case we return null, which will omit the object from the
+        /// output.
         /// </summary>
-        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
+        protected override RelationshipObject GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            RelationshipEntry relationshipEntry = null;
+            RelationshipObject relationshipObject = null;
             IReadOnlyCollection<IReadOnlyCollection<RelationshipAttribute>> relationshipChains = GetInclusionChainsStartingWith(relationship);
 
             if (Equals(relationship, _requestRelationship) || relationshipChains.Any())
             {
-                relationshipEntry = base.GetRelationshipData(relationship, resource);
+                relationshipObject = base.GetRelationshipData(relationship, resource);
 
-                if (relationshipChains.Any() && relationshipEntry.HasResource)
+                if (relationshipChains.Any() && relationshipObject.HasResource)
                 {
                     foreach (IReadOnlyCollection<RelationshipAttribute> chain in relationshipChains)
                     {
@@ -99,14 +100,14 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             if (links != null)
             {
-                // if relationshipLinks should be built for this entry, populate the "links" field.
-                relationshipEntry ??= new RelationshipEntry();
-                relationshipEntry.Links = links;
+                // if relationshipLinks should be built, populate the "links" field.
+                relationshipObject ??= new RelationshipObject();
+                relationshipObject.Links = links;
             }
 
-            // if neither "links" nor "data" was populated, return null, which will omit this entry from the output.
+            // if neither "links" nor "data" was populated, return null, which will omit this object from the output.
             // (see the NullValueHandling settings on <see cref="ResourceObject"/>)
-            return relationshipEntry;
+            return relationshipObject;
         }
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)

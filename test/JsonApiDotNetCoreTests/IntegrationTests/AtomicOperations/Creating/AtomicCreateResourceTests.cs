@@ -357,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Specifying the resource ID in operations that create a resource is not allowed.");
             error.Detail.Should().BeNull();
@@ -390,7 +390,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
             error.Detail.Should().BeNull();
@@ -426,7 +426,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.relationship' element is required.");
             error.Detail.Should().BeNull();
@@ -458,7 +458,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
             error.Detail.Should().BeNull();
@@ -496,7 +496,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data.type' element is required.");
             error.Detail.Should().BeNull();
@@ -532,7 +532,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
@@ -577,7 +577,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected single data element for create/update resource operation.");
             error.Detail.Should().BeNull();
@@ -617,7 +617,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
             error.Detail.Should().Be("Setting the initial value of 'createdAt' is not allowed.");
@@ -660,7 +660,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
             error.Detail.Should().Be("Attribute 'isArchived' is read-only.");
@@ -700,7 +700,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");

@@ -78,12 +78,12 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            resourceObject.Relationships = PruneRelationshipEntries(resourceObject);
+            resourceObject.Relationships = PruneRelationshipObjects(resourceObject);
         }
 
-        private static IDictionary<string, RelationshipEntry> PruneRelationshipEntries(ResourceObject resourceObject)
+        private static IDictionary<string, RelationshipObject> PruneRelationshipObjects(ResourceObject resourceObject)
         {
-            Dictionary<string, RelationshipEntry> pruned = resourceObject.Relationships.Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
+            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             return !pruned.Any() ? null : pruned;
@@ -159,18 +159,17 @@ namespace JsonApiDotNetCore.Serialization.Building
             chainRemainder.RemoveAt(0);
 
             string nextRelationshipName = nextRelationship.PublicName;
-            IDictionary<string, RelationshipEntry> relationshipsObject = resourceObject.Relationships;
+            IDictionary<string, RelationshipObject> relationshipsObject = resourceObject.Relationships;
 
-            // add the relationship entry in the relationship object.
-            if (!relationshipsObject.TryGetValue(nextRelationshipName, out RelationshipEntry relationshipEntry))
+            if (!relationshipsObject.TryGetValue(nextRelationshipName, out RelationshipObject relationshipObject))
             {
-                relationshipEntry = GetRelationshipData(nextRelationship, parent);
-                relationshipsObject[nextRelationshipName] = relationshipEntry;
+                relationshipObject = GetRelationshipData(nextRelationship, parent);
+                relationshipsObject[nextRelationshipName] = relationshipObject;
             }
 
-            relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
+            relationshipObject.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
-            if (relationshipEntry.HasResource)
+            if (relationshipObject.HasResource)
             {
                 // if the relationship is set, continue parsing the chain.
                 object related = nextRelationship.GetValue(parent);
@@ -186,14 +185,14 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// We only need an empty relationship object entry here. It will be populated in the ProcessRelationships method.
+        /// We only need an empty relationship object here. It will be populated in the ProcessRelationships method.
         /// </summary>
-        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
+        protected override RelationshipObject GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new RelationshipEntry
+            return new RelationshipObject
             {
                 Links = _linkBuilder.GetRelationshipLinks(relationship, resource)
             };

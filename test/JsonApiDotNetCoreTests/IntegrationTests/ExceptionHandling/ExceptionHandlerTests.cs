@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");

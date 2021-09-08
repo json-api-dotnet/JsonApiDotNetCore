@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             if (_clientSettingsProvider.IsIncludePlanetMoonsBlocked &&
                 existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Planet.Moons)))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Including moons is not permitted."
                 });

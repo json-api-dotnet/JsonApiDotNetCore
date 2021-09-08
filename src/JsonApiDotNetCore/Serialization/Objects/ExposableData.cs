@@ -54,12 +54,12 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// See https://www.newtonsoft.com/json/help/html/ConditionalProperties.htm.
         /// </summary>
         /// <remarks>
-        /// Moving this method to the derived class where it is needed only in the case of <see cref="RelationshipEntry" /> would make more sense, but Newtonsoft
-        /// does not support this.
+        /// Moving this method to the derived class where it is needed only in the case of <see cref="RelationshipObject" /> would make more sense, but
+        /// Newtonsoft does not support this.
         /// </remarks>
         public bool ShouldSerializeData()
         {
-            if (GetType() == typeof(RelationshipEntry))
+            if (GetType() == typeof(RelationshipObject))
             {
                 return IsPopulated;
             }

@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");

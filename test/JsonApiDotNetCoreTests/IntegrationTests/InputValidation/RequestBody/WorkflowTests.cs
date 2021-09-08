@@ -79,7 +79,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");

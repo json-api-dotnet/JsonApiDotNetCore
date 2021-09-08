@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be($"Page number cannot be higher than {MaximumPageNumber}.");
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be("Page size cannot be unconstrained.");
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
             error.Detail.Should().Be($"Page size cannot be higher than {MaximumPageSize}.");

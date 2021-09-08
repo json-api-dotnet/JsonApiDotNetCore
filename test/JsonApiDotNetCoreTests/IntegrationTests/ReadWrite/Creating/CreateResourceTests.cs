@@ -367,7 +367,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
             error.Detail.Should().BeNull();
@@ -390,7 +390,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
@@ -451,7 +451,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
@@ -506,7 +506,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             error.Detail.Should().Be("Expected resource of type 'workItems' in POST request body at endpoint '/workItems', instead of 'rgbColors'.");
@@ -538,7 +538,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
             error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body:");
@@ -570,7 +570,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
             error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
@@ -592,7 +592,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Invalid character after parsing");
@@ -624,7 +624,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");

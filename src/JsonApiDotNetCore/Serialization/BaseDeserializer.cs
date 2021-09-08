@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="data">
         /// Relationship data for <paramref name="resource" />. Is null when <paramref name="field" /> is not a <see cref="RelationshipAttribute" />.
         /// </param>
-        protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null);
+        protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null);
 
         protected object DeserializeBody(string body)
         {
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipAttributes">
         /// Exposed relationships for <paramref name="resource" />.
         /// </param>
-        private IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues,
+        private IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipObject> relationshipValues,
             IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (RelationshipAttribute attr in relationshipAttributes)
             {
-                bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
+                bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipObject relationshipData);
 
                 if (!relationshipIsProvided || !relationshipData.IsPopulated)
                 {
@@ -235,7 +235,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasOne relationship on a parsed resource.
         /// </summary>
-        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipEntry relationshipData)
+        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipObject relationshipData)
         {
             if (relationshipData.ManyData != null)
             {
@@ -254,7 +254,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        private void SetHasManyRelationship(IIdentifiable resource, HasManyAttribute hasManyRelationship, RelationshipEntry relationshipData)
+        private void SetHasManyRelationship(IIdentifiable resource, HasManyAttribute hasManyRelationship, RelationshipObject relationshipData)
         {
             if (relationshipData.ManyData == null)
             {

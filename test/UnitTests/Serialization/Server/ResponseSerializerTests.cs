@@ -418,7 +418,7 @@ namespace UnitTests.Serialization.Server
         public void SerializeError_Error_CanSerialize()
         {
             // Arrange
-            var error = new Error(HttpStatusCode.InsufficientStorage)
+            var error = new ErrorObject(HttpStatusCode.InsufficientStorage)
             {
                 Title = "title",
                 Detail = "detail"

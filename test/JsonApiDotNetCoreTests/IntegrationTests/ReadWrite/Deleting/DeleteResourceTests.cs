@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");

@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class ResourceIdMismatchException : JsonApiException
     {
         public ResourceIdMismatchException(string bodyId, string endpointId, string requestPath)
-            : base(new Error(HttpStatusCode.Conflict)
+            : base(new ErrorObject(HttpStatusCode.Conflict)
             {
                 Title = "Resource ID mismatch between request body and endpoint URL.",
                 Detail = $"Expected resource ID '{endpointId}' in PATCH request body at endpoint '{requestPath}', instead of '{bodyId}'."

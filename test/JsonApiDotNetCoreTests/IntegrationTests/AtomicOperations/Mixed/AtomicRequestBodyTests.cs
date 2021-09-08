@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Unexpected end of content while loading JObject.");
@@ -94,7 +94,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: No operations found.");
             error.Detail.Should().BeNull();
@@ -142,7 +142,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Error converting value \"merge\" to type");

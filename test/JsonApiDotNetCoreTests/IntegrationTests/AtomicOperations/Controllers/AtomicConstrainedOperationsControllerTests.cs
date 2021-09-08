@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -206,7 +206,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");

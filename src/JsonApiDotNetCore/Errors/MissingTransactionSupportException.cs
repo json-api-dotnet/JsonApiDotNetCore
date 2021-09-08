@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class MissingTransactionSupportException : JsonApiException
     {
         public MissingTransactionSupportException(string resourceType)
-            : base(new Error(HttpStatusCode.UnprocessableEntity)
+            : base(new ErrorObject(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Unsupported resource type in atomic:operations request.",
                 Detail = $"Operations on resources of type '{resourceType}' cannot be used because transaction support is unavailable."

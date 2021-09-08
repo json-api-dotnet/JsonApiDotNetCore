@@ -106,7 +106,7 @@ namespace JsonApiDotNetCore.Serialization
 
             if (exception.AtomicOperationIndex != null)
             {
-                foreach (Error error in requestException.Errors)
+                foreach (ErrorObject error in requestException.Errors)
                 {
                     error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
                 }
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (model == null && string.IsNullOrWhiteSpace(body))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Missing request body."
                 });

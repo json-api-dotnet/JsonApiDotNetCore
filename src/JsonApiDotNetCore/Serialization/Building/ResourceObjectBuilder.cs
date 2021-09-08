@@ -64,16 +64,15 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds the <see cref="RelationshipEntry" /> entries of the "relationships objects". The default behavior is to just construct a resource linkage with
-        /// the "data" field populated with "single" or "many" data. Depending on the requirements of the implementation (server or client serializer), this may
-        /// be overridden.
+        /// Builds a <see cref="RelationshipObject" />. The default behavior is to just construct a resource linkage with the "data" field populated with
+        /// "single" or "many" data.
         /// </summary>
-        protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
+        protected virtual RelationshipObject GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new RelationshipEntry
+            return new RelationshipObject
             {
                 Data = GetRelatedResourceLinkage(relationship, resource)
             };
@@ -149,11 +148,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             foreach (RelationshipAttribute rel in relationships)
             {
-                RelationshipEntry relData = GetRelationshipData(rel, resource);
+                RelationshipObject relData = GetRelationshipData(rel, resource);
 
                 if (relData != null)
                 {
-                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicName, relData);
+                    (ro.Relationships ??= new Dictionary<string, RelationshipObject>()).Add(rel.PublicName, relData);
                 }
             }
         }

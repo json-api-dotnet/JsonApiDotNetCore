@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Meta.Data.Should().ContainKey("stack-trace");
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");

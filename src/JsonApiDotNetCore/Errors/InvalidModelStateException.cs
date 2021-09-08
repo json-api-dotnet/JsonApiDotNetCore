@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        private static IEnumerable<Error> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors,
+        private static IEnumerable<ErrorObject> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors,
             JsonNamingPolicy namingPolicy)
         {
             ArgumentGuard.NotNull(violations, nameof(violations));
@@ -62,12 +62,12 @@ namespace JsonApiDotNetCore.Errors
             return violations.SelectMany(violation => FromModelStateViolation(violation, includeExceptionStackTraceInErrors, namingPolicy));
         }
 
-        private static IEnumerable<Error> FromModelStateViolation(ModelStateViolation violation, bool includeExceptionStackTraceInErrors,
+        private static IEnumerable<ErrorObject> FromModelStateViolation(ModelStateViolation violation, bool includeExceptionStackTraceInErrors,
             JsonNamingPolicy namingPolicy)
         {
             if (violation.Error.Exception is JsonApiException jsonApiException)
             {
-                foreach (Error error in jsonApiException.Errors)
+                foreach (ErrorObject error in jsonApiException.Errors)
                 {
                     yield return error;
                 }
@@ -100,9 +100,9 @@ namespace JsonApiDotNetCore.Errors
             return propertyName;
         }
 
-        private static Error FromModelError(ModelError modelError, string attributePath, bool includeExceptionStackTraceInErrors)
+        private static ErrorObject FromModelError(ModelError modelError, string attributePath, bool includeExceptionStackTraceInErrors)
         {
-            var error = new Error(HttpStatusCode.UnprocessableEntity)
+            var error = new ErrorObject(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Input validation failed.",
                 Detail = modelError.ErrorMessage,

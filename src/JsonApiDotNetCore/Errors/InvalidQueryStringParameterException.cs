@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Errors
         public string QueryParameterName { get; }
 
         public InvalidQueryStringParameterException(string queryParameterName, string genericMessage, string specificMessage, Exception innerException = null)
-            : base(new Error(HttpStatusCode.BadRequest)
+            : base(new ErrorObject(HttpStatusCode.BadRequest)
             {
                 Title = genericMessage,
                 Detail = specificMessage,

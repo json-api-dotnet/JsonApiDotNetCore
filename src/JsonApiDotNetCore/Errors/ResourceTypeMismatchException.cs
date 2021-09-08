@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class ResourceTypeMismatchException : JsonApiException
     {
         public ResourceTypeMismatchException(HttpMethod method, string requestPath, ResourceContext expected, ResourceContext actual)
-            : base(new Error(HttpStatusCode.Conflict)
+            : base(new ErrorObject(HttpStatusCode.Conflict)
             {
                 Title = "Resource type mismatch between request body and endpoint URL.",
                 Detail = $"Expected resource of type '{expected.PublicName}' in {method} request body at endpoint " +

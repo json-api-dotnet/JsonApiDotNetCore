@@ -36,14 +36,14 @@ namespace UnitTests.Serialization
                 {
                     Id = "1",
                     Type = primaryType,
-                    Relationships = new Dictionary<string, RelationshipEntry>()
+                    Relationships = new Dictionary<string, RelationshipObject>()
                 }
             };
         }
 
-        protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
+        protected RelationshipObject CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
-            var entry = new RelationshipEntry();
+            var relationshipObject = new RelationshipObject();
 
             ResourceIdentifierObject rio = relatedType == null
                 ? null
@@ -55,14 +55,14 @@ namespace UnitTests.Serialization
 
             if (isToManyData)
             {
-                entry.Data = relatedType != null ? rio.AsList() : new List<ResourceIdentifierObject>();
+                relationshipObject.Data = relatedType != null ? rio.AsList() : new List<ResourceIdentifierObject>();
             }
             else
             {
-                entry.Data = rio;
+                relationshipObject.Data = rio;
             }
 
-            return entry;
+            return relationshipObject;
         }
 
         protected Document CreateTestResourceDocument()
@@ -97,7 +97,7 @@ namespace UnitTests.Serialization
                 return DeserializeBody(body);
             }
 
-            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
+            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null)
             {
             }
         }

@@ -242,7 +242,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
 
-            content.SingleData.Relationships["dependents"] = new RelationshipEntry
+            content.SingleData.Relationships["dependents"] = new RelationshipObject
             {
                 Data = new ResourceIdentifierObject
                 {
@@ -266,7 +266,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
 
-            content.SingleData.Relationships["dependent"] = new RelationshipEntry
+            content.SingleData.Relationships["dependent"] = new RelationshipObject
             {
                 Data = new List<ResourceIdentifierObject>
                 {

@@ -560,7 +560,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
@@ -581,7 +581,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
@@ -602,7 +602,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including the requested relationship is not allowed.");
             error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
@@ -692,7 +692,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");

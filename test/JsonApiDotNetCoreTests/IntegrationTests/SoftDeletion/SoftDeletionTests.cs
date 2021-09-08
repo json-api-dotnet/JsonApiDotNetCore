@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'departments' with ID '{department.StringId}' does not exist.");
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{company.StringId}' does not exist.");
@@ -246,7 +246,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'departments' with ID '{department.StringId}' does not exist.");
@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{company.StringId}' does not exist.");
@@ -357,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'departments' with ID '{department.StringId}' does not exist.");
@@ -439,7 +439,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
 
@@ -495,7 +495,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'companies' with ID '{existingCompany.StringId}' in relationship 'company' does not exist.");
@@ -539,7 +539,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{existingCompany.StringId}' does not exist.");
@@ -593,7 +593,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
 
@@ -646,7 +646,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'companies' with ID '{existingCompany.StringId}' in relationship 'company' does not exist.");
@@ -681,7 +681,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{existingCompany.StringId}' does not exist.");
@@ -724,7 +724,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
 
@@ -760,7 +760,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'departments' with ID '{existingDepartment.StringId}' does not exist.");
@@ -800,7 +800,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'companies' with ID '{existingCompany.StringId}' in relationship 'company' does not exist.");
@@ -843,7 +843,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{existingCompany.StringId}' does not exist.");
@@ -886,7 +886,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
 
@@ -930,7 +930,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'companies' with ID '{existingCompany.StringId}' does not exist.");
@@ -972,7 +972,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
 
@@ -1034,7 +1034,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'departments' with ID '{existingDepartment.StringId}' does not exist.");

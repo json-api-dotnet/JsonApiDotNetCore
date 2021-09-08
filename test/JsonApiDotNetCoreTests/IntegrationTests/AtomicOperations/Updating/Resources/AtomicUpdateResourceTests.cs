@@ -481,7 +481,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships.Values.Should().OnlyContain(relationshipEntry => relationshipEntry.Data == null);
+            responseDocument.Results[0].SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data == null);
         }
 
         [Fact]
@@ -510,7 +510,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
             error.Detail.Should().BeNull();
@@ -614,7 +614,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.type' element is required.");
             error.Detail.Should().BeNull();
@@ -661,7 +661,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -710,7 +710,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -742,7 +742,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
             error.Detail.Should().BeNull();
@@ -784,7 +784,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data.type' element is required.");
             error.Detail.Should().BeNull();
@@ -826,7 +826,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -870,7 +870,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -922,7 +922,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected single data element for create/update resource operation.");
             error.Detail.Should().BeNull();
@@ -970,7 +970,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.type' and 'data.type' element.");
             error.Detail.Should().Be("Expected resource of type 'performers' in 'data.type', instead of 'playlists'.");
@@ -1021,7 +1021,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource ID mismatch between 'ref.id' and 'data.id' element.");
             error.Detail.Should().Be($"Expected resource with ID '{performerId1}' in 'data.id', instead of '{performerId2}'.");
@@ -1069,7 +1069,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource local ID mismatch between 'ref.lid' and 'data.lid' element.");
             error.Detail.Should().Be("Expected resource with local ID 'local-1' in 'data.lid', instead of 'local-2'.");
@@ -1119,7 +1119,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.id' and 'data.lid' element.");
             error.Detail.Should().Be($"Expected resource with ID '{performerId}' in 'data.id', instead of 'local-1' in 'data.lid'.");
@@ -1169,7 +1169,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.lid' and 'data.id' element.");
             error.Detail.Should().Be($"Expected resource with local ID 'local-1' in 'data.lid', instead of '{performerId}' in 'data.id'.");
@@ -1212,7 +1212,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
@@ -1257,7 +1257,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
@@ -1304,7 +1304,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
@@ -1353,7 +1353,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
             error.Detail.Should().Be("Changing the value of 'createdAt' is not allowed.");
@@ -1402,7 +1402,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
             error.Detail.Should().Be("Attribute 'isArchived' is read-only.");
@@ -1451,7 +1451,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
             error.Detail.Should().BeNull();
@@ -1500,7 +1500,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");

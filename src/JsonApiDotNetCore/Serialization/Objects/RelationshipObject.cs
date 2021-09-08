@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
-    public sealed class RelationshipEntry : ExposableData<ResourceIdentifierObject>
+    public sealed class RelationshipObject : ExposableData<ResourceIdentifierObject>
     {
         [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
         public RelationshipLinks Links { get; set; }

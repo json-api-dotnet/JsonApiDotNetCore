@@ -22,11 +22,11 @@ namespace JsonApiDotNetCore.Errors
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
-        public IReadOnlyList<Error> Errors { get; }
+        public IReadOnlyList<ErrorObject> Errors { get; }
 
         public override string Message => $"Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
 
-        public JsonApiException(Error error, Exception innerException = null)
+        public JsonApiException(ErrorObject error, Exception innerException = null)
             : base(null, innerException)
         {
             ArgumentGuard.NotNull(error, nameof(error));
@@ -34,10 +34,10 @@ namespace JsonApiDotNetCore.Errors
             Errors = error.AsArray();
         }
 
-        public JsonApiException(IEnumerable<Error> errors, Exception innerException = null)
+        public JsonApiException(IEnumerable<ErrorObject> errors, Exception innerException = null)
             : base(null, innerException)
         {
-            List<Error> errorList = errors?.ToList();
+            List<ErrorObject> errorList = errors?.ToList();
             ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
             Errors = errorList;

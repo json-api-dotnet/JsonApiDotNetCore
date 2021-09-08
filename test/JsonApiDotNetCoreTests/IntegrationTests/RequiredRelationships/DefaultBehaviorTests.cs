@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -293,7 +293,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -330,7 +330,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -374,7 +374,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 

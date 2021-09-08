@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             if (!value.StartsWith("x", StringComparison.Ordinal))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Invalid ID value.",
                     Detail = $"The value '{value}' is not a valid hexadecimal value."

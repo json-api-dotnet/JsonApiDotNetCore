@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{shop.StringId}' does not exist.");
@@ -280,7 +280,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{product.StringId}' does not exist.");
@@ -379,7 +379,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
@@ -433,7 +433,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
@@ -526,7 +526,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
@@ -582,7 +582,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
@@ -635,7 +635,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
@@ -670,7 +670,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
@@ -715,7 +715,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
@@ -750,7 +750,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");
@@ -792,7 +792,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webShops' with ID '{existingShop.StringId}' in relationship 'shop' does not exist.");
@@ -837,7 +837,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
@@ -881,7 +881,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be($"Related resource of type 'webProducts' with ID '{existingProduct.StringId}' in relationship 'products' does not exist.");
@@ -923,7 +923,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webShops' with ID '{existingShop.StringId}' does not exist.");
@@ -985,7 +985,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'webProducts' with ID '{existingProduct.StringId}' does not exist.");

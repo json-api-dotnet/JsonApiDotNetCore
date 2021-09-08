@@ -18,7 +18,7 @@ namespace UnitTests.Internal
         public void ErrorDocument_GetErrorStatusCode_IsCorrect(HttpStatusCode[] errorCodes, HttpStatusCode expected)
         {
             // Arrange
-            var document = new ErrorDocument(errorCodes.Select(code => new Error(code)));
+            var document = new ErrorDocument(errorCodes.Select(code => new ErrorObject(code)));
 
             // Act
             HttpStatusCode status = document.GetErrorStatusCode();

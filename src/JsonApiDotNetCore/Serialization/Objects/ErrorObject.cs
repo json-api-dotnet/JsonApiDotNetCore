@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     /// in the top level of a JSON:API document.
     /// </summary>
     [PublicAPI]
-    public sealed class Error
+    public sealed class ErrorObject
     {
         /// <summary>
         /// A unique identifier for this particular occurrence of the problem.
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonProperty]
         public ErrorMeta Meta { get; set; } = new();
 
-        public Error(HttpStatusCode statusCode)
+        public ErrorObject(HttpStatusCode statusCode)
         {
             StatusCode = statusCode;
         }

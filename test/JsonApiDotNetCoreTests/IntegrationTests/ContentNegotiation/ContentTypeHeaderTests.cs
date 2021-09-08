@@ -96,7 +96,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'text/html' for the Content-Type header value.");
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
@@ -224,7 +224,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
@@ -258,7 +258,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
@@ -326,7 +326,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
@@ -370,7 +370,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be(detail);

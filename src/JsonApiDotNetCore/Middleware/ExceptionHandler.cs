@@ -73,17 +73,17 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
-            IReadOnlyList<Error> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
-                exception is OperationCanceledException ? new Error((HttpStatusCode)499)
+            IReadOnlyList<ErrorObject> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
+                exception is OperationCanceledException ? new ErrorObject((HttpStatusCode)499)
                 {
                     Title = "Request execution was canceled."
-                }.AsArray() : new Error(HttpStatusCode.InternalServerError)
+                }.AsArray() : new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "An unhandled error occurred while processing this request.",
                     Detail = exception.Message
                 }.AsArray();
 
-            foreach (Error error in errors)
+            foreach (ErrorObject error in errors)
             {
                 ApplyOptions(error, exception);
             }
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Middleware
             return new ErrorDocument(errors);
         }
 
-        private void ApplyOptions(Error error, Exception exception)
+        private void ApplyOptions(ErrorObject error, Exception exception)
         {
             Exception resultException = exception is InvalidModelStateException ? null : exception;
 

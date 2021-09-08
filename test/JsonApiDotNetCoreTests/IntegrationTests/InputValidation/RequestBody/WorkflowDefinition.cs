@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
         {
             if (resource.Stage != WorkflowStage.Created)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                 {
                     Title = "Invalid workflow stage.",
                     Detail = $"Initial stage of workflow must be '{WorkflowStage.Created}'.",
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
         {
             if (!CanTransitionToStage(fromStage, toStage))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.UnprocessableEntity)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                 {
                     Title = "Invalid workflow stage.",
                     Detail = $"Cannot transition from '{fromStage}' to '{toStage}'.",

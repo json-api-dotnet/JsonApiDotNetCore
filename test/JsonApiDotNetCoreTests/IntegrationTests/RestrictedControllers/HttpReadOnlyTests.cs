@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support POST requests.");
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support PATCH requests.");
@@ -126,7 +126,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support DELETE requests.");

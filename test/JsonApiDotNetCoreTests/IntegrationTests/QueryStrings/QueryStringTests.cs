@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Unknown query string parameter.");
 
@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing query string parameter value.");
             error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");
