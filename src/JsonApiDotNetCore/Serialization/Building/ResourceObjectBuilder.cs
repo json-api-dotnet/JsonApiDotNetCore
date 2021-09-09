@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
@@ -168,15 +168,15 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 object value = attr.GetValue(resource);
 
-                if (_options.SerializerSettings.NullValueHandling == NullValueHandling.Ignore && value == null)
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && value == null)
                 {
-                    return;
+                    continue;
                 }
 
-                if (_options.SerializerSettings.DefaultValueHandling == DefaultValueHandling.Ignore &&
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
                     Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
                 {
-                    return;
+                    continue;
                 }
 
                 ro.Attributes.Add(attr.PublicName, value);

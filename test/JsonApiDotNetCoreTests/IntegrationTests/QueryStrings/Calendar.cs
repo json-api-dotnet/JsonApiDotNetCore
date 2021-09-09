@@ -12,6 +12,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public string TimeZone { get; set; }
 
         [Attr]
+        public bool ShowWeekNumbers { get; set; }
+
+        [Attr]
         public int DefaultAppointmentDurationInMinutes { get; set; }
 
         [HasMany]
