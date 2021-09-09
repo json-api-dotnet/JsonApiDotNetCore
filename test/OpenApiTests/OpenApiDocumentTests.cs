@@ -15,6 +15,7 @@ namespace OpenApiTests
         {
             UseController<AirplanesController>();
             UseController<FlightsController>();
+            UseController<FlightAttendantsController>();
         }
 
         [Fact]
