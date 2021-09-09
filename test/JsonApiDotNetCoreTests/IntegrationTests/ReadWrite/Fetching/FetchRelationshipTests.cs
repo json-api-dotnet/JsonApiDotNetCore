@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             string route = $"/workItems/{workItemId}/relationships/assignee";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             string route = $"/workItems/{workItem.StringId}/relationships/{Unknown.Relationship}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{department.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -183,7 +183,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{company.StringId}/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{department.StringId}/company";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -294,7 +294,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{company.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -350,7 +350,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{department.StringId}/relationships/company";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -432,7 +432,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             const string route = "/companies";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -488,7 +488,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             const string route = "/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -532,7 +532,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -586,7 +586,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -639,7 +639,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{existingDepartment.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -674,7 +674,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -717,7 +717,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -753,7 +753,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{existingDepartment.StringId}/relationships/company";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -793,7 +793,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{existingDepartment.StringId}/relationships/company";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -836,7 +836,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -879,7 +879,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -923,7 +923,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -965,7 +965,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/companies/{existingCompany.StringId}/relationships/departments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -1027,7 +1027,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             string route = $"/departments/{existingDepartment.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

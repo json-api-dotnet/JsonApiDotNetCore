@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeMany(collectionOfIdentifiable.ToArray());
             }
 
-            if (content is ErrorDocument errorDocument)
+            if (content is Document errorDocument)
             {
                 return SerializeErrorDocument(errorDocument);
             }
@@ -80,9 +80,11 @@ namespace JsonApiDotNetCore.Serialization
             throw new InvalidOperationException("Data being returned must be errors or resources.");
         }
 
-        private string SerializeErrorDocument(ErrorDocument errorDocument)
+        private string SerializeErrorDocument(Document document)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer =>
+            SetApiVersion(document);
+
+            return SerializeObject(document, _options.SerializerSettings, serializer =>
             {
                 serializer.ApplyErrorSettings();
             });
@@ -166,6 +168,15 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void AddTopLevelObjects(Document document)
         {
+            SetApiVersion(document);
+
+            document.Links = _linkBuilder.GetTopLevelLinks();
+            document.Meta = _metaBuilder.Build();
+            document.Included = _includedBuilder.Build();
+        }
+
+        private void SetApiVersion(Document document)
+        {
             if (_options.IncludeJsonApiVersion)
             {
                 document.JsonApi = new JsonApiObject
@@ -173,10 +184,6 @@ namespace JsonApiDotNetCore.Serialization
                     Version = "1.1"
                 };
             }
-
-            document.Links = _linkBuilder.GetTopLevelLinks();
-            document.Meta = _metaBuilder.Build();
-            document.Included = _includedBuilder.Build();
         }
     }
 }

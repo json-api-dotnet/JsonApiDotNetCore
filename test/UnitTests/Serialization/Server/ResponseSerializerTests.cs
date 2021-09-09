@@ -424,7 +424,7 @@ namespace UnitTests.Serialization.Server
                 Detail = "detail"
             };
 
-            var errorDocument = new ErrorDocument
+            var errorDocument = new Document
             {
                 Errors = error.AsList()
             };

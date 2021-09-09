@@ -301,7 +301,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             string route = $"/postOffices/{officeId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

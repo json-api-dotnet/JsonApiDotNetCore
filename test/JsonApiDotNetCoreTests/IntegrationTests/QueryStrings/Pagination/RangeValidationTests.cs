@@ -36,7 +36,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogs?page[number]=-1";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogs?page[number]=0";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             const string route = "/blogs?page[size]=-1";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

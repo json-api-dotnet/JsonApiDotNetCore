@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -165,7 +165,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -187,7 +187,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route, setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
@@ -232,8 +232,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) =
+                await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);

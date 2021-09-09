@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             string route = $"/webAccounts?filter[{Unknown.Relationship}]=equals(title,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             string route = $"/webAccounts?filter[posts.{Unknown.Relationship}]=equals(title,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/webAccounts?filter=equals(dateOfBirth,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

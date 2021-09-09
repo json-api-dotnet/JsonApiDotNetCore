@@ -9,8 +9,6 @@ using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -283,10 +281,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            var jObject = JsonConvert.DeserializeObject<JObject>(responseDocument);
-            jObject.Should().NotBeNull();
-
-            string errorId = jObject!["errors"].Should().NotBeNull().And.Subject.Select(element => (string)element["id"]).Single();
+            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
             responseDocument.Should().BeJson(@"{
   ""errors"": [
@@ -688,6 +683,40 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
   },
   ""data"": null
+}");
+        }
+
+        [Fact]
+        public async Task Includes_version_on_error_in_resource_endpoint()
+        {
+            // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeJsonApiVersion = true;
+
+            string attendeeId = Unknown.StringId.For<MeetingAttendee, Guid>();
+
+            string route = $"/meetingAttendees/{attendeeId}";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
+
+            responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1""
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'meetingAttendees' with ID '" + attendeeId + @"' does not exist.""
+    }
+  ]
 }");
         }
     }

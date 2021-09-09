@@ -88,8 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = "text/html";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -123,7 +122,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Act
             // ReSharper disable once RedundantArgumentDefaultValue
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -156,7 +155,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -182,8 +181,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             string contentType = $"{HeaderConstants.MediaType}; profile=something";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -216,8 +214,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             string contentType = $"{HeaderConstants.MediaType}; ext=something";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -250,8 +247,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -284,8 +280,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -318,8 +313,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -360,8 +354,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Act
             // ReSharper disable once RedundantArgumentDefaultValue
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);

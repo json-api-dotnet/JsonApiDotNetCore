@@ -8,6 +8,6 @@ namespace JsonApiDotNetCore.Middleware
     /// </summary>
     public interface IExceptionHandler
     {
-        ErrorDocument HandleException(Exception exception);
+        Document HandleException(Exception exception);
     }
 }

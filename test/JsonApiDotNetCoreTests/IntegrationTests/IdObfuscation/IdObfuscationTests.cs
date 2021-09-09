@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             const string route = "/bankAccounts/not-a-hex-value";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         }
 
         [Fact]
-        public async Task Cannot_delete_missing_resource()
+        public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
             var codec = new HexadecimalCodec();
@@ -458,7 +458,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             string route = $"/bankAccounts/{stringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

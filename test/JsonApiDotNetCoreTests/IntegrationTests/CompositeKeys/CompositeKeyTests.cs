@@ -527,7 +527,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

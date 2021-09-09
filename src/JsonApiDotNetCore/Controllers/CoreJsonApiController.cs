@@ -21,7 +21,7 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(errors, nameof(errors));
 
-            var document = new ErrorDocument
+            var document = new Document
             {
                 Errors = errors.ToList()
             };

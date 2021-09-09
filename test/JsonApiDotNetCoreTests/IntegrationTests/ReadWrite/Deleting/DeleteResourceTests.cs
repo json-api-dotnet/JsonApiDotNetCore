@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
         }
 
         [Fact]
-        public async Task Cannot_delete_missing_resource()
+        public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
             string workItemId = Unknown.StringId.For<WorkItem, int>();
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
             string route = $"/workItems/{workItemId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);

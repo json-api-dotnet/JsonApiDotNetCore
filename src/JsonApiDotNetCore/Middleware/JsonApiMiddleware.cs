@@ -209,7 +209,7 @@ namespace JsonApiDotNetCore.Middleware
             httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int)error.StatusCode;
 
-            var errorDocument = new ErrorDocument
+            var errorDocument = new Document
             {
                 Errors = error.AsList()
             };

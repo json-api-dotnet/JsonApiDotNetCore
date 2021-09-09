@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             return base.GetLogLevel(exception);
         }
 
-        protected override ErrorDocument CreateErrorDocument(Exception exception)
+        protected override Document CreateErrorDocument(Exception exception)
         {
             if (exception is ConsumerArticleIsNoLongerAvailableException articleException)
             {

@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
             const string route = "/tables";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);

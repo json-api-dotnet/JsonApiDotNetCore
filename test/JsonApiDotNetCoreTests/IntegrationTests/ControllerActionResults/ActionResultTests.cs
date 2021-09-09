@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             string route = $"/toothbrushes/{BaseToothbrushesController.EmptyActionResultId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithErrorObjectId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithStringParameter}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorObjectId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadGateway);
@@ -130,7 +130,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorCollectionId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

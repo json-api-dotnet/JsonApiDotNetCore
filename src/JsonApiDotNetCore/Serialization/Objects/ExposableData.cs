@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// Internally used to indicate if the document's primary data should still be serialized when it's value is null. This is used when a single resource is
         /// requested but not present (eg /articles/1/author).
         /// </summary>
-        internal bool IsPopulated { get; private set; }
+        internal bool IsPopulated { get; set; }
 
         internal bool HasResource => IsPopulated && !IsEmpty;
 
@@ -59,12 +59,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
         /// </remarks>
         public bool ShouldSerializeData()
         {
-            if (GetType() == typeof(RelationshipObject))
-            {
-                return IsPopulated;
-            }
-
-            return true;
+            return IsPopulated;
         }
 
         /// <summary>

@@ -225,7 +225,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -264,7 +264,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -304,7 +304,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -343,7 +343,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -391,7 +391,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -444,7 +444,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -520,7 +520,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{workItemId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -560,7 +560,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/{Unknown.Relationship}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
@@ -601,7 +601,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
@@ -687,7 +687,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
@@ -720,7 +720,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);

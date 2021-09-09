@@ -86,7 +86,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             string route = $"/blogPosts/{post.StringId}?page[number]=2";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             string route = $"/blogPosts/{post.StringId}/author?page[size]=5";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -389,7 +389,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             string route = $"/webAccounts?page[number]={Unknown.Relationship}:1";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -410,7 +410,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             string route = $"/webAccounts?page[size]=posts.{Unknown.Relationship}:1";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

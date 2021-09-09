@@ -75,12 +75,12 @@ namespace JsonApiDotNetCore.Serialization
 
         private object DeserializeOperationsDocument(string body)
         {
-            AtomicOperationsDocument document;
+            Document document;
 
             using (CodeTimingSessionManager.Current.Measure("Newtonsoft.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
             {
                 JToken bodyToken = LoadJToken(body);
-                document = bodyToken.ToObject<AtomicOperationsDocument>();
+                document = bodyToken.ToObject<Document>();
             }
 
             if ((document?.Operations).IsNullOrEmpty())

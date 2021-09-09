@@ -244,7 +244,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/filterableResources?filter=equals(someDouble,someTimeSpan)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

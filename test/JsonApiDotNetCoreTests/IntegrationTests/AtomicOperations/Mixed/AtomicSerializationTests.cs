@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeExceptionStackTraceInErrors = false;
             options.IncludeJsonApiVersion = true;
             options.AllowClientGeneratedIds = true;
         }
@@ -96,6 +98,59 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
         ""links"": {
           ""self"": ""http://localhost/performers/" + newPerformer.StringId + @"""
         }
+      }
+    }
+  ]
+}");
+        }
+
+        [Fact]
+        public async Task Includes_version_with_ext_on_error_in_operations_endpoint()
+        {
+            // Arrange
+            string musicTrackId = Unknown.StringId.For<MusicTrack, Guid>();
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "remove",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = musicTrackId
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
+
+            responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1"",
+    ""ext"": [
+      ""https://jsonapi.org/ext/atomic""
+    ]
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'musicTracks' with ID '" + musicTrackId + @"' does not exist."",
+      ""source"": {
+        ""pointer"": ""/atomic:operations[0]""
       }
     }
   ]

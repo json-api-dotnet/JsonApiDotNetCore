@@ -163,8 +163,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody, setRequestHeaders: setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) =
+                await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);

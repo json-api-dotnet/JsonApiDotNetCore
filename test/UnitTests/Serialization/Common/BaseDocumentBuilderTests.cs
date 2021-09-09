@@ -32,7 +32,7 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.Null(document.Data);
-            Assert.False(document.IsPopulated);
+            Assert.True(document.IsPopulated);
         }
 
         [Fact]

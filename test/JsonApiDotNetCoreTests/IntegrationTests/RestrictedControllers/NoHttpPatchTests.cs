@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
             string route = $"/chairs/{existingChair.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);

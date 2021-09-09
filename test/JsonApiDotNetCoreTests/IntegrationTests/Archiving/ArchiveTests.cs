@@ -457,7 +457,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             const string route = "/televisionBroadcasts";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
@@ -589,7 +589,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
@@ -648,7 +648,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             string route = $"/televisionBroadcasts/{broadcast.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);

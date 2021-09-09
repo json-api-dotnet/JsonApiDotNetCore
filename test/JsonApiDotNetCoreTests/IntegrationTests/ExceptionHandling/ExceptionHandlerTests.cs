@@ -67,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             string route = $"/consumerArticles/{consumerArticle.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             string route = $"/throwingArticles/{throwingArticle.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);

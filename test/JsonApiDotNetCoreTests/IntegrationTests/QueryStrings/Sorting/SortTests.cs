@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/blogPosts/{post.StringId}?sort=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/blogPosts/{post.StringId}/author?sort=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -468,7 +468,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
@@ -489,7 +489,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort=dateOfBirth";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);

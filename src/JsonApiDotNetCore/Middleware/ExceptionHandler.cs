@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Middleware
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
-        public ErrorDocument HandleException(Exception exception)
+        public Document HandleException(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Middleware
             return exception.Message;
         }
 
-        protected virtual ErrorDocument CreateErrorDocument(Exception exception)
+        protected virtual Document CreateErrorDocument(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Middleware
                 ApplyOptions(error, exception);
             }
 
-            return new ErrorDocument
+            return new Document
             {
                 Errors = errors.ToList()
             };

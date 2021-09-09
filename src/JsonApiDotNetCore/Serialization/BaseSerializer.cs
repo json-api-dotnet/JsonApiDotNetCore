@@ -48,7 +48,10 @@ namespace JsonApiDotNetCore.Serialization
 
             if (resource == null)
             {
-                return new Document();
+                return new Document
+                {
+                    IsPopulated = true
+                };
             }
 
             return new Document
