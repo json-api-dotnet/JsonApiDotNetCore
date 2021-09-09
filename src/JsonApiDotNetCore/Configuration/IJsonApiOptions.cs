@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Configuration
         LinkTypes RelationshipLinks { get; }
 
         /// <summary>
-        /// Whether or not the total resource count should be included in all document-level meta objects. False by default.
+        /// Whether or not the total resource count should be included in top-level meta objects. This requires an additional database query. False by default.
         /// </summary>
         bool IncludeTotalResourceCount { get; }
 

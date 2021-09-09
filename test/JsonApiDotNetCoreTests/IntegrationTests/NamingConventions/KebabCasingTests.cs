@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             responseDocument.Included[0].Relationships.Should().BeNull();
             responseDocument.Included[0].Links.Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
 
-            responseDocument.Meta["total-resources"].Should().Be(2);
+            responseDocument.Meta["total"].Should().Be(2);
         }
 
         [Fact]

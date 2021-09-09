@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             if (_paginationContext.TotalResourceCount != null)
             {
-                const string keyName = "TotalResources";
+                const string keyName = "Total";
 
                 string key = _options.SerializerOptions.DictionaryKeyPolicy == null
                     ? keyName

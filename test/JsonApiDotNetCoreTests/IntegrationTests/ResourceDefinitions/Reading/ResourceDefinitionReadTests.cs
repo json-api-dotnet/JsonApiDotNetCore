@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             responseDocument.ManyData[0].Id.Should().Be(planets[1].StringId);
             responseDocument.ManyData[1].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["totalResources"].Should().Be(2);
+            responseDocument.Meta["total"].Should().Be(2);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["totalResources"].Should().Be(1);
+            responseDocument.Meta["total"].Should().Be(1);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
