@@ -3,11 +3,10 @@ using JetBrains.Annotations;
 namespace OpenApiTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum AircraftType
+    public enum Airline
     {
-        Turboprops,
-        LightJet,
-        MidSizeJet,
-        JumboJet
+        DeltaAirLines,
+        LufthansaGroup,
+        AirFranceKlm
     }
 }

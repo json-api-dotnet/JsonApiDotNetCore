@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
@@ -7,10 +8,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class FlightAttendant : Identifiable<long>
+    public sealed class FlightAttendant : Identifiable<string>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
-        public override long Id { get; set; }
+        public override string Id { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public FlightAttendantExpertise ExpertiseLevel { get; set; }
@@ -27,16 +28,18 @@ namespace OpenApiTests
 
         [Attr(Capabilities = AttrCapabilities.All)]
         [Required]
+        [Range(18, 75)]
+        public int Age { get; set; }
+
+        [Attr(Capabilities = AttrCapabilities.All)]
+        [Required]
         [Url]
         public string ProfileImageUrl { get; set; }
 
-        [Attr(Capabilities = AttrCapabilities.All)]
-        public ICollection<string> DestinationPreferences { get; set; }
+        [HasMany]
+        public ISet<Flight> ScheduledForFlights { get; set; }
 
         [HasMany]
-        public ISet<Flight> Flights { get; set; }
-
-        [HasOne]
-        public Flight PurserOnFlight { get; set; }
+        public ISet<Flight> StandbyForFlights { get; set; }
     }
 }

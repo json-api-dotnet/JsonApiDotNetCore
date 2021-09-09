@@ -22,15 +22,14 @@ namespace OpenApiTests
         {
             builder.Entity<Flight>()
                 .HasMany(flight => flight.CabinPersonnel)
-                .WithMany(flightAttendant => flightAttendant.Flights);
-
-            builder.Entity<FlightAttendant>()
-                .Ignore(flightAttendant => flightAttendant.DestinationPreferences);
+                .WithMany(flightAttendant => flightAttendant.ScheduledForFlights);
 
             builder.Entity<Flight>()
-                .HasOne(flight => flight.Purser)
-                .WithOne(flightAttendant => flightAttendant.PurserOnFlight)
-                .HasForeignKey<Flight>("PurserId");
+                .HasMany(flight => flight.BackupPersonnel)
+                .WithMany(flightAttendant => flightAttendant.StandbyForFlights);
+
+            builder.Entity<Flight>()
+                .Ignore(flight => flight.ServicesOnBoard);
         }
     }
 }

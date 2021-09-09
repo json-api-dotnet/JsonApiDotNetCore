@@ -44,11 +44,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             IList<DataProperty> replacementProperties = null;
 
-            if (type.IsSubclassOfOpenGeneric(typeof(Identifiable<>)))
-            {
-                replacementProperties = dataContract.ObjectProperties.Where(IsIdentity).ToArray();
-            }
-            else if (type.IsAssignableTo(typeof(IIdentifiable)))
+            if (type.IsAssignableTo(typeof(IIdentifiable)))
             {
                 replacementProperties = GetDataPropertiesThatExistInResourceContext(type, dataContract);
             }
@@ -59,6 +55,16 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             }
 
             return dataContract;
+        }
+
+        private static bool IsIdentifiableBaseType(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                return type.GetGenericTypeDefinition() == typeof(Identifiable<>);
+            }
+
+            return type == typeof(Identifiable);
         }
 
         private static bool IsIdentity(DataProperty property)
