@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
@@ -13,7 +12,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public IDictionary<string, object> Meta { get; set; }
 
         [JsonProperty("op")]
-        [JsonConverter(typeof(StringEnumConverter))]
         public AtomicOperationCode Code { get; set; }
 
         [JsonProperty("ref", NullValueHandling = NullValueHandling.Ignore)]

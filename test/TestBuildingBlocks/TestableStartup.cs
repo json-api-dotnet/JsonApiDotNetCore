@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace TestBuildingBlocks
 {
@@ -21,7 +20,6 @@ namespace TestBuildingBlocks
         {
             options.IncludeExceptionStackTraceInErrors = true;
             options.SerializerSettings.Formatting = Formatting.Indented;
-            options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)

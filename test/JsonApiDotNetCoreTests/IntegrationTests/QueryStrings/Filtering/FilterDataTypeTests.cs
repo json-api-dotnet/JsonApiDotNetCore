@@ -10,6 +10,7 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Converters;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -27,6 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
+            options.SerializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         [Theory]
