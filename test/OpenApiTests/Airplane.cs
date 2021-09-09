@@ -10,7 +10,6 @@ namespace OpenApiTests
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Airplane : Identifiable<string>
     {
-
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [Required]
         [MaxLength(255)]
@@ -42,7 +41,3 @@ namespace OpenApiTests
         public ISet<Flight> Flights { get; set; }
     }
 }
-
-
-
-

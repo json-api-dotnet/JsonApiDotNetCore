@@ -29,7 +29,7 @@ namespace OpenApiTests.ClientLibrary
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest()
+                    Attributes = new AirplaneAttributesInPatchRequest
                     {
                         ManufacturedAt = manufacturedAt
                     }

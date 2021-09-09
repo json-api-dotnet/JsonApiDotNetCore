@@ -28,7 +28,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 // [MaxLength(2000)]
 // public string ExternalId { get; set; }
 
-
 namespace OpenApiTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
@@ -45,7 +44,7 @@ namespace OpenApiTests
         [Attr]
         public DateTime? ArrivesAt { get; set; }
 
-        [Attr(PublicName =  "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
+        [Attr(PublicName = "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         public Airline Airline { get; set; }
 
         [Attr]

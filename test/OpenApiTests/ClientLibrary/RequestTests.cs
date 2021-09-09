@@ -181,7 +181,8 @@ namespace OpenApiTests.ClientLibrary
             };
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.ManufacturedAt, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
+                airplane => airplane.ManufacturedAt, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance,
+                airplane => airplane.AirtimeInHours))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -293,9 +294,9 @@ namespace OpenApiTests.ClientLibrary
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToOneAirplaneRequestData()
+            var requestDocument = new ToOneAirplaneRequestData
             {
-                Data = new AirplaneIdentifier()
+                Data = new AirplaneIdentifier
                 {
                     Id = "bBJHu",
                     Type = AirplanesResourceType.Airplanes
@@ -348,7 +349,7 @@ namespace OpenApiTests.ClientLibrary
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData()
+            var requestDocument = new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -398,7 +399,7 @@ namespace OpenApiTests.ClientLibrary
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData()
+            var requestDocument = new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -448,7 +449,7 @@ namespace OpenApiTests.ClientLibrary
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToManyFlightAttendantRequestData()
+            var requestDocument = new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

@@ -283,7 +283,7 @@ namespace OpenApiTests.ClientLibrary
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        OperatingAirplane = new ToOneAirplaneRequestData()
+                        OperatingAirplane = new ToOneAirplaneRequestData
                         {
                             Data = new AirplaneIdentifier
                             {
@@ -466,9 +466,9 @@ namespace OpenApiTests.ClientLibrary
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await apiClient.PatchFlightOperatingAirplaneRelationshipAsync(8712, new ToOneAirplaneRequestData()
+            await apiClient.PatchFlightOperatingAirplaneRelationshipAsync(8712, new ToOneAirplaneRequestData
             {
-                Data = new AirplaneIdentifier()
+                Data = new AirplaneIdentifier
                 {
                     Id = "Adk2a",
                     Type = AirplanesResourceType.Airplanes
@@ -504,7 +504,8 @@ namespace OpenApiTests.ClientLibrary
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightFlightAttendantsRelationshipAsync(Convert.ToInt32(flightId));
+            FlightAttendantIdentifierCollectionResponseDocument
+                document = await apiClient.GetFlightFlightAttendantsRelationshipAsync(Convert.ToInt32(flightId));
 
             // Assert
             document.Data.Should().HaveCount(2);
@@ -522,7 +523,7 @@ namespace OpenApiTests.ClientLibrary
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PostFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData()
+            Func<Task> action = async () => await apiClient.PostFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -551,7 +552,7 @@ namespace OpenApiTests.ClientLibrary
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PatchFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData()
+            Func<Task> action = async () => await apiClient.PatchFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -580,7 +581,7 @@ namespace OpenApiTests.ClientLibrary
             IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.DeleteFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData()
+            Func<Task> action = async () => await apiClient.DeleteFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

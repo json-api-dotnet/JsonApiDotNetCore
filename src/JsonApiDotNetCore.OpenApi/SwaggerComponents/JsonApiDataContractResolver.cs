@@ -57,21 +57,6 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             return dataContract;
         }
 
-        private static bool IsIdentifiableBaseType(Type type)
-        {
-            if (type.IsGenericType)
-            {
-                return type.GetGenericTypeDefinition() == typeof(Identifiable<>);
-            }
-
-            return type == typeof(Identifiable);
-        }
-
-        private static bool IsIdentity(DataProperty property)
-        {
-            return property.MemberInfo.Name == nameof(Identifiable.Id);
-        }
-
         private static DataContract ReplacePropertiesInDataContract(DataContract dataContract, IEnumerable<DataProperty> dataProperties)
         {
             return DataContract.ForObject(dataContract.UnderlyingType, dataProperties, dataContract.ObjectExtensionDataType,

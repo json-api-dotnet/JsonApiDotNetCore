@@ -21,7 +21,10 @@
 # [Errors](errors.md)
 # [Metadata](meta.md)
 # [Caching](caching.md)
-# [OpenAPI](openapi.md)
+
+# OpenAPI
+## [Specification Generator](openapi/openapi.md))
+## [Generated Client](openapi/openapiclient.md))
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)

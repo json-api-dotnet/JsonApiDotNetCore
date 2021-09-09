@@ -39,8 +39,8 @@ public class Startup
         IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
         services.AddJsonApi<AppDbContext>(mvcBuilder: mvcBuilder);
 
-	    // Adds the Swashbuckle integration.
-	    services.AddOpenApi(mvcBuilder);
+        // Adds the Swashbuckle integration.
+        services.AddOpenApi(mvcBuilder);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
