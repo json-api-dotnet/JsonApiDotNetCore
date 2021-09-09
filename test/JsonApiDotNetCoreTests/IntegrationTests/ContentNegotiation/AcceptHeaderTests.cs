@@ -198,6 +198,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
             error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
             error.Detail.Should().Be("Please include 'application/vnd.api+json' in the Accept header values.");
+            error.Source.Header.Should().Be("Accept");
         }
 
         [Fact]
@@ -244,6 +245,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
             error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
             error.Detail.Should().Be("Please include 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' in the Accept header values.");
+            error.Source.Header.Should().Be("Accept");
         }
     }
 }

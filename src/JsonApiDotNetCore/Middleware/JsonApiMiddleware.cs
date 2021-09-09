@@ -108,7 +108,11 @@ namespace JsonApiDotNetCore.Middleware
             {
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.PreconditionFailed)
                 {
-                    Title = "Detection of mid-air edit collisions using ETags is not supported."
+                    Title = "Detection of mid-air edit collisions using ETags is not supported.",
+                    Source = new ErrorSource
+                    {
+                        Header = "If-Match"
+                    }
                 });
 
                 return false;
@@ -149,7 +153,11 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value.",
+                    Source = new ErrorSource
+                    {
+                        Header = "Content-Type"
+                    }
                 });
 
                 return false;
@@ -195,7 +203,11 @@ namespace JsonApiDotNetCore.Middleware
                 await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
-                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
+                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values.",
+                    Source = new ErrorSource
+                    {
+                        Header = "Accept"
+                    }
                 });
 
                 return false;

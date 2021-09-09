@@ -175,6 +175,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
             error.Detail.Should().BeNull();
+            error.Source.Header.Should().Be("If-Match");
         }
 
         [Fact]
