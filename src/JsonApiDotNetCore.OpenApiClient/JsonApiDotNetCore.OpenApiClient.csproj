@@ -7,7 +7,7 @@
 
   <PropertyGroup>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;openapi;swagger;client;nswag</PackageTags>
-    <Description>Contains utility methods to enrich the usability of an OpenAPI gnerated client.</Description>
+    <Description>Contains utility methods to enrich the usability of an OpenAPI generated client.</Description>
     <Authors>json-api-dotnet</Authors>
     <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

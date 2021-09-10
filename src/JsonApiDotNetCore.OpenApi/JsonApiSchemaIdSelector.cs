@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
-using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.OpenApi
 {

@@ -1,4 +1,4 @@
-# OpenAPI
+# OpenAPI generator
 
 You can describe your API with an OpenAPI specification using the [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) integration for JsonApiDotNetCore. 
 

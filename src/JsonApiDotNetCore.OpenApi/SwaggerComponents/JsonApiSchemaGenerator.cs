@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
-using JsonApiDotNetCore.Configuration;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -66,16 +66,9 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 return jsonApiDocumentSchema;
             }
 
-            OpenApiSchema schema;
-
-            if (IsJsonApiResourceDocument(type))
-            {
-                schema = GenerateResourceJsonApiDocumentSchema(type);
-            }
-            else
-            {
-                schema = _defaultSchemaGenerator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);
-            }
+            OpenApiSchema schema = IsJsonApiResourceDocument(type)
+                ? GenerateResourceJsonApiDocumentSchema(type)
+                : _defaultSchemaGenerator.GenerateSchema(type, schemaRepository, memberInfo, parameterInfo);
 
             if (IsSingleNonPrimaryDataDocument(type))
             {

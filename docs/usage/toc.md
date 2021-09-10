@@ -23,8 +23,8 @@
 # [Caching](caching.md)
 
 # OpenAPI
-## [Specification Generator](openapi/openapi.md))
-## [Generated Client](openapi/openapiclient.md))
+## [Describing Your API](openapi/openapi-generator.md))
+## [Generating A Client](openapi/client-generator.md))
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;

@@ -121,7 +121,6 @@ namespace OpenApiTests.ClientLibrary
             flight.Meta["docs"].Should().Be(flightMetaValue);
 
             flight.Attributes.Destination.Should().Be(flightDestination);
-            flight.Attributes.FlightNumber.Should().Be(null);
             flight.Attributes.ServicesOnBoard.Should().HaveCount(3);
             flight.Attributes.ServicesOnBoard.ElementAt(0).Should().Be(fightServiceOnBoard);
             flight.Attributes.ServicesOnBoard.ElementAt(1).Should().Be(string.Empty);
@@ -187,7 +186,6 @@ namespace OpenApiTests.ClientLibrary
             document.Data.Relationships.Should().BeNull();
             document.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
             document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
-            document.Data.Attributes.FlightNumber.Should().BeNull();
             document.Data.Attributes.ServicesOnBoard.Should().BeNull();
             document.Data.Attributes.Destination.Should().BeNull();
             document.Data.Attributes.OperatedBy.Should().Be(default(Airline));
