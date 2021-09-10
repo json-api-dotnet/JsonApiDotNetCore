@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Humanizer;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.Documents;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
@@ -35,7 +36,7 @@ namespace JsonApiDotNetCore.OpenApi
 
         private readonly IControllerResourceMapping _controllerResourceMapping;
         private readonly NamingStrategy _namingStrategy;
-        private readonly ResourceNameFormatterProxy _formatter;
+        private readonly ResourceNameFormatter _formatter;
 
         public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, NamingStrategy namingStrategy)
         {
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCore.OpenApi
 
             _controllerResourceMapping = controllerResourceMapping;
             _namingStrategy = namingStrategy;
-            _formatter = new ResourceNameFormatterProxy(namingStrategy);
+            _formatter = new ResourceNameFormatter(namingStrategy);
         }
 
         public string GetOperationId(ApiDescription endpoint)

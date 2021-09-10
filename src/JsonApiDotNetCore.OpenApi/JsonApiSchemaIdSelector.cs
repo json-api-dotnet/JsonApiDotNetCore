@@ -30,10 +30,10 @@ namespace JsonApiDotNetCore.OpenApi
             [typeof(ResourceIdentifierObject<>)] = "###-identifier"
         };
 
-        private readonly ResourceNameFormatterProxy _formatter;
+        private readonly ResourceNameFormatter _formatter;
         private readonly IResourceContextProvider _resourceContextProvider;
 
-        public JsonApiSchemaIdSelector(ResourceNameFormatterProxy formatter, IResourceContextProvider resourceContextProvider)
+        public JsonApiSchemaIdSelector(ResourceNameFormatter formatter, IResourceContextProvider resourceContextProvider)
         {
             ArgumentGuard.NotNull(formatter, nameof(formatter));
             ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));

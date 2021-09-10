@@ -41,8 +41,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
             NamingStrategy namingStrategy = ((DefaultContractResolver)jsonApiOptions.SerializerSettings.ContractResolver)!.NamingStrategy;
-            ResourceNameFormatterProxy resourceNameFormatterProxy = new(namingStrategy);
-            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatterProxy, resourceContextProvider);
+            ResourceNameFormatter resourceNameFormatter = new(namingStrategy);
+            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceContextProvider);
 
             return resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor, defaultSchemaGenerator,
                 jsonApiSchemaIdSelector, resourceTypeSchemaGenerator);
