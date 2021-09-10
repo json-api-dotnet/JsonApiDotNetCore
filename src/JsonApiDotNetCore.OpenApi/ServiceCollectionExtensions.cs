@@ -32,8 +32,6 @@ namespace JsonApiDotNetCore.OpenApi
             AddSwaggerGenerator(scope, services, setupSwaggerGenAction);
             AddSwashbuckleCliCompatibility(scope, mvcBuilder);
             AddOpenApiEndpointConvention(scope, mvcBuilder);
-
-            AddJsonApiInputFormatterWorkaround(mvcBuilder);
         }
 
         private static void AddCustomApiExplorer(IServiceCollection services, IMvcCoreBuilder mvcBuilder)
@@ -52,6 +50,8 @@ namespace JsonApiDotNetCore.OpenApi
             });
 
             mvcBuilder.AddApiExplorer();
+
+            mvcBuilder.AddMvcOptions(options => options.InputFormatters.Add(new JsonApiRequestFormatMetadataProvider()));
         }
 
         private static void AddSwaggerGenerator(IServiceScope scope, IServiceCollection services, Action<SwaggerGenOptions> setupSwaggerGenAction)
@@ -131,12 +131,6 @@ namespace JsonApiDotNetCore.OpenApi
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
 
             mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(resourceContextProvider, controllerResourceMapping)));
-        }
-
-        private static void AddJsonApiInputFormatterWorkaround(IMvcCoreBuilder mvcBuilder)
-        {
-            // See https://github.com/json-api-dotnet/JsonApiDotNetCore/pull/972 for why this is needed.
-            mvcBuilder.AddMvcOptions(options => options.InputFormatters.Add(new JsonApiInputFormatterWithMetadata()));
         }
     }
 }
