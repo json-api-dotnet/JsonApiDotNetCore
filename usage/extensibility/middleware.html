@@ -86,7 +86,7 @@ services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&
     {
         services.AddSingleton&lt;CustomAsyncQueryStringActionFilter&gt;();
 
-        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+        IMvcCoreBuilder builder = services.AddMvcCore();
         services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: builder);
 
         // Ensure this call is placed after the AddJsonApi call.
@@ -119,7 +119,7 @@ services.AddService&lt;IAsyncJsonApiExceptionFilter, CustomAsyncExceptionFilter&
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/usage/extensibility/middleware.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/extensibility/middleware.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
