@@ -425,7 +425,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         [Theory]
         [InlineData("two", "one two", "'one','two','three'")]
         [InlineData("two", "nine", "'one','two','three','four','five'")]
-        public async Task Can_filter_in_set(string matchingText, string nonMatchingText, string filterText)
+        public async Task Can_filter_in_string_set(string matchingText, string nonMatchingText, string filterText)
         {
             // Arrange
             var resource = new FilterableResource
@@ -455,6 +455,45 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["someString"].Should().Be(resource.SomeString);
+        }
+
+        [Fact]
+        public async Task Can_filter_in_enum_set()
+        {
+            // Arrange
+            var resource = new FilterableResource
+            {
+                SomeEnumCollection = new []
+                {
+                    DayOfWeek.Friday, DayOfWeek.Saturday, DayOfWeek.Sunday
+                }
+            };
+
+            var otherResource = new FilterableResource
+            {
+                SomeEnumCollection = new []
+                {
+                    DayOfWeek.Monday, DayOfWeek.Tuesday
+                }
+            };
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<FilterableResource>();
+                dbContext.FilterableResources.AddRange(resource, otherResource);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/filterableResources?filter=any(someEnumCollection,'Saturday','Sunday')";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.ManyData.Should().HaveCount(1);
+            responseDocument.ManyData[0].Id.Should().Be(resource.Id.ToString());
         }
 
         [Fact]

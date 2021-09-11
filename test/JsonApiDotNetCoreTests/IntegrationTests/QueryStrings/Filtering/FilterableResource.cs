@@ -75,8 +75,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         [Attr]
         public DayOfWeek SomeEnum { get; set; }
 
+
         [Attr]
         public DayOfWeek? SomeNullableEnum { get; set; }
+
+        [Attr]
+        public DayOfWeek[] SomeEnumCollection { get; set; }
 
         [HasMany]
         public ICollection<FilterableResource> Children { get; set; }
