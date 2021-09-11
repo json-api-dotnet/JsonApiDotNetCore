@@ -25,11 +25,11 @@ dotnet new webapi
 ### Install
 
 ```
-dotnet add package JsonApiDotnetCore
+dotnet add package JsonApiDotNetCore
 
 - or -
 
-Install-Package JsonApiDotnetCore
+Install-Package JsonApiDotNetCore
 ```
 
 ### Define Models
