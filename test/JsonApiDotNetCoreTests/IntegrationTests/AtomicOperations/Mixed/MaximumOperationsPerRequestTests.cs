@@ -38,6 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "add",
                         data = new
                         {
+                            type = "performers"
                         }
                     },
                     new
@@ -45,6 +46,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "remove",
                         data = new
                         {
+                            type = "performers"
                         }
                     },
                     new
@@ -52,6 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "update",
                         data = new
                         {
+                            type = "performers"
                         }
                     }
                 }
