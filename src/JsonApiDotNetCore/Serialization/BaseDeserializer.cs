@@ -1,17 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -23,11 +19,9 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDeserializer
     {
         private protected static readonly CollectionConverter CollectionConverter = new();
-        private Document _document;
 
         protected IResourceGraph ResourceGraph { get; }
         protected IResourceFactory ResourceFactory { get; }
-
         protected int? AtomicOperationIndex { get; set; }
 
         protected BaseDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
@@ -57,31 +51,45 @@ namespace JsonApiDotNetCore.Serialization
         /// </param>
         protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null);
 
-        protected object DeserializeBody(string body)
+        protected Document DeserializeDocument(string body, JsonSerializerOptions serializerOptions)
         {
             ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
-            using (CodeTimingSessionManager.Current.Measure("Newtonsoft.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
+            try
             {
-                JToken bodyJToken = LoadJToken(body);
-                _document = bodyJToken.ToObject<Document>();
+                using (CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
+                {
+                    return JsonSerializer.Deserialize<Document>(body, serializerOptions);
+                }
             }
-
-            if (_document != null)
+            catch (JsonException exception)
             {
-                if (_document.IsManyData)
+                // JsonException.Path looks great for setting error.source.pointer, but unfortunately it is wrong in most cases.
+                // This is due to the use of custom converters, which are unable to interact with internal position tracking.
+                // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
+                throw new JsonApiSerializationException(null, exception.Message, exception);
+            }
+        }
+
+        protected object DeserializeData(string body, JsonSerializerOptions serializerOptions)
+        {
+            Document document = DeserializeDocument(body, serializerOptions);
+
+            if (document != null)
+            {
+                if (document.IsManyData)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (list)"))
                     {
-                        return _document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                        return document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                     }
                 }
 
-                if (_document.SingleData != null)
+                if (document.SingleData != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (single)"))
                     {
-                        return ParseResourceObject(_document.SingleData);
+                        return ParseResourceObject(document.SingleData);
                     }
                 }
             }
@@ -121,8 +129,21 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    object convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
-                    attr.SetValue(resource, convertedValue);
+                    if (newValue is JsonInvalidAttributeInfo info)
+                    {
+                        if (newValue == JsonInvalidAttributeInfo.Id)
+                        {
+                            throw new JsonApiSerializationException(null, "Resource ID is read-only.", atomicOperationIndex: AtomicOperationIndex);
+                        }
+
+                        string typeName = info.AttributeType.GetFriendlyTypeName();
+
+                        throw new JsonApiSerializationException(null,
+                            $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.",
+                            atomicOperationIndex: AtomicOperationIndex);
+                    }
+
+                    attr.SetValue(resource, newValue);
                     AfterProcessField(resource, attr);
                 }
             }
@@ -157,7 +178,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipObject relationshipData);
 
-                if (!relationshipIsProvided || !relationshipData.IsPopulated)
+                if (!relationshipIsProvided || !relationshipData.Data.IsPopulated)
                 {
                     continue;
                 }
@@ -173,19 +194,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             return resource;
-        }
-
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
-        protected JToken LoadJToken(string body)
-#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
-        {
-            using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
-            {
-                // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/509
-                DateParseHandling = DateParseHandling.None
-            };
-
-            return JToken.Load(jsonReader);
         }
 
         /// <summary>
@@ -292,9 +300,9 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         [AssertionMethod]
-        private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        private void AssertHasType(IResourceIdentity resourceIdentity, RelationshipAttribute relationship)
         {
-            if (resourceIdentifierObject.Type == null)
+            if (resourceIdentity.Type == null)
             {
                 string details = relationship != null
                     ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
@@ -330,11 +338,11 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         [AssertionMethod]
-        private void AssertHasNoLid(ResourceIdentifierObject resourceIdentifierObject)
+        private void AssertHasNoLid(IResourceIdentity resourceIdentityObject)
         {
-            if (resourceIdentifierObject.Lid != null)
+            if (resourceIdentityObject.Lid != null)
             {
-                throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null, atomicOperationIndex: AtomicOperationIndex);
+                throw new JsonApiSerializationException(null, "Local IDs cannot be used at this endpoint.", atomicOperationIndex: AtomicOperationIndex);
             }
         }
 
@@ -346,24 +354,6 @@ namespace JsonApiDotNetCore.Serialization
                     $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
-        }
-
-        private object ConvertAttrValue(object newValue, Type targetType)
-        {
-            if (newValue is JContainer jObject)
-            {
-                // the attribute value is a complex type that needs additional deserialization
-                return DeserializeComplexType(jObject, targetType);
-            }
-
-            // the attribute value is a native C# type.
-            object convertedValue = RuntimeTypeConverter.ConvertType(newValue, targetType);
-            return convertedValue;
-        }
-
-        private object DeserializeComplexType(JContainer obj, Type targetType)
-        {
-            return obj.ToObject(targetType);
         }
     }
 }

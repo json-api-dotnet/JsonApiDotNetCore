@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -517,7 +517,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            string requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("assignee_duplicate", "assignee");
+            string requestBodyText = JsonSerializer.Serialize(requestBody).Replace("assignee_duplicate", "assignee");
 
             const string route = "/workItems?include=assignee";
 
@@ -637,7 +637,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Local IDs cannot be used at this endpoint.");
+            error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Local IDs cannot be used at this endpoint. - Request body: <<");
         }
     }

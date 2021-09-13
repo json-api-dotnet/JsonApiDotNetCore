@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -57,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             responseDocument.Included[0].Relationships.Should().BeNull();
             responseDocument.Included[0].Links.Self.Should().Be($"/public-api/diving-boards/{pools[1].DivingBoards[0].StringId}");
 
-            responseDocument.Meta["total"].Should().Be(2);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(2);
         }
 
         [Fact]

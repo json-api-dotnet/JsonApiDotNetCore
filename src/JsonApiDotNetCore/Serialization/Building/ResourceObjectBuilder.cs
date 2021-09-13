@@ -79,9 +79,9 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Gets the value for the <see cref="ExposableData{T}.Data" /> property.
+        /// Gets the value for the data property.
         /// </summary>
-        protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
+        protected SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
@@ -94,22 +94,17 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject" /> for a HasOne relationship.
         /// </summary>
-        private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
+        private SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
             var relatedResource = (IIdentifiable)relationship.GetValue(resource);
-
-            if (relatedResource != null)
-            {
-                return GetResourceIdentifier(relatedResource);
-            }
-
-            return null;
+            ResourceIdentifierObject resourceIdentifierObject = relatedResource != null ? GetResourceIdentifier(relatedResource) : null;
+            return new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObject);
         }
 
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject" />s for a HasMany relationship.
         /// </summary>
-        private IList<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
+        private SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
             object value = relationship.GetValue(resource);
             ICollection<IIdentifiable> relatedResources = CollectionConverter.ExtractResources(value);
@@ -124,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            return manyData;
+            return new SingleOrManyData<ResourceIdentifierObject>(manyData);
         }
 
         /// <summary>

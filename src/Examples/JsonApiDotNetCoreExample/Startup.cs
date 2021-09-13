@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCoreExample.Data;
@@ -9,8 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace JsonApiDotNetCoreExample
 {
@@ -52,8 +51,8 @@ namespace JsonApiDotNetCoreExample
                         options.UseRelativeLinks = true;
                         options.ValidateModelState = true;
                         options.IncludeTotalResourceCount = true;
-                        options.SerializerSettings.Formatting = Formatting.Indented;
-                        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                        options.SerializerOptions.WriteIndented = true;
+                        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
 #endif

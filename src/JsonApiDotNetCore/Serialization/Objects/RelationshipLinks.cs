@@ -1,16 +1,20 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See "links" in https://jsonapi.org/format/1.1/#document-resource-object-relationships.
     /// </summary>
+    [PublicAPI]
     public sealed class RelationshipLinks
     {
-        [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("self")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Self { get; set; }
 
-        [JsonProperty("related", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("related")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Related { get; set; }
 
         internal bool HasValue()

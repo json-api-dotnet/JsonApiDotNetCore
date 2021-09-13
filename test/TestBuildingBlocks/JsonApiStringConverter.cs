@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 #pragma warning disable AV1008 // Class should not be static
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
 
 namespace TestBuildingBlocks
 {
@@ -11,16 +11,15 @@ namespace TestBuildingBlocks
     {
         public static string ExtractErrorId(string responseBody)
         {
-            var jObject = JsonConvert.DeserializeObject<JObject>(responseBody);
-
-            JToken jArray = jObject?["errors"];
-
-            if (jArray != null)
+            try
             {
-                return jArray.Select(element => (string)element["id"]).Single();
+                using JsonDocument document = JsonDocument.Parse(responseBody);
+                return document.RootElement.GetProperty("errors").EnumerateArray().Single().GetProperty("id").GetString();
             }
-
-            throw new Exception($"Failed to extract Error ID from response body '{responseBody}'.");
+            catch (Exception exception)
+            {
+                throw new Exception($"Failed to extract Error ID from response body '{responseBody}'.", exception);
+            }
         }
     }
 }

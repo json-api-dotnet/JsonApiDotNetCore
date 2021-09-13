@@ -305,7 +305,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             responseDocument.SingleData.Type.Should().Be("workItems");
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingTag.StringId);

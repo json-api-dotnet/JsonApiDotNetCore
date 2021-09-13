@@ -77,7 +77,7 @@ namespace JsonApiDotNetCore.Serialization
 
             SetApiVersion(document);
 
-            return SerializeObject(document, _options.SerializerSettings);
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         private void SetApiVersion(Document document)
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Serialization
 
             return new AtomicResultObject
             {
-                Data = resourceObject
+                Data = new SingleOrManyData<ResourceObject>(resourceObject)
             };
         }
 
@@ -129,10 +129,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             SetApiVersion(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.ApplyErrorSettings();
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
     }
 }

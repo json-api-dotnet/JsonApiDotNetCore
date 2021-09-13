@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
@@ -87,10 +88,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             responseDocument.Results.Should().HaveCount(2);
 
             responseDocument.Results[0].SingleData.Meta.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Meta["Copyright"].Should().Be("(C) 2018. All rights reserved.");
+            ((JsonElement)responseDocument.Results[0].SingleData.Meta["copyright"]).GetString().Should().Be("(C) 2018. All rights reserved.");
 
             responseDocument.Results[1].SingleData.Meta.Should().HaveCount(1);
-            responseDocument.Results[1].SingleData.Meta["Copyright"].Should().Be("(C) 1994. All rights reserved.");
+            ((JsonElement)responseDocument.Results[1].SingleData.Meta["copyright"]).GetString().Should().Be("(C) 1994. All rights reserved.");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -142,7 +143,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Meta.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Meta["Notice"].Should().Be(TextLanguageMetaDefinition.NoticeText);
+            ((JsonElement)responseDocument.Results[0].SingleData.Meta["notice"]).GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

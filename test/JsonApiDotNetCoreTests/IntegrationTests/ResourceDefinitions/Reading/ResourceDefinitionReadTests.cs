@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -159,7 +160,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             responseDocument.ManyData[0].Id.Should().Be(planets[1].StringId);
             responseDocument.ManyData[1].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["total"].Should().Be(2);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(2);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -208,7 +209,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["total"].Should().Be(1);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -372,7 +373,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(star.StringId);
             responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
-            responseDocument.SingleData.Attributes["kind"].Should().Be(star.Kind.ToString());
+            responseDocument.SingleData.Attributes["kind"].Should().Be(star.Kind);
             responseDocument.SingleData.Relationships.Should().NotBeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]

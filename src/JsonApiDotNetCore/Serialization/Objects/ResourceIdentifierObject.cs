@@ -1,23 +1,29 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See https://jsonapi.org/format/1.1/#document-resource-identifier-objects.
     /// </summary>
-    public class ResourceIdentifierObject
+    [PublicAPI]
+    public sealed class ResourceIdentifierObject : IResourceIdentity
     {
-        [JsonProperty("type", Order = -4)]
+        [JsonPropertyName("type")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public string Type { get; set; }
 
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore, Order = -3)]
+        [JsonPropertyName("id")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Id { get; set; }
 
-        [JsonProperty("lid", NullValueHandling = NullValueHandling.Ignore, Order = -2)]
+        [JsonPropertyName("lid")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Lid { get; set; }
 
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
     }
 }

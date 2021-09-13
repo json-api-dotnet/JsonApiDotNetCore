@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,15 @@ namespace NoEntityFrameworkTests
     public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
+
+        protected override JsonSerializerOptions SerializerOptions
+        {
+            get
+            {
+                var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
+                return options.SerializerOptions;
+            }
+        }
 
         public WorkItemTests(WebApplicationFactory<Startup> factory)
         {
@@ -107,7 +118,7 @@ namespace NoEntityFrameworkTests
             responseDocument.SingleData.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
             responseDocument.SingleData.Attributes["title"].Should().Be(newWorkItem.Title);
             responseDocument.SingleData.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
-            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId.ToString());
+            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
         }
 
         [Fact]

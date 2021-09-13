@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -54,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.Should().NotBeNull();
-            responseDocument.Meta["total"].Should().Be(1);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
         }
 
         [Fact]
@@ -75,7 +76,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.Should().NotBeNull();
-            responseDocument.Meta["total"].Should().Be(0);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(0);
         }
 
         [Fact]

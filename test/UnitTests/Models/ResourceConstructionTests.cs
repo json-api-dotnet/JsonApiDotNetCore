@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Design;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -7,7 +8,6 @@ using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Models
@@ -49,7 +49,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             object result = serializer.Deserialize(content);
@@ -82,7 +82,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             Action action = () => serializer.Deserialize(content);
@@ -117,7 +117,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             Action action = () => serializer.Deserialize(content);

@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -84,10 +83,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             SetApiVersion(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.ApplyErrorSettings();
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>
@@ -116,10 +112,7 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.NullValueHandling = NullValueHandling.Include;
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>
@@ -157,10 +150,7 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.NullValueHandling = NullValueHandling.Include;
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>

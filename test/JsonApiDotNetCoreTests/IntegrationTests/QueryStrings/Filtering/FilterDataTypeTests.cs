@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Common;
@@ -10,7 +12,6 @@ using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Converters;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -28,7 +29,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.EnableLegacyFilterNotation = false;
-            options.SerializerSettings.Converters.Add(new StringEnumConverter());
+
+            if (!options.SerializerOptions.Converters.Any(converter => converter is JsonStringEnumMemberConverter))
+            {
+                options.SerializerOptions.Converters.Add(new JsonStringEnumMemberConverter());
+                options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
+            }
         }
 
         [Theory]
@@ -67,7 +73,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes[attributeName].Should().Be(value is Enum ? value.ToString() : value);
+            responseDocument.ManyData[0].Attributes[attributeName].Should().Be(value);
         }
 
         [Fact]
@@ -123,7 +129,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someGuid"].Should().Be(resource.SomeGuid.ToString());
+            responseDocument.ManyData[0].Attributes["someGuid"].Should().Be(resource.SomeGuid);
         }
 
         [Fact]
@@ -151,7 +157,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTime"].Should().BeCloseTo(resource.SomeDateTime);
+            responseDocument.ManyData[0].Attributes["someDateTime"].As<DateTime>().Should().BeCloseTo(resource.SomeDateTime);
         }
 
         [Fact]
@@ -179,7 +185,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTimeOffset"].Should().BeCloseTo(resource.SomeDateTimeOffset);
+            responseDocument.ManyData[0].Attributes["someDateTimeOffset"].As<DateTimeOffset>().Should().BeCloseTo(resource.SomeDateTimeOffset);
         }
 
         [Fact]
@@ -207,7 +213,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someTimeSpan"].Should().Be(resource.SomeTimeSpan.ToString());
+            responseDocument.ManyData[0].Attributes["someTimeSpan"].Should().Be(resource.SomeTimeSpan);
         }
 
         [Fact]

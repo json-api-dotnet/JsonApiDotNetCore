@@ -31,8 +31,8 @@ namespace UnitTests.Serialization.Common
             Document document = _builder.PublicBuild((TestResource)null);
 
             // Assert
-            Assert.Null(document.Data);
-            Assert.True(document.IsPopulated);
+            Assert.Null(document.Data.Value);
+            Assert.True(document.Data.IsPopulated);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace UnitTests.Serialization.Common
             Document document = _builder.PublicBuild(new List<TestResource>());
 
             // Assert
-            Assert.NotNull(document.Data);
+            Assert.NotNull(document.Data.Value);
             Assert.Empty(document.ManyData);
         }
 
@@ -56,8 +56,8 @@ namespace UnitTests.Serialization.Common
             Document document = _builder.PublicBuild(dummy);
 
             // Assert
-            Assert.NotNull(document.Data);
-            Assert.True(document.IsPopulated);
+            Assert.NotNull(document.Data.Value);
+            Assert.True(document.Data.IsPopulated);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace UnitTests.Serialization.Common
 
             // Act
             Document document = _builder.PublicBuild(resources);
-            var data = (List<ResourceObject>)document.Data;
+            IList<ResourceObject> data = document.Data.ManyValue;
 
             // Assert
             Assert.Equal(2, data.Count);

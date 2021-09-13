@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
 
-            _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
+            _included = new HashSet<ResourceObject>(ResourceIdentityComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private static IDictionary<string, RelationshipObject> PruneRelationshipObjects(ResourceObject resourceObject)
         {
-            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
+            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.Data.IsPopulated || pair.Value.Links != null)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             return !pruned.Any() ? null : pruned;
@@ -140,6 +140,11 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private void ProcessRelationship(IIdentifiable parent, IList<RelationshipAttribute> inclusionChain)
         {
+            if (parent == null)
+            {
+                return;
+            }
+
             ResourceObject resourceObject = TryGetBuiltResourceObjectFor(parent);
 
             if (resourceObject == null)
@@ -169,7 +174,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             relationshipObject.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
-            if (relationshipObject.HasResource)
+            if (relationshipObject.Data.HasResource)
             {
                 // if the relationship is set, continue parsing the chain.
                 object related = nextRelationship.GetValue(parent);

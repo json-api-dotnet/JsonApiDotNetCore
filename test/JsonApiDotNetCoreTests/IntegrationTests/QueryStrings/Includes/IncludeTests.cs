@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -222,7 +223,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("comments");
             responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
-            responseDocument.Included[0].Attributes["createdAt"].Should().BeCloseTo(post.Comments.Single().CreatedAt);
+            responseDocument.Included[0].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(post.Comments.Single().CreatedAt);
         }
 
         [Fact]
@@ -364,7 +365,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Included[1].Type.Should().Be("comments");
             responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
-            responseDocument.Included[1].Attributes["createdAt"].Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
+            responseDocument.Included[1].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
         }
 
         [Fact]

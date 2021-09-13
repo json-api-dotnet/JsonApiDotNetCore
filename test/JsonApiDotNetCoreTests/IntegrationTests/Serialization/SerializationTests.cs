@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -37,6 +38,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             options.IncludeExceptionStackTraceInErrors = false;
             options.AllowClientGeneratedIds = true;
             options.IncludeJsonApiVersion = false;
+
+            if (!options.SerializerOptions.Converters.Any(converter => converter is JsonTimeSpanConverter))
+            {
+                options.SerializerOptions.Converters.Add(new JsonTimeSpanConverter());
+            }
         }
 
         [Fact]
@@ -650,6 +656,52 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     }
   }
 }");
+        }
+
+        [Fact]
+        public async Task Can_update_resource_with_relationship_for_type_at_end()
+        {
+            // Arrange
+            MeetingAttendee existingAttendee = _fakers.MeetingAttendee.Generate();
+            existingAttendee.Meeting = _fakers.Meeting.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Attendees.Add(existingAttendee);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    id = existingAttendee.StringId,
+                    attributes = new
+                    {
+                        displayName = existingAttendee.DisplayName
+                    },
+                    relationships = new
+                    {
+                        meeting = new
+                        {
+                            data = new
+                            {
+                                id = existingAttendee.Meeting.StringId,
+                                type = "meetings"
+                            }
+                        }
+                    },
+                    type = "meetingAttendees"
+                }
+            };
+
+            string route = $"/meetingAttendees/{existingAttendee.StringId}";
+
+            // Act
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
         }
 
         [Fact]

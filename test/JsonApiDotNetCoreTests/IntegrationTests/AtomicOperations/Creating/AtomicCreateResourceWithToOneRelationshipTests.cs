@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -542,7 +542,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                 }
             };
 
-            string requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("ownedBy_duplicate", "ownedBy");
+            string requestBodyText = JsonSerializer.Serialize(requestBody).Replace("ownedBy_duplicate", "ownedBy");
 
             const string route = "/operations";
 

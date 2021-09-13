@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
+using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +88,9 @@ namespace JsonApiDotNetCore.Configuration
             configureResourceGraph?.Invoke(_resourceGraphBuilder);
 
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
+
+            _options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
+
             _services.AddSingleton(resourceGraph);
         }
 

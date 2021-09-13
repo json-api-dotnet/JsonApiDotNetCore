@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
@@ -12,35 +12,43 @@ namespace JsonApiDotNetCore.Serialization.Objects
     [PublicAPI]
     public sealed class ErrorObject
     {
-        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("id")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
-        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("links")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ErrorLinks Links { get; set; }
 
         [JsonIgnore]
         public HttpStatusCode StatusCode { get; set; }
 
-        [JsonProperty("status")]
+        [JsonPropertyName("status")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public string Status
         {
             get => StatusCode.ToString("d");
             set => StatusCode = (HttpStatusCode)int.Parse(value);
         }
 
-        [JsonProperty("code", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("code")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Code { get; set; }
 
-        [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("title")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Title { get; set; }
 
-        [JsonProperty("detail", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("detail")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Detail { get; set; }
 
-        [JsonProperty("source", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("source")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public ErrorSource Source { get; set; }
 
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
 
         public ErrorObject(HttpStatusCode statusCode)

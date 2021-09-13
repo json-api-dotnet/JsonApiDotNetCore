@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -60,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(certificate.StringId);
-            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(certificate.IssueDate);
+            responseDocument.SingleData.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate);
             responseDocument.SingleData.Attributes["hasExpired"].Should().Be(false);
         }
 
@@ -173,7 +174,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(newIssueDate);
+            responseDocument.SingleData.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(newIssueDate);
             responseDocument.SingleData.Attributes["hasExpired"].Should().Be(true);
             responseDocument.SingleData.Relationships["issuer"].SingleData.Id.Should().Be(existingOffice.StringId);
 

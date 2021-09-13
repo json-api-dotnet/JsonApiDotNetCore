@@ -381,7 +381,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTime"].Should().BeCloseTo(resource.SomeDateTime);
+            responseDocument.ManyData[0].Attributes["someDateTime"].As<DateTime>().Should().BeCloseTo(resource.SomeDateTime);
         }
 
         [Theory]

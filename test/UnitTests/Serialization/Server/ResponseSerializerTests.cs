@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 using UnitTests.TestModels;
 using Xunit;
 
@@ -368,14 +368,14 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             const string expectedFormatted = @"{
-                ""meta"":{ ""test"": ""meta"" },
                 ""data"":{
                     ""type"":""oneToManyPrincipals"",
                     ""id"":""10"",
                     ""attributes"":{
                         ""attributeMember"":null
                     }
-                }
+                },
+                ""meta"":{ ""test"": ""meta"" }
             }";
 
             string expected = Regex.Replace(expectedFormatted, @"\s+", "");
@@ -399,7 +399,6 @@ namespace UnitTests.Serialization.Server
 
             // Assert
             const string expectedFormatted = @"{
-                ""meta"":{ ""test"": ""meta"" },
                 ""links"":{
                     ""self"":""http://www.dummy.com/dummy-self-link"",
                     ""first"":""http://www.dummy.com/dummy-first-link"",
@@ -407,7 +406,8 @@ namespace UnitTests.Serialization.Server
                     ""prev"":""http://www.dummy.com/dummy-prev-link"",
                     ""next"":""http://www.dummy.com/dummy-next-link""
                 },
-                ""data"": null
+                ""data"": null,
+                ""meta"":{ ""test"": ""meta"" }
             }";
 
             string expected = Regex.Replace(expectedFormatted, @"\s+", "");
@@ -429,7 +429,7 @@ namespace UnitTests.Serialization.Server
                 Errors = error.AsList()
             };
 
-            string expectedJson = JsonConvert.SerializeObject(new
+            string expectedJson = JsonSerializer.Serialize(new
             {
                 errors = new[]
                 {

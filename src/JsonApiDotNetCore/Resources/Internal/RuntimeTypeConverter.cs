@@ -16,7 +16,8 @@ namespace JsonApiDotNetCore.Resources.Internal
             {
                 if (!CanContainNull(type))
                 {
-                    throw new FormatException($"Failed to convert 'null' to type '{type.Name}'.");
+                    string targetTypeName = type.GetFriendlyTypeName();
+                    throw new FormatException($"Failed to convert 'null' to type '{targetTypeName}'.");
                 }
 
                 return null;
@@ -73,7 +74,10 @@ namespace JsonApiDotNetCore.Resources.Internal
             catch (Exception exception) when (exception is FormatException || exception is OverflowException || exception is InvalidCastException ||
                 exception is ArgumentException)
             {
-                throw new FormatException($"Failed to convert '{value}' of type '{runtimeType.Name}' to type '{type.Name}'.", exception);
+                string runtimeTypeName = runtimeType.GetFriendlyTypeName();
+                string targetTypeName = type.GetFriendlyTypeName();
+
+                throw new FormatException($"Failed to convert '{value}' of type '{runtimeTypeName}' to type '{targetTypeName}'.", exception);
             }
         }
 

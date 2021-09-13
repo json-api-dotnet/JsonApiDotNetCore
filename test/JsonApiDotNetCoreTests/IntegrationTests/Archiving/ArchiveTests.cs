@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(broadcast.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].Should().BeCloseTo(broadcast.ArchivedAt);
+            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcast.ArchivedAt.GetValueOrDefault());
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(broadcast.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].Should().BeNull();
+            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(broadcasts[1].StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].Should().BeNull();
+            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Id.Should().Be(broadcasts[0].StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].Should().BeCloseTo(broadcasts[0].ArchivedAt);
+            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcasts[0].ArchivedAt.GetValueOrDefault());
             responseDocument.ManyData[1].Id.Should().Be(broadcasts[1].StringId);
             responseDocument.ManyData[1].Attributes["archivedAt"].Should().BeNull();
         }
@@ -192,12 +192,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
+
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(station.StringId);
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-            responseDocument.Included[0].Attributes["archivedAt"].Should().BeCloseTo(station.Broadcasts.ElementAt(0).ArchivedAt);
+            responseDocument.Included[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt0);
             responseDocument.Included[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
             responseDocument.Included[1].Attributes["archivedAt"].Should().BeNull();
         }
@@ -225,7 +227,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Id.Should().Be(comment.AppliesTo.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].Should().BeCloseTo(comment.AppliesTo.ArchivedAt);
+            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(comment.AppliesTo.ArchivedAt.GetValueOrDefault());
         }
 
         [Fact]
@@ -277,9 +279,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
+
             responseDocument.ManyData.Should().HaveCount(2);
             responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].Should().BeCloseTo(station.Broadcasts.ElementAt(0).ArchivedAt);
+            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt0);
             responseDocument.ManyData[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
             responseDocument.ManyData[1].Attributes["archivedAt"].Should().BeNull();
         }
@@ -338,12 +342,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            DateTimeOffset archivedAt0 = network.Stations.ElementAt(0).Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
+
             responseDocument.ManyData.Should().HaveCount(1);
             responseDocument.ManyData[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).StringId);
-            responseDocument.Included[0].Attributes["archivedAt"].Should().BeCloseTo(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).ArchivedAt);
+            responseDocument.Included[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt0);
             responseDocument.Included[1].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
             responseDocument.Included[1].Attributes["archivedAt"].Should().BeNull();
         }
@@ -430,7 +436,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes["title"].Should().Be(newBroadcast.Title);
-            responseDocument.SingleData.Attributes["airedAt"].Should().BeCloseTo(newBroadcast.AiredAt);
+            responseDocument.SingleData.Attributes["airedAt"].As<DateTimeOffset>().Should().BeCloseTo(newBroadcast.AiredAt);
             responseDocument.SingleData.Attributes["archivedAt"].Should().BeNull();
         }
 

@@ -1,14 +1,13 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -17,7 +16,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -52,7 +50,7 @@ namespace JsonApiDotNetCore.Middleware
 
             using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
             {
-                if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerSettings))
+                if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerWriteOptions))
                 {
                     return;
                 }
@@ -62,8 +60,8 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (primaryResourceContext != null)
                 {
-                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) ||
-                        !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerSettings))
+                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerWriteOptions) ||
+                        !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerWriteOptions))
                     {
                         return;
                     }
@@ -74,8 +72,8 @@ namespace JsonApiDotNetCore.Middleware
                 }
                 else if (IsRouteForOperations(routeValues))
                 {
-                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) ||
-                        !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerSettings))
+                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions) ||
+                        !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions))
                     {
                         return;
                     }
@@ -102,11 +100,11 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerOptions serializerOptions)
         {
             if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.PreconditionFailed)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.PreconditionFailed)
                 {
                     Title = "Detection of mid-air edit collisions using ETags is not supported.",
                     Source = new ErrorSource
@@ -142,7 +140,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
-            JsonSerializerSettings serializerSettings)
+            JsonSerializerOptions serializerOptions)
         {
             string contentType = httpContext.Request.ContentType;
 
@@ -150,7 +148,7 @@ namespace JsonApiDotNetCore.Middleware
             // Justification: Workaround for https://github.com/dotnet/aspnetcore/issues/32097 (fixed in .NET 6)
             if (contentType != null && contentType != allowedContentType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
                     Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value.",
@@ -167,7 +165,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue allowedMediaTypeValue, HttpContext httpContext,
-            JsonSerializerSettings serializerSettings)
+            JsonSerializerOptions serializerOptions)
         {
             string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
 
@@ -200,7 +198,7 @@ namespace JsonApiDotNetCore.Middleware
 
             if (!seenCompatibleMediaType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new ErrorObject(HttpStatusCode.NotAcceptable)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
                     Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values.",
@@ -216,7 +214,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, ErrorObject error)
+        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, ErrorObject error)
         {
             httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int)error.StatusCode;
@@ -226,22 +224,7 @@ namespace JsonApiDotNetCore.Middleware
                 Errors = error.AsList()
             };
 
-            var serializer = JsonSerializer.CreateDefault(serializerSettings);
-            serializer.ApplyErrorSettings();
-
-            // https://github.com/JamesNK/Newtonsoft.Json/issues/1193
-            await using (var stream = new MemoryStream())
-            {
-                await using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
-                {
-                    using var jsonWriter = new JsonTextWriter(streamWriter);
-                    serializer.Serialize(jsonWriter, errorDocument);
-                }
-
-                stream.Seek(0, SeekOrigin.Begin);
-                await stream.CopyToAsync(httpResponse.Body);
-            }
-
+            await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
             await httpResponse.Body.FlushAsync();
         }
 

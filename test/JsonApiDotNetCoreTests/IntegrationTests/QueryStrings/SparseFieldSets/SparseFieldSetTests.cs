@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -63,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["author"].Data.Should().BeNull();
+            responseDocument.ManyData[0].Relationships["author"].Data.Value.Should().BeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
@@ -135,7 +136,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.ManyData[0].Id.Should().Be(post.StringId);
             responseDocument.ManyData[0].Attributes.Should().BeNull();
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["author"].Data.Should().BeNull();
+            responseDocument.ManyData[0].Relationships["author"].Data.Value.Should().BeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["author"].Links.Related.Should().NotBeNull();
 
@@ -173,7 +174,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
             responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
             responseDocument.ManyData[0].Relationships.Should().HaveCount(1);
-            responseDocument.ManyData[0].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.ManyData[0].Relationships["labels"].Data.Value.Should().BeNull();
             responseDocument.ManyData[0].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.ManyData[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
@@ -214,7 +215,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
             responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
+            responseDocument.SingleData.Relationships["author"].Data.Value.Should().BeNull();
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 
@@ -259,7 +260,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
             responseDocument.Included[0].Attributes["emailAddress"].Should().Be(post.Author.EmailAddress);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["preferences"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["preferences"].Data.Value.Should().BeNull();
             responseDocument.Included[0].Relationships["preferences"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["preferences"].Links.Related.Should().NotBeNull();
 
@@ -308,7 +309,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["caption"].Should().Be(account.Posts[0].Caption);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["labels"].Data.Value.Should().BeNull();
             responseDocument.Included[0].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["labels"].Links.Related.Should().NotBeNull();
 
@@ -358,7 +359,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
             responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[0].Relationships.Should().HaveCount(1);
-            responseDocument.Included[0].Relationships["comments"].Data.Should().BeNull();
+            responseDocument.Included[0].Relationships["comments"].Data.Value.Should().BeNull();
             responseDocument.Included[0].Relationships["comments"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["comments"].Links.Related.Should().NotBeNull();
 
@@ -406,7 +407,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Attributes.Should().HaveCount(1);
-            responseDocument.Included[0].Attributes["color"].Should().Be(post.Labels.Single().Color.ToString("G"));
+            responseDocument.Included[0].Attributes["color"].Should().Be(post.Labels.Single().Color);
             responseDocument.Included[0].Relationships.Should().BeNull();
 
             var postCaptured = (BlogPost)store.Resources.Should().ContainSingle(resource => resource is BlogPost).And.Subject.Single();
@@ -515,7 +516,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes["userName"].Should().Be(blog.Owner.UserName);
             responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
-            responseDocument.Included[0].Attributes["dateOfBirth"].Should().BeCloseTo(blog.Owner.DateOfBirth);
+            responseDocument.Included[0].Attributes["dateOfBirth"].As<DateTime?>().Should().BeCloseTo(blog.Owner.DateOfBirth.GetValueOrDefault());
             responseDocument.Included[0].Relationships["posts"].ManyData.Should().HaveCount(1);
             responseDocument.Included[0].Relationships["posts"].ManyData[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[0].Relationships["posts"].Links.Self.Should().NotBeNull();
@@ -524,7 +525,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[1].Attributes["url"].Should().Be(blog.Owner.Posts[0].Url);
-            responseDocument.Included[1].Relationships["labels"].Data.Should().BeNull();
+            responseDocument.Included[1].Relationships["labels"].Data.Value.Should().BeNull();
             responseDocument.Included[1].Relationships["labels"].Links.Self.Should().NotBeNull();
             responseDocument.Included[1].Relationships["labels"].Links.Related.Should().NotBeNull();
 
@@ -711,7 +712,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
             responseDocument.SingleData.Attributes["url"].Should().Be(post.Url);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["author"].Data.Should().BeNull();
+            responseDocument.SingleData.Relationships["author"].Data.Value.Should().BeNull();
             responseDocument.SingleData.Relationships["author"].Links.Self.Should().NotBeNull();
             responseDocument.SingleData.Relationships["author"].Links.Related.Should().NotBeNull();
 

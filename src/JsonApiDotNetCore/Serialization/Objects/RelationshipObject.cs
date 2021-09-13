@@ -1,17 +1,33 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See https://jsonapi.org/format/1.1/#document-resource-object-relationships.
     /// </summary>
-    public sealed class RelationshipObject : ExposableData<ResourceIdentifierObject>
+    [PublicAPI]
+    public sealed class RelationshipObject
     {
-        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("links")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public RelationshipLinks Links { get; set; }
 
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("data")]
+        // JsonIgnoreCondition is determined at runtime by WriteOnlyRelationshipObjectConverter.
+        public SingleOrManyData<ResourceIdentifierObject> Data { get; set; }
+
+        // [TODO-STJ]: Inline
+        [JsonIgnore]
+        public IList<ResourceIdentifierObject> ManyData => Data.ManyValue;
+
+        // [TODO-STJ]: Inline
+        [JsonIgnore]
+        public ResourceIdentifierObject SingleData => Data.SingleValue;
+
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
     }
 }

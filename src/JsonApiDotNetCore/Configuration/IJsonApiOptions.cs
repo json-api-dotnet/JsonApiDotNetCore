@@ -3,7 +3,6 @@ using System.Data;
 using System.Text.Json;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -136,11 +135,8 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         IsolationLevel? TransactionIsolationLevel { get; }
 
-        JsonSerializerSettings SerializerSettings { get; }
-
         /// <summary>
-        /// Specifies the settings that are used by the <see cref="System.Text.Json.JsonSerializer" />. Note that at some places a few settings are ignored, to
-        /// ensure JSON:API spec compliance.
+        /// Enables to customize the settings that are used by the <see cref="JsonSerializer" />.
         /// </summary>
         /// <example>
         /// The next example sets the naming convention to camel casing.
@@ -150,5 +146,15 @@ namespace JsonApiDotNetCore.Configuration
         /// ]]></code>
         /// </example>
         JsonSerializerOptions SerializerOptions { get; }
+
+        /// <summary>
+        /// Gets the settings used for deserializing request bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
+        /// </summary>
+        JsonSerializerOptions SerializerReadOptions { get; }
+
+        /// <summary>
+        /// Gets the settings used for serializing response bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
+        /// </summary>
+        JsonSerializerOptions SerializerWriteOptions { get; }
     }
 }

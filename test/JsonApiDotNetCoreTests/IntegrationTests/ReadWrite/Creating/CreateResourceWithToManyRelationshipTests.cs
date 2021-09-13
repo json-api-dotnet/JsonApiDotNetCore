@@ -291,7 +291,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(3);
             responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingTags[0].StringId);
@@ -718,7 +718,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Local IDs cannot be used at this endpoint.");
+            error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Local IDs cannot be used at this endpoint. - Request body: <<");
         }
     }

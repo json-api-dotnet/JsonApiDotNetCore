@@ -274,7 +274,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Data.Value.Should().BeNull();
         }
 
         [Fact]
@@ -385,7 +385,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Data.Value.Should().BeNull();
         }
 
         [Fact]

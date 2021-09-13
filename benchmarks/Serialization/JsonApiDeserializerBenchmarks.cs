@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Text.Json;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Benchmarks.Serialization
 {
@@ -16,15 +13,14 @@ namespace Benchmarks.Serialization
     [MarkdownExporter]
     public class JsonApiDeserializerBenchmarks
     {
-        private static readonly string Content = JsonConvert.SerializeObject(new Document
+        private static readonly string RequestBody = JsonSerializer.Serialize(new
         {
-            Data = new ResourceObject
+            data = new
             {
-                Type = BenchmarkResourcePublicNames.Type,
-                Id = "1",
-                Attributes = new Dictionary<string, object>
+                type = BenchmarkResourcePublicNames.Type,
+                id = "1",
+                attributes = new
                 {
-                    ["name"] = Guid.NewGuid().ToString()
                 }
             }
         });
@@ -55,7 +51,7 @@ namespace Benchmarks.Serialization
         [Benchmark]
         public object DeserializeSimpleObject()
         {
-            return _jsonApiDeserializer.Deserialize(Content);
+            return _jsonApiDeserializer.Deserialize(RequestBody);
         }
     }
 }

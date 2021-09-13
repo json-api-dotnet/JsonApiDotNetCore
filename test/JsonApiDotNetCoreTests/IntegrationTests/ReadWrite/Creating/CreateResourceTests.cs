@@ -541,7 +541,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body:");
+            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body: <<");
         }
 
         [Fact]
@@ -573,7 +573,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
+            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body: <<");
         }
 
         [Fact]
@@ -595,7 +595,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Invalid character after parsing");
+            error.Detail.Should().Match("'{' is invalid after a property name. * - Request body: <<*");
         }
 
         [Fact]
@@ -627,7 +627,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
+
+            error.Detail.Should().StartWith("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' " +
+                "of type 'String' to type 'Nullable<DateTimeOffset>'. - Request body: <<");
         }
 
         [Fact]

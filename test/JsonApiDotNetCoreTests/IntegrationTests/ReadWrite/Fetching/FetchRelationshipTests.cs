@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Data.Value.Should().BeNull();
         }
 
         [Fact]

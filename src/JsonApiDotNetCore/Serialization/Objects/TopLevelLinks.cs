@@ -1,31 +1,40 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See "links" in https://jsonapi.org/format/1.1/#document-top-level.
     /// </summary>
+    [PublicAPI]
     public sealed class TopLevelLinks
     {
-        [JsonProperty("self", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("self")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Self { get; set; }
 
-        [JsonProperty("related", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("related")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Related { get; set; }
 
-        [JsonProperty("describedby", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("describedby")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string DescribedBy { get; set; }
 
-        [JsonProperty("first", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("first")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string First { get; set; }
 
-        [JsonProperty("last", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("last")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Last { get; set; }
 
-        [JsonProperty("prev", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("prev")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Prev { get; set; }
 
-        [JsonProperty("next", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("next")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Next { get; set; }
 
         internal bool HasValue()

@@ -6,7 +6,6 @@ using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.Logging;
 
@@ -102,8 +101,10 @@ namespace JsonApiDotNetCore.Middleware
 
             if (resultException != null && _options.IncludeExceptionStackTraceInErrors)
             {
+                string[] stackTraceLines = resultException.ToString().Split(Environment.NewLine);
+
                 error.Meta ??= new Dictionary<string, object>();
-                error.Meta.IncludeExceptionStackTrace(resultException);
+                error.Meta["StackTrace"] = stackTraceLines;
             }
         }
     }

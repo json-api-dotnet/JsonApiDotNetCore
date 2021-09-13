@@ -479,7 +479,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             responseDocument.Results.Should().HaveCount(1);
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data == null);
+            responseDocument.Results[0].SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
         }
 
         [Fact]
@@ -1451,8 +1451,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
-            error.Detail.Should().BeNull();
+            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Detail.Should().Be("Resource ID is read-only.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -1481,7 +1481,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
                             id = existingPerformer.StringId,
                             attributes = new
                             {
-                                bornAt = "not-a-valid-time"
+                                bornAt = 123.45
                             }
                         }
                     }
@@ -1501,8 +1501,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");
-            error.Source.Should().BeNull();
+            error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '123.45' of type 'Number' to type 'DateTimeOffset'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]

@@ -183,7 +183,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[0].SingleData.Type.Should().Be("performers");
             responseDocument.Results[0].SingleData.Lid.Should().BeNull();
             responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newPerformer.ArtistName);
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].Should().BeCloseTo(newPerformer.BornAt);
+            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt);
 
             responseDocument.Results[1].SingleData.Should().NotBeNull();
             responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
@@ -479,7 +479,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
             responseDocument.Results[0].SingleData.Attributes["genre"].Should().BeNull();
 
-            responseDocument.Results[1].Data.Should().BeNull();
+            responseDocument.Results[1].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 
@@ -606,7 +606,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[2].SingleData.Lid.Should().BeNull();
             responseDocument.Results[2].SingleData.Attributes["name"].Should().Be(newCompanyName);
 
-            responseDocument.Results[3].Data.Should().BeNull();
+            responseDocument.Results[3].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
             int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
@@ -714,7 +714,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newCompanyName);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
             short newCompanyId = short.Parse(responseDocument.Results[1].SingleData.Id);
@@ -812,7 +812,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
             int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
@@ -910,7 +910,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
             Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
@@ -1030,7 +1030,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
             int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
@@ -1150,7 +1150,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
             Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
@@ -1270,7 +1270,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
             int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
@@ -1412,9 +1412,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[1].SingleData.Lid.Should().BeNull();
             responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            responseDocument.Results[3].Data.Should().BeNull();
+            responseDocument.Results[3].Data.Value.Should().BeNull();
 
             long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
             Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
@@ -1570,7 +1570,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[2].SingleData.Lid.Should().BeNull();
             responseDocument.Results[2].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[3].Data.Should().BeNull();
+            responseDocument.Results[3].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[2].SingleData.Id);
 
@@ -1692,11 +1692,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[0].SingleData.Lid.Should().BeNull();
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.Should().BeNull();
+            responseDocument.Results[1].Data.Value.Should().BeNull();
 
-            responseDocument.Results[2].Data.Should().BeNull();
+            responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            responseDocument.Results[3].Data.Should().BeNull();
+            responseDocument.Results[3].Data.Value.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1759,7 +1759,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             responseDocument.Results[0].SingleData.Lid.Should().BeNull();
             responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.Should().BeNull();
+            responseDocument.Results[1].Data.Value.Should().BeNull();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
 

@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Unexpected end of content while loading JObject.");
+            error.Detail.Should().Match("* There is an open JSON object or array that should be closed. *");
             error.Source.Should().BeNull();
         }
 
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Error converting value \"merge\" to type");
+            error.Detail.Should().StartWith("The JSON value could not be converted to ");
             error.Source.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>

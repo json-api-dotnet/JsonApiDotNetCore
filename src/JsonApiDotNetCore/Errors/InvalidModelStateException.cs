@@ -8,7 +8,6 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -117,8 +116,10 @@ namespace JsonApiDotNetCore.Errors
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)
             {
+                string[] stackTraceLines = modelError.Exception.Demystify().ToString().Split(Environment.NewLine);
+
                 error.Meta ??= new Dictionary<string, object>();
-                error.Meta.IncludeExceptionStackTrace(modelError.Exception.Demystify());
+                error.Meta["StackTrace"] = stackTraceLines;
             }
 
             return error;

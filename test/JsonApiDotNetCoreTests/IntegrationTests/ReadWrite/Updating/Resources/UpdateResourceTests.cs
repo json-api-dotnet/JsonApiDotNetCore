@@ -357,7 +357,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
             responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
             responseDocument.SingleData.Attributes["isImportant"].Should().Be(existingWorkItem.IsImportant);
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
 
@@ -411,7 +411,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
             responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
             responseDocument.SingleData.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -466,7 +466,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
             responseDocument.SingleData.Attributes.Should().HaveCount(2);
             responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority.ToString("G"));
+            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
             responseDocument.SingleData.Relationships.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
             responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
@@ -520,7 +520,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             responseDocument.SingleData.Should().NotBeNull();
             responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data == null);
+            responseDocument.SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
 
             responseDocument.Included.Should().BeNull();
         }
@@ -843,7 +843,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Changing the value of 'isImportant' is not allowed. - Request body:");
+            error.Detail.Should().StartWith("Changing the value of 'isImportant' is not allowed. - Request body: <<");
         }
 
         [Fact]
@@ -884,7 +884,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
+            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body: <<");
         }
 
         [Fact]
@@ -899,7 +899,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 await dbContext.SaveChangesAsync();
             });
 
-            const string requestBody = "{ \"data\" {";
+            const string requestBody = "{ \"data {";
 
             string route = $"/workItemGroups/{existingWorkItem.StringId}";
 
@@ -914,7 +914,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Invalid character after parsing");
+            error.Detail.Should().Match("Expected end of string, but instead reached end of data. * - Request body: <<*");
         }
 
         [Fact]
@@ -954,7 +954,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
+            error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Resource ID is read-only. - Request body: <<");
         }
 
@@ -978,7 +978,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                     id = existingWorkItem.StringId,
                     attributes = new
                     {
-                        dueAt = "not-a-valid-time"
+                        dueAt = new
+                        {
+                            Start = 10,
+                            End = 20
+                        }
                     }
                 }
             };
@@ -996,7 +1000,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
+
+            error.Detail.Should().Match("Failed to convert attribute 'dueAt' with value '*start*end*' " +
+                "of type 'Object' to type 'Nullable<DateTimeOffset>'. - Request body: <<*");
         }
 
         [Fact]

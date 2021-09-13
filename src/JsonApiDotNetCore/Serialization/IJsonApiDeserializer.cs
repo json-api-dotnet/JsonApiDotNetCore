@@ -8,7 +8,7 @@ namespace JsonApiDotNetCore.Serialization
     public interface IJsonApiDeserializer
     {
         /// <summary>
-        /// Deserializes JSON into a <see cref="Document" /> and constructs resources from <see cref="ExposableData{TResource}.Data" />.
+        /// Deserializes JSON into a <see cref="Document" /> and constructs resources from the 'data' element.
         /// </summary>
         /// <param name="body">
         /// The JSON to be deserialized.

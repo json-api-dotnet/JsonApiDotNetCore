@@ -23,26 +23,14 @@ namespace TestBuildingBlocks
         };
 
         /// <summary>
-        /// Used to assert on a (nullable) <see cref="DateTime" /> or <see cref="DateTimeOffset" /> property, whose value is returned as <see cref="string" /> in
-        /// JSON:API response body because of <see cref="IntegrationTestConfiguration.DeserializationSettings" />.
+        /// Same as <see cref="DateTimeAssertions{TAssertions}.BeCloseTo(DateTime, TimeSpan, string, object[])" />, but with default precision.
         /// </summary>
         [CustomAssertion]
-        public static void BeCloseTo(this ObjectAssertions source, DateTimeOffset? expected, string because = "", params object[] becauseArgs)
+        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeAssertions<TAssertions> parent, DateTime nearbyTime, string because = "",
+            params object[] becauseArgs)
+            where TAssertions : DateTimeAssertions<TAssertions>
         {
-            if (expected == null)
-            {
-                source.Subject.Should().BeNull(because, becauseArgs);
-            }
-            else
-            {
-                if (!DateTimeOffset.TryParse((string)source.Subject, out DateTimeOffset value))
-                {
-                    source.Subject.Should().Be(expected, because, becauseArgs);
-                }
-
-                // We lose a little bit of precision (milliseconds) on roundtrip through PostgreSQL database.
-                value.Should().BeCloseTo(expected.Value, TimePrecision, because, becauseArgs);
-            }
+            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
         }
 
         /// <summary>

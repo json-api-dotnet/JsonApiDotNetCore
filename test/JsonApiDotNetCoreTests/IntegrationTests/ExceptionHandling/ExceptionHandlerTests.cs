@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -9,7 +10,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
-            error.Meta["support"].Should().Be("Please contact us for info about similar articles at company@email.com.");
+            ((JsonElement)error.Meta["support"]).GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            IEnumerable<string> stackTraceLines = ((JArray)error.Meta["stackTrace"]).Select(token => token.Value<string>());
+            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
             stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);

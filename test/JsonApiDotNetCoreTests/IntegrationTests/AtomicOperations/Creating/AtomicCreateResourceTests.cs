@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("performers");
             responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newArtistName);
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].Should().BeCloseTo(newBornAt);
+            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newBornAt);
             responseDocument.Results[0].SingleData.Relationships.Should().BeNull();
 
             int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                 singleData.Attributes["title"].Should().Be(newTracks[index].Title);
                 singleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds);
                 singleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
-                singleData.Attributes["releasedAt"].Should().BeCloseTo(newTracks[index].ReleasedAt);
+                singleData.Attributes["releasedAt"].As<DateTimeOffset>().Should().BeCloseTo(newTracks[index].ReleasedAt);
                 singleData.Relationships.Should().NotBeEmpty();
             }
 
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             responseDocument.Results[0].SingleData.Should().NotBeNull();
             responseDocument.Results[0].SingleData.Type.Should().Be("performers");
             responseDocument.Results[0].SingleData.Attributes["artistName"].Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].Should().BeCloseTo(default(DateTimeOffset));
+            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(default);
             responseDocument.Results[0].SingleData.Relationships.Should().BeNull();
 
             int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
@@ -678,7 +678,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                             type = "performers",
                             attributes = new
                             {
-                                bornAt = "not-a-valid-time"
+                                bornAt = 12345
                             }
                         }
                     }
@@ -698,8 +698,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'DateTimeOffset'. - Request body:");
-            error.Source.Should().BeNull();
+            error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
         [Fact]

@@ -2,35 +2,58 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See https://jsonapi.org/format/1.1/#document-top-level and https://jsonapi.org/ext/atomic/#document-structure.
     /// </summary>
-    public sealed class Document : ExposableData<ResourceObject>
+    public sealed class Document
     {
-        [JsonProperty("jsonapi", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("jsonapi")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public JsonApiObject JsonApi { get; set; }
 
-        [JsonProperty("atomic:operations", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<AtomicOperationObject> Operations { get; set; }
-
-        [JsonProperty("atomic:results", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<AtomicResultObject> Results { get; set; }
-
-        [JsonProperty("errors", NullValueHandling = NullValueHandling.Ignore)]
-        public IList<ErrorObject> Errors { get; set; }
-
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
-        public IDictionary<string, object> Meta { get; set; }
-
-        [JsonProperty("links", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("links")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public TopLevelLinks Links { get; set; }
 
-        [JsonProperty("included", NullValueHandling = NullValueHandling.Ignore, Order = 1)]
+        [JsonPropertyName("data")]
+        // JsonIgnoreCondition is determined at runtime by WriteOnlyDocumentConverter.
+        public SingleOrManyData<ResourceObject> Data { get; set; }
+
+        [JsonPropertyName("atomic:operations")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IList<AtomicOperationObject> Operations { get; set; }
+
+        [JsonPropertyName("atomic:results")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IList<AtomicResultObject> Results { get; set; }
+
+        [JsonPropertyName("errors")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IList<ErrorObject> Errors { get; set; }
+
+        [JsonPropertyName("included")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IList<ResourceObject> Included { get; set; }
+
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IDictionary<string, object> Meta { get; set; }
+
+        // [TODO-STJ]: Inline
+        [JsonIgnore]
+        public bool IsManyData => Data.ManyValue != null;
+
+        // [TODO-STJ]: Inline
+        [JsonIgnore]
+        public IList<ResourceObject> ManyData => Data.ManyValue;
+
+        // [TODO-STJ]: Inline
+        [JsonIgnore]
+        public ResourceObject SingleData => Data.SingleValue;
 
         internal HttpStatusCode GetErrorStatusCode()
         {

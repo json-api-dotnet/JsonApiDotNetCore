@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
 using TestBuildingBlocks;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
@@ -18,11 +17,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             options.UseRelativeLinks = true;
             options.IncludeTotalResourceCount = true;
             options.ValidateModelState = true;
-
-            options.SerializerSettings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new KebabCaseNamingStrategy()
-            };
 
             options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
             options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;

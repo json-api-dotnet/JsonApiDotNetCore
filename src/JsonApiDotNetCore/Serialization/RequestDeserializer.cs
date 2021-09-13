@@ -6,14 +6,12 @@ using System.Net.Http;
 using Humanizer;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -61,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
                 return DeserializeOperationsDocument(body);
             }
 
-            object instance = DeserializeBody(body);
+            object instance = DeserializeData(body, _options.SerializerReadOptions);
 
             if (instance is IIdentifiable resource && _request.Kind != EndpointKind.Relationship)
             {
@@ -75,13 +73,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private object DeserializeOperationsDocument(string body)
         {
-            Document document;
-
-            using (CodeTimingSessionManager.Current.Measure("Newtonsoft.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
-            {
-                JToken bodyToken = LoadJToken(body);
-                document = bodyToken.ToObject<Document>();
-            }
+            Document document = DeserializeDocument(body, _options.SerializerReadOptions);
 
             if ((document?.Operations).IsNullOrEmpty())
             {
@@ -236,7 +228,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private ResourceObject GetRequiredSingleDataForResourceOperation(AtomicOperationObject operation)
         {
-            if (operation.Data == null)
+            if (operation.Data.Value == null)
             {
                 throw new JsonApiSerializationException("The 'data' element is required.", null, atomicOperationIndex: AtomicOperationIndex);
             }
@@ -251,18 +243,18 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         [AssertionMethod]
-        private void AssertElementHasType(ResourceIdentifierObject resourceIdentifierObject, string elementPath)
+        private void AssertElementHasType(IResourceIdentity resourceIdentity, string elementPath)
         {
-            if (resourceIdentifierObject.Type == null)
+            if (resourceIdentity.Type == null)
             {
                 throw new JsonApiSerializationException($"The '{elementPath}.type' element is required.", null, atomicOperationIndex: AtomicOperationIndex);
             }
         }
 
-        private void AssertElementHasIdOrLid(ResourceIdentifierObject resourceIdentifierObject, string elementPath, bool isRequired)
+        private void AssertElementHasIdOrLid(IResourceIdentity resourceIdentity, string elementPath, bool isRequired)
         {
-            bool hasNone = resourceIdentifierObject.Id == null && resourceIdentifierObject.Lid == null;
-            bool hasBoth = resourceIdentifierObject.Id != null && resourceIdentifierObject.Lid != null;
+            bool hasNone = resourceIdentity.Id == null && resourceIdentity.Lid == null;
+            bool hasBoth = resourceIdentity.Id != null && resourceIdentity.Lid != null;
 
             if (isRequired ? hasNone || hasBoth : hasBoth)
             {
@@ -271,13 +263,13 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void AssertCompatibleId(ResourceIdentifierObject resourceIdentifierObject, Type idType)
+        private void AssertCompatibleId(IResourceIdentity resourceIdentity, Type idType)
         {
-            if (resourceIdentifierObject.Id != null)
+            if (resourceIdentity.Id != null)
             {
                 try
                 {
-                    RuntimeTypeConverter.ConvertType(resourceIdentifierObject.Id, idType);
+                    RuntimeTypeConverter.ConvertType(resourceIdentity.Id, idType);
                 }
                 catch (FormatException exception)
                 {
@@ -286,33 +278,33 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private void AssertSameIdentityInRefData(AtomicOperationObject operation, ResourceIdentifierObject resourceIdentifierObject)
+        private void AssertSameIdentityInRefData(AtomicOperationObject operation, IResourceIdentity resourceIdentity)
         {
-            if (operation.Ref.Id != null && resourceIdentifierObject.Id != null && resourceIdentifierObject.Id != operation.Ref.Id)
+            if (operation.Ref.Id != null && resourceIdentity.Id != null && resourceIdentity.Id != operation.Ref.Id)
             {
                 throw new JsonApiSerializationException("Resource ID mismatch between 'ref.id' and 'data.id' element.",
-                    $"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceIdentifierObject.Id}'.",
+                    $"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceIdentity.Id}'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
 
-            if (operation.Ref.Lid != null && resourceIdentifierObject.Lid != null && resourceIdentifierObject.Lid != operation.Ref.Lid)
+            if (operation.Ref.Lid != null && resourceIdentity.Lid != null && resourceIdentity.Lid != operation.Ref.Lid)
             {
                 throw new JsonApiSerializationException("Resource local ID mismatch between 'ref.lid' and 'data.lid' element.",
-                    $"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceIdentifierObject.Lid}'.",
+                    $"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceIdentity.Lid}'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
 
-            if (operation.Ref.Id != null && resourceIdentifierObject.Lid != null)
+            if (operation.Ref.Id != null && resourceIdentity.Lid != null)
             {
                 throw new JsonApiSerializationException("Resource identity mismatch between 'ref.id' and 'data.lid' element.",
-                    $"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceIdentifierObject.Lid}' in 'data.lid'.",
+                    $"Expected resource with ID '{operation.Ref.Id}' in 'data.id', instead of '{resourceIdentity.Lid}' in 'data.lid'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
 
-            if (operation.Ref.Lid != null && resourceIdentifierObject.Id != null)
+            if (operation.Ref.Lid != null && resourceIdentity.Id != null)
             {
                 throw new JsonApiSerializationException("Resource identity mismatch between 'ref.lid' and 'data.id' element.",
-                    $"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceIdentifierObject.Id}' in 'data.id'.",
+                    $"Expected resource with local ID '{operation.Ref.Lid}' in 'data.lid', instead of '{resourceIdentity.Id}' in 'data.id'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
         }

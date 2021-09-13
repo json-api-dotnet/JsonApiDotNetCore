@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 relationshipObject = base.GetRelationshipData(relationship, resource);
 
-                if (relationshipChains.Any() && relationshipObject.HasResource)
+                if (relationshipChains.Any() && relationshipObject.Data.HasResource)
                 {
                     foreach (IReadOnlyCollection<RelationshipAttribute> chain in relationshipChains)
                     {
