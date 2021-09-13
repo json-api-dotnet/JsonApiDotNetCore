@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     attributes = new
                     {
                         name = "!@#$%^&*().-",
-                        isCaseSensitive = "false"
+                        isCaseSensitive = false
                     }
                 }
             };
