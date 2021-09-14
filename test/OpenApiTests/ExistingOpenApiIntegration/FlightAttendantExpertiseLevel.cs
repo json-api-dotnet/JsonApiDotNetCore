@@ -1,9 +1,9 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum FlightAttendantExpertise
+    public enum FlightAttendantExpertiseLevel
     {
         Junior,
         Intermediate,

@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Airplane : Identifiable<string>

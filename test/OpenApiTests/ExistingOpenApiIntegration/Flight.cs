@@ -5,30 +5,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-//
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-// [Required, MaxLength(255)]
-// public string Title { get; set; }
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-// [MaxLength(2000)]
-// public string Summary { get; set; }
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-// public int? DurationInSeconds { get; set; }
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
-// public DateTime? PublishedAt { get; set; }
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
-// public bool IsDeleted { get; set; }
-//
-// [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
-// [MaxLength(2000)]
-// public string ExternalId { get; set; }
-
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class Flight : Identifiable

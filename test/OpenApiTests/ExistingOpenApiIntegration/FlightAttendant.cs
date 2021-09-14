@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class FlightAttendant : Identifiable<string>
@@ -13,7 +13,7 @@ namespace OpenApiTests
         public override string Id { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.None)]
-        public FlightAttendantExpertise ExpertiseLevel { get; set; }
+        public FlightAttendantExpertiseLevel ExpertiseLevel { get; set; }
 
         [Attr(PublicName = "document-number", Capabilities = AttrCapabilities.AllowCreate | AttrCapabilities.AllowChange)]
         [Required]

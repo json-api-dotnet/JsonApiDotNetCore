@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum Airline

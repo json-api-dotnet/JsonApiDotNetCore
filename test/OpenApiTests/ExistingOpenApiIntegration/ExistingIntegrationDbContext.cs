@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 // @formatter:wrap_chained_method_calls chop_always
 // @formatter:keep_existing_linebreaks true
 
-namespace OpenApiTests
+namespace OpenApiTests.ExistingOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class OpenApiDbContext : DbContext
+    public sealed class ExistingIntegrationDbContext : DbContext
     {
         public DbSet<Airplane> Airplanes { get; set; }
         public DbSet<Flight> Flights { get; set; }
         public DbSet<FlightAttendant> FlightAttendants { get; set; }
 
-        public OpenApiDbContext(DbContextOptions<OpenApiDbContext> options)
+        public ExistingIntegrationDbContext(DbContextOptions<ExistingIntegrationDbContext> options)
             : base(options)
         {
         }
