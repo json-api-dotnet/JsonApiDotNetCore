@@ -68,6 +68,14 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         {
                             case "id":
                             {
+                                if (reader.TokenType != JsonTokenType.String)
+                                {
+                                    // Newtonsoft.Json used to auto-convert number to strings, while System.Text.Json does not. This is so likely
+                                    // to hit users during upgrade that we special-case for this and produce a helpful error message.
+                                    var jsonElement = JsonConverterSupport.ReadSubTree<JsonElement>(ref reader, options);
+                                    throw new JsonException($"Failed to convert ID '{jsonElement}' of type '{jsonElement.ValueKind}' to type 'String'.");
+                                }
+
                                 resourceObject.Id = reader.GetString();
                                 break;
                             }

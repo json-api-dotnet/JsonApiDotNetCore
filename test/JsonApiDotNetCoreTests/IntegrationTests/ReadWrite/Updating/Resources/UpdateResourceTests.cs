@@ -959,6 +959,46 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
         }
 
         [Fact]
+        public async Task Cannot_update_resource_with_incompatible_ID_value()
+        {
+            // Arrange
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    id = existingWorkItem.Id,
+                    attributes = new
+                    {
+                    }
+                }
+            };
+
+            string route = $"/workItems/{existingWorkItem.StringId}";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Detail.Should().StartWith($"Failed to convert ID '{existingWorkItem.Id}' of type 'Number' to type 'String'. - Request body: <<");
+        }
+
+        [Fact]
         public async Task Cannot_update_resource_with_incompatible_attribute_value()
         {
             // Arrange
