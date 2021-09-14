@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using OpenApiTests.Startups;
 
 namespace OpenApiTests.ExistingOpenApiIntegration
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public sealed class ExistingOpenApiIntegrationStartup<TDbContext> : OpenApiStartup<TDbContext>
         where TDbContext : DbContext
     {

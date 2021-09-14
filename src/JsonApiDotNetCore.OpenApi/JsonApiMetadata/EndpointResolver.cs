@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using JsonApiDotNetCore.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
@@ -10,6 +11,12 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
         public JsonApiEndpoint? Get(MethodInfo controllerAction)
         {
             ArgumentGuard.NotNull(controllerAction, nameof(controllerAction));
+
+            if (!typeof(CoreJsonApiController).IsAssignableFrom(controllerAction.ReflectedType) ||
+                typeof(BaseJsonApiOperationsController).IsAssignableFrom(controllerAction.ReflectedType))
+            {
+                return null;
+            }
 
             HttpMethodAttribute method = controllerAction.GetCustomAttributes(true).OfType<HttpMethodAttribute>().FirstOrDefault();
 
