@@ -32,7 +32,7 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.Null(document.Data.Value);
-            Assert.True(document.Data.IsPopulated);
+            Assert.True(document.Data.IsAssigned);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.NotNull(document.Data.Value);
-            Assert.Empty(document.ManyData);
+            Assert.Empty(document.Data.ManyValue);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.NotNull(document.Data.Value);
-            Assert.True(document.Data.IsPopulated);
+            Assert.True(document.Data.IsAssigned);
         }
 
         [Fact]

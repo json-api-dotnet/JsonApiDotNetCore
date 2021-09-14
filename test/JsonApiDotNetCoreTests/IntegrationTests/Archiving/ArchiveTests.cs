@@ -52,9 +52,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(broadcast.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcast.ArchivedAt.GetValueOrDefault());
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
+            responseDocument.Data.SingleValue.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcast.ArchivedAt.GetValueOrDefault());
         }
 
         [Fact]
@@ -78,9 +78,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(broadcast.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(broadcast.StringId);
+            responseDocument.Data.SingleValue.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
         }
 
         [Fact]
@@ -105,9 +105,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(broadcasts[1].StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[1].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeNull();
         }
 
         [Fact]
@@ -132,11 +132,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(broadcasts[0].StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcasts[0].ArchivedAt.GetValueOrDefault());
-            responseDocument.ManyData[1].Id.Should().Be(broadcasts[1].StringId);
-            responseDocument.ManyData[1].Attributes["archivedAt"].Should().BeNull();
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(broadcasts[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(broadcasts[0].ArchivedAt.GetValueOrDefault());
+            responseDocument.Data.ManyValue[1].Id.Should().Be(broadcasts[1].StringId);
+            responseDocument.Data.ManyValue[1].Attributes["archivedAt"].Should().BeNull();
         }
 
         [Fact]
@@ -161,8 +161,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(station.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
@@ -194,8 +194,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(station.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(station.StringId);
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
@@ -225,9 +225,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.AppliesTo.StringId);
-            responseDocument.SingleData.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(comment.AppliesTo.ArchivedAt.GetValueOrDefault());
+            DateTimeOffset archivedAt = comment.AppliesTo.ArchivedAt.GetValueOrDefault();
+
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.AppliesTo.StringId);
+            responseDocument.Data.SingleValue.Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt);
         }
 
         [Fact]
@@ -252,9 +254,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].Should().BeNull();
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue[0].Attributes["archivedAt"].Should().BeNull();
         }
 
         [Fact]
@@ -281,11 +283,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             DateTimeOffset archivedAt0 = station.Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-            responseDocument.ManyData[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt0);
-            responseDocument.ManyData[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
-            responseDocument.ManyData[1].Attributes["archivedAt"].Should().BeNull();
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue[0].Attributes["archivedAt"].As<DateTimeOffset?>().Should().BeCloseTo(archivedAt0);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue[1].Attributes["archivedAt"].Should().BeNull();
         }
 
         [Fact]
@@ -311,8 +313,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(1).StringId);
@@ -344,8 +346,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             DateTimeOffset archivedAt0 = network.Stations.ElementAt(0).Broadcasts.ElementAt(0).ArchivedAt.GetValueOrDefault();
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(network.Stations.ElementAt(0).StringId);
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included[0].Id.Should().Be(network.Stations.ElementAt(0).Broadcasts.ElementAt(0).StringId);
@@ -376,8 +378,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
         }
 
         [Fact]
@@ -402,9 +404,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
-            responseDocument.ManyData[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(station.Broadcasts.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(station.Broadcasts.ElementAt(1).StringId);
         }
 
         [Fact]
@@ -434,10 +436,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["title"].Should().Be(newBroadcast.Title);
-            responseDocument.SingleData.Attributes["airedAt"].As<DateTimeOffset>().Should().BeCloseTo(newBroadcast.AiredAt);
-            responseDocument.SingleData.Attributes["archivedAt"].Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newBroadcast.Title);
+            responseDocument.Data.SingleValue.Attributes["airedAt"].As<DateTimeOffset>().Should().BeCloseTo(newBroadcast.AiredAt);
+            responseDocument.Data.SingleValue.Attributes["archivedAt"].Should().BeNull();
         }
 
         [Fact]

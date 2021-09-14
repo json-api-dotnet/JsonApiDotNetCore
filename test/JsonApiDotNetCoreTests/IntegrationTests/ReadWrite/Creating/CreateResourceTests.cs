@@ -61,14 +61,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            string newWorkItemId = responseDocument.SingleData.Id;
+            string newWorkItemId = responseDocument.Data.SingleValue.Id;
             httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
 
             responseDocument.Links.Self.Should().Be("http://localhost/workItems");
             responseDocument.Links.First.Should().BeNull();
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be($"http://localhost{httpResponse.Headers.Location}");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Links.Self.Should().Be($"http://localhost{httpResponse.Headers.Location}");
         }
 
         [Fact]
@@ -98,13 +98,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-            responseDocument.SingleData.Attributes["dueAt"].Should().Be(newWorkItem.DueAt);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.Data.SingleValue.Attributes["dueAt"].Should().Be(newWorkItem.DueAt);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -145,13 +145,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("userAccounts");
-            responseDocument.SingleData.Attributes["firstName"].Should().Be(newUserAccount.FirstName);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(newUserAccount.LastName);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
+            responseDocument.Data.SingleValue.Attributes["firstName"].Should().Be(newUserAccount.FirstName);
+            responseDocument.Data.SingleValue.Attributes["lastName"].Should().Be(newUserAccount.LastName);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            long newUserAccountId = long.Parse(responseDocument.SingleData.Id);
+            long newUserAccountId = long.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -191,12 +191,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroup.Name);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -235,13 +235,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().BeNull();
-            responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes["dueAt"].Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -279,12 +279,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -325,12 +325,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -701,11 +701,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newDescription);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

@@ -70,18 +70,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            string isoCode = $"{newLanguage.IsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}";
+
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
-            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be($"{newLanguage.IsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("isRightToLeft");
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("textLanguages");
+            responseDocument.Results[0].Data.SingleValue.Attributes["isoCode"].Should().Be(isoCode);
+            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("isRightToLeft");
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 TextLanguage languageInDatabase = await dbContext.TextLanguages.FirstWithIdAsync(newLanguage.Id);
 
-                languageInDatabase.IsoCode.Should().Be($"{newLanguage.IsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
+                languageInDatabase.IsoCode.Should().Be(isoCode);
             });
         }
 

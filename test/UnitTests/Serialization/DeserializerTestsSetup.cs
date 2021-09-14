@@ -34,7 +34,7 @@ namespace UnitTests.Serialization
             bool isToManyData = false)
         {
             Document content = CreateDocumentWithRelationships(primaryType);
-            content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
+            content.Data.SingleValue.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
 

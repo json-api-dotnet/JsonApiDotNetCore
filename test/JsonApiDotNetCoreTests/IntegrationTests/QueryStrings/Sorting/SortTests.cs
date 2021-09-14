@@ -49,10 +49,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(posts[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(posts[2].StringId);
         }
 
         [Fact]
@@ -108,10 +108,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(blog.Posts[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(blog.Posts[2].StringId);
         }
 
         [Fact]
@@ -166,9 +166,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
         }
 
         [Fact]
@@ -194,9 +194,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
@@ -223,8 +223,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(account.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(account.Posts[1].StringId);
@@ -257,8 +257,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
@@ -290,8 +290,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
@@ -337,9 +337,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
             responseDocument.Included.Should().HaveCount(7);
 
@@ -391,9 +391,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
@@ -428,9 +428,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
             responseDocument.Included.Should().HaveCount(5);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
@@ -531,10 +531,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(accounts[2].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[2].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
         }
 
         [Fact]
@@ -562,11 +562,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(4);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[2].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(accounts[1].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
-            responseDocument.ManyData[3].Id.Should().Be(accounts[3].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(4);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[2].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue[3].Id.Should().Be(accounts[3].StringId);
         }
     }
 }

@@ -72,8 +72,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes[attributeName].Should().Be(value);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().Be(value);
         }
 
         [Fact]
@@ -100,8 +100,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDecimal"].Should().Be(resource.SomeDecimal);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["someDecimal"].Should().Be(resource.SomeDecimal);
         }
 
         [Fact]
@@ -128,8 +128,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someGuid"].Should().Be(resource.SomeGuid);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["someGuid"].Should().Be(resource.SomeGuid);
         }
 
         [Fact]
@@ -156,8 +156,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTime"].As<DateTime>().Should().BeCloseTo(resource.SomeDateTime);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["someDateTime"].As<DateTime>().Should().BeCloseTo(resource.SomeDateTime);
         }
 
         [Fact]
@@ -184,8 +184,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someDateTimeOffset"].As<DateTimeOffset>().Should().BeCloseTo(resource.SomeDateTimeOffset);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["someDateTimeOffset"].As<DateTimeOffset>().Should().BeCloseTo(resource.SomeDateTimeOffset);
         }
 
         [Fact]
@@ -212,8 +212,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["someTimeSpan"].Should().Be(resource.SomeTimeSpan);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["someTimeSpan"].Should().Be(resource.SomeTimeSpan);
         }
 
         [Fact]
@@ -299,8 +299,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes[attributeName].Should().Be(null);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().Be(null);
         }
 
         [Theory]
@@ -349,8 +349,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes[attributeName].Should().NotBe(null);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().NotBe(null);
         }
     }
 }

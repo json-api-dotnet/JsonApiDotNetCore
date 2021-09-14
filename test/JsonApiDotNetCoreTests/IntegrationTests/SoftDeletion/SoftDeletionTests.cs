@@ -65,8 +65,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(departments[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(departments[1].StringId);
         }
 
         [Fact]
@@ -97,8 +97,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(departments[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(departments[0].StringId);
         }
 
         [Fact]
@@ -128,9 +128,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("companies");
-            responseDocument.ManyData[0].Id.Should().Be(companies[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Type.Should().Be("companies");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(companies[1].StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("departments");
@@ -218,8 +218,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
         }
 
         [Fact]
@@ -329,8 +329,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(company.Departments.ElementAt(1).StringId);
         }
 
         [Fact]

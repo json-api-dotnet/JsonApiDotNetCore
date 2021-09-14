@@ -72,12 +72,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
             responseDocument.Included.Should().BeNull();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -136,9 +136,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
@@ -148,7 +148,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["lastName"] != null);
             responseDocument.Included.Should().OnlyContain(resource => resource.Relationships.Count > 0);
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -207,9 +207,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(2);
             responseDocument.Included.Should().OnlyContain(resource => resource.Type == "userAccounts");
@@ -219,7 +219,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["firstName"] != null);
             responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -289,14 +289,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(workItemToCreate.Priority);
-            responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(3);
-            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingTags[0].StringId);
-            responseDocument.SingleData.Relationships["tags"].ManyData[1].Id.Should().Be(existingTags[1].StringId);
-            responseDocument.SingleData.Relationships["tags"].ManyData[2].Id.Should().Be(existingTags[2].StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(workItemToCreate.Priority);
+            responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue[0].Id.Should().Be(existingTags[0].StringId);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue[1].Id.Should().Be(existingTags[1].StringId);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue[2].Id.Should().Be(existingTags[2].StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included.Should().OnlyContain(resource => resource.Type == "workTags");
@@ -307,7 +307,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included.Should().OnlyContain(resource => resource.Attributes["text"] != null);
             responseDocument.Included.Should().OnlyContain(resource => resource.Relationships == null);
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -588,15 +588,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
             responseDocument.Included[0].Id.Should().Be(existingUserAccount.StringId);
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

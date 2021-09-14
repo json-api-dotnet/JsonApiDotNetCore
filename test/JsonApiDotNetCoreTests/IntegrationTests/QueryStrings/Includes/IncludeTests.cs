@@ -53,9 +53,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(post.StringId);
+            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -84,9 +84,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -116,9 +116,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
-            responseDocument.SingleData.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
+            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
@@ -148,9 +148,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -180,9 +180,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -216,9 +216,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("comments");
@@ -247,9 +247,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("labels");
@@ -278,10 +278,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("labels");
-            responseDocument.ManyData[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
-            responseDocument.ManyData[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Type.Should().Be("labels");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
@@ -312,9 +312,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(3);
 
@@ -353,9 +353,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.StringId);
-            responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -392,9 +392,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(5);
 
@@ -445,9 +445,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.StringId);
-            responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
 
             responseDocument.Included.Should().HaveCount(7);
 
@@ -504,9 +504,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -539,7 +539,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -632,16 +632,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject[] postWithReviewer = responseDocument.ManyData
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData != null).ToArray();
+            ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue != null).ToArray();
 
             postWithReviewer.Should().HaveCount(1);
             postWithReviewer[0].Attributes["caption"].Should().Be(posts[0].Caption);
 
-            ResourceObject[] postWithoutReviewer = responseDocument.ManyData
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData == null).ToArray();
+            ResourceObject[] postWithoutReviewer = responseDocument.Data.ManyValue
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue == null).ToArray();
 
             postWithoutReviewer.Should().HaveCount(1);
             postWithoutReviewer[0].Attributes["caption"].Should().Be(posts[1].Caption);

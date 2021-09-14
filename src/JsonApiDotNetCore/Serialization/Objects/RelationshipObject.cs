@@ -18,14 +18,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         // JsonIgnoreCondition is determined at runtime by WriteOnlyRelationshipObjectConverter.
         public SingleOrManyData<ResourceIdentifierObject> Data { get; set; }
 
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public IList<ResourceIdentifierObject> ManyData => Data.ManyValue;
-
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public ResourceIdentifierObject SingleData => Data.SingleValue;
-
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }

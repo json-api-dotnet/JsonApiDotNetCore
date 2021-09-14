@@ -43,18 +43,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
 
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public bool IsManyData => Data.ManyValue != null;
-
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public IList<ResourceObject> ManyData => Data.ManyValue;
-
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public ResourceObject SingleData => Data.SingleValue;
-
         internal HttpStatusCode GetErrorStatusCode()
         {
             if (Errors.IsNullOrEmpty())

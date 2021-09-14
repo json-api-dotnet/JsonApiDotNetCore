@@ -14,14 +14,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public SingleOrManyData<ResourceObject> Data { get; set; }
 
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public IList<ResourceObject> ManyData => Data.ManyValue;
-
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public ResourceObject SingleData => Data.SingleValue;
-
         [JsonPropertyName("op")]
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public AtomicOperationCode Code { get; set; }

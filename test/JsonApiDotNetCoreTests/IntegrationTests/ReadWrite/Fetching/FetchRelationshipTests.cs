@@ -42,11 +42,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("userAccounts");
-            responseDocument.SingleData.Id.Should().Be(workItem.Assignee.StringId);
-            responseDocument.SingleData.Attributes.Should().BeNull();
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
+            responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
         }
 
         [Fact]
@@ -92,14 +92,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
+            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes.Should().BeNull();
             item1.Relationships.Should().BeNull();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
+            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes.Should().BeNull();
             item2.Relationships.Should().BeNull();
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().BeEmpty();
+            responseDocument.Data.ManyValue.Should().BeEmpty();
         }
 
         [Fact]
@@ -149,14 +149,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
+            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes.Should().BeNull();
             item1.Relationships.Should().BeNull();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
+            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes.Should().BeNull();
             item2.Relationships.Should().BeNull();
@@ -182,7 +182,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().BeEmpty();
+            responseDocument.Data.ManyValue.Should().BeEmpty();
         }
 
         [Fact]

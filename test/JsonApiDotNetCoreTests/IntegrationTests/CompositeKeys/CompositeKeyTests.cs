@@ -60,8 +60,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(car.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -118,8 +118,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -147,8 +147,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]

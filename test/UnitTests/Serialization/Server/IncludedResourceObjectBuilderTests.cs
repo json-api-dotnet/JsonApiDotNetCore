@@ -31,11 +31,11 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(6, result.Count);
 
             ResourceObject authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
-            ResourceIdentifierObject authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceIdentifierObject authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].Data.SingleValue;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
             ResourceObject reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
-            ResourceIdentifierObject reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceIdentifierObject reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].Data.SingleValue;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
 

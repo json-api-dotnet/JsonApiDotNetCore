@@ -40,7 +40,7 @@ namespace UnitTests.Serialization.Server
             Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", relationshipObject.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", relationshipObject.Links.Related);
-            Assert.False(relationshipObject.Data.IsPopulated);
+            Assert.False(relationshipObject.Data.IsAssigned);
         }
 
         [Fact]
@@ -85,8 +85,8 @@ namespace UnitTests.Serialization.Server
             // Assert
             Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
             Assert.Null(relationshipObject.Links);
-            Assert.True(relationshipObject.Data.IsPopulated);
-            Assert.Equal("20", relationshipObject.ManyData.Single().Id);
+            Assert.True(relationshipObject.Data.IsAssigned);
+            Assert.Equal("20", relationshipObject.Data.ManyValue.Single().Id);
         }
 
         [Fact]
@@ -115,8 +115,8 @@ namespace UnitTests.Serialization.Server
             Assert.True(resourceObject.Relationships.TryGetValue(RelationshipName, out RelationshipObject relationshipObject));
             Assert.Equal("http://www.dummy.com/dummy-relationship-self-link", relationshipObject.Links.Self);
             Assert.Equal("http://www.dummy.com/dummy-relationship-related-link", relationshipObject.Links.Related);
-            Assert.True(relationshipObject.Data.IsPopulated);
-            Assert.Equal("20", relationshipObject.ManyData.Single().Id);
+            Assert.True(relationshipObject.Data.IsAssigned);
+            Assert.Equal("20", relationshipObject.Data.ManyValue.Single().Id);
         }
     }
 }

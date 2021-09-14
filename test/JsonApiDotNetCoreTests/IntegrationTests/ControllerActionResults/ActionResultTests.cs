@@ -39,8 +39,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(toothbrush.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(toothbrush.StringId);
         }
 
         [Fact]

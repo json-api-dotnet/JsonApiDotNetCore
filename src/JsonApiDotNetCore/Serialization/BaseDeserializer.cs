@@ -77,19 +77,19 @@ namespace JsonApiDotNetCore.Serialization
 
             if (document != null)
             {
-                if (document.IsManyData)
+                if (document.Data.ManyValue != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (list)"))
                     {
-                        return document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                        return document.Data.ManyValue.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                     }
                 }
 
-                if (document.SingleData != null)
+                if (document.Data.SingleValue != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (single)"))
                     {
-                        return ParseResourceObject(document.SingleData);
+                        return ParseResourceObject(document.Data.SingleValue);
                     }
                 }
             }
@@ -178,7 +178,7 @@ namespace JsonApiDotNetCore.Serialization
             {
                 bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipObject relationshipData);
 
-                if (!relationshipIsProvided || !relationshipData.Data.IsPopulated)
+                if (!relationshipIsProvided || !relationshipData.Data.IsAssigned)
                 {
                     continue;
                 }
@@ -245,13 +245,13 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipObject relationshipData)
         {
-            if (relationshipData.ManyData != null)
+            if (relationshipData.Data.ManyValue != null)
             {
                 throw new JsonApiSerializationException("Expected single data element for to-one relationship.",
                     $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
             }
 
-            IIdentifiable rightResource = CreateRightResource(hasOneRelationship, relationshipData.SingleData);
+            IIdentifiable rightResource = CreateRightResource(hasOneRelationship, relationshipData.Data.SingleValue);
             hasOneRelationship.SetValue(resource, rightResource);
 
             // depending on if this base parser is used client-side or server-side,
@@ -264,13 +264,13 @@ namespace JsonApiDotNetCore.Serialization
         /// </summary>
         private void SetHasManyRelationship(IIdentifiable resource, HasManyAttribute hasManyRelationship, RelationshipObject relationshipData)
         {
-            if (relationshipData.ManyData == null)
+            if (relationshipData.Data.ManyValue == null)
             {
                 throw new JsonApiSerializationException("Expected data[] element for to-many relationship.",
                     $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
             }
 
-            HashSet<IIdentifiable> rightResources = relationshipData.ManyData.Select(rio => CreateRightResource(hasManyRelationship, rio))
+            HashSet<IIdentifiable> rightResources = relationshipData.Data.ManyValue.Select(rio => CreateRightResource(hasManyRelationship, rio))
                 .ToHashSet(IdentifiableComparer.Instance);
 
             IEnumerable convertedCollection = CollectionConverter.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);

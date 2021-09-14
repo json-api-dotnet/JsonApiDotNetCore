@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private static IDictionary<string, RelationshipObject> PruneRelationshipObjects(ResourceObject resourceObject)
         {
-            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.Data.IsPopulated || pair.Value.Links != null)
+            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.Data.IsAssigned || pair.Value.Links != null)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             return !pruned.Any() ? null : pruned;
@@ -174,7 +174,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
             relationshipObject.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
-            if (relationshipObject.Data.HasResource)
+            if (relationshipObject.Data.IsAssigned && relationshipObject.Data.Value != null)
             {
                 // if the relationship is set, continue parsing the chain.
                 object related = nextRelationship.GetValue(parent);

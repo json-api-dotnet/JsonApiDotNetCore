@@ -87,11 +87,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[0].SingleData.Meta["copyright"]).GetString().Should().Be("(C) 2018. All rights reserved.");
+            responseDocument.Results[0].Data.SingleValue.Meta.Should().HaveCount(1);
+            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 2018. All rights reserved.");
 
-            responseDocument.Results[1].SingleData.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[1].SingleData.Meta["copyright"]).GetString().Should().Be("(C) 1994. All rights reserved.");
+            responseDocument.Results[1].Data.SingleValue.Meta.Should().HaveCount(1);
+            ((JsonElement)responseDocument.Results[1].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 1994. All rights reserved.");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -142,8 +142,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Meta.Should().HaveCount(1);
-            ((JsonElement)responseDocument.Results[0].SingleData.Meta["notice"]).GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
+            responseDocument.Results[0].Data.SingleValue.Meta.Should().HaveCount(1);
+            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["notice"]).GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

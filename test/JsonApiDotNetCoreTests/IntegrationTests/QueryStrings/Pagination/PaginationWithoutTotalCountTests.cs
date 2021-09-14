@@ -131,7 +131,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Count.Should().BeLessThan(DefaultPageSize);
+            responseDocument.Data.ManyValue.Count.Should().BeLessThan(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -162,7 +162,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(DefaultPageSize);
+            responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
@@ -193,7 +193,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(DefaultPageSize);
+            responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
 
             responseDocument.Links.Should().NotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");

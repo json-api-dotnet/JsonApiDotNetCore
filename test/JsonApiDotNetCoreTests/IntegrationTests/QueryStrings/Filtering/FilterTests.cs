@@ -110,9 +110,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[0].StringId);
-            responseDocument.ManyData[0].Attributes["userName"].Should().Be(accounts[0].UserName);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["userName"].Should().Be(accounts[0].UserName);
         }
     }
 }

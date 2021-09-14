@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
 
             responseDocument.Results.Should().HaveCount(1);
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

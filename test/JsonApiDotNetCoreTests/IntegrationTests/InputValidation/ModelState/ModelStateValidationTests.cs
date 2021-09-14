@@ -149,9 +149,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
-            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]
@@ -282,9 +282,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
-            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]

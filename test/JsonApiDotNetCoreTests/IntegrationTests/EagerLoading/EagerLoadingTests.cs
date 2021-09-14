@@ -52,12 +52,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(building.StringId);
-            responseDocument.SingleData.Attributes["number"].Should().Be(building.Number);
-            responseDocument.SingleData.Attributes["windowCount"].Should().Be(4);
-            responseDocument.SingleData.Attributes["primaryDoorColor"].Should().Be(building.PrimaryDoor.Color);
-            responseDocument.SingleData.Attributes["secondaryDoorColor"].Should().Be(building.SecondaryDoor.Color);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(building.StringId);
+            responseDocument.Data.SingleValue.Attributes["number"].Should().Be(building.Number);
+            responseDocument.Data.SingleValue.Attributes["windowCount"].Should().Be(4);
+            responseDocument.Data.SingleValue.Attributes["primaryDoorColor"].Should().Be(building.PrimaryDoor.Color);
+            responseDocument.Data.SingleValue.Attributes["secondaryDoorColor"].Should().Be(building.SecondaryDoor.Color);
         }
 
         [Fact]
@@ -88,12 +88,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(street.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(street.Name);
-            responseDocument.SingleData.Attributes["buildingCount"].Should().Be(2);
-            responseDocument.SingleData.Attributes["doorTotalCount"].Should().Be(3);
-            responseDocument.SingleData.Attributes["windowTotalCount"].Should().Be(5);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(street.Name);
+            responseDocument.Data.SingleValue.Attributes["buildingCount"].Should().Be(2);
+            responseDocument.Data.SingleValue.Attributes["doorTotalCount"].Should().Be(3);
+            responseDocument.Data.SingleValue.Attributes["windowTotalCount"].Should().Be(5);
         }
 
         [Fact]
@@ -119,11 +119,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(street.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["windowTotalCount"].Should().Be(3);
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(street.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["windowTotalCount"].Should().Be(3);
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
         }
 
         [Fact]
@@ -151,9 +151,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(state.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(state.Name);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(state.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(state.Name);
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -194,11 +194,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(state.Cities[0].StringId);
-            responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
-            responseDocument.ManyData[0].Attributes["name"].Should().Be(state.Cities[0].Name);
-            responseDocument.ManyData[0].Relationships.Should().BeNull();
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(state.Cities[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes["name"].Should().Be(state.Cities[0].Name);
+            responseDocument.Data.ManyValue[0].Relationships.Should().BeNull();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("streets");
@@ -235,13 +235,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["number"].Should().Be(newBuilding.Number);
-            responseDocument.SingleData.Attributes["windowCount"].Should().Be(0);
-            responseDocument.SingleData.Attributes["primaryDoorColor"].Should().BeNull();
-            responseDocument.SingleData.Attributes["secondaryDoorColor"].Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["number"].Should().Be(newBuilding.Number);
+            responseDocument.Data.SingleValue.Attributes["windowCount"].Should().Be(0);
+            responseDocument.Data.SingleValue.Attributes["primaryDoorColor"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes["secondaryDoorColor"].Should().BeNull();
 
-            int newBuildingId = int.Parse(responseDocument.SingleData.Id);
+            int newBuildingId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

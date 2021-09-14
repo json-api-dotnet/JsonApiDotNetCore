@@ -208,7 +208,7 @@ namespace JsonApiDotNetCore.Serialization
 
             _request.CopyFrom(request);
 
-            IIdentifiable primaryResource = ParseResourceObject(operation.SingleData);
+            IIdentifiable primaryResource = ParseResourceObject(operation.Data.SingleValue);
 
             _resourceDefinitionAccessor.OnDeserialize(primaryResource);
 
@@ -233,13 +233,13 @@ namespace JsonApiDotNetCore.Serialization
                 throw new JsonApiSerializationException("The 'data' element is required.", null, atomicOperationIndex: AtomicOperationIndex);
             }
 
-            if (operation.SingleData == null)
+            if (operation.Data.SingleValue == null)
             {
                 throw new JsonApiSerializationException("Expected single data element for create/update resource operation.", null,
                     atomicOperationIndex: AtomicOperationIndex);
             }
 
-            return operation.SingleData;
+            return operation.Data.SingleValue;
         }
 
         [AssertionMethod]
@@ -401,23 +401,23 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (relationship is HasOneAttribute)
             {
-                if (operation.ManyData != null)
+                if (operation.Data.ManyValue != null)
                 {
                     throw new JsonApiSerializationException("Expected single data element for to-one relationship.",
                         $"Expected single data element for '{relationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
                 }
 
-                if (operation.SingleData != null)
+                if (operation.Data.SingleValue != null)
                 {
-                    ValidateSingleDataForRelationship(operation.SingleData, secondaryResourceContext, "data");
+                    ValidateSingleDataForRelationship(operation.Data.SingleValue, secondaryResourceContext, "data");
 
-                    IIdentifiable secondaryResource = ParseResourceObject(operation.SingleData);
+                    IIdentifiable secondaryResource = ParseResourceObject(operation.Data.SingleValue);
                     relationship.SetValue(primaryResource, secondaryResource);
                 }
             }
             else if (relationship is HasManyAttribute)
             {
-                if (operation.ManyData == null)
+                if (operation.Data.ManyValue == null)
                 {
                     throw new JsonApiSerializationException("Expected data[] element for to-many relationship.",
                         $"Expected data[] element for '{relationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
@@ -425,7 +425,7 @@ namespace JsonApiDotNetCore.Serialization
 
                 var secondaryResources = new List<IIdentifiable>();
 
-                foreach (ResourceObject resourceObject in operation.ManyData)
+                foreach (ResourceObject resourceObject in operation.Data.ManyValue)
                 {
                     ValidateSingleDataForRelationship(resourceObject, secondaryResourceContext, "data[]");
 

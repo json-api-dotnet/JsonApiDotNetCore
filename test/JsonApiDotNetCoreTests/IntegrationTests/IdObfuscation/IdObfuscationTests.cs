@@ -44,8 +44,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
         [Fact]
@@ -114,8 +114,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(card.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
         }
 
         [Fact]
@@ -139,9 +139,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(account.Cards[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
         }
 
         [Fact]
@@ -165,8 +165,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(account.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
@@ -195,8 +195,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(account.Cards[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         }
 
         [Fact]
@@ -244,11 +244,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Attributes["ownerName"].Should().Be(newCard.OwnerName);
-            responseDocument.SingleData.Attributes["pinCode"].Should().Be(newCard.PinCode);
+            responseDocument.Data.SingleValue.Attributes["ownerName"].Should().Be(newCard.OwnerName);
+            responseDocument.Data.SingleValue.Attributes["pinCode"].Should().Be(newCard.PinCode);
 
             var codec = new HexadecimalCodec();
-            int newCardId = codec.Decode(responseDocument.SingleData.Id);
+            int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

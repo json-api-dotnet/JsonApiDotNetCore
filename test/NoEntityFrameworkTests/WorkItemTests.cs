@@ -52,7 +52,7 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().NotBeEmpty();
+            responseDocument.Data.ManyValue.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -75,8 +75,8 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(workItem.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
         }
 
         [Fact]
@@ -114,11 +114,11 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
-            responseDocument.SingleData.Attributes["title"].Should().Be(newWorkItem.Title);
-            responseDocument.SingleData.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
-            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newWorkItem.Title);
+            responseDocument.Data.SingleValue.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
+            responseDocument.Data.SingleValue.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
         }
 
         [Fact]

@@ -54,9 +54,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be("0");
-            responseDocument.ManyData[0].Links.Self.Should().Be("/games/0");
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be("0");
+            responseDocument.Data.ManyValue[0].Links.Self.Should().Be("/games/0");
         }
 
         [Fact]
@@ -82,9 +82,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be("0");
-            responseDocument.SingleData.Links.Self.Should().Be("/games/0");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be("0");
+            responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(game.ActivePlayers.ElementAt(0).StringId);
@@ -124,8 +124,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             httpResponse.Headers.Location.Should().Be("/games/0");
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be("0");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be("0");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -173,9 +173,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be("0");
-            responseDocument.SingleData.Attributes["title"].Should().Be(newTitle);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be("0");
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newTitle);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

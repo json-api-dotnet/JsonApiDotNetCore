@@ -22,14 +22,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonIgnore]
         public bool IsAssigned { get; }
 
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        public bool IsPopulated => IsAssigned;
-
-        // [TODO-STJ]: Inline
-        [JsonIgnore]
-        internal bool HasResource => IsAssigned && Value != null;
-
         [JsonIgnore]
         public T SingleValue { get; }
 

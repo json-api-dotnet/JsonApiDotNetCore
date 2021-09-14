@@ -86,19 +86,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("recordCompanies");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newCompany.Name);
-            responseDocument.Results[0].SingleData.Attributes["countryOfResidence"].Should().Be(newCompany.CountryOfResidence);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("recordCompanies");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newCompany.Name);
+            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompany.CountryOfResidence);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            short newCompanyId = short.Parse(responseDocument.Results[0].SingleData.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -179,19 +179,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newPerformer.ArtistName);
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newPerformer.ArtistName);
+            responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -271,18 +271,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("playlists");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            long newPlaylistId = long.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -473,15 +473,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].SingleData.Attributes["genre"].Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Attributes["genre"].Should().BeNull();
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -591,26 +591,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(4);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
 
-            responseDocument.Results[2].SingleData.Should().NotBeNull();
-            responseDocument.Results[2].SingleData.Type.Should().Be("recordCompanies");
-            responseDocument.Results[2].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[2].SingleData.Attributes["name"].Should().Be(newCompanyName);
+            responseDocument.Results[2].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[2].Data.SingleValue.Type.Should().Be("recordCompanies");
+            responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[2].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
-            short newCompanyId = short.Parse(responseDocument.Results[2].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[2].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -704,20 +704,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("recordCompanies");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newCompanyName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("recordCompanies");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            short newCompanyId = short.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -802,20 +802,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -900,20 +900,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1020,20 +1020,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1140,20 +1140,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1260,20 +1260,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(3);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1402,22 +1402,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(4);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1555,24 +1555,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(4);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newArtistName1);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName1);
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[1].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[1].SingleData.Attributes["artistName"].Should().Be(newArtistName2);
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName2);
 
-            responseDocument.Results[2].SingleData.Should().NotBeNull();
-            responseDocument.Results[2].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[2].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[2].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[2].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[2].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[2].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[2].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[2].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1687,10 +1687,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(4);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
@@ -1754,14 +1754,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Lid.Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

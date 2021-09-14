@@ -57,10 +57,10 @@ namespace UnitTests.Serialization.Server
             SetupFieldsManager(attributesToUpdate, relationshipsToUpdate);
 
             Document content = CreateDocumentWithRelationships("multiPrincipals");
-            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
-            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
-            content.SingleData.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
+            content.Data.SingleValue.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
+            content.Data.SingleValue.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.Data.SingleValue.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
+            content.Data.SingleValue.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
 
             string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
@@ -81,10 +81,10 @@ namespace UnitTests.Serialization.Server
             SetupFieldsManager(attributesToUpdate, relationshipsToUpdate);
 
             Document content = CreateDocumentWithRelationships("multiDependents");
-            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
-            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
-            content.SingleData.Relationships.Add("emptyToMany", CreateRelationshipData());
+            content.Data.SingleValue.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
+            content.Data.SingleValue.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.Data.SingleValue.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
+            content.Data.SingleValue.Relationships.Add("emptyToMany", CreateRelationshipData());
 
             string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 

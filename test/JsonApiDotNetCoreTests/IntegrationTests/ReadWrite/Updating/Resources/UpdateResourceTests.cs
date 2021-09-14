@@ -205,12 +205,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(existingGroup.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be($"{newName}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["isPublic"].Should().Be(existingGroup.IsPublic);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingGroup.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newName}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes["isPublic"].Should().Be(existingGroup.IsPublic);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -352,14 +352,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
-            responseDocument.SingleData.Attributes["isImportant"].Should().Be(existingWorkItem.IsImportant);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes["dueAt"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(existingWorkItem.Priority);
+            responseDocument.Data.SingleValue.Attributes["isImportant"].Should().Be(existingWorkItem.IsImportant);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -406,13 +406,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(existingWorkItem.Priority);
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -461,15 +461,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Attributes["priority"].Should().Be(existingWorkItem.Priority);
-            responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["tags"].ManyData.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["tags"].ManyData[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(existingWorkItem.Priority);
+            responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships["tags"].Data.ManyValue[0].Id.Should().Be(existingWorkItem.Tags.Single().StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("workTags");
@@ -518,9 +518,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
 
             responseDocument.Included.Should().BeNull();
         }
@@ -1080,9 +1080,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be($"{newDescription}{ImplicitlyChangingWorkItemDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1176,7 +1176,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

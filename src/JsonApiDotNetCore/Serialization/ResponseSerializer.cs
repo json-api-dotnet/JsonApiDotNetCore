@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Serialization
             IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 
             Document document = Build(resource, attributes, relationships);
-            ResourceObject resourceObject = document.SingleData;
+            ResourceObject resourceObject = document.Data.SingleValue;
 
             if (resourceObject != null)
             {
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCore.Serialization
 
             Document document = Build(resources, attributes, relationships);
 
-            foreach (ResourceObject resourceObject in document.ManyData)
+            foreach (ResourceObject resourceObject in document.Data.ManyValue)
             {
                 ResourceLinks links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
 

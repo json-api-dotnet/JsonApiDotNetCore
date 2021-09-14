@@ -425,11 +425,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("textLanguages");
-            responseDocument.Results[0].SingleData.Attributes["isoCode"].Should().Be($"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("isRightToLeft");
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("textLanguages");
+            responseDocument.Results[0].Data.SingleValue.Attributes["isoCode"].Should().Be($"{newIsoCode}{ImplicitlyChangingTextLanguageDefinition.Suffix}");
+            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("isRightToLeft");
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -477,9 +477,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships.Values.Should().OnlyContain(relationshipObject => relationshipObject.Data.Value == null);
         }
 
         [Fact]

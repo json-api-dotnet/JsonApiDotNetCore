@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -343,11 +343,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
+
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(description);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
@@ -408,13 +410,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(existingWorkItem.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["description"].Should().Be($"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}");
-            responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
+            string description = $"{existingWorkItem.Description}{ImplicitlyChangingWorkItemDefinition.Suffix}";
+
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(existingWorkItem.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(description);
+            responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships["assignee"].Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
@@ -763,7 +767,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -813,7 +817,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

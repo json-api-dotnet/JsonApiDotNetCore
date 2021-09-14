@@ -43,8 +43,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.Should().HaveCount(1);
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             var content = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content.GroupId.Should().Be(newGroupId);
@@ -121,8 +121,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -134,7 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.Should().HaveCount(3);
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content1.GroupId.Should().Be(newGroupId);

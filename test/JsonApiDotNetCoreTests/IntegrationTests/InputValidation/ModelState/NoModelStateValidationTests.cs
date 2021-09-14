@@ -45,8 +45,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("!@#$%^&*().-");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("!@#$%^&*().-");
         }
 
         [Fact]

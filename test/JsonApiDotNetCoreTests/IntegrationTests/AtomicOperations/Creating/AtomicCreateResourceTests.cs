@@ -66,13 +66,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().Be(newArtistName);
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newBornAt);
-            responseDocument.Results[0].SingleData.Relationships.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newBornAt);
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().BeNull();
 
-            int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             for (int index = 0; index < elementCount; index++)
             {
-                ResourceObject singleData = responseDocument.Results[index].SingleData;
+                ResourceObject singleData = responseDocument.Results[index].Data.SingleValue;
 
                 singleData.Should().NotBeNull();
                 singleData.Type.Should().Be("musicTracks");
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                 singleData.Relationships.Should().NotBeEmpty();
             }
 
-            Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.SingleData.Id)).ToArray();
+            Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.Data.SingleValue.Id)).ToArray();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -194,13 +194,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("performers");
-            responseDocument.Results[0].SingleData.Attributes["artistName"].Should().BeNull();
-            responseDocument.Results[0].SingleData.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(default);
-            responseDocument.Results[0].SingleData.Relationships.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
+            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(default);
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().BeNull();
 
-            int newPerformerId = int.Parse(responseDocument.Results[0].SingleData.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -246,12 +246,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("playlists");
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newName);
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newName);
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -300,12 +300,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("lyrics");
-            responseDocument.Results[0].SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("lyrics");
+            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            long newLyricId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            long newLyricId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -776,12 +776,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].SingleData.Attributes["title"].Should().Be(newTitle);
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
+            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTitle);
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].SingleData.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

@@ -77,27 +77,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
 
-            string languageLink = $"/api/textLanguages/{Guid.Parse(responseDocument.Results[0].SingleData.Id)}";
+            string languageLink = $"/api/textLanguages/{Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id)}";
 
-            responseDocument.Results[0].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Links.Self.Should().Be(languageLink);
-            responseDocument.Results[0].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Should().NotBeNull();
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
-            responseDocument.Results[0].SingleData.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
+            responseDocument.Results[0].Data.SingleValue.Links.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Links.Self.Should().Be(languageLink);
+            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
+            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
 
-            responseDocument.Results[1].SingleData.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
 
-            string companyLink = $"/api/recordCompanies/{short.Parse(responseDocument.Results[1].SingleData.Id)}";
+            string companyLink = $"/api/recordCompanies/{short.Parse(responseDocument.Results[1].Data.SingleValue.Id)}";
 
-            responseDocument.Results[1].SingleData.Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Links.Self.Should().Be(companyLink);
-            responseDocument.Results[1].SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Should().NotBeNull();
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
-            responseDocument.Results[1].SingleData.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
+            responseDocument.Results[1].Data.SingleValue.Links.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Links.Self.Should().Be(companyLink);
+            responseDocument.Results[1].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
+            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
         }
     }
 }

@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
         }
 
         [Fact]

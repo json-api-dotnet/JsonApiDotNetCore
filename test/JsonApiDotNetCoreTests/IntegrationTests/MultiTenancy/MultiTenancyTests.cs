@@ -68,8 +68,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(shops[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
         }
 
         [Fact]
@@ -98,8 +98,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(shops[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
         }
 
         [Fact]
@@ -128,9 +128,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("webShops");
-            responseDocument.ManyData[0].Id.Should().Be(shops[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Type.Should().Be("webShops");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webProducts");
@@ -312,11 +312,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["url"].Should().Be(newShopUrl);
-            responseDocument.SingleData.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["url"].Should().Be(newShopUrl);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
-            int newShopId = int.Parse(responseDocument.SingleData.Id);
+            int newShopId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1023,10 +1023,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             string shopLink = $"/nld/shops/{shop.StringId}";
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Links.Self.Should().Be(shopLink);
-            responseDocument.ManyData[0].Relationships["products"].Links.Self.Should().Be($"{shopLink}/relationships/products");
-            responseDocument.ManyData[0].Relationships["products"].Links.Related.Should().Be($"{shopLink}/products");
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Links.Self.Should().Be(shopLink);
+            responseDocument.Data.ManyValue[0].Relationships["products"].Links.Self.Should().Be($"{shopLink}/relationships/products");
+            responseDocument.Data.ManyValue[0].Relationships["products"].Links.Related.Should().Be($"{shopLink}/products");
 
             string productLink = $"/nld/products/{shop.Products[0].StringId}";
 

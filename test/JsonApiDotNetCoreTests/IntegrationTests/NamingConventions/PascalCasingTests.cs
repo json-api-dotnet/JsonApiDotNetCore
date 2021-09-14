@@ -45,11 +45,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Attributes.ContainsKey("IsIndoor"));
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("WaterSlides"));
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("DivingBoards"));
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ContainsKey("IsIndoor"));
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("WaterSlides"));
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("DivingBoards"));
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("DivingBoards");
@@ -85,10 +85,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("WaterSlides");
-            responseDocument.ManyData[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-            responseDocument.ManyData[0].Attributes.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Type.Should().Be("WaterSlides");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
+            responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
         }
 
         [Fact]
@@ -117,18 +117,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("SwimmingPools");
-            responseDocument.SingleData.Attributes["IsIndoor"].Should().Be(newPool.IsIndoor);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
+            responseDocument.Data.SingleValue.Attributes["IsIndoor"].Should().Be(newPool.IsIndoor);
 
-            int newPoolId = int.Parse(responseDocument.SingleData.Id);
+            int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id);
             string poolLink = $"{route}/{newPoolId}";
 
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships["WaterSlides"].Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
-            responseDocument.SingleData.Relationships["WaterSlides"].Links.Related.Should().Be($"{poolLink}/WaterSlides");
-            responseDocument.SingleData.Relationships["DivingBoards"].Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
-            responseDocument.SingleData.Relationships["DivingBoards"].Links.Related.Should().Be($"{poolLink}/DivingBoards");
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
+            responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Related.Should().Be($"{poolLink}/WaterSlides");
+            responseDocument.Data.SingleValue.Relationships["DivingBoards"].Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
+            responseDocument.Data.SingleValue.Relationships["DivingBoards"].Links.Related.Should().Be($"{poolLink}/DivingBoards");
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

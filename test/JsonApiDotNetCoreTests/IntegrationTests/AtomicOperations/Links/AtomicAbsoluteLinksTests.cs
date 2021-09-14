@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
-            ResourceObject singleData1 = responseDocument.Results[0].SingleData;
+            ResourceObject singleData1 = responseDocument.Results[0].Data.SingleValue;
             singleData1.Should().NotBeNull();
             singleData1.Links.Should().NotBeNull();
             singleData1.Links.Self.Should().Be(languageLink);
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
 
-            ResourceObject singleData2 = responseDocument.Results[1].SingleData;
+            ResourceObject singleData2 = responseDocument.Results[1].Data.SingleValue;
             singleData2.Should().NotBeNull();
             singleData2.Links.Should().NotBeNull();
             singleData2.Links.Self.Should().Be(companyLink);
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.Should().HaveCount(1);
 
-            ResourceObject singleData = responseDocument.Results[0].SingleData;
+            ResourceObject singleData = responseDocument.Results[0].Data.SingleValue;
             singleData.Should().NotBeNull();
             singleData.Links.Should().BeNull();
             singleData.Relationships.Should().BeNull();

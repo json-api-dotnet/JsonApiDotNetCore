@@ -56,28 +56,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
             responseDocument.Included.Should().HaveCount(1);
 
             if (expectNullValueInDocument)
             {
-                responseDocument.SingleData.Attributes.Should().ContainKey("timeZone");
+                responseDocument.Data.SingleValue.Attributes.Should().ContainKey("timeZone");
                 responseDocument.Included[0].Attributes.Should().ContainKey("title");
             }
             else
             {
-                responseDocument.SingleData.Attributes.Should().NotContainKey("timeZone");
+                responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("timeZone");
                 responseDocument.Included[0].Attributes.Should().NotContainKey("title");
             }
 
             if (expectDefaultValueInDocument)
             {
-                responseDocument.SingleData.Attributes.Should().ContainKey("defaultAppointmentDurationInMinutes");
+                responseDocument.Data.SingleValue.Attributes.Should().ContainKey("defaultAppointmentDurationInMinutes");
                 responseDocument.Included[0].Attributes.Should().ContainKey("startTime");
             }
             else
             {
-                responseDocument.SingleData.Attributes.Should().NotContainKey("defaultAppointmentDurationInMinutes");
+                responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("defaultAppointmentDurationInMinutes");
                 responseDocument.Included[0].Attributes.Should().NotContainKey("startTime");
             }
         }

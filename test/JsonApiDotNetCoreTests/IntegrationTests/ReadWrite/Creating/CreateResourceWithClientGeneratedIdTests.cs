@@ -63,11 +63,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -108,12 +108,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

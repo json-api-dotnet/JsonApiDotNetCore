@@ -105,7 +105,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().BeEmpty();
+            responseDocument.Data.ManyValue.Should().BeEmpty();
         }
 
         [Fact]
