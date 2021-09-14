@@ -38,7 +38,7 @@ The left side of this relationship is of type `Person` (public name: "persons") 
 
 There are two ways the exposed relationship name is determined:
 
-1. Using the configured [naming convention](~/usage/options.md#custom-serializer-settings).
+1. Using the configured [naming convention](~/usage/options.md#customize-serializer-options).
 
 2. Individually using the attribute's constructor.
 ```c#

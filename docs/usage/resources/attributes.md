@@ -14,7 +14,7 @@ public class Person : Identifiable
 
 There are two ways the exposed attribute name is determined:
 
-1. Using the configured [naming convention](~/usage/options.md#custom-serializer-settings).
+1. Using the configured [naming convention](~/usage/options.md#customize-serializer-options).
 
 2. Individually using the attribute's constructor.
 ```c#
@@ -88,9 +88,9 @@ public class Person : Identifiable
 ## Complex Attributes
 
 Models may contain complex attributes.
-Serialization of these types is done by [Newtonsoft.Json](https://www.newtonsoft.com/json),
-so you should use their APIs to specify serialization formats.
-You can also use global options to specify `JsonSerializer` configuration.
+Serialization of these types is done by [System.Text.Json](https://www.nuget.org/packages/System.Text.Json),
+so you should use their APIs to specify serialization format.
+You can also use [global options](~/usage/options.md#customize-serializer-options) to control the `JsonSerializer` behavior.
 
 ```c#
 public class Foo : Identifiable
@@ -101,7 +101,8 @@ public class Foo : Identifiable
 
 public class Bar
 {
-    [JsonProperty("compound-member")]
+    [JsonPropertyName("compound-member")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string CompoundMember { get; set; }
 }
 ```
@@ -121,13 +122,13 @@ public class Foo : Identifiable
     {
         get
         {
-            return Bar == null ? "{}" : JsonConvert.SerializeObject(Bar);
+            return Bar == null ? "{}" : JsonSerializer.Serialize(Bar);
         }
         set
         {
             Bar = string.IsNullOrWhiteSpace(value)
                 ? null
-                : JsonConvert.DeserializeObject<Bar>(value);
+                : JsonSerializer.Deserialize<Bar>(value);
         }
     }
 }

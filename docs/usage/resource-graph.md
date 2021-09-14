@@ -98,4 +98,4 @@ public class MyModel : Identifiable
 }
 ```
 
-The default naming convention can be changed in [options](~/usage/options.md#custom-serializer-settings).
+The default naming convention can be changed in [options](~/usage/options.md#customize-serializer-options).
