@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
-using JsonApiDotNetCore;
-using OpenApiTests.ClientLibrary.GeneratedCode;
+using JsonApiDotNetCore.OpenApi.Client;
+using OpenApiClientTests.LegacyClient.GeneratedCode;
 
 #pragma warning disable AV1008 // Class should not be static
 
-namespace OpenApiTests.ClientLibrary
+namespace OpenApiClientTests.LegacyClient
 {
     internal static class ApiResponse
     {

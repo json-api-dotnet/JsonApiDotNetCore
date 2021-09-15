@@ -3,8 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using JsonApiDotNetCoreExampleClient.GeneratedCode;
 
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
-
 namespace JsonApiDotNetCoreExampleClient
 {
     // ReSharper disable once ClassNeverInstantiated.Global

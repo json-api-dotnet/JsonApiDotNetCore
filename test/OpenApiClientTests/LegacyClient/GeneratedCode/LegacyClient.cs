@@ -1,9 +1,9 @@
 using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 
-namespace OpenApiTests.ClientLibrary.GeneratedCode
+namespace OpenApiClientTests.LegacyClient.GeneratedCode
 {
-    internal partial class OpenApiClient : JsonApiClient
+    internal partial class LegacyClient : JsonApiClient
     {
         partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
         {
