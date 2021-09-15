@@ -14,7 +14,7 @@ namespace OpenApiClientTests.LegacyClient
     /// <summary>
     /// Enables to inject an outgoing response body and inspect the incoming request.
     /// </summary>
-    public sealed class FakeHttpClientWrapper : IDisposable
+    internal sealed class FakeHttpClientWrapper : IDisposable
     {
         private readonly FakeHttpMessageHandler _handler;
 
