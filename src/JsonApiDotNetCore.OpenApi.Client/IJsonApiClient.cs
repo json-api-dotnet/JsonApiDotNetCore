@@ -1,7 +1,7 @@
 using System;
 using System.Linq.Expressions;
 
-namespace JsonApiDotNetCore.OpenApiClient
+namespace JsonApiDotNetCore.OpenApi.Client
 {
     public interface IJsonApiClient
     {

@@ -24,7 +24,7 @@
 
 # OpenAPI
 ## [API Description](openapi/api-description.md))
-## [Client Library](openapi/client-library.md))
+### [Client Library](openapi/client-library.md))
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)

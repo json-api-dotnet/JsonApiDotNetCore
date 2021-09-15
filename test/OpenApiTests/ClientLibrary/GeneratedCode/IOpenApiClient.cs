@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.OpenApiClient;
+using JsonApiDotNetCore.OpenApi.Client;
 
 namespace OpenApiTests.ClientLibrary.GeneratedCode
 {

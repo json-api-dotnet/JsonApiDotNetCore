@@ -26,6 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApiClient\JsonApiDotNetCore.OpenApiClient.csproj" />
+      <ProjectReference Include="..\..\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
     </ItemGroup>
 </Project>

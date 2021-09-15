@@ -1,4 +1,4 @@
-using JsonApiDotNetCore.OpenApiClient;
+using JsonApiDotNetCore.OpenApi.Client;
 using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreExampleClient.GeneratedCode

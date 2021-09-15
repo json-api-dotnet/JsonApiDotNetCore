@@ -4,6 +4,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApiClient\JsonApiDotNetCore.OpenApiClient.csproj" />
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />

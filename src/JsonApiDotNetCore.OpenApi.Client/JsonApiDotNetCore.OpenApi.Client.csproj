@@ -7,7 +7,7 @@
 
   <PropertyGroup>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;openapi;swagger;client;nswag</PackageTags>
-    <Description>Contains utility methods to enrich the usability of an OpenAPI generated client.</Description>
+    <Description>Provides support for partial PATCH and partial POST requests for a C# client generated with NSwag.</Description>
     <Authors>json-api-dotnet</Authors>
     <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -16,11 +16,6 @@
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
-    <ProjectReference Include="..\JsonApiDotNetCore\JsonApiDotNetCore.csproj" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">

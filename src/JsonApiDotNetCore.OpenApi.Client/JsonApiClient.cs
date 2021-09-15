@@ -4,11 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.OpenApi;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace JsonApiDotNetCore.OpenApiClient
+namespace JsonApiDotNetCore.OpenApi.Client
 {
     /// <summary>
     /// Base class to inherit auto-generated client from. Enables to mark fields to be explicitly included in a request body, even if they are null or
@@ -116,7 +115,7 @@ namespace JsonApiDotNetCore.OpenApiClient
 
             public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
             {
-                throw new UnreachableCodeException();
+                throw new Exception("This code should not be reachable.");
             }
 
             public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
