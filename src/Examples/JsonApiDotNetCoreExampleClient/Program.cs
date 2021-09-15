@@ -17,7 +17,7 @@ namespace JsonApiDotNetCoreExampleClient
                 BaseAddress = new Uri("http://localhost:14140")
             };
 
-            IExampleApiClient exampleApiClient = new ExampleApiClient(httpClient);
+            ExampleApiClient exampleApiClient = new(httpClient);
 
             try
             {

@@ -3,8 +3,7 @@ using Newtonsoft.Json;
 
 namespace JsonApiDotNetCoreExampleClient.GeneratedCode
 {
-    // ReSharper disable once MemberCanBeInternal
-    public partial class ExampleApiClient : JsonApiClient
+    internal partial class ExampleApiClient : JsonApiClient
     {
         partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
         {

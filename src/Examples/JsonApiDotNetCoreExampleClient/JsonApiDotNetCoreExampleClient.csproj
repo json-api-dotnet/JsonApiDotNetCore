@@ -21,7 +21,7 @@
         <ClassName>ExampleApiClient</ClassName>
         <CodeGenerator>NSwagCSharp</CodeGenerator>
         <Namespace>JsonApiDotNetCoreExampleClient.GeneratedCode</Namespace>
-        <Options>/UseBaseUrl:false /GenerateClientInterfaces:true</Options>
+        <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal</Options>
       </OpenApiReference>
     </ItemGroup>
 
