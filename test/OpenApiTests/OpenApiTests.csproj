@@ -13,28 +13,6 @@
     <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.10.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="5.0.9">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="NSwag.ApiDescription.Client" Version="13.13.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <OpenApiReference Include="LegacyOpenApiIntegration\swagger.json">
-      <Namespace>OpenApiTests.ClientLibrary.GeneratedCode</Namespace>
-      <ClassName>OpenApiClient</ClassName>
-      <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal</Options>
-    </OpenApiReference>
   </ItemGroup>
 
   <ItemGroup>

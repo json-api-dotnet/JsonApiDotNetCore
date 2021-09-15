@@ -49,7 +49,8 @@ namespace OpenApiClientTests.LegacyClient
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""attributes"": {
-        ""destination"": """ + flightDestination + @""",
+        ""final-destination"": """ + flightDestination + @""",
+        ""stop-over-destination"": null,
         ""operated-by"": ""DeltaAirLines"",
         ""departs-at"": """ + flightDepartsAt + @""",
         ""arrives-at"": null,
@@ -120,7 +121,7 @@ namespace OpenApiClientTests.LegacyClient
             flight.Meta.Should().HaveCount(1);
             flight.Meta["docs"].Should().Be(flightMetaValue);
 
-            flight.Attributes.Destination.Should().Be(flightDestination);
+            flight.Attributes.FinalDestination.Should().Be(flightDestination);
             flight.Attributes.ServicesOnBoard.Should().HaveCount(3);
             flight.Attributes.ServicesOnBoard.ElementAt(0).Should().Be(fightServiceOnBoard);
             flight.Attributes.ServicesOnBoard.ElementAt(1).Should().Be(string.Empty);
@@ -187,7 +188,7 @@ namespace OpenApiClientTests.LegacyClient
             document.Data.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(departsAtInZuluTime));
             document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
             document.Data.Attributes.ServicesOnBoard.Should().BeNull();
-            document.Data.Attributes.Destination.Should().BeNull();
+            document.Data.Attributes.FinalDestination.Should().BeNull();
             document.Data.Attributes.OperatedBy.Should().Be(default(Airline));
         }
 
@@ -203,7 +204,7 @@ namespace OpenApiClientTests.LegacyClient
       ""id"": ""f1a520ac-02a0-466b-94ea-86cbaa86f02f"",
       ""status"": ""404"",
       ""destination"": ""The requested resource does not exist."",
-      ""detail"": ""Resource of type 'meetings' with ID '" + flightId + @"' does not exist.""
+      ""detail"": ""Resource of type 'flights' with ID '" + flightId + @"' does not exist.""
     }
   ]
 }";

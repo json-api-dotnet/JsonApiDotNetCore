@@ -7,10 +7,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.LegacyOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class FlightAttendant : Identifiable<string>
+    public sealed class FlightAttendant : Identifiable<long>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowFilter)]
-        public override string Id { get; set; }
+        public override long Id { get; set; }
 
         [Attr(Capabilities = AttrCapabilities.None)]
         public FlightAttendantExpertiseLevel ExpertiseLevel { get; set; }

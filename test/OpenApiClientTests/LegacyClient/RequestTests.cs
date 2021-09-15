@@ -125,13 +125,13 @@ namespace OpenApiClientTests.LegacyClient
                     Attributes = new AirplaneAttributesInPostRequest
                     {
                         Name = name,
-                        SeatingCapacity = 250
+                        AirtimeInHours = 800
                     }
                 }
             };
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
-                airplane => airplane.AirtimeInHours))
+                airplane => airplane.SerialNumber))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument));
@@ -150,8 +150,8 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""attributes"": {
       ""name"": """ + name + @""",
-      ""airtime-in-hours"": null,
-      ""seating-capacity"": 250
+      ""airtime-in-hours"": 800,
+      ""serial-number"": null
     }
   }
 }");
@@ -162,7 +162,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             const string airplaneId = "XUuiP";
-            var manufacturedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
+            var lastServicedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
@@ -175,14 +175,13 @@ namespace OpenApiClientTests.LegacyClient
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPatchRequest
                     {
-                        ManufacturedAt = manufacturedAt
+                        LastServicedAt = lastServicedAt
                     }
                 }
             };
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.ManufacturedAt, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance,
-                airplane => airplane.AirtimeInHours))
+                airplane => airplane.SerialNumber, airplane => airplane.AirtimeInHours))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -201,10 +200,9 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": ""XUuiP"",
     ""attributes"": {
-      ""manufactured-at"": ""2021-01-01T15:23:05.033+04:00"",
       ""airtime-in-hours"": null,
-      ""last-serviced-at"": null,
-      ""is-in-maintenance"": false
+      ""last-serviced-at"": ""2021-01-01T15:23:05.033+04:00"",
+      ""serial-number"": null
     }
   }
 }");

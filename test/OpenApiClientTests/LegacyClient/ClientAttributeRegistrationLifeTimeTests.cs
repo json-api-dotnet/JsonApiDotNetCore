@@ -21,7 +21,6 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             const string airplaneId = "XUuiP";
-            var manufacturedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
 
             var requestDocument = new AirplanePatchRequestDocument
             {
@@ -29,10 +28,7 @@ namespace OpenApiClientTests.LegacyClient
                 {
                     Id = airplaneId,
                     Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        ManufacturedAt = manufacturedAt
-                    }
+                    Attributes = new AirplaneAttributesInPatchRequest()
                 }
             };
 
@@ -53,7 +49,6 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
     ""attributes"": {
-      ""manufactured-at"": ""2021-01-01T15:23:05.033+04:00"",
       ""is-in-maintenance"": false
     }
   }
@@ -135,10 +130,7 @@ namespace OpenApiClientTests.LegacyClient
                 {
                     Id = airplaneId2,
                     Type = AirplanesResourceType.Airplanes,
-                    Attributes = new AirplaneAttributesInPatchRequest
-                    {
-                        ManufacturedAt = manufacturedAt
-                    }
+                    Attributes = new AirplaneAttributesInPatchRequest()
                 }
             };
 
@@ -146,7 +138,7 @@ namespace OpenApiClientTests.LegacyClient
                 airplane => airplane.AirtimeInHours))
             {
                 using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                    airplane => airplane.ManufacturedAt))
+                    airplane => airplane.IsInMaintenance))
                 {
                 }
 
@@ -160,7 +152,6 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
     ""attributes"": {
-      ""manufactured-at"": ""2021-01-01T15:23:05.033+04:00"",
       ""is-in-maintenance"": false
     }
   }
@@ -296,7 +287,7 @@ namespace OpenApiClientTests.LegacyClient
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPatchRequest
                     {
-                        SerialNumber = "100"
+                        ManufacturedInCity = "Everett"
                     }
                 }
             };
@@ -304,7 +295,7 @@ namespace OpenApiClientTests.LegacyClient
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                airplane => airplane.LastServicedAt))
+                airplane => airplane.SerialNumber))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
@@ -316,8 +307,8 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
     ""attributes"": {
-      ""last-serviced-at"": null,
-      ""serial-number"": ""100""
+      ""serial-number"": null,
+      ""manufactured-in-city"": ""Everett""
     }
   }
 }");
@@ -355,7 +346,7 @@ namespace OpenApiClientTests.LegacyClient
                     Type = AirplanesResourceType.Airplanes,
                     Attributes = new AirplaneAttributesInPatchRequest
                     {
-                        SerialNumber = "100"
+                        ManufacturedInCity = "Everett"
                     }
                 }
             };
@@ -363,7 +354,7 @@ namespace OpenApiClientTests.LegacyClient
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                airplane => airplane.LastServicedAt))
+                airplane => airplane.SerialNumber))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument2));
@@ -375,8 +366,8 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId + @""",
     ""attributes"": {
-      ""last-serviced-at"": null,
-      ""serial-number"": ""100""
+      ""serial-number"": null,
+      ""manufactured-in-city"": ""Everett""
     }
   }
 }");
@@ -414,7 +405,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
-                airplane => airplane.ManufacturedAt))
+                airplane => airplane.SerialNumber))
             {
                 using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                     airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))

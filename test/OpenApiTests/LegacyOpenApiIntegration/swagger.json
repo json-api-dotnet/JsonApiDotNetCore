@@ -478,7 +478,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -506,7 +507,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -534,7 +536,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -574,7 +577,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -597,7 +601,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -625,7 +630,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -655,7 +661,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -683,7 +690,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -711,7 +719,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -741,7 +750,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -771,7 +781,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -803,7 +814,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -831,7 +843,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -861,7 +874,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -889,7 +903,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -917,7 +932,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -947,7 +963,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -977,7 +994,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -1792,10 +1810,6 @@
             "maxLength": 255,
             "type": "string"
           },
-          "manufactured-at": {
-            "type": "string",
-            "format": "date-time"
-          },
           "airtime-in-hours": {
             "type": "integer",
             "format": "int32",
@@ -1810,7 +1824,12 @@
             "type": "boolean"
           },
           "serial-number": {
-            "maxLength": 2000,
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
+          "manufactured-in-city": {
+            "maxLength": 85,
             "type": "string",
             "nullable": true
           }
@@ -1827,21 +1846,33 @@
             "maxLength": 255,
             "type": "string"
           },
-          "manufactured-at": {
-            "type": "string",
-            "format": "date-time"
-          },
           "airtime-in-hours": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "seating-capacity": {
-            "type": "integer",
-            "format": "int32"
+          "last-serviced-at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
-          "airplane-type": {
-            "$ref": "#/components/schemas/aircraft-type"
+          "serial-number": {
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
+          "manufactured-in-city": {
+            "maxLength": 85,
+            "type": "string",
+            "nullable": true
+          },
+          "manufactured-at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "distance-traveled-in-kilometers": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -1852,10 +1883,6 @@
           "name": {
             "maxLength": 255,
             "type": "string"
-          },
-          "manufactured-at": {
-            "type": "string",
-            "format": "date-time"
           },
           "airtime-in-hours": {
             "type": "integer",
@@ -1871,13 +1898,22 @@
             "type": "boolean"
           },
           "serial-number": {
-            "maxLength": 2000,
+            "maxLength": 16,
             "type": "string",
             "nullable": true
           },
-          "seating-capacity": {
+          "manufactured-in-city": {
+            "maxLength": 85,
+            "type": "string",
+            "nullable": true
+          },
+          "manufactured-at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "distance-traveled-in-kilometers": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "airplane-type": {
             "$ref": "#/components/schemas/aircraft-type"
@@ -2441,9 +2477,14 @@
       "flight-attributes-in-patch-request": {
         "type": "object",
         "properties": {
-          "destination": {
+          "final-destination": {
             "maxLength": 40,
             "type": "string"
+          },
+          "stop-over-destination": {
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
           },
           "operated-by": {
             "$ref": "#/components/schemas/airline"
@@ -2454,9 +2495,14 @@
       "flight-attributes-in-response": {
         "type": "object",
         "properties": {
-          "destination": {
+          "final-destination": {
             "maxLength": 40,
             "type": "string"
+          },
+          "stop-over-destination": {
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
           },
           "departs-at": {
             "type": "string",

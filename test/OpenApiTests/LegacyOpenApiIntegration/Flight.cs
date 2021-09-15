@@ -13,7 +13,11 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [Required]
         [MaxLength(40)]
-        public string Destination { get; set; }
+        public string FinalDestination { get; set; }
+
+        [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
+        [MaxLength(2000)]
+        public string StopOverDestination { get; set; }
 
         [Attr]
         public DateTime? DepartsAt { get; set; }
