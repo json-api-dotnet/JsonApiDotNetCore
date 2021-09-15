@@ -11,8 +11,6 @@ using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-#pragma warning disable AV1500 // Member or local function contains too many statements
-
 namespace OpenApiClientTests.LegacyClient
 {
     public sealed class RequestTests

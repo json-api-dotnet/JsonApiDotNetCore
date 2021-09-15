@@ -107,11 +107,11 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 referenceSchemaForResourceObject = _resourceObjectSchemaGenerator.GenerateSchema(resourceObjectType);
             }
 
-            OpenApiSchema referenceSchemaForDataObject =
-                IsSingleDataDocument(type) ? referenceSchemaForResourceObject : CreateArrayTypeDataSchema(referenceSchemaForResourceObject);
-
             OpenApiSchema referenceSchemaForDocument = _defaultSchemaGenerator.GenerateSchema(type, _schemaRepositoryAccessor.Current);
             OpenApiSchema fullSchemaForDocument = _schemaRepositoryAccessor.Current.Schemas[referenceSchemaForDocument.Reference.Id];
+
+            OpenApiSchema referenceSchemaForDataObject =
+                IsSingleDataDocument(type) ? referenceSchemaForResourceObject : CreateArrayTypeDataSchema(referenceSchemaForResourceObject);
 
             fullSchemaForDocument.Properties[JsonApiObjectPropertyName.Data] = referenceSchemaForDataObject;
 

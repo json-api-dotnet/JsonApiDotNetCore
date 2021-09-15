@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Specialized;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
-using TestBuildingBlocks;
 using Xunit;
 
-#pragma warning disable AV1500 // Member or local function contains too many statements
 #pragma warning disable AV1704 // Don't include numbers in variables, parameters and type members
 
 namespace OpenApiClientTests.LegacyClient

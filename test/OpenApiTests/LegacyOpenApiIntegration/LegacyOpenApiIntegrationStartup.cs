@@ -3,7 +3,6 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
-using OpenApiTests.Startups;
 
 namespace OpenApiTests.LegacyOpenApiIntegration
 {

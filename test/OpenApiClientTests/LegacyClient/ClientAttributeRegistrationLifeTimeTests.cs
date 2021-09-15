@@ -1,8 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
-using FluentAssertions.Common;
-using FluentAssertions.Extensions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
@@ -58,10 +56,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_registration_can_be_used_for_multiple_requests()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             const string airplaneId = "XUuiP";
 
             var requestDocument = new AirplanePatchRequestDocument
@@ -110,7 +108,6 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             const string airplaneId1 = "XUuiP";
-            var manufacturedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
 
             var requestDocument1 = new AirplanePatchRequestDocument
             {
@@ -161,10 +158,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_values_can_be_changed_after_attribute_registration()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             const string airplaneId = "XUuiP";
 
             var requestDocument = new AirplanePatchRequestDocument
@@ -204,10 +201,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_registration_is_unaffected_by_successive_attribute_registration_for_document_of_different_type()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             const string airplaneId1 = "XUuiP";
 
             var requestDocument1 = new AirplanePatchRequestDocument
@@ -255,10 +252,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_different_document_of_same_type()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             const string airplaneId1 = "XUuiP";
 
             var requestDocument1 = new AirplanePatchRequestDocument
@@ -317,10 +314,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_registration_is_unaffected_by_preceding_disposed_attribute_registration_for_document_of_different_type()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             var requestDocument1 = new AirplanePostRequestDocument
             {
                 Data = new AirplaneDataInPostRequest
@@ -376,10 +373,10 @@ namespace OpenApiClientTests.LegacyClient
         [Fact]
         public async Task Attribute_registration_is_unaffected_by_preceding_attribute_registration_for_different_document_of_same_type()
         {
+            // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
-            // Arrange
             const string airplaneId1 = "XUuiP";
 
             var requestDocument1 = new AirplanePatchRequestDocument

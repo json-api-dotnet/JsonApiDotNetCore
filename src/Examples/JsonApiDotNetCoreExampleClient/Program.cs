@@ -5,8 +5,7 @@ using JsonApiDotNetCoreExampleClient.GeneratedCode;
 
 namespace JsonApiDotNetCoreExampleClient
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
-    internal class Program
+    internal static class Program
     {
         private static async Task Main()
         {

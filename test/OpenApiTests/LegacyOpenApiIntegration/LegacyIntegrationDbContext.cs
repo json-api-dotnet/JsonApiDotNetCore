@@ -27,9 +27,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
             builder.Entity<Flight>()
                 .HasMany(flight => flight.BackupPersonnel)
                 .WithMany(flightAttendant => flightAttendant.StandbyForFlights);
-
-            builder.Entity<Flight>()
-                .Ignore(flight => flight.ServicesOnBoard);
         }
     }
 }

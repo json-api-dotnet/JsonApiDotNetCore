@@ -9,9 +9,7 @@ namespace OpenApiClientTests.LegacyClient.GeneratedCode
         {
             SetSerializerSettingsForJsonApi(settings);
 
-#if DEBUG
             settings.Formatting = Formatting.Indented;
-#endif
         }
     }
 }

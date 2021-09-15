@@ -12,8 +12,8 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
         {
             ArgumentGuard.NotNull(controllerAction, nameof(controllerAction));
 
-            if (!typeof(CoreJsonApiController).IsAssignableFrom(controllerAction.ReflectedType) ||
-                typeof(BaseJsonApiOperationsController).IsAssignableFrom(controllerAction.ReflectedType))
+            // This is a temporary work-around to prevent the JsonApiDotNetCoreExample project from crashing upon startup.
+            if (!IsJsonApiController(controllerAction) || IsOperationsController(controllerAction))
             {
                 return null;
             }
@@ -21,6 +21,16 @@ namespace JsonApiDotNetCore.OpenApi.JsonApiMetadata
             HttpMethodAttribute method = controllerAction.GetCustomAttributes(true).OfType<HttpMethodAttribute>().FirstOrDefault();
 
             return ResolveJsonApiEndpoint(method);
+        }
+
+        private static bool IsJsonApiController(MethodInfo controllerAction)
+        {
+            return typeof(CoreJsonApiController).IsAssignableFrom(controllerAction.ReflectedType);
+        }
+
+        private static bool IsOperationsController(MethodInfo controllerAction)
+        {
+            return typeof(BaseJsonApiOperationsController).IsAssignableFrom(controllerAction.ReflectedType);
         }
 
         private static JsonApiEndpoint? ResolveJsonApiEndpoint(HttpMethodAttribute httpMethod)

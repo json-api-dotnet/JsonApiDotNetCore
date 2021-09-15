@@ -1,6 +1,6 @@
 # OpenAPI Client Library
 
-You can generate a client library in various programming languages from the OpenAPI specification file that JsonApiDotNetCore APIs provide. For C# .NET clients generated using NSwag, we provide an additional package that introduces support for sending partial write requests.
+You can generate a client library in various programming languages from the OpenAPI specification file that JsonApiDotNetCore APIs provide. For C# .NET clients generated using NSwag, we provide an additional package that introduces better support for PATCH and POST requests. The issue here is that a property on a generated C# class being `null` could mean "set the value to `null` in the request" or "this is `null` because I never touched it".
 
 ## Installation
 

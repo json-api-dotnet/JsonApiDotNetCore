@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -29,6 +30,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public Airline Airline { get; set; }
 
         [Attr]
+        [NotMapped]
         public ICollection<string> ServicesOnBoard { get; set; }
 
         [HasOne]

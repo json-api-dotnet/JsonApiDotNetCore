@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestBuildingBlocks;
 
-namespace OpenApiTests.Startups
+namespace OpenApiTests
 {
     public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
