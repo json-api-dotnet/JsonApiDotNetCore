@@ -3,7 +3,7 @@ using JsonApiDotNetCore.Controllers;
 using JsonApiDotNetCore.Services;
 using Microsoft.Extensions.Logging;
 
-namespace OpenApiTests.ExistingOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration
 {
     public sealed class FlightAttendantsController : JsonApiController<FlightAttendant, string>
     {

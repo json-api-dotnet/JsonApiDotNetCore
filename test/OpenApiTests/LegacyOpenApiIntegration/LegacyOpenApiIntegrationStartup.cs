@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using OpenApiTests.Startups;
 
-namespace OpenApiTests.ExistingOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ExistingOpenApiIntegrationStartup<TDbContext> : OpenApiStartup<TDbContext>
+    public sealed class LegacyOpenApiIntegrationStartup<TDbContext> : OpenApiStartup<TDbContext>
         where TDbContext : DbContext
     {
         protected override void SetJsonApiOptions(JsonApiOptions options)

@@ -1,6 +1,6 @@
 using JetBrains.Annotations;
 
-namespace OpenApiTests.ExistingOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public enum AircraftType

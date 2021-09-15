@@ -7,12 +7,12 @@ using FluentAssertions;
 using TestBuildingBlocks;
 using Xunit;
 
-namespace OpenApiTests.ExistingOpenApiIntegration
+namespace OpenApiTests.LegacyOpenApiIntegration
 {
-    public sealed class ExistingOpenApiIntegrationTests
-        : IntegrationTestContext<ExistingOpenApiIntegrationStartup<ExistingIntegrationDbContext>, ExistingIntegrationDbContext>
+    public sealed class LegacyOpenApiIntegrationTests
+        : IntegrationTestContext<LegacyOpenApiIntegrationStartup<LegacyIntegrationDbContext>, LegacyIntegrationDbContext>
     {
-        public ExistingOpenApiIntegrationTests()
+        public LegacyOpenApiIntegrationTests()
         {
             UseController<AirplanesController>();
             UseController<FlightsController>();
@@ -23,7 +23,7 @@ namespace OpenApiTests.ExistingOpenApiIntegration
         public async Task Retrieved_document_matches_expected_document()
         {
             // Arrange
-            string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(ExistingOpenApiIntegration)}.swagger.json";
+            string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
             string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
             const string requestUrl = "swagger/v1/swagger.json";
 
