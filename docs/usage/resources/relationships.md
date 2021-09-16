@@ -34,6 +34,32 @@ public class Person : Identifiable
 
 The left side of this relationship is of type `Person` (public name: "persons") and the right side is of type `TodoItem` (public name: "todoItems").
 
+## HasManyThrough
+
+_removed since v5.0_
+
+Earlier versions of Entity Framework Core (up to v5) [did not support](https://github.com/aspnet/EntityFrameworkCore/issues/1368) many-to-many relationships without a join entity.
+For this reason, earlier versions of JsonApiDotNetCore filled this gap by allowing applications to declare a relationship as `HasManyThrough`,
+which would expose the relationship to the client the same way as any other `HasMany` relationship.
+However, under the covers it would use the join type and Entity Framework Core's APIs to get and set the relationship.
+
+```c#
+public class Article : Identifiable
+{
+    // tells Entity Framework Core to ignore this property
+    [NotMapped]
+
+    // tells JsonApiDotNetCore to use the join table below
+    [HasManyThrough(nameof(ArticleTags))]
+    public ICollection<Tag> Tags { get; set; }
+
+    // this is the Entity Framework Core navigation to the join table
+    public ICollection<ArticleTag> ArticleTags { get; set; }
+}
+```
+
+The left side of this relationship is of type `Article` (public name: "articles") and the right side is of type `Tag` (public name: "tags").
+
 ## Name
 
 There are two ways the exposed relationship name is determined:
