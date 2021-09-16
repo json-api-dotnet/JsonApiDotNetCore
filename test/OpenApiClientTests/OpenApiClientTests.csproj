@@ -30,7 +30,7 @@
   <ItemGroup>
     <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
       <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
-      <ClassName>LegacyOpenApiClient</ClassName>
+      <ClassName>OpenApiClient</ClassName>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal</Options>
     </OpenApiReference>
