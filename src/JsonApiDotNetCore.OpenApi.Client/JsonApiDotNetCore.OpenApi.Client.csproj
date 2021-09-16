@@ -7,7 +7,7 @@
 
   <PropertyGroup>
     <PackageTags>jsonapidotnetcore;jsonapi;json:api;dotnet;asp.net;openapi;swagger;client;nswag</PackageTags>
-    <Description>Provides support for OpenAPI generated clients in sending partial POST/PATCH requests against JSON:API endpoints</Description>
+    <Description>Provides support for OpenAPI generated clients in sending partial POST/PATCH requests against JSON:API endpoints.</Description>
     <Authors>json-api-dotnet</Authors>
     <PackageProjectUrl>https://www.jsonapi.net/</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -26,5 +26,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
-  
 </Project>

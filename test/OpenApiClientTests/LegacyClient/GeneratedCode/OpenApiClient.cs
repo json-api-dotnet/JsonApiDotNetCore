@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace OpenApiClientTests.LegacyClient.GeneratedCode
 {
-    internal partial class LegacyClient : JsonApiClient
+    internal partial class OpenApiClient : JsonApiClient
     {
         partial void UpdateJsonSerializerSettings(JsonSerializerSettings settings)
         {

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using JsonApiDotNetCore.OpenApi.Client;
 
 namespace OpenApiClientTests.LegacyClient
-
 {
     /// <summary>
     /// Enables to inject an outgoing response body and inspect the incoming request.

@@ -1,6 +1,7 @@
-# OpenAPI API Description
+# OpenAPI
 
-You can describe your API with an OpenAPI specification using the [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) integration for JsonApiDotNetCore. 
+JsonApiDotNetCore provides an extension package that enables you to produce an [OpenAPI specification](https://swagger.io/specification/) for your JSON:API endpoints. This can be used to generate a [documentation website](https://swagger.io/tools/swagger-ui/) or to generate [client libraries](https://openapi-generator.tech/docs/generators/) in various languages. The package provides an integration with [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore).
+
 
 ## Installation
 

@@ -22,10 +22,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCollectionAsync());
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightCollectionAsync());
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -41,10 +41,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -58,7 +58,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new FlightPostRequestDocument
             {
@@ -73,7 +73,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostFlightAsync(requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PostFlightAsync(requestDocument));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -100,7 +100,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const char euroSign = '\x20AC';
             const char checkMark = '\x2713';
@@ -128,11 +128,11 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
+            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
                 airplane => airplane.SerialNumber))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PostAirplaneAsync(requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PostAirplaneAsync(requestDocument));
             }
 
             // Assert
@@ -163,7 +163,7 @@ namespace OpenApiClientTests.LegacyClient
             var lastServicedAt = 1.January(2021).At(15, 23, 5, 33).ToDateTimeOffset(4.Hours());
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new AirplanePatchRequestDocument
             {
@@ -178,11 +178,11 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
                 airplane => airplane.SerialNumber, airplane => airplane.AirtimeInHours))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
             }
 
             // Assert
@@ -213,10 +213,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await apiClient.DeleteFlightAsync(flightId);
+            await apiOpenApiClient.DeleteFlightAsync(flightId);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Delete);
@@ -231,10 +231,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightOperatingAirplaneAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightOperatingAirplaneAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -250,10 +250,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinPersonnelAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightCabinPersonnelAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -269,10 +269,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightOperatingAirplaneRelationshipAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightOperatingAirplaneRelationshipAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -288,7 +288,7 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new ToOneAirplaneRequestData
             {
@@ -300,7 +300,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             // Act
-            await apiClient.PatchFlightOperatingAirplaneRelationshipAsync(flightId, requestDocument);
+            await apiOpenApiClient.PatchFlightOperatingAirplaneRelationshipAsync(flightId, requestDocument);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
@@ -324,10 +324,10 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiClient.GetFlightCabinPersonnelRelationshipAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.GetFlightCabinPersonnelRelationshipAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
@@ -343,7 +343,7 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new ToManyFlightAttendantRequestData
             {
@@ -363,7 +363,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             // Act
-            await apiClient.PostFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
+            await apiOpenApiClient.PostFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Post);
@@ -393,7 +393,7 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new ToManyFlightAttendantRequestData
             {
@@ -413,7 +413,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             // Act
-            await apiClient.PatchFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
+            await apiOpenApiClient.PatchFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
@@ -443,7 +443,7 @@ namespace OpenApiClientTests.LegacyClient
             const int flightId = 8712;
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
+            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument = new ToManyFlightAttendantRequestData
             {
@@ -463,7 +463,7 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             // Act
-            await apiClient.DeleteFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
+            await apiOpenApiClient.DeleteFlightCabinPersonnelRelationshipAsync(flightId, requestDocument);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Delete);
