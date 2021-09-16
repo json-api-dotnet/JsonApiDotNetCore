@@ -5,5 +5,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("JsonApiDotNetCoreTests")]
 [assembly: InternalsVisibleTo("UnitTests")]
 [assembly: InternalsVisibleTo("DiscoveryTests")]
-[assembly: InternalsVisibleTo("OpenApiTests")]
 [assembly: InternalsVisibleTo("TestBuildingBlocks")]

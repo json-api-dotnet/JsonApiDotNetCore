@@ -1206,12 +1206,12 @@
         }
       }
     },
-    "/api/v1/flights/{id}/flight-attendants": {
+    "/api/v1/flights/{id}/backup-cabin-personnel": {
       "get": {
         "tags": [
           "flights"
         ],
-        "operationId": "get-flight-flight-attendants",
+        "operationId": "get-flight-backup-cabin-personnel",
         "parameters": [
           {
             "name": "id",
@@ -1240,7 +1240,7 @@
         "tags": [
           "flights"
         ],
-        "operationId": "head-flight-flight-attendants",
+        "operationId": "head-flight-backup-cabin-personnel",
         "parameters": [
           {
             "name": "id",
@@ -1266,12 +1266,12 @@
         }
       }
     },
-    "/api/v1/flights/{id}/relationships/flight-attendants": {
+    "/api/v1/flights/{id}/relationships/backup-cabin-personnel": {
       "get": {
         "tags": [
           "flights"
         ],
-        "operationId": "get-flight-flight-attendants-relationship",
+        "operationId": "get-flight-backup-cabin-personnel-relationship",
         "parameters": [
           {
             "name": "id",
@@ -1300,7 +1300,7 @@
         "tags": [
           "flights"
         ],
-        "operationId": "head-flight-flight-attendants-relationship",
+        "operationId": "head-flight-backup-cabin-personnel-relationship",
         "parameters": [
           {
             "name": "id",
@@ -1329,7 +1329,7 @@
         "tags": [
           "flights"
         ],
-        "operationId": "post-flight-flight-attendants-relationship",
+        "operationId": "post-flight-backup-cabin-personnel-relationship",
         "parameters": [
           {
             "name": "id",
@@ -1360,7 +1360,7 @@
         "tags": [
           "flights"
         ],
-        "operationId": "patch-flight-flight-attendants-relationship",
+        "operationId": "patch-flight-backup-cabin-personnel-relationship",
         "parameters": [
           {
             "name": "id",
@@ -1391,7 +1391,220 @@
         "tags": [
           "flights"
         ],
-        "operationId": "delete-flight-flight-attendants-relationship",
+        "operationId": "delete-flight-backup-cabin-personnel-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/cabin-personnel": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-cabin-personnel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-cabin-personnel",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flights/{id}/relationships/cabin-personnel": {
+      "get": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "get-flight-cabin-personnel-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "head-flight-cabin-personnel-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/vnd.api+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "post-flight-cabin-personnel-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "patch-flight-cabin-personnel-relationship",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/vnd.api+json": {
+              "schema": {
+                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "flights"
+        ],
+        "operationId": "delete-flight-cabin-personnel-relationship",
         "parameters": [
           {
             "name": "id",
@@ -1569,224 +1782,11 @@
           }
         }
       }
-    },
-    "/api/v1/flights/{id}/reserve-flight-attendants": {
-      "get": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "get-flight-reserve-flight-attendants",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
-                }
-              }
-            }
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "head-flight-reserve-flight-attendants",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-collection-response-document"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/flights/{id}/relationships/reserve-flight-attendants": {
-      "get": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "get-flight-reserve-flight-attendants-relationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
-                }
-              }
-            }
-          }
-        }
-      },
-      "head": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "head-flight-reserve-flight-attendants-relationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/vnd.api+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/flight-attendant-identifier-collection-response-document"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "post-flight-reserve-flight-attendants-relationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "patch-flight-reserve-flight-attendants-relationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "flights"
-        ],
-        "operationId": "delete-flight-reserve-flight-attendants-relationship",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/vnd.api+json": {
-              "schema": {
-                "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          }
-        }
-      }
     }
   },
   "components": {
     "schemas": {
-      "aircraft-type": {
+      "aircraft-kind": {
         "enum": [
           "Turboprops",
           "LightJet",
@@ -1810,6 +1810,11 @@
             "maxLength": 255,
             "type": "string"
           },
+          "serial-number": {
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
           "airtime-in-hours": {
             "type": "integer",
             "format": "int32",
@@ -1822,11 +1827,6 @@
           },
           "is-in-maintenance": {
             "type": "boolean"
-          },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
           },
           "manufactured-in-city": {
             "maxLength": 85,
@@ -1846,6 +1846,11 @@
             "maxLength": 255,
             "type": "string"
           },
+          "serial-number": {
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
           "airtime-in-hours": {
             "type": "integer",
             "format": "int32",
@@ -1855,24 +1860,6 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
-          },
-          "manufactured-in-city": {
-            "maxLength": 85,
-            "type": "string",
-            "nullable": true
-          },
-          "manufactured-at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "distance-traveled-in-kilometers": {
-            "type": "integer",
-            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -1884,6 +1871,11 @@
             "maxLength": 255,
             "type": "string"
           },
+          "serial-number": {
+            "maxLength": 16,
+            "type": "string",
+            "nullable": true
+          },
           "airtime-in-hours": {
             "type": "integer",
             "format": "int32",
@@ -1894,29 +1886,20 @@
             "format": "date-time",
             "nullable": true
           },
+          "manufactured-at": {
+            "type": "string",
+            "format": "date-time"
+          },
           "is-in-maintenance": {
             "type": "boolean"
-          },
-          "serial-number": {
-            "maxLength": 16,
-            "type": "string",
-            "nullable": true
           },
           "manufactured-in-city": {
             "maxLength": 85,
             "type": "string",
             "nullable": true
           },
-          "manufactured-at": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "distance-traveled-in-kilometers": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "airplane-type": {
-            "$ref": "#/components/schemas/aircraft-type"
+          "kind": {
+            "$ref": "#/components/schemas/aircraft-kind"
           }
         },
         "additionalProperties": false
@@ -2189,10 +2172,6 @@
             "minimum": 18,
             "type": "integer",
             "format": "int32"
-          },
-          "profile-image-url": {
-            "type": "string",
-            "format": "uri"
           }
         },
         "additionalProperties": false
@@ -2243,6 +2222,10 @@
           "profile-image-url": {
             "type": "string",
             "format": "uri"
+          },
+          "distance-traveled-in-kilometers": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -2504,6 +2487,9 @@
             "type": "string",
             "nullable": true
           },
+          "operated-by": {
+            "$ref": "#/components/schemas/airline"
+          },
           "departs-at": {
             "type": "string",
             "format": "date-time",
@@ -2513,9 +2499,6 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          },
-          "operated-by": {
-            "$ref": "#/components/schemas/airline"
           },
           "services-on-board": {
             "type": "array",
@@ -2712,13 +2695,13 @@
       "flight-relationships-in-patch-request": {
         "type": "object",
         "properties": {
+          "cabin-personnel": {
+            "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+          },
           "operating-airplane": {
             "$ref": "#/components/schemas/to-one-airplane-request-data"
           },
-          "flight-attendants": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
-          },
-          "reserve-flight-attendants": {
+          "backup-cabin-personnel": {
             "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
           }
         },
@@ -2727,13 +2710,13 @@
       "flight-relationships-in-post-request": {
         "type": "object",
         "properties": {
+          "cabin-personnel": {
+            "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
+          },
           "operating-airplane": {
             "$ref": "#/components/schemas/to-one-airplane-request-data"
           },
-          "flight-attendants": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
-          },
-          "reserve-flight-attendants": {
+          "backup-cabin-personnel": {
             "$ref": "#/components/schemas/to-many-flight-attendant-request-data"
           }
         },
@@ -2742,13 +2725,13 @@
       "flight-relationships-in-response": {
         "type": "object",
         "properties": {
+          "cabin-personnel": {
+            "$ref": "#/components/schemas/to-many-flight-attendant-response-data"
+          },
           "operating-airplane": {
             "$ref": "#/components/schemas/to-one-airplane-response-data"
           },
-          "flight-attendants": {
-            "$ref": "#/components/schemas/to-many-flight-attendant-response-data"
-          },
-          "reserve-flight-attendants": {
+          "backup-cabin-personnel": {
             "$ref": "#/components/schemas/to-many-flight-attendant-response-data"
           }
         },

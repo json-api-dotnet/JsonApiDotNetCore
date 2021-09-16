@@ -28,8 +28,8 @@ namespace OpenApiClientTests.LegacyClient
             const string documentMetaValue = "1";
             const string flightMetaValue = "https://api.jsonapi.net/docs/#get-flights";
             const string operatingAirplaneMetaValue = "https://jsonapi.net/api/docs/#get-flight-operating-airplane";
-            const string flightAttendantsMetaValue = "https://jsonapi.net/api/docs/#get-flight-flight-attendants";
-            const string reserveFlightAttendantsMetaValue = "https://jsonapi.net/api/docs/#get-flight-reserve-flight-attendants";
+            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-personnel";
+            const string reserveCabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-backup-cabin-personnel";
             const string topLevelLink = HostPrefix + "flights";
             const string flightResourceLink = topLevelLink + "/" + flightId;
 
@@ -68,22 +68,22 @@ namespace OpenApiClientTests.LegacyClient
              ""docs"": """ + operatingAirplaneMetaValue + @"""
           }
         },
-        ""flight-attendants"": {
+        ""cabin-personnel"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/flight-attendants"",
-            ""related"": """ + flightResourceLink + @"/flight-attendants""
+            ""self"": """ + flightResourceLink + @"/relationships/cabin-personnel"",
+            ""related"": """ + flightResourceLink + @"/cabin-personnel""
           },
           ""meta"": {
-             ""docs"": """ + flightAttendantsMetaValue + @"""
+             ""docs"": """ + cabinPersonnelMetaValue + @"""
           }
         },
-        ""reserve-flight-attendants"": {
+        ""backup-cabin-personnel"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/reserve-flight-attendants"",
-            ""related"": """ + flightResourceLink + @"/reserve-flight-attendants""
+            ""self"": """ + flightResourceLink + @"/relationships/backup-cabin-personnel"",
+            ""related"": """ + flightResourceLink + @"/backup-cabin-personnel""
           },
           ""meta"": {
-             ""docs"": """ + reserveFlightAttendantsMetaValue + @"""
+             ""docs"": """ + reserveCabinPersonnelMetaValue + @"""
           }
         }
       },
@@ -134,17 +134,17 @@ namespace OpenApiClientTests.LegacyClient
             flight.Relationships.OperatingAirplane.Meta.Should().HaveCount(1);
             flight.Relationships.OperatingAirplane.Meta["docs"].Should().Be(operatingAirplaneMetaValue);
 
-            flight.Relationships.FlightAttendants.Data.Should().BeNull();
-            flight.Relationships.FlightAttendants.Links.Self.Should().Be(flightResourceLink + "/relationships/flight-attendants");
-            flight.Relationships.FlightAttendants.Links.Related.Should().Be(flightResourceLink + "/flight-attendants");
-            flight.Relationships.FlightAttendants.Meta.Should().HaveCount(1);
-            flight.Relationships.FlightAttendants.Meta["docs"].Should().Be(flightAttendantsMetaValue);
+            flight.Relationships.CabinPersonnel.Data.Should().BeNull();
+            flight.Relationships.CabinPersonnel.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-personnel");
+            flight.Relationships.CabinPersonnel.Links.Related.Should().Be(flightResourceLink + "/cabin-personnel");
+            flight.Relationships.CabinPersonnel.Meta.Should().HaveCount(1);
+            flight.Relationships.CabinPersonnel.Meta["docs"].Should().Be(cabinPersonnelMetaValue);
 
-            flight.Relationships.ReserveFlightAttendants.Data.Should().BeNull();
-            flight.Relationships.ReserveFlightAttendants.Links.Self.Should().Be(flightResourceLink + "/relationships/reserve-flight-attendants");
-            flight.Relationships.ReserveFlightAttendants.Links.Related.Should().Be(flightResourceLink + "/reserve-flight-attendants");
-            flight.Relationships.ReserveFlightAttendants.Meta.Should().HaveCount(1);
-            flight.Relationships.ReserveFlightAttendants.Meta["docs"].Should().Be(reserveFlightAttendantsMetaValue);
+            flight.Relationships.BackupCabinPersonnel.Data.Should().BeNull();
+            flight.Relationships.BackupCabinPersonnel.Links.Self.Should().Be(flightResourceLink + "/relationships/backup-cabin-personnel");
+            flight.Relationships.BackupCabinPersonnel.Links.Related.Should().Be(flightResourceLink + "/backup-cabin-personnel");
+            flight.Relationships.BackupCabinPersonnel.Meta.Should().HaveCount(1);
+            flight.Relationships.BackupCabinPersonnel.Meta["docs"].Should().Be(reserveCabinPersonnelMetaValue);
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,flight-attendants,reserve-flight-attendants""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
   },
   ""data"": {
       ""type"": ""flights"",
@@ -243,10 +243,10 @@ namespace OpenApiClientTests.LegacyClient
           },
           ""data"": null
         },
-        ""flight-attendants"": {
+        ""cabin-personnel"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/flight-attendants"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/flight-attendants""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel""
           },
           ""data"": [
             {
@@ -255,16 +255,16 @@ namespace OpenApiClientTests.LegacyClient
             }
           ],
         },
-        ""reserve-flight-attendants"": {
+        ""backup-cabin-personnel"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/reserve-flight-attendants"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/reserve-flight-attendants""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-cabin-personnel"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/backup-cabin-personnel""
           },
           ""data"": [ ]
         }
       },
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,flight-attendants,reserve-flight-attendants""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
       }
     }
 }";
@@ -295,10 +295,10 @@ namespace OpenApiClientTests.LegacyClient
             // Assert
             document.Data.Attributes.Should().BeNull();
             document.Data.Relationships.OperatingAirplane.Data.Should().BeNull();
-            document.Data.Relationships.FlightAttendants.Data.Should().HaveCount(1);
-            document.Data.Relationships.FlightAttendants.Data.First().Id.Should().Be(flightAttendantId);
-            document.Data.Relationships.FlightAttendants.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
-            document.Data.Relationships.ReserveFlightAttendants.Data.Should().BeEmpty();
+            document.Data.Relationships.CabinPersonnel.Data.Should().HaveCount(1);
+            document.Data.Relationships.CabinPersonnel.Data.First().Id.Should().Be(flightAttendantId);
+            document.Data.Relationships.CabinPersonnel.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+            document.Data.Relationships.BackupCabinPersonnel.Data.Should().BeEmpty();
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace OpenApiClientTests.LegacyClient
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,flight-attendants,reserve-flight-attendants""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
       }
     }
 }";
@@ -409,8 +409,8 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/flight-attendants"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/flight-attendants""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel""
   },
   ""data"": [ ]
 }";
@@ -419,7 +419,7 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightFlightAttendantsAsync(Convert.ToInt32(flightId));
+            FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinPersonnelAsync(Convert.ToInt32(flightId));
 
             // Assert
             document.Data.Should().BeEmpty();
@@ -483,9 +483,9 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/flight-attendants"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/flight-attendants"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/flight-attendants""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
+    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel""
   },
   ""data"": [{
     ""type"": ""flight-attendants"",
@@ -501,8 +501,7 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierCollectionResponseDocument
-                document = await apiClient.GetFlightFlightAttendantsRelationshipAsync(Convert.ToInt32(flightId));
+            FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinPersonnelRelationshipAsync(Convert.ToInt32(flightId));
 
             // Assert
             document.Data.Should().HaveCount(2);
@@ -520,7 +519,7 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PostFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PostFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -549,7 +548,7 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.PatchFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PatchFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -578,7 +577,7 @@ namespace OpenApiClientTests.LegacyClient
             ILegacyClient apiClient = new GeneratedCode.LegacyClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await apiClient.DeleteFlightFlightAttendantsRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.DeleteFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {

@@ -30,10 +30,13 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [Range(18, 75)]
         public int Age { get; set; }
 
-        [Attr(Capabilities = AttrCapabilities.All)]
+        [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowCreate)]
         [Required]
         [Url]
         public string ProfileImageUrl { get; set; }
+
+        [Attr]
+        public long DistanceTraveledInKilometers { get; set; }
 
         [HasMany]
         public ISet<Flight> ScheduledForFlights { get; set; }

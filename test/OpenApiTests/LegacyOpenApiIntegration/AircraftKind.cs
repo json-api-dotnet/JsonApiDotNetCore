@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 namespace OpenApiTests.LegacyOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public enum AircraftType
+    public enum AircraftKind
     {
         Turboprops,
         LightJet,

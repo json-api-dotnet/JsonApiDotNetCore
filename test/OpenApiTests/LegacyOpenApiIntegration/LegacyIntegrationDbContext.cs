@@ -25,7 +25,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
                 .WithMany(flightAttendant => flightAttendant.ScheduledForFlights);
 
             builder.Entity<Flight>()
-                .HasMany(flight => flight.BackupPersonnel)
+                .HasMany(flight => flight.BackupCabinPersonnel)
                 .WithMany(flightAttendant => flightAttendant.StandbyForFlights);
         }
     }

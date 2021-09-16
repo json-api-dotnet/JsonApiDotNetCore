@@ -6,23 +6,23 @@ You can generate a client library in various programming languages from the Open
 
 You are required to install the following NuGet packages:
 
-- `JsonApiDotNetCore.OpenApiClient`
+- `JsonApiDotNetCore.OpenApi.Client`
 - `NSwag.ApiDescription.Client`
 - `Microsoft.Extensions.ApiDescription.Cient`
 - `NSwag.ApiDescription.Client`
 
-The following examples demonstrate how to install the `JsonApiDotNetCore.OpenApiClient` package.
+The following examples demonstrate how to install the `JsonApiDotNetCore.OpenApi.Client` package.
 
 ### CLI
 
 ```
-dotnet add package JsonApiDotNetCore.OpenApiClient
+dotnet add package JsonApiDotNetCore.OpenApi.Client
 ```
 
 ### Visual Studio
 
 ```powershell
-Install-Package JsonApiDotNetCore.OpenApiClient
+Install-Package JsonApiDotNetCore.OpenApi.Client
 ```
 
 ### *.csproj
@@ -30,7 +30,7 @@ Install-Package JsonApiDotNetCore.OpenApiClient
 ```xml
 <ItemGroup>
   <!-- Be sure to check NuGet for the latest version # -->
-  <PackageReference Include="JsonApiDotNetCore.OpenApiClient" Version="4.0.0" />
+  <PackageReference Include="JsonApiDotNetCore.OpenApi.Client" Version="4.0.0" />
 </ItemGroup>
 ```
 

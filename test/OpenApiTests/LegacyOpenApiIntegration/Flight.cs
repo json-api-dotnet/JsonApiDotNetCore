@@ -20,26 +20,26 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [MaxLength(2000)]
         public string StopOverDestination { get; set; }
 
+        [Attr(PublicName = "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
+        public Airline Airline { get; set; }
+
         [Attr]
         public DateTime? DepartsAt { get; set; }
 
         [Attr]
         public DateTime? ArrivesAt { get; set; }
 
-        [Attr(PublicName = "operated-by", Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
-        public Airline Airline { get; set; }
+        [HasMany]
+        public ISet<FlightAttendant> CabinPersonnel { get; set; }
+
+        [HasOne]
+        public Airplane OperatingAirplane { get; set; }
 
         [Attr]
         [NotMapped]
         public ICollection<string> ServicesOnBoard { get; set; }
 
-        [HasOne]
-        public Airplane OperatingAirplane { get; set; }
-
-        [HasMany(PublicName = "flight-attendants")]
-        public ISet<FlightAttendant> CabinPersonnel { get; set; }
-
-        [HasMany(PublicName = "reserve-flight-attendants")]
-        public ICollection<FlightAttendant> BackupPersonnel { get; set; }
+        [HasMany]
+        public ICollection<FlightAttendant> BackupCabinPersonnel { get; set; }
     }
 }

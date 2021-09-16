@@ -15,10 +15,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
             base.SetJsonApiOptions(options);
 
             options.Namespace = "api/v1";
-            options.DefaultPageSize = new PageSize(10);
-            options.MaximumPageSize = new PageSize(100);
-            options.MaximumPageNumber = new PageNumber(50);
-            options.IncludeTotalResourceCount = true;
             options.DefaultAttrCapabilities = AttrCapabilities.AllowView;
 
             options.SerializerSettings.ContractResolver = new DefaultContractResolver
