@@ -34,10 +34,7 @@ for:
     only:
     - image: Visual Studio 2019
   services:
-  - postgresql134
-  # https://help.appveyor.com/discussions/problems/30239-postgres-fails-to-connect-after-version-change
-  init:
-  - net start postgresql-x64-13
+  - postgresql13
   # REF: https://github.com/docascode/docfx-seed/blob/master/appveyor.yml
   before_build:
     - pwsh: |
