@@ -89,6 +89,25 @@ The left side of a relationship is where the relationship is declared, the right
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; }
 }
 </code></pre><p>The left side of this relationship is of type <code>Person</code> (public name: &quot;persons&quot;) and the right side is of type <code>TodoItem</code> (public name: &quot;todoItems&quot;).</p>
+<h2 id="hasmanythrough">HasManyThrough</h2>
+<p><em>removed since v5.0</em></p>
+<p>Earlier versions of Entity Framework Core (up to v5) <a href="https://github.com/aspnet/EntityFrameworkCore/issues/1368">did not support</a> many-to-many relationships without a join entity.
+For this reason, earlier versions of JsonApiDotNetCore filled this gap by allowing applications to declare a relationship as <code>HasManyThrough</code>,
+which would expose the relationship to the client the same way as any other <code>HasMany</code> relationship.
+However, under the covers it would use the join type and Entity Framework Core&#39;s APIs to get and set the relationship.</p>
+<pre><code class="lang-c#">public class Article : Identifiable
+{
+    // tells Entity Framework Core to ignore this property
+    [NotMapped]
+
+    // tells JsonApiDotNetCore to use the join table below
+    [HasManyThrough(nameof(ArticleTags))]
+    public ICollection&lt;Tag&gt; Tags { get; set; }
+
+    // this is the Entity Framework Core navigation to the join table
+    public ICollection&lt;ArticleTag&gt; ArticleTags { get; set; }
+}
+</code></pre><p>The left side of this relationship is of type <code>Article</code> (public name: &quot;articles&quot;) and the right side is of type <code>Tag</code> (public name: &quot;tags&quot;).</p>
 <h2 id="name">Name</h2>
 <p>There are two ways the exposed relationship name is determined:</p>
 <ol>
