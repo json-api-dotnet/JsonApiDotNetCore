@@ -1,20 +1,18 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using JsonApiDotNetCoreExampleClient.GeneratedCode;
 
 namespace JsonApiDotNetCoreExampleClient
 {
     internal static class Program
     {
+        private const string BaseUrl = "http://localhost:14140";
+
         private static async Task Main()
         {
-            using var httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("http://localhost:14140")
-            };
+            using var httpClient = new HttpClient();
 
-            ExampleApiClient exampleApiClient = new(httpClient);
+            ExampleApiClient exampleApiClient = new(BaseUrl, httpClient);
 
             try
             {
