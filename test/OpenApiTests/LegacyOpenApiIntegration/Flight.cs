@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace OpenApiTests.LegacyOpenApiIntegration
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Flight : Identifiable
+    public sealed class Flight : Identifiable<string>
     {
         [Attr(Capabilities = AttrCapabilities.AllowView | AttrCapabilities.AllowChange)]
         [Required]

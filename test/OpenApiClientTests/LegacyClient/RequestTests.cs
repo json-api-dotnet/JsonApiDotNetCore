@@ -38,7 +38,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_resource_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -212,7 +212,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Deleting_resource_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -230,7 +230,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_secondary_resource_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -249,7 +249,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_secondary_resources_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -268,7 +268,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_ToOne_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -287,7 +287,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Patching_ToOne_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -323,7 +323,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_ToMany_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -342,7 +342,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Posting_ToMany_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -392,7 +392,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Patching_ToMany_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
@@ -442,7 +442,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Deleting_ToMany_relationship_produces_expected_request()
         {
             // Arrange
-            const int flightId = 8712;
+            const string flightId = "ZvuH1";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);

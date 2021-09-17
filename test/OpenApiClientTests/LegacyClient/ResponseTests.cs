@@ -21,7 +21,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_resource_collection_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             const string flightDestination = "Destination of Flight";
             const string fightServiceOnBoard = "Movies";
             const string flightDepartsAt = "2014-11-25T00:00:00";
@@ -151,7 +151,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_resource_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             const string departsAtInZuluTime = "2021-06-08T12:53:30.554Z";
             const string arrivesAtWithUtcOffset = "2019-02-20T11:56:33.0721266+01:00";
 
@@ -176,7 +176,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await openApiClient.GetFlightAsync(Convert.ToInt32(flightId));
+            FlightPrimaryResponseDocument document = await openApiClient.GetFlightAsync(flightId);
 
             // Assert
             document.Jsonapi.Should().BeNull();
@@ -194,7 +194,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_unknown_resource_translates_error_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
 
             const string responseBody = @"{
   ""errors"": [
@@ -211,7 +211,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task<FlightPrimaryResponseDocument>> action = async () => await openApiClient.GetFlightAsync(Convert.ToInt32(flightId));
+            Func<Task<FlightPrimaryResponseDocument>> action = async () => await openApiClient.GetFlightAsync(flightId);
 
             // Assert
             ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
@@ -225,7 +225,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Posting_resource_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             const string flightAttendantId = "bBJHu";
 
             const string responseBody = @"{
@@ -305,7 +305,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Patching_resource_with_side_effects_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
 
             const string responseBody = @"{
   ""links"": {
@@ -324,7 +324,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await openApiClient.PatchFlightAsync(Convert.ToInt32(flightId), new FlightPatchRequestDocument
+            FlightPrimaryResponseDocument document = await openApiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
             {
                 Data = new FlightDataInPatchRequest
                 {
@@ -343,13 +343,13 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Patching_resource_without_side_effects_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchFlightAsync(
-                Convert.ToInt32(flightId), new FlightPatchRequestDocument
+            FlightPrimaryResponseDocument document = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchFlightAsync(flightId,
+                new FlightPatchRequestDocument
                 {
                     Data = new FlightDataInPatchRequest
                     {
@@ -370,7 +370,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.DeleteFlightAsync(8712);
+            Func<Task> action = async () => await openApiClient.DeleteFlightAsync("ZvuH1");
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -380,7 +380,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_secondary_resource_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
 
             const string responseBody = @"{
   ""links"": {
@@ -395,7 +395,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            AirplaneSecondaryResponseDocument document = await openApiClient.GetFlightOperatingAirplaneAsync(Convert.ToInt32(flightId));
+            AirplaneSecondaryResponseDocument document = await openApiClient.GetFlightOperatingAirplaneAsync(flightId);
 
             // Assert
             document.Data.Should().BeNull();
@@ -405,7 +405,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_secondary_resources_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
 
             const string responseBody = @"{
   ""links"": {
@@ -419,7 +419,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantCollectionResponseDocument document = await openApiClient.GetFlightCabinPersonnelAsync(Convert.ToInt32(flightId));
+            FlightAttendantCollectionResponseDocument document = await openApiClient.GetFlightCabinPersonnelAsync(flightId);
 
             // Assert
             document.Data.Should().BeEmpty();
@@ -429,7 +429,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_ToOne_relationship_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             const string operatingAirplaneId = "bBJHu";
 
             const string responseBody = @"{
@@ -447,7 +447,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            AirplaneIdentifierResponseDocument document = await openApiClient.GetFlightOperatingAirplaneRelationshipAsync(Convert.ToInt32(flightId));
+            AirplaneIdentifierResponseDocument document = await openApiClient.GetFlightOperatingAirplaneRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().NotBeNull();
@@ -463,7 +463,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await openApiClient.PatchFlightOperatingAirplaneRelationshipAsync(8712, new ToOneAirplaneRequestData
+            await openApiClient.PatchFlightOperatingAirplaneRelationshipAsync("ZvuH1", new ToOneAirplaneRequestData
             {
                 Data = new AirplaneIdentifier
                 {
@@ -477,7 +477,7 @@ namespace OpenApiClientTests.LegacyClient
         public async Task Getting_ToMany_relationship_translates_response()
         {
             // Arrange
-            const string flightId = "8712";
+            const string flightId = "ZvuH1";
             const string flightAttendantId1 = "bBJHu";
             const string flightAttendantId2 = "ZvuHNInmX1";
 
@@ -501,8 +501,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierCollectionResponseDocument document =
-                await openApiClient.GetFlightCabinPersonnelRelationshipAsync(Convert.ToInt32(flightId));
+            FlightAttendantIdentifierCollectionResponseDocument document = await openApiClient.GetFlightCabinPersonnelRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().HaveCount(2);
@@ -520,7 +519,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PostFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.PostFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -549,7 +548,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PatchFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.PatchFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -578,7 +577,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.DeleteFlightCabinPersonnelRelationshipAsync(8712, new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.DeleteFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
