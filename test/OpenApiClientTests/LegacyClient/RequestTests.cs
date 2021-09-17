@@ -179,7 +179,8 @@ namespace OpenApiClientTests.LegacyClient
             };
 
             using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
-                airplane => airplane.SerialNumber, airplane => airplane.AirtimeInHours))
+                airplane => airplane.SerialNumber, airplane => airplane.LastServicedAt, airplane => airplane.IsInMaintenance,
+                airplane => airplane.AirtimeInHours))
             {
                 // Act
                 _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
@@ -200,7 +201,8 @@ namespace OpenApiClientTests.LegacyClient
     ""attributes"": {
       ""serial-number"": null,
       ""airtime-in-hours"": null,
-      ""last-serviced-at"": ""2021-01-01T15:23:05.033+04:00""
+      ""last-serviced-at"": ""2021-01-01T15:23:05.033+04:00"",
+      ""is-in-maintenance"": false
     }
   }
 }");
