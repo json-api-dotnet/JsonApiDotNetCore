@@ -28,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             return (JsonConverter)Activator.CreateInstance(converterType, BindingFlags.Instance | BindingFlags.Public, null, null, null);
         }
 
-        private sealed class SingleOrManyDataConverter<T> : JsonConverter<SingleOrManyData<T>>
+        private sealed class SingleOrManyDataConverter<T> : JsonObjectConverter<SingleOrManyData<T>>
             where T : class, IResourceIdentity
         {
             public override SingleOrManyData<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions serializerOptions)
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         }
                         case JsonTokenType.StartObject:
                         {
-                            var resourceObject = JsonConverterSupport.ReadSubTree<T>(ref reader, serializerOptions);
+                            var resourceObject = ReadSubTree<T>(ref reader, serializerOptions);
                             objects.Add(resourceObject);
                             break;
                         }
@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
             public override void Write(Utf8JsonWriter writer, SingleOrManyData<T> value, JsonSerializerOptions options)
             {
-                JsonConverterSupport.WriteSubTree(writer, value.Value, options);
+                WriteSubTree(writer, value.Value, options);
             }
         }
     }

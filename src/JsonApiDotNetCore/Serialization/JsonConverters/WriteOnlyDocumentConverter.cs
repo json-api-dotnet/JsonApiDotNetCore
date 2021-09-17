@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -10,7 +9,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
     /// Converts <see cref="Document" /> to JSON.
     /// </summary>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class WriteOnlyDocumentConverter : JsonConverter<Document>
+    public sealed class WriteOnlyDocumentConverter : JsonObjectConverter<Document>
     {
         private static readonly JsonEncodedText JsonApiText = JsonEncodedText.Encode("jsonapi");
         private static readonly JsonEncodedText LinksText = JsonEncodedText.Encode("links");
@@ -36,49 +35,49 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             if (value.JsonApi != null)
             {
                 writer.WritePropertyName(JsonApiText);
-                JsonConverterSupport.WriteSubTree(writer, value.JsonApi, options);
+                WriteSubTree(writer, value.JsonApi, options);
             }
 
             if (value.Links != null && value.Links.HasValue())
             {
                 writer.WritePropertyName(LinksText);
-                JsonConverterSupport.WriteSubTree(writer, value.Links, options);
+                WriteSubTree(writer, value.Links, options);
             }
 
             if (value.Data.IsAssigned)
             {
                 writer.WritePropertyName(DataText);
-                JsonConverterSupport.WriteSubTree(writer, value.Data, options);
+                WriteSubTree(writer, value.Data, options);
             }
 
             if (!value.Operations.IsNullOrEmpty())
             {
                 writer.WritePropertyName(AtomicOperationsText);
-                JsonConverterSupport.WriteSubTree(writer, value.Operations, options);
+                WriteSubTree(writer, value.Operations, options);
             }
 
             if (!value.Results.IsNullOrEmpty())
             {
                 writer.WritePropertyName(AtomicResultsText);
-                JsonConverterSupport.WriteSubTree(writer, value.Results, options);
+                WriteSubTree(writer, value.Results, options);
             }
 
             if (!value.Errors.IsNullOrEmpty())
             {
                 writer.WritePropertyName(ErrorsText);
-                JsonConverterSupport.WriteSubTree(writer, value.Errors, options);
+                WriteSubTree(writer, value.Errors, options);
             }
 
             if (value.Included != null)
             {
                 writer.WritePropertyName(IncludedText);
-                JsonConverterSupport.WriteSubTree(writer, value.Included, options);
+                WriteSubTree(writer, value.Included, options);
             }
 
             if (!value.Meta.IsNullOrEmpty())
             {
                 writer.WritePropertyName(MetaText);
-                JsonConverterSupport.WriteSubTree(writer, value.Meta, options);
+                WriteSubTree(writer, value.Meta, options);
             }
 
             writer.WriteEndObject();

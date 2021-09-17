@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -15,7 +14,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
     /// Converts <see cref="ResourceObject" /> to/from JSON.
     /// </summary>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class ResourceObjectConverter : JsonConverter<ResourceObject>
+    public sealed class ResourceObjectConverter : JsonObjectConverter<ResourceObject>
     {
         private static readonly JsonEncodedText TypeText = JsonEncodedText.Encode("type");
         private static readonly JsonEncodedText IdText = JsonEncodedText.Encode("id");
@@ -72,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                                 {
                                     // Newtonsoft.Json used to auto-convert number to strings, while System.Text.Json does not. This is so likely
                                     // to hit users during upgrade that we special-case for this and produce a helpful error message.
-                                    var jsonElement = JsonConverterSupport.ReadSubTree<JsonElement>(ref reader, options);
+                                    var jsonElement = ReadSubTree<JsonElement>(ref reader, options);
                                     throw new JsonException($"Failed to convert ID '{jsonElement}' of type '{jsonElement.ValueKind}' to type 'String'.");
                                 }
 
@@ -99,17 +98,17 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "relationships":
                             {
-                                resourceObject.Relationships = JsonConverterSupport.ReadSubTree<IDictionary<string, RelationshipObject>>(ref reader, options);
+                                resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject>>(ref reader, options);
                                 break;
                             }
                             case "links":
                             {
-                                resourceObject.Links = JsonConverterSupport.ReadSubTree<ResourceLinks>(ref reader, options);
+                                resourceObject.Links = ReadSubTree<ResourceLinks>(ref reader, options);
                                 break;
                             }
                             case "meta":
                             {
-                                resourceObject.Meta = JsonConverterSupport.ReadSubTree<IDictionary<string, object>>(ref reader, options);
+                                resourceObject.Meta = ReadSubTree<IDictionary<string, object>>(ref reader, options);
                                 break;
                             }
                             default:
@@ -124,7 +123,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 }
             }
 
-            throw JsonConverterSupport.GetEndOfStreamError();
+            throw GetEndOfStreamError();
         }
 
         private static string TryPeekType(ref Utf8JsonReader reader)
@@ -196,7 +195,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                                     // Inside a JsonConverter there is no way to know where in the JSON object tree we are. And the serializer
                                     // is unable to provide the correct position either. So we avoid an exception and postpone producing an error
                                     // response to the post-processing phase, by setting a sentinel value.
-                                    var jsonElement = JsonConverterSupport.ReadSubTree<JsonElement>(ref reader, options);
+                                    var jsonElement = ReadSubTree<JsonElement>(ref reader, options);
 
                                     attributeValue = new JsonInvalidAttributeInfo(attributeName, property.PropertyType, jsonElement.ToString(),
                                         jsonElement.ValueKind);
@@ -215,7 +214,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 }
             }
 
-            throw JsonConverterSupport.GetEndOfStreamError();
+            throw GetEndOfStreamError();
         }
 
         /// <summary>
@@ -240,25 +239,25 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             if (!value.Attributes.IsNullOrEmpty())
             {
                 writer.WritePropertyName(AttributesText);
-                JsonConverterSupport.WriteSubTree(writer, value.Attributes, options);
+                WriteSubTree(writer, value.Attributes, options);
             }
 
             if (!value.Relationships.IsNullOrEmpty())
             {
                 writer.WritePropertyName(RelationshipsText);
-                JsonConverterSupport.WriteSubTree(writer, value.Relationships, options);
+                WriteSubTree(writer, value.Relationships, options);
             }
 
             if (value.Links != null && value.Links.HasValue())
             {
                 writer.WritePropertyName(LinksText);
-                JsonConverterSupport.WriteSubTree(writer, value.Links, options);
+                WriteSubTree(writer, value.Links, options);
             }
 
             if (!value.Meta.IsNullOrEmpty())
             {
                 writer.WritePropertyName(MetaText);
-                JsonConverterSupport.WriteSubTree(writer, value.Meta, options);
+                WriteSubTree(writer, value.Meta, options);
             }
 
             writer.WriteEndObject();
