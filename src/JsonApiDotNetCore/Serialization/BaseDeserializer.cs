@@ -1,18 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text.Json;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Resources.Internal;
-using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -25,18 +20,16 @@ namespace JsonApiDotNetCore.Serialization
     {
         private protected static readonly CollectionConverter CollectionConverter = new();
 
-        protected IResourceContextProvider ResourceContextProvider { get; }
+        protected IResourceGraph ResourceGraph { get; }
         protected IResourceFactory ResourceFactory { get; }
-        protected Document Document { get; set; }
-
         protected int? AtomicOperationIndex { get; set; }
 
-        protected BaseDeserializer(IResourceContextProvider resourceContextProvider, IResourceFactory resourceFactory)
+        protected BaseDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
-            ResourceContextProvider = resourceContextProvider;
+            ResourceGraph = resourceGraph;
             ResourceFactory = resourceFactory;
         }
 
@@ -45,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization
         /// depending on the type of deserializer.
         /// </summary>
         /// <remarks>
-        /// See the implementation of this method in <see cref="ResponseDeserializer" /> and <see cref="RequestDeserializer" /> for examples.
+        /// See the implementation of this method in <see cref="RequestDeserializer" /> for usage.
         /// </remarks>
         /// <param name="resource">
         /// The resource that was constructed from the document's body.
@@ -56,33 +49,47 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="data">
         /// Relationship data for <paramref name="resource" />. Is null when <paramref name="field" /> is not a <see cref="RelationshipAttribute" />.
         /// </param>
-        protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null);
+        protected abstract void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null);
 
-        protected object DeserializeBody(string body)
+        protected Document DeserializeDocument(string body, JsonSerializerOptions serializerOptions)
         {
             ArgumentGuard.NotNullNorEmpty(body, nameof(body));
 
-            using (CodeTimingSessionManager.Current.Measure("Newtonsoft.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
+            try
             {
-                JToken bodyJToken = LoadJToken(body);
-                Document = bodyJToken.ToObject<Document>();
+                using (CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages))
+                {
+                    return JsonSerializer.Deserialize<Document>(body, serializerOptions);
+                }
             }
-
-            if (Document != null)
+            catch (JsonException exception)
             {
-                if (Document.IsManyData)
+                // JsonException.Path looks great for setting error.source.pointer, but unfortunately it is wrong in most cases.
+                // This is due to the use of custom converters, which are unable to interact with internal position tracking.
+                // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
+                throw new JsonApiSerializationException(null, exception.Message, exception);
+            }
+        }
+
+        protected object DeserializeData(string body, JsonSerializerOptions serializerOptions)
+        {
+            Document document = DeserializeDocument(body, serializerOptions);
+
+            if (document != null)
+            {
+                if (document.Data.ManyValue != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (list)"))
                     {
-                        return Document.ManyData.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
+                        return document.Data.ManyValue.Select(ParseResourceObject).ToHashSet(IdentifiableComparer.Instance);
                     }
                 }
 
-                if (Document.SingleData != null)
+                if (document.Data.SingleValue != null)
                 {
                     using (CodeTimingSessionManager.Current.Measure("Deserializer.Build (single)"))
                     {
-                        return ParseResourceObject(Document.SingleData);
+                        return ParseResourceObject(document.Data.SingleValue);
                     }
                 }
             }
@@ -102,8 +109,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="attributes">
         /// Exposed attributes for <paramref name="resource" />.
         /// </param>
-        protected IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues,
-            IReadOnlyCollection<AttrAttribute> attributes)
+        private IIdentifiable SetAttributes(IIdentifiable resource, IDictionary<string, object> attributeValues, IReadOnlyCollection<AttrAttribute> attributes)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(attributes, nameof(attributes));
@@ -123,8 +129,21 @@ namespace JsonApiDotNetCore.Serialization
                             atomicOperationIndex: AtomicOperationIndex);
                     }
 
-                    object convertedValue = ConvertAttrValue(newValue, attr.Property.PropertyType);
-                    attr.SetValue(resource, convertedValue);
+                    if (newValue is JsonInvalidAttributeInfo info)
+                    {
+                        if (newValue == JsonInvalidAttributeInfo.Id)
+                        {
+                            throw new JsonApiSerializationException(null, "Resource ID is read-only.", atomicOperationIndex: AtomicOperationIndex);
+                        }
+
+                        string typeName = info.AttributeType.GetFriendlyTypeName();
+
+                        throw new JsonApiSerializationException(null,
+                            $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.",
+                            atomicOperationIndex: AtomicOperationIndex);
+                    }
+
+                    attr.SetValue(resource, newValue);
                     AfterProcessField(resource, attr);
                 }
             }
@@ -144,7 +163,7 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipAttributes">
         /// Exposed relationships for <paramref name="resource" />.
         /// </param>
-        protected virtual IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipEntry> relationshipValues,
+        private IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipObject> relationshipValues,
             IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
@@ -157,9 +176,9 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (RelationshipAttribute attr in relationshipAttributes)
             {
-                bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipEntry relationshipData);
+                bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipObject relationshipData);
 
-                if (!relationshipIsProvided || !relationshipData.IsPopulated)
+                if (!relationshipIsProvided || !relationshipData.Data.IsAssigned)
                 {
                     continue;
                 }
@@ -175,19 +194,6 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             return resource;
-        }
-
-#pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type
-        protected JToken LoadJToken(string body)
-#pragma warning restore AV1130 // Return type in method signature should be a collection interface instead of a concrete type
-        {
-            using JsonReader jsonReader = new JsonTextReader(new StringReader(body))
-            {
-                // https://github.com/json-api-dotnet/JsonApiDotNetCore/issues/509
-                DateParseHandling = DateParseHandling.None
-            };
-
-            return JToken.Load(jsonReader);
         }
 
         /// <summary>
@@ -223,7 +229,7 @@ namespace JsonApiDotNetCore.Serialization
 
         protected ResourceContext GetExistingResourceContext(string publicName)
         {
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(publicName);
+            ResourceContext resourceContext = ResourceGraph.TryGetResourceContext(publicName);
 
             if (resourceContext == null)
             {
@@ -237,15 +243,15 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasOne relationship on a parsed resource.
         /// </summary>
-        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipEntry relationshipData)
+        private void SetHasOneRelationship(IIdentifiable resource, HasOneAttribute hasOneRelationship, RelationshipObject relationshipData)
         {
-            if (relationshipData.ManyData != null)
+            if (relationshipData.Data.ManyValue != null)
             {
                 throw new JsonApiSerializationException("Expected single data element for to-one relationship.",
                     $"Expected single data element for '{hasOneRelationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
             }
 
-            IIdentifiable rightResource = CreateRightResource(hasOneRelationship, relationshipData.SingleData);
+            IIdentifiable rightResource = CreateRightResource(hasOneRelationship, relationshipData.Data.SingleValue);
             hasOneRelationship.SetValue(resource, rightResource);
 
             // depending on if this base parser is used client-side or server-side,
@@ -256,15 +262,15 @@ namespace JsonApiDotNetCore.Serialization
         /// <summary>
         /// Sets a HasMany relationship.
         /// </summary>
-        private void SetHasManyRelationship(IIdentifiable resource, HasManyAttribute hasManyRelationship, RelationshipEntry relationshipData)
+        private void SetHasManyRelationship(IIdentifiable resource, HasManyAttribute hasManyRelationship, RelationshipObject relationshipData)
         {
-            if (relationshipData.ManyData == null)
+            if (relationshipData.Data.ManyValue == null)
             {
                 throw new JsonApiSerializationException("Expected data[] element for to-many relationship.",
                     $"Expected data[] element for '{hasManyRelationship.PublicName}' relationship.", atomicOperationIndex: AtomicOperationIndex);
             }
 
-            HashSet<IIdentifiable> rightResources = relationshipData.ManyData.Select(rio => CreateRightResource(hasManyRelationship, rio))
+            HashSet<IIdentifiable> rightResources = relationshipData.Data.ManyValue.Select(rio => CreateRightResource(hasManyRelationship, rio))
                 .ToHashSet(IdentifiableComparer.Instance);
 
             IEnumerable convertedCollection = CollectionConverter.CopyToTypedCollection(rightResources, hasManyRelationship.Property.PropertyType);
@@ -294,9 +300,9 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         [AssertionMethod]
-        private void AssertHasType(ResourceIdentifierObject resourceIdentifierObject, RelationshipAttribute relationship)
+        private void AssertHasType(IResourceIdentity resourceIdentity, RelationshipAttribute relationship)
         {
-            if (resourceIdentifierObject.Type == null)
+            if (resourceIdentity.Type == null)
             {
                 string details = relationship != null
                     ? $"Expected 'type' element in '{relationship.PublicName}' relationship."
@@ -332,11 +338,11 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         [AssertionMethod]
-        private void AssertHasNoLid(ResourceIdentifierObject resourceIdentifierObject)
+        private void AssertHasNoLid(IResourceIdentity resourceIdentityObject)
         {
-            if (resourceIdentifierObject.Lid != null)
+            if (resourceIdentityObject.Lid != null)
             {
-                throw new JsonApiSerializationException("Local IDs cannot be used at this endpoint.", null, atomicOperationIndex: AtomicOperationIndex);
+                throw new JsonApiSerializationException(null, "Local IDs cannot be used at this endpoint.", atomicOperationIndex: AtomicOperationIndex);
             }
         }
 
@@ -348,24 +354,6 @@ namespace JsonApiDotNetCore.Serialization
                     $"Relationship '{relationship.PublicName}' contains incompatible resource type '{rightResourceContext.PublicName}'.",
                     atomicOperationIndex: AtomicOperationIndex);
             }
-        }
-
-        private object ConvertAttrValue(object newValue, Type targetType)
-        {
-            if (newValue is JContainer jObject)
-            {
-                // the attribute value is a complex type that needs additional deserialization
-                return DeserializeComplexType(jObject, targetType);
-            }
-
-            // the attribute value is a native C# type.
-            object convertedValue = RuntimeTypeConverter.ConvertType(newValue, targetType);
-            return convertedValue;
-        }
-
-        private object DeserializeComplexType(JContainer obj, Type targetType)
-        {
-            return obj.ToObject(targetType);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     attributes = new
                     {
                         name = "!@#$%^&*().-",
-                        isCaseSensitive = "false"
+                        isCaseSensitive = false
                     }
                 }
             };
@@ -45,8 +45,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("!@#$%^&*().-");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("!@#$%^&*().-");
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

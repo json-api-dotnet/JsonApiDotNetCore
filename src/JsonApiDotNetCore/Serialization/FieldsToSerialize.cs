@@ -16,20 +16,20 @@ namespace JsonApiDotNetCore.Serialization
     [PublicAPI]
     public class FieldsToSerialize : IFieldsToSerialize
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiRequest _request;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
         /// <inheritdoc />
         public bool ShouldSerialize => _request.Kind != EndpointKind.Relationship;
 
-        public FieldsToSerialize(IResourceContextProvider resourceContextProvider, IEnumerable<IQueryConstraintProvider> constraintProviders,
+        public FieldsToSerialize(IResourceGraph resourceGraph, IEnumerable<IQueryConstraintProvider> constraintProviders,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(request, nameof(request));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _request = request;
             _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
         }
@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Serialization
                 return Array.Empty<AttrAttribute>();
             }
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
 
             return SortAttributesInDeclarationOrder(fieldSet, resourceContext).ToArray();
@@ -76,7 +76,7 @@ namespace JsonApiDotNetCore.Serialization
                 return Array.Empty<RelationshipAttribute>();
             }
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
             return resourceContext.Relationships;
         }
 

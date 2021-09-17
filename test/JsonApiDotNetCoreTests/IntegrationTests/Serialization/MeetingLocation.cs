@@ -1,13 +1,15 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class MeetingLocation
     {
-        [JsonProperty("lat")]
+        [JsonPropertyName("lat")]
         public double Latitude { get; set; }
 
-        [JsonProperty("lng")]
+        [JsonPropertyName("lng")]
         public double Longitude { get; set; }
     }
 }

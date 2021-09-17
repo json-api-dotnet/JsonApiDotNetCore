@@ -50,7 +50,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
         }
 
         [Fact]
@@ -72,14 +72,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             const string route = "/workflows";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
@@ -114,17 +114,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 }
             };
 
-            string route = "/workflows/" + existingWorkflow.StringId;
+            string route = $"/workflows/{existingWorkflow.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
@@ -159,7 +159,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
                 }
             };
 
-            string route = "/workflows/" + existingWorkflow.StringId;
+            string route = $"/workflows/{existingWorkflow.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

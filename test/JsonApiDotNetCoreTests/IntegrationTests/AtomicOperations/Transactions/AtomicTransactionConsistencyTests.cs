@@ -60,14 +60,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported resource type in atomic:operations request.");
             error.Detail.Should().Be("Operations on resources of type 'performers' cannot be used because transaction support is unavailable.");
@@ -99,14 +99,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
             error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");
@@ -138,14 +138,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Transactions
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of resource types in atomic:operations request.");
             error.Detail.Should().Be("All operations need to participate in a single shared transaction, which is not the case for this request.");

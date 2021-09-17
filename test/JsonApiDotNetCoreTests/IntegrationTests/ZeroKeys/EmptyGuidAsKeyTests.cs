@@ -54,9 +54,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
-            responseDocument.ManyData[0].Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be("00000000-0000-0000-0000-000000000000");
+            responseDocument.Data.ManyValue[0].Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
         }
 
         [Fact]
@@ -83,9 +83,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be("00000000-0000-0000-0000-000000000000");
-            responseDocument.SingleData.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be("00000000-0000-0000-0000-000000000000");
+            responseDocument.Data.SingleValue.Links.Self.Should().Be("/maps/00000000-0000-0000-0000-000000000000");
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be("0");
@@ -157,7 +157,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty,
+                    id = "00000000-0000-0000-0000-000000000000",
                     attributes = new
                     {
                         name = newName
@@ -244,7 +244,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty
+                    id = "00000000-0000-0000-0000-000000000000"
                 }
             };
 
@@ -289,7 +289,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 data = new
                 {
                     type = "maps",
-                    id = Guid.Empty
+                    id = "00000000-0000-0000-0000-000000000000"
                 }
             };
 

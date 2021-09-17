@@ -42,14 +42,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             const string route = "/systemDirectories";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
@@ -76,14 +76,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             const string route = "/systemDirectories";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
@@ -110,14 +110,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             const string route = "/systemDirectories";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
@@ -149,9 +149,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
-            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]
@@ -173,26 +173,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             const string route = "/systemDirectories";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Name field is required.");
             error1.Source.Pointer.Should().Be("/data/attributes/name");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
             error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
 
-            Error error3 = responseDocument.Errors[2];
+            ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error3.Title.Should().Be("Input validation failed.");
             error3.Detail.Should().Be("The IsCaseSensitive field is required.");
@@ -282,9 +282,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be("Projects");
-            responseDocument.SingleData.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
         [Fact]
@@ -361,7 +361,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -401,17 +401,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
@@ -447,17 +447,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
@@ -485,7 +485,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = -1,
+                    id = "-1",
                     attributes = new
                     {
                         name = "Repositories"
@@ -499,7 +499,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemDirectories",
-                                    id = -1
+                                    id = "-1"
                                 }
                             }
                         }
@@ -510,20 +510,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             const string route = "/systemDirectories/-1";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
             error1.Source.Pointer.Should().Be("/data/attributes/id");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
@@ -559,7 +559,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -670,7 +670,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -729,7 +729,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -783,7 +783,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId;
+            string route = $"/systemDirectories/{directory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -830,7 +830,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId + "/relationships/parent";
+            string route = $"/systemDirectories/{directory.StringId}/relationships/parent";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -886,7 +886,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = "/systemDirectories/" + directory.StringId + "/relationships/files";
+            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

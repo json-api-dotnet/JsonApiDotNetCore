@@ -12,15 +12,15 @@ namespace JsonApiDotNetCore.Configuration
     [PublicAPI]
     public sealed class InverseNavigationResolver : IInverseNavigationResolver
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IEnumerable<IDbContextResolver> _dbContextResolvers;
 
-        public InverseNavigationResolver(IResourceContextProvider resourceContextProvider, IEnumerable<IDbContextResolver> dbContextResolvers)
+        public InverseNavigationResolver(IResourceGraph resourceGraph, IEnumerable<IDbContextResolver> dbContextResolvers)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(dbContextResolvers, nameof(dbContextResolvers));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _dbContextResolvers = dbContextResolvers;
         }
 
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void Resolve(DbContext dbContext)
         {
-            foreach (ResourceContext resourceContext in _resourceContextProvider.GetResourceContexts().Where(context => context.Relationships.Any()))
+            foreach (ResourceContext resourceContext in _resourceGraph.GetResourceContexts().Where(context => context.Relationships.Any()))
             {
                 IEntityType entityType = dbContext.Model.FindEntityType(resourceContext.ResourceType);
 

@@ -4,7 +4,7 @@ curl -s -f http://localhost:14141/api/books/1       `
     -d '{
             \"data\": {
                 \"type\": \"books\",
-                \"id\": "1",
+                \"id\": \"1\",
                 \"attributes\": {
                     \"publishYear\": 1820
                 }

@@ -27,20 +27,19 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IJsonApiDeserializer _deserializer;
         private readonly IJsonApiRequest _request;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly TraceLogWriter<JsonApiReader> _traceWriter;
 
-        public JsonApiReader(IJsonApiDeserializer deserializer, IJsonApiRequest request, IResourceContextProvider resourceContextProvider,
-            ILoggerFactory loggerFactory)
+        public JsonApiReader(IJsonApiDeserializer deserializer, IJsonApiRequest request, IResourceGraph resourceGraph, ILoggerFactory loggerFactory)
         {
             ArgumentGuard.NotNull(deserializer, nameof(deserializer));
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
             _deserializer = deserializer;
             _request = request;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _traceWriter = new TraceLogWriter<JsonApiReader>(loggerFactory);
         }
 
@@ -107,8 +106,9 @@ namespace JsonApiDotNetCore.Serialization
 
             if (exception.AtomicOperationIndex != null)
             {
-                foreach (Error error in requestException.Errors)
+                foreach (ErrorObject error in requestException.Errors)
                 {
+                    error.Source ??= new ErrorSource();
                     error.Source.Pointer = $"/atomic:operations[{exception.AtomicOperationIndex}]";
                 }
             }
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             if (model == null && string.IsNullOrWhiteSpace(body))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Missing request body."
                 });
@@ -171,8 +171,8 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (!endpointResourceType.IsAssignableFrom(bodyResourceType))
                 {
-                    ResourceContext resourceFromEndpoint = _resourceContextProvider.GetResourceContext(endpointResourceType);
-                    ResourceContext resourceFromBody = _resourceContextProvider.GetResourceContext(bodyResourceType);
+                    ResourceContext resourceFromEndpoint = _resourceGraph.GetResourceContext(endpointResourceType);
+                    ResourceContext resourceFromBody = _resourceGraph.GetResourceContext(bodyResourceType);
 
                     throw new ResourceTypeMismatchException(new HttpMethod(httpRequest.Method), httpRequest.Path, resourceFromEndpoint, resourceFromBody);
                 }

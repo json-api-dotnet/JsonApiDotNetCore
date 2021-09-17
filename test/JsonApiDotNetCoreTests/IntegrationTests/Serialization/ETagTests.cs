@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Returns_no_ETag_for_failed_GET_request()
         {
             // Arrange
-            const string route = "/meetings/99999999";
+            string route = $"/meetings/{Unknown.StringId.For<Meeting, Guid>()}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
                 }
             };
 
-            string route = "/meetings/" + existingMeeting.StringId;
+            string route = $"/meetings/{existingMeeting.StringId}";
 
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
@@ -163,18 +163,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody, setRequestHeaders: setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) =
+                await _testContext.ExecutePatchAsync<Document>(route, requestBody, setRequestHeaders: setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.PreconditionFailed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
             error.Detail.Should().BeNull();
+            error.Source.Header.Should().Be("If-Match");
         }
 
         [Fact]
@@ -198,7 +199,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
             Action<HttpRequestHeaders> setRequestHeaders2 = headers =>
             {
-                headers.IfNoneMatch.ParseAdd("\"12345\", W/\"67890\", " + responseETag);
+                headers.IfNoneMatch.ParseAdd($"\"12345\", W/\"67890\", {responseETag}");
             };
 
             // Act

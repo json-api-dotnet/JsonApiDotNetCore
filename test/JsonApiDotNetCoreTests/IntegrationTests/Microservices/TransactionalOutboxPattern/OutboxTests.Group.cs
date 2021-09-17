@@ -49,8 +49,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -130,8 +130,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -140,7 +140,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 (typeof(DomainGroup), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -192,7 +192,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 }
             };
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -279,7 +279,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 }
             };
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainGroups/" + existingGroup.StringId;
+            string route = $"/domainGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

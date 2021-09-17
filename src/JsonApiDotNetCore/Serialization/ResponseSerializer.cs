@@ -8,7 +8,6 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization
 {
@@ -72,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeMany(collectionOfIdentifiable.ToArray());
             }
 
-            if (content is ErrorDocument errorDocument)
+            if (content is Document errorDocument)
             {
                 return SerializeErrorDocument(errorDocument);
             }
@@ -80,12 +79,11 @@ namespace JsonApiDotNetCore.Serialization
             throw new InvalidOperationException("Data being returned must be errors or resources.");
         }
 
-        private string SerializeErrorDocument(ErrorDocument errorDocument)
+        private string SerializeErrorDocument(Document document)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer =>
-            {
-                serializer.ApplyErrorSettings();
-            });
+            SetApiVersion(document);
+
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>
@@ -105,7 +103,7 @@ namespace JsonApiDotNetCore.Serialization
             IReadOnlyCollection<RelationshipAttribute> relationships = _fieldsToSerialize.GetRelationships(_primaryResourceType);
 
             Document document = Build(resource, attributes, relationships);
-            ResourceObject resourceObject = document.SingleData;
+            ResourceObject resourceObject = document.Data.SingleValue;
 
             if (resourceObject != null)
             {
@@ -114,10 +112,7 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.NullValueHandling = NullValueHandling.Include;
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>
@@ -141,7 +136,7 @@ namespace JsonApiDotNetCore.Serialization
 
             Document document = Build(resources, attributes, relationships);
 
-            foreach (ResourceObject resourceObject in document.ManyData)
+            foreach (ResourceObject resourceObject in document.Data.ManyValue)
             {
                 ResourceLinks links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
 
@@ -155,16 +150,22 @@ namespace JsonApiDotNetCore.Serialization
 
             AddTopLevelObjects(document);
 
-            return SerializeObject(document, _options.SerializerSettings, serializer =>
-            {
-                serializer.NullValueHandling = NullValueHandling.Include;
-            });
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
 
         /// <summary>
         /// Adds top-level objects that are only added to a document in the case of server-side serialization.
         /// </summary>
         private void AddTopLevelObjects(Document document)
+        {
+            SetApiVersion(document);
+
+            document.Links = _linkBuilder.GetTopLevelLinks();
+            document.Meta = _metaBuilder.Build();
+            document.Included = _includedBuilder.Build();
+        }
+
+        private void SetApiVersion(Document document)
         {
             if (_options.IncludeJsonApiVersion)
             {
@@ -173,10 +174,6 @@ namespace JsonApiDotNetCore.Serialization
                     Version = "1.1"
                 };
             }
-
-            document.Links = _linkBuilder.GetTopLevelLinks();
-            document.Meta = _metaBuilder.Build();
-            document.Included = _includedBuilder.Build();
         }
     }
 }

@@ -26,11 +26,11 @@ namespace JsonApiDotNetCore.Middleware
 
             if (context.HttpContext.IsJsonApiRequest())
             {
-                ErrorDocument errorDocument = _exceptionHandler.HandleException(context.Exception);
+                Document document = _exceptionHandler.HandleException(context.Exception);
 
-                context.Result = new ObjectResult(errorDocument)
+                context.Result = new ObjectResult(document)
                 {
-                    StatusCode = (int)errorDocument.GetErrorStatusCode()
+                    StatusCode = (int)document.GetErrorStatusCode()
                 };
             }
 

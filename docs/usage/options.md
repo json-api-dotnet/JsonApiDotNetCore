@@ -78,27 +78,26 @@ To limit the maximum depth of nested includes, use `MaximumIncludeDepth`. This i
 options.MaximumIncludeDepth = 1;
 ```
 
-## Custom Serializer Settings
+## Customize Serializer options
 
-We use [Newtonsoft.Json](https://www.newtonsoft.com/json) for all serialization needs.
-If you want to change the default serializer settings, you can:
+We use [System.Text.Json](https://www.nuget.org/packages/System.Text.Json) for all serialization needs.
+If you want to change the default serializer options, you can:
 
 ```c#
-options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-options.SerializerSettings.Converters.Add(new StringEnumConverter());
-options.SerializerSettings.Formatting = Formatting.Indented;
+options.SerializerOptions.WriteIndented = true;
+options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 ```
 
 The default naming convention (as used in the routes and resource/attribute/relationship names) is also determined here, and can be changed (default is camel-case):
 
 ```c#
-options.SerializerSettings.ContractResolver = new DefaultContractResolver
-{
-    NamingStrategy = new KebabCaseNamingStrategy()
-};
+// Use Pascal case
+options.SerializerOptions.PropertyNamingPolicy = null;
+options.SerializerOptions.DictionaryKeyPolicy = null;
 ```
 
-Because we copy resource properties into an intermediate object before serialization, Newtonsoft.Json annotations on properties are ignored.
+Because we copy resource properties into an intermediate object before serialization, JSON annotations such as `[JsonPropertyName]` and `[JsonIgnore]` on `[Attr]` properties are ignored.
 
 
 ## Enable ModelState Validation

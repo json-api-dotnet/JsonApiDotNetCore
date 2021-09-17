@@ -1,12 +1,13 @@
 using System.Collections.Generic;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Serialization.Server
@@ -20,8 +21,11 @@ namespace UnitTests.Serialization.Server
 
         public RequestDeserializerTests()
         {
+            var options = new JsonApiOptions();
+            options.SerializerOptions.Converters.Add(new ResourceObjectConverter(ResourceGraph));
+
             _deserializer = new RequestDeserializer(ResourceGraph, new TestResourceFactory(), _fieldsManagerMock.Object, MockHttpContextAccessor.Object,
-                _requestMock.Object, new JsonApiOptions(), _resourceDefinitionAccessorMock.Object);
+                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
         }
 
         [Fact]
@@ -33,7 +37,8 @@ namespace UnitTests.Serialization.Server
             SetupFieldsManager(attributesToUpdate, relationshipsToUpdate);
 
             Document content = CreateTestResourceDocument();
-            string body = JsonConvert.SerializeObject(content);
+
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             _deserializer.Deserialize(body);
@@ -52,11 +57,12 @@ namespace UnitTests.Serialization.Server
             SetupFieldsManager(attributesToUpdate, relationshipsToUpdate);
 
             Document content = CreateDocumentWithRelationships("multiPrincipals");
-            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
-            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
-            content.SingleData.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
-            string body = JsonConvert.SerializeObject(content);
+            content.Data.SingleValue.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOneDependents"));
+            content.Data.SingleValue.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.Data.SingleValue.Relationships.Add("populatedToManies", CreateRelationshipData("oneToManyDependents", true));
+            content.Data.SingleValue.Relationships.Add("emptyToManies", CreateRelationshipData(isToManyData: true));
+
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             _deserializer.Deserialize(body);
@@ -75,11 +81,12 @@ namespace UnitTests.Serialization.Server
             SetupFieldsManager(attributesToUpdate, relationshipsToUpdate);
 
             Document content = CreateDocumentWithRelationships("multiDependents");
-            content.SingleData.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
-            content.SingleData.Relationships.Add("emptyToOne", CreateRelationshipData());
-            content.SingleData.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
-            content.SingleData.Relationships.Add("emptyToMany", CreateRelationshipData());
-            string body = JsonConvert.SerializeObject(content);
+            content.Data.SingleValue.Relationships.Add("populatedToOne", CreateRelationshipData("oneToOnePrincipals"));
+            content.Data.SingleValue.Relationships.Add("emptyToOne", CreateRelationshipData());
+            content.Data.SingleValue.Relationships.Add("populatedToMany", CreateRelationshipData("oneToManyPrincipals"));
+            content.Data.SingleValue.Relationships.Add("emptyToMany", CreateRelationshipData());
+
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             _deserializer.Deserialize(body);

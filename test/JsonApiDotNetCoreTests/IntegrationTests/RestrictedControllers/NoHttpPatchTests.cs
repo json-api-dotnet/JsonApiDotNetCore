@@ -81,17 +81,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            string route = "/chairs/" + existingChair.StringId;
+            string route = $"/chairs/{existingChair.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support PATCH requests.");
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/chairs/" + existingChair.StringId;
+            string route = $"/chairs/{existingChair.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);

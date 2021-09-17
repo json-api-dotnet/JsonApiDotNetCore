@@ -63,7 +63,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -116,10 +116,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; q=0.3"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; q=0.3"));
             };
 
             // Act
@@ -158,14 +158,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + ";ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType};ext=\"https://jsonapi.org/ext/atomic\"; q=0.2"));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -180,24 +180,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             Action<HttpRequestHeaders> setRequestHeaders = headers =>
             {
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/html"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; profile=some"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; ext=other"));
-                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.MediaType + "; unknown=unexpected"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; profile=some"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; ext=other"));
+                headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse($"{HeaderConstants.MediaType}; unknown=unexpected"));
                 headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(HeaderConstants.AtomicOperationsMediaType));
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route, setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
             error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
             error.Detail.Should().Be("Please include 'application/vnd.api+json' in the Accept header values.");
+            error.Source.Header.Should().Be("Accept");
         }
 
         [Fact]
@@ -232,18 +233,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType, setRequestHeaders);
+            (HttpResponseMessage httpResponse, Document responseDocument) =
+                await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType, setRequestHeaders);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotAcceptable);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotAcceptable);
             error.Title.Should().Be("The specified Accept header value does not contain any supported media types.");
             error.Detail.Should().Be("Please include 'application/vnd.api+json; ext=\"https://jsonapi.org/ext/atomic\"' in the Accept header values.");
+            error.Source.Header.Should().Be("Accept");
         }
     }
 }

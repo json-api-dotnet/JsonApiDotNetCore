@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -15,7 +15,7 @@ namespace UnitTests.Serialization.Common
 
         public ResourceObjectBuilderTests()
         {
-            _builder = new ResourceObjectBuilder(ResourceGraph, new ResourceObjectBuilderSettings());
+            _builder = new ResourceObjectBuilder(ResourceGraph, new JsonApiOptions());
         }
 
         [Fact]
@@ -151,16 +151,16 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.Equal(4, resourceObject.Relationships.Count);
-            Assert.Null(resourceObject.Relationships["emptyToOne"].Data);
-            Assert.Empty((IList)resourceObject.Relationships["emptyToManies"].Data);
-            var populatedToOneData = (ResourceIdentifierObject)resourceObject.Relationships["populatedToOne"].Data;
+            Assert.Null(resourceObject.Relationships["emptyToOne"].Data.SingleValue);
+            Assert.Empty(resourceObject.Relationships["emptyToManies"].Data.ManyValue);
+            ResourceIdentifierObject populatedToOneData = resourceObject.Relationships["populatedToOne"].Data.SingleValue;
             Assert.NotNull(populatedToOneData);
             Assert.Equal("10", populatedToOneData.Id);
             Assert.Equal("oneToOneDependents", populatedToOneData.Type);
-            var populatedToManiesData = (List<ResourceIdentifierObject>)resourceObject.Relationships["populatedToManies"].Data;
-            Assert.Single(populatedToManiesData);
-            Assert.Equal("20", populatedToManiesData.First().Id);
-            Assert.Equal("oneToManyDependents", populatedToManiesData.First().Type);
+            IList<ResourceIdentifierObject> populatedToManyData = resourceObject.Relationships["populatedToManies"].Data.ManyValue;
+            Assert.Single(populatedToManyData);
+            Assert.Equal("20", populatedToManyData.First().Id);
+            Assert.Equal("oneToManyDependents", populatedToManyData.First().Type);
         }
 
         [Fact]
@@ -183,8 +183,8 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.Single(resourceObject.Relationships);
-            Assert.NotNull(resourceObject.Relationships["principal"].Data);
-            var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
+            Assert.NotNull(resourceObject.Relationships["principal"].Data.Value);
+            ResourceIdentifierObject ro = resourceObject.Relationships["principal"].Data.SingleValue;
             Assert.Equal("10", ro.Id);
         }
 
@@ -204,7 +204,7 @@ namespace UnitTests.Serialization.Common
             ResourceObject resourceObject = _builder.Build(resource, relationships: relationships);
 
             // Assert
-            Assert.Null(resourceObject.Relationships["principal"].Data);
+            Assert.Null(resourceObject.Relationships["principal"].Data.Value);
         }
 
         [Fact]
@@ -227,8 +227,8 @@ namespace UnitTests.Serialization.Common
 
             // Assert
             Assert.Single(resourceObject.Relationships);
-            Assert.NotNull(resourceObject.Relationships["principal"].Data);
-            var ro = (ResourceIdentifierObject)resourceObject.Relationships["principal"].Data;
+            Assert.NotNull(resourceObject.Relationships["principal"].Data.SingleValue);
+            ResourceIdentifierObject ro = resourceObject.Relationships["principal"].Data.SingleValue;
             Assert.Equal("10", ro.Id);
         }
     }

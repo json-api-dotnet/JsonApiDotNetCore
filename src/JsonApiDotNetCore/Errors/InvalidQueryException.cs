@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Errors
     public sealed class InvalidQueryException : JsonApiException
     {
         public InvalidQueryException(string reason, Exception exception)
-            : base(new Error(HttpStatusCode.BadRequest)
+            : base(new ErrorObject(HttpStatusCode.BadRequest)
             {
                 Title = reason,
                 Detail = exception?.Message

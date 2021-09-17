@@ -44,9 +44,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.SingleData.Attributes["displayName"].Should().Be(newDisplayName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
+            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.Should().HaveCount(1);
 
-            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content.UserId.Should().Be(newUserId);
@@ -113,9 +113,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.SingleData.Attributes["displayName"].Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
+            responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.Should().HaveCount(2);
 
-            Guid newUserId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content1.UserId.Should().Be(newUserId);
@@ -171,7 +171,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -311,7 +311,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -385,7 +385,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 }
             };
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -431,7 +431,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -469,7 +469,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

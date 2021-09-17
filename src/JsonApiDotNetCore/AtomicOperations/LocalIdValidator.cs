@@ -15,15 +15,15 @@ namespace JsonApiDotNetCore.AtomicOperations
     public sealed class LocalIdValidator
     {
         private readonly ILocalIdTracker _localIdTracker;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
-        public LocalIdValidator(ILocalIdTracker localIdTracker, IResourceContextProvider resourceContextProvider)
+        public LocalIdValidator(ILocalIdTracker localIdTracker, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _localIdTracker = localIdTracker;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public void Validate(IEnumerable<OperationContainer> operations)
@@ -45,9 +45,10 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
             catch (JsonApiException exception)
             {
-                foreach (Error error in exception.Errors)
+                foreach (ErrorObject error in exception.Errors)
                 {
-                    error.Source.Pointer = $"/atomic:operations[{operationIndex}]" + error.Source.Pointer;
+                    error.Source ??= new ErrorSource();
+                    error.Source.Pointer = $"/atomic:operations[{operationIndex}]{error.Source.Pointer}";
                 }
 
                 throw;
@@ -80,7 +81,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
                 _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
             }
         }
@@ -89,8 +90,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(operation.Resource.GetType());
-
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.Resource.GetType());
                 _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, "placeholder");
             }
         }
@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resource.GetType());
+                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
                 _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
             }
         }

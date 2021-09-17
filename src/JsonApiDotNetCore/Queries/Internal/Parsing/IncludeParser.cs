@@ -17,9 +17,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         private readonly Action<RelationshipAttribute, ResourceContext, string> _validateSingleRelationshipCallback;
         private ResourceContext _resourceContextInScope;
 
-        public IncludeParser(IResourceContextProvider resourceContextProvider,
-            Action<RelationshipAttribute, ResourceContext, string> validateSingleRelationshipCallback = null)
-            : base(resourceContextProvider)
+        public IncludeParser(IResourceGraph resourceGraph, Action<RelationshipAttribute, ResourceContext, string> validateSingleRelationshipCallback = null)
+            : base(resourceGraph)
         {
             _validateSingleRelationshipCallback = validateSingleRelationshipCallback;
         }

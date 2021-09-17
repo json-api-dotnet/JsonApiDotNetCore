@@ -51,14 +51,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             const string route = "/orders";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
@@ -85,14 +85,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             const string route = "/shipments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/customers/{existingOrder.Customer.Id}";
+            string route = $"/customers/{existingOrder.Customer.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/orders/{existingOrder.Id}";
+            string route = $"/orders/{existingOrder.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.Id,
+                    id = existingOrder.StringId,
                     type = "orders",
                     relationships = new
                     {
@@ -198,17 +198,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/orders/{existingOrder.Id}";
+            string route = $"/orders/{existingOrder.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -235,17 +235,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 data = (object)null
             };
 
-            string route = $"/orders/{existingOrder.Id}/relationships/customer";
+            string route = $"/orders/{existingOrder.StringId}/relationships/customer";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.Customer.Id,
+                    id = existingOrder.Customer.StringId,
                     type = "customers",
                     relationships = new
                     {
@@ -283,17 +283,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}";
+            string route = $"/customers/{existingOrder.Customer.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -320,17 +320,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 data = Array.Empty<object>()
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
+            string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePatchAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -359,22 +359,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                     new
                     {
                         type = "orders",
-                        id = existingOrder.Id
+                        id = existingOrder.StringId
                     }
                 }
             };
 
-            string route = $"/customers/{existingOrder.Customer.Id}/relationships/orders";
+            string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Failed to clear a required relationship.");
 
@@ -403,7 +403,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithoutShipment.Id,
+                    id = orderWithoutShipment.StringId,
                     type = "orders",
                     relationships = new
                     {
@@ -411,7 +411,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                         {
                             data = new
                             {
-                                id = orderWithShipment.Shipment.Id,
+                                id = orderWithShipment.Shipment.StringId,
                                 type = "shipments"
                             }
                         }
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 }
             };
 
-            string route = $"/orders/{orderWithoutShipment.Id}";
+            string route = $"/orders/{orderWithoutShipment.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -459,12 +459,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithShipment.Shipment.Id,
+                    id = orderWithShipment.Shipment.StringId,
                     type = "shipments"
                 }
             };
 
-            string route = $"/orders/{orderWithoutShipment.Id}/relationships/shipment";
+            string route = $"/orders/{orderWithoutShipment.StringId}/relationships/shipment";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);

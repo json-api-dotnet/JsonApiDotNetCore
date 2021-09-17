@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/world-api/civilization/popular/towns/" + town.StringId;
+            string route = $"/world-api/civilization/popular/towns/{town.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -46,16 +46,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("towns");
-            responseDocument.SingleData.Id.Should().Be(town.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(town.Name);
-            responseDocument.SingleData.Attributes["latitude"].Should().Be(town.Latitude);
-            responseDocument.SingleData.Attributes["longitude"].Should().Be(town.Longitude);
-            responseDocument.SingleData.Relationships["civilians"].Links.Self.Should().Be(HostPrefix + route + "/relationships/civilians");
-            responseDocument.SingleData.Relationships["civilians"].Links.Related.Should().Be(HostPrefix + route + "/civilians");
-            responseDocument.SingleData.Links.Self.Should().Be(HostPrefix + route);
-            responseDocument.Links.Self.Should().Be(HostPrefix + route);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("towns");
+            responseDocument.Data.SingleValue.Id.Should().Be(town.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(town.Name);
+            responseDocument.Data.SingleValue.Attributes["latitude"].Should().Be(town.Latitude);
+            responseDocument.Data.SingleValue.Attributes["longitude"].Should().Be(town.Longitude);
+            responseDocument.Data.SingleValue.Relationships["civilians"].Links.Self.Should().Be($"{HostPrefix}{route}/relationships/civilians");
+            responseDocument.Data.SingleValue.Relationships["civilians"].Links.Related.Should().Be($"{HostPrefix}{route}/civilians");
+            responseDocument.Data.SingleValue.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         }
 
         [Fact]
@@ -79,10 +79,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(5);
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Attributes.Any());
-            responseDocument.ManyData.Should().OnlyContain(resourceObject => resourceObject.Relationships.Any());
+            responseDocument.Data.ManyValue.Should().HaveCount(5);
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.Any());
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.Any());
         }
     }
 }

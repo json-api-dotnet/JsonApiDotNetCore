@@ -1,10 +1,12 @@
 using System;
+using System.IO;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using FluentAssertions;
 using FluentAssertions.Numeric;
 using FluentAssertions.Primitives;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace TestBuildingBlocks
 {
@@ -12,33 +14,34 @@ namespace TestBuildingBlocks
     public static class ObjectAssertionsExtensions
     {
         private const decimal NumericPrecision = 0.00000000001M;
+        private static readonly TimeSpan TimePrecision = TimeSpan.FromMilliseconds(20);
 
-        private static readonly JsonSerializerSettings DeserializationSettings = new()
+        private static readonly JsonWriterOptions JsonWriterOptions = new()
         {
-            Formatting = Formatting.Indented
+            Indented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
         /// <summary>
-        /// Used to assert on a (nullable) <see cref="DateTime" /> or <see cref="DateTimeOffset" /> property, whose value is returned as <see cref="string" /> in
-        /// JSON:API response body because of <see cref="IntegrationTestConfiguration.DeserializationSettings" />.
+        /// Same as <see cref="DateTimeAssertions{TAssertions}.BeCloseTo(DateTime, TimeSpan, string, object[])" />, but with default precision.
         /// </summary>
         [CustomAssertion]
-        public static void BeCloseTo(this ObjectAssertions source, DateTimeOffset? expected, string because = "", params object[] becauseArgs)
+        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeAssertions<TAssertions> parent, DateTime nearbyTime, string because = "",
+            params object[] becauseArgs)
+            where TAssertions : DateTimeAssertions<TAssertions>
         {
-            if (expected == null)
-            {
-                source.Subject.Should().BeNull(because, becauseArgs);
-            }
-            else
-            {
-                if (!DateTimeOffset.TryParse((string)source.Subject, out DateTimeOffset value))
-                {
-                    source.Subject.Should().Be(expected, because, becauseArgs);
-                }
+            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
+        }
 
-                // We lose a little bit of precision (milliseconds) on roundtrip through PostgreSQL database.
-                value.Should().BeCloseTo(expected.Value, because: because, becauseArgs: becauseArgs);
-            }
+        /// <summary>
+        /// Same as <see cref="DateTimeOffsetAssertions{TAssertions}.BeCloseTo(DateTimeOffset, TimeSpan, string, object[])" />, but with default precision.
+        /// </summary>
+        [CustomAssertion]
+        public static AndConstraint<TAssertions> BeCloseTo<TAssertions>(this DateTimeOffsetAssertions<TAssertions> parent, DateTimeOffset nearbyTime,
+            string because = "", params object[] becauseArgs)
+            where TAssertions : DateTimeOffsetAssertions<TAssertions>
+        {
+            return parent.BeCloseTo(nearbyTime, TimePrecision, because, becauseArgs);
         }
 
         /// <summary>
@@ -69,13 +72,23 @@ namespace TestBuildingBlocks
         [CustomAssertion]
         public static void BeJson(this StringAssertions source, string expected, string because = "", params object[] becauseArgs)
         {
-            var sourceToken = JsonConvert.DeserializeObject<JToken>(source.Subject, DeserializationSettings);
-            var expectedToken = JsonConvert.DeserializeObject<JToken>(expected, DeserializationSettings);
+            using JsonDocument sourceJson = JsonDocument.Parse(source.Subject);
+            using JsonDocument expectedJson = JsonDocument.Parse(expected);
 
-            string sourceText = sourceToken?.ToString();
-            string expectedText = expectedToken?.ToString();
+            string sourceText = ToJsonString(sourceJson);
+            string expectedText = ToJsonString(expectedJson);
 
             sourceText.Should().Be(expectedText, because, becauseArgs);
+        }
+
+        private static string ToJsonString(JsonDocument document)
+        {
+            using var stream = new MemoryStream();
+            var writer = new Utf8JsonWriter(stream, JsonWriterOptions);
+
+            document.WriteTo(writer);
+            writer.Flush();
+            return Encoding.UTF8.GetString(stream.ToArray());
         }
     }
 }

@@ -49,10 +49,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(posts[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(posts[2].StringId);
         }
 
         [Fact]
@@ -70,14 +70,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/blogPosts/{post.StringId}?sort=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -108,10 +108,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(blog.Posts[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(blog.Posts[2].StringId);
         }
 
         [Fact]
@@ -129,14 +129,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             string route = $"/blogPosts/{post.StringId}/author?sort=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
@@ -166,9 +166,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
         }
 
         [Fact]
@@ -194,9 +194,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
@@ -223,8 +223,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(account.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(account.Posts[1].StringId);
@@ -257,8 +257,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
@@ -290,8 +290,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
 
             responseDocument.Included.Should().HaveCount(3);
             responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
@@ -337,9 +337,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
             responseDocument.Included.Should().HaveCount(7);
 
@@ -391,9 +391,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(posts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(posts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
 
         [Fact]
@@ -428,9 +428,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(blogs[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(blogs[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
             responseDocument.Included.Should().HaveCount(5);
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
@@ -444,42 +444,42 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
         public async Task Cannot_sort_in_unknown_scope()
         {
             // Arrange
-            const string route = "/webAccounts?sort[doesNotExist]=id";
+            string route = $"/webAccounts?sort[{Unknown.Relationship}]=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            error.Source.Parameter.Should().Be("sort[doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be($"sort[{Unknown.Relationship}]");
         }
 
         [Fact]
         public async Task Cannot_sort_in_unknown_nested_scope()
         {
             // Arrange
-            const string route = "/webAccounts?sort[posts.doesNotExist]=id";
+            string route = $"/webAccounts?sort[posts.{Unknown.Relationship}]=id";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            error.Source.Parameter.Should().Be("sort[posts.doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be($"sort[posts.{Unknown.Relationship}]");
         }
 
         [Fact]
@@ -489,14 +489,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             const string route = "/webAccounts?sort=dateOfBirth";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Sorting on the requested attribute is not allowed.");
             error.Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
@@ -531,10 +531,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(accounts[2].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[2].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
         }
 
         [Fact]
@@ -562,11 +562,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(4);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[2].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(accounts[1].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(accounts[0].StringId);
-            responseDocument.ManyData[3].Id.Should().Be(accounts[3].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(4);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[2].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue[3].Id.Should().Be(accounts[3].StringId);
         }
     }
 }

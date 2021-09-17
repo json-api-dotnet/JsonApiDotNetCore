@@ -62,8 +62,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
             const string route = "/operations/musicTracks/create";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -96,14 +95,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
             const string route = "/operations/musicTracks/create";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -144,14 +143,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
             const string route = "/operations/musicTracks/create";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");
@@ -199,14 +198,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
             const string route = "/operations/musicTracks/create";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Unsupported combination of operation code and resource type at this endpoint.");
             error.Detail.Should().Be("This endpoint can only be used to create resources of type 'musicTracks'.");

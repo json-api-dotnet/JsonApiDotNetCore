@@ -49,20 +49,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Title field is required.");
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
@@ -118,15 +118,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].SingleData.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -173,20 +172,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(2);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Title field is required.");
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/title");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");
@@ -432,7 +431,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
                         data = new
                         {
                             type = "playlists",
-                            id = 99999999,
+                            id = Unknown.StringId.For<Playlist, long>(),
                             attributes = new
                             {
                                 name = (string)null
@@ -457,26 +456,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ModelStateVal
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Name field is required.");
             error1.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/name");
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The Title field is required.");
             error2.Source.Pointer.Should().Be("/atomic:operations[1]/data/attributes/title");
 
-            Error error3 = responseDocument.Errors[2];
+            ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error3.Title.Should().Be("Input validation failed.");
             error3.Detail.Should().Be("The field LengthInSeconds must be between 1 and 1440.");

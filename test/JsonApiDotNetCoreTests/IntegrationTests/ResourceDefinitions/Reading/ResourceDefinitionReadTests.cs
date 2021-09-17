@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -66,14 +67,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             const string route = "/planets?include=moons";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including moons is not permitted.");
             error.Detail.Should().BeNull();
@@ -104,7 +105,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/moons/" + moon.StringId;
+            string route = $"/moons/{moon.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -112,9 +113,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["orbitsAround"].SingleData.Type.Should().Be("planets");
-            responseDocument.SingleData.Relationships["orbitsAround"].SingleData.Id.Should().Be(moon.OrbitsAround.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships["orbitsAround"].Data.SingleValue.Type.Should().Be("planets");
+            responseDocument.Data.SingleValue.Relationships["orbitsAround"].Data.SingleValue.Id.Should().Be(moon.OrbitsAround.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("planets");
@@ -155,11 +156,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(planets[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(planets[3].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(planets[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["totalResources"].Should().Be(2);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(2);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -205,10 +206,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(planets[3].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(planets[3].StringId);
 
-            responseDocument.Meta["totalResources"].Should().Be(1);
+            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -250,10 +251,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(stars[1].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(stars[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(stars[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(stars[1].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(stars[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(stars[2].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -297,10 +298,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(3);
-            responseDocument.ManyData[0].Id.Should().Be(stars[2].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(stars[0].StringId);
-            responseDocument.ManyData[2].Id.Should().Be(stars[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(stars[2].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(stars[0].StringId);
+            responseDocument.Data.ManyValue[2].Id.Should().Be(stars[1].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -335,7 +336,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(5);
+            responseDocument.Data.ManyValue.Should().HaveCount(5);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -369,11 +370,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(star.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
-            responseDocument.SingleData.Attributes["kind"].Should().Be(star.Kind.ToString());
-            responseDocument.SingleData.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
+            responseDocument.Data.SingleValue.Attributes["kind"].Should().Be(star.Kind);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -407,12 +408,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(star.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(2);
-            responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
-            responseDocument.SingleData.Attributes["solarRadius"].As<decimal>().Should().BeApproximately(star.SolarRadius);
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
+            responseDocument.Data.SingleValue.Attributes["solarRadius"].As<decimal>().Should().BeApproximately(star.SolarRadius);
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -446,11 +447,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(star.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
-            responseDocument.SingleData.Attributes.Should().NotContainKey("isVisibleFromEarth");
-            responseDocument.SingleData.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
+            responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("isVisibleFromEarth");
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -484,11 +485,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(star.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["name"].Should().Be(star.Name);
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -526,8 +527,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(moons[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(moons[1].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -572,8 +573,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(moons[2].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(moons[2].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -601,14 +602,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             string route = $"/planets/{planet.StringId}/moons?isLargerThanTheSun=false";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Custom query string parameters cannot be used on nested resource endpoints.");
             error.Detail.Should().Be("Query string parameter 'isLargerThanTheSun' cannot be used on a nested resource endpoint.");

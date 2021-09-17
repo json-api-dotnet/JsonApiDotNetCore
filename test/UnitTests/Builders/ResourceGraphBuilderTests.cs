@@ -29,10 +29,10 @@ namespace UnitTests.Builders
 
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
-            ResourceContext dbResource = resourceGraph.GetResourceContext("dbResources");
-            ResourceContext nonDbResource = resourceGraph.GetResourceContext("nonDbResources");
-            Assert.Equal(typeof(DbResource), dbResource.ResourceType);
-            Assert.Equal(typeof(NonDbResource), nonDbResource.ResourceType);
+            ResourceContext dbResourceContext = resourceGraph.GetResourceContext("dbResources");
+            ResourceContext nonDbResourceContext = resourceGraph.GetResourceContext("nonDbResources");
+            Assert.Equal(typeof(DbResource), dbResourceContext.ResourceType);
+            Assert.Equal(typeof(NonDbResource), nonDbResourceContext.ResourceType);
         }
 
         [Fact]
@@ -46,8 +46,8 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("testResources", resource.PublicName);
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
+            Assert.Equal("testResources", resourceContext.PublicName);
         }
 
         [Fact]
@@ -61,8 +61,8 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resource.Attributes, attribute => attribute.PublicName == "compoundAttribute");
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
+            Assert.Contains(resourceContext.Attributes, attribute => attribute.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -76,9 +76,9 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resource = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resource.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
-            Assert.Equal("relatedResources", resource.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
+            Assert.Equal("relatedResource", resourceContext.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
+            Assert.Equal("relatedResources", resourceContext.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
         }
 
         private sealed class NonDbResource : Identifiable

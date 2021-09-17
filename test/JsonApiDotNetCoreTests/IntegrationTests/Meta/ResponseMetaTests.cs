@@ -48,6 +48,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/supportTickets"",
+    ""first"": ""http://localhost/supportTickets""
+  },
+  ""data"": [],
   ""meta"": {
     ""license"": ""MIT"",
     ""projectUrl"": ""https://github.com/json-api-dotnet/JsonApiDotNetCore/"",
@@ -57,12 +62,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
       ""v2.5.2"",
       ""v1.3.1""
     ]
-  },
-  ""links"": {
-    ""self"": ""http://localhost/supportTickets"",
-    ""first"": ""http://localhost/supportTickets""
-  },
-  ""data"": []
+  }
 }");
         }
     }
