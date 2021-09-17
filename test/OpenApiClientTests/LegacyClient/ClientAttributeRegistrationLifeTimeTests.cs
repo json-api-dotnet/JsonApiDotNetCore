@@ -147,7 +147,7 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
     ""attributes"": {
-      ""serial-number"": null
+      ""is-in-maintenance"": false
     }
   }
 }");
