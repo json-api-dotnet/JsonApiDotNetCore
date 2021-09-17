@@ -78,7 +78,7 @@
 </code></pre><h2 id="name">Name</h2>
 <p>There are two ways the exposed attribute name is determined:</p>
 <ol>
-<li><p>Using the configured <a href="../options.html#customize-serializer-options">naming convention</a>.</p>
+<li><p>Using the configured <a href="../options.html#custom-serializer-settings">naming convention</a>.</p>
 </li>
 <li><p>Individually using the attribute&#39;s constructor.</p>
 <pre><code class="lang-c#">public class Person : Identifiable
@@ -123,9 +123,9 @@
 }
 </code></pre><h2 id="complex-attributes">Complex Attributes</h2>
 <p>Models may contain complex attributes.
-Serialization of these types is done by <a href="https://www.nuget.org/packages/System.Text.Json">System.Text.Json</a>,
-so you should use their APIs to specify serialization format.
-You can also use <a href="../options.html#customize-serializer-options">global options</a> to control the <code>JsonSerializer</code> behavior.</p>
+Serialization of these types is done by <a href="https://www.newtonsoft.com/json">Newtonsoft.Json</a>,
+so you should use their APIs to specify serialization formats.
+You can also use global options to specify <code>JsonSerializer</code> configuration.</p>
 <pre><code class="lang-c#">public class Foo : Identifiable
 {
     [Attr]
@@ -134,8 +134,7 @@ You can also use <a href="../options.html#customize-serializer-options">global o
 
 public class Bar
 {
-    [JsonPropertyName(&quot;compound-member&quot;)]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonProperty(&quot;compound-member&quot;)]
     public string CompoundMember { get; set; }
 }
 </code></pre><p>If you need your complex attributes persisted as a
@@ -151,13 +150,13 @@ and retrieval.</p>
     {
         get
         {
-            return Bar == null ? &quot;{}&quot; : JsonSerializer.Serialize(Bar);
+            return Bar == null ? &quot;{}&quot; : JsonConvert.SerializeObject(Bar);
         }
         set
         {
             Bar = string.IsNullOrWhiteSpace(value)
                 ? null
-                : JsonSerializer.Deserialize&lt;Bar&gt;(value);
+                : JsonConvert.DeserializeObject&lt;Bar&gt;(value);
         }
     }
 }
@@ -169,7 +168,7 @@ and retrieval.</p>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/resources/attributes.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/usage/resources/attributes.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

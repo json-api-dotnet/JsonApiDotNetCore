@@ -73,6 +73,9 @@
 </ol>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
+  &quot;meta&quot;: {
+    &quot;totalResources&quot;: 3
+  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?include=author&quot;,
     &quot;first&quot;: &quot;/api/books?include=author&quot;,
@@ -204,10 +207,7 @@
         &quot;self&quot;: &quot;/api/people/3&quot;
       }
     }
-  ],
-  &quot;meta&quot;: {
-    &quot;total&quot;: 3
-  }
+  ]
 }
 </code></pre><pre><code>
 3. Run `pwsh ../generate-examples.ps1`
@@ -220,7 +220,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/request-examples/README.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/request-examples/README.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

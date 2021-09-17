@@ -96,11 +96,10 @@ application. When using a data access layer different from EF Core, you will nee
 in cases when we need to manually resolve services from the request scope (e.g. operation processors).</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></h4>
-      <section><p>Metadata about the shape of a JSON:API resource in the resource graph.</p>
+      <section><p>Provides metadata for a resource, such as its attributes and relationships.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a></h4>
-      <section><p>Metadata about the shape of JSON:API resources that your API serves and the relationships between them. The resource graph is built at application
-startup and is exposed as a singleton through Dependency Injection.</p>
+      <section><p>Enables retrieving the exposed resource fields (attributes and relationships) of resources registered in the resource graph.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraphBuilder.html">ResourceGraphBuilder</a></h4>
       <section><p>Builds and configures the <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a>.</p>
@@ -124,9 +123,11 @@ application. When using a data access layer different from EF Core, you will nee
       <section><p>An interface used to separate the registration of the global <span class="xref">System.IServiceProvider</span> from a request-scoped service provider. This is useful
 in cases when we need to manually resolve services from the request scope (e.g. operation processors).</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceContextProvider.html">IResourceContextProvider</a></h4>
+      <section><p>Responsible for getting <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>s from the <a class="xref" href="JsonApiDotNetCore.Configuration.ResourceGraph.html">ResourceGraph</a>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></h4>
-      <section><p>Metadata about the shape of JSON:API resources that your API serves and the relationships between them. The resource graph is built at application
-startup and is exposed as a singleton through Dependency Injection.</p>
+      <section><p>Enables retrieving the exposed resource fields (attributes and relationships) of resources registered in the resource graph.</p>
 </section>
 </article>
           </div>

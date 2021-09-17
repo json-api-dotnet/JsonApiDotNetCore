@@ -80,59 +80,53 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.AtomicOperationObject.html">AtomicOperationObject</a></h4>
       <section><p>See <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.AtomicOperationsDocument.html">AtomicOperationsDocument</a></h4>
+      <section><p>See <a href="https://jsonapi.org/ext/atomic/#document-structure">https://jsonapi.org/ext/atomic/#document-structure</a>.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.AtomicReference.html">AtomicReference</a></h4>
-      <section><p>See &quot;ref&quot; in <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
+      <section><p>See &apos;ref&apos; in <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.html">AtomicResultObject</a></h4>
       <section><p>See <a href="https://jsonapi.org/ext/atomic/#result-objects">https://jsonapi.org/ext/atomic/#result-objects</a>.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-top-level">https://jsonapi.org/format/1.1/#document-top-level</a> and <a href="https://jsonapi.org/ext/atomic/#document-structure">https://jsonapi.org/ext/atomic/#document-structure</a>.</p>
+      <section><p><a href="https://jsonapi.org/format/#document-structure">https://jsonapi.org/format/#document-structure</a></p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Error.html">Error</a></h4>
+      <section><p>Provides additional information about a problem encountered while performing an operation. Error objects MUST be returned as an array keyed by errors
+in the top level of a JSON:API document.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorDocument.html">ErrorDocument</a></h4>
+      <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorLinks.html">ErrorLinks</a></h4>
-      <section><p>See &quot;links&quot; in <a href="https://jsonapi.org/format/1.1/#error-objects">https://jsonapi.org/format/1.1/#error-objects</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorObject.html">ErrorObject</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#error-objects">https://jsonapi.org/format/1.1/#error-objects</a>.</p>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorMeta.html">ErrorMeta</a></h4>
+      <section><p>A meta object containing non-standard meta-information about the error.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorSource.html">ErrorSource</a></h4>
-      <section><p>See &quot;source&quot; in <a href="https://jsonapi.org/format/1.1/#error-objects">https://jsonapi.org/format/1.1/#error-objects</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html">JsonApiObject</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-jsonapi-object">https://jsonapi.org/format/1.1/#document-jsonapi-object</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipLinks.html">RelationshipLinks</a></h4>
-      <section><p>See &quot;links&quot; in <a href="https://jsonapi.org/format/1.1/#document-resource-object-relationships">https://jsonapi.org/format/1.1/#document-resource-object-relationships</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipObject.html">RelationshipObject</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-resource-object-relationships">https://jsonapi.org/format/1.1/#document-resource-object-relationships</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html">ResourceIdentifierObject</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-resource-identifier-objects">https://jsonapi.org/format/1.1/#document-resource-identifier-objects</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.html">ResourceLinks</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-resource-object-links">https://jsonapi.org/format/1.1/#document-resource-object-links</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a></h4>
-      <section><p>See <a href="https://jsonapi.org/format/1.1/#document-resource-objects">https://jsonapi.org/format/1.1/#document-resource-objects</a>.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.TopLevelLinks.html">TopLevelLinks</a></h4>
-      <section><p>See &quot;links&quot; in <a href="https://jsonapi.org/format/1.1/#document-top-level">https://jsonapi.org/format/1.1/#document-top-level</a>.</p>
-</section>
-    <h3 id="structs">Structs
-  </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData-1.html">SingleOrManyData&lt;T&gt;</a></h4>
-      <section><p>Represents the value of the &quot;data&quot; element, which is either null, a single object or an array of objects. Add
-<a class="xref" href="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.html">SingleOrManyDataConverterFactory</a> to <span class="xref">System.Text.Json.JsonSerializerOptions.Converters</span> to properly roundtrip.</p>
-</section>
-    <h3 id="interfaces">Interfaces
-  </h3>
-      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.IResourceIdentity.html">IResourceIdentity</a></h4>
       <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html">ExposableData&lt;TResource&gt;</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.html">JsonApiObject</a></h4>
+      <section><p><a href="https://jsonapi.org/format/1.1/#document-jsonapi-object">https://jsonapi.org/format/1.1/#document-jsonapi-object</a>.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipEntry.html">RelationshipEntry</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.RelationshipLinks.html">RelationshipLinks</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html">ResourceIdentifierObject</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.html">ResourceLinks</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a></h4>
+      <section></section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.TopLevelLinks.html">TopLevelLinks</a></h4>
+      <section><p>See links section in <a href="https://jsonapi.org/format/#document-top-level">https://jsonapi.org/format/#document-top-level</a>.</p>
+</section>
     <h3 id="enums">Enums
   </h3>
       <h4><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.AtomicOperationCode.html">AtomicOperationCode</a></h4>
-      <section><p>See &quot;op&quot; in <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
+      <section><p>See <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
 </section>
 </article>
           </div>

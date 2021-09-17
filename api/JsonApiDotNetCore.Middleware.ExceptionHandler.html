@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Middleware_ExceptionHandler" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler" class="text-break">Class ExceptionHandler
   </h1>
-  <div class="markdown level0 summary"><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
+  <div class="markdown level0 summary"><p>Central place to handle all exceptions. Log them and translate into Error response.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -120,10 +120,10 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler__ctor_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Configuration_IJsonApiOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.%23ctor(Microsoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Configuration.IJsonApiOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler__ctor_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Configuration_IJsonApiOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.%23ctor(Microsoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.Configuration.IJsonApiOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L21">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L20">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ExceptionHandler__ctor_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_ExceptionHandler__ctor_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Configuration_IJsonApiOptions_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.#ctor(Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Configuration.IJsonApiOptions)">ExceptionHandler(ILoggerFactory, IJsonApiOptions)</h4>
@@ -159,10 +159,10 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_CreateErrorDocument_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.CreateErrorDocument(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_CreateErrorDocument_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.CreateErrorDocument(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L73">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L72">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ExceptionHandler_CreateErrorDocument_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.CreateErrorDocument*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_ExceptionHandler_CreateErrorDocument_System_Exception_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.CreateErrorDocument(System.Exception)">CreateErrorDocument(Exception)</h4>
@@ -170,7 +170,7 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected virtual Document CreateErrorDocument(Exception exception)</code></pre>
+    <pre><code class="lang-csharp hljs">protected virtual ErrorDocument CreateErrorDocument(Exception exception)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -199,17 +199,17 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorDocument.html">ErrorDocument</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogLevel_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogLevel(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogLevel_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogLevel(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L49">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L48">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogLevel_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogLevel*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogLevel_System_Exception_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogLevel(System.Exception)">GetLogLevel(Exception)</h4>
@@ -253,10 +253,10 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogMessage_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogMessage(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogMessage_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogMessage(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L66">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L65">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogMessage_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogMessage*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_ExceptionHandler_GetLogMessage_System_Exception_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.GetLogMessage(System.Exception)">GetLogMessage(Exception)</h4>
@@ -300,10 +300,10 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_HandleException_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.HandleException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler_HandleException_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler.HandleException(System.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L30">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L29">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Middleware_ExceptionHandler_HandleException_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.HandleException*"></a>
   <h4 id="JsonApiDotNetCore_Middleware_ExceptionHandler_HandleException_System_Exception_" data-uid="JsonApiDotNetCore.Middleware.ExceptionHandler.HandleException(System.Exception)">HandleException(Exception)</h4>
@@ -311,7 +311,7 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Document HandleException(Exception exception)</code></pre>
+    <pre><code class="lang-csharp hljs">public ErrorDocument HandleException(Exception exception)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -340,7 +340,7 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorDocument.html">ErrorDocument</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -357,10 +357,10 @@ public class ExceptionHandler : IExceptionHandler</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Middleware_ExceptionHandler.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Middleware.ExceptionHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Middleware/ExceptionHandler.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

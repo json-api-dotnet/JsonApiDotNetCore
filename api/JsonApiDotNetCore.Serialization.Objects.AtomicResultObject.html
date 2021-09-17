@@ -79,10 +79,32 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">AtomicResultObject</span></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html">ExposableData</a>&lt;<a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a>&gt;</div>
+    <div class="level2"><span class="xref">AtomicResultObject</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_Data">ExposableData&lt;ResourceObject&gt;.Data</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_SingleData">ExposableData&lt;ResourceObject&gt;.SingleData</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_ManyData">ExposableData&lt;ResourceObject&gt;.ManyData</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_IsManyData">ExposableData&lt;ResourceObject&gt;.IsManyData</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_ShouldSerializeData">ExposableData&lt;ResourceObject&gt;.ShouldSerializeData()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_GetPrimaryData">ExposableData&lt;ResourceObject&gt;.GetPrimaryData()</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ExposableData-1.html#JsonApiDotNetCore_Serialization_Objects_ExposableData_1_SetPrimaryData_System_Object_">ExposableData&lt;ResourceObject&gt;.SetPrimaryData(Object)</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -109,49 +131,16 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[PublicAPI]
-public sealed class AtomicResultObject</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class AtomicResultObject : ExposableData&lt;ResourceObject&gt;</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Data.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Data%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicResultObject.cs/#L13">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Data_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Data*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Data" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Data">Data</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;data&quot;)]
-[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-public SingleOrManyData&lt;ResourceObject&gt; Data { get; set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData-1.html">SingleOrManyData</a>&lt;<a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceObject.html">ResourceObject</a>&gt;</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicResultObject.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Serialization/Objects/AtomicResultObject.cs/#L11">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicResultObject_Meta" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicResultObject.Meta">Meta</h4>
@@ -159,9 +148,8 @@ public SingleOrManyData&lt;ResourceObject&gt; Data { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;meta&quot;)]
-[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;meta&quot;, NullValueHandling = NullValueHandling.Ignore)]
+public Dictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,7 +161,7 @@ public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -186,10 +174,10 @@ public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicResultObject.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicResultObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicResultObject.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicResultObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicResultObject.cs/#L10" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Serialization/Objects/AtomicResultObject.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
