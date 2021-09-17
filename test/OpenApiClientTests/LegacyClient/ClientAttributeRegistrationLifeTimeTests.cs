@@ -5,8 +5,6 @@ using OpenApiClientTests.LegacyClient.GeneratedCode;
 using TestBuildingBlocks;
 using Xunit;
 
-#pragma warning disable AV1704 // Don't include numbers in variables, parameters and type members
-
 namespace OpenApiClientTests.LegacyClient
 {
     public sealed class ClientAttributeRegistrationLifetimeTests
@@ -135,7 +133,7 @@ namespace OpenApiClientTests.LegacyClient
                 airplane => airplane.AirtimeInHours))
             {
                 using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
-                    airplane => airplane.IsInMaintenance))
+                    airplane => airplane.SerialNumber))
                 {
                 }
 
@@ -149,7 +147,7 @@ namespace OpenApiClientTests.LegacyClient
     ""type"": ""airplanes"",
     ""id"": """ + airplaneId2 + @""",
     ""attributes"": {
-      ""is-in-maintenance"": false
+      ""serial-number"": null
     }
   }
 }");

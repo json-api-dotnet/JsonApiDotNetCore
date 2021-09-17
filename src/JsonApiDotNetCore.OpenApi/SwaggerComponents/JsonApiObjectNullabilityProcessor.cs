@@ -7,8 +7,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
     /// </summary>
     /// <remarks>
     /// Initially these entries are marked nullable by Swashbuckle because nullable reference types are not enabled. This post-processing step can be removed
-    /// entirely once we enable nullable reference types. See eg
-    /// https://github.com/degreed/JsonApiCorePrototype/blob/936db8950d925f1b8a055cf5d8bba753f6579094/src/Web/OpenApi/JsonApiObjects/Documents/ManyResourceIdentifierResponseDocument.cs#L7
+    /// entirely once we enable nullable reference types.
     /// </remarks>
     internal sealed class JsonApiObjectNullabilityProcessor
     {

@@ -9,8 +9,6 @@ using FluentAssertions.Specialized;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using Xunit;
 
-#pragma warning disable AV1704 // Don't include numbers in variables, parameters and type members
-
 namespace OpenApiClientTests.LegacyClient
 {
     public sealed class ResponseTests
@@ -22,13 +20,13 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             const string flightId = "ZvuH1";
-            const string flightDestination = "Destination of Flight";
-            const string fightServiceOnBoard = "Movies";
+            const string flightDestination = "Amsterdam";
+            const string flightServiceOnBoard = "Movies";
             const string flightDepartsAt = "2014-11-25T00:00:00";
             const string documentMetaValue = "1";
-            const string flightMetaValue = "https://api.jsonapi.net/docs/#get-flights";
+            const string flightMetaValue = "https://jsonapi.net/api/docs/#get-flights";
             const string purserMetaValue = "https://jsonapi.net/api/docs/#get-flight-purser";
-            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
+            const string cabinCrewMembersMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
             const string passengersMetaValue = "https://jsonapi.net/api/docs/#get-flight-passengers";
             const string topLevelLink = HostPrefix + "flights";
             const string flightResourceLink = topLevelLink + "/" + flightId;
@@ -53,7 +51,7 @@ namespace OpenApiClientTests.LegacyClient
         ""departs-at"": """ + flightDepartsAt + @""",
         ""arrives-at"": null,
         ""services-on-board"": [
-          """ + fightServiceOnBoard + @""",
+          """ + flightServiceOnBoard + @""",
           """",
           null
         ]
@@ -74,7 +72,7 @@ namespace OpenApiClientTests.LegacyClient
             ""related"": """ + flightResourceLink + @"/cabin-crew-members""
           },
           ""meta"": {
-             ""docs"": """ + cabinPersonnelMetaValue + @"""
+             ""docs"": """ + cabinCrewMembersMetaValue + @"""
           }
         },
         ""passengers"": {
@@ -120,13 +118,14 @@ namespace OpenApiClientTests.LegacyClient
             flight.Meta["docs"].Should().Be(flightMetaValue);
 
             flight.Attributes.FinalDestination.Should().Be(flightDestination);
+            flight.Attributes.StopOverDestination.Should().Be(null);
             flight.Attributes.ServicesOnBoard.Should().HaveCount(3);
-            flight.Attributes.ServicesOnBoard.ElementAt(0).Should().Be(fightServiceOnBoard);
+            flight.Attributes.ServicesOnBoard.ElementAt(0).Should().Be(flightServiceOnBoard);
             flight.Attributes.ServicesOnBoard.ElementAt(1).Should().Be(string.Empty);
             flight.Attributes.ServicesOnBoard.ElementAt(2).Should().BeNull();
             flight.Attributes.OperatedBy.Should().Be(Airline.DeltaAirLines);
             flight.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(flightDepartsAt, new CultureInfo("en-GB")));
-            flight.Attributes.ArrivesAt.Should().Be(null);
+            flight.Attributes.ArrivesAt.Should().BeNull();
 
             flight.Relationships.Purser.Data.Should().BeNull();
             flight.Relationships.Purser.Links.Self.Should().Be(flightResourceLink + "/relationships/purser");
@@ -138,7 +137,7 @@ namespace OpenApiClientTests.LegacyClient
             flight.Relationships.CabinCrewMembers.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-crew-members");
             flight.Relationships.CabinCrewMembers.Links.Related.Should().Be(flightResourceLink + "/cabin-crew-members");
             flight.Relationships.CabinCrewMembers.Meta.Should().HaveCount(1);
-            flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinPersonnelMetaValue);
+            flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinCrewMembersMetaValue);
 
             flight.Relationships.Passengers.Data.Should().BeNull();
             flight.Relationships.Passengers.Links.Self.Should().Be(flightResourceLink + "/relationships/passengers");
@@ -187,6 +186,8 @@ namespace OpenApiClientTests.LegacyClient
             document.Data.Attributes.ArrivesAt.Should().Be(DateTimeOffset.Parse(arrivesAtWithUtcOffset));
             document.Data.Attributes.ServicesOnBoard.Should().BeNull();
             document.Data.Attributes.FinalDestination.Should().BeNull();
+            document.Data.Attributes.StopOverDestination.Should().BeNull();
+
             document.Data.Attributes.OperatedBy.Should().Be(default(Airline));
         }
 
