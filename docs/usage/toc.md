@@ -22,8 +22,8 @@
 # [Metadata](meta.md)
 # [Caching](caching.md)
 
-# [OpenAPI](openapi.md))
-## [Client](openapi-client.md))
+# [OpenAPI](openapi.md)
+## [Client](openapi-client.md)
 
 # Extensibility
 ## [Layer Overview](extensibility/layer-overview.md)
