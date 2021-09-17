@@ -24,10 +24,10 @@ namespace OpenApiClientTests.LegacyClient
             const string flightServiceOnBoard = "Movies";
             const string flightDepartsAt = "2014-11-25T00:00:00";
             const string documentMetaValue = "1";
-            const string flightMetaValue = "https://jsonapi.net/api/docs/#get-flights";
-            const string purserMetaValue = "https://jsonapi.net/api/docs/#get-flight-purser";
-            const string cabinCrewMembersMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
-            const string passengersMetaValue = "https://jsonapi.net/api/docs/#get-flight-passengers";
+            const string flightMetaValue = "https://api.jsonapi.net/docs/#get-flights";
+            const string purserMetaValue = "https://api.jsonapi.net/docs/#get-flight-purser";
+            const string cabinCrewMembersMetaValue = "https://api.jsonapi.net/docs/#get-flight-cabin-crew-members";
+            const string passengersMetaValue = "https://api.jsonapi.net/docs/#get-flight-passengers";
             const string topLevelLink = HostPrefix + "flights";
             const string flightResourceLink = topLevelLink + "/" + flightId;
 
@@ -96,10 +96,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightCollectionResponseDocument document = await openApiClient.GetFlightCollectionAsync();
+            FlightCollectionResponseDocument document = await apiClient.GetFlightCollectionAsync();
 
             // Assert
             document.Jsonapi.Should().BeNull();
@@ -118,7 +118,7 @@ namespace OpenApiClientTests.LegacyClient
             flight.Meta["docs"].Should().Be(flightMetaValue);
 
             flight.Attributes.FinalDestination.Should().Be(flightDestination);
-            flight.Attributes.StopOverDestination.Should().Be(null);
+            flight.Attributes.StopOverDestination.Should().BeNull();
             flight.Attributes.ServicesOnBoard.Should().HaveCount(3);
             flight.Attributes.ServicesOnBoard.ElementAt(0).Should().Be(flightServiceOnBoard);
             flight.Attributes.ServicesOnBoard.ElementAt(1).Should().Be(string.Empty);
@@ -172,10 +172,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await openApiClient.GetFlightAsync(flightId);
+            FlightPrimaryResponseDocument document = await apiClient.GetFlightAsync(flightId);
 
             // Assert
             document.Jsonapi.Should().BeNull();
@@ -187,7 +187,6 @@ namespace OpenApiClientTests.LegacyClient
             document.Data.Attributes.ServicesOnBoard.Should().BeNull();
             document.Data.Attributes.FinalDestination.Should().BeNull();
             document.Data.Attributes.StopOverDestination.Should().BeNull();
-
             document.Data.Attributes.OperatedBy.Should().Be(default(Airline));
         }
 
@@ -209,10 +208,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NotFound, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task<FlightPrimaryResponseDocument>> action = async () => await openApiClient.GetFlightAsync(flightId);
+            Func<Task<FlightPrimaryResponseDocument>> action = async () => await apiClient.GetFlightAsync(flightId);
 
             // Assert
             ExceptionAssertions<ApiException> assertion = await action.Should().ThrowExactlyAsync<ApiException>();
@@ -271,10 +270,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.Created, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await openApiClient.PostFlightAsync(new FlightPostRequestDocument
+            FlightPrimaryResponseDocument document = await apiClient.PostFlightAsync(new FlightPostRequestDocument
             {
                 Data = new FlightDataInPostRequest
                 {
@@ -322,10 +321,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await openApiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
+            FlightPrimaryResponseDocument document = await apiClient.PatchFlightAsync(flightId, new FlightPatchRequestDocument
             {
                 Data = new FlightDataInPatchRequest
                 {
@@ -346,10 +345,10 @@ namespace OpenApiClientTests.LegacyClient
             // Arrange
             const string flightId = "ZvuH1";
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightPrimaryResponseDocument document = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchFlightAsync(flightId,
+            FlightPrimaryResponseDocument document = await ApiResponse.TranslateAsync(async () => await apiClient.PatchFlightAsync(flightId,
                 new FlightPatchRequestDocument
                 {
                     Data = new FlightDataInPatchRequest
@@ -368,10 +367,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.DeleteFlightAsync("ZvuH1");
+            Func<Task> action = async () => await apiClient.DeleteFlightAsync("ZvuH1");
 
             // Assert
             await action.Should().NotThrowAsync();
@@ -393,10 +392,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantSecondaryResponseDocument document = await openApiClient.GetFlightPurserAsync(flightId);
+            FlightAttendantSecondaryResponseDocument document = await apiClient.GetFlightPurserAsync(flightId);
 
             // Assert
             document.Data.Should().BeNull();
@@ -417,10 +416,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantCollectionResponseDocument document = await openApiClient.GetFlightCabinCrewMembersAsync(flightId);
+            FlightAttendantCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersAsync(flightId);
 
             // Assert
             document.Data.Should().BeEmpty();
@@ -445,10 +444,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierResponseDocument document = await openApiClient.GetFlightPurserRelationshipAsync(flightId);
+            FlightAttendantIdentifierResponseDocument document = await apiClient.GetFlightPurserRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().NotBeNull();
@@ -461,10 +460,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await openApiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantRequestData
+            await apiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantRequestData
             {
                 Data = new FlightAttendantIdentifier
                 {
@@ -499,10 +498,10 @@ namespace OpenApiClientTests.LegacyClient
 }";
 
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.OK, responseBody);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierCollectionResponseDocument document = await openApiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId);
+            FlightAttendantIdentifierCollectionResponseDocument document = await apiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().HaveCount(2);
@@ -517,10 +516,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -546,10 +545,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -575,10 +574,10 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient apiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await apiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
