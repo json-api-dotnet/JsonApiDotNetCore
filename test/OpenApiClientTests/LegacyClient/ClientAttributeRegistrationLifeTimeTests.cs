@@ -16,7 +16,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId = "XUuiP";
 
@@ -30,16 +30,16 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
                 airplane => airplane.AirtimeInHours))
             {
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
             }
 
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+            _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
 
             // Assert
             wrapper.RequestBody.Should().BeJson(@"{
@@ -58,7 +58,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId = "XUuiP";
 
@@ -75,17 +75,17 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
                 airplane => airplane.AirtimeInHours))
             {
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
 
                 wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
                 requestDocument.Data.Attributes.AirtimeInHours = null;
 
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
             }
 
             // Assert
@@ -105,7 +105,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId1 = "XUuiP";
 
@@ -131,16 +131,16 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
                 airplane => airplane.AirtimeInHours))
             {
-                using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+                using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                     airplane => airplane.IsInMaintenance))
                 {
                 }
 
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
             }
 
             // Assert
@@ -160,7 +160,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId = "XUuiP";
 
@@ -177,13 +177,13 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument,
                 airplane => airplane.IsInMaintenance))
             {
                 requestDocument.Data.Attributes.IsInMaintenance = false;
 
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument));
             }
 
             // Assert
@@ -203,7 +203,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId1 = "XUuiP";
 
@@ -226,14 +226,14 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
                 airplane => airplane.IsInMaintenance))
             {
-                using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
+                using (openApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument2,
                     airplane => airplane.AirtimeInHours))
                 {
                     // Act
-                    _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
+                    _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
                 }
             }
 
@@ -254,7 +254,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId1 = "XUuiP";
 
@@ -268,10 +268,10 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
                 airplane => airplane.AirtimeInHours))
             {
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId1, requestDocument1));
             }
 
             const string airplaneId2 = "DJy1u";
@@ -291,11 +291,11 @@ namespace OpenApiClientTests.LegacyClient
 
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.SerialNumber))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
             }
 
             // Assert
@@ -316,7 +316,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             var requestDocument1 = new AirplanePostRequestDocument
             {
@@ -327,10 +327,10 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument1,
                 airplane => airplane.AirtimeInHours))
             {
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PostAirplaneAsync(requestDocument1));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PostAirplaneAsync(requestDocument1));
             }
 
             const string airplaneId = "DJy1u";
@@ -350,11 +350,11 @@ namespace OpenApiClientTests.LegacyClient
 
             wrapper.ChangeResponse(HttpStatusCode.NoContent, null);
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                 airplane => airplane.SerialNumber))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId, requestDocument2));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId, requestDocument2));
             }
 
             // Assert
@@ -375,7 +375,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const string airplaneId1 = "XUuiP";
 
@@ -401,14 +401,14 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument1,
                 airplane => airplane.SerialNumber))
             {
-                using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
+                using (openApiClient.RegisterAttributesForRequestDocument<AirplanePatchRequestDocument, AirplaneAttributesInPatchRequest>(requestDocument2,
                     airplane => airplane.IsInMaintenance, airplane => airplane.AirtimeInHours))
                 {
                     // Act
-                    _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
+                    _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PatchAirplaneAsync(airplaneId2, requestDocument2));
                 }
             }
 

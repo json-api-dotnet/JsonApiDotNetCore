@@ -100,7 +100,7 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
-            IOpenApiClient apiOpenApiClient = new OpenApiClient(wrapper.HttpClient);
+            IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             const char euroSign = '\x20AC';
             const char checkMark = '\x2713';
@@ -128,11 +128,11 @@ namespace OpenApiClientTests.LegacyClient
                 }
             };
 
-            using (apiOpenApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
+            using (openApiClient.RegisterAttributesForRequestDocument<AirplanePostRequestDocument, AirplaneAttributesInPostRequest>(requestDocument,
                 airplane => airplane.SerialNumber))
             {
                 // Act
-                _ = await ApiResponse.TranslateAsync(async () => await apiOpenApiClient.PostAirplaneAsync(requestDocument));
+                _ = await ApiResponse.TranslateAsync(async () => await openApiClient.PostAirplaneAsync(requestDocument));
             }
 
             // Assert
