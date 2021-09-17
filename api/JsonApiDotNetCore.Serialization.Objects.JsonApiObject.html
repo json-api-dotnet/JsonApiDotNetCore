@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject" class="text-break">Class JsonApiObject
   </h1>
-  <div class="markdown level0 summary"><p><a href="https://jsonapi.org/format/1.1/#document-jsonapi-object">https://jsonapi.org/format/1.1/#document-jsonapi-object</a>.</p>
+  <div class="markdown level0 summary"><p>See <a href="https://jsonapi.org/format/1.1/#document-jsonapi-object">https://jsonapi.org/format/1.1/#document-jsonapi-object</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -109,7 +109,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class JsonApiObject</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class JsonApiObject</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -118,7 +119,7 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Ext.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L14">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Ext_" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Ext" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Ext">Ext</h4>
@@ -126,8 +127,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;ext&quot;, NullValueHandling = NullValueHandling.Ignore)]
-public ICollection&lt;string&gt; Ext { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;ext&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+public IList&lt;string&gt; Ext { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -139,7 +141,7 @@ public ICollection&lt;string&gt; Ext { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.ICollection</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -149,16 +151,16 @@ public ICollection&lt;string&gt; Ext { get; set; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Meta.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L23">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L25">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Meta_" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Meta" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Meta">Meta</h4>
-  <div class="markdown level1 summary"><p>see &quot;meta&quot; in <a href="https://jsonapi.org/format/1.1/#document-meta">https://jsonapi.org/format/1.1/#document-meta</a></p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;meta&quot;, NullValueHandling = NullValueHandling.Ignore)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;meta&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -181,7 +183,7 @@ public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Profile.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L17">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L21">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Profile_" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Profile" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Profile">Profile</h4>
@@ -189,8 +191,9 @@ public IDictionary&lt;string, object&gt; Meta { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;profile&quot;, NullValueHandling = NullValueHandling.Ignore)]
-public ICollection&lt;string&gt; Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;profile&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+public IList&lt;string&gt; Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -202,7 +205,7 @@ public ICollection&lt;string&gt; Profile { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.ICollection</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.String</span>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -212,7 +215,7 @@ public ICollection&lt;string&gt; Profile { get; set; }</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Version.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L11">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L13">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Version_" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_JsonApiObject_Version" data-uid="JsonApiDotNetCore.Serialization.Objects.JsonApiObject.Version">Version</h4>
@@ -220,7 +223,8 @@ public ICollection&lt;string&gt; Profile { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;version&quot;, NullValueHandling = NullValueHandling.Ignore)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;version&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 public string Version { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -249,7 +253,7 @@ public string Version { get; set; }</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_JsonApiObject.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.JsonApiObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/JsonApiObject.cs/#L10" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

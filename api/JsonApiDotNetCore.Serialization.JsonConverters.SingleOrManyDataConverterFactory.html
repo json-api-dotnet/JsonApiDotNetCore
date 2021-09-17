@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Class JsonApiWriter
+    <title>Class SingleOrManyDataConverterFactory
    </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Class JsonApiWriter
+    <meta name="title" content="Class SingleOrManyDataConverterFactory
    ">
     <meta name="generator" content="docfx 2.58.4.0">
     
@@ -68,23 +68,20 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter">
+            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory">
   
   
-  <h1 id="JsonApiDotNetCore_Serialization_JsonApiWriter" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter" class="text-break">Class JsonApiWriter
+  <h1 id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory" class="text-break">Class SingleOrManyDataConverterFactory
   </h1>
-  <div class="markdown level0 summary"><p>Formats the response data used (see <a href="https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0">https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0</a>). It was intended to
-have as little dependencies as possible in formatting layer for greater extensibility.</p>
+  <div class="markdown level0 summary"><p>Converts <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.SingleOrManyData-1.html">SingleOrManyData&lt;T&gt;</a> to/from JSON.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">JsonApiWriter</span></div>
-  </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiWriter.html">IJsonApiWriter</a></div>
+    <div class="level1"><span class="xref">System.Text.Json.Serialization.JsonConverter</span></div>
+    <div class="level2"><span class="xref">System.Text.Json.Serialization.JsonConverterFactory</span></div>
+    <div class="level3"><span class="xref">SingleOrManyDataConverterFactory</span></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -110,78 +107,29 @@ have as little dependencies as possible in formatting layer for greater extensib
       <span class="xref">System.Object.ToString()</span>
     </div>
   </div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.html">JsonApiDotNetCore.Serialization</a></h6>
+  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.JsonConverters.html">JsonApiDotNetCore.Serialization.JsonConverters</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Serialization_JsonApiWriter_syntax">Syntax</h5>
+  <h5 id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[PublicAPI]
-public class JsonApiWriter : IJsonApiWriter</code></pre>
+    <pre><code class="lang-csharp hljs">[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
+public sealed class SingleOrManyDataConverterFactory : JsonConverterFactory</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_JsonApiDotNetCore_Middleware_IExceptionHandler_JsonApiDotNetCore_Serialization_IETagGenerator_Microsoft_Extensions_Logging_ILoggerFactory_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonApiWriter.%23ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer%2CJsonApiDotNetCore.Middleware.IExceptionHandler%2CJsonApiDotNetCore.Serialization.IETagGenerator%2CMicrosoft.Extensions.Logging.ILoggerFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonApiWriter.cs/#L35">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_JsonApiWriter__ctor_JsonApiDotNetCore_Serialization_IJsonApiSerializer_JsonApiDotNetCore_Middleware_IExceptionHandler_JsonApiDotNetCore_Serialization_IETagGenerator_Microsoft_Extensions_Logging_ILoggerFactory_" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter.#ctor(JsonApiDotNetCore.Serialization.IJsonApiSerializer,JsonApiDotNetCore.Middleware.IExceptionHandler,JsonApiDotNetCore.Serialization.IETagGenerator,Microsoft.Extensions.Logging.ILoggerFactory)">JsonApiWriter(IJsonApiSerializer, IExceptionHandler, IETagGenerator, ILoggerFactory)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, IETagGenerator eTagGenerator, ILoggerFactory loggerFactory)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiSerializer.html">IJsonApiSerializer</a></td>
-        <td><span class="parametername">serializer</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Middleware.IExceptionHandler.html">IExceptionHandler</a></td>
-        <td><span class="parametername">exceptionHandler</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.IETagGenerator.html">IETagGenerator</a></td>
-        <td><span class="parametername">eTagGenerator</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">Microsoft.Extensions.Logging.ILoggerFactory</span></td>
-        <td><span class="parametername">loggerFactory</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonApiWriter_WriteAsync_Microsoft_AspNetCore_Mvc_Formatters_OutputFormatterWriteContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonApiWriter.WriteAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CanConvert_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CanConvert(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonApiWriter.cs/#L48">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/SingleOrManyDataConverterFactory.cs/#L18">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Serialization_JsonApiWriter_WriteAsync_" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter.WriteAsync*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_JsonApiWriter_WriteAsync_Microsoft_AspNetCore_Mvc_Formatters_OutputFormatterWriteContext_" data-uid="JsonApiDotNetCore.Serialization.JsonApiWriter.WriteAsync(Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext)">WriteAsync(OutputFormatterWriteContext)</h4>
+  <a id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CanConvert_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CanConvert*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CanConvert_System_Type_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CanConvert(System.Type)">CanConvert(Type)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public async Task WriteAsync(OutputFormatterWriteContext context)</code></pre>
+    <pre><code class="lang-csharp hljs">public override bool CanConvert(Type typeToConvert)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -194,8 +142,8 @@ public class JsonApiWriter : IJsonApiWriter</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Microsoft.AspNetCore.Mvc.Formatters.OutputFormatterWriteContext</span></td>
-        <td><span class="parametername">context</span></td>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">typeToConvert</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -210,15 +158,67 @@ public class JsonApiWriter : IJsonApiWriter</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Threading.Tasks.Task</span></td>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.IJsonApiWriter.html">IJsonApiWriter</a>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Text.Json.Serialization.JsonConverter.CanConvert(System.Type)</span></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CreateConverter_System_Type_System_Text_Json_JsonSerializerOptions_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CreateConverter(System.Type%2CSystem.Text.Json.JsonSerializerOptions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/SingleOrManyDataConverterFactory.cs/#L23">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CreateConverter_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CreateConverter*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory_CreateConverter_System_Type_System_Text_Json_JsonSerializerOptions_" data-uid="JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory.CreateConverter(System.Type,System.Text.Json.JsonSerializerOptions)">CreateConverter(Type, JsonSerializerOptions)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Type</span></td>
+        <td><span class="parametername">typeToConvert</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Text.Json.JsonSerializerOptions</span></td>
+        <td><span class="parametername">options</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Text.Json.Serialization.JsonConverter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Text.Json.Serialization.JsonConverterFactory.CreateConverter(System.Type, System.Text.Json.JsonSerializerOptions)</span></div>
 </article>
           </div>
           
@@ -227,10 +227,10 @@ public class JsonApiWriter : IJsonApiWriter</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonApiWriter.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonApiWriter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_JsonConverters_SingleOrManyDataConverterFactory.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.JsonConverters.SingleOrManyDataConverterFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonApiWriter.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/JsonConverters/SingleOrManyDataConverterFactory.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

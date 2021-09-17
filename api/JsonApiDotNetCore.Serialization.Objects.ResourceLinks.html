@@ -73,7 +73,8 @@
   
   <h1 id="JsonApiDotNetCore_Serialization_Objects_ResourceLinks" data-uid="JsonApiDotNetCore.Serialization.Objects.ResourceLinks" class="text-break">Class ResourceLinks
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>See <a href="https://jsonapi.org/format/1.1/#document-resource-object-links">https://jsonapi.org/format/1.1/#document-resource-object-links</a>.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -108,7 +109,8 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Objects_ResourceLinks_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ResourceLinks</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class ResourceLinks</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -117,16 +119,16 @@
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_ResourceLinks_Self.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.ResourceLinks.Self%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/ResourceLinks.cs/#L10">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/ResourceLinks.cs/#L12">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_ResourceLinks_Self_" data-uid="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.Self*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_ResourceLinks_Self" data-uid="JsonApiDotNetCore.Serialization.Objects.ResourceLinks.Self">Self</h4>
-  <div class="markdown level1 summary"><p>See <a href="https://jsonapi.org/format/#document-resource-object-links">https://jsonapi.org/format/#document-resource-object-links</a>.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;self&quot;, NullValueHandling = NullValueHandling.Ignore)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;self&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 public string Self { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -155,7 +157,7 @@ public string Self { get; set; }</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_ResourceLinks.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.ResourceLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/ResourceLinks.cs/#L5" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/ResourceLinks.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

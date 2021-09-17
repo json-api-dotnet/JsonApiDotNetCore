@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Middleware_IExceptionHandler" data-uid="JsonApiDotNetCore.Middleware.IExceptionHandler" class="text-break">Interface IExceptionHandler
   </h1>
-  <div class="markdown level0 summary"><p>Central place to handle all exceptions. Log them and translate into Error response.</p>
+  <div class="markdown level0 summary"><p>Central place to handle all exceptions, such as log them and translate into error response.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Middleware.html">JsonApiDotNetCore.Middleware</a></h6>
@@ -97,7 +97,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ErrorDocument HandleException(Exception exception)</code></pre>
+    <pre><code class="lang-csharp hljs">Document HandleException(Exception exception)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -126,7 +126,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ErrorDocument.html">ErrorDocument</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.Document.html">Document</a></td>
         <td></td>
       </tr>
     </tbody>
