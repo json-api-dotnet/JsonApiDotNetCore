@@ -86,10 +86,12 @@ function CreateNuGetPackage {
     if ([string]::IsNullOrWhitespace($versionSuffix)) {
         dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts
         dotnet pack .\src\JsonApiDotNetCore.OpenApi -c Release -o .\artifacts
+        dotnet pack .\src\JsonApiDotNetCore.OpenApi.Client -c Release -o .\artifacts
     }
     else {
         dotnet pack .\src\JsonApiDotNetCore -c Release -o .\artifacts --version-suffix=$versionSuffix
         dotnet pack .\src\JsonApiDotNetCore.OpenApi -c Release -o .\artifacts --version-suffix=$versionSuffix
+        dotnet pack .\src\JsonApiDotNetCore.OpenApi.Client -c Release -o .\artifacts --version-suffix=$versionSuffix
     }
 
     CheckLastExitCode

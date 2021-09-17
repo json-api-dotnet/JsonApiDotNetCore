@@ -9,7 +9,7 @@ using TestBuildingBlocks;
 
 namespace OpenApiTests
 {
-    public sealed class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
+    public abstract class OpenApiStartup<TDbContext> : TestableStartup<TDbContext>
         where TDbContext : DbContext
     {
         public override void ConfigureServices(IServiceCollection services)
