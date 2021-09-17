@@ -33,13 +33,13 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public ISet<FlightAttendant> CabinCrewMembers { get; set; }
 
         [HasOne]
-        public Airplane OperatingAirplane { get; set; }
+        public FlightAttendant Purser { get; set; }
 
         [Attr]
         [NotMapped]
         public ICollection<string> ServicesOnBoard { get; set; }
 
-        [HasOne]
-        public FlightAttendant Purser { get; set; }
+        [HasMany]
+        public ICollection<Passenger> Passengers { get; set; }
     }
 }

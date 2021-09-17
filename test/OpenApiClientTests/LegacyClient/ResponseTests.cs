@@ -27,9 +27,9 @@ namespace OpenApiClientTests.LegacyClient
             const string flightDepartsAt = "2014-11-25T00:00:00";
             const string documentMetaValue = "1";
             const string flightMetaValue = "https://api.jsonapi.net/docs/#get-flights";
-            const string operatingAirplaneMetaValue = "https://jsonapi.net/api/docs/#get-flight-operating-airplane";
-            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
             const string purserMetaValue = "https://jsonapi.net/api/docs/#get-flight-purser";
+            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
+            const string passengersMetaValue = "https://jsonapi.net/api/docs/#get-flight-passengers";
             const string topLevelLink = HostPrefix + "flights";
             const string flightResourceLink = topLevelLink + "/" + flightId;
 
@@ -59,13 +59,13 @@ namespace OpenApiClientTests.LegacyClient
         ]
       },
       ""relationships"": {
-        ""operating-airplane"": {
+        ""purser"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/operating-airplane"",
-            ""related"": """ + flightResourceLink + @"/operating-airplane""
+            ""self"": """ + flightResourceLink + @"/relationships/purser"",
+            ""related"": """ + flightResourceLink + @"/purser""
           },
           ""meta"": {
-             ""docs"": """ + operatingAirplaneMetaValue + @"""
+             ""docs"": """ + purserMetaValue + @"""
           }
         },
         ""cabin-crew-members"": {
@@ -77,13 +77,13 @@ namespace OpenApiClientTests.LegacyClient
              ""docs"": """ + cabinPersonnelMetaValue + @"""
           }
         },
-        ""purser"": {
+        ""passengers"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/purser"",
-            ""related"": """ + flightResourceLink + @"/purser""
+            ""self"": """ + flightResourceLink + @"/relationships/passengers"",
+            ""related"": """ + flightResourceLink + @"/passengers""
           },
           ""meta"": {
-             ""docs"": """ + purserMetaValue + @"""
+             ""docs"": """ + passengersMetaValue + @"""
           }
         }
       },
@@ -128,11 +128,11 @@ namespace OpenApiClientTests.LegacyClient
             flight.Attributes.DepartsAt.Should().Be(DateTimeOffset.Parse(flightDepartsAt, new CultureInfo("en-GB")));
             flight.Attributes.ArrivesAt.Should().Be(null);
 
-            flight.Relationships.OperatingAirplane.Data.Should().BeNull();
-            flight.Relationships.OperatingAirplane.Links.Self.Should().Be(flightResourceLink + "/relationships/operating-airplane");
-            flight.Relationships.OperatingAirplane.Links.Related.Should().Be(flightResourceLink + "/operating-airplane");
-            flight.Relationships.OperatingAirplane.Meta.Should().HaveCount(1);
-            flight.Relationships.OperatingAirplane.Meta["docs"].Should().Be(operatingAirplaneMetaValue);
+            flight.Relationships.Purser.Data.Should().BeNull();
+            flight.Relationships.Purser.Links.Self.Should().Be(flightResourceLink + "/relationships/purser");
+            flight.Relationships.Purser.Links.Related.Should().Be(flightResourceLink + "/purser");
+            flight.Relationships.Purser.Meta.Should().HaveCount(1);
+            flight.Relationships.Purser.Meta["docs"].Should().Be(purserMetaValue);
 
             flight.Relationships.CabinCrewMembers.Data.Should().BeNull();
             flight.Relationships.CabinCrewMembers.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-crew-members");
@@ -140,11 +140,11 @@ namespace OpenApiClientTests.LegacyClient
             flight.Relationships.CabinCrewMembers.Meta.Should().HaveCount(1);
             flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinPersonnelMetaValue);
 
-            flight.Relationships.Purser.Data.Should().BeNull();
-            flight.Relationships.Purser.Links.Self.Should().Be(flightResourceLink + "/relationships/purser");
-            flight.Relationships.Purser.Links.Related.Should().Be(flightResourceLink + "/purser");
-            flight.Relationships.Purser.Meta.Should().HaveCount(1);
-            flight.Relationships.Purser.Meta["docs"].Should().Be(purserMetaValue);
+            flight.Relationships.Passengers.Data.Should().BeNull();
+            flight.Relationships.Passengers.Links.Self.Should().Be(flightResourceLink + "/relationships/passengers");
+            flight.Relationships.Passengers.Links.Related.Should().Be(flightResourceLink + "/passengers");
+            flight.Relationships.Passengers.Meta.Should().HaveCount(1);
+            flight.Relationships.Passengers.Meta["docs"].Should().Be(passengersMetaValue);
         }
 
         [Fact]
@@ -230,16 +230,16 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
   },
   ""data"": {
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""relationships"": {
-        ""operating-airplane"": {
+        ""purser"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/operating-airplane"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/operating-airplane""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
           },
           ""data"": null
         },
@@ -255,16 +255,16 @@ namespace OpenApiClientTests.LegacyClient
             }
           ],
         },
-        ""purser"": {
+        ""passengers"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/passengers"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/passengers""
           },
-          ""data"": null
+          ""data"": [ ]
         }
       },
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
       }
     }
 }";
@@ -280,12 +280,12 @@ namespace OpenApiClientTests.LegacyClient
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        OperatingAirplane = new ToOneAirplaneRequestData
+                        Purser = new ToOneFlightAttendantRequestData
                         {
-                            Data = new AirplaneIdentifier
+                            Data = new FlightAttendantIdentifier
                             {
                                 Id = "XxuIu",
-                                Type = AirplanesResourceType.Airplanes
+                                Type = FlightAttendantsResourceType.FlightAttendants
                             }
                         }
                     }
@@ -294,11 +294,11 @@ namespace OpenApiClientTests.LegacyClient
 
             // Assert
             document.Data.Attributes.Should().BeNull();
-            document.Data.Relationships.OperatingAirplane.Data.Should().BeNull();
+            document.Data.Relationships.Purser.Data.Should().BeNull();
             document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
             document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
             document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
-            document.Data.Relationships.Purser.Data.Should().BeNull();
+            document.Data.Relationships.Passengers.Data.Should().BeEmpty();
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace OpenApiClientTests.LegacyClient
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=purser,cabin-crew-members,passengers""
       }
     }
 }";
@@ -384,9 +384,9 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/operating-airplane"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/operating-airplane"",
-    ""last"": """ + HostPrefix + @"flights/" + flightId + @"/operating-airplane""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/purser"",
+    ""last"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
   },
   ""data"": null
 }";
@@ -395,7 +395,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            AirplaneSecondaryResponseDocument document = await openApiClient.GetFlightOperatingAirplaneAsync(flightId);
+            FlightAttendantSecondaryResponseDocument document = await openApiClient.GetFlightPurserAsync(flightId);
 
             // Assert
             document.Data.Should().BeNull();
@@ -430,16 +430,16 @@ namespace OpenApiClientTests.LegacyClient
         {
             // Arrange
             const string flightId = "ZvuH1";
-            const string operatingAirplaneId = "bBJHu";
+            const string purserId = "bBJHu";
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/operating-airplane"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/operating-airplane""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
+    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser""
   },
   ""data"": {
-    ""type"": ""airplanes"",
-    ""id"": """ + operatingAirplaneId + @"""
+    ""type"": ""flight-attendants"",
+    ""id"": """ + purserId + @"""
   }
 }";
 
@@ -447,11 +447,11 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            AirplaneIdentifierResponseDocument document = await openApiClient.GetFlightOperatingAirplaneRelationshipAsync(flightId);
+            FlightAttendantIdentifierResponseDocument document = await openApiClient.GetFlightPurserRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().NotBeNull();
-            document.Data.Id.Should().Be(operatingAirplaneId);
+            document.Data.Id.Should().Be(purserId);
             document.Data.Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
         }
 
@@ -463,12 +463,12 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            await openApiClient.PatchFlightOperatingAirplaneRelationshipAsync("ZvuH1", new ToOneAirplaneRequestData
+            await openApiClient.PatchFlightPurserRelationshipAsync("ZvuH1", new ToOneFlightAttendantRequestData
             {
-                Data = new AirplaneIdentifier
+                Data = new FlightAttendantIdentifier
                 {
                     Id = "Adk2a",
-                    Type = AirplanesResourceType.Airplanes
+                    Type = FlightAttendantsResourceType.FlightAttendants
                 }
             });
         }

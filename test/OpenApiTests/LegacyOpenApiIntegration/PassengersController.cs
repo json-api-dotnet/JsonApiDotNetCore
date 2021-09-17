@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace OpenApiTests.LegacyOpenApiIntegration
 {
-    public sealed class FlightAttendantsController : JsonApiController<FlightAttendant, string>
+    public sealed class PassengersController : JsonApiController<Passenger, string>
     {
-        public FlightAttendantsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<FlightAttendant, string> resourceService)
+        public PassengersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Passenger, string> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

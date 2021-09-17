@@ -67,7 +67,7 @@ namespace OpenApiClientTests.LegacyClient
                     Type = FlightsResourceType.Flights,
                     Relationships = new FlightRelationshipsInPostRequest
                     {
-                        OperatingAirplane = new ToOneAirplaneRequestData()
+                        Purser = new ToOneFlightAttendantRequestData()
                     }
                 }
             };
@@ -87,7 +87,7 @@ namespace OpenApiClientTests.LegacyClient
   ""data"": {
     ""type"": ""flights"",
     ""relationships"": {
-      ""operating-airplane"": {
+      ""purser"": {
         ""data"": null
       }
     }
@@ -236,12 +236,12 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await openApiClient.GetFlightOperatingAirplaneAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await openApiClient.GetFlightPurserAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
-            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/operating-airplane");
+            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/purser");
             wrapper.RequestBody.Should().BeNull();
         }
 
@@ -274,12 +274,12 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            _ = await ApiResponse.TranslateAsync(async () => await openApiClient.GetFlightOperatingAirplaneRelationshipAsync(flightId));
+            _ = await ApiResponse.TranslateAsync(async () => await openApiClient.GetFlightPurserRelationshipAsync(flightId));
 
             // Assert
             wrapper.Request.Headers.GetValue(HeaderNames.Accept).Should().Be(HeaderConstants.MediaType);
             wrapper.Request.Method.Should().Be(HttpMethod.Get);
-            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/operating-airplane");
+            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
             wrapper.RequestBody.Should().BeNull();
         }
 
@@ -292,28 +292,28 @@ namespace OpenApiClientTests.LegacyClient
             using var wrapper = FakeHttpClientWrapper.Create(HttpStatusCode.NoContent, null);
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
-            var requestDocument = new ToOneAirplaneRequestData
+            var requestDocument = new ToOneFlightAttendantRequestData
             {
-                Data = new AirplaneIdentifier
+                Data = new FlightAttendantIdentifier
                 {
                     Id = "bBJHu",
-                    Type = AirplanesResourceType.Airplanes
+                    Type = FlightAttendantsResourceType.FlightAttendants
                 }
             };
 
             // Act
-            await openApiClient.PatchFlightOperatingAirplaneRelationshipAsync(flightId, requestDocument);
+            await openApiClient.PatchFlightPurserRelationshipAsync(flightId, requestDocument);
 
             // Assert
             wrapper.Request.Method.Should().Be(HttpMethod.Patch);
-            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/operating-airplane");
+            wrapper.Request.RequestUri.Should().Be(HostPrefix + $"flights/{flightId}/relationships/purser");
             wrapper.Request.Content.Should().NotBeNull();
             wrapper.Request.Content!.Headers.ContentType.Should().NotBeNull();
             wrapper.Request.Content!.Headers.ContentType!.ToString().Should().Be(HeaderConstants.MediaType);
 
             wrapper.RequestBody.Should().BeJson(@"{
   ""data"": {
-    ""type"": ""airplanes"",
+    ""type"": ""flight-attendants"",
     ""id"": ""bBJHu""
   }
 }");
