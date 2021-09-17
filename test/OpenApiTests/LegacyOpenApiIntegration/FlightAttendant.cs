@@ -42,6 +42,6 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public ISet<Flight> ScheduledForFlights { get; set; }
 
         [HasMany]
-        public ISet<Flight> StandbyForFlights { get; set; }
+        public ISet<Flight> PurserOnFlights { get; set; }
     }
 }

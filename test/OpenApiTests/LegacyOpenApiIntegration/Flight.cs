@@ -30,7 +30,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public DateTime? ArrivesAt { get; set; }
 
         [HasMany]
-        public ISet<FlightAttendant> CabinPersonnel { get; set; }
+        public ISet<FlightAttendant> CabinCrewMembers { get; set; }
 
         [HasOne]
         public Airplane OperatingAirplane { get; set; }
@@ -39,7 +39,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         [NotMapped]
         public ICollection<string> ServicesOnBoard { get; set; }
 
-        [HasMany]
-        public ICollection<FlightAttendant> BackupCabinPersonnel { get; set; }
+        [HasOne]
+        public FlightAttendant Purser { get; set; }
     }
 }

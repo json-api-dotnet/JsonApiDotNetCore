@@ -21,12 +21,12 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Flight>()
-                .HasMany(flight => flight.CabinPersonnel)
+                .HasMany(flight => flight.CabinCrewMembers)
                 .WithMany(flightAttendant => flightAttendant.ScheduledForFlights);
 
             builder.Entity<Flight>()
-                .HasMany(flight => flight.BackupCabinPersonnel)
-                .WithMany(flightAttendant => flightAttendant.StandbyForFlights);
+                .HasOne(flight => flight.Purser)
+                .WithMany(flightAttendant => flightAttendant.PurserOnFlights);
         }
     }
 }

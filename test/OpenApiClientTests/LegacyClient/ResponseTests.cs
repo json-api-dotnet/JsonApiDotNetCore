@@ -28,8 +28,8 @@ namespace OpenApiClientTests.LegacyClient
             const string documentMetaValue = "1";
             const string flightMetaValue = "https://api.jsonapi.net/docs/#get-flights";
             const string operatingAirplaneMetaValue = "https://jsonapi.net/api/docs/#get-flight-operating-airplane";
-            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-personnel";
-            const string reserveCabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-backup-cabin-personnel";
+            const string cabinPersonnelMetaValue = "https://jsonapi.net/api/docs/#get-flight-cabin-crew-members";
+            const string purserMetaValue = "https://jsonapi.net/api/docs/#get-flight-purser";
             const string topLevelLink = HostPrefix + "flights";
             const string flightResourceLink = topLevelLink + "/" + flightId;
 
@@ -68,22 +68,22 @@ namespace OpenApiClientTests.LegacyClient
              ""docs"": """ + operatingAirplaneMetaValue + @"""
           }
         },
-        ""cabin-personnel"": {
+        ""cabin-crew-members"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/cabin-personnel"",
-            ""related"": """ + flightResourceLink + @"/cabin-personnel""
+            ""self"": """ + flightResourceLink + @"/relationships/cabin-crew-members"",
+            ""related"": """ + flightResourceLink + @"/cabin-crew-members""
           },
           ""meta"": {
              ""docs"": """ + cabinPersonnelMetaValue + @"""
           }
         },
-        ""backup-cabin-personnel"": {
+        ""purser"": {
           ""links"": {
-            ""self"": """ + flightResourceLink + @"/relationships/backup-cabin-personnel"",
-            ""related"": """ + flightResourceLink + @"/backup-cabin-personnel""
+            ""self"": """ + flightResourceLink + @"/relationships/purser"",
+            ""related"": """ + flightResourceLink + @"/purser""
           },
           ""meta"": {
-             ""docs"": """ + reserveCabinPersonnelMetaValue + @"""
+             ""docs"": """ + purserMetaValue + @"""
           }
         }
       },
@@ -134,17 +134,17 @@ namespace OpenApiClientTests.LegacyClient
             flight.Relationships.OperatingAirplane.Meta.Should().HaveCount(1);
             flight.Relationships.OperatingAirplane.Meta["docs"].Should().Be(operatingAirplaneMetaValue);
 
-            flight.Relationships.CabinPersonnel.Data.Should().BeNull();
-            flight.Relationships.CabinPersonnel.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-personnel");
-            flight.Relationships.CabinPersonnel.Links.Related.Should().Be(flightResourceLink + "/cabin-personnel");
-            flight.Relationships.CabinPersonnel.Meta.Should().HaveCount(1);
-            flight.Relationships.CabinPersonnel.Meta["docs"].Should().Be(cabinPersonnelMetaValue);
+            flight.Relationships.CabinCrewMembers.Data.Should().BeNull();
+            flight.Relationships.CabinCrewMembers.Links.Self.Should().Be(flightResourceLink + "/relationships/cabin-crew-members");
+            flight.Relationships.CabinCrewMembers.Links.Related.Should().Be(flightResourceLink + "/cabin-crew-members");
+            flight.Relationships.CabinCrewMembers.Meta.Should().HaveCount(1);
+            flight.Relationships.CabinCrewMembers.Meta["docs"].Should().Be(cabinPersonnelMetaValue);
 
-            flight.Relationships.BackupCabinPersonnel.Data.Should().BeNull();
-            flight.Relationships.BackupCabinPersonnel.Links.Self.Should().Be(flightResourceLink + "/relationships/backup-cabin-personnel");
-            flight.Relationships.BackupCabinPersonnel.Links.Related.Should().Be(flightResourceLink + "/backup-cabin-personnel");
-            flight.Relationships.BackupCabinPersonnel.Meta.Should().HaveCount(1);
-            flight.Relationships.BackupCabinPersonnel.Meta["docs"].Should().Be(reserveCabinPersonnelMetaValue);
+            flight.Relationships.Purser.Data.Should().BeNull();
+            flight.Relationships.Purser.Links.Self.Should().Be(flightResourceLink + "/relationships/purser");
+            flight.Relationships.Purser.Links.Related.Should().Be(flightResourceLink + "/purser");
+            flight.Relationships.Purser.Meta.Should().HaveCount(1);
+            flight.Relationships.Purser.Meta["docs"].Should().Be(purserMetaValue);
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
   },
   ""data"": {
       ""type"": ""flights"",
@@ -243,10 +243,10 @@ namespace OpenApiClientTests.LegacyClient
           },
           ""data"": null
         },
-        ""cabin-personnel"": {
+        ""cabin-crew-members"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members""
           },
           ""data"": [
             {
@@ -255,16 +255,16 @@ namespace OpenApiClientTests.LegacyClient
             }
           ],
         },
-        ""backup-cabin-personnel"": {
+        ""purser"": {
           ""links"": {
-            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/backup-cabin-personnel"",
-            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/backup-cabin-personnel""
+            ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/purser"",
+            ""related"": """ + HostPrefix + @"flights/" + flightId + @"/purser""
           },
-          ""data"": [ ]
+          ""data"": null
         }
       },
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
       }
     }
 }";
@@ -295,10 +295,10 @@ namespace OpenApiClientTests.LegacyClient
             // Assert
             document.Data.Attributes.Should().BeNull();
             document.Data.Relationships.OperatingAirplane.Data.Should().BeNull();
-            document.Data.Relationships.CabinPersonnel.Data.Should().HaveCount(1);
-            document.Data.Relationships.CabinPersonnel.Data.First().Id.Should().Be(flightAttendantId);
-            document.Data.Relationships.CabinPersonnel.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
-            document.Data.Relationships.BackupCabinPersonnel.Data.Should().BeEmpty();
+            document.Data.Relationships.CabinCrewMembers.Data.Should().HaveCount(1);
+            document.Data.Relationships.CabinCrewMembers.Data.First().Id.Should().Be(flightAttendantId);
+            document.Data.Relationships.CabinCrewMembers.Data.First().Type.Should().Be(FlightAttendantsResourceType.FlightAttendants);
+            document.Data.Relationships.Purser.Data.Should().BeNull();
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace OpenApiClientTests.LegacyClient
       ""type"": ""flights"",
       ""id"": """ + flightId + @""",
       ""links"": {
-        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-personnel,backup-cabin-personnel""
+        ""self"": """ + HostPrefix + @"flights/" + flightId + @"&fields[flights]&include=operating-airplane,cabin-crew-members,purser""
       }
     }
 }";
@@ -409,8 +409,8 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-personnel""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/cabin-crew-members""
   },
   ""data"": [ ]
 }";
@@ -419,7 +419,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantCollectionResponseDocument document = await openApiClient.GetFlightCabinPersonnelAsync(flightId);
+            FlightAttendantCollectionResponseDocument document = await openApiClient.GetFlightCabinCrewMembersAsync(flightId);
 
             // Assert
             document.Data.Should().BeEmpty();
@@ -483,9 +483,9 @@ namespace OpenApiClientTests.LegacyClient
 
             const string responseBody = @"{
   ""links"": {
-    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
-    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel"",
-    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-personnel""
+    ""self"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
+    ""related"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members"",
+    ""first"": """ + HostPrefix + @"flights/" + flightId + @"/relationships/cabin-crew-members""
   },
   ""data"": [{
     ""type"": ""flight-attendants"",
@@ -501,7 +501,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            FlightAttendantIdentifierCollectionResponseDocument document = await openApiClient.GetFlightCabinPersonnelRelationshipAsync(flightId);
+            FlightAttendantIdentifierCollectionResponseDocument document = await openApiClient.GetFlightCabinCrewMembersRelationshipAsync(flightId);
 
             // Assert
             document.Data.Should().HaveCount(2);
@@ -519,7 +519,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PostFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.PostFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -548,7 +548,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.PatchFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.PatchFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
@@ -577,7 +577,7 @@ namespace OpenApiClientTests.LegacyClient
             IOpenApiClient openApiClient = new OpenApiClient(wrapper.HttpClient);
 
             // Act
-            Func<Task> action = async () => await openApiClient.DeleteFlightCabinPersonnelRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
+            Func<Task> action = async () => await openApiClient.DeleteFlightCabinCrewMembersRelationshipAsync("ZvuH1", new ToManyFlightAttendantRequestData
             {
                 Data = new List<FlightAttendantIdentifier>
                 {
