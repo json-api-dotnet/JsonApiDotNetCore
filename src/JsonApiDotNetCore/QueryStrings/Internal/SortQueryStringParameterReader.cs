@@ -21,11 +21,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly List<ExpressionInScope> _constraints = new();
         private string _lastParameterName;
 
-        public SortQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
-            : base(request, resourceContextProvider)
+        public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+            : base(request, resourceGraph)
         {
-            _scopeParser = new QueryStringParameterScopeParser(resourceContextProvider, FieldChainRequirements.EndsInToMany);
-            _sortParser = new SortParser(resourceContextProvider, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
+            _sortParser = new SortParser(resourceGraph, ValidateSingleField);
         }
 
         protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace TestBuildingBlocks
 {
@@ -20,8 +18,7 @@ namespace TestBuildingBlocks
         protected virtual void SetJsonApiOptions(JsonApiOptions options)
         {
             options.IncludeExceptionStackTraceInErrors = true;
-            options.SerializerSettings.Formatting = Formatting.Indented;
-            options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            options.SerializerOptions.WriteIndented = true;
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment environment, ILoggerFactory loggerFactory)

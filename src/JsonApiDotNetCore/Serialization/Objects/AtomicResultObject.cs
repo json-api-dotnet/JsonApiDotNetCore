@@ -1,14 +1,21 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See https://jsonapi.org/ext/atomic/#result-objects.
     /// </summary>
-    public sealed class AtomicResultObject : ExposableData<ResourceObject>
+    [PublicAPI]
+    public sealed class AtomicResultObject
     {
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Meta { get; set; }
+        [JsonPropertyName("data")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        public SingleOrManyData<ResourceObject> Data { get; set; }
+
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IDictionary<string, object> Meta { get; set; }
     }
 }

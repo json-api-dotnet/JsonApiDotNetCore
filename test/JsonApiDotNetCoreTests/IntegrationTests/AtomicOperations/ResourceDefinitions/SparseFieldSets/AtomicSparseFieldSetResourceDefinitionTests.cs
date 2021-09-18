@@ -84,19 +84,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Attributes["format"].Should().Be(newLyrics[0].Format);
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("text");
+            responseDocument.Results[0].Data.SingleValue.Attributes["format"].Should().Be(newLyrics[0].Format);
+            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("text");
 
-            responseDocument.Results[1].SingleData.Attributes["format"].Should().Be(newLyrics[1].Format);
-            responseDocument.Results[1].SingleData.Attributes.Should().NotContainKey("text");
+            responseDocument.Results[1].Data.SingleValue.Attributes["format"].Should().Be(newLyrics[1].Format);
+            responseDocument.Results[1].Data.SingleValue.Attributes.Should().NotContainKey("text");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -158,19 +157,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Attributes["format"].Should().Be(existingLyrics[0].Format);
-            responseDocument.Results[0].SingleData.Attributes.Should().NotContainKey("text");
+            responseDocument.Results[0].Data.SingleValue.Attributes["format"].Should().Be(existingLyrics[0].Format);
+            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("text");
 
-            responseDocument.Results[1].SingleData.Attributes["format"].Should().Be(existingLyrics[1].Format);
-            responseDocument.Results[1].SingleData.Attributes.Should().NotContainKey("text");
+            responseDocument.Results[1].Data.SingleValue.Attributes["format"].Should().Be(existingLyrics[1].Format);
+            responseDocument.Results[1].Data.SingleValue.Attributes.Should().NotContainKey("text");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

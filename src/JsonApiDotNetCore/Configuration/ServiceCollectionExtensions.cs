@@ -6,8 +6,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Serialization.Building;
-using JsonApiDotNetCore.Serialization.Client.Internal;
 using JsonApiDotNetCore.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,25 +53,6 @@ namespace JsonApiDotNetCore.Configuration
             applicationBuilder.ConfigureMvc();
             applicationBuilder.DiscoverInjectables();
             applicationBuilder.ConfigureServiceContainer(dbContextTypes);
-        }
-
-        /// <summary>
-        /// Enables client serializers for sending requests and receiving responses in JSON:API format. Internally only used for testing. Will be extended in the
-        /// future to be part of a JsonApiClientDotNetCore package.
-        /// </summary>
-        public static IServiceCollection AddClientSerialization(this IServiceCollection services)
-        {
-            ArgumentGuard.NotNull(services, nameof(services));
-
-            services.AddScoped<IResponseDeserializer, ResponseDeserializer>();
-
-            services.AddScoped<IRequestSerializer>(sp =>
-            {
-                var graph = sp.GetRequiredService<IResourceGraph>();
-                return new RequestSerializer(graph, new ResourceObjectBuilder(graph, new ResourceObjectBuilderSettings()));
-            });
-
-            return services;
         }
 
         /// <summary>

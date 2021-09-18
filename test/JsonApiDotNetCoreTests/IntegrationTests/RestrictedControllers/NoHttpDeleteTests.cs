@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            string route = "/sofas/" + existingSofa.StringId;
+            string route = $"/sofas/{existingSofa.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -102,17 +102,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/sofas/" + existingSofa.StringId;
+            string route = $"/sofas/{existingSofa.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support DELETE requests.");

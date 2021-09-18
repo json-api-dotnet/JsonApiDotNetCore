@@ -60,8 +60,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/cars/" + car.StringId;
+            string route = $"/cars/{car.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -89,8 +89,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(car.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -118,8 +118,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -147,8 +147,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(car.StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            string route = "/engines/" + existingEngine.StringId;
+            string route = $"/engines/{existingEngine.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -290,7 +290,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 }
             };
 
-            string route = "/engines/" + existingEngine.StringId;
+            string route = $"/engines/{existingEngine.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -527,14 +527,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             string route = $"/dealerships/{existingDealership.StringId}/relationships/inventory";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
             error.Detail.Should().Be("Related resource of type 'cars' with ID '999:XX-YY-22' in relationship 'inventory' does not exist.");
@@ -557,7 +557,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/cars/" + existingCar.StringId;
+            string route = $"/cars/{existingCar.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

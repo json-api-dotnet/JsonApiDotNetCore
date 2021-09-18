@@ -15,8 +15,6 @@ namespace JsonApiDotNetCore.QueryStrings
         Include = 4,
         Page = 8,
         Fields = 16,
-        Nulls = 32,
-        Defaults = 64,
-        All = Filter | Sort | Include | Page | Fields | Nulls | Defaults
+        All = Filter | Sort | Include | Page | Fields
     }
 }

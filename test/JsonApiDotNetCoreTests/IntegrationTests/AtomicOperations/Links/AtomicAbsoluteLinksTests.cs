@@ -80,35 +80,34 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(2);
 
-            string languageLink = HostPrefix + "/textLanguages/" + existingLanguage.StringId;
+            string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
-            ResourceObject singleData1 = responseDocument.Results[0].SingleData;
+            ResourceObject singleData1 = responseDocument.Results[0].Data.SingleValue;
             singleData1.Should().NotBeNull();
             singleData1.Links.Should().NotBeNull();
             singleData1.Links.Self.Should().Be(languageLink);
             singleData1.Relationships.Should().NotBeEmpty();
             singleData1.Relationships["lyrics"].Links.Should().NotBeNull();
-            singleData1.Relationships["lyrics"].Links.Self.Should().Be(languageLink + "/relationships/lyrics");
-            singleData1.Relationships["lyrics"].Links.Related.Should().Be(languageLink + "/lyrics");
+            singleData1.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
+            singleData1.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
 
-            string companyLink = HostPrefix + "/recordCompanies/" + existingCompany.StringId;
+            string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
 
-            ResourceObject singleData2 = responseDocument.Results[1].SingleData;
+            ResourceObject singleData2 = responseDocument.Results[1].Data.SingleValue;
             singleData2.Should().NotBeNull();
             singleData2.Links.Should().NotBeNull();
             singleData2.Links.Self.Should().Be(companyLink);
             singleData2.Relationships.Should().NotBeEmpty();
             singleData2.Relationships["tracks"].Links.Should().NotBeNull();
-            singleData2.Relationships["tracks"].Links.Self.Should().Be(companyLink + "/relationships/tracks");
-            singleData2.Relationships["tracks"].Links.Related.Should().Be(companyLink + "/tracks");
+            singleData2.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
+            singleData2.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
         }
 
         [Fact]
@@ -145,15 +144,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(1);
 
-            ResourceObject singleData = responseDocument.Results[0].SingleData;
+            ResourceObject singleData = responseDocument.Results[0].Data.SingleValue;
             singleData.Should().NotBeNull();
             singleData.Links.Should().BeNull();
             singleData.Relationships.Should().BeNull();

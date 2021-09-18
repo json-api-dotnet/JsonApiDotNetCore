@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -52,9 +53,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(post.StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(post.StringId);
+            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -83,9 +84,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -115,9 +116,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.Owner.StringId);
-            responseDocument.SingleData.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
+            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
@@ -147,9 +148,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.ManyData[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -179,9 +180,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -215,14 +216,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("comments");
             responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
-            responseDocument.Included[0].Attributes["createdAt"].Should().BeCloseTo(post.Comments.Single().CreatedAt);
+            responseDocument.Included[0].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(post.Comments.Single().CreatedAt);
         }
 
         [Fact]
@@ -246,9 +247,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("labels");
@@ -277,10 +278,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Type.Should().Be("labels");
-            responseDocument.ManyData[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
-            responseDocument.ManyData[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Type.Should().Be("labels");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
+            responseDocument.Data.ManyValue[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
@@ -311,9 +312,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(3);
 
@@ -352,9 +353,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.StringId);
-            responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -364,7 +365,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Included[1].Type.Should().Be("comments");
             responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
-            responseDocument.Included[1].Attributes["createdAt"].Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
+            responseDocument.Included[1].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
         }
 
         [Fact]
@@ -391,9 +392,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(comment.StringId);
-            responseDocument.SingleData.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
+            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
 
             responseDocument.Included.Should().HaveCount(5);
 
@@ -444,9 +445,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(blog.StringId);
-            responseDocument.SingleData.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
 
             responseDocument.Included.Should().HaveCount(7);
 
@@ -503,9 +504,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(post.StringId);
-            responseDocument.SingleData.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
+            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -538,7 +539,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
@@ -550,20 +551,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_relationship()
         {
             // Arrange
-            const string route = "/webAccounts?include=doesNotExist";
+            string route = $"/webAccounts?include={Unknown.Relationship}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -571,20 +572,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
         public async Task Cannot_include_unknown_nested_relationship()
         {
             // Arrange
-            const string route = "/blogs?include=posts.doesNotExist";
+            string route = $"/blogs?include=posts.{Unknown.Relationship}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -595,14 +596,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogPosts?include=parent";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including the requested relationship is not allowed.");
             error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
@@ -631,16 +632,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject[] postWithReviewer = responseDocument.ManyData
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData != null).ToArray();
+            ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue != null).ToArray();
 
             postWithReviewer.Should().HaveCount(1);
             postWithReviewer[0].Attributes["caption"].Should().Be(posts[0].Caption);
 
-            ResourceObject[] postWithoutReviewer = responseDocument.ManyData
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.SingleData == null).ToArray();
+            ResourceObject[] postWithoutReviewer = responseDocument.Data.ManyValue
+                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue == null).ToArray();
 
             postWithoutReviewer.Should().HaveCount(1);
             postWithoutReviewer[0].Attributes["caption"].Should().Be(posts[1].Caption);
@@ -685,14 +686,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             const string route = "/blogs/123/owner?include=posts.comments";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");

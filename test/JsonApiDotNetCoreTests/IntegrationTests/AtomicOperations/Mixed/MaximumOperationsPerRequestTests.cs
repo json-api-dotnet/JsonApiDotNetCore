@@ -38,6 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "add",
                         data = new
                         {
+                            type = "performers"
                         }
                     },
                     new
@@ -45,6 +46,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "remove",
                         data = new
                         {
+                            type = "performers"
                         }
                     },
                     new
@@ -52,6 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         op = "update",
                         data = new
                         {
+                            type = "performers"
                         }
                     }
                 }
@@ -60,18 +63,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request exceeds the maximum number of operations.");
             error.Detail.Should().Be("The number of operations in this request (3) is higher than 2.");
-            error.Source.Pointer.Should().BeNull();
+            error.Source.Should().BeNull();
         }
 
         [Fact]
@@ -113,7 +116,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -153,7 +156,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

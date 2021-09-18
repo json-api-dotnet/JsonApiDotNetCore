@@ -31,7 +31,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/toothbrushes/" + toothbrush.StringId;
+            string route = $"/toothbrushes/{toothbrush.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -39,25 +39,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(toothbrush.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(toothbrush.StringId);
         }
 
         [Fact]
         public async Task Converts_empty_ActionResult_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.EmptyActionResultId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.EmptyActionResultId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("NotFound");
             error.Detail.Should().BeNull();
@@ -67,17 +67,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ActionResult_with_error_object_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithErrorObjectId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithErrorObjectId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("No toothbrush with that ID exists.");
             error.Detail.Should().BeNull();
@@ -87,17 +87,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Cannot_convert_ActionResult_with_string_parameter_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ActionResultWithStringParameter;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ActionResultWithStringParameter}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Data being returned must be errors or resources.");
@@ -107,17 +107,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_object_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorObjectId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorObjectId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadGateway);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadGateway);
             error.Title.Should().BeNull();
             error.Detail.Should().BeNull();
@@ -127,27 +127,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         public async Task Converts_ObjectResult_with_error_objects_to_error_collection()
         {
             // Arrange
-            string route = "/toothbrushes/" + BaseToothbrushesController.ObjectResultWithErrorCollectionId;
+            string route = $"/toothbrushes/{BaseToothbrushesController.ObjectResultWithErrorCollectionId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(3);
 
-            Error error1 = responseDocument.Errors[0];
+            ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error1.Title.Should().BeNull();
             error1.Detail.Should().BeNull();
 
-            Error error2 = responseDocument.Errors[1];
+            ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             error2.Title.Should().BeNull();
             error2.Detail.Should().BeNull();
 
-            Error error3 = responseDocument.Errors[2];
+            ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.ExpectationFailed);
             error3.Title.Should().Be("This is not a very great request.");
             error3.Detail.Should().BeNull();

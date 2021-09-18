@@ -2,9 +2,9 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Middleware;
-using Newtonsoft.Json;
 
 namespace TestBuildingBlocks
 {
@@ -13,7 +13,7 @@ namespace TestBuildingBlocks
     /// </summary>
     public abstract class IntegrationTest
     {
-        private static readonly IntegrationTestConfiguration IntegrationTestConfiguration = new();
+        protected abstract JsonSerializerOptions SerializerOptions { get; }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
             Action<HttpRequestHeaders> setRequestHeaders = null)
@@ -82,7 +82,8 @@ namespace TestBuildingBlocks
 
         private string SerializeRequest(object requestBody)
         {
-            return requestBody == null ? null : requestBody is string stringRequestBody ? stringRequestBody : JsonConvert.SerializeObject(requestBody);
+            return requestBody == null ? null :
+                requestBody is string stringRequestBody ? stringRequestBody : JsonSerializer.Serialize(requestBody, SerializerOptions);
         }
 
         protected abstract HttpClient CreateClient();
@@ -96,7 +97,7 @@ namespace TestBuildingBlocks
 
             try
             {
-                return JsonConvert.DeserializeObject<TResponseDocument>(responseText, IntegrationTestConfiguration.DeserializationSettings);
+                return JsonSerializer.Deserialize<TResponseDocument>(responseText, SerializerOptions);
             }
             catch (JsonException exception)
             {

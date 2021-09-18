@@ -13,7 +13,7 @@ namespace TestBuildingBlocks
             // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
 
             MethodBase testMethod = GetTestMethod();
-            string testName = testMethod.DeclaringType?.FullName + "." + testMethod.Name;
+            string testName = $"{testMethod.DeclaringType?.FullName}.{testMethod.Name}";
 
             return GetDeterministicHashCode(testName);
         }

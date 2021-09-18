@@ -79,7 +79,7 @@ namespace UnitTests.Middleware
         {
             IControllerResourceMapping controllerResourceMapping = holder.ControllerResourceMapping.Object;
             HttpContext context = holder.HttpContext;
-            IJsonApiOptions options = holder.Options.Object;
+            IJsonApiOptions options = holder.Options;
             JsonApiRequest request = holder.Request;
             IResourceGraph resourceGraph = holder.ResourceGraph.Object;
             return holder.MiddleWare.InvokeAsync(context, controllerResourceMapping, options, request, resourceGraph, NullLogger<JsonApiMiddleware>.Instance);
@@ -101,7 +101,7 @@ namespace UnitTests.Middleware
             var mockMapping = new Mock<IControllerResourceMapping>();
             mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(string));
 
-            Mock<IJsonApiOptions> mockOptions = CreateMockOptions(forcedNamespace);
+            IJsonApiOptions options = CreateOptions(forcedNamespace);
             Mock<IResourceGraph> mockGraph = CreateMockResourceGraph(resourceName, relType != null);
             var request = new JsonApiRequest();
 
@@ -119,18 +119,21 @@ namespace UnitTests.Middleware
             {
                 MiddleWare = middleware,
                 ControllerResourceMapping = mockMapping,
-                Options = mockOptions,
+                Options = options,
                 Request = request,
                 HttpContext = context,
                 ResourceGraph = mockGraph
             };
         }
 
-        private static Mock<IJsonApiOptions> CreateMockOptions(string forcedNamespace)
+        private static IJsonApiOptions CreateOptions(string forcedNamespace)
         {
-            var mockOptions = new Mock<IJsonApiOptions>();
-            mockOptions.Setup(options => options.Namespace).Returns(forcedNamespace);
-            return mockOptions;
+            var options = new JsonApiOptions
+            {
+                Namespace = forcedNamespace
+            };
+
+            return options;
         }
 
         private static DefaultHttpContext CreateHttpContext(string path, bool isRelationship = false, string action = "", string id = null)
@@ -190,7 +193,7 @@ namespace UnitTests.Middleware
             public JsonApiMiddleware MiddleWare { get; init; }
             public HttpContext HttpContext { get; init; }
             public Mock<IControllerResourceMapping> ControllerResourceMapping { get; init; }
-            public Mock<IJsonApiOptions> Options { get; init; }
+            public IJsonApiOptions Options { get; init; }
             public JsonApiRequest Request { get; init; }
             public Mock<IResourceGraph> ResourceGraph { get; init; }
         }

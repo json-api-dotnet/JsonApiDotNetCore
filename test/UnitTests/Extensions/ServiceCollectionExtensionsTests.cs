@@ -28,15 +28,17 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
-            services.AddJsonApi<TestDbContext>();
 
-            // Act
             // this is required because the DbContextResolver requires access to the current HttpContext
             // to get the request scoped DbContext instance
             services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
+
+            // Act
+            services.AddJsonApi<TestDbContext>();
+
             ServiceProvider provider = services.BuildServiceProvider();
-            var graph = provider.GetRequiredService<IResourceGraph>();
-            ResourceContext resourceContext = graph.GetResourceContext<Person>();
+            var resourceGraph = provider.GetRequiredService<IResourceGraph>();
+            ResourceContext resourceContext = resourceGraph.GetResourceContext<Person>();
 
             // Assert
             Assert.Equal("people", resourceContext.PublicName);
@@ -177,8 +179,9 @@ namespace UnitTests.Extensions
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
-            ResourceContext resource = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("intResources", resource.PublicName);
+
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(IntResource));
+            Assert.Equal("intResources", resourceContext.PublicName);
         }
 
         private sealed class IntResource : Identifiable

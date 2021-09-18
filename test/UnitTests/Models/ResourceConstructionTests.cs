@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Design;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -7,7 +8,6 @@ using JsonApiDotNetCore.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace UnitTests.Models
@@ -32,13 +32,13 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithoutConstructor>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithoutConstructor>().Build();
 
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
+            var serializer = new RequestDeserializer(resourceGraph, new ResourceFactory(serviceContainer), new TargetedFields(),
+                _mockHttpContextAccessor.Object, _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {
@@ -49,7 +49,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             object result = serializer.Deserialize(content);
@@ -65,13 +65,13 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithThrowingConstructor>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithThrowingConstructor>().Build();
 
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
+            var serializer = new RequestDeserializer(resourceGraph, new ResourceFactory(serviceContainer), new TargetedFields(),
+                _mockHttpContextAccessor.Object, _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {
@@ -82,7 +82,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             Action action = () => serializer.Deserialize(content);
@@ -100,13 +100,13 @@ namespace UnitTests.Models
             // Arrange
             var options = new JsonApiOptions();
 
-            IResourceGraph graph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithStringConstructor>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceWithStringConstructor>().Build();
 
             var serviceContainer = new ServiceContainer();
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), new NeverResourceDefinitionAccessor());
 
-            var serializer = new RequestDeserializer(graph, new ResourceFactory(serviceContainer), new TargetedFields(), _mockHttpContextAccessor.Object,
-                _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
+            var serializer = new RequestDeserializer(resourceGraph, new ResourceFactory(serviceContainer), new TargetedFields(),
+                _mockHttpContextAccessor.Object, _requestMock.Object, options, _resourceDefinitionAccessorMock.Object);
 
             var body = new
             {
@@ -117,7 +117,7 @@ namespace UnitTests.Models
                 }
             };
 
-            string content = JsonConvert.SerializeObject(body);
+            string content = JsonSerializer.Serialize(body);
 
             // Act
             Action action = () => serializer.Deserialize(content);

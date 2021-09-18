@@ -54,13 +54,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("men");
-            responseDocument.SingleData.Attributes["familyName"].Should().Be(newMan.FamilyName);
-            responseDocument.SingleData.Attributes["isRetired"].Should().Be(newMan.IsRetired);
-            responseDocument.SingleData.Attributes["hasBeard"].Should().Be(newMan.HasBeard);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("men");
+            responseDocument.Data.SingleValue.Attributes["familyName"].Should().Be(newMan.FamilyName);
+            responseDocument.Data.SingleValue.Attributes["isRetired"].Should().Be(newMan.IsRetired);
+            responseDocument.Data.SingleValue.Attributes["hasBeard"].Should().Be(newMan.HasBeard);
 
-            int newManId = int.Parse(responseDocument.SingleData.Id);
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -112,8 +112,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            int newManId = int.Parse(responseDocument.SingleData.Id);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
                 }
             };
 
-            string route = "/men/" + existingMan.StringId;
+            string route = $"/men/{existingMan.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -274,8 +274,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            int newManId = int.Parse(responseDocument.SingleData.Id);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -388,8 +388,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            int newManId = int.Parse(responseDocument.SingleData.Id);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

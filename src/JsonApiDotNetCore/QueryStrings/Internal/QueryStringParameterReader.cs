@@ -9,18 +9,18 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 {
     public abstract class QueryStringParameterReader
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly bool _isCollectionRequest;
 
         protected ResourceContext RequestResource { get; }
         protected bool IsAtomicOperationsRequest { get; }
 
-        protected QueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
+        protected QueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _isCollectionRequest = request.IsCollection;
             RequestResource = request.SecondaryResource ?? request.PrimaryResource;
             IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
@@ -36,7 +36,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ResourceFieldAttribute lastField = scope.Fields[^1];
             Type type = lastField is RelationshipAttribute relationship ? relationship.RightType : lastField.Property.PropertyType;
 
-            return _resourceContextProvider.GetResourceContext(type);
+            return _resourceGraph.GetResourceContext(type);
         }
 
         protected void AssertIsCollectionRequest()

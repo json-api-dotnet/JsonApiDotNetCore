@@ -61,14 +61,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            string newWorkItemId = responseDocument.SingleData.Id;
-            httpResponse.Headers.Location.Should().Be("/workItems/" + newWorkItemId);
+            string newWorkItemId = responseDocument.Data.SingleValue.Id;
+            httpResponse.Headers.Location.Should().Be($"/workItems/{newWorkItemId}");
 
             responseDocument.Links.Self.Should().Be("http://localhost/workItems");
             responseDocument.Links.First.Should().BeNull();
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Self.Should().Be("http://localhost" + httpResponse.Headers.Location);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Links.Self.Should().Be($"http://localhost{httpResponse.Headers.Location}");
         }
 
         [Fact]
@@ -98,13 +98,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-            responseDocument.SingleData.Attributes["dueAt"].Should().Be(newWorkItem.DueAt);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.Data.SingleValue.Attributes["dueAt"].Should().Be(newWorkItem.DueAt);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -145,13 +145,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("userAccounts");
-            responseDocument.SingleData.Attributes["firstName"].Should().Be(newUserAccount.FirstName);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(newUserAccount.LastName);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
+            responseDocument.Data.SingleValue.Attributes["firstName"].Should().Be(newUserAccount.FirstName);
+            responseDocument.Data.SingleValue.Attributes["lastName"].Should().Be(newUserAccount.LastName);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            long newUserAccountId = long.Parse(responseDocument.SingleData.Id);
+            long newUserAccountId = long.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -191,12 +191,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroup.Name);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            Guid newGroupId = Guid.Parse(responseDocument.SingleData.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -235,13 +235,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().BeNull();
-            responseDocument.SingleData.Attributes["dueAt"].Should().BeNull();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes["dueAt"].Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -279,12 +279,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -309,8 +309,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 12345678
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.Int32
                             }
                         }
                     }
@@ -325,12 +325,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -360,14 +360,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/rgbColors";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
             error.Detail.Should().BeNull();
@@ -383,14 +383,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing request body.");
             error.Detail.Should().BeNull();
@@ -413,14 +413,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
@@ -434,7 +434,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             {
                 data = new
                 {
-                    type = "doesNotExist",
+                    type = Unknown.ResourceType,
                     attributes = new
                     {
                     }
@@ -444,17 +444,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -472,7 +472,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            const string route = "/doesNotExist";
+            const string route = "/" + Unknown.ResourceType;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -499,14 +499,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
             error.Detail.Should().Be("Expected resource of type 'workItems' in POST request body at endpoint '/workItems', instead of 'rgbColors'.");
@@ -531,17 +531,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body:");
+            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body: <<");
         }
 
         [Fact]
@@ -563,17 +563,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItemGroups";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body:");
+            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body: <<");
         }
 
         [Fact]
@@ -585,17 +585,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItemGroups";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Invalid character after parsing");
+            error.Detail.Should().Match("'{' is invalid after a property name. * - Request body: <<*");
         }
 
         [Fact]
@@ -617,17 +617,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().StartWith("Failed to convert 'not-a-valid-time' of type 'String' to type 'Nullable`1'. - Request body: <<");
+
+            error.Detail.Should().StartWith("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' " +
+                "of type 'String' to type 'Nullable<DateTimeOffset>'. - Request body: <<");
         }
 
         [Fact]
@@ -699,11 +701,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["description"].Should().Be(newDescription);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newDescription);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

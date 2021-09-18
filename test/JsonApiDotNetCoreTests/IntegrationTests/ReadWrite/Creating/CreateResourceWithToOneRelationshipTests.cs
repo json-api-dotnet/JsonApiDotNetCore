@@ -2,13 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -72,11 +72,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
-            string newGroupId = responseDocument.SingleData.Id;
+            string newGroupId = responseDocument.Data.SingleValue.Id;
             newGroupId.Should().NotBeNullOrEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -190,9 +190,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
@@ -201,7 +201,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
             responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -257,11 +257,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["description"].Should().Be(newWorkItem.Description);
-            responseDocument.SingleData.Relationships.Should().HaveCount(1);
-            responseDocument.SingleData.Relationships["assignee"].SingleData.Id.Should().Be(existingUserAccount.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(newWorkItem.Description);
+            responseDocument.Data.SingleValue.Relationships.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Relationships["assignee"].Data.SingleValue.Id.Should().Be(existingUserAccount.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
@@ -270,7 +270,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccount.LastName);
             responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -298,7 +298,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                id = 12345678
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -308,14 +308,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().StartWith("Expected 'type' element in 'assignee' relationship. - Request body: <<");
@@ -336,8 +336,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                         {
                             data = new
                             {
-                                type = "doesNotExist",
-                                id = 12345678
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.For<UserAccount, long>()
                             }
                         }
                     }
@@ -347,17 +347,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith("Resource type 'doesNotExist' does not exist. - Request body: <<");
+            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
         }
 
         [Fact]
@@ -385,14 +385,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             error.Detail.Should().StartWith("Expected 'id' element in 'assignee' relationship. - Request body: <<");
@@ -402,6 +402,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         public async Task Cannot_create_with_unknown_relationship_ID()
         {
             // Arrange
+            string userAccountId = Unknown.StringId.For<UserAccount, long>();
+
             var requestBody = new
             {
                 data = new
@@ -414,7 +416,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                             data = new
                             {
                                 type = "userAccounts",
-                                id = 12345678
+                                id = userAccountId
                             }
                         }
                     }
@@ -424,17 +426,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be("Related resource of type 'userAccounts' with ID '12345678' in relationship 'assignee' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'userAccounts' with ID '{userAccountId}' in relationship 'assignee' does not exist.");
         }
 
         [Fact]
@@ -463,14 +465,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             error.Detail.Should().StartWith("Relationship 'assignee' contains incompatible resource type 'rgbColors'. - Request body: <<");
@@ -515,7 +517,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 }
             };
 
-            string requestBodyText = JsonConvert.SerializeObject(requestBody).Replace("assignee_duplicate", "assignee");
+            string requestBodyText = JsonSerializer.Serialize(requestBody).Replace("assignee_duplicate", "assignee");
 
             const string route = "/workItems?include=assignee";
 
@@ -525,9 +527,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes.Should().NotBeEmpty();
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Type.Should().Be("userAccounts");
@@ -536,7 +538,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             responseDocument.Included[0].Attributes["lastName"].Should().Be(existingUserAccounts[1].LastName);
             responseDocument.Included[0].Relationships.Should().NotBeEmpty();
 
-            int newWorkItemId = int.Parse(responseDocument.SingleData.Id);
+            int newWorkItemId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -584,14 +586,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
             error.Detail.Should().StartWith("Expected single data element for 'assignee' relationship. - Request body: <<");
@@ -626,16 +628,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/workItems";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Local IDs cannot be used at this endpoint.");
+            error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().StartWith("Local IDs cannot be used at this endpoint. - Request body: <<");
         }
     }

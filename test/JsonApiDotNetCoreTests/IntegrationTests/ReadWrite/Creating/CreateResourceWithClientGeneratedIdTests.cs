@@ -63,17 +63,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
+                groupInDatabase.Name.Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
             });
 
             PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -108,18 +108,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItemGroups");
-            responseDocument.SingleData.Id.Should().Be(newGroup.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["name"].Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
-            responseDocument.SingleData.Relationships.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
+            responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be(newGroup.Name + ImplicitlyChangingWorkItemGroupDefinition.Suffix);
+                groupInDatabase.Name.Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
             });
 
             PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
@@ -237,14 +237,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             const string route = "/rgbColors";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Another resource with the specified ID already exists.");
             error.Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");

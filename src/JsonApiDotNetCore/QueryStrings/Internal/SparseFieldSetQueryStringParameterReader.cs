@@ -30,11 +30,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         bool IQueryStringParameterReader.AllowEmptyValue => true;
 
-        public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider)
-            : base(request, resourceContextProvider)
+        public SparseFieldSetQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
+            : base(request, resourceGraph)
         {
-            _sparseFieldTypeParser = new SparseFieldTypeParser(resourceContextProvider);
-            _sparseFieldSetParser = new SparseFieldSetParser(resourceContextProvider, ValidateSingleField);
+            _sparseFieldTypeParser = new SparseFieldTypeParser(resourceGraph);
+            _sparseFieldSetParser = new SparseFieldSetParser(resourceGraph, ValidateSingleField);
         }
 
         protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (sparseFieldSet == null)
             {
                 // We add ID on an incoming empty fieldset, so that callers can distinguish between no fieldset and an empty one.
-                AttrAttribute idAttribute = resourceContext.Attributes.Single(attribute => attribute.Property.Name == nameof(Identifiable.Id));
+                AttrAttribute idAttribute = resourceContext.GetAttributeByPropertyName(nameof(Identifiable.Id));
                 return new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
             }
 

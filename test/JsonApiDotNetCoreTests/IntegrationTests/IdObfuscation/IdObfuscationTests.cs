@@ -44,8 +44,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             });
 
             var codec = new HexadecimalCodec();
-            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(99999999)}')";
+            string route = $"/bankAccounts?filter=any(id,'{accounts[1].StringId}','{codec.Encode(Unknown.TypedId.Int32)}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -70,8 +70,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
         [Fact]
@@ -81,14 +81,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             const string route = "/bankAccounts/not-a-hex-value";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Invalid ID value.");
             error.Detail.Should().Be("The value 'not-a-hex-value' is not a valid hexadecimal value.");
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/debitCards/" + card.StringId;
+            string route = $"/debitCards/{card.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -114,8 +114,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(card.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
         }
 
         [Fact]
@@ -139,9 +139,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(account.Cards[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
         }
 
         [Fact]
@@ -165,8 +165,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(account.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
@@ -195,8 +195,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(account.Cards[0].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         }
 
         [Fact]
@@ -244,11 +244,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Attributes["ownerName"].Should().Be(newCard.OwnerName);
-            responseDocument.SingleData.Attributes["pinCode"].Should().Be(newCard.PinCode);
+            responseDocument.Data.SingleValue.Attributes["ownerName"].Should().Be(newCard.OwnerName);
+            responseDocument.Data.SingleValue.Attributes["pinCode"].Should().Be(newCard.PinCode);
 
             var codec = new HexadecimalCodec();
-            int newCardId = codec.Decode(responseDocument.SingleData.Id);
+            int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -307,7 +307,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 }
             };
 
-            string route = "/bankAccounts/" + existingAccount.StringId;
+            string route = $"/bankAccounts/{existingAccount.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -430,7 +430,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/bankAccounts/" + existingAccount.StringId;
+            string route = $"/bankAccounts/{existingAccount.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -449,23 +449,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         }
 
         [Fact]
-        public async Task Cannot_delete_missing_resource()
+        public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
             var codec = new HexadecimalCodec();
-            string stringId = codec.Encode(99999999);
+            string stringId = codec.Encode(Unknown.TypedId.Int32);
 
-            string route = "/bankAccounts/" + stringId;
+            string route = $"/bankAccounts/{stringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'bankAccounts' with ID '{stringId}' does not exist.");

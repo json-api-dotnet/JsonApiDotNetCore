@@ -7,11 +7,12 @@
     <SwashbuckleVersion>6.2.*</SwashbuckleVersion>
     <JsonApiDotNetCoreVersionPrefix>4.2.0</JsonApiDotNetCoreVersionPrefix>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All" />
-    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.6.0" PrivateAssets="All" />
+    <PackageReference Include="CSharpGuidelinesAnalyzer" Version="3.7.0" PrivateAssets="All" />
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)CSharpGuidelinesAnalyzer.config" Visible="False" />
   </ItemGroup>
 
@@ -23,11 +24,11 @@
 
   <!-- Test Project Dependencies -->
   <PropertyGroup>
-    <BogusVersion>33.0.2</BogusVersion>
+    <BogusVersion>33.1.1</BogusVersion>
     <CoverletVersion>3.1.0</CoverletVersion>
-    <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
+    <FluentAssertionsVersion>6.1.0</FluentAssertionsVersion>
     <MoqVersion>4.16.1</MoqVersion>
     <XUnitVersion>2.4.*</XUnitVersion>
-    <TestSdkVersion>16.10.0</TestSdkVersion>
+    <TestSdkVersion>16.11.0</TestSdkVersion>
   </PropertyGroup>
 </Project>

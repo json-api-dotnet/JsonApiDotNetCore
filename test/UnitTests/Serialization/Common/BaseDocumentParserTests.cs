@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 using UnitTests.TestModels;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace UnitTests.Serialization.Common
 
         public BaseDocumentParserTests()
         {
-            _deserializer = new TestDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()));
+            _deserializer = new TestDeserializer(ResourceGraph, new ResourceFactory(new ServiceContainer()), Options);
         }
 
         [Fact]
@@ -27,14 +27,14 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "testResource",
                     Id = "1"
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (TestResource)_deserializer.Deserialize(body);
@@ -48,7 +48,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             var content = new Document();
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             object result = _deserializer.Deserialize(body);
@@ -63,17 +63,17 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new List<ResourceObject>
+                Data = new SingleOrManyData<ResourceObject>(new List<ResourceObject>
                 {
                     new()
                     {
                         Type = "testResource",
                         Id = "1"
                     }
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
@@ -87,10 +87,10 @@ namespace UnitTests.Serialization.Common
         {
             var content = new Document
             {
-                Data = new List<ResourceObject>()
+                Data = new SingleOrManyData<ResourceObject>(Array.Empty<ResourceObject>())
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (IEnumerable<IIdentifiable>)_deserializer.Deserialize(body);
@@ -104,12 +104,12 @@ namespace UnitTests.Serialization.Common
         [InlineData("stringField", null)]
         [InlineData("intField", null, true)]
         [InlineData("intField", 1)]
-        [InlineData("intField", "1")]
+        [InlineData("intField", "1", true)]
         [InlineData("nullableIntField", null)]
-        [InlineData("nullableIntField", "1")]
+        [InlineData("nullableIntField", 1)]
         [InlineData("guidField", "bad format", true)]
         [InlineData("guidField", "1a68be43-cc84-4924-a421-7f4d614b7781")]
-        [InlineData("dateTimeField", "9/11/2019 11:41:40 AM")]
+        [InlineData("dateTimeField", "9/11/2019 11:41:40 AM", true)]
         [InlineData("dateTimeField", null, true)]
         [InlineData("nullableDateTimeField", null)]
         public void DeserializeAttributes_VariousDataTypes_CanDeserialize(string member, object value, bool expectError = false)
@@ -117,7 +117,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "testResource",
                     Id = "1",
@@ -125,10 +125,10 @@ namespace UnitTests.Serialization.Common
                     {
                         [member] = value
                     }
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             Func<TestResource> action = () => (TestResource)_deserializer.Deserialize(body);
@@ -136,13 +136,13 @@ namespace UnitTests.Serialization.Common
             // Assert
             if (expectError)
             {
-                Assert.ThrowsAny<FormatException>(action);
+                Assert.ThrowsAny<JsonApiSerializationException>(action);
             }
             else
             {
                 TestResource resource = action();
 
-                PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").Attributes.Single(attr => attr.PublicName == member).Property;
+                PropertyInfo pi = ResourceGraph.GetResourceContext("testResource").GetAttributeByPublicName(member).Property;
                 object deserializedValue = pi.GetValue(resource);
 
                 if (member == "intField")
@@ -153,7 +153,7 @@ namespace UnitTests.Serialization.Common
                 {
                     Assert.Null(deserializedValue);
                 }
-                else if (member == "nullableIntField" && (string)value == "1")
+                else if (member == "nullableIntField" && (int?)value == 1)
                 {
                     Assert.Equal(1, deserializedValue);
                 }
@@ -178,7 +178,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "testResource",
                     Id = "1",
@@ -189,10 +189,10 @@ namespace UnitTests.Serialization.Common
                             ["compoundName"] = "testName"
                         }
                     }
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (TestResource)_deserializer.Deserialize(body);
@@ -208,7 +208,7 @@ namespace UnitTests.Serialization.Common
             // Arrange
             var content = new Document
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "testResource-with-list",
                     Id = "1",
@@ -222,10 +222,10 @@ namespace UnitTests.Serialization.Common
                             }
                         }
                     }
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (TestResourceWithList)_deserializer.Deserialize(body);
@@ -242,16 +242,16 @@ namespace UnitTests.Serialization.Common
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents");
 
-            content.SingleData.Relationships["dependents"] = new RelationshipEntry
+            content.Data.SingleValue.Relationships["dependents"] = new RelationshipObject
             {
-                Data = new ResourceIdentifierObject
+                Data = new SingleOrManyData<ResourceIdentifierObject>(new ResourceIdentifierObject
                 {
                     Type = "Dependents",
                     Id = "1"
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             Action action = () => _deserializer.Deserialize(body);
@@ -266,19 +266,19 @@ namespace UnitTests.Serialization.Common
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
 
-            content.SingleData.Relationships["dependent"] = new RelationshipEntry
+            content.Data.SingleValue.Relationships["dependent"] = new RelationshipObject
             {
-                Data = new List<ResourceIdentifierObject>
+                Data = new SingleOrManyData<ResourceIdentifierObject>(new List<ResourceIdentifierObject>
                 {
                     new()
                     {
                         Type = "Dependent",
                         Id = "1"
                     }
-                }
+                })
             };
 
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             Action action = () => _deserializer.Deserialize(body);
@@ -292,7 +292,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
@@ -308,7 +308,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOnePrincipals", "dependent", "oneToOneDependents");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToOnePrincipal)_deserializer.Deserialize(body);
@@ -324,7 +324,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOneDependents", "principal");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
@@ -339,7 +339,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOneRequiredDependents", "principal");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToOneRequiredDependent)_deserializer.Deserialize(body);
@@ -354,7 +354,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToOneDependents", "principal", "oneToOnePrincipals");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToOneDependent)_deserializer.Deserialize(body);
@@ -371,7 +371,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyDependents", "principal");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
@@ -387,7 +387,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToMany-requiredDependents", "principal");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToManyRequiredDependent)_deserializer.Deserialize(body);
@@ -403,7 +403,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyDependents", "principal", "oneToManyPrincipals");
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToManyDependent)_deserializer.Deserialize(body);
@@ -420,7 +420,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", isToManyData: true);
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);
@@ -436,7 +436,7 @@ namespace UnitTests.Serialization.Common
         {
             // Arrange
             Document content = CreateDocumentWithRelationships("oneToManyPrincipals", "dependents", "oneToManyDependents", true);
-            string body = JsonConvert.SerializeObject(content);
+            string body = JsonSerializer.Serialize(content, SerializerWriteOptions);
 
             // Act
             var result = (OneToManyPrincipal)_deserializer.Deserialize(body);

@@ -9,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
         public string SupportEmailAddress { get; }
 
         public ConsumerArticleIsNoLongerAvailableException(string articleCode, string supportEmailAddress)
-            : base(new Error(HttpStatusCode.Gone)
+            : base(new ErrorObject(HttpStatusCode.Gone)
             {
                 Title = "The requested article is no longer available.",
                 Detail = $"Article with code '{articleCode}' is no longer available."

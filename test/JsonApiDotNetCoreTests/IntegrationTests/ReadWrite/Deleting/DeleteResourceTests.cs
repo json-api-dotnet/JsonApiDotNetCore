@@ -37,7 +37,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -56,23 +56,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
         }
 
         [Fact]
-        public async Task Cannot_delete_missing_resource()
+        public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
-            const string route = "/workItems/99999999";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -88,7 +90,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/rgbColors/" + existingColor.StringId;
+            string route = $"/rgbColors/{existingColor.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -123,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItemGroups/" + existingGroup.StringId;
+            string route = $"/workItemGroups/{existingGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -159,7 +161,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -195,7 +197,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + existingWorkItem.StringId;
+            string route = $"/workItems/{existingWorkItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);

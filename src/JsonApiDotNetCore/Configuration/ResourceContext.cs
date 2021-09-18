@@ -7,12 +7,13 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Provides metadata for a resource, such as its attributes and relationships.
+    /// Metadata about the shape of a JSON:API resource in the resource graph.
     /// </summary>
     [PublicAPI]
     public sealed class ResourceContext
     {
-        private IReadOnlyCollection<ResourceFieldAttribute> _fields;
+        private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = new();
+        private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = new();
 
         /// <summary>
         /// The publicly exposed resource name.
@@ -30,6 +31,11 @@ namespace JsonApiDotNetCore.Configuration
         public Type IdentityType { get; }
 
         /// <summary>
+        /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields.
+        /// </summary>
+        public IReadOnlyCollection<ResourceFieldAttribute> Fields { get; }
+
+        /// <summary>
         /// Exposed resource attributes. See https://jsonapi.org/format/#document-resource-object-attributes.
         /// </summary>
         public IReadOnlyCollection<AttrAttribute> Attributes { get; }
@@ -43,11 +49,6 @@ namespace JsonApiDotNetCore.Configuration
         /// Related entities that are not exposed as resource relationships.
         /// </summary>
         public IReadOnlyCollection<EagerLoadAttribute> EagerLoads { get; }
-
-        /// <summary>
-        /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields.
-        /// </summary>
-        public IReadOnlyCollection<ResourceFieldAttribute> Fields => _fields ??= Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
 
         /// <summary>
         /// Configures which links to show in the <see cref="Serialization.Objects.TopLevelLinks" /> object for this resource type. Defaults to
@@ -92,12 +93,79 @@ namespace JsonApiDotNetCore.Configuration
             PublicName = publicName;
             ResourceType = resourceType;
             IdentityType = identityType;
+            Fields = attributes.Cast<ResourceFieldAttribute>().Concat(relationships).ToArray();
             Attributes = attributes;
             Relationships = relationships;
             EagerLoads = eagerLoads;
             TopLevelLinks = topLevelLinks;
             ResourceLinks = resourceLinks;
             RelationshipLinks = relationshipLinks;
+
+            foreach (ResourceFieldAttribute field in Fields)
+            {
+                _fieldsByPublicName.Add(field.PublicName, field);
+                _fieldsByPropertyName.Add(field.Property.Name, field);
+            }
+        }
+
+        public AttrAttribute GetAttributeByPublicName(string publicName)
+        {
+            AttrAttribute attribute = TryGetAttributeByPublicName(publicName);
+            return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on resource type '{PublicName}'.");
+        }
+
+        public AttrAttribute TryGetAttributeByPublicName(string publicName)
+        {
+            ArgumentGuard.NotNull(publicName, nameof(publicName));
+
+            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute field) && field is AttrAttribute attribute ? attribute : null;
+        }
+
+        public AttrAttribute GetAttributeByPropertyName(string propertyName)
+        {
+            AttrAttribute attribute = TryGetAttributeByPropertyName(propertyName);
+
+            return attribute ??
+                throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ResourceType.Name}'.");
+        }
+
+        public AttrAttribute TryGetAttributeByPropertyName(string propertyName)
+        {
+            ArgumentGuard.NotNull(propertyName, nameof(propertyName));
+
+            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute field) && field is AttrAttribute attribute ? attribute : null;
+        }
+
+        public RelationshipAttribute GetRelationshipByPublicName(string publicName)
+        {
+            RelationshipAttribute relationship = TryGetRelationshipByPublicName(publicName);
+            return relationship ?? throw new InvalidOperationException($"Relationship '{publicName}' does not exist on resource type '{PublicName}'.");
+        }
+
+        public RelationshipAttribute TryGetRelationshipByPublicName(string publicName)
+        {
+            ArgumentGuard.NotNull(publicName, nameof(publicName));
+
+            return _fieldsByPublicName.TryGetValue(publicName, out ResourceFieldAttribute field) && field is RelationshipAttribute relationship
+                ? relationship
+                : null;
+        }
+
+        public RelationshipAttribute GetRelationshipByPropertyName(string propertyName)
+        {
+            RelationshipAttribute relationship = TryGetRelationshipByPropertyName(propertyName);
+
+            return relationship ??
+                throw new InvalidOperationException($"Relationship for property '{propertyName}' does not exist on resource type '{ResourceType.Name}'.");
+        }
+
+        public RelationshipAttribute TryGetRelationshipByPropertyName(string propertyName)
+        {
+            ArgumentGuard.NotNull(propertyName, nameof(propertyName));
+
+            return _fieldsByPropertyName.TryGetValue(propertyName, out ResourceFieldAttribute field) && field is RelationshipAttribute relationship
+                ? relationship
+                : null;
         }
 
         public override string ToString()

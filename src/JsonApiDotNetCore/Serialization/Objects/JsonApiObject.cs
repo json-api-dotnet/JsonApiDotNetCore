@@ -1,26 +1,29 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// https://jsonapi.org/format/1.1/#document-jsonapi-object.
+    /// See https://jsonapi.org/format/1.1/#document-jsonapi-object.
     /// </summary>
+    [PublicAPI]
     public sealed class JsonApiObject
     {
-        [JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("version")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Version { get; set; }
 
-        [JsonProperty("ext", NullValueHandling = NullValueHandling.Ignore)]
-        public ICollection<string> Ext { get; set; }
+        [JsonPropertyName("ext")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IList<string> Ext { get; set; }
 
-        [JsonProperty("profile", NullValueHandling = NullValueHandling.Ignore)]
-        public ICollection<string> Profile { get; set; }
+        [JsonPropertyName("profile")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IList<string> Profile { get; set; }
 
-        /// <summary>
-        /// see "meta" in https://jsonapi.org/format/1.1/#document-meta
-        /// </summary>
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
     }
 }

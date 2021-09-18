@@ -2,12 +2,24 @@ using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
 {
-    internal sealed class TraceLogWriter<T>
+    internal abstract class TraceLogWriter
+    {
+        protected static readonly JsonSerializerOptions SerializerOptions = new()
+        {
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
+    }
+
+    internal sealed class TraceLogWriter<T> : TraceLogWriter
     {
         private readonly ILogger _logger;
 
@@ -126,12 +138,9 @@ namespace JsonApiDotNetCore.Middleware
         {
             try
             {
-                // It turns out setting ReferenceLoopHandling to something other than Error only takes longer to fail.
-                // This is because Newtonsoft.Json always tries to serialize the first element in a graph. And with
-                // EF Core models, that one is often recursive, resulting in either StackOverflowException or OutOfMemoryException.
-                return JsonConvert.SerializeObject(value, Formatting.Indented);
+                return JsonSerializer.Serialize(value, SerializerOptions);
             }
-            catch (JsonSerializationException)
+            catch (JsonException)
             {
                 // Never crash as a result of logging, this is best-effort only.
                 return "object";

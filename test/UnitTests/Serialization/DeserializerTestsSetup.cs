@@ -1,9 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text.Json;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -12,10 +16,16 @@ namespace UnitTests.Serialization
 {
     public class DeserializerTestsSetup : SerializationTestsSetupBase
     {
+        protected readonly JsonApiOptions Options = new();
+        protected readonly JsonSerializerOptions SerializerWriteOptions;
+
         protected Mock<IHttpContextAccessor> MockHttpContextAccessor { get; }
 
         protected DeserializerTestsSetup()
         {
+            Options.SerializerOptions.Converters.Add(new ResourceObjectConverter(ResourceGraph));
+
+            SerializerWriteOptions = ((IJsonApiOptions)Options).SerializerWriteOptions;
             MockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             MockHttpContextAccessor.Setup(mock => mock.HttpContext).Returns(new DefaultHttpContext());
         }
@@ -24,7 +34,7 @@ namespace UnitTests.Serialization
             bool isToManyData = false)
         {
             Document content = CreateDocumentWithRelationships(primaryType);
-            content.SingleData.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
+            content.Data.SingleValue.Relationships.Add(relationshipMemberName, CreateRelationshipData(relatedType, isToManyData));
             return content;
         }
 
@@ -32,18 +42,18 @@ namespace UnitTests.Serialization
         {
             return new()
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Id = "1",
                     Type = primaryType,
-                    Relationships = new Dictionary<string, RelationshipEntry>()
-                }
+                    Relationships = new Dictionary<string, RelationshipObject>()
+                })
             };
         }
 
-        protected RelationshipEntry CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
+        protected RelationshipObject CreateRelationshipData(string relatedType = null, bool isToManyData = false, string id = "10")
         {
-            var entry = new RelationshipEntry();
+            var relationshipObject = new RelationshipObject();
 
             ResourceIdentifierObject rio = relatedType == null
                 ? null
@@ -55,21 +65,22 @@ namespace UnitTests.Serialization
 
             if (isToManyData)
             {
-                entry.Data = relatedType != null ? rio.AsList() : new List<ResourceIdentifierObject>();
+                IList<ResourceIdentifierObject> rios = relatedType != null ? rio.AsList() : Array.Empty<ResourceIdentifierObject>();
+                relationshipObject.Data = new SingleOrManyData<ResourceIdentifierObject>(rios);
             }
             else
             {
-                entry.Data = rio;
+                relationshipObject.Data = new SingleOrManyData<ResourceIdentifierObject>(rio);
             }
 
-            return entry;
+            return relationshipObject;
         }
 
         protected Document CreateTestResourceDocument()
         {
             return new()
             {
-                Data = new ResourceObject
+                Data = new SingleOrManyData<ResourceObject>(new ResourceObject
                 {
                     Type = "testResource",
                     Id = "1",
@@ -79,25 +90,28 @@ namespace UnitTests.Serialization
                         ["intField"] = 1,
                         ["nullableIntField"] = null,
                         ["guidField"] = "1a68be43-cc84-4924-a421-7f4d614b7781",
-                        ["dateTimeField"] = "9/11/2019 11:41:40 AM"
+                        ["dateTimeField"] = DateTime.Parse("9/11/2019 11:41:40 AM", CultureInfo.InvariantCulture)
                     }
-                }
+                })
             };
         }
 
         protected sealed class TestDeserializer : BaseDeserializer
         {
-            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
+            private readonly IJsonApiOptions _options;
+
+            public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
                 : base(resourceGraph, resourceFactory)
             {
+                _options = options;
             }
 
             public object Deserialize(string body)
             {
-                return DeserializeBody(body);
+                return DeserializeData(body, _options.SerializerReadOptions);
             }
 
-            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipEntry data = null)
+            protected override void AfterProcessField(IIdentifiable resource, ResourceFieldAttribute field, RelationshipObject data = null)
             {
             }
         }

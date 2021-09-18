@@ -19,7 +19,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             if (!value.StartsWith("x", StringComparison.Ordinal))
             {
-                throw new JsonApiException(new Error(HttpStatusCode.BadRequest)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.BadRequest)
                 {
                     Title = "Invalid ID value.",
                     Detail = $"The value '{value}' is not a valid hexadecimal value."
@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             }
 
             string stringValue = value.ToString();
-            return 'x' + ToHexString(stringValue);
+            return $"x{ToHexString(stringValue)}";
         }
 
         private static string ToHexString(string value)

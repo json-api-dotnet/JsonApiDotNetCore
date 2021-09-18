@@ -45,11 +45,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 
             responseDocument.Links.Should().BeNull();
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Should().BeNull();
-            responseDocument.SingleData.Relationships["photo"].Links.Self.Should().BeNull();
-            responseDocument.SingleData.Relationships["photo"].Links.Related.Should().NotBeNull();
-            responseDocument.SingleData.Relationships["album"].Links.Should().BeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Links.Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Self.Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships["album"].Links.Should().BeNull();
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -85,11 +85,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 
             responseDocument.Links.Should().BeNull();
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Links.Should().BeNull();
-            responseDocument.SingleData.Relationships["photo"].Links.Self.Should().BeNull();
-            responseDocument.SingleData.Relationships["photo"].Links.Related.Should().NotBeNull();
-            responseDocument.SingleData.Relationships.Should().NotContainKey("album");
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Links.Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Self.Should().BeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("album");
         }
     }
 }

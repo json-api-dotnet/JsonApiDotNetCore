@@ -4,10 +4,10 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>
-    /// Central place to handle all exceptions. Log them and translate into Error response.
+    /// Central place to handle all exceptions, such as log them and translate into error response.
     /// </summary>
     public interface IExceptionHandler
     {
-        ErrorDocument HandleException(Exception exception);
+        Document HandleException(Exception exception);
     }
 }

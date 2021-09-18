@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
-            string missingUserId = Guid.NewGuid().ToString();
+            string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                     new
                     {
                         type = "domainUsers",
-                        id = missingUserId
+                        id = unknownUserId
                     }
                 }
             };
@@ -80,17 +80,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             string route = $"/domainGroups/{existingGroup.StringId}/relationships/users";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("A related resource does not exist.");
-            error.Detail.Should().Be($"Related resource of type 'domainUsers' with ID '{missingUserId}' in relationship 'users' does not exist.");
+            error.Detail.Should().Be($"Related resource of type 'domainUsers' with ID '{unknownUserId}' in relationship 'users' does not exist.");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

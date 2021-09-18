@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
 {
     public sealed class AtomicSerializationTests : IClassFixture<IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext>>
     {
+        private const string JsonDateTimeOffsetFormatSpecifier = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
+
         private readonly IntegrationTestContext<TestableStartup<OperationsDbContext>, OperationsDbContext> _testContext;
         private readonly OperationsFakers _fakers = new();
 
@@ -30,6 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.IncludeExceptionStackTraceInErrors = false;
             options.IncludeJsonApiVersion = true;
             options.AllowClientGeneratedIds = true;
         }
@@ -38,8 +42,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
         public async Task Includes_version_with_ext_on_operations_endpoint()
         {
             // Arrange
-            const int newArtistId = 12345;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            Performer newPerformer = _fakers.Performer.Generate();
+            newPerformer.Id = Unknown.TypedId.Int32;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -56,10 +60,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
                         data = new
                         {
                             type = "performers",
-                            id = newArtistId,
+                            id = newPerformer.StringId,
                             attributes = new
                             {
-                                artistName = newArtistName
+                                artistName = newPerformer.ArtistName,
+                                bornAt = newPerformer.BornAt
                             }
                         }
                     }
@@ -85,14 +90,67 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
     {
       ""data"": {
         ""type"": ""performers"",
-        ""id"": """ + newArtistId + @""",
+        ""id"": """ + newPerformer.StringId + @""",
         ""attributes"": {
-          ""artistName"": """ + newArtistName + @""",
-          ""bornAt"": ""0001-01-01T01:00:00+01:00""
+          ""artistName"": """ + newPerformer.ArtistName + @""",
+          ""bornAt"": """ + newPerformer.BornAt.ToString(JsonDateTimeOffsetFormatSpecifier) + @"""
         },
         ""links"": {
-          ""self"": ""http://localhost/performers/" + newArtistId + @"""
+          ""self"": ""http://localhost/performers/" + newPerformer.StringId + @"""
         }
+      }
+    }
+  ]
+}");
+        }
+
+        [Fact]
+        public async Task Includes_version_with_ext_on_error_in_operations_endpoint()
+        {
+            // Arrange
+            string musicTrackId = Unknown.StringId.For<MusicTrack, Guid>();
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "remove",
+                        @ref = new
+                        {
+                            type = "musicTracks",
+                            id = musicTrackId
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAtomicAsync<string>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
+
+            responseDocument.Should().BeJson(@"{
+  ""jsonapi"": {
+    ""version"": ""1.1"",
+    ""ext"": [
+      ""https://jsonapi.org/ext/atomic""
+    ]
+  },
+  ""errors"": [
+    {
+      ""id"": """ + errorId + @""",
+      ""status"": ""404"",
+      ""title"": ""The requested resource does not exist."",
+      ""detail"": ""Resource of type 'musicTracks' with ID '" + musicTrackId + @"' does not exist."",
+      ""source"": {
+        ""pointer"": ""/atomic:operations[0]""
       }
     }
   ]

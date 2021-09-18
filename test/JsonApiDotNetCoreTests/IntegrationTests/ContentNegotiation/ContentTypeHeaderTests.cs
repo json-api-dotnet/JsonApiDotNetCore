@@ -88,18 +88,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = "text/html";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'text/html' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Act
             // ReSharper disable once RedundantArgumentDefaultValue
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
@@ -156,7 +156,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -179,21 +179,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; profile=something";
+            string contentType = $"{HeaderConstants.MediaType}; profile=something";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -213,21 +213,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; ext=something";
+            string contentType = $"{HeaderConstants.MediaType}; ext=something";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -250,18 +250,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             const string contentType = HeaderConstants.AtomicOperationsMediaType;
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -281,21 +281,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; charset=ISO-8859-4";
+            string contentType = $"{HeaderConstants.MediaType}; charset=ISO-8859-4";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -315,21 +315,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             };
 
             const string route = "/policies";
-            const string contentType = HeaderConstants.MediaType + "; unknown=unexpected";
+            string contentType = $"{HeaderConstants.MediaType}; unknown=unexpected";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.Header.Should().Be("Content-Type");
         }
 
         [Fact]
@@ -360,8 +360,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Act
             // ReSharper disable once RedundantArgumentDefaultValue
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) =
-                await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody, contentType);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody, contentType);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
@@ -370,10 +369,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be(detail);
+            error.Source.Header.Should().Be("Content-Type");
         }
     }
 }

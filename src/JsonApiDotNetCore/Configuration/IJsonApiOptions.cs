@@ -1,9 +1,8 @@
 using System;
 using System.Data;
+using System.Text.Json;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
@@ -12,15 +11,6 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     public interface IJsonApiOptions
     {
-        internal NamingStrategy SerializerNamingStrategy
-        {
-            get
-            {
-                var contractResolver = SerializerSettings.ContractResolver as DefaultContractResolver;
-                return contractResolver?.NamingStrategy ?? JsonApiOptions.DefaultNamingStrategy;
-            }
-        }
-
         /// <summary>
         /// The URL prefix to use for exposed endpoints.
         /// </summary>
@@ -40,7 +30,7 @@ namespace JsonApiDotNetCore.Configuration
         bool IncludeJsonApiVersion { get; }
 
         /// <summary>
-        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorMeta" /> objects. False by default.
+        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorObject.Meta" />. False by default.
         /// </summary>
         bool IncludeExceptionStackTraceInErrors { get; }
 
@@ -88,7 +78,7 @@ namespace JsonApiDotNetCore.Configuration
         LinkTypes RelationshipLinks { get; }
 
         /// <summary>
-        /// Whether or not the total resource count should be included in all document-level meta objects. False by default.
+        /// Whether or not the total resource count should be included in top-level meta objects. This requires an additional database query. False by default.
         /// </summary>
         bool IncludeTotalResourceCount { get; }
 
@@ -129,18 +119,6 @@ namespace JsonApiDotNetCore.Configuration
         bool EnableLegacyFilterNotation { get; }
 
         /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.NullValueHandling" /> serialization setting can be controlled using a query string
-        /// parameter. False by default.
-        /// </summary>
-        bool AllowQueryStringOverrideForSerializerNullValueHandling { get; }
-
-        /// <summary>
-        /// Determines whether the <see cref="JsonSerializerSettings.DefaultValueHandling" /> serialization setting can be controlled using a query string
-        /// parameter. False by default.
-        /// </summary>
-        bool AllowQueryStringOverrideForSerializerDefaultValueHandling { get; }
-
-        /// <summary>
         /// Controls how many levels deep includes are allowed to be nested. For example, MaximumIncludeDepth=1 would allow ?include=articles but not
         /// ?include=articles.revisions. <c>null</c> by default, which means unconstrained.
         /// </summary>
@@ -158,18 +136,25 @@ namespace JsonApiDotNetCore.Configuration
         IsolationLevel? TransactionIsolationLevel { get; }
 
         /// <summary>
-        /// Specifies the settings that are used by the <see cref="JsonSerializer" />. Note that at some places a few settings are ignored, to ensure JSON:API
-        /// spec compliance.
+        /// Enables to customize the settings that are used by the <see cref="JsonSerializer" />.
+        /// </summary>
         /// <example>
-        /// The next example changes the naming convention to kebab casing.
+        /// The next example sets the naming convention to camel casing.
         /// <code><![CDATA[
-        /// options.SerializerSettings.ContractResolver = new DefaultContractResolver
-        /// {
-        ///     NamingStrategy = new KebabCaseNamingStrategy()
-        /// };
+        /// options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        /// options.SerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
         /// ]]></code>
         /// </example>
+        JsonSerializerOptions SerializerOptions { get; }
+
+        /// <summary>
+        /// Gets the settings used for deserializing request bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
         /// </summary>
-        JsonSerializerSettings SerializerSettings { get; }
+        JsonSerializerOptions SerializerReadOptions { get; }
+
+        /// <summary>
+        /// Gets the settings used for serializing response bodies. This value is based on <see cref="SerializerOptions" /> and is intended for internal use.
+        /// </summary>
+        JsonSerializerOptions SerializerWriteOptions { get; }
     }
 }

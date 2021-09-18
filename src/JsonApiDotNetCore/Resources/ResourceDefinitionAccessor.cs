@@ -16,15 +16,15 @@ namespace JsonApiDotNetCore.Resources
     [PublicAPI]
     public class ResourceDefinitionAccessor : IResourceDefinitionAccessor
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IServiceProvider _serviceProvider;
 
-        public ResourceDefinitionAccessor(IResourceContextProvider resourceContextProvider, IServiceProvider serviceProvider)
+        public ResourceDefinitionAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _serviceProvider = serviceProvider;
         }
 
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCore.Resources
 
         protected virtual object ResolveResourceDefinition(Type resourceType)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {

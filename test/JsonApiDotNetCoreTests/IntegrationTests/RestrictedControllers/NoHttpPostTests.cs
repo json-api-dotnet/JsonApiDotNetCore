@@ -51,14 +51,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
             const string route = "/tables";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.MethodNotAllowed);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.MethodNotAllowed);
             error.Title.Should().Be("The request method is not allowed.");
             error.Detail.Should().Be("Endpoint does not support POST requests.");
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 }
             };
 
-            string route = "/tables/" + existingTable.StringId;
+            string route = $"/tables/{existingTable.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/tables/" + existingTable.StringId;
+            string route = $"/tables/{existingTable.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, _) = await _testContext.ExecuteDeleteAsync<string>(route);

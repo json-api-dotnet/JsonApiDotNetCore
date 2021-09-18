@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -9,7 +10,6 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             var consumerArticle = new ConsumerArticle
             {
-                Code = ConsumerArticleService.UnavailableArticlePrefix + "123"
+                Code = $"{ConsumerArticleService.UnavailableArticlePrefix}123"
             };
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -64,21 +64,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/consumerArticles/" + consumerArticle.StringId;
+            string route = $"/consumerArticles/{consumerArticle.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
-            error.Meta.Data["support"].Should().Be("Please contact us for info about similar articles at company@email.com.");
+            ((JsonElement)error.Meta["support"]).GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
@@ -100,22 +100,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/throwingArticles/" + throwingArticle.StringId;
+            string route = $"/throwingArticles/{throwingArticle.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            IEnumerable<string> stackTraceLines = ((JArray)error.Meta.Data["stackTrace"]).Select(token => token.Value<string>());
+            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
             stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
