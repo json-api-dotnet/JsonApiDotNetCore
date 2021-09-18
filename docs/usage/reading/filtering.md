@@ -63,7 +63,7 @@ Aside from filtering on the resource being requested (which would be blogs in /b
 filtering on included collections can be done using bracket notation:
 
 ```http
-GET /articles?include=author,tags&filter=equals(author.lastName,'Smith')&filter[tags]=contains(label,'tech','design') HTTP/1.1
+GET /articles?include=author,tags&filter=equals(author.lastName,'Smith')&filter[tags]=any(label,'tech','design') HTTP/1.1
 ```
 
 In the above request, the first filter is applied on the collection of articles, while the second one is applied on the nested collection of tags.
