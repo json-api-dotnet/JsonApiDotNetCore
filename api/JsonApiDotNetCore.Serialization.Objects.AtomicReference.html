@@ -73,32 +73,20 @@
   
   <h1 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference" class="text-break">Class AtomicReference
   </h1>
-  <div class="markdown level0 summary"><p>See &apos;ref&apos; in <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
+  <div class="markdown level0 summary"><p>See &quot;ref&quot; in <a href="https://jsonapi.org/ext/atomic/#operation-objects">https://jsonapi.org/ext/atomic/#operation-objects</a>.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html">ResourceIdentifierObject</a></div>
-    <div class="level2"><span class="xref">AtomicReference</span></div>
+    <div class="level1"><span class="xref">AtomicReference</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.IResourceIdentity.html">IResourceIdentity</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_Type">ResourceIdentifierObject.Type</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_Id">ResourceIdentifierObject.Id</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_Lid">ResourceIdentifierObject.Lid</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_ToString">ResourceIdentifierObject.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMember_System_Text_StringBuilder_System_String_System_String_">ResourceIdentifierObject.WriteMember(StringBuilder, String, String)</a>
-    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -117,21 +105,89 @@
     <div>
       <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
     </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.html">JsonApiDotNetCore.Serialization.Objects</a></h6>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class AtomicReference : ResourceIdentifierObject</code></pre>
+    <pre><code class="lang-csharp hljs">[PublicAPI]
+public sealed class AtomicReference : IResourceIdentity</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_Id.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.Id%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L11">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L16">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Id_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Id*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Id" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Id">Id</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;id&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+public string Id { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_Lid.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.Lid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L20">View Source</a>
+  </span>
+  <a id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Lid_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Lid*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Lid" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Lid">Lid</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;lid&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+public string Lid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L24">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship*"></a>
   <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Relationship" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Relationship">Relationship</h4>
@@ -139,7 +195,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;relationship&quot;, NullValueHandling = NullValueHandling.Ignore)]
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;relationship&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
 public string Relationship { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -157,42 +214,42 @@ public string Relationship { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <h3 id="methods">Methods
-  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_WriteMembers_System_Text_StringBuilder_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers(System.Text.StringBuilder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference_Type.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L14">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L12">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_WriteMembers_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers*"></a>
-  <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_WriteMembers_System_Text_StringBuilder_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.WriteMembers(System.Text.StringBuilder)">WriteMembers(StringBuilder)</h4>
+  <a id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Type_" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Type*"></a>
+  <h4 id="JsonApiDotNetCore_Serialization_Objects_AtomicReference_Type" data-uid="JsonApiDotNetCore.Serialization.Objects.AtomicReference.Type">Type</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected override void WriteMembers(StringBuilder builder)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonPropertyName(&quot;type&quot;)]
+[JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+public string Type { get; set; }</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
+  <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
         <th>Type</th>
-        <th>Name</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Text.StringBuilder</span></td>
-        <td><span class="parametername">builder</span></td>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="JsonApiDotNetCore.Serialization.Objects.ResourceIdentifierObject.html#JsonApiDotNetCore_Serialization_Objects_ResourceIdentifierObject_WriteMembers_System_Text_StringBuilder_">ResourceIdentifierObject.WriteMembers(StringBuilder)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Objects.IResourceIdentity.html">IResourceIdentity</a>
+  </div>
 </article>
           </div>
           
@@ -201,10 +258,10 @@ public string Relationship { get; set; }</code></pre>
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Serialization_Objects_AtomicReference.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Serialization.Objects.AtomicReference%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L9" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Serialization/Objects/AtomicReference.cs/#L9" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

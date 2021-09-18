@@ -69,9 +69,6 @@
 <h3 id="get-all">Get all</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 3
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books&quot;,
     &quot;first&quot;: &quot;/api/books&quot;,
@@ -135,7 +132,10 @@
         &quot;self&quot;: &quot;/api/books/3&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 3
+  }
 }
 </code></pre><h3 id="get-by-id">Get by ID</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/people/1
@@ -165,9 +165,6 @@
 </code></pre><h3 id="get-with-relationship">Get with relationship</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?include=author
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 3
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?include=author&quot;,
     &quot;first&quot;: &quot;/api/books?include=author&quot;,
@@ -299,14 +296,14 @@
         &quot;self&quot;: &quot;/api/people/3&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 3
+  }
 }
 </code></pre><h3 id="get-sparse-fieldset">Get sparse fieldset</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?fields%5Bbooks%5D=publishYear
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 3
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?fields%5Bbooks%5D=publishYear&quot;,
     &quot;first&quot;: &quot;/api/books?fields[books]=publishYear&quot;,
@@ -343,14 +340,14 @@
         &quot;self&quot;: &quot;/api/books/3&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 3
+  }
 }
 </code></pre><h3 id="filter-on-partial-match">Filter on partial match</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/people?filter=contains(name,&#39;Shell&#39;)&quot;
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 1
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;,
     &quot;first&quot;: &quot;/api/people?filter=contains(name,&#39;Shell&#39;)&quot;,
@@ -375,14 +372,14 @@
         &quot;self&quot;: &quot;/api/people/1&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 1
+  }
 }
 </code></pre><h3 id="sorting">Sorting</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f http://localhost:14141/api/books?sort=-publishYear
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 3
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?sort=-publishYear&quot;,
     &quot;first&quot;: &quot;/api/books?sort=-publishYear&quot;,
@@ -446,14 +443,14 @@
         &quot;self&quot;: &quot;/api/books/2&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 3
+  }
 }
 </code></pre><h3 id="pagination">Pagination</h3>
 <pre><code class="lang-ps" name="REQUEST">curl -s -f &quot;http://localhost:14141/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;
 </code></pre><pre><code class="lang-json" name="RESPONSE">{
-  &quot;meta&quot;: {
-    &quot;totalResources&quot;: 3
-  },
   &quot;links&quot;: {
     &quot;self&quot;: &quot;/api/books?page%5Bsize%5D=1&amp;page%5Bnumber%5D=2&quot;,
     &quot;first&quot;: &quot;/api/books?page[size]=1&quot;,
@@ -481,7 +478,10 @@
         &quot;self&quot;: &quot;/api/books/2&quot;
       }
     }
-  ]
+  ],
+  &quot;meta&quot;: {
+    &quot;total&quot;: 3
+  }
 }
 </code></pre><h1 id="writing-data">Writing data</h1>
 <h3 id="create-resource">Create resource</h3>
@@ -569,7 +569,7 @@
     -d &#39;{
             \&quot;data\&quot;: {
                 \&quot;type\&quot;: \&quot;books\&quot;,
-                \&quot;id\&quot;: &quot;1&quot;,
+                \&quot;id\&quot;: \&quot;1\&quot;,
                 \&quot;attributes\&quot;: {
                     \&quot;publishYear\&quot;: 1820
                 }
@@ -586,7 +586,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/request-examples/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/request-examples/index.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>

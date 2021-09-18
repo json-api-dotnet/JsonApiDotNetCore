@@ -155,16 +155,17 @@ The filtering strategy we have selected, uses the following form.</p>
 <pre><code class="lang-http">GET /users?filter=equals(displayName,&#39;Brian O&#39;&#39;Connor&#39;) HTTP/1.1
 </code></pre><pre><code class="lang-http">GET /users?filter=equals(displayName,null) HTTP/1.1
 </code></pre><pre><code class="lang-http">GET /users?filter=equals(displayName,lastName) HTTP/1.1
-</code></pre><p>Comparison operators can be combined with the <code>count</code> function, which acts on HasMany relationships:</p>
+</code></pre><p>Comparison operators can be combined with the <code>count</code> function, which acts on to-many relationships:</p>
 <pre><code class="lang-http">GET /blogs?filter=lessThan(count(owner.articles),&#39;10&#39;) HTTP/1.1
 </code></pre><pre><code class="lang-http">GET /customers?filter=greaterThan(count(orders),count(invoices)) HTTP/1.1
 </code></pre><p>When filters are used multiple times on the same resource, they are combined using an OR operator.
 The next request returns all customers that have orders -or- whose last name is Smith.</p>
 <pre><code class="lang-http">GET /customers?filter=has(orders)&amp;filter=equals(lastName,&#39;Smith&#39;) HTTP/1.1
 </code></pre><p>Aside from filtering on the resource being requested (which would be blogs in /blogs and articles in /blogs/1/articles), 
-filtering on included collections can be done using bracket notation:</p>
-<pre><code class="lang-http">GET /articles?include=author,tags&amp;filter=equals(author.lastName,&#39;Smith&#39;)&amp;filter[tags]=contains(label,&#39;tech&#39;,&#39;design&#39;) HTTP/1.1
+filtering on to-many relationships can be done using bracket notation:</p>
+<pre><code class="lang-http">GET /articles?include=author,tags&amp;filter=equals(author.lastName,&#39;Smith&#39;)&amp;filter[tags]=any(label,&#39;tech&#39;,&#39;design&#39;) HTTP/1.1
 </code></pre><p>In the above request, the first filter is applied on the collection of articles, while the second one is applied on the nested collection of tags.</p>
+<p>Note this does <strong>not</strong> hide articles without any matching tags! Use the <code>has</code> function with a filter condition (see below) to accomplish that.</p>
 <p>Putting it all together, you can build quite complex filters, such as:</p>
 <pre><code class="lang-http">GET /blogs?include=owner.articles.revisions&amp;filter=and(or(equals(title,&#39;Technology&#39;),has(owner.articles)),not(equals(owner.lastName,null)))&amp;filter[owner.articles]=equals(caption,&#39;Two&#39;)&amp;filter[owner.articles.revisions]=greaterThan(publishTime,&#39;2005-05-05&#39;) HTTP/1.1
 </code></pre><p><em>since v4.2</em></p>
@@ -256,7 +257,7 @@ Examples can be found in the table below.</p>
 </tbody>
 </table>
 <p>Filters can be combined and will be applied using an OR operator. This used to be AND in versions prior to v4.0.</p>
-<p>Attributes to filter on can optionally be prefixed with a HasOne relationship, for example:</p>
+<p>Attributes to filter on can optionally be prefixed with to-one relationships, for example:</p>
 <pre><code class="lang-http">GET /api/articles?include=author&amp;filter[caption]=like:marketing&amp;filter[author.lastName]=Smith HTTP/1.1
 </code></pre><p>Legacy filter notation can still be used in v4.0 by setting <code>options.EnableLegacyFilterNotation</code> to <code>true</code>.
 If you want to use the new filter notation in that case, prefix the parameter value with <code>expr:</code>, for example:</p>
@@ -332,7 +333,7 @@ LINE_BREAKS: [\r\n]+ -&gt; skip;
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/usage/reading/filtering.md/#L1" class="contribution-link">Improve this Doc</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/docs/usage/reading/filtering.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
