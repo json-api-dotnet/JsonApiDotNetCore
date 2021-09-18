@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.OpenApi
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
             var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var jsonApiOptions = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
-            var namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
+            JsonNamingPolicy namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
 
             AddSchemaGenerator(services);
 
@@ -101,8 +101,7 @@ namespace JsonApiDotNetCore.OpenApi
             };
         }
 
-        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph,
-            JsonNamingPolicy namingPolicy)
+        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
         {
             ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
             JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceGraph);

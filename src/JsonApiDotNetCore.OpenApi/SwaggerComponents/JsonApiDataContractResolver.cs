@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using Swashbuckle.AspNetCore.Newtonsoft;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     /// <summary>
-    /// For schema generation, we rely on <see cref="NewtonsoftDataContractResolver" /> from Swashbuckle for all but our own JSON:API types.
+    /// For schema generation, we rely on <see cref="JsonSerializerDataContractResolver" /> from Swashbuckle for all but our own JSON:API types.
     /// </summary>
     internal sealed class JsonApiDataContractResolver : ISerializerDataContractResolver
     {
-        private readonly NewtonsoftDataContractResolver _dataContractResolver;
+        private readonly JsonSerializerDataContractResolver _dataContractResolver;
         private readonly IResourceGraph _resourceGraph;
 
         public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions)
@@ -25,8 +25,8 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             _resourceGraph = resourceGraph;
 
-            var serializerOptions = jsonApiOptions.SerializerOptions;
-            _dataContractResolver = new NewtonsoftDataContractResolver(serializerOptions);
+            JsonSerializerOptions serializerOptions = jsonApiOptions.SerializerOptions;
+            _dataContractResolver = new JsonSerializerDataContractResolver(serializerOptions);
         }
 
         public DataContract GetDataContractForType(Type type)

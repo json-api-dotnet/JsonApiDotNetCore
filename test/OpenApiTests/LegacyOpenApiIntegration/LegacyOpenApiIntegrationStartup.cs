@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -17,6 +18,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
             options.DefaultAttrCapabilities = AttrCapabilities.AllowView;
             options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
             options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
     }
 }

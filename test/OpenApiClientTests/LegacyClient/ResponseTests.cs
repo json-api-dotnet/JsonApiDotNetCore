@@ -187,7 +187,7 @@ namespace OpenApiClientTests.LegacyClient
             document.Data.Attributes.ServicesOnBoard.Should().BeNull();
             document.Data.Attributes.FinalDestination.Should().BeNull();
             document.Data.Attributes.StopOverDestination.Should().BeNull();
-            document.Data.Attributes.OperatedBy.Should().Be(default(Airline));
+            document.Data.Attributes.OperatedBy.Should().Be(default);
         }
 
         [Fact]

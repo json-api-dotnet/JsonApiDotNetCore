@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.OpenApi
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(type);
+            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(type);
 
             if (resourceContext != null)
             {
