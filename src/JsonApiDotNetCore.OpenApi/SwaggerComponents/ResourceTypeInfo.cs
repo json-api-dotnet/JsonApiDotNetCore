@@ -22,14 +22,14 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             ResourceType = resourceType;
         }
 
-        public static ResourceTypeInfo Create(Type resourceObjectType, IResourceContextProvider resourceContextProvider)
+        public static ResourceTypeInfo Create(Type resourceObjectType, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(resourceObjectType, nameof(resourceObjectType));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             Type resourceObjectOpenType = resourceObjectType.GetGenericTypeDefinition();
             Type resourceType = resourceObjectType.GenericTypeArguments[0];
-            ResourceContext resourceContext = resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(resourceType);
 
             return new ResourceTypeInfo(resourceObjectType, resourceObjectOpenType, resourceType, resourceContext);
         }

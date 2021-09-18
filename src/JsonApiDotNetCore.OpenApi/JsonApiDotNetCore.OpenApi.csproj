@@ -28,6 +28,5 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="$(SwashbuckleVersion)" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="$(SwashbuckleVersion)" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="$(SwashbuckleVersion)" />
   </ItemGroup>
 </Project>

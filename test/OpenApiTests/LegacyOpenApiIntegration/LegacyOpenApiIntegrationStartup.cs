@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Serialization;
 
 namespace OpenApiTests.LegacyOpenApiIntegration
 {
@@ -16,11 +15,8 @@ namespace OpenApiTests.LegacyOpenApiIntegration
 
             options.Namespace = "api/v1";
             options.DefaultAttrCapabilities = AttrCapabilities.AllowView;
-
-            options.SerializerSettings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new KebabCaseNamingStrategy()
-            };
+            options.SerializerOptions.PropertyNamingPolicy = JsonKebabCaseNamingPolicy.Instance;
+            options.SerializerOptions.DictionaryKeyPolicy = JsonKebabCaseNamingPolicy.Instance;
         }
     }
 }

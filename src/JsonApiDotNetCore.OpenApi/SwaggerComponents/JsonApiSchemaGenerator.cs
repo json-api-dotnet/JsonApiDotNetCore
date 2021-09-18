@@ -40,10 +40,10 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly JsonApiObjectNullabilityProcessor _jsonApiObjectNullabilityProcessor;
         private readonly SchemaRepositoryAccessor _schemaRepositoryAccessor = new();
 
-        public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceContextProvider resourceContextProvider, IJsonApiOptions jsonApiOptions)
+        public JsonApiSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions)
         {
             ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(jsonApiOptions, nameof(jsonApiOptions));
 
             _defaultSchemaGenerator = defaultSchemaGenerator;
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _jsonApiObjectNullabilityProcessor = new JsonApiObjectNullabilityProcessor(_schemaRepositoryAccessor);
 
             _resourceObjectSchemaGenerator =
-                new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceContextProvider, jsonApiOptions, _schemaRepositoryAccessor);
+                new ResourceObjectSchemaGenerator(defaultSchemaGenerator, resourceGraph, jsonApiOptions, _schemaRepositoryAccessor);
         }
 
         public OpenApiSchema GenerateSchema(Type type, SchemaRepository schemaRepository, MemberInfo memberInfo = null, ParameterInfo parameterInfo = null)

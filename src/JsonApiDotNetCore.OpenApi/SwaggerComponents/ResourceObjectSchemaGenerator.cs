@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.OpenApi.JsonApiObjects.ResourceObjects;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
@@ -11,38 +10,38 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
     internal sealed class ResourceObjectSchemaGenerator
     {
         private readonly SchemaGenerator _defaultSchemaGenerator;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
         private readonly ResourceTypeSchemaGenerator _resourceTypeSchemaGenerator;
         private readonly bool _allowClientGeneratedIds;
         private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _createFieldObjectBuilderFactory;
 
-        public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceContextProvider resourceContextProvider,
+        public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph,
             IJsonApiOptions jsonApiOptions, ISchemaRepositoryAccessor schemaRepositoryAccessor)
         {
             ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(jsonApiOptions, nameof(jsonApiOptions));
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
 
             _defaultSchemaGenerator = defaultSchemaGenerator;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _schemaRepositoryAccessor = schemaRepositoryAccessor;
 
-            _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceContextProvider);
+            _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph);
             _allowClientGeneratedIds = jsonApiOptions.AllowClientGeneratedIds;
 
-            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceContextProvider, jsonApiOptions,
+            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph, jsonApiOptions,
                 schemaRepositoryAccessor, _resourceTypeSchemaGenerator);
         }
 
         private static Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> CreateFieldObjectBuilderFactory(SchemaGenerator defaultSchemaGenerator,
-            IResourceContextProvider resourceContextProvider, IJsonApiOptions jsonApiOptions, ISchemaRepositoryAccessor schemaRepositoryAccessor,
+            IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions, ISchemaRepositoryAccessor schemaRepositoryAccessor,
             ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
-            NamingStrategy namingStrategy = ((DefaultContractResolver)jsonApiOptions.SerializerSettings.ContractResolver)!.NamingStrategy;
-            ResourceNameFormatter resourceNameFormatter = new(namingStrategy);
-            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceContextProvider);
+            var namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
+            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
+            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceGraph);
 
             return resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor, defaultSchemaGenerator,
                 jsonApiSchemaIdSelector, resourceTypeSchemaGenerator);
@@ -54,7 +53,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
             (OpenApiSchema fullSchemaForResourceObject, OpenApiSchema referenceSchemaForResourceObject) = EnsureSchemasExist(resourceObjectType);
 
-            var resourceTypeInfo = ResourceTypeInfo.Create(resourceObjectType, _resourceContextProvider);
+            var resourceTypeInfo = ResourceTypeInfo.Create(resourceObjectType, _resourceGraph);
             ResourceFieldObjectSchemaBuilder fieldObjectBuilder = _createFieldObjectBuilderFactory(resourceTypeInfo);
 
             RemoveResourceIdIfPostResourceObject(resourceTypeInfo.ResourceObjectOpenType, fullSchemaForResourceObject);
