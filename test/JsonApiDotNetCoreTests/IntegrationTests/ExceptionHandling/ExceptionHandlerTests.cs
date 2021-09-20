@@ -80,9 +80,43 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
             ((JsonElement)error.Meta["support"]).GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
 
+            responseDocument.Meta.Should().BeNull();
+
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
+        }
+
+        [Fact]
+        public async Task Logs_and_produces_error_response_on_deserialization_failure()
+        {
+            // Arrange
+            var loggerFactory = _testContext.Factory.Services.GetRequiredService<FakeLoggerFactory>();
+            loggerFactory.Logger.Clear();
+
+            const string requestBody = @"{ ""data"": { ""type"": """" } }";
+
+            const string route = "/consumerArticles";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            error.Detail.Should().Be("Resource type '' does not exist.");
+
+            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
+            stackTraceLines.Should().NotBeEmpty();
+
+            responseDocument.Meta["requestBody"].ToString().Should().Be(requestBody);
+
+            loggerFactory.Logger.Messages.Should().BeEmpty();
         }
 
         [Fact]
@@ -117,6 +151,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
             stackTraceLines.Should().ContainMatch("*at object System.Reflection.*");
+
+            responseDocument.Meta.Should().BeNull();
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);

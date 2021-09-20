@@ -18,6 +18,7 @@ namespace TestBuildingBlocks
         protected virtual void SetJsonApiOptions(JsonApiOptions options)
         {
             options.IncludeExceptionStackTraceInErrors = true;
+            options.IncludeRequestBodyInErrors = true;
             options.SerializerOptions.WriteIndented = true;
         }
 

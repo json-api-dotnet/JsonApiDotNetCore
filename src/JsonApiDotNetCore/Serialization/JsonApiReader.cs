@@ -99,8 +99,7 @@ namespace JsonApiDotNetCore.Serialization
                 return new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception);
             }
 
-            // In contrast to resource endpoints, we don't include the request body for operations because they are usually very long.
-            var requestException = new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, null, exception.InnerException);
+            var requestException = new InvalidRequestBodyException(exception.GenericMessage, exception.SpecificMessage, body, exception.InnerException);
 
             if (exception.AtomicOperationIndex != null)
             {

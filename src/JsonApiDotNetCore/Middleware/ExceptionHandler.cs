@@ -84,31 +84,42 @@ namespace JsonApiDotNetCore.Middleware
                     Detail = exception.Message
                 }.AsArray();
 
-            foreach (ErrorObject error in errors)
-            {
-                ApplyOptions(error, exception);
-            }
-
-            return new Document
+            var document = new Document
             {
                 Errors = errors.ToList()
             };
+
+            if (_options.IncludeExceptionStackTraceInErrors && exception is not InvalidModelStateException)
+            {
+                IncludeStackTraces(exception, document.Errors);
+            }
+
+            if (_options.IncludeRequestBodyInErrors && exception is InvalidRequestBodyException { RequestBody: { } } invalidRequestBodyException)
+            {
+                IncludeRequestBody(invalidRequestBodyException, document);
+            }
+
+            return document;
         }
 
-        private void ApplyOptions(ErrorObject error, Exception exception)
+        private void IncludeStackTraces(Exception exception, IList<ErrorObject> errors)
         {
-            Exception resultException = exception is InvalidModelStateException ? null : exception;
+            string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-            if (resultException != null && _options.IncludeExceptionStackTraceInErrors)
+            if (stackTraceLines.Any())
             {
-                string[] stackTraceLines = resultException.ToString().Split(Environment.NewLine);
-
-                if (stackTraceLines.Any())
+                foreach (ErrorObject error in errors)
                 {
                     error.Meta ??= new Dictionary<string, object>();
                     error.Meta["StackTrace"] = stackTraceLines;
                 }
             }
+        }
+
+        private static void IncludeRequestBody(InvalidRequestBodyException exception, Document document)
+        {
+            document.Meta ??= new Dictionary<string, object>();
+            document.Meta["RequestBody"] = exception.RequestBody;
         }
     }
 }

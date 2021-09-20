@@ -12,31 +12,22 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidRequestBodyException : JsonApiException
     {
+        public string RequestBody { get; }
+
         public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)
             : base(new ErrorObject(HttpStatusCode.UnprocessableEntity)
             {
                 Title = reason != null ? $"Failed to deserialize request body: {reason}" : "Failed to deserialize request body.",
-                Detail = FormatErrorDetail(details, requestBody, innerException)
+                Detail = FormatErrorDetail(details, innerException)
             }, innerException)
         {
+            RequestBody = requestBody;
         }
 
-        private static string FormatErrorDetail(string details, string requestBody, Exception innerException)
+        private static string FormatErrorDetail(string details, Exception innerException)
         {
             var builder = new StringBuilder();
             builder.Append(details ?? innerException?.Message);
-
-            if (requestBody != null)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append(" - ");
-                }
-
-                builder.Append("Request body: <<");
-                builder.Append(requestBody);
-                builder.Append(">>");
-            }
 
             return builder.Length > 0 ? builder.ToString() : null;
         }

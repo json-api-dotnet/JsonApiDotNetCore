@@ -39,6 +39,9 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeExceptionStackTraceInErrors { get; set; }
 
         /// <inheritdoc />
+        public bool IncludeRequestBodyInErrors { get; set; }
+
+        /// <inheritdoc />
         public bool UseRelativeLinks { get; set; }
 
         /// <inheritdoc />

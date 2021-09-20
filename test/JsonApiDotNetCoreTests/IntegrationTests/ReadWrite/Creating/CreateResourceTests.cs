@@ -423,7 +423,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
+            error.Detail.Should().Be("Expected 'type' element in 'data' element.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -454,7 +456,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -541,7 +545,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body: <<");
+            error.Detail.Should().Be("Setting the initial value of 'isImportant' is not allowed.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -573,7 +579,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body: <<");
+            error.Detail.Should().Be("Attribute 'isDeprecated' is read-only.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -595,7 +603,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().Match("'{' is invalid after a property name. * - Request body: <<*");
+            error.Detail.Should().StartWith("'{' is invalid after a property name.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -627,9 +637,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
+            error.Detail.Should().Be("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' of type 'String' to type 'Nullable<DateTimeOffset>'.");
 
-            error.Detail.Should().StartWith("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' " +
-                "of type 'String' to type 'Nullable<DateTimeOffset>'. - Request body: <<");
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

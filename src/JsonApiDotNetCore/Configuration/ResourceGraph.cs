@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceContext TryGetResourceContext(string publicName)
         {
-            ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
+            ArgumentGuard.NotNull(publicName, nameof(publicName));
 
             return _resourceContextsByPublicName.TryGetValue(publicName, out ResourceContext resourceContext) ? resourceContext : null;
         }
