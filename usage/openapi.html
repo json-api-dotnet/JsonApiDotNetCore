@@ -5,11 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Enum ComparisonOperator
-   </title>
+    <title>OpenAPI </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Enum ComparisonOperator
-   ">
+    <meta name="title" content="OpenAPI ">
     <meta name="generator" content="docfx 2.58.4.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -68,51 +66,50 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonOperator">
-  
-  
-  <h1 id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator" data-uid="JsonApiDotNetCore.Queries.Expressions.ComparisonOperator" class="text-break">Enum ComparisonOperator
-  </h1>
-  <div class="markdown level0 summary"></div>
-  <div class="markdown level0 conceptual"></div>
-  <h6><strong>Namespace</strong>: <a class="xref" href="JsonApiDotNetCore.Queries.Expressions.html">JsonApiDotNetCore.Queries.Expressions</a></h6>
-  <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
-  <h5 id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_syntax">Syntax</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum ComparisonOperator</code></pre>
-  </div>
-  <h3 id="fields">Fields
-  </h3>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    <thead>
-    <tbody>
-      <tr>
-        <td id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_Equals">Equals</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_GreaterOrEqual">GreaterOrEqual</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_GreaterThan">GreaterThan</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_LessOrEqual">LessOrEqual</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td id="JsonApiDotNetCore_Queries_Expressions_ComparisonOperator_LessThan">LessThan</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </thead></thead></table>
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="openapi">OpenAPI</h1>
+
+<p>JsonApiDotNetCore provides an extension package that enables you to produce an <a href="https://swagger.io/specification/">OpenAPI specification</a> for your JSON:API endpoints. This can be used to generate a <a href="https://swagger.io/tools/swagger-ui/">documentation website</a> or to generate <a href="https://openapi-generator.tech/docs/generators/">client libraries</a> in various languages. The package provides an integration with <a href="https://github.com/domaindrivendev/Swashbuckle.AspNetCore">Swashbuckle</a>.</p>
+<h2 id="getting-started">Getting started</h2>
+<ol>
+<li><p>Install the <code>JsonApiDotNetCore.OpenApi</code> NuGet package:</p>
+<pre><code>dotnet add package JsonApiDotNetCore.OpenApi
+</code></pre></li>
+<li><p>Add the integration in your <code>Startup</code> class.</p>
+<pre><code class="lang-c#">public class Startup
+{
+    public void ConfigureServices(IServiceCollection services)
+    {
+        IMvcCoreBuilder mvcBuilder = services.AddMvcCore();
+
+        services.AddJsonApi&lt;AppDbContext&gt;(mvcBuilder: mvcBuilder);
+
+        // Adds the Swashbuckle integration.
+        services.AddOpenApi(mvcBuilder);
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app.UseRouting();
+        app.UseJsonApi();
+
+        // Adds the Swashbuckle middleware.
+        app.UseSwagger();
+
+        app.UseEndpoints(endpoints =&gt; endpoints.MapControllers());
+    }
+}
+</code></pre></li>
+</ol>
+<p>By default, the OpenAPI specification will be available at <code>http://localhost:&lt;port&gt;/swagger/v1/swagger.json</code>.</p>
+<h2 id="documentation">Documentation</h2>
+<p>Swashbuckle also ships with <a href="https://swagger.io/tools/swagger-ui/">SwaggerUI</a>, tooling for a generated documentation page. This can be enabled by installing the <code>Swashbuckle.AspNetCore.SwaggerUI</code> NuGet package and adding the following to your <code>Startup</code> class:</p>
+<pre><code class="lang-c#">// Startup.cs
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseSwaggerUI();
+}
+</code></pre><p>By default, SwaggerUI will be available at <code>http://localhost:&lt;port&gt;/swagger</code>.</p>
 </article>
           </div>
           
@@ -121,10 +118,7 @@
               <div class="contribution">
                 <ul class="nav">
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/openapi/apiSpec/new?filename=JsonApiDotNetCore_Queries_Expressions_ComparisonOperator.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Expressions.ComparisonOperator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/src/JsonApiDotNetCore/Queries/Expressions/ComparisonOperator.cs/#L3" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/openapi/docs/usage/openapi.md/#L1" class="contribution-link">Improve this Doc</a>
                   </li>
                 </ul>
               </div>
