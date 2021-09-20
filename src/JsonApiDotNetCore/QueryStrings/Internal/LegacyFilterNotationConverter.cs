@@ -82,7 +82,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (parameterValue.StartsWith(InPrefix, StringComparison.Ordinal))
             {
                 string[] valueParts = parameterValue.Substring(InPrefix.Length).Split(",");
-                string valueList = "'" + string.Join("','", valueParts) + "'";
+                string valueList = $"'{string.Join("','", valueParts)}'";
                 string expression = $"{Keywords.Any}({attributeName},{valueList})";
 
                 return (OutputParameterName, expression);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             if (parameterValue.StartsWith(NotInPrefix, StringComparison.Ordinal))
             {
                 string[] valueParts = parameterValue.Substring(NotInPrefix.Length).Split(",");
-                string valueList = "'" + string.Join("','", valueParts) + "'";
+                string valueList = $"'{string.Join("','", valueParts)}'";
                 string expression = $"{Keywords.Not}({Keywords.Any}({attributeName},{valueList}))";
 
                 return (OutputParameterName, expression);

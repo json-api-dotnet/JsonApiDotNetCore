@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class SparseFieldTypeParser : QueryExpressionParser
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
-        public SparseFieldTypeParser(IResourceContextProvider resourceContextProvider)
-            : base(resourceContextProvider)
+        public SparseFieldTypeParser(IResourceGraph resourceGraph)
+            : base(resourceGraph)
         {
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public ResourceContext Parse(string source)
@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceContext GetResourceContext(string publicName)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(publicName);
+            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(publicName);
 
             if (resourceContext == null)
             {

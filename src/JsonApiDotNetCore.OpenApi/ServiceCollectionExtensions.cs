@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.OpenApi.SwaggerComponents;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -57,16 +57,16 @@ namespace JsonApiDotNetCore.OpenApi
         private static void AddSwaggerGenerator(IServiceScope scope, IServiceCollection services, Action<SwaggerGenOptions> setupSwaggerGenAction)
         {
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
-            var resourceContextProvider = scope.ServiceProvider.GetRequiredService<IResourceContextProvider>();
+            var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var jsonApiOptions = scope.ServiceProvider.GetRequiredService<IJsonApiOptions>();
-            NamingStrategy namingStrategy = ((DefaultContractResolver)jsonApiOptions.SerializerSettings.ContractResolver)!.NamingStrategy;
+            JsonNamingPolicy namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
 
             AddSchemaGenerator(services);
 
             services.AddSwaggerGen(swaggerGenOptions =>
             {
-                SetOperationInfo(swaggerGenOptions, controllerResourceMapping, resourceContextProvider, namingStrategy);
-                SetSchemaIdSelector(swaggerGenOptions, resourceContextProvider, namingStrategy);
+                SetOperationInfo(swaggerGenOptions, controllerResourceMapping, resourceGraph, namingPolicy);
+                SetSchemaIdSelector(swaggerGenOptions, resourceGraph, namingPolicy);
                 swaggerGenOptions.DocumentFilter<EndpointOrderingFilter>();
 
                 setupSwaggerGenAction?.Invoke(swaggerGenOptions);
@@ -80,20 +80,20 @@ namespace JsonApiDotNetCore.OpenApi
         }
 
         private static void SetOperationInfo(SwaggerGenOptions swaggerGenOptions, IControllerResourceMapping controllerResourceMapping,
-            IResourceContextProvider resourceContextProvider, NamingStrategy namingStrategy)
+            IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
         {
-            swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping, resourceContextProvider));
+            swaggerGenOptions.TagActionsBy(description => GetOperationTags(description, controllerResourceMapping, resourceGraph));
 
-            JsonApiOperationIdSelector jsonApiOperationIdSelector = new(controllerResourceMapping, namingStrategy);
+            JsonApiOperationIdSelector jsonApiOperationIdSelector = new(controllerResourceMapping, namingPolicy);
             swaggerGenOptions.CustomOperationIds(jsonApiOperationIdSelector.GetOperationId);
         }
 
         private static IList<string> GetOperationTags(ApiDescription description, IControllerResourceMapping controllerResourceMapping,
-            IResourceContextProvider resourceContextProvider)
+            IResourceGraph resourceGraph)
         {
             MethodInfo actionMethod = description.ActionDescriptor.GetActionMethod();
             Type resourceType = controllerResourceMapping.GetResourceTypeForController(actionMethod.ReflectedType);
-            ResourceContext resourceContext = resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(resourceType);
 
             return new[]
             {
@@ -101,11 +101,10 @@ namespace JsonApiDotNetCore.OpenApi
             };
         }
 
-        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceContextProvider resourceContextProvider,
-            NamingStrategy namingStrategy)
+        private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
         {
-            ResourceNameFormatter resourceNameFormatter = new(namingStrategy);
-            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceContextProvider);
+            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
+            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceGraph);
 
             swaggerGenOptions.CustomSchemaIds(type => jsonApiObjectSchemaSelector.GetSchemaId(type));
         }
@@ -127,10 +126,10 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void AddOpenApiEndpointConvention(IServiceScope scope, IMvcCoreBuilder mvcBuilder)
         {
-            var resourceContextProvider = scope.ServiceProvider.GetRequiredService<IResourceContextProvider>();
+            var resourceGraph = scope.ServiceProvider.GetRequiredService<IResourceGraph>();
             var controllerResourceMapping = scope.ServiceProvider.GetRequiredService<IControllerResourceMapping>();
 
-            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(resourceContextProvider, controllerResourceMapping)));
+            mvcBuilder.AddMvcOptions(options => options.Conventions.Add(new OpenApiEndpointConvention(resourceGraph, controllerResourceMapping)));
         }
     }
 }

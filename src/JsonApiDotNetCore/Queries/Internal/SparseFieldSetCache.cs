@@ -99,7 +99,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
 
-            AttrAttribute idAttribute = resourceContext.Attributes.Single(attr => attr.Property.Name == nameof(Identifiable.Id));
+            AttrAttribute idAttribute = resourceContext.GetAttributeByPropertyName(nameof(Identifiable.Id));
             var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
@@ -146,10 +146,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 fieldSetBuilder.Add(attribute);
             }
 
-            foreach (RelationshipAttribute relationship in resourceContext.Relationships)
-            {
-                fieldSetBuilder.Add(relationship);
-            }
+            fieldSetBuilder.AddRange(resourceContext.Relationships);
 
             return fieldSetBuilder.ToImmutable();
         }

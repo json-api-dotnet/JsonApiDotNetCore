@@ -5,29 +5,25 @@ using System.Reflection;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Newtonsoft;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 {
     /// <summary>
-    /// For schema generation, we rely on <see cref="NewtonsoftDataContractResolver" /> from Swashbuckle for all but our own JSON:API types.
+    /// For schema generation, we rely on <see cref="JsonSerializerDataContractResolver" /> from Swashbuckle for all but our own JSON:API types.
     /// </summary>
     internal sealed class JsonApiDataContractResolver : ISerializerDataContractResolver
     {
-        private readonly NewtonsoftDataContractResolver _dataContractResolver;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly JsonSerializerDataContractResolver _dataContractResolver;
+        private readonly IResourceGraph _resourceGraph;
 
-        public JsonApiDataContractResolver(IResourceContextProvider resourceContextProvider, IJsonApiOptions jsonApiOptions)
+        public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions options)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
-            ArgumentGuard.NotNull(jsonApiOptions, nameof(jsonApiOptions));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(options, nameof(options));
 
-            _resourceContextProvider = resourceContextProvider;
-
-            JsonSerializerSettings serializerSettings = jsonApiOptions.SerializerSettings ?? new JsonSerializerSettings();
-            _dataContractResolver = new NewtonsoftDataContractResolver(serializerSettings);
+            _resourceGraph = resourceGraph;
+            _dataContractResolver = new JsonSerializerDataContractResolver(options.SerializerOptions);
         }
 
         public DataContract GetDataContractForType(Type type)
@@ -65,7 +61,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
 
         private IList<DataProperty> GetDataPropertiesThatExistInResourceContext(Type resourceType, DataContract dataContract)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
             var dataProperties = new List<DataProperty>();
 
             foreach (DataProperty property in dataContract.ObjectProperties)

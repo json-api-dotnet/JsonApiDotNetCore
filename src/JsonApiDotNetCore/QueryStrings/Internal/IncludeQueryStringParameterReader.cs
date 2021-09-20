@@ -21,13 +21,13 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private IncludeExpression _includeExpression;
         private string _lastParameterName;
 
-        public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceContextProvider resourceContextProvider, IJsonApiOptions options)
-            : base(request, resourceContextProvider)
+        public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
+            : base(request, resourceGraph)
         {
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _includeParser = new IncludeParser(resourceContextProvider, ValidateSingleRelationship);
+            _includeParser = new IncludeParser(resourceGraph, ValidateSingleRelationship);
         }
 
         protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)

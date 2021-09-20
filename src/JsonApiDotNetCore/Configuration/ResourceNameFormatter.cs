@@ -1,18 +1,18 @@
 using System;
 using System.Reflection;
+using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Resources.Annotations;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.Configuration
 {
     internal sealed class ResourceNameFormatter
     {
-        private readonly NamingStrategy _namingStrategy;
+        private readonly JsonNamingPolicy _namingPolicy;
 
-        public ResourceNameFormatter(NamingStrategy namingStrategy)
+        public ResourceNameFormatter(JsonNamingPolicy namingPolicy)
         {
-            _namingStrategy = namingStrategy;
+            _namingPolicy = namingPolicy;
         }
 
         /// <summary>
@@ -20,9 +20,13 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public string FormatResourceName(Type resourceType)
         {
-            return resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute
-                ? attribute.PublicName
-                : _namingStrategy.GetPropertyName(resourceType.Name.Pluralize(), false);
+            if (resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
+            {
+                return attribute.PublicName;
+            }
+
+            string publicName = resourceType.Name.Pluralize();
+            return _namingPolicy != null ? _namingPolicy.ConvertName(publicName) : publicName;
         }
     }
 }

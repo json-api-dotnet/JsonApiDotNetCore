@@ -4,15 +4,15 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
-    internal sealed class ResourceIdentifierObjectComparer : IEqualityComparer<ResourceIdentifierObject>
+    internal sealed class ResourceIdentityComparer : IEqualityComparer<IResourceIdentity>
     {
-        public static readonly ResourceIdentifierObjectComparer Instance = new();
+        public static readonly ResourceIdentityComparer Instance = new();
 
-        private ResourceIdentifierObjectComparer()
+        private ResourceIdentityComparer()
         {
         }
 
-        public bool Equals(ResourceIdentifierObject x, ResourceIdentifierObject y)
+        public bool Equals(IResourceIdentity x, IResourceIdentity y)
         {
             if (ReferenceEquals(x, y))
             {
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             return x.Type == y.Type && x.Id == y.Id && x.Lid == y.Lid;
         }
 
-        public int GetHashCode(ResourceIdentifierObject obj)
+        public int GetHashCode(IResourceIdentity obj)
         {
             return HashCode.Combine(obj.Type, obj.Id, obj.Lid);
         }

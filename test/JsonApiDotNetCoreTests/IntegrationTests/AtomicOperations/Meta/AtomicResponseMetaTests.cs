@@ -1,14 +1,13 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -58,17 +57,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.Should().HaveCount(3);
-            responseDocument.Meta["license"].Should().Be("MIT");
-            responseDocument.Meta["projectUrl"].Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
+            ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
+            ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
-            string[] versionArray = ((IEnumerable<JToken>)responseDocument.Meta["versions"]).Select(token => token.ToString()).ToArray();
+            string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
 
             versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");
@@ -111,17 +109,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.Should().HaveCount(3);
-            responseDocument.Meta["license"].Should().Be("MIT");
-            responseDocument.Meta["projectUrl"].Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
+            ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
+            ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
-            string[] versionArray = ((IEnumerable<JToken>)responseDocument.Meta["versions"]).Select(token => token.ToString()).ToArray();
+            string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
 
             versionArray.Should().HaveCount(4);
             versionArray.Should().Contain("v4.0.0");

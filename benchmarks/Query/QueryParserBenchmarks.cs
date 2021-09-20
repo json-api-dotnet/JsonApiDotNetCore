@@ -64,11 +64,9 @@ namespace Benchmarks.Query
             var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
             var sparseFieldSetReader = new SparseFieldSetQueryStringParameterReader(request, resourceGraph);
             var paginationReader = new PaginationQueryStringParameterReader(request, resourceGraph, options);
-            var defaultsReader = new DefaultsQueryStringParameterReader(options);
-            var nullsReader = new NullsQueryStringParameterReader(options);
 
             IQueryStringParameterReader[] readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader,
-                sparseFieldSetReader, paginationReader, defaultsReader, nullsReader);
+                sparseFieldSetReader, paginationReader);
 
             return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
         }

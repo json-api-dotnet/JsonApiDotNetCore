@@ -86,19 +86,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(newCompanies[0].Name.ToUpperInvariant());
-            responseDocument.Results[0].SingleData.Attributes["countryOfResidence"].Should().Be(newCompanies[0].CountryOfResidence.ToUpperInvariant());
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newCompanies[0].Name.ToUpperInvariant());
+            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompanies[0].CountryOfResidence.ToUpperInvariant());
 
-            responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(newCompanies[1].Name.ToUpperInvariant());
-            responseDocument.Results[1].SingleData.Attributes["countryOfResidence"].Should().Be(newCompanies[1].CountryOfResidence.ToUpperInvariant());
+            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newCompanies[1].Name.ToUpperInvariant());
+            responseDocument.Results[1].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompanies[1].CountryOfResidence.ToUpperInvariant());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -170,8 +169,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
@@ -230,19 +228,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            string country0 = existingCompanies[0].CountryOfResidence.ToUpperInvariant();
+            string country1 = existingCompanies[1].CountryOfResidence.ToUpperInvariant();
+
             responseDocument.Results.Should().HaveCount(2);
 
-            responseDocument.Results[0].SingleData.Attributes["name"].Should().Be(existingCompanies[0].Name);
-            responseDocument.Results[0].SingleData.Attributes["countryOfResidence"].Should().Be(existingCompanies[0].CountryOfResidence.ToUpperInvariant());
-
-            responseDocument.Results[1].SingleData.Attributes["name"].Should().Be(existingCompanies[1].Name);
-            responseDocument.Results[1].SingleData.Attributes["countryOfResidence"].Should().Be(existingCompanies[1].CountryOfResidence.ToUpperInvariant());
+            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(existingCompanies[0].Name);
+            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(country0);
+            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(existingCompanies[1].Name);
+            responseDocument.Results[1].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(country1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -313,8 +312,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, AtomicOperationsDocument responseDocument) =
-                await _testContext.ExecutePostAtomicAsync<AtomicOperationsDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);

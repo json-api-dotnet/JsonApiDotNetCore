@@ -31,22 +31,22 @@ namespace JsonApiDotNetCore.OpenApi
         };
 
         private readonly ResourceNameFormatter _formatter;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
-        public JsonApiSchemaIdSelector(ResourceNameFormatter formatter, IResourceContextProvider resourceContextProvider)
+        public JsonApiSchemaIdSelector(ResourceNameFormatter formatter, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(formatter, nameof(formatter));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _formatter = formatter;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public string GetSchemaId(Type type)
         {
             ArgumentGuard.NotNull(type, nameof(type));
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(type);
+            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(type);
 
             if (resourceContext != null)
             {

@@ -11,13 +11,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     /// </summary>
     internal sealed class ResourceFieldChainResolver
     {
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
 
-        public ResourceFieldChainResolver(IResourceContextProvider resourceContextProvider)
+        public ResourceFieldChainResolver(IResourceGraph resourceGraph)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 validateCallback?.Invoke(relationship, nextResourceContext, path);
 
                 chainBuilder.Add(relationship);
-                nextResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                nextResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }
 
             string lastName = publicNameParts[^1];
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 validateCallback?.Invoke(relationship, nextResourceContext, path);
 
                 chainBuilder.Add(relationship);
-                nextResourceContext = _resourceContextProvider.GetResourceContext(relationship.RightType);
+                nextResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
             }
 
             return chainBuilder.ToImmutable();
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
+                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
             }
 
             string lastName = publicNameParts[^1];
@@ -139,7 +139,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
+                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
             }
 
             string lastName = publicNameParts[^1];
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 validateCallback?.Invoke(toOneRelationship, nextResourceContext, path);
 
                 chainBuilder.Add(toOneRelationship);
-                nextResourceContext = _resourceContextProvider.GetResourceContext(toOneRelationship.RightType);
+                nextResourceContext = _resourceGraph.GetResourceContext(toOneRelationship.RightType);
             }
 
             string lastName = publicNameParts[^1];
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private RelationshipAttribute GetRelationship(string publicName, ResourceContext resourceContext, string path)
         {
-            RelationshipAttribute relationship = resourceContext.Relationships.FirstOrDefault(nextRelationship => nextRelationship.PublicName == publicName);
+            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(publicName);
 
             if (relationship == null)
             {
@@ -239,7 +239,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private AttrAttribute GetAttribute(string publicName, ResourceContext resourceContext, string path)
         {
-            AttrAttribute attribute = resourceContext.Attributes.FirstOrDefault(nextAttribute => nextAttribute.PublicName == publicName);
+            AttrAttribute attribute = resourceContext.TryGetAttributeByPublicName(publicName);
 
             if (attribute == null)
             {

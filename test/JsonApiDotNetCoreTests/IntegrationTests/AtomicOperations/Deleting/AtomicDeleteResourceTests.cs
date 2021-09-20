@@ -347,14 +347,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
             error.Detail.Should().BeNull();
@@ -379,14 +379,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref' element is required.");
             error.Detail.Should().BeNull();
@@ -406,7 +406,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
                         op = "remove",
                         @ref = new
                         {
-                            id = 99999999
+                            id = Unknown.StringId.Int32
                         }
                     }
                 }
@@ -415,14 +415,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.type' element is required.");
             error.Detail.Should().BeNull();
@@ -442,8 +442,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
                         op = "remove",
                         @ref = new
                         {
-                            type = "doesNotExist",
-                            id = 99999999
+                            type = Unknown.ResourceType,
+                            id = Unknown.StringId.Int32
                         }
                     }
                 }
@@ -452,17 +452,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be("Resource type 'doesNotExist' does not exist.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -488,14 +488,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();
@@ -506,6 +506,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
         public async Task Cannot_delete_resource_for_unknown_ID()
         {
             // Arrange
+            string performerId = Unknown.StringId.For<Performer, int>();
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -516,7 +518,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
                         @ref = new
                         {
                             type = "performers",
-                            id = 99999999
+                            id = performerId
                         }
                     }
                 }
@@ -525,17 +527,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'performers' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
         }
 
@@ -543,7 +545,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
         public async Task Cannot_delete_resource_for_incompatible_ID()
         {
             // Arrange
-            string guid = Guid.NewGuid().ToString();
+            string guid = Unknown.StringId.Guid;
 
             var requestBody = new
             {
@@ -564,14 +566,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int64'.");
@@ -592,7 +594,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
                         @ref = new
                         {
                             type = "musicTracks",
-                            id = Guid.NewGuid().ToString(),
+                            id = Unknown.StringId.For<MusicTrack, Guid>(),
                             lid = "local-1"
                         }
                     }
@@ -602,14 +604,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             const string route = "/operations";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecutePostAtomicAsync<ErrorDocument>(route, requestBody);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
             error.Detail.Should().BeNull();

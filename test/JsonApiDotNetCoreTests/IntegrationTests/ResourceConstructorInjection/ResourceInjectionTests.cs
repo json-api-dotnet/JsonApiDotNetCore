@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -50,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/giftCertificates/" + certificate.StringId;
+            string route = $"/giftCertificates/{certificate.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -58,10 +59,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(certificate.StringId);
-            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(certificate.IssueDate);
-            responseDocument.SingleData.Attributes["hasExpired"].Should().Be(false);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
+            responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate);
+            responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(false);
         }
 
         [Fact]
@@ -88,10 +89,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(postOffices[1].StringId);
-            responseDocument.ManyData[0].Attributes["address"].Should().Be(postOffices[1].Address);
-            responseDocument.ManyData[0].Attributes["isOpen"].Should().Be(true);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["address"].Should().Be(postOffices[1].Address);
+            responseDocument.Data.ManyValue[0].Attributes["isOpen"].Should().Be(true);
         }
 
         [Fact]
@@ -118,10 +119,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(certificate.Issuer.StringId);
-            responseDocument.SingleData.Attributes.Should().HaveCount(1);
-            responseDocument.SingleData.Attributes["isOpen"].Should().Be(true);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
+            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes["isOpen"].Should().Be(true);
         }
 
         [Fact]
@@ -172,17 +173,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["issueDate"].Should().BeCloseTo(newIssueDate);
-            responseDocument.SingleData.Attributes["hasExpired"].Should().Be(true);
-            responseDocument.SingleData.Relationships["issuer"].SingleData.Id.Should().Be(existingOffice.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(newIssueDate);
+            responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(true);
+            responseDocument.Data.SingleValue.Relationships["issuer"].Data.SingleValue.Id.Should().Be(existingOffice.StringId);
 
             responseDocument.Included.Should().HaveCount(1);
             responseDocument.Included[0].Id.Should().Be(existingOffice.StringId);
             responseDocument.Included[0].Attributes["address"].Should().Be(existingOffice.Address);
             responseDocument.Included[0].Attributes["isOpen"].Should().Be(false);
 
-            int newCertificateId = int.Parse(responseDocument.SingleData.Id);
+            int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -241,7 +242,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 }
             };
 
-            string route = "/postOffices/" + existingOffice.StringId;
+            string route = $"/postOffices/{existingOffice.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -274,7 +275,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/postOffices/" + existingOffice.StringId;
+            string route = $"/postOffices/{existingOffice.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route);
@@ -296,20 +297,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
         public async Task Cannot_delete_unknown_resource()
         {
             // Arrange
-            const string route = "/postOffices/99999999";
+            string officeId = Unknown.StringId.For<PostOffice, int>();
+
+            string route = $"/postOffices/{officeId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'postOffices' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'postOffices' with ID '{officeId}' does not exist.");
         }
 
         [Fact]

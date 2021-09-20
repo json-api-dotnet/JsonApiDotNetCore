@@ -1,14 +1,13 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -17,7 +16,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -41,41 +39,41 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         public async Task InvokeAsync(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping, IJsonApiOptions options,
-            IJsonApiRequest request, IResourceContextProvider resourceContextProvider, ILogger<JsonApiMiddleware> logger)
+            IJsonApiRequest request, IResourceGraph resourceGraph, ILogger<JsonApiMiddleware> logger)
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(logger, nameof(logger));
 
             using (CodeTimingSessionManager.Current.Measure("JSON:API middleware"))
             {
-                if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerSettings))
+                if (!await ValidateIfMatchHeaderAsync(httpContext, options.SerializerWriteOptions))
                 {
                     return;
                 }
 
                 RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-                ResourceContext primaryResourceContext = CreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceContextProvider);
+                ResourceContext primaryResourceContext = TryCreatePrimaryResourceContext(httpContext, controllerResourceMapping, resourceGraph);
 
                 if (primaryResourceContext != null)
                 {
-                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerSettings) ||
-                        !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerSettings))
+                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.MediaType, httpContext, options.SerializerWriteOptions) ||
+                        !await ValidateAcceptHeaderAsync(MediaType, httpContext, options.SerializerWriteOptions))
                     {
                         return;
                     }
 
-                    SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceContextProvider, httpContext.Request);
+                    SetupResourceRequest((JsonApiRequest)request, primaryResourceContext, routeValues, resourceGraph, httpContext.Request);
 
                     httpContext.RegisterJsonApiRequest();
                 }
                 else if (IsRouteForOperations(routeValues))
                 {
-                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerSettings) ||
-                        !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerSettings))
+                    if (!await ValidateContentTypeHeaderAsync(HeaderConstants.AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions) ||
+                        !await ValidateAcceptHeaderAsync(AtomicOperationsMediaType, httpContext, options.SerializerWriteOptions))
                     {
                         return;
                     }
@@ -102,13 +100,17 @@ namespace JsonApiDotNetCore.Middleware
             }
         }
 
-        private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerSettings serializerSettings)
+        private async Task<bool> ValidateIfMatchHeaderAsync(HttpContext httpContext, JsonSerializerOptions serializerOptions)
         {
             if (httpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.PreconditionFailed)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.PreconditionFailed)
                 {
-                    Title = "Detection of mid-air edit collisions using ETags is not supported."
+                    Title = "Detection of mid-air edit collisions using ETags is not supported.",
+                    Source = new ErrorSource
+                    {
+                        Header = "If-Match"
+                    }
                 });
 
                 return false;
@@ -117,8 +119,8 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static ResourceContext CreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,
-            IResourceContextProvider resourceContextProvider)
+        private static ResourceContext TryCreatePrimaryResourceContext(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping,
+            IResourceGraph resourceGraph)
         {
             Endpoint endpoint = httpContext.GetEndpoint();
             var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
@@ -130,7 +132,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (resourceType != null)
                 {
-                    return resourceContextProvider.GetResourceContext(resourceType);
+                    return resourceGraph.GetResourceContext(resourceType);
                 }
             }
 
@@ -138,7 +140,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static async Task<bool> ValidateContentTypeHeaderAsync(string allowedContentType, HttpContext httpContext,
-            JsonSerializerSettings serializerSettings)
+            JsonSerializerOptions serializerOptions)
         {
             string contentType = httpContext.Request.ContentType;
 
@@ -146,10 +148,14 @@ namespace JsonApiDotNetCore.Middleware
             // Justification: Workaround for https://github.com/dotnet/aspnetcore/issues/32097 (fixed in .NET 6)
             if (contentType != null && contentType != allowedContentType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.UnsupportedMediaType)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.UnsupportedMediaType)
                 {
                     Title = "The specified Content-Type header value is not supported.",
-                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' " + "for the Content-Type header value."
+                    Detail = $"Please specify '{allowedContentType}' instead of '{contentType}' for the Content-Type header value.",
+                    Source = new ErrorSource
+                    {
+                        Header = "Content-Type"
+                    }
                 });
 
                 return false;
@@ -159,7 +165,7 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         private static async Task<bool> ValidateAcceptHeaderAsync(MediaTypeHeaderValue allowedMediaTypeValue, HttpContext httpContext,
-            JsonSerializerSettings serializerSettings)
+            JsonSerializerOptions serializerOptions)
         {
             string[] acceptHeaders = httpContext.Request.Headers.GetCommaSeparatedValues("Accept");
 
@@ -192,10 +198,14 @@ namespace JsonApiDotNetCore.Middleware
 
             if (!seenCompatibleMediaType)
             {
-                await FlushResponseAsync(httpContext.Response, serializerSettings, new Error(HttpStatusCode.NotAcceptable)
+                await FlushResponseAsync(httpContext.Response, serializerOptions, new ErrorObject(HttpStatusCode.NotAcceptable)
                 {
                     Title = "The specified Accept header value does not contain any supported media types.",
-                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values."
+                    Detail = $"Please include '{allowedMediaTypeValue}' in the Accept header values.",
+                    Source = new ErrorSource
+                    {
+                        Header = "Accept"
+                    }
                 });
 
                 return false;
@@ -204,32 +214,22 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerSettings serializerSettings, Error error)
+        private static async Task FlushResponseAsync(HttpResponse httpResponse, JsonSerializerOptions serializerOptions, ErrorObject error)
         {
             httpResponse.ContentType = HeaderConstants.MediaType;
             httpResponse.StatusCode = (int)error.StatusCode;
 
-            var serializer = JsonSerializer.CreateDefault(serializerSettings);
-            serializer.ApplyErrorSettings();
-
-            // https://github.com/JamesNK/Newtonsoft.Json/issues/1193
-            await using (var stream = new MemoryStream())
+            var errorDocument = new Document
             {
-                await using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
-                {
-                    using var jsonWriter = new JsonTextWriter(streamWriter);
-                    serializer.Serialize(jsonWriter, new ErrorDocument(error));
-                }
+                Errors = error.AsList()
+            };
 
-                stream.Seek(0, SeekOrigin.Begin);
-                await stream.CopyToAsync(httpResponse.Body);
-            }
-
+            await JsonSerializer.SerializeAsync(httpResponse.Body, errorDocument, serializerOptions);
             await httpResponse.Body.FlushAsync();
         }
 
         private static void SetupResourceRequest(JsonApiRequest request, ResourceContext primaryResourceContext, RouteValueDictionary routeValues,
-            IResourceContextProvider resourceContextProvider, HttpRequest httpRequest)
+            IResourceGraph resourceGraph, HttpRequest httpRequest)
         {
             request.IsReadOnly = httpRequest.Method == HttpMethod.Get.Method || httpRequest.Method == HttpMethod.Head.Method;
             request.PrimaryResource = primaryResourceContext;
@@ -252,13 +252,12 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                RelationshipAttribute requestRelationship =
-                    primaryResourceContext.Relationships.SingleOrDefault(relationship => relationship.PublicName == relationshipName);
+                RelationshipAttribute requestRelationship = primaryResourceContext.TryGetRelationshipByPublicName(relationshipName);
 
                 if (requestRelationship != null)
                 {
                     request.Relationship = requestRelationship;
-                    request.SecondaryResource = resourceContextProvider.GetResourceContext(requestRelationship.RightType);
+                    request.SecondaryResource = resourceGraph.GetResourceContext(requestRelationship.RightType);
                 }
             }
             else

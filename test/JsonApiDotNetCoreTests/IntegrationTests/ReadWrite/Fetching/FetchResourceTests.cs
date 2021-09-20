@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -44,20 +45,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItems[0].StringId);
+            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes["description"].Should().Be(workItems[0].Description);
-            item1.Attributes["dueAt"].Should().BeCloseTo(workItems[0].DueAt);
-            item1.Attributes["priority"].Should().Be(workItems[0].Priority.ToString("G"));
+            item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[0].DueAt.GetValueOrDefault());
+            item1.Attributes["priority"].Should().Be(workItems[0].Priority);
             item1.Relationships.Should().NotBeEmpty();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItems[1].StringId);
+            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes["description"].Should().Be(workItems[1].Description);
-            item2.Attributes["dueAt"].Should().BeCloseTo(workItems[1].DueAt);
-            item2.Attributes["priority"].Should().Be(workItems[1].Priority.ToString("G"));
+            item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[1].DueAt.GetValueOrDefault());
+            item2.Attributes["priority"].Should().Be(workItems[1].Priority);
             item2.Relationships.Should().NotBeEmpty();
         }
 
@@ -65,7 +66,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resources_for_unknown_type()
         {
             // Arrange
-            const string route = "/doesNotExist";
+            const string route = "/" + Unknown.ResourceType;
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -88,7 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/workItems/" + workItem.StringId;
+            string route = $"/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -96,20 +97,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("workItems");
-            responseDocument.SingleData.Id.Should().Be(workItem.StringId);
-            responseDocument.SingleData.Attributes["description"].Should().Be(workItem.Description);
-            responseDocument.SingleData.Attributes["dueAt"].Should().BeCloseTo(workItem.DueAt);
-            responseDocument.SingleData.Attributes["priority"].Should().Be(workItem.Priority.ToString("G"));
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("workItems");
+            responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
+            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(workItem.Description);
+            responseDocument.Data.SingleValue.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItem.DueAt.GetValueOrDefault());
+            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(workItem.Priority);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
         }
 
         [Fact]
         public async Task Cannot_get_primary_resource_for_unknown_type()
         {
             // Arrange
-            const string route = "/doesNotExist/99999999";
+            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -124,20 +125,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_primary_resource_for_unknown_ID()
         {
             // Arrange
-            const string route = "/workItems/99999999";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -161,12 +164,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Type.Should().Be("userAccounts");
-            responseDocument.SingleData.Id.Should().Be(workItem.Assignee.StringId);
-            responseDocument.SingleData.Attributes["firstName"].Should().Be(workItem.Assignee.FirstName);
-            responseDocument.SingleData.Attributes["lastName"].Should().Be(workItem.Assignee.LastName);
-            responseDocument.SingleData.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
+            responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
+            responseDocument.Data.SingleValue.Attributes["firstName"].Should().Be(workItem.Assignee.FirstName);
+            responseDocument.Data.SingleValue.Attributes["lastName"].Should().Be(workItem.Assignee.LastName);
+            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -189,7 +192,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.Should().BeNull();
+            responseDocument.Data.Value.Should().BeNull();
         }
 
         [Fact]
@@ -213,20 +216,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
+            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(0).Description);
-            item1.Attributes["dueAt"].Should().BeCloseTo(userAccount.AssignedItems.ElementAt(0).DueAt);
-            item1.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(0).Priority.ToString("G"));
+            item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(0).DueAt.GetValueOrDefault());
+            item1.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(0).Priority);
             item1.Relationships.Should().NotBeEmpty();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
+            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(1).Description);
-            item2.Attributes["dueAt"].Should().BeCloseTo(userAccount.AssignedItems.ElementAt(1).DueAt);
-            item2.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(1).Priority.ToString("G"));
+            item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(1).DueAt.GetValueOrDefault());
+            item2.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(1).Priority);
             item2.Relationships.Should().NotBeEmpty();
         }
 
@@ -250,7 +253,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().BeEmpty();
+            responseDocument.Data.ManyValue.Should().BeEmpty();
         }
 
         [Fact]
@@ -274,15 +277,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            ResourceObject item1 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
+            ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes["text"].Should().Be(workItem.Tags.ElementAt(0).Text);
             item1.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn);
             item1.Relationships.Should().NotBeEmpty();
 
-            ResourceObject item2 = responseDocument.ManyData.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
+            ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes["text"].Should().Be(workItem.Tags.ElementAt(1).Text);
             item2.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn);
@@ -309,14 +312,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().BeEmpty();
+            responseDocument.Data.ManyValue.Should().BeEmpty();
         }
 
         [Fact]
         public async Task Cannot_get_secondary_resource_for_unknown_primary_type()
         {
             // Arrange
-            const string route = "/doesNotExist/99999999/assignee";
+            string route = $"/{Unknown.ResourceType}/{Unknown.StringId.Int32}/assignee";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
@@ -331,20 +334,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
         public async Task Cannot_get_secondary_resource_for_unknown_primary_ID()
         {
             // Arrange
-            const string route = "/workItems/99999999/assignee";
+            string workItemId = Unknown.StringId.For<WorkItem, int>();
+
+            string route = $"/workItems/{workItemId}/assignee";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' with ID '99999999' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
         }
 
         [Fact]
@@ -360,20 +365,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/workItems/{workItem.StringId}/doesNotExist";
+            string route = $"/workItems/{workItem.StringId}/{Unknown.Relationship}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
-            error.Detail.Should().Be("Resource of type 'workItems' does not contain a relationship named 'doesNotExist'.");
+            error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
         }
     }
 }

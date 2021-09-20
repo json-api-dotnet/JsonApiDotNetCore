@@ -21,9 +21,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         protected Stack<Token> TokenStack { get; private set; }
         private protected ResourceFieldChainResolver ChainResolver { get; }
 
-        protected QueryExpressionParser(IResourceContextProvider resourceContextProvider)
+        protected QueryExpressionParser(IResourceGraph resourceGraph)
         {
-            ChainResolver = new ResourceFieldChainResolver(resourceContextProvider);
+            ChainResolver = new ResourceFieldChainResolver(resourceGraph);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (!TokenStack.TryPop(out Token token) || token.Kind != TokenKind.Text || token.Value != text)
             {
-                throw new QueryParseException(text + " expected.");
+                throw new QueryParseException($"{text} expected.");
             }
         }
 
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             if (!TokenStack.TryPop(out Token token) || token.Kind != kind)
             {
                 char ch = QueryTokenizer.SingleCharacterToTokenKinds.Single(pair => pair.Value == kind).Key;
-                throw new QueryParseException(ch + " expected.");
+                throw new QueryParseException($"{ch} expected.");
             }
         }
 

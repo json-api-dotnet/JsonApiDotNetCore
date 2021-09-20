@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Queries
 
         private static void WriteLayer(IndentingStringWriter writer, QueryLayer layer, string prefix = null)
         {
-            writer.WriteLine(prefix + nameof(QueryLayer) + "<" + layer.ResourceContext.ResourceType.Name + ">");
+            writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceContext.ResourceType.Name}>");
 
             using (writer.Indent())
             {
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Queries
                             }
                             else
                             {
-                                WriteLayer(writer, nextLayer, field.PublicName + ": ");
+                                WriteLayer(writer, nextLayer, $"{field.PublicName}: ");
                             }
                         }
                     }

@@ -243,13 +243,15 @@ namespace JsonApiDotNetCore.Configuration
 
         private string FormatResourceName(Type resourceType)
         {
-            var formatter = new ResourceNameFormatter(_options.SerializerNamingStrategy);
+            var formatter = new ResourceNameFormatter(_options.SerializerOptions.PropertyNamingPolicy);
             return formatter.FormatResourceName(resourceType);
         }
 
         private string FormatPropertyName(PropertyInfo resourceProperty)
         {
-            return _options.SerializerNamingStrategy.GetPropertyName(resourceProperty.Name, false);
+            return _options.SerializerOptions.PropertyNamingPolicy == null
+                ? resourceProperty.Name
+                : _options.SerializerOptions.PropertyNamingPolicy.ConvertName(resourceProperty.Name);
         }
     }
 }

@@ -31,26 +31,25 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IJsonApiOptions _options;
         private readonly IJsonApiRequest _request;
         private readonly IPaginationContext _paginationContext;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LinkGenerator _linkGenerator;
         private readonly IControllerResourceMapping _controllerResourceMapping;
 
-        public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext,
-            IResourceContextProvider resourceContextProvider, IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator,
-            IControllerResourceMapping controllerResourceMapping)
+        public LinkBuilder(IJsonApiOptions options, IJsonApiRequest request, IPaginationContext paginationContext, IResourceGraph resourceGraph,
+            IHttpContextAccessor httpContextAccessor, LinkGenerator linkGenerator, IControllerResourceMapping controllerResourceMapping)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(linkGenerator, nameof(linkGenerator));
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
 
             _options = options;
             _request = request;
             _paginationContext = paginationContext;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _httpContextAccessor = httpContextAccessor;
             _linkGenerator = linkGenerator;
             _controllerResourceMapping = controllerResourceMapping;
@@ -173,7 +172,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 return ImmutableArray<PaginationElementQueryStringValueExpression>.Empty;
             }
 
-            var parser = new PaginationParser(_resourceContextProvider);
+            var parser = new PaginationParser(_resourceGraph);
             PaginationQueryStringValueExpression paginationExpression = parser.Parse(pageSizeParameterValue, requestResource);
 
             return paginationExpression.Elements;
@@ -231,7 +230,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNullNorEmpty(id, nameof(id));
 
             var links = new ResourceLinks();
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceName);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceName);
 
             if (_request.Kind != EndpointKind.Relationship && ShouldIncludeResourceLink(LinkTypes.Self, resourceContext))
             {
@@ -270,7 +269,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(leftResource, nameof(leftResource));
 
             var links = new RelationshipLinks();
-            ResourceContext leftResourceContext = _resourceContextProvider.GetResourceContext(leftResource.GetType());
+            ResourceContext leftResourceContext = _resourceGraph.GetResourceContext(leftResource.GetType());
 
             if (ShouldIncludeRelationshipLink(LinkTypes.Self, relationship, leftResourceContext))
             {

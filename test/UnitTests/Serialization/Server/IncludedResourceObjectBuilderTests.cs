@@ -31,11 +31,11 @@ namespace UnitTests.Serialization.Server
             Assert.Equal(6, result.Count);
 
             ResourceObject authorResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == author.StringId);
-            ResourceIdentifierObject authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceIdentifierObject authorFoodRelation = authorResourceObject.Relationships["favoriteFood"].Data.SingleValue;
             Assert.Equal(author.FavoriteFood.StringId, authorFoodRelation.Id);
 
             ResourceObject reviewerResourceObject = result.Single(ro => ro.Type == "people" && ro.Id == reviewer.StringId);
-            ResourceIdentifierObject reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].SingleData;
+            ResourceIdentifierObject reviewerFoodRelation = reviewerResourceObject.Relationships["favoriteFood"].Data.SingleValue;
             Assert.Equal(reviewer.FavoriteFood.StringId, reviewerFoodRelation.Id);
         }
 
@@ -111,7 +111,7 @@ namespace UnitTests.Serialization.Server
             IList<ResourceObject> result = builder.Build();
             Assert.Single(result);
             Assert.Equal(person.Name, result[0].Attributes["name"]);
-            Assert.Equal(person.Id.ToString(), result[0].Id);
+            Assert.Equal(person.StringId, result[0].Id);
         }
 
         private Song GetReviewerChainInstances(Article article, Blog sharedBlog, Person sharedBlogAuthor)
@@ -166,8 +166,7 @@ namespace UnitTests.Serialization.Server
 
             foreach (string requestedRelationship in splitPath)
             {
-                RelationshipAttribute relationship =
-                    resourceContext.Relationships.Single(nextRelationship => nextRelationship.PublicName == requestedRelationship);
+                RelationshipAttribute relationship = resourceContext.GetRelationshipByPublicName(requestedRelationship);
 
                 parsedChain.Add(relationship);
                 resourceContext = ResourceGraph.GetResourceContext(relationship.RightType);
@@ -182,10 +181,10 @@ namespace UnitTests.Serialization.Server
             ILinkBuilder links = GetLinkBuilder();
             IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var queryStringAccessor = new FakeRequestQueryStringAccessor();
-            IResourceObjectBuilderSettingsProvider resourceObjectBuilderSettingsProvider = GetSerializerSettingsProvider();
+            var options = new JsonApiOptions();
 
             return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor,
-                queryStringAccessor, resourceObjectBuilderSettingsProvider);
+                queryStringAccessor, options);
         }
 
         private sealed class AuthorChainInstances

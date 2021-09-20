@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
-                    AttrAttribute archivedAtAttribute = ResourceContext.Attributes.Single(attr => attr.Property.Name == nameof(TelevisionBroadcast.ArchivedAt));
+                    AttrAttribute archivedAtAttribute = ResourceContext.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         {
             if (broadcast.ArchivedAt != null)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
                 {
                     Title = "Television broadcasts cannot be created in archived state."
                 });
@@ -163,7 +163,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         {
             if (_storedArchivedAt != null && broadcast.ArchivedAt != null && _storedArchivedAt != broadcast.ArchivedAt)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
                 {
                     Title = "Archive date of television broadcasts cannot be shifted. Unarchive it first."
                 });
@@ -175,7 +175,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         {
             if (broadcast.ArchivedAt == null)
             {
-                throw new JsonApiException(new Error(HttpStatusCode.Forbidden)
+                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
                 {
                     Title = "Television broadcasts must first be archived before they can be deleted."
                 });

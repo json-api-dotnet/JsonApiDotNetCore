@@ -14,9 +14,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
         private ResourceContext _resourceContextInScope;
 
-        public PaginationParser(IResourceContextProvider resourceContextProvider,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
-            : base(resourceContextProvider)
+        public PaginationParser(IResourceGraph resourceGraph, Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
+            : base(resourceGraph)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }

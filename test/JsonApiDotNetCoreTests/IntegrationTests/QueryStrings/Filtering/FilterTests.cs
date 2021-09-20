@@ -30,42 +30,42 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         public async Task Cannot_filter_in_unknown_scope()
         {
             // Arrange
-            const string route = "/webAccounts?filter[doesNotExist]=equals(title,null)";
+            string route = $"/webAccounts?filter[{Unknown.Relationship}]=equals(title,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource 'webAccounts'.");
-            error.Source.Parameter.Should().Be("filter[doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Source.Parameter.Should().Be($"filter[{Unknown.Relationship}]");
         }
 
         [Fact]
         public async Task Cannot_filter_in_unknown_nested_scope()
         {
             // Arrange
-            const string route = "/webAccounts?filter[posts.doesNotExist]=equals(title,null)";
+            string route = $"/webAccounts?filter[posts.{Unknown.Relationship}]=equals(title,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' in 'posts.doesNotExist' does not exist on resource 'blogPosts'.");
-            error.Source.Parameter.Should().Be("filter[posts.doesNotExist]");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Source.Parameter.Should().Be($"filter[posts.{Unknown.Relationship}]");
         }
 
         [Fact]
@@ -75,14 +75,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             const string route = "/webAccounts?filter=equals(dateOfBirth,null)";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
             error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
@@ -110,9 +110,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(1);
-            responseDocument.ManyData[0].Id.Should().Be(accounts[0].StringId);
-            responseDocument.ManyData[0].Attributes["userName"].Should().Be(accounts[0].UserName);
+            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);
+            responseDocument.Data.ManyValue[0].Attributes["userName"].Should().Be(accounts[0].UserName);
         }
     }
 }

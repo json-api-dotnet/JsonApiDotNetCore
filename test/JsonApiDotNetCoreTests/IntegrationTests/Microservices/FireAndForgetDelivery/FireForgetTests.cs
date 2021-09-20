@@ -46,22 +46,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
             var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
-            string missingUserId = Guid.NewGuid().ToString();
+            string unknownUserId = Unknown.StringId.For<DomainUser, Guid>();
 
-            string route = "/domainUsers/" + missingUserId;
+            string route = $"/domainUsers/{unknownUserId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
-            error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{missingUserId}' does not exist.");
+            error.Detail.Should().Be($"Resource of type 'domainUsers' with ID '{unknownUserId}' does not exist.");
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -89,17 +89,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/domainUsers/" + existingUser.StringId;
+            string route = $"/domainUsers/{existingUser.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteDeleteAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.ServiceUnavailable);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.ServiceUnavailable);
             error.Title.Should().Be("Message delivery failed.");
             error.Detail.Should().BeNull();

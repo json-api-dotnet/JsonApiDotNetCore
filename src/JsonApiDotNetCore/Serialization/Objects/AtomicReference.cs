@@ -1,20 +1,28 @@
-using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
-    /// See 'ref' in https://jsonapi.org/ext/atomic/#operation-objects.
+    /// See "ref" in https://jsonapi.org/ext/atomic/#operation-objects.
     /// </summary>
-    public sealed class AtomicReference : ResourceIdentifierObject
+    [PublicAPI]
+    public sealed class AtomicReference : IResourceIdentity
     {
-        [JsonProperty("relationship", NullValueHandling = NullValueHandling.Ignore)]
-        public string Relationship { get; set; }
+        [JsonPropertyName("type")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        public string Type { get; set; }
 
-        protected override void WriteMembers(StringBuilder builder)
-        {
-            base.WriteMembers(builder);
-            WriteMember(builder, "relationship", Relationship);
-        }
+        [JsonPropertyName("id")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Id { get; set; }
+
+        [JsonPropertyName("lid")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Lid { get; set; }
+
+        [JsonPropertyName("relationship")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Relationship { get; set; }
     }
 }

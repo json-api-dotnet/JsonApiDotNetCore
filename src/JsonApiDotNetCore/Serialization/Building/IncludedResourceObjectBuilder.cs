@@ -24,10 +24,10 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
         private readonly SparseFieldSetCache _sparseFieldSetCache;
 
-        public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceContextProvider resourceContextProvider,
+        public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IRequestQueryStringAccessor queryStringAccessor, IResourceObjectBuilderSettingsProvider settingsProvider)
-            : base(resourceContextProvider, settingsProvider.Get())
+            IRequestQueryStringAccessor queryStringAccessor, IJsonApiOptions options)
+            : base(resourceGraph, options)
         {
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
 
-            _included = new HashSet<ResourceObject>(ResourceIdentifierObjectComparer.Instance);
+            _included = new HashSet<ResourceObject>(ResourceIdentityComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -69,8 +69,8 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             foreach (string relationshipName in resourceObject.Relationships.Keys)
             {
-                ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceObject.Type);
-                RelationshipAttribute relationship = resourceContext.Relationships.Single(rel => rel.PublicName == relationshipName);
+                ResourceContext resourceContext = ResourceGraph.GetResourceContext(resourceObject.Type);
+                RelationshipAttribute relationship = resourceContext.GetRelationshipByPublicName(relationshipName);
 
                 if (!IsRelationshipInSparseFieldSet(relationship))
                 {
@@ -78,12 +78,12 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            resourceObject.Relationships = PruneRelationshipEntries(resourceObject);
+            resourceObject.Relationships = PruneRelationshipObjects(resourceObject);
         }
 
-        private static IDictionary<string, RelationshipEntry> PruneRelationshipEntries(ResourceObject resourceObject)
+        private static IDictionary<string, RelationshipObject> PruneRelationshipObjects(ResourceObject resourceObject)
         {
-            Dictionary<string, RelationshipEntry> pruned = resourceObject.Relationships.Where(pair => pair.Value.IsPopulated || pair.Value.Links != null)
+            Dictionary<string, RelationshipObject> pruned = resourceObject.Relationships.Where(pair => pair.Value.Data.IsAssigned || pair.Value.Links != null)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
             return !pruned.Any() ? null : pruned;
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private bool IsRelationshipInSparseFieldSet(RelationshipAttribute relationship)
         {
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(relationship.LeftType);
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(relationship.LeftType);
 
             IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
             return fieldSet.Contains(relationship);
@@ -140,6 +140,11 @@ namespace JsonApiDotNetCore.Serialization.Building
 
         private void ProcessRelationship(IIdentifiable parent, IList<RelationshipAttribute> inclusionChain)
         {
+            if (parent == null)
+            {
+                return;
+            }
+
             ResourceObject resourceObject = TryGetBuiltResourceObjectFor(parent);
 
             if (resourceObject == null)
@@ -159,18 +164,17 @@ namespace JsonApiDotNetCore.Serialization.Building
             chainRemainder.RemoveAt(0);
 
             string nextRelationshipName = nextRelationship.PublicName;
-            IDictionary<string, RelationshipEntry> relationshipsObject = resourceObject.Relationships;
+            IDictionary<string, RelationshipObject> relationshipsObject = resourceObject.Relationships;
 
-            // add the relationship entry in the relationship object.
-            if (!relationshipsObject.TryGetValue(nextRelationshipName, out RelationshipEntry relationshipEntry))
+            if (!relationshipsObject.TryGetValue(nextRelationshipName, out RelationshipObject relationshipObject))
             {
-                relationshipEntry = GetRelationshipData(nextRelationship, parent);
-                relationshipsObject[nextRelationshipName] = relationshipEntry;
+                relationshipObject = GetRelationshipData(nextRelationship, parent);
+                relationshipsObject[nextRelationshipName] = relationshipObject;
             }
 
-            relationshipEntry.Data = GetRelatedResourceLinkage(nextRelationship, parent);
+            relationshipObject.Data = GetRelatedResourceLinkage(nextRelationship, parent);
 
-            if (relationshipEntry.HasResource)
+            if (relationshipObject.Data.IsAssigned && relationshipObject.Data.Value != null)
             {
                 // if the relationship is set, continue parsing the chain.
                 object related = nextRelationship.GetValue(parent);
@@ -186,14 +190,14 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// We only need an empty relationship object entry here. It will be populated in the ProcessRelationships method.
+        /// We only need an empty relationship object here. It will be populated in the ProcessRelationships method.
         /// </summary>
-        protected override RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
+        protected override RelationshipObject GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new RelationshipEntry
+            return new RelationshipObject
             {
                 Links = _linkBuilder.GetRelationshipLinks(relationship, resource)
             };
@@ -202,7 +206,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         private ResourceObject TryGetBuiltResourceObjectFor(IIdentifiable resource)
         {
             Type resourceType = resource.GetType();
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(resourceType);
 
             return _included.SingleOrDefault(resourceObject => resourceObject.Type == resourceContext.PublicName && resourceObject.Id == resource.StringId);
         }

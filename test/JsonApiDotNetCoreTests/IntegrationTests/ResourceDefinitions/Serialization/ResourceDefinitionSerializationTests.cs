@@ -63,12 +63,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.ManyData[0].Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[0].Attributes["socialSecurityNumber"]);
             socialSecurityNumber1.Should().Be(students[0].SocialSecurityNumber);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.ManyData[1].Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[1].Attributes["socialSecurityNumber"]);
             socialSecurityNumber2.Should().Be(students[1].SocialSecurityNumber);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
             responseDocument.Included.Should().HaveCount(4);
 
@@ -144,7 +144,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/students/" + student.StringId;
+            string route = $"/students/{student.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -152,9 +152,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -187,12 +187,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.ManyData[0].Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[0].Attributes["socialSecurityNumber"]);
             socialSecurityNumber1.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.ManyData[1].Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[1].Attributes["socialSecurityNumber"]);
             socialSecurityNumber2.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -226,9 +226,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -261,7 +261,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
 
@@ -305,12 +305,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
 
-            int newStudentId = int.Parse(responseDocument.SingleData.Id);
+            int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -376,7 +376,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(1);
 
@@ -419,7 +419,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
                 }
             };
 
-            string route = "/students/" + existingStudent.StringId;
+            string route = $"/students/{existingStudent.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -427,9 +427,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.SingleData.Attributes["socialSecurityNumber"]);
+            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
             socialSecurityNumber.Should().Be(newSocialSecurityNumber);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -504,7 +504,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Should().NotBeNull();
 
             responseDocument.Included.Should().HaveCount(2);
 
@@ -544,8 +544,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(scholarship.PrimaryContact.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(scholarship.PrimaryContact.StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }
@@ -573,9 +573,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().HaveCount(2);
-            responseDocument.ManyData[0].Id.Should().Be(scholarship.Participants[0].StringId);
-            responseDocument.ManyData[1].Id.Should().Be(scholarship.Participants[1].StringId);
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(scholarship.Participants[0].StringId);
+            responseDocument.Data.ManyValue[1].Id.Should().Be(scholarship.Participants[1].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEmpty();
         }

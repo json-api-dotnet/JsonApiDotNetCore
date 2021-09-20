@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Humanizer;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -9,7 +10,6 @@ using JsonApiDotNetCore.OpenApi.JsonApiObjects.RelationshipData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Newtonsoft.Json.Serialization;
 
 namespace JsonApiDotNetCore.OpenApi
 {
@@ -35,17 +35,17 @@ namespace JsonApiDotNetCore.OpenApi
         };
 
         private readonly IControllerResourceMapping _controllerResourceMapping;
-        private readonly NamingStrategy _namingStrategy;
+        private readonly JsonNamingPolicy _namingPolicy;
         private readonly ResourceNameFormatter _formatter;
 
-        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, NamingStrategy namingStrategy)
+        public JsonApiOperationIdSelector(IControllerResourceMapping controllerResourceMapping, JsonNamingPolicy namingPolicy)
         {
             ArgumentGuard.NotNull(controllerResourceMapping, nameof(controllerResourceMapping));
-            ArgumentGuard.NotNull(namingStrategy, nameof(namingStrategy));
+            ArgumentGuard.NotNull(namingPolicy, nameof(namingPolicy));
 
             _controllerResourceMapping = controllerResourceMapping;
-            _namingStrategy = namingStrategy;
-            _formatter = new ResourceNameFormatter(namingStrategy);
+            _namingPolicy = namingPolicy;
+            _formatter = new ResourceNameFormatter(namingPolicy);
         }
 
         public string GetOperationId(ApiDescription endpoint)
@@ -109,7 +109,7 @@ namespace JsonApiDotNetCore.OpenApi
             // @formatter:keep_existing_linebreaks restore
             // @formatter:wrap_chained_method_calls restore
 
-            return _namingStrategy.GetPropertyName(pascalCaseId, false);
+            return _namingPolicy.ConvertName(pascalCaseId);
         }
     }
 }

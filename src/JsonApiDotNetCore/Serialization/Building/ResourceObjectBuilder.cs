@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Resources.Internal;
 using JsonApiDotNetCore.Serialization.Objects;
-using Newtonsoft.Json;
 
 namespace JsonApiDotNetCore.Serialization.Building
 {
@@ -15,17 +15,17 @@ namespace JsonApiDotNetCore.Serialization.Building
     public class ResourceObjectBuilder : IResourceObjectBuilder
     {
         private static readonly CollectionConverter CollectionConverter = new();
+        private readonly IJsonApiOptions _options;
 
-        private readonly ResourceObjectBuilderSettings _settings;
-        protected IResourceContextProvider ResourceContextProvider { get; }
+        protected IResourceGraph ResourceGraph { get; }
 
-        public ResourceObjectBuilder(IResourceContextProvider resourceContextProvider, ResourceObjectBuilderSettings settings)
+        public ResourceObjectBuilder(IResourceGraph resourceGraph, IJsonApiOptions options)
         {
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
-            ArgumentGuard.NotNull(settings, nameof(settings));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(options, nameof(options));
 
-            ResourceContextProvider = resourceContextProvider;
-            _settings = settings;
+            ResourceGraph = resourceGraph;
+            _options = options;
         }
 
         /// <inheritdoc />
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = ResourceContextProvider.GetResourceContext(resource.GetType());
+            ResourceContext resourceContext = ResourceGraph.GetResourceContext(resource.GetType());
 
             // populating the top-level "type" and "id" members.
             var resourceObject = new ResourceObject
@@ -64,25 +64,24 @@ namespace JsonApiDotNetCore.Serialization.Building
         }
 
         /// <summary>
-        /// Builds the <see cref="RelationshipEntry" /> entries of the "relationships objects". The default behavior is to just construct a resource linkage with
-        /// the "data" field populated with "single" or "many" data. Depending on the requirements of the implementation (server or client serializer), this may
-        /// be overridden.
+        /// Builds a <see cref="RelationshipObject" />. The default behavior is to just construct a resource linkage with the "data" field populated with
+        /// "single" or "many" data.
         /// </summary>
-        protected virtual RelationshipEntry GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
+        protected virtual RelationshipObject GetRelationshipData(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            return new RelationshipEntry
+            return new RelationshipObject
             {
                 Data = GetRelatedResourceLinkage(relationship, resource)
             };
         }
 
         /// <summary>
-        /// Gets the value for the <see cref="ExposableData{T}.Data" /> property.
+        /// Gets the value for the data property.
         /// </summary>
-        protected object GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
+        protected SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkage(RelationshipAttribute relationship, IIdentifiable resource)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(resource, nameof(resource));
@@ -95,22 +94,17 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// <summary>
         /// Builds a <see cref="ResourceIdentifierObject" /> for a HasOne relationship.
         /// </summary>
-        private ResourceIdentifierObject GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
+        private SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkageForHasOne(HasOneAttribute relationship, IIdentifiable resource)
         {
             var relatedResource = (IIdentifiable)relationship.GetValue(resource);
-
-            if (relatedResource != null)
-            {
-                return GetResourceIdentifier(relatedResource);
-            }
-
-            return null;
+            ResourceIdentifierObject resourceIdentifierObject = relatedResource != null ? GetResourceIdentifier(relatedResource) : null;
+            return new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObject);
         }
 
         /// <summary>
         /// Builds the <see cref="ResourceIdentifierObject" />s for a HasMany relationship.
         /// </summary>
-        private IList<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
+        private SingleOrManyData<ResourceIdentifierObject> GetRelatedResourceLinkageForHasMany(HasManyAttribute relationship, IIdentifiable resource)
         {
             object value = relationship.GetValue(resource);
             ICollection<IIdentifiable> relatedResources = CollectionConverter.ExtractResources(value);
@@ -125,7 +119,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 }
             }
 
-            return manyData;
+            return new SingleOrManyData<ResourceIdentifierObject>(manyData);
         }
 
         /// <summary>
@@ -133,7 +127,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private ResourceIdentifierObject GetResourceIdentifier(IIdentifiable resource)
         {
-            string publicName = ResourceContextProvider.GetResourceContext(resource.GetType()).PublicName;
+            string publicName = ResourceGraph.GetResourceContext(resource.GetType()).PublicName;
 
             return new ResourceIdentifierObject
             {
@@ -149,11 +143,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         {
             foreach (RelationshipAttribute rel in relationships)
             {
-                RelationshipEntry relData = GetRelationshipData(rel, resource);
+                RelationshipObject relData = GetRelationshipData(rel, resource);
 
                 if (relData != null)
                 {
-                    (ro.Relationships ??= new Dictionary<string, RelationshipEntry>()).Add(rel.PublicName, relData);
+                    (ro.Relationships ??= new Dictionary<string, RelationshipObject>()).Add(rel.PublicName, relData);
                 }
             }
         }
@@ -169,15 +163,15 @@ namespace JsonApiDotNetCore.Serialization.Building
             {
                 object value = attr.GetValue(resource);
 
-                if (_settings.SerializerNullValueHandling == NullValueHandling.Ignore && value == null)
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && value == null)
                 {
-                    return;
+                    continue;
                 }
 
-                if (_settings.SerializerDefaultValueHandling == DefaultValueHandling.Ignore &&
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
                     Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
                 {
-                    return;
+                    continue;
                 }
 
                 ro.Attributes.Add(attr.PublicName, value);

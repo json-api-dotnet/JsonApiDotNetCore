@@ -33,7 +33,6 @@ namespace DiscoveryTests
             _services.AddScoped(_ => new Mock<IJsonApiRequest>().Object);
             _services.AddScoped(_ => new Mock<ITargetedFields>().Object);
             _services.AddScoped(_ => new Mock<IResourceGraph>().Object);
-            _services.AddScoped(_ => new Mock<IResourceContextProvider>().Object);
             _services.AddScoped(typeof(IResourceChangeTracker<>), typeof(ResourceChangeTracker<>));
             _services.AddScoped(_ => new Mock<IResourceFactory>().Object);
             _services.AddScoped(_ => new Mock<IPaginationContext>().Object);
@@ -57,10 +56,10 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceContext personContext = resourceGraph.GetResourceContext(typeof(Person));
+            ResourceContext personContext = resourceGraph.TryGetResourceContext(typeof(Person));
             personContext.Should().NotBeNull();
 
-            ResourceContext todoItemContext = resourceGraph.GetResourceContext(typeof(TodoItem));
+            ResourceContext todoItemContext = resourceGraph.TryGetResourceContext(typeof(TodoItem));
             todoItemContext.Should().NotBeNull();
         }
 
@@ -77,7 +76,7 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceContext testContext = resourceGraph.GetResourceContext(typeof(TestResource));
+            ResourceContext testContext = resourceGraph.TryGetResourceContext(typeof(TestResource));
             testContext.Should().NotBeNull();
         }
 

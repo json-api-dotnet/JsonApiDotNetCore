@@ -1,25 +1,33 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     /// <summary>
     /// See https://jsonapi.org/ext/atomic/#operation-objects.
     /// </summary>
-    public sealed class AtomicOperationObject : ExposableData<ResourceObject>
+    [PublicAPI]
+    public sealed class AtomicOperationObject
     {
-        [JsonProperty("meta", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, object> Meta { get; set; }
+        [JsonPropertyName("data")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+        public SingleOrManyData<ResourceObject> Data { get; set; }
 
-        [JsonProperty("op")]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonPropertyName("op")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         public AtomicOperationCode Code { get; set; }
 
-        [JsonProperty("ref", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("ref")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public AtomicReference Ref { get; set; }
 
-        [JsonProperty("href", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("href")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string Href { get; set; }
+
+        [JsonPropertyName("meta")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public IDictionary<string, object> Meta { get; set; }
     }
 }

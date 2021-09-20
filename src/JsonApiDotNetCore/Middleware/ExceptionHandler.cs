@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -26,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
-        public ErrorDocument HandleException(Exception exception)
+        public Document HandleException(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -69,33 +70,42 @@ namespace JsonApiDotNetCore.Middleware
             return exception.Message;
         }
 
-        protected virtual ErrorDocument CreateErrorDocument(Exception exception)
+        protected virtual Document CreateErrorDocument(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
-            IReadOnlyList<Error> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
-                exception is OperationCanceledException ? new Error((HttpStatusCode)499)
+            IReadOnlyList<ErrorObject> errors = exception is JsonApiException jsonApiException ? jsonApiException.Errors :
+                exception is OperationCanceledException ? new ErrorObject((HttpStatusCode)499)
                 {
                     Title = "Request execution was canceled."
-                }.AsArray() : new Error(HttpStatusCode.InternalServerError)
+                }.AsArray() : new ErrorObject(HttpStatusCode.InternalServerError)
                 {
                     Title = "An unhandled error occurred while processing this request.",
                     Detail = exception.Message
                 }.AsArray();
 
-            foreach (Error error in errors)
+            foreach (ErrorObject error in errors)
             {
                 ApplyOptions(error, exception);
             }
 
-            return new ErrorDocument(errors);
+            return new Document
+            {
+                Errors = errors.ToList()
+            };
         }
 
-        private void ApplyOptions(Error error, Exception exception)
+        private void ApplyOptions(ErrorObject error, Exception exception)
         {
             Exception resultException = exception is InvalidModelStateException ? null : exception;
 
-            error.Meta.IncludeExceptionStackTrace(_options.IncludeExceptionStackTraceInErrors ? resultException : null);
+            if (resultException != null && _options.IncludeExceptionStackTraceInErrors)
+            {
+                string[] stackTraceLines = resultException.ToString().Split(Environment.NewLine);
+
+                error.Meta ??= new Dictionary<string, object>();
+                error.Meta["StackTrace"] = stackTraceLines;
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             if (id == ActionResultWithErrorObjectId)
             {
-                return NotFound(new Error(HttpStatusCode.NotFound)
+                return NotFound(new ErrorObject(HttpStatusCode.NotFound)
                 {
                     Title = "No toothbrush with that ID exists."
                 });
@@ -45,16 +45,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 
             if (id == ObjectResultWithErrorObjectId)
             {
-                return Error(new Error(HttpStatusCode.BadGateway));
+                return Error(new ErrorObject(HttpStatusCode.BadGateway));
             }
 
             if (id == ObjectResultWithErrorCollectionId)
             {
                 var errors = new[]
                 {
-                    new Error(HttpStatusCode.PreconditionFailed),
-                    new Error(HttpStatusCode.Unauthorized),
-                    new Error(HttpStatusCode.ExpectationFailed)
+                    new ErrorObject(HttpStatusCode.PreconditionFailed),
+                    new ErrorObject(HttpStatusCode.Unauthorized),
+                    new ErrorObject(HttpStatusCode.ExpectationFailed)
                     {
                         Title = "This is not a very great request."
                     }

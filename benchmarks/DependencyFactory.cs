@@ -8,7 +8,10 @@ namespace Benchmarks
         public IResourceGraph CreateResourceGraph(IJsonApiOptions options)
         {
             var builder = new ResourceGraphBuilder(options, NullLoggerFactory.Instance);
+
             builder.Add<BenchmarkResource>(BenchmarkResourcePublicNames.Type);
+            builder.Add<SubResource>();
+
             return builder.Build();
         }
     }

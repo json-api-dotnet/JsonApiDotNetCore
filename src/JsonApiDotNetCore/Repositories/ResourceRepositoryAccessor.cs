@@ -18,17 +18,17 @@ namespace JsonApiDotNetCore.Repositories
     public class ResourceRepositoryAccessor : IResourceRepositoryAccessor
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiRequest _request;
 
-        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceContextProvider resourceContextProvider, IJsonApiRequest request)
+        public ResourceRepositoryAccessor(IServiceProvider serviceProvider, IResourceGraph resourceGraph, IJsonApiRequest request)
         {
             ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(request, nameof(request));
 
             _serviceProvider = serviceProvider;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _request = request;
         }
 
@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual object ResolveReadRepository(Type resourceType)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 if (writeRepository is not IRepositorySupportsTransaction repository)
                 {
-                    ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+                    ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
                     throw new MissingTransactionSupportException(resourceContext.PublicName);
                 }
 
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual object ResolveWriteRepository(Type resourceType)
         {
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
             if (resourceContext.IdentityType == typeof(int))
             {

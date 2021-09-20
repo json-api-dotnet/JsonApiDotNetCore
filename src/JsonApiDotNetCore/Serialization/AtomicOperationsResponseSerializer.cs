@@ -59,7 +59,7 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeOperationsDocument(operations);
             }
 
-            if (content is ErrorDocument errorDocument)
+            if (content is Document errorDocument)
             {
                 return SerializeErrorDocument(errorDocument);
             }
@@ -69,12 +69,19 @@ namespace JsonApiDotNetCore.Serialization
 
         private string SerializeOperationsDocument(IEnumerable<OperationContainer> operations)
         {
-            var document = new AtomicOperationsDocument
+            var document = new Document
             {
                 Results = operations.Select(SerializeOperation).ToList(),
                 Meta = _metaBuilder.Build()
             };
 
+            SetApiVersion(document);
+
+            return SerializeObject(document, _options.SerializerWriteOptions);
+        }
+
+        private void SetApiVersion(Document document)
+        {
             if (_options.IncludeJsonApiVersion)
             {
                 document.JsonApi = new JsonApiObject
@@ -86,8 +93,6 @@ namespace JsonApiDotNetCore.Serialization
                     }
                 };
             }
-
-            return SerializeObject(document, _options.SerializerSettings);
         }
 
         private AtomicResultObject SerializeOperation(OperationContainer operation)
@@ -116,16 +121,15 @@ namespace JsonApiDotNetCore.Serialization
 
             return new AtomicResultObject
             {
-                Data = resourceObject
+                Data = new SingleOrManyData<ResourceObject>(resourceObject)
             };
         }
 
-        private string SerializeErrorDocument(ErrorDocument errorDocument)
+        private string SerializeErrorDocument(Document document)
         {
-            return SerializeObject(errorDocument, _options.SerializerSettings, serializer =>
-            {
-                serializer.ApplyErrorSettings();
-            });
+            SetApiVersion(document);
+
+            return SerializeObject(document, _options.SerializerWriteOptions);
         }
     }
 }

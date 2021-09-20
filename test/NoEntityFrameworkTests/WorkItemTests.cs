@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +19,15 @@ namespace NoEntityFrameworkTests
     public sealed class WorkItemTests : IntegrationTest, IClassFixture<WebApplicationFactory<Startup>>
     {
         private readonly WebApplicationFactory<Startup> _factory;
+
+        protected override JsonSerializerOptions SerializerOptions
+        {
+            get
+            {
+                var options = _factory.Services.GetRequiredService<IJsonApiOptions>();
+                return options.SerializerOptions;
+            }
+        }
 
         public WorkItemTests(WebApplicationFactory<Startup> factory)
         {
@@ -41,7 +52,7 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.ManyData.Should().NotBeEmpty();
+            responseDocument.Data.ManyValue.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -56,7 +67,7 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/api/v1/workItems/" + workItem.StringId;
+            string route = $"/api/v1/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await ExecuteGetAsync<Document>(route);
@@ -64,8 +75,8 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Id.Should().Be(workItem.StringId);
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
         }
 
         [Fact]
@@ -103,11 +114,11 @@ namespace NoEntityFrameworkTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.SingleData.Should().NotBeNull();
-            responseDocument.SingleData.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
-            responseDocument.SingleData.Attributes["title"].Should().Be(newWorkItem.Title);
-            responseDocument.SingleData.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
-            responseDocument.SingleData.Attributes["projectId"].Should().Be(newWorkItem.ProjectId.ToString());
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
+            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newWorkItem.Title);
+            responseDocument.Data.SingleValue.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
+            responseDocument.Data.SingleValue.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
         }
 
         [Fact]
@@ -122,7 +133,7 @@ namespace NoEntityFrameworkTests
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = "/api/v1/workItems/" + workItem.StringId;
+            string route = $"/api/v1/workItems/{workItem.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await ExecuteDeleteAsync<string>(route);

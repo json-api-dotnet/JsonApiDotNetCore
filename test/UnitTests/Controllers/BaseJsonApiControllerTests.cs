@@ -26,7 +26,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             var serviceMock = new Mock<IGetAllService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, serviceMock.Object);
 
             // Act
             await controller.GetAsync(CancellationToken.None);
@@ -39,7 +39,7 @@ namespace UnitTests.Controllers
         public async Task GetAsync_Throws_405_If_No_Service()
         {
             // Arrange
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, null);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, null);
 
             // Act
             Func<Task> asyncAction = () => controller.GetAsync(CancellationToken.None);
@@ -56,7 +56,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var serviceMock = new Mock<IGetByIdService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getById: serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getById: serviceMock.Object);
 
             // Act
             await controller.GetAsync(id, CancellationToken.None);
@@ -70,7 +70,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetAsync(id, CancellationToken.None);
@@ -88,7 +88,7 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<IGetRelationshipService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
 
             // Act
             await controller.GetRelationshipAsync(id, relationshipName, CancellationToken.None);
@@ -102,7 +102,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetRelationshipAsync(id, "articles", CancellationToken.None);
@@ -120,7 +120,7 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<IGetSecondaryService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
 
             // Act
             await controller.GetSecondaryAsync(id, relationshipName, CancellationToken.None);
@@ -134,7 +134,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetSecondaryAsync(id, "articles", CancellationToken.None);
@@ -168,7 +168,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var resource = new Resource();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.PatchAsync(id, resource, CancellationToken.None);
@@ -208,7 +208,7 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<ISetRelationshipService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
             await controller.PatchRelationshipAsync(id, relationshipName, null, CancellationToken.None);
@@ -222,7 +222,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None);
@@ -239,7 +239,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var serviceMock = new Mock<IDeleteService<Resource>>();
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance, delete: serviceMock.Object);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, delete: serviceMock.Object);
 
             // Act
             await controller.DeleteAsync(id, CancellationToken.None);
@@ -253,7 +253,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new Mock<IJsonApiOptions>().Object, NullLoggerFactory.Instance);
+            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.DeleteAsync(id, CancellationToken.None);

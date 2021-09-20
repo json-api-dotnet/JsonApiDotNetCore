@@ -1,7 +1,9 @@
 using System;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -34,6 +36,15 @@ namespace TestBuildingBlocks
         private Action<ILoggingBuilder> _loggingConfiguration;
         private Action<IServiceCollection> _beforeServicesConfiguration;
         private Action<IServiceCollection> _afterServicesConfiguration;
+
+        protected override JsonSerializerOptions SerializerOptions
+        {
+            get
+            {
+                var options = Factory.Services.GetRequiredService<IJsonApiOptions>();
+                return options.SerializerOptions;
+            }
+        }
 
         public WebApplicationFactory<TStartup> Factory => _lazyFactory.Value;
 

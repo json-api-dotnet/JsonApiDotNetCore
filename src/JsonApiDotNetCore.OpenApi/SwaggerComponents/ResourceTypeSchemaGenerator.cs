@@ -9,16 +9,16 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
     internal sealed class ResourceTypeSchemaGenerator
     {
         private readonly ISchemaRepositoryAccessor _schemaRepositoryAccessor;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly Dictionary<Type, OpenApiSchema> _resourceTypeSchemaCache = new();
 
-        public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceContextProvider resourceContextProvider)
+        public ResourceTypeSchemaGenerator(ISchemaRepositoryAccessor schemaRepositoryAccessor, IResourceGraph resourceGraph)
         {
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _schemaRepositoryAccessor = schemaRepositoryAccessor;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
         }
 
         public OpenApiSchema Get(Type resourceType)
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
                 return referenceSchema;
             }
 
-            ResourceContext resourceContext = _resourceContextProvider.GetResourceContext(resourceType);
+            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
 
             var fullSchema = new OpenApiSchema
             {

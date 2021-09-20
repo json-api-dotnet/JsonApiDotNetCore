@@ -5,7 +5,6 @@ using JsonApiDotNetCore.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace GettingStarted
 {
@@ -21,7 +20,7 @@ namespace GettingStarted
                 options.Namespace = "api";
                 options.UseRelativeLinks = true;
                 options.IncludeTotalResourceCount = true;
-                options.SerializerSettings.Formatting = Formatting.Indented;
+                options.SerializerOptions.WriteIndented = true;
             });
         }
 

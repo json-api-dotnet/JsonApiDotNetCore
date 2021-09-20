@@ -21,20 +21,19 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private readonly Type _extensionType;
         private readonly LambdaParameterNameFactory _nameFactory;
         private readonly IResourceFactory _resourceFactory;
-        private readonly IResourceContextProvider _resourceContextProvider;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IModel _entityModel;
         private readonly LambdaScopeFactory _lambdaScopeFactory;
 
         public QueryableBuilder(Expression source, Type elementType, Type extensionType, LambdaParameterNameFactory nameFactory,
-            IResourceFactory resourceFactory, IResourceContextProvider resourceContextProvider, IModel entityModel,
-            LambdaScopeFactory lambdaScopeFactory = null)
+            IResourceFactory resourceFactory, IResourceGraph resourceGraph, IModel entityModel, LambdaScopeFactory lambdaScopeFactory = null)
         {
             ArgumentGuard.NotNull(source, nameof(source));
             ArgumentGuard.NotNull(elementType, nameof(elementType));
             ArgumentGuard.NotNull(extensionType, nameof(extensionType));
             ArgumentGuard.NotNull(nameFactory, nameof(nameFactory));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
-            ArgumentGuard.NotNull(resourceContextProvider, nameof(resourceContextProvider));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(entityModel, nameof(entityModel));
 
             _source = source;
@@ -42,7 +41,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             _extensionType = extensionType;
             _nameFactory = nameFactory;
             _resourceFactory = resourceFactory;
-            _resourceContextProvider = resourceContextProvider;
+            _resourceGraph = resourceGraph;
             _entityModel = entityModel;
             _lambdaScopeFactory = lambdaScopeFactory ?? new LambdaScopeFactory(_nameFactory);
         }
@@ -85,7 +84,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
-            var builder = new IncludeClauseBuilder(source, lambdaScope, resourceContext, _resourceContextProvider);
+            var builder = new IncludeClauseBuilder(source, lambdaScope, resourceContext, _resourceGraph);
             return builder.ApplyInclude(include);
         }
 
@@ -118,7 +117,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             using LambdaScope lambdaScope = _lambdaScopeFactory.CreateScope(_elementType);
 
-            var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory, _resourceContextProvider);
+            var builder = new SelectClauseBuilder(source, lambdaScope, _entityModel, _extensionType, _nameFactory, _resourceFactory, _resourceGraph);
             return builder.ApplySelect(projection, resourceContext);
         }
     }

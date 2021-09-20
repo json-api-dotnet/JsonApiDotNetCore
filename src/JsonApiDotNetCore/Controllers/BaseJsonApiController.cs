@@ -190,7 +190,7 @@ namespace JsonApiDotNetCore.Controllers
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerNamingStrategy);
+                    _options.SerializerOptions.PropertyNamingPolicy);
             }
 
             TResource newResource = await _create.CreateAsync(resource, cancellationToken);
@@ -267,7 +267,7 @@ namespace JsonApiDotNetCore.Controllers
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerNamingStrategy);
+                    _options.SerializerOptions.PropertyNamingPolicy);
             }
 
             TResource updated = await _update.UpdateAsync(id, resource, cancellationToken);

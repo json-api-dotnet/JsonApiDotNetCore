@@ -26,14 +26,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             const string route = "/world-civilians/missing";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
         }
     }

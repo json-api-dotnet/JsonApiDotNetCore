@@ -31,14 +31,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             const string route = "/calendars?foo=bar";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Unknown query string parameter.");
 
@@ -70,25 +70,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         [InlineData("sort")]
         [InlineData("page[size]")]
         [InlineData("page[number]")]
-        [InlineData("defaults")]
-        [InlineData("nulls")]
         public async Task Cannot_use_empty_query_string_parameter_value(string parameterName)
         {
             // Arrange
             var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.AllowUnknownQueryStringParameters = false;
 
-            string route = "calendars?" + parameterName + "=";
+            string route = $"calendars?{parameterName}=";
 
             // Act
-            (HttpResponseMessage httpResponse, ErrorDocument responseDocument) = await _testContext.ExecuteGetAsync<ErrorDocument>(route);
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
             responseDocument.Errors.Should().HaveCount(1);
 
-            Error error = responseDocument.Errors[0];
+            ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing query string parameter value.");
             error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");

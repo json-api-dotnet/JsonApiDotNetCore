@@ -57,10 +57,10 @@ namespace UnitTests.Internal
 
             // Act
             var proxy = proxyGenerator.CreateClassProxy<Bar>();
-            ResourceContext result = resourceGraph.GetResourceContext(proxy.GetType());
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(proxy.GetType());
 
             // Assert
-            Assert.Equal(typeof(Bar), result.ResourceType);
+            Assert.Equal(typeof(Bar), resourceContext.ResourceType);
         }
 
         [Fact]
@@ -72,10 +72,10 @@ namespace UnitTests.Internal
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Act
-            ResourceContext result = resourceGraph.GetResourceContext(typeof(Bar));
+            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(Bar));
 
             // Assert
-            Assert.Equal(typeof(Bar), result.ResourceType);
+            Assert.Equal(typeof(Bar), resourceContext.ResourceType);
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

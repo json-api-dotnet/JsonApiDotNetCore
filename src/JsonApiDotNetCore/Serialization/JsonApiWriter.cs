@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -64,10 +65,10 @@ namespace JsonApiDotNetCore.Serialization
             catch (Exception exception)
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
-                ErrorDocument errorDocument = _exceptionHandler.HandleException(exception);
-                responseContent = _serializer.Serialize(errorDocument);
+                Document document = _exceptionHandler.HandleException(exception);
+                responseContent = _serializer.Serialize(document);
 
-                response.StatusCode = (int)errorDocument.GetErrorStatusCode();
+                response.StatusCode = (int)document.GetErrorStatusCode();
             }
 
             bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
@@ -129,14 +130,20 @@ namespace JsonApiDotNetCore.Serialization
 
         private static object WrapErrors(object contextObject)
         {
-            if (contextObject is IEnumerable<Error> errors)
+            if (contextObject is IEnumerable<ErrorObject> errors)
             {
-                return new ErrorDocument(errors);
+                return new Document
+                {
+                    Errors = errors.ToList()
+                };
             }
 
-            if (contextObject is Error error)
+            if (contextObject is ErrorObject error)
             {
-                return new ErrorDocument(error);
+                return new Document
+                {
+                    Errors = error.AsList()
+                };
             }
 
             return contextObject;

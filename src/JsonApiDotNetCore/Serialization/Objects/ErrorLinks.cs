@@ -1,13 +1,20 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Serialization.Objects
 {
+    /// <summary>
+    /// See "links" in https://jsonapi.org/format/1.1/#error-objects.
+    /// </summary>
+    [PublicAPI]
     public sealed class ErrorLinks
     {
-        /// <summary>
-        /// A URL that leads to further details about this particular occurrence of the problem.
-        /// </summary>
-        [JsonProperty]
+        [JsonPropertyName("about")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string About { get; set; }
+
+        [JsonPropertyName("type")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string Type { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace Benchmarks.Serialization
             ILinkBuilder linkBuilder = new Mock<ILinkBuilder>().Object;
             IIncludedResourceObjectBuilder includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
 
-            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, new ResourceObjectBuilderSettings());
+            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, options);
 
             IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
 
