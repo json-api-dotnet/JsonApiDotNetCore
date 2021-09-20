@@ -116,7 +116,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
             IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.Should().ContainMatch("* System.InvalidOperationException: Article status could not be determined.*");
+            stackTraceLines.Should().ContainMatch("*at object System.Reflection.*");
 
             loggerFactory.Logger.Messages.Should().HaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);

@@ -24,8 +24,6 @@ namespace JsonApiDotNetCore.Errors
 
         public IReadOnlyList<ErrorObject> Errors { get; }
 
-        public override string Message => $"Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
-
         public JsonApiException(ErrorObject error, Exception innerException = null)
             : base(null, innerException)
         {
@@ -41,6 +39,11 @@ namespace JsonApiDotNetCore.Errors
             ArgumentGuard.NotNullNorEmpty(errorList, nameof(errors));
 
             Errors = errorList;
+        }
+
+        public string GetSummary()
+        {
+            return $"{nameof(JsonApiException)}: Errors = {JsonSerializer.Serialize(Errors, SerializerOptions)}";
         }
     }
 }

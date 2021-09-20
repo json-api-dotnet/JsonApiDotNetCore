@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Middleware
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
-            return exception.Message;
+            return exception is JsonApiException jsonApiException ? jsonApiException.GetSummary() : exception.Message;
         }
 
         protected virtual Document CreateErrorDocument(Exception exception)
@@ -103,8 +103,11 @@ namespace JsonApiDotNetCore.Middleware
             {
                 string[] stackTraceLines = resultException.ToString().Split(Environment.NewLine);
 
-                error.Meta ??= new Dictionary<string, object>();
-                error.Meta["StackTrace"] = stackTraceLines;
+                if (stackTraceLines.Any())
+                {
+                    error.Meta ??= new Dictionary<string, object>();
+                    error.Meta["StackTrace"] = stackTraceLines;
+                }
             }
         }
     }

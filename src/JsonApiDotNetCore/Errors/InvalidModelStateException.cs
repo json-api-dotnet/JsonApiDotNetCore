@@ -116,10 +116,14 @@ namespace JsonApiDotNetCore.Errors
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)
             {
-                string[] stackTraceLines = modelError.Exception.Demystify().ToString().Split(Environment.NewLine);
+                Exception exception = modelError.Exception.Demystify();
+                string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-                error.Meta ??= new Dictionary<string, object>();
-                error.Meta["StackTrace"] = stackTraceLines;
+                if (stackTraceLines.Any())
+                {
+                    error.Meta ??= new Dictionary<string, object>();
+                    error.Meta["StackTrace"] = stackTraceLines;
+                }
             }
 
             return error;
