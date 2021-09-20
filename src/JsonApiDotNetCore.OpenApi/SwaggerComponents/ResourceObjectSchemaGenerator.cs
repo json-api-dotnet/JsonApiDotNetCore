@@ -17,12 +17,12 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly bool _allowClientGeneratedIds;
         private readonly Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> _createFieldObjectBuilderFactory;
 
-        public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions,
+        public ResourceObjectSchemaGenerator(SchemaGenerator defaultSchemaGenerator, IResourceGraph resourceGraph, IJsonApiOptions options,
             ISchemaRepositoryAccessor schemaRepositoryAccessor)
         {
             ArgumentGuard.NotNull(defaultSchemaGenerator, nameof(defaultSchemaGenerator));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-            ArgumentGuard.NotNull(jsonApiOptions, nameof(jsonApiOptions));
+            ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(schemaRepositoryAccessor, nameof(schemaRepositoryAccessor));
 
             _defaultSchemaGenerator = defaultSchemaGenerator;
@@ -30,17 +30,17 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _schemaRepositoryAccessor = schemaRepositoryAccessor;
 
             _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph);
-            _allowClientGeneratedIds = jsonApiOptions.AllowClientGeneratedIds;
+            _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
-            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph, jsonApiOptions, schemaRepositoryAccessor,
+            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph, options, schemaRepositoryAccessor,
                 _resourceTypeSchemaGenerator);
         }
 
         private static Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> CreateFieldObjectBuilderFactory(SchemaGenerator defaultSchemaGenerator,
-            IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions, ISchemaRepositoryAccessor schemaRepositoryAccessor,
+            IResourceGraph resourceGraph, IJsonApiOptions options, ISchemaRepositoryAccessor schemaRepositoryAccessor,
             ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
-            JsonNamingPolicy namingPolicy = jsonApiOptions.SerializerOptions.PropertyNamingPolicy;
+            JsonNamingPolicy namingPolicy = options.SerializerOptions.PropertyNamingPolicy;
             ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
             var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceGraph);
 

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -18,15 +17,13 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
         private readonly JsonSerializerDataContractResolver _dataContractResolver;
         private readonly IResourceGraph _resourceGraph;
 
-        public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions jsonApiOptions)
+        public JsonApiDataContractResolver(IResourceGraph resourceGraph, IJsonApiOptions options)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
-            ArgumentGuard.NotNull(jsonApiOptions, nameof(jsonApiOptions));
+            ArgumentGuard.NotNull(options, nameof(options));
 
             _resourceGraph = resourceGraph;
-
-            JsonSerializerOptions serializerOptions = jsonApiOptions.SerializerOptions;
-            _dataContractResolver = new JsonSerializerDataContractResolver(serializerOptions);
+            _dataContractResolver = new JsonSerializerDataContractResolver(options.SerializerOptions);
         }
 
         public DataContract GetDataContractForType(Type type)
