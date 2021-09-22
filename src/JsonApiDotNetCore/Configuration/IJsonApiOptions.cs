@@ -119,6 +119,11 @@ namespace JsonApiDotNetCore.Configuration
         bool AllowUnknownQueryStringParameters { get; }
 
         /// <summary>
+        /// Whether or not to produce an error on unknown attribute and relationship keys in request bodies. False by default.
+        /// </summary>
+        bool AllowUnknownFieldsInRequestBody { get; }
+
+        /// <summary>
         /// Determines whether legacy filter notation in query strings, such as =eq:, =like:, and =in: is enabled. False by default.
         /// </summary>
         bool EnableLegacyFilterNotation { get; }

@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -28,6 +30,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             testContext.UseController<LyricsController>();
             testContext.UseController<MusicTracksController>();
             testContext.UseController<PlaylistsController>();
+
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = false;
         }
 
         [Fact]
@@ -212,9 +217,56 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_attribute()
+        {
+            // Arrange
+            string newName = _fakers.Playlist.Generate().Name;
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                doesNotExist = "ignored",
+                                name = newName
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown attribute.");
+            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             string newName = _fakers.Playlist.Generate().Name;
 
             var requestBody = new
@@ -262,9 +314,60 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "lyrics",
+                            relationships = new
+                            {
+                                doesNotExist = new
+                                {
+                                    data = new
+                                    {
+                                        type = Unknown.ResourceType,
+                                        id = Unknown.StringId.Int32
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown relationship.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             var requestBody = new
             {
                 atomic__operations = new[]

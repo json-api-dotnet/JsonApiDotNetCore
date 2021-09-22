@@ -28,6 +28,8 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         public ResourceObjectConverter(IResourceGraph resourceGraph)
         {
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
             _resourceGraph = resourceGraph;
         }
 
@@ -206,6 +208,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         }
                         else
                         {
+                            attributes.Add(attributeName!, null);
                             reader.Skip();
                         }
 

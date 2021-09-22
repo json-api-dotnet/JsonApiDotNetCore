@@ -19,18 +19,21 @@ namespace JsonApiDotNetCore.Serialization
     public abstract class BaseDeserializer
     {
         private protected static readonly CollectionConverter CollectionConverter = new();
+        private readonly IJsonApiOptions _options;
 
         protected IResourceGraph ResourceGraph { get; }
         protected IResourceFactory ResourceFactory { get; }
         protected int? AtomicOperationIndex { get; set; }
 
-        protected BaseDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory)
+        protected BaseDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
+            ArgumentGuard.NotNull(options, nameof(options));
 
             ResourceGraph = resourceGraph;
             ResourceFactory = resourceFactory;
+            _options = options;
         }
 
         /// <summary>
@@ -123,6 +126,8 @@ namespace JsonApiDotNetCore.Serialization
             {
                 if (attributeValues.TryGetValue(attr.PublicName, out object newValue))
                 {
+                    attributeValues.Remove(attr.PublicName);
+
                     if (attr.Property.SetMethod == null)
                     {
                         throw new JsonApiSerializationException("Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.",
@@ -148,6 +153,14 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
+            if (!_options.AllowUnknownFieldsInRequestBody && attributeValues.Any())
+            {
+                string attributeName = attributeValues.First().Key;
+
+                throw new JsonApiSerializationException("Request body includes unknown attribute.", $"Attribute '{attributeName}' does not exist.",
+                    atomicOperationIndex: AtomicOperationIndex);
+            }
+
             return resource;
         }
 
@@ -160,23 +173,25 @@ namespace JsonApiDotNetCore.Serialization
         /// <param name="relationshipValues">
         /// Relationships and their values, as in the serialized content.
         /// </param>
-        /// <param name="relationshipAttributes">
+        /// <param name="relationships">
         /// Exposed relationships for <paramref name="resource" />.
         /// </param>
         private IIdentifiable SetRelationships(IIdentifiable resource, IDictionary<string, RelationshipObject> relationshipValues,
-            IReadOnlyCollection<RelationshipAttribute> relationshipAttributes)
+            IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
-            ArgumentGuard.NotNull(relationshipAttributes, nameof(relationshipAttributes));
+            ArgumentGuard.NotNull(relationships, nameof(relationships));
 
             if (relationshipValues.IsNullOrEmpty())
             {
                 return resource;
             }
 
-            foreach (RelationshipAttribute attr in relationshipAttributes)
+            foreach (RelationshipAttribute attr in relationships)
             {
                 bool relationshipIsProvided = relationshipValues.TryGetValue(attr.PublicName, out RelationshipObject relationshipData);
+
+                relationshipValues.Remove(attr.PublicName);
 
                 if (!relationshipIsProvided || !relationshipData.Data.IsAssigned)
                 {
@@ -191,6 +206,14 @@ namespace JsonApiDotNetCore.Serialization
                 {
                     SetHasManyRelationship(resource, hasManyAttribute, relationshipData);
                 }
+            }
+
+            if (!_options.AllowUnknownFieldsInRequestBody && relationshipValues.Any())
+            {
+                string relationshipName = relationshipValues.First().Key;
+
+                throw new JsonApiSerializationException("Request body includes unknown relationship.", $"Relationship '{relationshipName}' does not exist.",
+                    atomicOperationIndex: AtomicOperationIndex);
             }
 
             return resource;

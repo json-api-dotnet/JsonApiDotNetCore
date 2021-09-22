@@ -29,12 +29,11 @@ namespace JsonApiDotNetCore.Serialization
 
         public RequestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory, ITargetedFields targetedFields,
             IHttpContextAccessor httpContextAccessor, IJsonApiRequest request, IJsonApiOptions options, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(resourceGraph, resourceFactory)
+            : base(resourceGraph, resourceFactory, options)
         {
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
             ArgumentGuard.NotNull(request, nameof(request));
-            ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _targetedFields = targetedFields;

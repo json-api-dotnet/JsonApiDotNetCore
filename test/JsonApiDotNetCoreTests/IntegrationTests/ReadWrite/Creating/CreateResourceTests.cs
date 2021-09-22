@@ -33,6 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = false;
             options.AllowClientGeneratedIds = false;
+            options.AllowUnknownFieldsInRequestBody = false;
         }
 
         [Fact]
@@ -253,9 +254,49 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_attribute()
+        {
+            // Arrange
+            WorkItem newWorkItem = _fakers.WorkItem.Generate();
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                        doesNotExist = "ignored",
+                        description = newWorkItem.Description
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown attribute.");
+            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             WorkItem newWorkItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
@@ -295,9 +336,53 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        doesNotExist = new
+                        {
+                            data = new
+                            {
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.Int32
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown relationship.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist.");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             var requestBody = new
             {
                 data = new
@@ -352,7 +437,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                     id = "0A0B0C",
                     attributes = new
                     {
-                        name = "Black"
+                        displayName = "Black"
                     }
                 }
             };

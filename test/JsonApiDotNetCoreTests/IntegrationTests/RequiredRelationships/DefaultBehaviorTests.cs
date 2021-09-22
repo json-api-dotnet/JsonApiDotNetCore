@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                     type = "orders",
                     attributes = new
                     {
-                        order = order.Amount
+                        amount = order.Amount
                     }
                 }
             };

@@ -75,6 +75,9 @@ namespace JsonApiDotNetCore.Configuration
         public bool AllowUnknownQueryStringParameters { get; set; }
 
         /// <inheritdoc />
+        public bool AllowUnknownFieldsInRequestBody { get; set; }
+
+        /// <inheritdoc />
         public bool EnableLegacyFilterNotation { get; set; }
 
         /// <inheritdoc />

@@ -101,7 +101,7 @@ namespace UnitTests.Serialization
             private readonly IJsonApiOptions _options;
 
             public TestDeserializer(IResourceGraph resourceGraph, IResourceFactory resourceFactory, IJsonApiOptions options)
-                : base(resourceGraph, resourceFactory)
+                : base(resourceGraph, resourceFactory, options)
             {
                 _options = options;
             }
