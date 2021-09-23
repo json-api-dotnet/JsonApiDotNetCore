@@ -963,11 +963,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
         public async Task Cannot_update_resource_with_readonly_attribute()
         {
             // Arrange
-            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+            WorkItemGroup existingWorkItemGroup = _fakers.WorkItemGroup.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.WorkItems.Add(existingWorkItem);
+                dbContext.Groups.Add(existingWorkItemGroup);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -976,7 +976,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 data = new
                 {
                     type = "workItemGroups",
-                    id = existingWorkItem.StringId,
+                    id = existingWorkItemGroup.StringId,
                     attributes = new
                     {
                         isDeprecated = true
@@ -984,7 +984,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 }
             };
 
-            string route = $"/workItemGroups/{existingWorkItem.StringId}";
+            string route = $"/workItemGroups/{existingWorkItemGroup.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
