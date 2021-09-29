@@ -71,6 +71,11 @@ namespace JsonApiDotNetCore
             return true;
         }
 
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source)
+        {
+            return source ?? Enumerable.Empty<T>();
+        }
+
         public static void AddRange<T>(this ICollection<T> source, IEnumerable<T> itemsToAdd)
         {
             ArgumentGuard.NotNull(source, nameof(source));

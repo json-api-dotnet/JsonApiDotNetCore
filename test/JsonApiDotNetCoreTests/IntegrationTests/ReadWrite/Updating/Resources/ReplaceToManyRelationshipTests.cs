@@ -443,6 +443,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
             error.Detail.Should().Be("Expected 'type' element in 'subscribers' relationship.");
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -496,6 +497,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -548,6 +550,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
             error.Detail.Should().Be("Expected 'id' element in 'subscribers' relationship.");
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -694,6 +697,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
             error.Detail.Should().Be("Relationship 'subscribers' contains incompatible resource type 'rgbColors'.");
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data[0]/type");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -802,6 +806,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().Be("Expected data[] element for 'subscribers' relationship.");
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -848,6 +853,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
             error.Detail.Should().Be("Expected data[] element for 'tags' relationship.");
+            error.Source.Pointer.Should().Be("/data/relationships/tags/data");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }

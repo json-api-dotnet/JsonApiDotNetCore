@@ -109,9 +109,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             TrackLocalIdsForOperation(operation);
 
-            _targetedFields.Attributes = operation.TargetedFields.Attributes;
-            _targetedFields.Relationships = operation.TargetedFields.Relationships;
-
+            _targetedFields.CopyFrom(operation.TargetedFields);
             _request.CopyFrom(operation.Request);
 
             return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);

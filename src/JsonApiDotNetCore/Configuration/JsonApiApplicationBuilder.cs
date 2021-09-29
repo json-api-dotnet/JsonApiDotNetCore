@@ -13,6 +13,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
 using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.JsonConverters;
+using JsonApiDotNetCore.Serialization.RequestAdapters;
 using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -251,7 +252,6 @@ namespace JsonApiDotNetCore.Configuration
         private void AddSerializationLayer()
         {
             _services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            _services.AddScoped<IJsonApiDeserializer, RequestDeserializer>();
             _services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
             _services.AddScoped<ILinkBuilder, LinkBuilder>();
             _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
@@ -262,6 +262,17 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
             _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
             _services.AddSingleton<IETagGenerator, ETagGenerator>();
+
+            _services.AddScoped<IResourceIdentifierObjectAdapter, ResourceIdentifierObjectAdapter>();
+            _services.AddScoped<IRelationshipDataAdapter, RelationshipDataAdapter>();
+            _services.AddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
+            _services.AddScoped<IResourceDataAdapter, ResourceDataAdapter>();
+            _services.AddScoped<IAtomicReferenceAdapter, AtomicReferenceAdapter>();
+            _services.AddScoped<IOperationResourceDataAdapter, OperationResourceDataAdapter>();
+            _services.AddScoped<IAtomicOperationObjectAdapter, AtomicOperationObjectAdapter>();
+            _services.AddScoped<IResourceDocumentAdapter, ResourceDocumentAdapter>();
+            _services.AddScoped<IOperationsDocumentAdapter, OperationsDocumentAdapter>();
+            _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
         }
 
         private void AddOperationsLayer()

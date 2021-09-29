@@ -113,8 +113,6 @@ namespace JsonApiDotNetCore.Controllers
 
             ArgumentGuard.NotNull(operations, nameof(operations));
 
-            ValidateClientGeneratedIds(operations);
-
             if (_options.ValidateModelState)
             {
                 ValidateModelState(operations);
@@ -122,24 +120,6 @@ namespace JsonApiDotNetCore.Controllers
 
             IList<OperationContainer> results = await _processor.ProcessAsync(operations, cancellationToken);
             return results.Any(result => result != null) ? Ok(results) : NoContent();
-        }
-
-        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
-        {
-            if (!_options.AllowClientGeneratedIds)
-            {
-                int index = 0;
-
-                foreach (OperationContainer operation in operations)
-                {
-                    if (operation.Kind == WriteOperationKind.CreateResource && operation.Resource.StringId != null)
-                    {
-                        throw new ResourceIdInCreateResourceNotAllowedException(index);
-                    }
-
-                    index++;
-                }
-            }
         }
 
         protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
@@ -155,9 +135,7 @@ namespace JsonApiDotNetCore.Controllers
             {
                 if (operation.Kind == WriteOperationKind.CreateResource || operation.Kind == WriteOperationKind.UpdateResource)
                 {
-                    _targetedFields.Attributes = operation.TargetedFields.Attributes;
-                    _targetedFields.Relationships = operation.TargetedFields.Relationships;
-
+                    _targetedFields.CopyFrom(operation.TargetedFields);
                     _request.CopyFrom(operation.Request);
 
                     var validationContext = new ActionContext();

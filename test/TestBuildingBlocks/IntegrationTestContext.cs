@@ -102,7 +102,7 @@ namespace TestBuildingBlocks
             // We have placed an appsettings.json in the TestBuildingBlock project folder and set the content root to there. Note that controllers
             // are not discovered in the content root but are registered manually using IntegrationTestContext.UseController.
             WebApplicationFactory<TStartup> factoryWithConfiguredContentRoot =
-                factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot("test/" + nameof(TestBuildingBlocks)));
+                factory.WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot($"test/{nameof(TestBuildingBlocks)}"));
 
             using IServiceScope scope = factoryWithConfiguredContentRoot.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();

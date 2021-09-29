@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JsonApiDotNetCore.Serialization
+namespace JsonApiDotNetCore.Serialization.JsonConverters
 {
     public abstract class JsonObjectConverter<TObject> : JsonConverter<TObject>
     {

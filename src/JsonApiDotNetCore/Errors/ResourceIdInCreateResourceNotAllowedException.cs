@@ -10,15 +10,15 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class ResourceIdInCreateResourceNotAllowedException : JsonApiException
     {
-        public ResourceIdInCreateResourceNotAllowedException(int? atomicOperationIndex = null)
+        public ResourceIdInCreateResourceNotAllowedException(bool isOperationsRequest, string sourcePointer)
             : base(new ErrorObject(HttpStatusCode.Forbidden)
             {
-                Title = atomicOperationIndex == null
-                    ? "Specifying the resource ID in POST requests is not allowed."
-                    : "Specifying the resource ID in operations that create a resource is not allowed.",
+                Title = isOperationsRequest
+                    ? "Specifying the resource ID in operations that create a resource is not allowed."
+                    : "Specifying the resource ID in POST resource requests is not allowed.",
                 Source = new ErrorSource
                 {
-                    Pointer = atomicOperationIndex != null ? $"/atomic:operations[{atomicOperationIndex}]/data/id" : "/data/id"
+                    Pointer = sourcePointer
                 }
             })
         {

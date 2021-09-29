@@ -14,11 +14,17 @@ namespace JsonApiDotNetCore.Errors
     {
         public string RequestBody { get; }
 
-        public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)
+        public InvalidRequestBodyException(string reason, string details, string requestBody, string sourcePointer, Exception innerException = null)
             : base(new ErrorObject(HttpStatusCode.UnprocessableEntity)
             {
                 Title = reason != null ? $"Failed to deserialize request body: {reason}" : "Failed to deserialize request body.",
-                Detail = FormatErrorDetail(details, innerException)
+                Detail = FormatErrorDetail(details, innerException),
+                Source = sourcePointer == null
+                    ? null
+                    : new ErrorSource
+                    {
+                        Pointer = sourcePointer
+                    }
             }, innerException)
         {
             RequestBody = requestBody;

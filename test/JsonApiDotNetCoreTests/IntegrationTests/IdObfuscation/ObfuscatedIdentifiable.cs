@@ -8,12 +8,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
         protected override string GetStringId(int value)
         {
-            return Codec.Encode(value);
+            return value == default ? null : Codec.Encode(value);
         }
 
         protected override int GetTypedId(string value)
         {
-            return Codec.Decode(value);
+            return value == null ? default : Codec.Decode(value);
         }
     }
 }

@@ -182,11 +182,6 @@ namespace JsonApiDotNetCore.Controllers
                 throw new RequestMethodNotAllowedException(HttpMethod.Post);
             }
 
-            if (!_options.AllowClientGeneratedIds && resource.StringId != null)
-            {
-                throw new ResourceIdInCreateResourceNotAllowedException();
-            }
-
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
                 throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
