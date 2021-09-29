@@ -189,7 +189,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                 catch (FormatException exception)
                 {
                     using IDisposable _ = state.Position.PushElement("id");
-                    throw new DeserializationException(state.Position, null, exception.Message);
+                    throw new ModelConversionException(state.Position, "Incompatible 'id' value found.", exception.Message);
                 }
             }
         }

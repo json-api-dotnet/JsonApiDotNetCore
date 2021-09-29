@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
                 string typeName = info.AttributeType.GetFriendlyTypeName();
 
-                throw new DeserializationException(state.Position, null,
+                throw new ModelConversionException(state.Position, "Incompatible attribute value found.",
                     $"Failed to convert attribute '{info.AttributeName}' with value '{info.JsonValue}' of type '{info.JsonType}' to type '{typeName}'.");
             }
         }

@@ -804,7 +804,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
             error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
         }

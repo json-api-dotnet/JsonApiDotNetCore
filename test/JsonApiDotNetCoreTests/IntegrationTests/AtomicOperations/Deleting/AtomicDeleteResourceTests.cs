@@ -575,7 +575,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int64'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
         }

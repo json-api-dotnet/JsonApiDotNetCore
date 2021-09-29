@@ -1425,7 +1425,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
         }
@@ -1621,7 +1621,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
             error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '123.45' of type 'Number' to type 'DateTimeOffset'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
         }

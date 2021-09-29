@@ -1252,7 +1252,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
             error.Detail.Should().Match("Failed to convert attribute 'dueAt' with value '*start*end*' of type 'Object' to type 'Nullable<DateTimeOffset>'.");
             error.Source.Pointer.Should().Be("/data/attributes/dueAt");
 
