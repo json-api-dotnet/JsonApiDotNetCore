@@ -459,9 +459,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("The use of client-generated IDs is disabled.");
+            error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

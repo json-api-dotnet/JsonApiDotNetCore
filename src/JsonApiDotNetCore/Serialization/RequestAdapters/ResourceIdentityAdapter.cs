@@ -182,7 +182,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             if (identity.Id != null)
             {
                 using IDisposable _ = state.Position.PushElement("id");
-                throw new ForbiddenClientGeneratedIdException(state.Position.ToSourcePointer());
+                throw new ModelConversionException(state.Position, "The use of client-generated IDs is disabled.", null, HttpStatusCode.Forbidden);
             }
         }
 
