@@ -143,11 +143,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(identity.Type);
 
-            if (resourceContext == null)
-            {
-                throw new DeserializationException(state.Position, "Request body includes unknown resource type.",
-                    $"Resource type '{identity.Type}' does not exist.");
-            }
+            AssertIsKnownResourceType(resourceContext, identity.Type, state);
 
             if (requirements?.ResourceContext != null && !requirements.ResourceContext.ResourceType.IsAssignableFrom(resourceContext.ResourceType))
             {
@@ -183,6 +179,14 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
 
             return resourceContext;
+        }
+
+        private static void AssertIsKnownResourceType(ResourceContext resourceContext, string typeName, RequestAdapterState state)
+        {
+            if (resourceContext == null)
+            {
+                throw new ModelConversionException(state.Position, "Unknown resource type found.", $"Resource type '{typeName}' does not exist.");
+            }
         }
 
         private void AssignStringId(IResourceIdentity identity, IIdentifiable resource, RequestAdapterState state)
