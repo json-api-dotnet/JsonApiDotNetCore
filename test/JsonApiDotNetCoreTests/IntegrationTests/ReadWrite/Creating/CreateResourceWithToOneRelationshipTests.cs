@@ -317,8 +317,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().Be("Expected 'type' element in 'assignee' relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();

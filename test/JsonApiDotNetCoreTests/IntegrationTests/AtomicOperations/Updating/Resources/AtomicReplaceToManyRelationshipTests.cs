@@ -388,8 +388,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().Be("Expected 'type' element in 'tracks' relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data[0]");
         }
 

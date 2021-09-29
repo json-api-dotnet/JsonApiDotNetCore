@@ -109,19 +109,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
         private ResourceContext ConvertType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            if (identity.Type == null)
-            {
-                string parent = identity is AtomicReference
-                    ? "'ref' element"
-                    :
-                    requirements?.RelationshipName != null &&
-                    state.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource
-                        ?
-                        $"'{requirements.RelationshipName}' relationship"
-                        : "'data' element";
-
-                throw new DeserializationException(state.Position, "Request body must include 'type' element.", $"Expected 'type' element in {parent}.");
-            }
+            AssertHasType(identity, state);
 
             using IDisposable _ = state.Position.PushElement("type");
 
@@ -163,6 +151,14 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
 
             return resourceContext;
+        }
+
+        private static void AssertHasType(IResourceIdentity identity, RequestAdapterState state)
+        {
+            if (identity.Type == null)
+            {
+                throw new ModelConversionException(state.Position, "The 'type' element is required.", null);
+            }
         }
 
         private static void AssertIsKnownResourceType(ResourceContext resourceContext, string typeName, RequestAdapterState state)
