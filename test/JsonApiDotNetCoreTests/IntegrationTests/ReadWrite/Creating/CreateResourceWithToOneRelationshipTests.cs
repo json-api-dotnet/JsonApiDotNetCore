@@ -400,8 +400,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            error.Detail.Should().Be("Expected 'id' element in 'assignee' relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
@@ -653,8 +653,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().Be("Local IDs cannot be used at this endpoint.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'lid' element is not supported at this endpoint.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/lid");
         }
     }

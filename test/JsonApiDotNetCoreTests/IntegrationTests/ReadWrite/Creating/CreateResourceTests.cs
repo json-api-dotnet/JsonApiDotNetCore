@@ -456,7 +456,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("Specifying the resource ID in POST resource requests is not allowed.");
+            error.Title.Should().Be("The use of client-generated IDs is disabled.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/id");
         }

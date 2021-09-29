@@ -35,36 +35,20 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             ResourceContext resourceContext = ConvertType(identity, requirements, state);
 
-            bool hasNone = identity.Id == null && identity.Lid == null;
-            bool hasBoth = identity.Id != null && identity.Lid != null;
-
-            if (requirements.IdConstraint == JsonElementConstraint.Required ? hasNone || hasBoth : hasBoth)
+            if (state.Request.Kind != EndpointKind.AtomicOperations)
             {
-                string parent = identity is AtomicReference
-                    ? "'ref' element"
-                    :
-                    requirements.RelationshipName != null &&
-                    state.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource
-                        ?
-                        $"'{requirements.RelationshipName}' relationship"
-                        : "'data' element";
-
-                throw new DeserializationException(state.Position,
-                    state.Request.Kind == EndpointKind.AtomicOperations
-                        ? "Request body must include 'id' or 'lid' element."
-                        : "Request body must include 'id' element.",
-                    state.Request.Kind == EndpointKind.AtomicOperations
-                        ? $"Expected 'id' or 'lid' element in {parent}."
-                        : $"Expected 'id' element in {parent}.");
+                AssertHasNoLid(identity, state);
             }
 
-            if (requirements.IdConstraint == JsonElementConstraint.Forbidden && identity.Id != null)
+            AssertNoIdWithLid(identity, state);
+
+            if (requirements.IdConstraint == JsonElementConstraint.Required)
             {
-                using (state.Position.PushElement("id"))
-                {
-                    throw new ResourceIdInCreateResourceNotAllowedException(state.Request.Kind == EndpointKind.AtomicOperations,
-                        state.Position.ToSourcePointer());
-                }
+                AssertHasIdOrLid(identity, state);
+            }
+            else if (requirements.IdConstraint == JsonElementConstraint.Forbidden)
+            {
+                AssertHasNoId(identity, state);
             }
 
             if (requirements.IdValue != null && identity.Id != null && identity.Id != requirements.IdValue)
@@ -118,7 +102,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             IIdentifiable resource = _resourceFactory.CreateInstance(resourceContext.ResourceType);
             AssignStringId(identity, resource, state);
-            resource.LocalId = ConvertLid(identity, state);
+            resource.LocalId = identity.Lid;
 
             return (resource, resourceContext);
         }
@@ -189,6 +173,44 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
         }
 
+        private static void AssertHasNoLid(IResourceIdentity identity, RequestAdapterState state)
+        {
+            if (identity.Lid != null)
+            {
+                using IDisposable _ = state.Position.PushElement("lid");
+                throw new ModelConversionException(state.Position, "The 'lid' element is not supported at this endpoint.", null);
+            }
+        }
+
+        private static void AssertNoIdWithLid(IResourceIdentity identity, RequestAdapterState state)
+        {
+            if (identity.Id != null && identity.Lid != null)
+            {
+                throw new ModelConversionException(state.Position, "The 'id' and 'lid' element are mutually exclusive.", null);
+            }
+        }
+
+        private static void AssertHasIdOrLid(IResourceIdentity identity, RequestAdapterState state)
+        {
+            if (identity.Id == null && identity.Lid == null)
+            {
+                string message = state.Request.Kind == EndpointKind.AtomicOperations
+                    ? "The 'id' or 'lid' element is required."
+                    : "The 'id' element is required.";
+
+                throw new ModelConversionException(state.Position, message, null);
+            }
+        }
+
+        private static void AssertHasNoId(IResourceIdentity identity, RequestAdapterState state)
+        {
+            if (identity.Id != null)
+            {
+                using IDisposable _ = state.Position.PushElement("id");
+                throw new ForbiddenClientGeneratedIdException(state.Position.ToSourcePointer());
+            }
+        }
+
         private void AssignStringId(IResourceIdentity identity, IIdentifiable resource, RequestAdapterState state)
         {
             if (identity.Id != null)
@@ -204,18 +226,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                     throw new DeserializationException(state.Position, null, exception.Message);
                 }
             }
-        }
-
-        private string ConvertLid(IResourceIdentity identity, RequestAdapterState state)
-        {
-            using IDisposable _ = state.Position.PushElement("lid");
-
-            if (state.Request.Kind != EndpointKind.AtomicOperations && identity.Lid != null)
-            {
-                throw new DeserializationException(state.Position, null, "Local IDs cannot be used at this endpoint.");
-            }
-
-            return identity.Lid;
         }
 
         protected static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, ResourceContext resourceContext,
