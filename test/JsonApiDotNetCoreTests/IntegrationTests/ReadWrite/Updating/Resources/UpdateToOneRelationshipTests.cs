@@ -676,14 +676,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
-            error.Detail.Should().Be("Relationship 'assignee' contains incompatible resource type 'rgbColors'.");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'userAccounts' of relationship 'assignee'.");
             error.Source.Pointer.Should().Be("/data/relationships/assignee/data/type");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();

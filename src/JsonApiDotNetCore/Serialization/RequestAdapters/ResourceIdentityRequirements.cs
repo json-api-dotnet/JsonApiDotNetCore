@@ -34,10 +34,5 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         /// When not null, indicates the name of the relationship to use in error messages.
         /// </summary>
         public string RelationshipName { get; init; }
-
-        /// <summary>
-        /// This temporary property will be removed in a future commit.
-        /// </summary>
-        public bool UseLegacyError { get; init; }
     }
 }

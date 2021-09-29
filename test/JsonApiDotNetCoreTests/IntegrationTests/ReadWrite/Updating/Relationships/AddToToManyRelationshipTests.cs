@@ -598,7 +598,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            error.Title.Should().Be("Resource type is incompatible with relationship type.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
             error.Detail.Should().Be("Type 'userAccounts' is incompatible with type 'workTags' of relationship 'tags'.");
             error.Source.Pointer.Should().Be("/data[0]/type");
         }

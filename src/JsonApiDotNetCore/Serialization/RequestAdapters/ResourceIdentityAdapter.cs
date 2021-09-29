@@ -112,43 +112,10 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             AssertHasType(identity, state);
 
             using IDisposable _ = state.Position.PushElement("type");
-
             ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(identity.Type);
 
             AssertIsKnownResourceType(resourceContext, identity.Type, state);
-
-            if (requirements?.ResourceContext != null && !requirements.ResourceContext.ResourceType.IsAssignableFrom(resourceContext.ResourceType))
-            {
-                if (requirements.UseLegacyError)
-                {
-                    throw new DeserializationException(state.Position, "Relationship contains incompatible resource type.",
-                        $"Relationship '{requirements.RelationshipName}' contains incompatible resource type '{resourceContext.PublicName}'.");
-                }
-
-                if (state.Request.Kind == EndpointKind.AtomicOperations)
-                {
-                    throw new DeserializationException(state.Position, "Resource type mismatch between 'ref.type' and 'data.type' element.",
-                        $"Expected resource of type '{requirements.ResourceContext.PublicName}' in 'data.type', instead of '{resourceContext.PublicName}'.");
-                }
-
-                string title = requirements.RelationshipName != null ? "Resource type is incompatible with relationship type." :
-                    state.Request.Kind == EndpointKind.AtomicOperations ? "Resource type is incompatible with type in ref." :
-                    "Resource type is incompatible with endpoint URL.";
-
-                string detail = requirements.RelationshipName != null
-                    ? $"Type '{resourceContext.PublicName}' is incompatible with type '{requirements.ResourceContext.PublicName}' of relationship '{requirements.RelationshipName}'."
-                    : $"Type '{resourceContext.PublicName}' is incompatible with type '{requirements.ResourceContext.PublicName}'.";
-
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
-                {
-                    Title = title,
-                    Detail = detail,
-                    Source = new ErrorSource
-                    {
-                        Pointer = state.Position.ToSourcePointer()
-                    }
-                });
-            }
+            AssertIsCompatibleResourceType(resourceContext, requirements.ResourceContext, requirements.RelationshipName, state);
 
             return resourceContext;
         }
@@ -166,6 +133,18 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             if (resourceContext == null)
             {
                 throw new ModelConversionException(state.Position, "Unknown resource type found.", $"Resource type '{typeName}' does not exist.");
+            }
+        }
+
+        private static void AssertIsCompatibleResourceType(ResourceContext actual, ResourceContext expected, string relationshipName, RequestAdapterState state)
+        {
+            if (expected != null && !expected.ResourceType.IsAssignableFrom(actual.ResourceType))
+            {
+                string message = relationshipName != null
+                    ? $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}' of relationship '{relationshipName}'."
+                    : $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}'.";
+
+                throw new ModelConversionException(state.Position, "Incompatible resource type found.", message, HttpStatusCode.Conflict);
             }
         }
 

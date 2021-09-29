@@ -14,8 +14,8 @@ namespace JsonApiDotNetCore.Errors
         public string RequestBody { get; }
 
         public InvalidRequestBodyException(string requestBody, string genericMessage, string specificMessage, string sourcePointer,
-            Exception innerException = null)
-            : base(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+            HttpStatusCode? alternativeStatusCode = null, Exception innerException = null)
+            : base(new ErrorObject(alternativeStatusCode ?? HttpStatusCode.UnprocessableEntity)
             {
                 Title = genericMessage != null ? $"Failed to deserialize request body: {genericMessage}" : "Failed to deserialize request body.",
                 Detail = specificMessage,

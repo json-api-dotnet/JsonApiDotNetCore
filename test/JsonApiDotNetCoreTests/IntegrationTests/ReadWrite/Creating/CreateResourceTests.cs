@@ -667,7 +667,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            error.Title.Should().Be("Resource type is incompatible with endpoint URL.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
             error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'workItems'.");
             error.Source.Pointer.Should().Be("/data/type");
         }

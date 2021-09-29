@@ -670,14 +670,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
-            error.Detail.Should().Be("Relationship 'performers' contains incompatible resource type 'playlists'.");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'playlists' is incompatible with type 'performers' of relationship 'performers'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
         }
     }

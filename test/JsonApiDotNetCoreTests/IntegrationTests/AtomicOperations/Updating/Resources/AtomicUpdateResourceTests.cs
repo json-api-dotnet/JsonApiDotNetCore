@@ -1085,14 +1085,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource type mismatch between 'ref.type' and 'data.type' element.");
-            error.Detail.Should().Be("Expected resource of type 'performers' in 'data.type', instead of 'playlists'.");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'playlists' is incompatible with type 'performers'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
         }
 

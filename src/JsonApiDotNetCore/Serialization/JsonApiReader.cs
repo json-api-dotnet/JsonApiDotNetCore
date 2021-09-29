@@ -71,7 +71,8 @@ namespace JsonApiDotNetCore.Serialization
             }
             catch (ModelConversionException exception)
             {
-                throw new InvalidRequestBodyException(requestBody, exception.GenericMessage, exception.SpecificMessage, exception.SourcePointer, exception);
+                throw new InvalidRequestBodyException(requestBody, exception.GenericMessage, exception.SpecificMessage, exception.SourcePointer,
+                    exception.StatusCode, exception);
             }
             catch (DeserializationException exception)
             {
@@ -107,7 +108,7 @@ namespace JsonApiDotNetCore.Serialization
                 // JsonException.Path looks great for setting error.source.pointer, but unfortunately it is wrong in most cases.
                 // This is due to the use of custom converters, which are unable to interact with internal position tracking.
                 // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
-                throw new InvalidRequestBodyException(requestBody, null, exception.Message, null, exception);
+                throw new InvalidRequestBodyException(requestBody, null, exception.Message, null, null, exception);
             }
         }
     }

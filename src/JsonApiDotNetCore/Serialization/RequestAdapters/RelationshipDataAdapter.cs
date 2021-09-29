@@ -80,8 +80,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             {
                 ResourceContext = rightResourceContext,
                 IdConstraint = JsonElementConstraint.Required,
-                RelationshipName = relationship.PublicName,
-                UseLegacyError = state.Request.Kind != EndpointKind.Relationship
+                RelationshipName = relationship.PublicName
             };
 
             return relationship is HasOneAttribute
