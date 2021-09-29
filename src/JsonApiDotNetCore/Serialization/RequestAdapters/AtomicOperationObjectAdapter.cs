@@ -63,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             {
                 using (state.Position.PushElement("href"))
                 {
-                    throw new DeserializationException(state.Position, "Usage of the 'href' element is not supported.", null);
+                    throw new ModelConversionException(state.Position, "The 'href' element is not supported.", null);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                     {
                         using (state.Position.PushElement("ref"))
                         {
-                            throw new DeserializationException(state.Position, "The 'ref.relationship' element is required.", null);
+                            throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
                         }
                     }
 
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                 {
                     if (atomicOperationObject.Ref == null)
                     {
-                        throw new DeserializationException(state.Position, "The 'ref' element is required.", null);
+                        throw new ModelConversionException(state.Position, "The 'ref' element is required.", null);
                     }
 
                     return atomicOperationObject.Ref.Relationship != null ? WriteOperationKind.RemoveFromRelationship : WriteOperationKind.DeleteResource;

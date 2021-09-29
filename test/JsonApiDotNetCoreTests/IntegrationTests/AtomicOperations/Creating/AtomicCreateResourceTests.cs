@@ -494,7 +494,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
         }
@@ -530,7 +530,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'ref.relationship' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'relationship' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
         }

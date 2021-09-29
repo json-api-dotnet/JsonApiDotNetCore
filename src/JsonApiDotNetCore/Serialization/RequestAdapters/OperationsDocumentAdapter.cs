@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         {
             if (atomicOperationObjects.IsNullOrEmpty())
             {
-                throw new DeserializationException(state.Position, "No operations found.", null);
+                throw new ModelConversionException(state.Position, "No operations found.", null);
             }
         }
 
@@ -46,8 +46,9 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         {
             if (atomicOperationObjects.Count > _options.MaximumOperationsPerRequest)
             {
-                throw new DeserializationException(state.Position, "Request exceeds the maximum number of operations.",
-                    $"The number of operations in this request ({atomicOperationObjects.Count}) is higher than {_options.MaximumOperationsPerRequest}.");
+                throw new ModelConversionException(state.Position, "Too many operations in request.",
+                    $"The number of operations in this request ({atomicOperationObjects.Count}) is higher " +
+                    $"than the maximum of {_options.MaximumOperationsPerRequest}.");
             }
         }
 

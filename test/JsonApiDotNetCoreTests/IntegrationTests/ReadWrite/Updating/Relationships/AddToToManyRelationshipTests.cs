@@ -58,8 +58,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("Only to-many relationships can be targeted through this endpoint.");
-            error.Detail.Should().Be("Relationship 'assignee' must be a to-many relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted through this endpoint.");
+            error.Detail.Should().Be("Relationship 'assignee' is not a to-many relationship.");
             error.Source.Should().BeNull();
         }
 

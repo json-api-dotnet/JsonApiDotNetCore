@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
-using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
@@ -50,7 +47,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                         return new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
                     }
 
-                    AssertToManyInAddOrRemoveRelationship(state);
+                    ResourceIdentityAdapter.AssertToManyInAddOrRemoveRelationship(state.Request.Relationship, state);
 
                     state.WritableTargetedFields.Relationships.Add(state.Request.Relationship);
                     return _relationshipDataAdapter.Convert(document.Data, state.Request.Relationship, false, state);
@@ -74,21 +71,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             };
 
             return requirements;
-        }
-
-        private static void AssertToManyInAddOrRemoveRelationship(RequestAdapterState state)
-        {
-            bool requireToManyRelationship = state.Request.WriteOperation == WriteOperationKind.AddToRelationship ||
-                state.Request.WriteOperation == WriteOperationKind.RemoveFromRelationship;
-
-            if (requireToManyRelationship && state.Request.Relationship is not HasManyAttribute)
-            {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.Forbidden)
-                {
-                    Title = "Only to-many relationships can be targeted through this endpoint.",
-                    Detail = $"Relationship '{state.Request.Relationship.PublicName}' must be a to-many relationship."
-                });
-            }
         }
     }
 }

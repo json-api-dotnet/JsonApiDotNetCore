@@ -1,6 +1,5 @@
 using System;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -43,18 +42,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             AssertToManyInAddOrRemoveRelationship(relationship, state);
 
             return relationship;
-        }
-
-        private static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
-        {
-            bool requireToManyRelationship = state.Request.WriteOperation == WriteOperationKind.AddToRelationship ||
-                state.Request.WriteOperation == WriteOperationKind.RemoveFromRelationship;
-
-            if (requireToManyRelationship && relationship is not HasManyAttribute)
-            {
-                throw new DeserializationException(state.Position, "Only to-many relationships can be targeted through this operation.",
-                    $"Relationship '{relationship.PublicName}' must be a to-many relationship.");
-            }
         }
     }
 }

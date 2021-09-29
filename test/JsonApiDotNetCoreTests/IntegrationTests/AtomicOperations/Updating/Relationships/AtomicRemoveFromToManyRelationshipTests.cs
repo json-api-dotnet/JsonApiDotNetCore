@@ -65,14 +65,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted through this operation.");
-            error.Detail.Should().Be("Relationship 'ownedBy' must be a to-many relationship.");
+            error.Detail.Should().Be("Relationship 'ownedBy' is not a to-many relationship.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
         }
 
@@ -263,7 +263,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
         }

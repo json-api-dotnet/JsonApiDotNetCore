@@ -203,5 +203,21 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                     $"Relationship '{relationshipName}' does not exist on resource type '{resourceContext.PublicName}'.");
             }
         }
+
+        protected internal static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
+        {
+            bool requireToManyRelationship = state.Request.WriteOperation == WriteOperationKind.AddToRelationship ||
+                state.Request.WriteOperation == WriteOperationKind.RemoveFromRelationship;
+
+            if (requireToManyRelationship && relationship is not HasManyAttribute)
+            {
+                string message = state.Request.Kind == EndpointKind.AtomicOperations
+                    ? "Only to-many relationships can be targeted through this operation."
+                    : "Only to-many relationships can be targeted through this endpoint.";
+
+                throw new ModelConversionException(state.Position, message, $"Relationship '{relationship.PublicName}' is not a to-many relationship.",
+                    HttpStatusCode.Forbidden);
+            }
+        }
     }
 }

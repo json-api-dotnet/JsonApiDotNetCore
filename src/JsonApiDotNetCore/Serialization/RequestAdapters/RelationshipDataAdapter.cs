@@ -90,14 +90,14 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         private IIdentifiable ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship,
             ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            AssertHasNoManyValue(data, relationship, state);
+            AssertHasSingleValue(data, relationship, state);
 
             return data.SingleValue != null ? _resourceIdentifierObjectAdapter.Convert(data.SingleValue, requirements, state) : null;
         }
 
-        private static void AssertHasNoManyValue(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, RequestAdapterState state)
+        private static void AssertHasSingleValue(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, RequestAdapterState state)
         {
-            if (data.ManyValue != null)
+            if (!data.IsAssigned || data.ManyValue != null)
             {
                 throw new DeserializationException(state.Position, "Expected single data element for to-one relationship.",
                     $"Expected single data element for '{relationship.PublicName}' relationship.");
