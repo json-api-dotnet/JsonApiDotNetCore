@@ -998,8 +998,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            error.Title.Should().Be("Resource ID mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be($"Expected resource ID '{existingWorkItems[1].StringId}', instead of '{existingWorkItems[0].StringId}'.");
+            error.Title.Should().Be("Failed to deserialize request body: Conflicting 'id' values found.");
+            error.Detail.Should().Be($"Expected '{existingWorkItems[1].StringId}' instead of '{existingWorkItems[0].StringId}'.");
             error.Source.Pointer.Should().Be("/data/id");
         }
 

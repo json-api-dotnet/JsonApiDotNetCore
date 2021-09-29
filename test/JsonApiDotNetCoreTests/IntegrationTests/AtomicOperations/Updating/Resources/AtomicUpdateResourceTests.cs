@@ -1136,14 +1136,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource ID mismatch between 'ref.id' and 'data.id' element.");
-            error.Detail.Should().Be($"Expected resource with ID '{performerId1}' in 'data.id', instead of '{performerId2}'.");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Conflicting 'id' values found.");
+            error.Detail.Should().Be($"Expected '{performerId1}' instead of '{performerId2}'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
         }
 
@@ -1184,14 +1184,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource local ID mismatch between 'ref.lid' and 'data.lid' element.");
-            error.Detail.Should().Be("Expected resource with local ID 'local-1' in 'data.lid', instead of 'local-2'.");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Conflicting 'lid' values found.");
+            error.Detail.Should().Be("Expected 'local-1' instead of 'local-2'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
         }
 
@@ -1240,9 +1240,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.id' and 'data.lid' element.");
-            error.Detail.Should().Be($"Expected resource with ID '{performerId}' in 'data.id', instead of 'local-1' in 'data.lid'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/lid");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
         }
 
         [Fact]
@@ -1290,9 +1290,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Resource identity mismatch between 'ref.lid' and 'data.id' element.");
-            error.Detail.Should().Be($"Expected resource with local ID 'local-1' in 'data.lid', instead of '{performerId}' in 'data.id'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+            error.Title.Should().Be("Failed to deserialize request body: The 'lid' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
         }
 
         [Fact]

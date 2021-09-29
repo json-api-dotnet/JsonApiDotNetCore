@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -34,75 +33,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             ArgumentGuard.NotNull(state, nameof(state));
 
             ResourceContext resourceContext = ConvertType(identity, requirements, state);
-
-            if (state.Request.Kind != EndpointKind.AtomicOperations)
-            {
-                AssertHasNoLid(identity, state);
-            }
-
-            AssertNoIdWithLid(identity, state);
-
-            if (requirements.IdConstraint == JsonElementConstraint.Required)
-            {
-                AssertHasIdOrLid(identity, state);
-            }
-            else if (requirements.IdConstraint == JsonElementConstraint.Forbidden)
-            {
-                AssertHasNoId(identity, state);
-            }
-
-            if (requirements.IdValue != null && identity.Id != null && identity.Id != requirements.IdValue)
-            {
-                using (state.Position.PushElement("id"))
-                {
-                    if (state.Request.Kind == EndpointKind.AtomicOperations)
-                    {
-                        throw new DeserializationException(state.Position, "Resource ID mismatch between 'ref.id' and 'data.id' element.",
-                            $"Expected resource with ID '{requirements.IdValue}' in 'data.id', instead of '{identity.Id}'.");
-                    }
-
-                    throw new JsonApiException(new ErrorObject(HttpStatusCode.Conflict)
-                    {
-                        Title = "Resource ID mismatch between request body and endpoint URL.",
-                        Detail = $"Expected resource ID '{requirements.IdValue}', instead of '{identity.Id}'.",
-                        Source = new ErrorSource
-                        {
-                            Pointer = state.Position.ToSourcePointer()
-                        }
-                    });
-                }
-            }
-
-            if (requirements.LidValue != null && identity.Lid != null && identity.Lid != requirements.LidValue)
-            {
-                using (state.Position.PushElement("lid"))
-                {
-                    throw new DeserializationException(state.Position, "Resource local ID mismatch between 'ref.lid' and 'data.lid' element.",
-                        $"Expected resource with local ID '{requirements.LidValue}' in 'data.lid', instead of '{identity.Lid}'.");
-                }
-            }
-
-            if (requirements.IdValue != null && identity.Lid != null)
-            {
-                using (state.Position.PushElement("lid"))
-                {
-                    throw new DeserializationException(state.Position, "Resource identity mismatch between 'ref.id' and 'data.lid' element.",
-                        $"Expected resource with ID '{requirements.IdValue}' in 'data.id', instead of '{identity.Lid}' in 'data.lid'.");
-                }
-            }
-
-            if (requirements.LidValue != null && identity.Id != null)
-            {
-                using (state.Position.PushElement("id"))
-                {
-                    throw new DeserializationException(state.Position, "Resource identity mismatch between 'ref.lid' and 'data.id' element.",
-                        $"Expected resource with local ID '{requirements.LidValue}' in 'data.lid', instead of '{identity.Id}' in 'data.id'.");
-                }
-            }
-
-            IIdentifiable resource = _resourceFactory.CreateInstance(resourceContext.ResourceType);
-            AssignStringId(identity, resource, state);
-            resource.LocalId = identity.Lid;
+            IIdentifiable resource = CreateResource(identity, requirements, resourceContext.ResourceType, state);
 
             return (resource, resourceContext);
         }
@@ -148,6 +79,34 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
         }
 
+        private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceType,
+            RequestAdapterState state)
+        {
+            if (state.Request.Kind != EndpointKind.AtomicOperations)
+            {
+                AssertHasNoLid(identity, state);
+            }
+
+            AssertNoIdWithLid(identity, state);
+
+            if (requirements.IdConstraint == JsonElementConstraint.Required)
+            {
+                AssertHasIdOrLid(identity, requirements, state);
+            }
+            else if (requirements.IdConstraint == JsonElementConstraint.Forbidden)
+            {
+                AssertHasNoId(identity, state);
+            }
+
+            AssertSameIdValue(identity, requirements.IdValue, state);
+            AssertSameLidValue(identity, requirements.LidValue, state);
+
+            IIdentifiable resource = _resourceFactory.CreateInstance(resourceType);
+            AssignStringId(identity, resource, state);
+            resource.LocalId = identity.Lid;
+            return resource;
+        }
+
         private static void AssertHasNoLid(IResourceIdentity identity, RequestAdapterState state)
         {
             if (identity.Lid != null)
@@ -165,14 +124,25 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
         }
 
-        private static void AssertHasIdOrLid(IResourceIdentity identity, RequestAdapterState state)
+        private static void AssertHasIdOrLid(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            if (identity.Id == null && identity.Lid == null)
-            {
-                string message = state.Request.Kind == EndpointKind.AtomicOperations
-                    ? "The 'id' or 'lid' element is required."
-                    : "The 'id' element is required.";
+            string message = null;
 
+            if (requirements.IdValue != null && identity.Id == null)
+            {
+                message = "The 'id' element is required.";
+            }
+            else if (requirements.LidValue != null && identity.Lid == null)
+            {
+                message = "The 'lid' element is required.";
+            }
+            else if (identity.Id == null && identity.Lid == null)
+            {
+                message = state.Request.Kind == EndpointKind.AtomicOperations ? "The 'id' or 'lid' element is required." : "The 'id' element is required.";
+            }
+
+            if (message != null)
+            {
                 throw new ModelConversionException(state.Position, message, null);
             }
         }
@@ -186,18 +156,39 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
         }
 
+        private static void AssertSameIdValue(IResourceIdentity identity, string expected, RequestAdapterState state)
+        {
+            if (expected != null && identity.Id != expected)
+            {
+                using IDisposable _ = state.Position.PushElement("id");
+
+                throw new ModelConversionException(state.Position, "Conflicting 'id' values found.", $"Expected '{expected}' instead of '{identity.Id}'.",
+                    HttpStatusCode.Conflict);
+            }
+        }
+
+        private static void AssertSameLidValue(IResourceIdentity identity, string expected, RequestAdapterState state)
+        {
+            if (expected != null && identity.Lid != expected)
+            {
+                using IDisposable _ = state.Position.PushElement("lid");
+
+                throw new ModelConversionException(state.Position, "Conflicting 'lid' values found.", $"Expected '{expected}' instead of '{identity.Lid}'.",
+                    HttpStatusCode.Conflict);
+            }
+        }
+
         private void AssignStringId(IResourceIdentity identity, IIdentifiable resource, RequestAdapterState state)
         {
             if (identity.Id != null)
             {
-                using IDisposable _ = state.Position.PushElement("id");
-
                 try
                 {
                     resource.StringId = identity.Id;
                 }
                 catch (FormatException exception)
                 {
+                    using IDisposable _ = state.Position.PushElement("id");
                     throw new DeserializationException(state.Position, null, exception.Message);
                 }
             }
