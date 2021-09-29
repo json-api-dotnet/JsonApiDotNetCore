@@ -125,8 +125,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown attribute.");
-            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
+            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'userAccounts'.");
             error.Source.Pointer.Should().Be("/data/attributes/doesNotExist");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
@@ -225,8 +225,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown relationship.");
-            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'userAccounts'.");
             error.Source.Pointer.Should().Be("/data/relationships/doesNotExist");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();

@@ -39,19 +39,10 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
 
-            AssertIsKnownRelationship(relationship, relationshipName, state);
+            AssertIsKnownRelationship(relationship, relationshipName, resourceContext, state);
             AssertToManyInAddOrRemoveRelationship(relationship, state);
 
             return relationship;
-        }
-
-        private static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, RequestAdapterState state)
-        {
-            if (relationship == null)
-            {
-                throw new DeserializationException(state.Position, "Request body includes unknown relationship.",
-                    $"Relationship '{relationshipName}' does not exist.");
-            }
         }
 
         private static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)

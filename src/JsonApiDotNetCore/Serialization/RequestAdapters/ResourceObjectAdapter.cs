@@ -60,11 +60,12 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             AttrAttribute attr = resourceContext.TryGetAttributeByPublicName(attributeName);
 
-            if (!AssertIsKnownAttribute(attr, attributeName, state))
+            if (attr == null && _options.AllowUnknownFieldsInRequestBody)
             {
                 return;
             }
 
+            AssertIsKnownAttribute(attr, attributeName, resourceContext, state);
             AssertNoInvalidAttribute(attributeValue, state);
             AssertNoBlockedCreate(attr, state);
             AssertNoBlockedChange(attr, state);
@@ -75,19 +76,13 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         }
 
         [AssertionMethod]
-        private bool AssertIsKnownAttribute(AttrAttribute attr, string attributeName, RequestAdapterState state)
+        private static void AssertIsKnownAttribute(AttrAttribute attr, string attributeName, ResourceContext resourceContext, RequestAdapterState state)
         {
             if (attr == null)
             {
-                if (_options.AllowUnknownFieldsInRequestBody)
-                {
-                    return false;
-                }
-
-                throw new DeserializationException(state.Position, "Request body includes unknown attribute.", $"Attribute '{attributeName}' does not exist.");
+                throw new ModelConversionException(state.Position, "Unknown attribute found.",
+                    $"Attribute '{attributeName}' does not exist on resource type '{resourceContext.PublicName}'.");
             }
-
-            return true;
         }
 
         private static void AssertNoInvalidAttribute(object attributeValue, RequestAdapterState state)
@@ -150,32 +145,17 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
 
-            if (!AssertIsKnownRelationship(relationship, relationshipName, state))
+            if (relationship == null && _options.AllowUnknownFieldsInRequestBody)
             {
                 return;
             }
+
+            AssertIsKnownRelationship(relationship, relationshipName, resourceContext, state);
 
             object rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
 
             relationship.SetValue(resource, rightValue);
             state.WritableTargetedFields.Relationships.Add(relationship);
-        }
-
-        [AssertionMethod]
-        private bool AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, RequestAdapterState state)
-        {
-            if (relationship == null)
-            {
-                if (_options.AllowUnknownFieldsInRequestBody)
-                {
-                    return false;
-                }
-
-                throw new DeserializationException(state.Position, "Request body includes unknown relationship.",
-                    $"Relationship '{relationshipName}' does not exist.");
-            }
-
-            return true;
         }
     }
 }

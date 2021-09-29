@@ -545,8 +545,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Rela
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown relationship.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'performers'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/relationship");
         }
 

@@ -4,6 +4,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
+using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
@@ -211,6 +212,16 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
 
             return identity.Lid;
+        }
+
+        protected static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, ResourceContext resourceContext,
+            RequestAdapterState state)
+        {
+            if (relationship == null)
+            {
+                throw new ModelConversionException(state.Position, "Unknown relationship found.",
+                    $"Relationship '{relationshipName}' does not exist on resource type '{resourceContext.PublicName}'.");
+            }
         }
     }
 }
