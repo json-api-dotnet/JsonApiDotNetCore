@@ -1507,8 +1507,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
-            error.Detail.Should().Be("Changing the value of 'createdAt' is not allowed.");
+            error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
+            error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
         }
 
@@ -1557,7 +1557,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().Be("Attribute 'isArchived' is read-only.");
+            error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
         }
 
@@ -1605,8 +1605,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().Be("Resource ID is read-only.");
+            error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/id");
         }
 

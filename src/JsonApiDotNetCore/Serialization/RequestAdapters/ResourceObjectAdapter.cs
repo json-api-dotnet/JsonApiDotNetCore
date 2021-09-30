@@ -66,9 +66,9 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             AssertIsKnownAttribute(attr, attributeName, resourceContext, state);
             AssertNoInvalidAttribute(attributeValue, state);
-            AssertNoBlockedCreate(attr, state);
-            AssertNoBlockedChange(attr, state);
-            AssertNotReadOnly(attr, state);
+            AssertNoBlockedCreate(attr, resourceContext, state);
+            AssertNoBlockedChange(attr, resourceContext, state);
+            AssertNotReadOnly(attr, resourceContext, state);
 
             attr!.SetValue(resource, attributeValue);
             state.WritableTargetedFields.Attributes.Add(attr);
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             {
                 if (info == JsonInvalidAttributeInfo.Id)
                 {
-                    throw new DeserializationException(state.Position, null, "Resource ID is read-only.");
+                    throw new ModelConversionException(state.Position, "Resource ID is read-only.", null);
                 }
 
                 string typeName = info.AttributeType.GetFriendlyTypeName();
@@ -100,29 +100,30 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             }
         }
 
-        private static void AssertNoBlockedCreate(AttrAttribute attr, RequestAdapterState state)
+        private static void AssertNoBlockedCreate(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
         {
             if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
             {
-                throw new DeserializationException(state.Position, "Setting the initial value of the requested attribute is not allowed.",
-                    $"Setting the initial value of '{attr.PublicName}' is not allowed.");
+                throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when creating resource.",
+                    $"The attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' cannot be assigned to.");
             }
         }
 
-        private static void AssertNoBlockedChange(AttrAttribute attr, RequestAdapterState state)
+        private static void AssertNoBlockedChange(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
         {
             if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
             {
-                throw new DeserializationException(state.Position, "Changing the value of the requested attribute is not allowed.",
-                    $"Changing the value of '{attr.PublicName}' is not allowed.");
+                throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when updating resource.",
+                    $"The attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' cannot be assigned to.");
             }
         }
 
-        private static void AssertNotReadOnly(AttrAttribute attr, RequestAdapterState state)
+        private static void AssertNotReadOnly(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
         {
             if (attr.Property.SetMethod == null)
             {
-                throw new DeserializationException(state.Position, "Attribute is read-only.", $"Attribute '{attr.PublicName}' is read-only.");
+                throw new ModelConversionException(state.Position, "Attribute is read-only.",
+                    $"Attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' is read-only.");
             }
         }
 

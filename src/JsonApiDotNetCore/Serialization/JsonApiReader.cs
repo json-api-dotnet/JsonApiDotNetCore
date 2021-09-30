@@ -64,20 +64,7 @@ namespace JsonApiDotNetCore.Serialization
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Read request body");
 
             Document document = DeserializeDocument(requestBody, _options.SerializerReadOptions);
-
-            try
-            {
-                return _documentAdapter.Convert(document);
-            }
-            catch (ModelConversionException exception)
-            {
-                throw new InvalidRequestBodyException(requestBody, exception.GenericMessage, exception.SpecificMessage, exception.SourcePointer,
-                    exception.StatusCode, exception);
-            }
-            catch (DeserializationException exception)
-            {
-                throw new InvalidRequestBodyException(requestBody, exception.GenericMessage, exception.SpecificMessage, exception.SourcePointer);
-            }
+            return ConvertDocumentToModel(document, requestBody);
         }
 
         [AssertionMethod]
@@ -94,8 +81,6 @@ namespace JsonApiDotNetCore.Serialization
 
         private Document DeserializeDocument(string requestBody, JsonSerializerOptions serializerOptions)
         {
-            ArgumentGuard.NotNull(requestBody, nameof(requestBody));
-
             try
             {
                 using IDisposable _ =
@@ -109,6 +94,19 @@ namespace JsonApiDotNetCore.Serialization
                 // This is due to the use of custom converters, which are unable to interact with internal position tracking.
                 // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
                 throw new InvalidRequestBodyException(requestBody, null, exception.Message, null, null, exception);
+            }
+        }
+
+        private object ConvertDocumentToModel(Document document, string requestBody)
+        {
+            try
+            {
+                return _documentAdapter.Convert(document);
+            }
+            catch (ModelConversionException exception)
+            {
+                throw new InvalidRequestBodyException(requestBody, exception.GenericMessage, exception.SpecificMessage, exception.SourcePointer,
+                    exception.StatusCode, exception);
             }
         }
     }

@@ -1076,8 +1076,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Changing the value of the requested attribute is not allowed.");
-            error.Detail.Should().Be("Changing the value of 'isImportant' is not allowed.");
+            error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when updating resource.");
+            error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
             error.Source.Pointer.Should().Be("/data/attributes/isImportant");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
@@ -1121,7 +1121,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().Be("Attribute 'isDeprecated' is read-only.");
+            error.Detail.Should().Be("Attribute 'isDeprecated' on resource type 'workItemGroups' is read-only.");
             error.Source.Pointer.Should().Be("/data/attributes/isDeprecated");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
@@ -1197,8 +1197,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().Be("Resource ID is read-only.");
+            error.Title.Should().Be("Failed to deserialize request body: Resource ID is read-only.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/attributes/id");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();

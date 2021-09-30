@@ -754,8 +754,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().Be("Setting the initial value of 'createdAt' is not allowed.");
+            error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
+            error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
         }
 
@@ -798,7 +798,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().Be("Attribute 'isArchived' is read-only.");
+            error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
         }
 
