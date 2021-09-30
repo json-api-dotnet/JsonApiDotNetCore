@@ -71,7 +71,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             AssertNoBlockedChange(attr, state);
             AssertNotReadOnly(attr, state);
 
-            attr.SetValue(resource, attributeValue);
+            attr!.SetValue(resource, attributeValue);
             state.WritableTargetedFields.Attributes.Add(attr);
         }
 
@@ -154,7 +154,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             object rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
 
-            relationship.SetValue(resource, rightValue);
+            relationship!.SetValue(resource, rightValue);
             state.WritableTargetedFields.Relationships.Add(relationship);
         }
     }
