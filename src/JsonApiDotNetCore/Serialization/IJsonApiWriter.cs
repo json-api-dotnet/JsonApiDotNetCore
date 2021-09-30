@@ -1,15 +1,18 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.Serialization
 {
     /// <summary>
-    /// Serializes models into the outgoing JSON response body.
+    /// Serializes ASP.NET models into the outgoing JSON:API response body.
     /// </summary>
     [PublicAPI]
     public interface IJsonApiWriter
     {
-        Task WriteAsync(OutputFormatterWriteContext context);
+        /// <summary>
+        /// Writes an object to the response body.
+        /// </summary>
+        Task WriteAsync(object model, HttpContext httpContext);
     }
 }

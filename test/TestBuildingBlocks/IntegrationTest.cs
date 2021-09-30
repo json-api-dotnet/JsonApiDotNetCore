@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Middleware;
 namespace TestBuildingBlocks
 {
     /// <summary>
-    /// A base class for tests that conveniently enables to execute HTTP requests against json:api endpoints.
+    /// A base class for tests that conveniently enables to execute HTTP requests against JSON:API endpoints.
     /// </summary>
     public abstract class IntegrationTest
     {

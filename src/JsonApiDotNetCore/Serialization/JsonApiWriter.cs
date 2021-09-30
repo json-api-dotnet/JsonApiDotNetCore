@@ -6,7 +6,6 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -14,18 +13,14 @@ using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization
 {
-    /// <summary>
-    /// Formats the response data used (see https://docs.microsoft.com/en-us/aspnet/core/web-api/advanced/formatting?view=aspnetcore-3.0). It was intended to
-    /// have as little dependencies as possible in formatting layer for greater extensibility.
-    /// </summary>
-    [PublicAPI]
-    public class JsonApiWriter : IJsonApiWriter
+    /// <inheritdoc />
+    public sealed class JsonApiWriter : IJsonApiWriter
     {
         private readonly IJsonApiSerializer _serializer;
         private readonly IExceptionHandler _exceptionHandler;
@@ -45,21 +40,22 @@ namespace JsonApiDotNetCore.Serialization
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
         }
 
-        public async Task WriteAsync(OutputFormatterWriteContext context)
+        /// <inheritdoc />
+        public async Task WriteAsync(object model, HttpContext httpContext)
         {
-            ArgumentGuard.NotNull(context, nameof(context));
+            ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body");
 
-            HttpRequest request = context.HttpContext.Request;
-            HttpResponse response = context.HttpContext.Response;
+            HttpRequest request = httpContext.Request;
+            HttpResponse response = httpContext.Response;
 
-            await using TextWriter writer = context.WriterFactory(response.Body, Encoding.UTF8);
+            await using TextWriter writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
             string responseContent;
 
             try
             {
-                responseContent = SerializeResponse(context.Object, (HttpStatusCode)response.StatusCode);
+                responseContent = SerializeResponse(model, (HttpStatusCode)response.StatusCode);
             }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             catch (Exception exception)

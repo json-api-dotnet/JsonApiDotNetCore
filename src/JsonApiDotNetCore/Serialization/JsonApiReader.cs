@@ -12,14 +12,12 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.RequestAdapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Serialization
 {
     /// <inheritdoc />
-    [PublicAPI]
-    public class JsonApiReader : IJsonApiReader
+    public sealed class JsonApiReader : IJsonApiReader
     {
         private readonly IJsonApiOptions _options;
         private readonly IDocumentAdapter _documentAdapter;
@@ -37,14 +35,12 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc />
-        public async Task<InputFormatterResult> ReadAsync(HttpRequest httpRequest)
+        public async Task<object> ReadAsync(HttpRequest httpRequest)
         {
             ArgumentGuard.NotNull(httpRequest, nameof(httpRequest));
 
             string requestBody = await GetRequestBodyAsync(httpRequest);
-            object model = GetModel(requestBody);
-
-            return model == null ? await InputFormatterResult.NoValueAsync() : await InputFormatterResult.SuccessAsync(model);
+            return GetModel(requestBody);
         }
 
         private async Task<string> GetRequestBodyAsync(HttpRequest httpRequest)

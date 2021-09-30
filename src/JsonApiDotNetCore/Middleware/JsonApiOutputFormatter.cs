@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(context, nameof(context));
 
             var writer = context.HttpContext.RequestServices.GetRequiredService<IJsonApiWriter>();
-            await writer.WriteAsync(context);
+            await writer.WriteAsync(context.Object, context.HttpContext);
         }
     }
 }
