@@ -22,7 +22,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             ArgumentGuard.NotNull(state, nameof(state));
 
             using IDisposable _ = state.Position.PushElement("ref");
-
             (IIdentifiable resource, ResourceContext resourceContext) = ConvertResourceIdentity(atomicReference, requirements, state);
 
             RelationshipAttribute relationship = atomicReference.Relationship != null
@@ -35,7 +34,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         private RelationshipAttribute ConvertRelationship(string relationshipName, ResourceContext resourceContext, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("relationship");
-
             RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
 
             AssertIsKnownRelationship(relationship, relationshipName, resourceContext, state);

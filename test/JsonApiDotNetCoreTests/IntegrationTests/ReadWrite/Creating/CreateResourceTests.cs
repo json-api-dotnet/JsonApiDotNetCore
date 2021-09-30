@@ -518,7 +518,35 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_data_array()
+        public async Task Cannot_create_resource_for_null_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of 'null'.");
+            error.Source.Pointer.Should().Be("/data");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_array_data()
         {
             // Arrange
             var requestBody = new
@@ -544,7 +572,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected 'data' object instead of array.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of an array.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data");
 

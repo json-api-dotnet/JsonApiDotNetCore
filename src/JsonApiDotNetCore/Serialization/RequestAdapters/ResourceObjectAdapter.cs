@@ -57,7 +57,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(attributeName);
-
             AttrAttribute attr = resourceContext.TryGetAttributeByPublicName(attributeName);
 
             if (attr == null && _options.AllowUnknownFieldsInRequestBody)
@@ -142,7 +141,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             ResourceContext resourceContext, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(relationshipName);
-
             RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
 
             if (relationship == null && _options.AllowUnknownFieldsInRequestBody)

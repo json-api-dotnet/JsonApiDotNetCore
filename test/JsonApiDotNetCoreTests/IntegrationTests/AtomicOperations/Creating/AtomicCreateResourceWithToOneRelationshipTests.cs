@@ -257,6 +257,98 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_for_missing_data_in_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            relationships = new
+                            {
+                                lyric = new
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric");
+        }
+
+        [Fact]
+        public async Task Cannot_create_for_array_data_in_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            relationships = new
+                            {
+                                lyric = new
+                                {
+                                    data = new[]
+                                    {
+                                        new
+                                        {
+                                            type = "lyrics",
+                                            id = Unknown.StringId.For<Lyric, long>()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null' in 'data' element, instead of an array.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
+        }
+
+        [Fact]
         public async Task Cannot_create_for_missing_relationship_type()
         {
             // Arrange
@@ -567,56 +659,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                 trackInDatabase.OwnedBy.Should().NotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
             });
-        }
-
-        [Fact]
-        public async Task Cannot_create_with_data_array_in_relationship()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = "musicTracks",
-                            relationships = new
-                            {
-                                lyric = new
-                                {
-                                    data = new[]
-                                    {
-                                        new
-                                        {
-                                            type = "lyrics",
-                                            id = Unknown.StringId.For<Lyric, long>()
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/operations";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
-            error.Detail.Should().Be("Expected single data element for 'lyric' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/lyric/data");
         }
     }
 }

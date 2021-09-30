@@ -1,11 +1,12 @@
+using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
 {
-    /// <inheritdoc />
-    public class ResourceDataAdapter : IResourceDataAdapter
+    /// <inheritdoc cref="IResourceDataAdapter" />
+    public class ResourceDataAdapter : BaseDataAdapter, IResourceDataAdapter
     {
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IResourceObjectAdapter _resourceObjectAdapter;
@@ -24,36 +25,19 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         {
             ArgumentGuard.NotNull(requirements, nameof(requirements));
             ArgumentGuard.NotNull(state, nameof(state));
+
             AssertHasData(data, state);
 
-            using (state.Position.PushElement("data"))
-            {
-                AssertNoManyValue(data, state);
+            using IDisposable _ = state.Position.PushElement("data");
+            AssertHasSingleValue(data, false, state);
 
-                (IIdentifiable resource, ResourceContext _) = ConvertResourceObject(data, requirements, state);
+            (IIdentifiable resource, ResourceContext _) = ConvertResourceObject(data, requirements, state);
 
-                // Ensure that IResourceDefinition extensibility point sees the current operation, it case it injects IJsonApiRequest.
-                state.RefreshInjectables();
+            // Ensure that IResourceDefinition extensibility point sees the current operation, it case it injects IJsonApiRequest.
+            state.RefreshInjectables();
 
-                _resourceDefinitionAccessor.OnDeserialize(resource);
-                return resource;
-            }
-        }
-
-        private static void AssertHasData(SingleOrManyData<ResourceObject> data, RequestAdapterState state)
-        {
-            if (data.Value == null)
-            {
-                throw new DeserializationException(state.Position, "The 'data' element is required.", null);
-            }
-        }
-
-        private static void AssertNoManyValue(SingleOrManyData<ResourceObject> data, RequestAdapterState state)
-        {
-            if (data.ManyValue != null)
-            {
-                throw new DeserializationException(state.Position, "Expected 'data' object instead of array.", null);
-            }
+            _resourceDefinitionAccessor.OnDeserialize(resource);
+            return resource;
         }
 
         protected virtual (IIdentifiable resource, ResourceContext resourceContext) ConvertResourceObject(SingleOrManyData<ResourceObject> data,

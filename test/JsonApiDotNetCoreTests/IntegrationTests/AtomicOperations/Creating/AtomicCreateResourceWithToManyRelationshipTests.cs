@@ -533,7 +533,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_OneToMany_relationship()
+        public async Task Cannot_create_with_missing_data_in_OneToMany_relationship()
         {
             // Arrange
             var requestBody = new
@@ -550,7 +550,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
                             {
                                 performers = new
                                 {
-                                    data = (object)null
                                 }
                             }
                         }
@@ -570,9 +569,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().Be("Expected data[] element for 'performers' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data");
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers");
         }
 
         [Fact]
@@ -613,8 +612,53 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().Be("Expected data[] element for 'tracks' relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
+        }
+
+        [Fact]
+        public async Task Cannot_create_with_object_data_in_ManyToMany_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            relationships = new
+                            {
+                                tracks = new
+                                {
+                                    data = new
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of an object.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data");
         }
     }

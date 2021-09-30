@@ -61,10 +61,8 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         {
             if (atomicOperationObject.Href != null)
             {
-                using (state.Position.PushElement("href"))
-                {
-                    throw new ModelConversionException(state.Position, "The 'href' element is not supported.", null);
-                }
+                using IDisposable _ = state.Position.PushElement("href");
+                throw new ModelConversionException(state.Position, "The 'href' element is not supported.", null);
             }
         }
 
@@ -76,10 +74,8 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
                 {
                     if (atomicOperationObject.Ref is { Relationship: null })
                     {
-                        using (state.Position.PushElement("ref"))
-                        {
-                            throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
-                        }
+                        using IDisposable _ = state.Position.PushElement("ref");
+                        throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
                     }
 
                     return atomicOperationObject.Ref == null ? WriteOperationKind.CreateResource : WriteOperationKind.AddToRelationship;

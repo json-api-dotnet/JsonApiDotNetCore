@@ -9,8 +9,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
 {
-    /// <inheritdoc />
-    public sealed class RelationshipDataAdapter : IRelationshipDataAdapter
+    /// <inheritdoc cref="IRelationshipDataAdapter" />
+    public sealed class RelationshipDataAdapter : BaseDataAdapter, IRelationshipDataAdapter
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
@@ -70,9 +70,9 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(state, nameof(state));
+            AssertHasData(data, state);
 
             using IDisposable _ = state.Position.PushElement("data");
-
             ResourceContext rightResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
 
             var requirements = new ResourceIdentityRequirements
@@ -83,31 +83,22 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             };
 
             return relationship is HasOneAttribute
-                ? ConvertToOneRelationshipData(data, relationship, requirements, state)
+                ? ConvertToOneRelationshipData(data, requirements, state)
                 : ConvertToManyRelationshipData(data, relationship, requirements, useToManyElementType, state);
         }
 
-        private IIdentifiable ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship,
-            ResourceIdentityRequirements requirements, RequestAdapterState state)
+        private IIdentifiable ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, ResourceIdentityRequirements requirements,
+            RequestAdapterState state)
         {
-            AssertHasSingleValue(data, relationship, state);
+            AssertHasSingleValue(data, true, state);
 
             return data.SingleValue != null ? _resourceIdentifierObjectAdapter.Convert(data.SingleValue, requirements, state) : null;
-        }
-
-        private static void AssertHasSingleValue(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, RequestAdapterState state)
-        {
-            if (!data.IsAssigned || data.ManyValue != null)
-            {
-                throw new DeserializationException(state.Position, "Expected single data element for to-one relationship.",
-                    $"Expected single data element for '{relationship.PublicName}' relationship.");
-            }
         }
 
         private IEnumerable ConvertToManyRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship,
             ResourceIdentityRequirements requirements, bool useToManyElementType, RequestAdapterState state)
         {
-            AssertHasManyValue(data, relationship, state);
+            AssertHasManyValue(data, state);
 
             int arrayIndex = 0;
             var rightResources = new List<IIdentifiable>();
@@ -130,15 +121,6 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             var resourceSet = new HashSet<IIdentifiable>(IdentifiableComparer.Instance);
             resourceSet.AddRange(rightResources);
             return resourceSet;
-        }
-
-        private static void AssertHasManyValue(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, RequestAdapterState state)
-        {
-            if (data.ManyValue == null)
-            {
-                throw new DeserializationException(state.Position, "Expected data[] element for to-many relationship.",
-                    $"Expected data[] element for '{relationship.PublicName}' relationship.");
-            }
         }
     }
 }

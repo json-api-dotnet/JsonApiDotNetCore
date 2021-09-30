@@ -620,7 +620,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
-        public async Task Cannot_create_with_null_data_in_OneToMany_relationship()
+        public async Task Cannot_create_with_missing_data_in_OneToMany_relationship()
         {
             // Arrange
             var requestBody = new
@@ -632,7 +632,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                     {
                         subscribers = new
                         {
-                            data = (object)null
                         }
                     }
                 }
@@ -650,9 +649,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().Be("Expected data[] element for 'subscribers' relationship.");
-            error.Source.Pointer.Should().Be("/data/relationships/subscribers/data");
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/subscribers");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
@@ -688,8 +687,48 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().Be("Expected data[] element for 'tags' relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/tags/data");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_with_object_data_in_ManyToMany_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        tags = new
+                        {
+                            data = new
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of an object.");
+            error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/relationships/tags/data");
 
             responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -26,12 +27,10 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             ArgumentGuard.NotNull(state, nameof(state));
             AssertHasOperations(document.Operations, state);
 
-            using (state.Position.PushElement("atomic:operations"))
-            {
-                AssertMaxOperationsNotExceeded(document.Operations, state);
+            using IDisposable _ = state.Position.PushElement("atomic:operations");
+            AssertMaxOperationsNotExceeded(document.Operations, state);
 
-                return ConvertOperations(document.Operations, state);
-            }
+            return ConvertOperations(document.Operations, state);
         }
 
         private static void AssertHasOperations(IEnumerable<AtomicOperationObject> atomicOperationObjects, RequestAdapterState state)
@@ -59,13 +58,12 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             foreach (AtomicOperationObject atomicOperationObject in atomicOperationObjects)
             {
-                using (state.Position.PushArrayIndex(operationIndex))
-                {
-                    OperationContainer operation = _atomicOperationObjectAdapter.Convert(atomicOperationObject, state);
-                    operations.Add(operation);
+                using IDisposable _ = state.Position.PushArrayIndex(operationIndex);
 
-                    operationIndex++;
-                }
+                OperationContainer operation = _atomicOperationObjectAdapter.Convert(atomicOperationObject, state);
+                operations.Add(operation);
+
+                operationIndex++;
             }
 
             return operations;

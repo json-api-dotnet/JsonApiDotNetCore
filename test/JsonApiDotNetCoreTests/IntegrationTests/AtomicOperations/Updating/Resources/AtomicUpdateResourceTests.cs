@@ -869,6 +869,91 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         }
 
         [Fact]
+        public async Task Cannot_update_resource_for_null_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = (object)null
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        }
+
+        [Fact]
+        public async Task Cannot_update_resource_for_array_data()
+        {
+            // Arrange
+            Performer existingPerformer = _fakers.Performer.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Performers.Add(existingPerformer);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new[]
+                        {
+                            new
+                            {
+                                type = "performers",
+                                id = existingPerformer.StringId,
+                                attributes = new
+                                {
+                                    artistName = existingPerformer.ArtistName
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of an array.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+        }
+
+        [Fact]
         public async Task Cannot_update_resource_for_missing_type_in_data()
         {
             // Arrange
@@ -992,58 +1077,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
-            error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-        }
-
-        [Fact]
-        public async Task Cannot_update_resource_for_data_array()
-        {
-            // Arrange
-            Performer existingPerformer = _fakers.Performer.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Performers.Add(existingPerformer);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "update",
-                        data = new[]
-                        {
-                            new
-                            {
-                                type = "performers",
-                                id = existingPerformer.StringId,
-                                attributes = new
-                                {
-                                    artistName = existingPerformer.ArtistName
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/operations";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected 'data' object instead of array.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
         }

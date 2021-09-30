@@ -284,6 +284,104 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_with_missing_data_in_relationship()
+        {
+            // Arrange
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.Add(existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                        }
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/assignee");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_with_array_data_in_relationship()
+        {
+            // Arrange
+            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.UserAccounts.Add(existingUserAccount);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        assignee = new
+                        {
+                            data = new[]
+                            {
+                                new
+                                {
+                                    type = "userAccounts",
+                                    id = existingUserAccount.StringId
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object or 'null' in 'data' element, instead of an array.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Cannot_create_for_missing_relationship_type()
         {
             // Arrange
@@ -560,59 +658,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 workItemInDatabase.Assignee.Should().NotBeNull();
                 workItemInDatabase.Assignee.Id.Should().Be(existingUserAccounts[1].Id);
             });
-        }
-
-        [Fact]
-        public async Task Cannot_create_with_data_array_in_relationship()
-        {
-            // Arrange
-            UserAccount existingUserAccount = _fakers.UserAccount.Generate();
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.UserAccounts.Add(existingUserAccount);
-                await dbContext.SaveChangesAsync();
-            });
-
-            var requestBody = new
-            {
-                data = new
-                {
-                    type = "workItems",
-                    relationships = new
-                    {
-                        assignee = new
-                        {
-                            data = new[]
-                            {
-                                new
-                                {
-                                    type = "userAccounts",
-                                    id = existingUserAccount.StringId
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            const string route = "/workItems";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected single data element for to-one relationship.");
-            error.Detail.Should().Be("Expected single data element for 'assignee' relationship.");
-            error.Source.Pointer.Should().Be("/data/relationships/assignee/data");
-
-            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
