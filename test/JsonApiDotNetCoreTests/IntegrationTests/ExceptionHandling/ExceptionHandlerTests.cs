@@ -150,7 +150,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
             IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.Should().ContainMatch("*at object System.Reflection.*");
+            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
 
             responseDocument.Meta.Should().BeNull();
 
