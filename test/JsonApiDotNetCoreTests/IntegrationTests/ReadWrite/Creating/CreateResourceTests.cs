@@ -700,6 +700,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
             error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'workItems'.");
             error.Source.Pointer.Should().Be("/data/type");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

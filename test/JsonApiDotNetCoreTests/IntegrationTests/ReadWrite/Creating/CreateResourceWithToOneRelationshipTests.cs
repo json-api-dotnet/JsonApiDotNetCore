@@ -701,6 +701,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             error.Title.Should().Be("Failed to deserialize request body: The 'lid' element is not supported at this endpoint.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/lid");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
     }
 }

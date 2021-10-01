@@ -658,6 +658,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
             error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'userAccounts' of relationship 'assignee'.");
             error.Source.Pointer.Should().Be("/data/type");
+
+            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
