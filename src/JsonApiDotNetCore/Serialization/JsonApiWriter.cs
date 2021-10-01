@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -61,10 +60,9 @@ namespace JsonApiDotNetCore.Serialization
             catch (Exception exception)
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
-                Document document = _exceptionHandler.HandleException(exception);
-                responseContent = _serializer.Serialize(document);
-
-                response.StatusCode = (int)document.GetErrorStatusCode();
+                IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
+                responseContent = _serializer.Serialize(errors);
+                response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);
             }
 
             bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
@@ -114,35 +112,12 @@ namespace JsonApiDotNetCore.Serialization
                 }
             }
 
-            object contextObjectWrapped = WrapErrors(contextObject);
-
-            return _serializer.Serialize(contextObjectWrapped);
+            return _serializer.Serialize(contextObject);
         }
 
         private bool IsSuccessStatusCode(HttpStatusCode statusCode)
         {
             return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
-        }
-
-        private static object WrapErrors(object contextObject)
-        {
-            if (contextObject is IEnumerable<ErrorObject> errors)
-            {
-                return new Document
-                {
-                    Errors = errors.ToList()
-                };
-            }
-
-            if (contextObject is ErrorObject error)
-            {
-                return new Document
-                {
-                    Errors = error.AsList()
-                };
-            }
-
-            return contextObject;
         }
 
         private bool SetETagResponseHeader(HttpRequest request, HttpResponse response, string responseContent)

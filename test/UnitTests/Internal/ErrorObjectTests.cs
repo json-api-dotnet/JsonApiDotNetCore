@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UnitTests.Internal
 {
-    public sealed class ErrorDocumentTests
+    public sealed class ErrorObjectTests
     {
         // @formatter:wrap_array_initializer_style wrap_if_long
         [Theory]
@@ -18,13 +18,10 @@ namespace UnitTests.Internal
         public void ErrorDocument_GetErrorStatusCode_IsCorrect(HttpStatusCode[] errorCodes, HttpStatusCode expected)
         {
             // Arrange
-            var document = new Document
-            {
-                Errors = errorCodes.Select(code => new ErrorObject(code)).ToList()
-            };
+            ErrorObject[] errors = errorCodes.Select(code => new ErrorObject(code)).ToArray();
 
             // Act
-            HttpStatusCode status = document.GetErrorStatusCode();
+            HttpStatusCode status = ErrorObject.GetResponseStatusCode(errors);
 
             // Assert
             status.Should().Be(expected);

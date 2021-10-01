@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -11,8 +12,6 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidRequestBodyException : JsonApiException
     {
-        public string RequestBody { get; }
-
         public InvalidRequestBodyException(string requestBody, string genericMessage, string specificMessage, string sourcePointer,
             HttpStatusCode? alternativeStatusCode = null, Exception innerException = null)
             : base(new ErrorObject(alternativeStatusCode ?? HttpStatusCode.UnprocessableEntity)
@@ -24,10 +23,15 @@ namespace JsonApiDotNetCore.Errors
                     : new ErrorSource
                     {
                         Pointer = sourcePointer
+                    },
+                Meta = string.IsNullOrEmpty(requestBody)
+                    ? null
+                    : new Dictionary<string, object>
+                    {
+                        ["RequestBody"] = requestBody
                     }
             }, innerException)
         {
-            RequestBody = requestBody;
         }
     }
 }

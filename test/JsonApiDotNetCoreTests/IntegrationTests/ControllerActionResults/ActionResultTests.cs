@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().Be("Data being returned must be errors or resources.");
+            error.Detail.Should().Be("Data being returned must be null, errors or resources.");
         }
 
         [Fact]

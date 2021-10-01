@@ -110,11 +110,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be("Resource type '' does not exist.");
+            error.Meta["requestBody"].ToString().Should().Be(requestBody);
 
             IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
             stackTraceLines.Should().NotBeEmpty();
-
-            responseDocument.Meta["requestBody"].ToString().Should().Be(requestBody);
 
             loggerFactory.Logger.Messages.Should().BeEmpty();
         }

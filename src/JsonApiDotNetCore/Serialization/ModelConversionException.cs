@@ -1,5 +1,6 @@
 using System;
 using System.Net;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.RequestAdapters;
 
 namespace JsonApiDotNetCore.Serialization
@@ -7,7 +8,8 @@ namespace JsonApiDotNetCore.Serialization
     /// <summary>
     /// The error that is thrown when unable to convert a deserialized request body to an ASP.NET model.
     /// </summary>
-    internal sealed class ModelConversionException : Exception
+    [PublicAPI]
+    public sealed class ModelConversionException : Exception
     {
         public string GenericMessage { get; }
         public string SpecificMessage { get; }

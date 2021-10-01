@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Middleware
             _logger = loggerFactory.CreateLogger<ExceptionHandler>();
         }
 
-        public Document HandleException(Exception exception)
+        public IReadOnlyList<ErrorObject> HandleException(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Middleware
 
             LogException(demystified);
 
-            return CreateErrorDocument(demystified);
+            return CreateErrorResponse(demystified);
         }
 
         private void LogException(Exception exception)
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Middleware
                 return LogLevel.None;
             }
 
-            if (exception is JsonApiException)
+            if (exception is JsonApiException and not FailedOperationException)
             {
                 return LogLevel.Information;
             }
@@ -70,7 +70,7 @@ namespace JsonApiDotNetCore.Middleware
             return exception is JsonApiException jsonApiException ? jsonApiException.GetSummary() : exception.Message;
         }
 
-        protected virtual Document CreateErrorDocument(Exception exception)
+        protected virtual IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
         {
             ArgumentGuard.NotNull(exception, nameof(exception));
 
@@ -84,25 +84,15 @@ namespace JsonApiDotNetCore.Middleware
                     Detail = exception.Message
                 }.AsArray();
 
-            var document = new Document
-            {
-                Errors = errors.ToList()
-            };
-
             if (_options.IncludeExceptionStackTraceInErrors && exception is not InvalidModelStateException)
             {
-                IncludeStackTraces(exception, document.Errors);
+                IncludeStackTraces(exception, errors);
             }
 
-            if (_options.IncludeRequestBodyInErrors && exception is InvalidRequestBodyException { RequestBody: { } } invalidRequestBodyException)
-            {
-                IncludeRequestBody(invalidRequestBodyException, document);
-            }
-
-            return document;
+            return errors;
         }
 
-        private void IncludeStackTraces(Exception exception, IList<ErrorObject> errors)
+        private void IncludeStackTraces(Exception exception, IReadOnlyList<ErrorObject> errors)
         {
             string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
@@ -114,12 +104,6 @@ namespace JsonApiDotNetCore.Middleware
                     error.Meta["StackTrace"] = stackTraceLines;
                 }
             }
-        }
-
-        private static void IncludeRequestBody(InvalidRequestBodyException exception, Document document)
-        {
-            document.Meta ??= new Dictionary<string, object>();
-            document.Meta["RequestBody"] = exception.RequestBody;
         }
     }
 }

@@ -71,12 +71,27 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeMany(collectionOfIdentifiable.ToArray());
             }
 
-            if (content is Document errorDocument)
+            if (content is IEnumerable<ErrorObject> errorObjects)
             {
+                var errorDocument = new Document
+                {
+                    Errors = errorObjects.ToArray()
+                };
+
                 return SerializeErrorDocument(errorDocument);
             }
 
-            throw new InvalidOperationException("Data being returned must be errors or resources.");
+            if (content is ErrorObject errorObject)
+            {
+                var errorDocument = new Document
+                {
+                    Errors = errorObject.AsArray()
+                };
+
+                return SerializeErrorDocument(errorDocument);
+            }
+
+            throw new InvalidOperationException("Data being returned must be null, errors or resources.");
         }
 
         private string SerializeErrorDocument(Document document)

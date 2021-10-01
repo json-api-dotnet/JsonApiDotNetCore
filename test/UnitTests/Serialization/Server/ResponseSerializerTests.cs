@@ -424,11 +424,6 @@ namespace UnitTests.Serialization.Server
                 Detail = "detail"
             };
 
-            var errorDocument = new Document
-            {
-                Errors = error.AsList()
-            };
-
             string expectedJson = JsonSerializer.Serialize(new
             {
                 errors = new[]
@@ -446,7 +441,7 @@ namespace UnitTests.Serialization.Server
             ResponseSerializer<OneToManyPrincipal> serializer = GetResponseSerializer<OneToManyPrincipal>();
 
             // Act
-            string result = serializer.Serialize(errorDocument);
+            string result = serializer.Serialize(error);
 
             // Assert
             Assert.Equal(expectedJson, result);

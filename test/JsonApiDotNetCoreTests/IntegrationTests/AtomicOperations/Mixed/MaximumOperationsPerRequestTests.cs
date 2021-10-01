@@ -75,8 +75,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.Title.Should().Be("Failed to deserialize request body: Too many operations in request.");
             error.Detail.Should().Be("The number of operations in this request (3) is higher than the maximum of 2.");
             error.Source.Pointer.Should().Be("/atomic:operations");
-
-            responseDocument.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

@@ -54,13 +54,28 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public string Serialize(object content)
         {
-            if (content is IList<OperationContainer> operations)
+            if (content is IEnumerable<OperationContainer> operations)
             {
                 return SerializeOperationsDocument(operations);
             }
 
-            if (content is Document errorDocument)
+            if (content is IEnumerable<ErrorObject> errors)
             {
+                var errorDocument = new Document
+                {
+                    Errors = errors.ToArray()
+                };
+
+                return SerializeErrorDocument(errorDocument);
+            }
+
+            if (content is ErrorObject errorObject)
+            {
+                var errorDocument = new Document
+                {
+                    Errors = errorObject.AsArray()
+                };
+
                 return SerializeErrorDocument(errorDocument);
             }
 

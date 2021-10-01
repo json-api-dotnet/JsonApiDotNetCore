@@ -14,21 +14,21 @@ namespace JsonApiDotNetCore.Controllers
         {
             ArgumentGuard.NotNull(error, nameof(error));
 
-            return Error(error.AsEnumerable());
+            return new ObjectResult(error)
+            {
+                StatusCode = (int)error.StatusCode
+            };
         }
 
         protected IActionResult Error(IEnumerable<ErrorObject> errors)
         {
             ArgumentGuard.NotNull(errors, nameof(errors));
 
-            var document = new Document
-            {
-                Errors = errors.ToList()
-            };
+            ErrorObject[] errorArray = errors.ToArray();
 
-            return new ObjectResult(document)
+            return new ObjectResult(errorArray)
             {
-                StatusCode = (int)document.GetErrorStatusCode()
+                StatusCode = (int)ErrorObject.GetResponseStatusCode(errorArray)
             };
         }
     }
