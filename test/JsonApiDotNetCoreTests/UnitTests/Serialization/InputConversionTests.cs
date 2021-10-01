@@ -259,13 +259,13 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             var resourceDataAdapter = new ResourceDataAdapter(resourceDefinitionAccessor, resourceObjectAdapter);
 
             var atomicReferenceAdapter = new AtomicReferenceAdapter(resourceGraph, resourceFactory);
-            var atomicOperationResourceDataAdapter = new OperationResourceDataAdapter(resourceDefinitionAccessor, resourceObjectAdapter);
+            var atomicOperationResourceDataAdapter = new ResourceDataInOperationsRequestAdapter(resourceDefinitionAccessor, resourceObjectAdapter);
 
             var atomicOperationObjectAdapter = new AtomicOperationObjectAdapter(resourceGraph, options, atomicReferenceAdapter,
                 atomicOperationResourceDataAdapter, relationshipDataAdapter);
 
-            var resourceDocumentAdapter = new ResourceDocumentAdapter(options, resourceDataAdapter, relationshipDataAdapter);
-            var operationsDocumentAdapter = new OperationsDocumentAdapter(options, atomicOperationObjectAdapter);
+            var resourceDocumentAdapter = new DocumentInResourceOrRelationshipRequestAdapter(options, resourceDataAdapter, relationshipDataAdapter);
+            var operationsDocumentAdapter = new DocumentInOperationsRequestAdapter(options, atomicOperationObjectAdapter);
 
             return new DocumentAdapter(request, targetedFields, resourceDocumentAdapter, operationsDocumentAdapter);
         }

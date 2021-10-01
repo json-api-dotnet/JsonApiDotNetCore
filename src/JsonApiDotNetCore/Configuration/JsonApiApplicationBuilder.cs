@@ -268,10 +268,10 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
             _services.AddScoped<IResourceDataAdapter, ResourceDataAdapter>();
             _services.AddScoped<IAtomicReferenceAdapter, AtomicReferenceAdapter>();
-            _services.AddScoped<IOperationResourceDataAdapter, OperationResourceDataAdapter>();
+            _services.AddScoped<IResourceDataInOperationsRequestAdapter, ResourceDataInOperationsRequestAdapter>();
             _services.AddScoped<IAtomicOperationObjectAdapter, AtomicOperationObjectAdapter>();
-            _services.AddScoped<IResourceDocumentAdapter, ResourceDocumentAdapter>();
-            _services.AddScoped<IOperationsDocumentAdapter, OperationsDocumentAdapter>();
+            _services.AddScoped<IDocumentInResourceOrRelationshipRequestAdapter, DocumentInResourceOrRelationshipRequestAdapter>();
+            _services.AddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
             _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
         }
 

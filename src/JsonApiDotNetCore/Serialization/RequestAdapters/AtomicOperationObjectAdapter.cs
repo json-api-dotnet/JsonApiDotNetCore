@@ -10,25 +10,25 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
     /// <inheritdoc />
     public sealed class AtomicOperationObjectAdapter : IAtomicOperationObjectAdapter
     {
-        private readonly IOperationResourceDataAdapter _operationResourceDataAdapter;
+        private readonly IResourceDataInOperationsRequestAdapter _resourceDataInOperationsRequestAdapter;
         private readonly IAtomicReferenceAdapter _atomicReferenceAdapter;
         private readonly IRelationshipDataAdapter _relationshipDataAdapter;
         private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiOptions _options;
 
         public AtomicOperationObjectAdapter(IResourceGraph resourceGraph, IJsonApiOptions options, IAtomicReferenceAdapter atomicReferenceAdapter,
-            IOperationResourceDataAdapter operationResourceDataAdapter, IRelationshipDataAdapter relationshipDataAdapter)
+            IResourceDataInOperationsRequestAdapter resourceDataInOperationsRequestAdapter, IRelationshipDataAdapter relationshipDataAdapter)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(atomicReferenceAdapter, nameof(atomicReferenceAdapter));
-            ArgumentGuard.NotNull(operationResourceDataAdapter, nameof(operationResourceDataAdapter));
+            ArgumentGuard.NotNull(resourceDataInOperationsRequestAdapter, nameof(resourceDataInOperationsRequestAdapter));
             ArgumentGuard.NotNull(relationshipDataAdapter, nameof(relationshipDataAdapter));
 
             _resourceGraph = resourceGraph;
             _options = options;
             _atomicReferenceAdapter = atomicReferenceAdapter;
-            _operationResourceDataAdapter = operationResourceDataAdapter;
+            _resourceDataInOperationsRequestAdapter = resourceDataInOperationsRequestAdapter;
             _relationshipDataAdapter = relationshipDataAdapter;
         }
 
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             if (writeOperation == WriteOperationKind.CreateResource || writeOperation == WriteOperationKind.UpdateResource)
             {
-                primaryResource = _operationResourceDataAdapter.Convert(atomicOperationObject.Data, requirements, state);
+                primaryResource = _resourceDataInOperationsRequestAdapter.Convert(atomicOperationObject.Data, requirements, state);
             }
 
             return new OperationContainer(writeOperation, primaryResource, state.WritableTargetedFields, state.Request);

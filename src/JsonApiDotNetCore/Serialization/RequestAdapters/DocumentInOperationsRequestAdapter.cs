@@ -7,12 +7,12 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
 {
     /// <inheritdoc />
-    public sealed class OperationsDocumentAdapter : IOperationsDocumentAdapter
+    public sealed class DocumentInOperationsRequestAdapter : IDocumentInOperationsRequestAdapter
     {
         private readonly IJsonApiOptions _options;
         private readonly IAtomicOperationObjectAdapter _atomicOperationObjectAdapter;
 
-        public OperationsDocumentAdapter(IJsonApiOptions options, IAtomicOperationObjectAdapter atomicOperationObjectAdapter)
+        public DocumentInOperationsRequestAdapter(IJsonApiOptions options, IAtomicOperationObjectAdapter atomicOperationObjectAdapter)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(atomicOperationObjectAdapter, nameof(atomicOperationObjectAdapter));

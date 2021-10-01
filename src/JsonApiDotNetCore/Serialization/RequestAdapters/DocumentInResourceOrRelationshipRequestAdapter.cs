@@ -7,13 +7,14 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
 {
     /// <inheritdoc />
-    public sealed class ResourceDocumentAdapter : IResourceDocumentAdapter
+    public sealed class DocumentInResourceOrRelationshipRequestAdapter : IDocumentInResourceOrRelationshipRequestAdapter
     {
         private readonly IJsonApiOptions _options;
         private readonly IResourceDataAdapter _resourceDataAdapter;
         private readonly IRelationshipDataAdapter _relationshipDataAdapter;
 
-        public ResourceDocumentAdapter(IJsonApiOptions options, IResourceDataAdapter resourceDataAdapter, IRelationshipDataAdapter relationshipDataAdapter)
+        public DocumentInResourceOrRelationshipRequestAdapter(IJsonApiOptions options, IResourceDataAdapter resourceDataAdapter,
+            IRelationshipDataAdapter relationshipDataAdapter)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(resourceDataAdapter, nameof(resourceDataAdapter));

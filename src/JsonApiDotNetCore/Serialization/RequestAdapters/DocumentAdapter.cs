@@ -9,21 +9,22 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
     {
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
-        private readonly IResourceDocumentAdapter _resourceDocumentAdapter;
-        private readonly IOperationsDocumentAdapter _operationsDocumentAdapter;
+        private readonly IDocumentInResourceOrRelationshipRequestAdapter _documentInResourceOrRelationshipRequestAdapter;
+        private readonly IDocumentInOperationsRequestAdapter _documentInOperationsRequestAdapter;
 
-        public DocumentAdapter(IJsonApiRequest request, ITargetedFields targetedFields, IResourceDocumentAdapter resourceDocumentAdapter,
-            IOperationsDocumentAdapter operationsDocumentAdapter)
+        public DocumentAdapter(IJsonApiRequest request, ITargetedFields targetedFields,
+            IDocumentInResourceOrRelationshipRequestAdapter documentInResourceOrRelationshipRequestAdapter,
+            IDocumentInOperationsRequestAdapter documentInOperationsRequestAdapter)
         {
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-            ArgumentGuard.NotNull(resourceDocumentAdapter, nameof(resourceDocumentAdapter));
-            ArgumentGuard.NotNull(operationsDocumentAdapter, nameof(operationsDocumentAdapter));
+            ArgumentGuard.NotNull(documentInResourceOrRelationshipRequestAdapter, nameof(documentInResourceOrRelationshipRequestAdapter));
+            ArgumentGuard.NotNull(documentInOperationsRequestAdapter, nameof(documentInOperationsRequestAdapter));
 
             _request = request;
             _targetedFields = targetedFields;
-            _resourceDocumentAdapter = resourceDocumentAdapter;
-            _operationsDocumentAdapter = operationsDocumentAdapter;
+            _documentInResourceOrRelationshipRequestAdapter = documentInResourceOrRelationshipRequestAdapter;
+            _documentInOperationsRequestAdapter = documentInOperationsRequestAdapter;
         }
 
         /// <inheritdoc />
@@ -34,8 +35,8 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             using var context = new RequestAdapterState(_request, _targetedFields);
 
             return context.Request.Kind == EndpointKind.AtomicOperations
-                ? _operationsDocumentAdapter.Convert(document, context)
-                : _resourceDocumentAdapter.Convert(document, context);
+                ? _documentInOperationsRequestAdapter.Convert(document, context)
+                : _documentInResourceOrRelationshipRequestAdapter.Convert(document, context);
         }
     }
 }

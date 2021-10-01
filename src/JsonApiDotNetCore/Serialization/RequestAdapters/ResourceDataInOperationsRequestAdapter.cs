@@ -4,10 +4,10 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.RequestAdapters
 {
-    /// <inheritdoc cref="IOperationResourceDataAdapter" />
-    public sealed class OperationResourceDataAdapter : ResourceDataAdapter, IOperationResourceDataAdapter
+    /// <inheritdoc cref="IResourceDataInOperationsRequestAdapter" />
+    public sealed class ResourceDataInOperationsRequestAdapter : ResourceDataAdapter, IResourceDataInOperationsRequestAdapter
     {
-        public OperationResourceDataAdapter(IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectAdapter resourceObjectAdapter)
+        public ResourceDataInOperationsRequestAdapter(IResourceDefinitionAccessor resourceDefinitionAccessor, IResourceObjectAdapter resourceObjectAdapter)
             : base(resourceDefinitionAccessor, resourceObjectAdapter)
         {
         }
