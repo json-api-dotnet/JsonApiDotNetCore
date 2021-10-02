@@ -445,6 +445,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("blogs");
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
             responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
             responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
@@ -452,12 +453,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Included.Should().HaveCount(2);
 
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes.Should().HaveCount(2);
             responseDocument.Included[0].Attributes["userName"].Should().Be(blog.Owner.UserName);
             responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
             responseDocument.Included[0].Relationships.Should().BeNull();
 
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[1].Attributes.Should().HaveCount(1);
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
@@ -503,6 +506,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Type.Should().Be("blogs");
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
             responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
             responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
@@ -513,6 +517,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
 
             responseDocument.Included.Should().HaveCount(2);
 
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
             responseDocument.Included[0].Attributes["userName"].Should().Be(blog.Owner.UserName);
             responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
@@ -522,6 +527,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             responseDocument.Included[0].Relationships["posts"].Links.Self.Should().NotBeNull();
             responseDocument.Included[0].Relationships["posts"].Links.Related.Should().NotBeNull();
 
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[1].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
             responseDocument.Included[1].Attributes["url"].Should().Be(blog.Owner.Posts[0].Url);

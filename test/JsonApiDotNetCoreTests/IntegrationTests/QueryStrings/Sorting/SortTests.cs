@@ -433,10 +433,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
             responseDocument.Included.Should().HaveCount(5);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+
+            responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
+
+            responseDocument.Included[3].Type.Should().Be("comments");
             responseDocument.Included[3].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(0).StringId);
+
+            responseDocument.Included[4].Type.Should().Be("blogPosts");
             responseDocument.Included[4].Id.Should().Be(blogs[1].Owner.Posts[0].StringId);
         }
 

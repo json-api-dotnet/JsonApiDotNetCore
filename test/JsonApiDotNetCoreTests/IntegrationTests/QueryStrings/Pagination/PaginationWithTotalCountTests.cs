@@ -368,8 +368,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
             responseDocument.Included.Should().HaveCount(3);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+
+            responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
 
             string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
