@@ -62,12 +62,14 @@ namespace UnitTests.Serialization
             IFieldsToSerialize fieldsToSerialize = GetSerializableFields();
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
             IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
+            var sparseFieldSetCache = new SparseFieldSetCache(Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
             var options = new JsonApiOptions();
 
             var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor,
-                options, evaluatedIncludeCache);
+                options, evaluatedIncludeCache, sparseFieldSetCache);
 
-            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor, options);
+            return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor,
+                sparseFieldSetCache, options);
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null,
@@ -79,10 +81,12 @@ namespace UnitTests.Serialization
             IEnumerable<IQueryConstraintProvider> includeConstraints = GetIncludeConstraints(inclusionChainArray);
             IIncludedResourceObjectBuilder includedBuilder = GetIncludedBuilder(inclusionChains != null);
             IEvaluatedIncludeCache evaluatedIncludeCache = GetEvaluatedIncludeCache(inclusionChainArray);
+            IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
+            var sparseFieldSetCache = new SparseFieldSetCache(Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
             var options = new JsonApiOptions();
 
-            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, GetResourceDefinitionAccessor(), options,
-                evaluatedIncludeCache);
+            return new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor, options,
+                evaluatedIncludeCache, sparseFieldSetCache);
         }
 
         private IIncludedResourceObjectBuilder GetIncludedBuilder(bool hasIncludeQueryString)
@@ -91,10 +95,11 @@ namespace UnitTests.Serialization
             ILinkBuilder linkBuilder = GetLinkBuilder();
             IResourceDefinitionAccessor resourceDefinitionAccessor = GetResourceDefinitionAccessor();
             IRequestQueryStringAccessor queryStringAccessor = new FakeRequestQueryStringAccessor(hasIncludeQueryString ? "include=" : null);
+            var sparseFieldSetCache = new SparseFieldSetCache(Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor);
             var options = new JsonApiOptions();
 
             return new IncludedResourceObjectBuilder(fieldsToSerialize, linkBuilder, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(),
-                resourceDefinitionAccessor, queryStringAccessor, options);
+                resourceDefinitionAccessor, queryStringAccessor, options, sparseFieldSetCache);
         }
 
         private IResourceDefinitionAccessor GetResourceDefinitionAccessor()

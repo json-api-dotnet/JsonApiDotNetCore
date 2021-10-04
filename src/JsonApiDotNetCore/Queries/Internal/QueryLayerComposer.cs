@@ -23,11 +23,11 @@ namespace JsonApiDotNetCore.Queries.Internal
         private readonly IPaginationContext _paginationContext;
         private readonly ITargetedFields _targetedFields;
         private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
-        private readonly SparseFieldSetCache _sparseFieldSetCache;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
         public QueryLayerComposer(IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiOptions options, IPaginationContext paginationContext,
-            ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache)
+            ITargetedFields targetedFields, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache)
         {
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
@@ -36,6 +36,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(paginationContext, nameof(paginationContext));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
             ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
 
             _constraintProviders = constraintProviders;
             _resourceGraph = resourceGraph;
@@ -44,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             _paginationContext = paginationContext;
             _targetedFields = targetedFields;
             _evaluatedIncludeCache = evaluatedIncludeCache;
-            _sparseFieldSetCache = new SparseFieldSetCache(_constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = sparseFieldSetCache;
         }
 
         /// <inheritdoc />

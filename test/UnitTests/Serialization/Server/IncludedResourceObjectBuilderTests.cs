@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization;
@@ -182,9 +184,11 @@ namespace UnitTests.Serialization.Server
             IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
             var queryStringAccessor = new FakeRequestQueryStringAccessor();
             var options = new JsonApiOptions();
+            IEnumerable<IQueryConstraintProvider> constraintProviders = Array.Empty<IQueryConstraintProvider>();
+            var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
 
-            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, Enumerable.Empty<IQueryConstraintProvider>(), resourceDefinitionAccessor,
-                queryStringAccessor, options);
+            return new IncludedResourceObjectBuilder(fields, links, ResourceGraph, constraintProviders, resourceDefinitionAccessor, queryStringAccessor,
+                options, sparseFieldSetCache);
         }
 
         private sealed class AuthorChainInstances

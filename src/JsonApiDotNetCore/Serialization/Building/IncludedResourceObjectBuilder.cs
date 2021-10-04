@@ -22,11 +22,11 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly ILinkBuilder _linkBuilder;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IRequestQueryStringAccessor _queryStringAccessor;
-        private readonly SparseFieldSetCache _sparseFieldSetCache;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
         public IncludedResourceObjectBuilder(IFieldsToSerialize fieldsToSerialize, ILinkBuilder linkBuilder, IResourceGraph resourceGraph,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IRequestQueryStringAccessor queryStringAccessor, IJsonApiOptions options)
+            IRequestQueryStringAccessor queryStringAccessor, IJsonApiOptions options, ISparseFieldSetCache sparseFieldSetCache)
             : base(resourceGraph, options)
         {
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
@@ -34,13 +34,14 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(queryStringAccessor, nameof(queryStringAccessor));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
 
             _included = new HashSet<ResourceObject>(ResourceIdentityComparer.Instance);
             _fieldsToSerialize = fieldsToSerialize;
             _linkBuilder = linkBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _queryStringAccessor = queryStringAccessor;
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = sparseFieldSetCache;
         }
 
         /// <inheritdoc />

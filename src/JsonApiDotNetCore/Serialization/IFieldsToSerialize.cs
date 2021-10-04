@@ -24,10 +24,5 @@ namespace JsonApiDotNetCore.Serialization
         /// Gets the collection of relationships that are to be serialized for resources of type <paramref name="resourceType" />.
         /// </summary>
         IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType);
-
-        /// <summary>
-        /// Clears internal caches.
-        /// </summary>
-        void ResetCache();
     }
 }

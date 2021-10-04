@@ -21,13 +21,13 @@ namespace JsonApiDotNetCore.Serialization.Building
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
-        private readonly SparseFieldSetCache _sparseFieldSetCache;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
         private RelationshipAttribute _requestRelationship;
 
         public ResponseResourceObjectBuilder(ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IEnumerable<IQueryConstraintProvider> constraintProviders, IResourceGraph resourceGraph, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IJsonApiOptions options, IEvaluatedIncludeCache evaluatedIncludeCache)
+            IJsonApiOptions options, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache)
             : base(resourceGraph, options)
         {
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
@@ -35,12 +35,13 @@ namespace JsonApiDotNetCore.Serialization.Building
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
 
             _linkBuilder = linkBuilder;
             _includedBuilder = includedBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _evaluatedIncludeCache = evaluatedIncludeCache;
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = sparseFieldSetCache;
         }
 
         public RelationshipObject Build(IIdentifiable resource, RelationshipAttribute requestRelationship)

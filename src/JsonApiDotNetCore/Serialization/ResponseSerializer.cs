@@ -4,6 +4,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Building;
@@ -31,6 +32,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IIncludedResourceObjectBuilder _includedBuilder;
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
         private readonly IJsonApiOptions _options;
         private readonly Type _primaryResourceType;
 
@@ -39,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization
 
         public ResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            IJsonApiOptions options)
+            ISparseFieldSetCache sparseFieldSetCache, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
@@ -47,6 +49,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(includedBuilder, nameof(includedBuilder));
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
             ArgumentGuard.NotNull(options, nameof(options));
 
             _metaBuilder = metaBuilder;
@@ -54,6 +57,7 @@ namespace JsonApiDotNetCore.Serialization
             _includedBuilder = includedBuilder;
             _fieldsToSerialize = fieldsToSerialize;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
+            _sparseFieldSetCache = sparseFieldSetCache;
             _options = options;
             _primaryResourceType = typeof(TResource);
         }
@@ -61,6 +65,8 @@ namespace JsonApiDotNetCore.Serialization
         /// <inheritdoc />
         public string Serialize(object content)
         {
+            _sparseFieldSetCache.Reset();
+
             if (content == null || content is IIdentifiable)
             {
                 return SerializeSingle((IIdentifiable)content);

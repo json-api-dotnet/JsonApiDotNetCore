@@ -261,7 +261,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
@@ -308,7 +307,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
@@ -342,7 +340,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             {
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
@@ -380,7 +377,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             {
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
@@ -420,7 +416,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
@@ -458,7 +453,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());
         }
@@ -495,7 +489,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             {
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
                 (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
             }, options => options.WithStrictOrdering());

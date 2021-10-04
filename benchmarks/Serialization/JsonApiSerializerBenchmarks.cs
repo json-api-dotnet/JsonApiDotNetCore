@@ -3,6 +3,7 @@ using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.QueryStrings.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization;
@@ -27,33 +28,29 @@ namespace Benchmarks.Serialization
         public JsonApiSerializerBenchmarks()
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
-            IFieldsToSerialize fieldsToSerialize = CreateFieldsToSerialize(resourceGraph);
-
-            IMetaBuilder metaBuilder = new Mock<IMetaBuilder>().Object;
-            ILinkBuilder linkBuilder = new Mock<ILinkBuilder>().Object;
-            IIncludedResourceObjectBuilder includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
-
-            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, options);
-
-            IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
-
-            _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilder, linkBuilder, includeBuilder, fieldsToSerialize, resourceObjectBuilder,
-                resourceDefinitionAccessor, options);
-        }
-
-        private static FieldsToSerialize CreateFieldsToSerialize(IResourceGraph resourceGraph)
-        {
             var request = new JsonApiRequest();
+
+            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
 
             var constraintProviders = new IQueryConstraintProvider[]
             {
                 new SparseFieldSetQueryStringParameterReader(request, resourceGraph)
             };
 
-            IResourceDefinitionAccessor accessor = new Mock<IResourceDefinitionAccessor>().Object;
+            IResourceDefinitionAccessor resourceDefinitionAccessor = new Mock<IResourceDefinitionAccessor>().Object;
+            var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
 
-            return new FieldsToSerialize(resourceGraph, constraintProviders, accessor, request);
+            IMetaBuilder metaBuilder = new Mock<IMetaBuilder>().Object;
+            ILinkBuilder linkBuilder = new Mock<ILinkBuilder>().Object;
+            IIncludedResourceObjectBuilder includeBuilder = new Mock<IIncludedResourceObjectBuilder>().Object;
+
+            IFieldsToSerialize fieldsToSerialize =
+                new FieldsToSerialize(resourceGraph, constraintProviders, resourceDefinitionAccessor, request, sparseFieldSetCache);
+
+            var resourceObjectBuilder = new ResourceObjectBuilder(resourceGraph, options);
+
+            _jsonApiSerializer = new ResponseSerializer<BenchmarkResource>(metaBuilder, linkBuilder, includeBuilder, fieldsToSerialize, resourceObjectBuilder,
+                resourceDefinitionAccessor, sparseFieldSetCache, options);
         }
 
         [Benchmark]

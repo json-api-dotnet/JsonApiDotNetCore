@@ -18,20 +18,21 @@ namespace JsonApiDotNetCore.Serialization
     {
         private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiRequest _request;
-        private readonly SparseFieldSetCache _sparseFieldSetCache;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
         /// <inheritdoc />
         public bool ShouldSerialize => _request.Kind != EndpointKind.Relationship;
 
         public FieldsToSerialize(IResourceGraph resourceGraph, IEnumerable<IQueryConstraintProvider> constraintProviders,
-            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request)
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IJsonApiRequest request, ISparseFieldSetCache sparseFieldSetCache)
         {
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
 
             _resourceGraph = resourceGraph;
             _request = request;
-            _sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
+            _sparseFieldSetCache = sparseFieldSetCache;
         }
 
         /// <inheritdoc />
@@ -78,12 +79,6 @@ namespace JsonApiDotNetCore.Serialization
 
             ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
             return resourceContext.Relationships;
-        }
-
-        /// <inheritdoc />
-        public void ResetCache()
-        {
-            _sparseFieldSetCache.Reset();
         }
     }
 }

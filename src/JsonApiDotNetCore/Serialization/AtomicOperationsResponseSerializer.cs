@@ -23,6 +23,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IFieldsToSerialize _fieldsToSerialize;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IEvaluatedIncludeCache _evaluatedIncludeCache;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
 
@@ -31,7 +32,7 @@ namespace JsonApiDotNetCore.Serialization
 
         public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
             IFieldsToSerialize fieldsToSerialize, IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache,
-            IJsonApiRequest request, IJsonApiOptions options)
+            ISparseFieldSetCache sparseFieldSetCache, IJsonApiRequest request, IJsonApiOptions options)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
@@ -39,6 +40,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(fieldsToSerialize, nameof(fieldsToSerialize));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(evaluatedIncludeCache, nameof(evaluatedIncludeCache));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
 
@@ -47,6 +49,7 @@ namespace JsonApiDotNetCore.Serialization
             _fieldsToSerialize = fieldsToSerialize;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _evaluatedIncludeCache = evaluatedIncludeCache;
+            _sparseFieldSetCache = sparseFieldSetCache;
             _request = request;
             _options = options;
         }
@@ -117,7 +120,7 @@ namespace JsonApiDotNetCore.Serialization
             if (operation != null)
             {
                 _request.CopyFrom(operation.Request);
-                _fieldsToSerialize.ResetCache();
+                _sparseFieldSetCache.Reset();
                 _evaluatedIncludeCache.Set(null);
 
                 _resourceDefinitionAccessor.OnSerialize(operation.Resource);

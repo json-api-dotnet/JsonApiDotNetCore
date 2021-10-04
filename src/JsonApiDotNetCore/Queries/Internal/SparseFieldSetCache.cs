@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -10,12 +9,8 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal
 {
-    /// <summary>
-    /// Takes sparse fieldsets from <see cref="IQueryConstraintProvider" />s and invokes
-    /// <see cref="IResourceDefinition{TResource,TId}.OnApplySparseFieldSet" /> on them.
-    /// </summary>
-    [PublicAPI]
-    public sealed class SparseFieldSetCache
+    /// <inheritdoc />
+    public sealed class SparseFieldSetCache : ISparseFieldSetCache
     {
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly Lazy<IDictionary<ResourceContext, IImmutableSet<ResourceFieldAttribute>>> _lazySourceTable;
@@ -73,6 +68,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             }
         }
 
+        /// <inheritdoc />
         public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext)
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
@@ -95,6 +91,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return _visitedTable[resourceContext];
         }
 
+        /// <inheritdoc />
         public IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext)
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
@@ -113,6 +110,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             return outputAttributes;
         }
 
+        /// <inheritdoc />
         public IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceContext resourceContext)
         {
             ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
