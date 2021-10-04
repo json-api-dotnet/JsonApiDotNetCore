@@ -49,7 +49,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
             foreach (PropertyInfo property in properties)
             {
-                if (property.Name == "Count" || property.Name == "Length")
+                if (property.Name is "Count" or "Length")
                 {
                     return Expression.Property(collectionExpression, property);
                 }

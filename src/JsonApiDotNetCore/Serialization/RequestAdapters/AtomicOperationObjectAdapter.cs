@@ -49,12 +49,12 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             (ResourceIdentityRequirements requirements, IIdentifiable primaryResource) = ConvertRef(atomicOperationObject, state);
 
-            if (writeOperation == WriteOperationKind.CreateResource || writeOperation == WriteOperationKind.UpdateResource)
+            if (writeOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
             {
                 primaryResource = _resourceDataInOperationsRequestAdapter.Convert(atomicOperationObject.Data, requirements, state);
             }
 
-            return new OperationContainer(writeOperation, primaryResource, state.WritableTargetedFields, state.Request);
+            return new OperationContainer(primaryResource, state.WritableTargetedFields, state.Request);
         }
 
         private static void AssertNoHref(AtomicOperationObject atomicOperationObject, RequestAdapterState state)

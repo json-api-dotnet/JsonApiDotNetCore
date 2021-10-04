@@ -206,8 +206,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
         protected internal static void AssertToManyInAddOrRemoveRelationship(RelationshipAttribute relationship, RequestAdapterState state)
         {
-            bool requireToManyRelationship = state.Request.WriteOperation == WriteOperationKind.AddToRelationship ||
-                state.Request.WriteOperation == WriteOperationKind.RemoveFromRelationship;
+            bool requireToManyRelationship = state.Request.WriteOperation is WriteOperationKind.AddToRelationship or WriteOperationKind.RemoveFromRelationship;
 
             if (requireToManyRelationship && relationship is not HasManyAttribute)
             {

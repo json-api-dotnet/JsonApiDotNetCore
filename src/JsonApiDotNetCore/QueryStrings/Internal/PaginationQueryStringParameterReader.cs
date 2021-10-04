@@ -45,7 +45,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         /// <inheritdoc />
         public virtual bool CanRead(string parameterName)
         {
-            return parameterName == PageSizeParameterName || parameterName == PageNumberParameterName;
+            return parameterName is PageSizeParameterName or PageNumberParameterName;
         }
 
         /// <inheritdoc />

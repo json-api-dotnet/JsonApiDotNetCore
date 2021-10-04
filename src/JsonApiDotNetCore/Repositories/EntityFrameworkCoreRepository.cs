@@ -570,7 +570,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
-            catch (Exception exception) when (exception is DbUpdateException || exception is InvalidOperationException)
+            catch (Exception exception) when (exception is DbUpdateException or InvalidOperationException)
             {
                 if (_dbContext.Database.CurrentTransaction != null)
                 {

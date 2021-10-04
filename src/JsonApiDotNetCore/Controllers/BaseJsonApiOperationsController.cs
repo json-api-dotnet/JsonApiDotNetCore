@@ -133,7 +133,7 @@ namespace JsonApiDotNetCore.Controllers
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind == WriteOperationKind.CreateResource || operation.Kind == WriteOperationKind.UpdateResource)
+                if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
                 {
                     _targetedFields.CopyFrom(operation.TargetedFields);
                     _request.CopyFrom(operation.Request);

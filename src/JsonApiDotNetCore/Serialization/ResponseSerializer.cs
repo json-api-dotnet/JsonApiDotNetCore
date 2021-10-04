@@ -67,7 +67,7 @@ namespace JsonApiDotNetCore.Serialization
         {
             _sparseFieldSetCache.Reset();
 
-            if (content == null || content is IIdentifiable)
+            if (content is null or IIdentifiable)
             {
                 return SerializeSingle((IIdentifiable)content);
             }

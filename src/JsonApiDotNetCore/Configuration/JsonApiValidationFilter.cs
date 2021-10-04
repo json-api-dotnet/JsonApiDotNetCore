@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsAtPrimaryEndpoint(IJsonApiRequest request)
         {
-            return request.Kind == EndpointKind.Primary || request.Kind == EndpointKind.AtomicOperations;
+            return request.Kind is EndpointKind.Primary or EndpointKind.AtomicOperations;
         }
 
         private static bool IsFieldTargeted(ValidationEntry entry, ITargetedFields targetedFields)

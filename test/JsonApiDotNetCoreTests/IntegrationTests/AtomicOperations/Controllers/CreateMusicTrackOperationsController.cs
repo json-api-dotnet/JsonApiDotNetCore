@@ -38,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
+                if (operation.Request.WriteOperation != WriteOperationKind.CreateResource || operation.Resource.GetType() != typeof(MusicTrack))
                 {
                     throw new JsonApiException(new ErrorObject(HttpStatusCode.UnprocessableEntity)
                     {

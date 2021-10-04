@@ -105,7 +105,7 @@ namespace JsonApiDotNetCore.Serialization
                     throw new UnsuccessfulActionResultException(statusCode);
                 }
 
-                if (statusCode == HttpStatusCode.NoContent || statusCode == HttpStatusCode.ResetContent || statusCode == HttpStatusCode.NotModified)
+                if (statusCode is HttpStatusCode.NoContent or HttpStatusCode.ResetContent or HttpStatusCode.NotModified)
                 {
                     // Prevent exception from Kestrel server, caused by writing data:null json response.
                     return null;
