@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (IncludeElementExpression)obj;
 
-            return Relationship.Equals(other.Relationship) == Children.SequenceEqual(other.Children);
+            return Relationship.Equals(other.Relationship) && Children.SequenceEqual(other.Children);
         }
 
         public override int GetHashCode()

@@ -14,6 +14,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public DbSet<Comment> Comments { get; set; }
         public DbSet<WebAccount> Accounts { get; set; }
         public DbSet<AccountPreferences> AccountPreferences { get; set; }
+        public DbSet<LoginAttempt> LoginAttempts { get; set; }
         public DbSet<Calendar> Calendars { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
 

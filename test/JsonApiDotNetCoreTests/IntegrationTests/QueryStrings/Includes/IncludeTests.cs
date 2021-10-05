@@ -447,37 +447,176 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
-            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
+            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
 
             responseDocument.Included.Should().HaveCount(7);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.StringId);
+            responseDocument.Included[0].Relationships["comments"].Data.ManyValue[0].Type.Should().Be("comments");
+            responseDocument.Included[0].Relationships["comments"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
 
             responseDocument.Included[1].Type.Should().Be("webAccounts");
             responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author.StringId);
-            responseDocument.Included[1].Attributes["userName"].Should().Be(blog.Posts[0].Author.UserName);
+            responseDocument.Included[1].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
+            responseDocument.Included[1].Relationships["preferences"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.Preferences.StringId);
+            responseDocument.Included[1].Relationships["posts"].Data.Value.Should().BeNull();
 
             responseDocument.Included[2].Type.Should().Be("accountPreferences");
             responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author.Preferences.StringId);
-            responseDocument.Included[2].Attributes["useDarkTheme"].Should().Be(blog.Posts[0].Author.Preferences.UseDarkTheme);
 
             responseDocument.Included[3].Type.Should().Be("comments");
             responseDocument.Included[3].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
-            responseDocument.Included[3].Attributes["text"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Text);
+            responseDocument.Included[3].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Included[3].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
 
             responseDocument.Included[4].Type.Should().Be("webAccounts");
             responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
-            responseDocument.Included[4].Attributes["userName"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.UserName);
+            responseDocument.Included[4].Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[4].Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
+            responseDocument.Included[4].Relationships["preferences"].Data.Value.Should().BeNull();
 
             responseDocument.Included[5].Type.Should().Be("blogPosts");
             responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
-            responseDocument.Included[5].Attributes["caption"].Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].Caption);
+            responseDocument.Included[5].Relationships["author"].Data.Value.Should().BeNull();
+            responseDocument.Included[5].Relationships["comments"].Data.Value.Should().BeNull();
 
             responseDocument.Included[6].Type.Should().Be("comments");
             responseDocument.Included[6].Id.Should().Be(blog.Posts[0].Comments.ElementAt(1).StringId);
-            responseDocument.Included[6].Attributes["text"].Should().Be(blog.Posts[0].Comments.ElementAt(1).Text);
+            responseDocument.Included[5].Relationships["author"].Data.Value.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Can_include_chain_of_relationships_with_reused_resources()
+        {
+            WebAccount author = _fakers.WebAccount.Generate();
+            author.Preferences = _fakers.AccountPreferences.Generate();
+            author.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+
+            WebAccount reviewer = _fakers.WebAccount.Generate();
+            reviewer.Preferences = _fakers.AccountPreferences.Generate();
+            reviewer.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+
+            BlogPost post1 = _fakers.BlogPost.Generate();
+            post1.Author = author;
+            post1.Reviewer = reviewer;
+
+            WebAccount person = _fakers.WebAccount.Generate();
+            person.Preferences = _fakers.AccountPreferences.Generate();
+            person.LoginAttempts = _fakers.LoginAttempt.Generate(1);
+
+            BlogPost post2 = _fakers.BlogPost.Generate();
+            post2.Author = person;
+            post2.Reviewer = person;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                await dbContext.ClearTableAsync<BlogPost>();
+                dbContext.Posts.AddRange(post1, post2);
+                await dbContext.SaveChangesAsync();
+            });
+
+            const string route = "/blogPosts?include=reviewer.loginAttempts,author.preferences";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.Should().HaveCount(2);
+
+            responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
+            responseDocument.Data.ManyValue[0].Id.Should().Be(post1.StringId);
+            responseDocument.Data.ManyValue[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Data.ManyValue[0].Relationships["author"].Data.SingleValue.Id.Should().Be(author.StringId);
+            responseDocument.Data.ManyValue[0].Relationships["reviewer"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Data.ManyValue[0].Relationships["reviewer"].Data.SingleValue.Id.Should().Be(reviewer.StringId);
+
+            responseDocument.Data.ManyValue[1].Type.Should().Be("blogPosts");
+            responseDocument.Data.ManyValue[1].Id.Should().Be(post2.StringId);
+            responseDocument.Data.ManyValue[1].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Data.ManyValue[1].Relationships["author"].Data.SingleValue.Id.Should().Be(person.StringId);
+            responseDocument.Data.ManyValue[1].Relationships["reviewer"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Data.ManyValue[1].Relationships["reviewer"].Data.SingleValue.Id.Should().Be(person.StringId);
+
+            responseDocument.Included.Should().HaveCount(7);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Id.Should().Be(author.StringId);
+            responseDocument.Included[0].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
+            responseDocument.Included[0].Relationships["preferences"].Data.SingleValue.Id.Should().Be(author.Preferences.StringId);
+            responseDocument.Included[0].Relationships["loginAttempts"].Data.Value.Should().BeNull();
+
+            responseDocument.Included[1].Type.Should().Be("accountPreferences");
+            responseDocument.Included[1].Id.Should().Be(author.Preferences.StringId);
+
+            responseDocument.Included[2].Type.Should().Be("webAccounts");
+            responseDocument.Included[2].Id.Should().Be(reviewer.StringId);
+            responseDocument.Included[2].Relationships["preferences"].Data.Value.Should().BeNull();
+            responseDocument.Included[2].Relationships["loginAttempts"].Data.ManyValue[0].Type.Should().Be("loginAttempts");
+            responseDocument.Included[2].Relationships["loginAttempts"].Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
+
+            responseDocument.Included[3].Type.Should().Be("loginAttempts");
+            responseDocument.Included[3].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
+
+            responseDocument.Included[4].Type.Should().Be("webAccounts");
+            responseDocument.Included[4].Id.Should().Be(person.StringId);
+            responseDocument.Included[4].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
+            responseDocument.Included[4].Relationships["preferences"].Data.SingleValue.Id.Should().Be(person.Preferences.StringId);
+            responseDocument.Included[4].Relationships["loginAttempts"].Data.ManyValue[0].Type.Should().Be("loginAttempts");
+            responseDocument.Included[4].Relationships["loginAttempts"].Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
+
+            responseDocument.Included[5].Type.Should().Be("accountPreferences");
+            responseDocument.Included[5].Id.Should().Be(person.Preferences.StringId);
+
+            responseDocument.Included[6].Type.Should().Be("loginAttempts");
+            responseDocument.Included[6].Id.Should().Be(person.LoginAttempts[0].StringId);
+        }
+
+        [Fact]
+        public async Task Can_include_chain_with_cyclic_dependency()
+        {
+            List<BlogPost> posts = _fakers.BlogPost.Generate(1);
+
+            Blog blog = _fakers.Blog.Generate();
+            blog.Posts = posts;
+            blog.Posts[0].Author = _fakers.WebAccount.Generate();
+            blog.Posts[0].Author.Posts = posts;
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Blogs.Add(blog);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/blogs/{blog.StringId}?include=posts.author.posts.author.posts.author";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.SingleValue.Type.Should().Be("blogs");
+            responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
+            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
+            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+
+            responseDocument.Included.Should().HaveCount(2);
+
+            responseDocument.Included[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
+            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("webAccounts");
+            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author.StringId);
+            responseDocument.Included[1].Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
+            responseDocument.Included[1].Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
         }
 
         [Fact]
