@@ -130,6 +130,7 @@ namespace JsonApiDotNetCore.Controllers
             var violations = new List<ModelStateViolation>();
 
             int index = 0;
+            using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
             foreach (OperationContainer operation in operations)
             {

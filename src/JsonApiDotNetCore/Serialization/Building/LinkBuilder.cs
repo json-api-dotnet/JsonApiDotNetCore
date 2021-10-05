@@ -72,7 +72,7 @@ namespace JsonApiDotNetCore.Serialization.Building
                 links.Self = GetLinkForTopLevelSelf();
             }
 
-            if (_request.Kind == EndpointKind.Relationship && ShouldIncludeTopLevelLink(LinkTypes.Related, requestContext))
+            if (_request.Kind == EndpointKind.Relationship && _request.Relationship != null && ShouldIncludeTopLevelLink(LinkTypes.Related, requestContext))
             {
                 links.Related = GetLinkForRelationshipRelated(_request.PrimaryId, _request.Relationship);
             }
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCore.Serialization.Building
         /// </summary>
         private bool ShouldIncludeTopLevelLink(LinkTypes linkType, ResourceContext resourceContext)
         {
-            if (resourceContext.TopLevelLinks != LinkTypes.NotConfigured)
+            if (resourceContext != null && resourceContext.TopLevelLinks != LinkTypes.NotConfigured)
             {
                 return resourceContext.TopLevelLinks.HasFlag(linkType);
             }
@@ -232,7 +232,7 @@ namespace JsonApiDotNetCore.Serialization.Building
             var links = new ResourceLinks();
             ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceName);
 
-            if (_request.Kind != EndpointKind.Relationship && ShouldIncludeResourceLink(LinkTypes.Self, resourceContext))
+            if (ShouldIncludeResourceLink(LinkTypes.Self, resourceContext))
             {
                 links.Self = GetLinkForResourceSelf(resourceContext, id);
             }

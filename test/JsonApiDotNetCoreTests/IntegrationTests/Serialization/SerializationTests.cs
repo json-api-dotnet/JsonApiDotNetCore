@@ -290,6 +290,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
             responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/ffffffff-ffff-ffff-ffff-ffffffffffff""
+  },
   ""errors"": [
     {
       ""id"": """ + errorId + @""",
@@ -760,6 +763,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
     ""version"": ""1.1""
+  },
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/ffffffff-ffff-ffff-ffff-ffffffffffff""
   },
   ""errors"": [
     {

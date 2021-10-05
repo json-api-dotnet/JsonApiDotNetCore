@@ -61,6 +61,8 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             try
             {
+                using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
+
                 foreach (OperationContainer operation in operations)
                 {
                     operation.SetTransactionId(transaction.TransactionId);

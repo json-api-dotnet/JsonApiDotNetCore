@@ -34,6 +34,7 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly ISparseFieldSetCache _sparseFieldSetCache;
         private readonly IJsonApiOptions _options;
+        private readonly IJsonApiRequest _request;
         private readonly Type _primaryResourceType;
 
         /// <inheritdoc />
@@ -41,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization
 
         public ResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IResourceDefinitionAccessor resourceDefinitionAccessor,
-            ISparseFieldSetCache sparseFieldSetCache, IJsonApiOptions options)
+            ISparseFieldSetCache sparseFieldSetCache, IJsonApiOptions options, IJsonApiRequest request)
             : base(resourceObjectBuilder)
         {
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
@@ -51,6 +52,7 @@ namespace JsonApiDotNetCore.Serialization
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
             ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(request, nameof(request));
 
             _metaBuilder = metaBuilder;
             _linkBuilder = linkBuilder;
@@ -59,6 +61,7 @@ namespace JsonApiDotNetCore.Serialization
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
             _sparseFieldSetCache = sparseFieldSetCache;
             _options = options;
+            _request = request;
             _primaryResourceType = typeof(TResource);
         }
 
@@ -97,11 +100,12 @@ namespace JsonApiDotNetCore.Serialization
                 return SerializeErrorDocument(errorDocument);
             }
 
-            throw new InvalidOperationException("Data being returned must be null, errors or resources.");
+            throw new InvalidOperationException("Data being returned must be resources, operations, errors or null.");
         }
 
         private string SerializeErrorDocument(Document document)
         {
+            document.Links = _linkBuilder.GetTopLevelLinks();
             SetApiVersion(document);
 
             return SerializeObject(document, _options.SerializerWriteOptions);
@@ -126,7 +130,7 @@ namespace JsonApiDotNetCore.Serialization
             Document document = Build(resource, attributes, relationships);
             ResourceObject resourceObject = document.Data.SingleValue;
 
-            if (resourceObject != null)
+            if (resourceObject != null && _request.Kind != EndpointKind.Relationship)
             {
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
             }
@@ -159,14 +163,9 @@ namespace JsonApiDotNetCore.Serialization
 
             foreach (ResourceObject resourceObject in document.Data.ManyValue)
             {
-                ResourceLinks links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
-
-                if (links == null)
-                {
-                    break;
-                }
-
-                resourceObject.Links = links;
+                resourceObject.Links = _request.Kind != EndpointKind.Relationship
+                    ? _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id)
+                    : null;
             }
 
             AddTopLevelObjects(document);

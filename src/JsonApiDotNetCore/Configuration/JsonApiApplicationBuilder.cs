@@ -259,7 +259,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IMetaBuilder, MetaBuilder>();
             _services.AddScoped(typeof(ResponseSerializer<>));
             _services.AddScoped(typeof(AtomicOperationsResponseSerializer));
-            _services.AddScoped(sp => sp.GetRequiredService<IJsonApiSerializerFactory>().GetSerializer());
             _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
             _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
             _services.AddSingleton<IETagGenerator, ETagGenerator>();
@@ -274,6 +273,9 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IDocumentInResourceOrRelationshipRequestAdapter, DocumentInResourceOrRelationshipRequestAdapter>();
             _services.AddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
             _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
+
+            _services.AddScoped<IResponseModelAdapter, ResponseModelAdapter>();
+            _services.AddScoped<IJsonApiSerializer, TemporarySerializerBridge>();
         }
 
         private void AddOperationsLayer()

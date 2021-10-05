@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Running;
 using Benchmarks.Deserialization;
-using Benchmarks.LinkBuilder;
+using Benchmarks.LinkBuilding;
 using Benchmarks.Query;
 using Benchmarks.Serialization;
 
@@ -14,7 +14,8 @@ namespace Benchmarks
             {
                 typeof(ResourceDeserializationBenchmarks),
                 typeof(OperationsDeserializationBenchmarks),
-                typeof(JsonApiSerializerBenchmarks),
+                typeof(ResourceSerializationBenchmarks),
+                typeof(OperationsSerializationBenchmarks),
                 typeof(QueryParserBenchmarks),
                 typeof(LinkBuilderGetNamespaceFromPathBenchmarks)
             });

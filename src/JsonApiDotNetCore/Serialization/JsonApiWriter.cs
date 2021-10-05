@@ -44,51 +44,54 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
-            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body");
-
             HttpRequest request = httpContext.Request;
             HttpResponse response = httpContext.Response;
 
             await using TextWriter writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
             string responseContent;
 
-            try
+            using (IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body"))
             {
-                responseContent = SerializeResponse(model, (HttpStatusCode)response.StatusCode);
-            }
+                try
+                {
+                    responseContent = SerializeResponse(model, (HttpStatusCode)response.StatusCode);
+                }
 #pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
-            catch (Exception exception)
+                catch (Exception exception)
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
-            {
-                IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
-                responseContent = _serializer.Serialize(errors);
-                response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);
+                {
+                    IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
+                    responseContent = _serializer.Serialize(errors);
+                    response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);
+                }
+
+                bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
+
+                if (hasMatchingETag)
+                {
+                    response.StatusCode = (int)HttpStatusCode.NotModified;
+                    responseContent = string.Empty;
+                }
+
+                if (request.Method == HttpMethod.Head.Method)
+                {
+                    responseContent = string.Empty;
+                }
+
+                if (!string.IsNullOrEmpty(responseContent))
+                {
+                    response.ContentType = _serializer.ContentType;
+                }
             }
 
-            bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
+            _traceWriter.LogMessage(() =>
+                $"Sending {response.StatusCode} response for {request.Method} request at '{request.GetEncodedUrl()}' with body: <<{responseContent}>>");
 
-            if (hasMatchingETag)
+            using (IDisposable _ = CodeTimingSessionManager.Current.Measure("Send response body"))
             {
-                response.StatusCode = (int)HttpStatusCode.NotModified;
-                responseContent = string.Empty;
+                await writer.WriteAsync(responseContent);
+                await writer.FlushAsync();
             }
-
-            if (request.Method == HttpMethod.Head.Method)
-            {
-                responseContent = string.Empty;
-            }
-
-            string url = request.GetEncodedUrl();
-
-            if (!string.IsNullOrEmpty(responseContent))
-            {
-                response.ContentType = _serializer.ContentType;
-            }
-
-            _traceWriter.LogMessage(() => $"Sending {response.StatusCode} response for {request.Method} request at '{url}' with body: <<{responseContent}>>");
-
-            await writer.WriteAsync(responseContent);
-            await writer.FlushAsync();
         }
 
         private string SerializeResponse(object contextObject, HttpStatusCode statusCode)

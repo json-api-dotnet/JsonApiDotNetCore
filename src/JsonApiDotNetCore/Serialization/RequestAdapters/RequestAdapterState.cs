@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 
@@ -11,8 +12,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
     [PublicAPI]
     public sealed class RequestAdapterState : IDisposable
     {
-        private static readonly TargetedFields EmptyTargetedFields = new();
-        private readonly IJsonApiRequest _backupRequest;
+        private readonly IDisposable _backupRequestState;
 
         public IJsonApiRequest InjectableRequest { get; }
         public ITargetedFields InjectableTargetedFields { get; }
@@ -33,8 +33,7 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
 
             if (request.Kind == EndpointKind.AtomicOperations)
             {
-                _backupRequest = new JsonApiRequest();
-                _backupRequest.CopyFrom(InjectableRequest);
+                _backupRequestState = new RevertRequestStateOnDispose(request, targetedFields);
             }
         }
 
@@ -56,10 +55,9 @@ namespace JsonApiDotNetCore.Serialization.RequestAdapters
             // For resource requests, we'd like the injected state to become the final state.
             // But for operations, it makes more sense to reset than to reflect the last operation.
 
-            if (_backupRequest != null)
+            if (_backupRequestState != null)
             {
-                InjectableTargetedFields.CopyFrom(EmptyTargetedFields);
-                InjectableRequest.CopyFrom(_backupRequest);
+                _backupRequestState.Dispose();
             }
             else
             {

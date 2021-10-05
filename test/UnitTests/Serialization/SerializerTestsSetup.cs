@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Queries.Internal;
@@ -68,8 +69,10 @@ namespace UnitTests.Serialization
             var resourceObjectBuilder = new ResponseResourceObjectBuilder(link, includedBuilder, includeConstraints, ResourceGraph, resourceDefinitionAccessor,
                 options, evaluatedIncludeCache, sparseFieldSetCache);
 
+            var request = new JsonApiRequest();
+
             return new ResponseSerializer<T>(meta, link, includedBuilder, fieldsToSerialize, resourceObjectBuilder, resourceDefinitionAccessor,
-                sparseFieldSetCache, options);
+                sparseFieldSetCache, options, request);
         }
 
         protected ResponseResourceObjectBuilder GetResponseResourceObjectBuilder(IEnumerable<IEnumerable<RelationshipAttribute>> inclusionChains = null,

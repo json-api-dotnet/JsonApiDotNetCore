@@ -90,7 +90,8 @@ namespace JsonApiDotNetCore.Serialization
             var document = new Document
             {
                 Results = operations.Select(SerializeOperation).ToList(),
-                Meta = _metaBuilder.Build()
+                Meta = _metaBuilder.Build(),
+                Links = _linkBuilder.GetTopLevelLinks()
             };
 
             SetApiVersion(document);
@@ -132,7 +133,7 @@ namespace JsonApiDotNetCore.Serialization
                 resourceObject = ResourceObjectBuilder.Build(operation.Resource, attributes, relationships);
             }
 
-            if (resourceObject != null)
+            if (resourceObject != null && operation.Request.Kind != EndpointKind.Relationship)
             {
                 resourceObject.Links = _linkBuilder.GetResourceLinks(resourceObject.Type, resourceObject.Id);
             }
@@ -145,6 +146,7 @@ namespace JsonApiDotNetCore.Serialization
 
         private string SerializeErrorDocument(Document document)
         {
+            document.Links = _linkBuilder.GetTopLevelLinks();
             SetApiVersion(document);
 
             return SerializeObject(document, _options.SerializerWriteOptions);

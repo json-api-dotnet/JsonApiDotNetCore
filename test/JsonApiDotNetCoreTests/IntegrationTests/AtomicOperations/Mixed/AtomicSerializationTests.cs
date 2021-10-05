@@ -97,6 +97,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
       ""https://jsonapi.org/ext/atomic""
     ]
   },
+  ""links"": {
+    ""self"": ""http://localhost/operations""
+  },
   ""atomic:results"": [
     {
       ""data"": null
@@ -163,6 +166,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
     ""ext"": [
       ""https://jsonapi.org/ext/atomic""
     ]
+  },
+  ""links"": {
+    ""self"": ""http://localhost/operations""
   },
   ""errors"": [
     {

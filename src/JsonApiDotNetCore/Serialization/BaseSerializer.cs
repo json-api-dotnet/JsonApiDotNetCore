@@ -43,8 +43,6 @@ namespace JsonApiDotNetCore.Serialization
         protected Document Build(IIdentifiable resource, IReadOnlyCollection<AttrAttribute> attributes,
             IReadOnlyCollection<RelationshipAttribute> relationships)
         {
-            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Serializer.Build (single)");
-
             ResourceObject resourceObject = resource != null ? ResourceObjectBuilder.Build(resource, attributes, relationships) : null;
 
             return new Document
@@ -73,8 +71,6 @@ namespace JsonApiDotNetCore.Serialization
             IReadOnlyCollection<RelationshipAttribute> relationships)
         {
             ArgumentGuard.NotNull(resources, nameof(resources));
-
-            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Serializer.Build (list)");
 
             var resourceObjects = new List<ResourceObject>();
 

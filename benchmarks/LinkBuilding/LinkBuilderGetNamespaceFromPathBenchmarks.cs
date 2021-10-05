@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 
-namespace Benchmarks.LinkBuilder
+namespace Benchmarks.LinkBuilding
 {
     // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
