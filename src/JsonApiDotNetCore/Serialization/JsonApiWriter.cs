@@ -61,6 +61,12 @@ namespace JsonApiDotNetCore.Serialization
 
             string responseBody = GetResponseBody(model, httpContext);
 
+            if (httpContext.Request.Method == HttpMethod.Head.Method)
+            {
+                httpContext.Response.GetTypedHeaders().ContentLength = Encoding.UTF8.GetByteCount(responseBody);
+                return;
+            }
+
             _traceWriter.LogMessage(() =>
                 $"Sending {httpContext.Response.StatusCode} response for {httpContext.Request.Method} request at '{httpContext.Request.GetEncodedUrl()}' with body: <<{responseBody}>>");
 
@@ -93,11 +99,6 @@ namespace JsonApiDotNetCore.Serialization
                 if (SetETagResponseHeader(httpContext.Request, httpContext.Response, responseBody))
                 {
                     httpContext.Response.StatusCode = (int)HttpStatusCode.NotModified;
-                    return null;
-                }
-
-                if (httpContext.Request.Method == HttpMethod.Head.Method)
-                {
                     return null;
                 }
 

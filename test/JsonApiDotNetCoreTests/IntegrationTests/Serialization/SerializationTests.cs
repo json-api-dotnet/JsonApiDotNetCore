@@ -65,6 +65,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+
             responseDocument.Should().BeEmpty();
         }
 
@@ -79,6 +81,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
+
+            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
 
             responseDocument.Should().BeEmpty();
         }
