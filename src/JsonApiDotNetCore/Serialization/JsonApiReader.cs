@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using System.Net;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -12,6 +12,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.RequestAdapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Serialization
@@ -39,18 +40,19 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(httpRequest, nameof(httpRequest));
 
-            string requestBody = await GetRequestBodyAsync(httpRequest);
-            return GetModel(requestBody);
-        }
-
-        private async Task<string> GetRequestBodyAsync(HttpRequest httpRequest)
-        {
-            using var reader = new StreamReader(httpRequest.Body, leaveOpen: true);
-            string requestBody = await reader.ReadToEndAsync();
+            string requestBody = await ReceiveRequestBodyAsync(httpRequest);
 
             _traceWriter.LogMessage(() => $"Received {httpRequest.Method} request at '{httpRequest.GetEncodedUrl()}' with body: <<{requestBody}>>");
 
-            return requestBody;
+            return GetModel(requestBody);
+        }
+
+        private static async Task<string> ReceiveRequestBodyAsync(HttpRequest httpRequest)
+        {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Receive request body");
+
+            using var reader = new HttpRequestStreamReader(httpRequest.Body, Encoding.UTF8);
+            return await reader.ReadToEndAsync();
         }
 
         private object GetModel(string requestBody)
@@ -59,7 +61,7 @@ namespace JsonApiDotNetCore.Serialization
 
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Read request body");
 
-            Document document = DeserializeDocument(requestBody, _options.SerializerReadOptions);
+            Document document = DeserializeDocument(requestBody);
             return ConvertDocumentToModel(document, requestBody);
         }
 
@@ -72,14 +74,14 @@ namespace JsonApiDotNetCore.Serialization
             }
         }
 
-        private Document DeserializeDocument(string requestBody, JsonSerializerOptions serializerOptions)
+        private Document DeserializeDocument(string requestBody)
         {
             try
             {
                 using IDisposable _ =
                     CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-                return JsonSerializer.Deserialize<Document>(requestBody, serializerOptions);
+                return JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
             }
             catch (JsonException exception)
             {

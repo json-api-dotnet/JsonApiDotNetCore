@@ -16,8 +16,6 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiSerializerFactory _factory;
         private readonly IJsonApiOptions _options;
 
-        public string ContentType { get; private set; }
-
         public TemporarySerializerBridge(IResponseModelAdapter responseModelAdapter, IJsonApiSerializerFactory factory, IJsonApiOptions options)
         {
             ArgumentGuard.NotNull(responseModelAdapter, nameof(responseModelAdapter));
@@ -34,14 +32,10 @@ namespace JsonApiDotNetCore.Serialization
             if (UseLegacySerializer(model))
             {
                 IJsonApiSerializer serializer = _factory.GetSerializer();
-                string responseBody = serializer.Serialize(model);
-                ContentType = serializer.ContentType;
-                return responseBody;
+                return serializer.Serialize(model);
             }
 
-            (Document document, string contentType) = _responseModelAdapter.Convert(model);
-            ContentType = contentType;
-
+            Document document = _responseModelAdapter.Convert(model);
             return SerializeObject(document, _options.SerializerWriteOptions);
         }
 

@@ -37,9 +37,6 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiRequest _request;
         private readonly Type _primaryResourceType;
 
-        /// <inheritdoc />
-        public string ContentType { get; } = HeaderConstants.MediaType;
-
         public ResponseSerializer(IMetaBuilder metaBuilder, ILinkBuilder linkBuilder, IIncludedResourceObjectBuilder includedBuilder,
             IFieldsToSerialize fieldsToSerialize, IResourceObjectBuilder resourceObjectBuilder, IResourceDefinitionAccessor resourceDefinitionAccessor,
             ISparseFieldSetCache sparseFieldSetCache, IJsonApiOptions options, IJsonApiRequest request)

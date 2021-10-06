@@ -42,6 +42,6 @@ namespace JsonApiDotNetCore.Serialization
         /// </item>
         /// </list>
         /// </summary>
-        (Document responseDocument, string contentType) Convert(object model);
+        Document Convert(object model);
     }
 }

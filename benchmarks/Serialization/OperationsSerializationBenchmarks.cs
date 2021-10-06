@@ -116,7 +116,7 @@ namespace Benchmarks.Serialization
         [Benchmark]
         public string SerializeOperationsResponse()
         {
-            (Document responseDocument, _) = ResponseModelAdapter.Convert(_responseOperations);
+            Document responseDocument = ResponseModelAdapter.Convert(_responseOperations);
             return JsonSerializer.Serialize(responseDocument, SerializerWriteOptions);
         }
 

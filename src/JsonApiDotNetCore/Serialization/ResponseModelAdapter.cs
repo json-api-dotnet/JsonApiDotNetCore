@@ -58,7 +58,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         /// <inheritdoc />
-        public (Document responseDocument, string contentType) Convert(object model)
+        public Document Convert(object model)
         {
             _sparseFieldSetCache.Reset();
 
@@ -108,8 +108,7 @@ namespace JsonApiDotNetCore.Serialization
             document.Meta = _metaBuilder.Build();
             document.Included = GetIncluded(includedCollection);
 
-            string contentType = _request.Kind == EndpointKind.AtomicOperations ? HeaderConstants.AtomicOperationsMediaType : HeaderConstants.MediaType;
-            return (document, contentType);
+            return document;
         }
 
         private AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableList<IncludeElementExpression> includeElements,

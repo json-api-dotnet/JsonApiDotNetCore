@@ -4,7 +4,9 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Diagnostics;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
@@ -21,19 +23,26 @@ namespace JsonApiDotNetCore.Serialization
     /// <inheritdoc />
     public sealed class JsonApiWriter : IJsonApiWriter
     {
-        private readonly IJsonApiSerializer _serializer;
+        private readonly IJsonApiRequest _request;
+        private readonly IJsonApiOptions _options;
+        private readonly IResponseModelAdapter _responseModelAdapter;
         private readonly IExceptionHandler _exceptionHandler;
         private readonly IETagGenerator _eTagGenerator;
         private readonly TraceLogWriter<JsonApiWriter> _traceWriter;
 
-        public JsonApiWriter(IJsonApiSerializer serializer, IExceptionHandler exceptionHandler, IETagGenerator eTagGenerator, ILoggerFactory loggerFactory)
+        public JsonApiWriter(IJsonApiRequest request, IJsonApiOptions options, IResponseModelAdapter responseModelAdapter, IExceptionHandler exceptionHandler,
+            IETagGenerator eTagGenerator, ILoggerFactory loggerFactory)
         {
-            ArgumentGuard.NotNull(serializer, nameof(serializer));
+            ArgumentGuard.NotNull(request, nameof(request));
+            ArgumentGuard.NotNull(responseModelAdapter, nameof(responseModelAdapter));
             ArgumentGuard.NotNull(exceptionHandler, nameof(exceptionHandler));
             ArgumentGuard.NotNull(eTagGenerator, nameof(eTagGenerator));
+            ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
-            _serializer = serializer;
+            _request = request;
+            _options = options;
+            _responseModelAdapter = responseModelAdapter;
             _exceptionHandler = exceptionHandler;
             _eTagGenerator = eTagGenerator;
             _traceWriter = new TraceLogWriter<JsonApiWriter>(loggerFactory);
@@ -44,83 +53,84 @@ namespace JsonApiDotNetCore.Serialization
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
-            HttpRequest request = httpContext.Request;
-            HttpResponse response = httpContext.Response;
-
-            await using TextWriter writer = new HttpResponseStreamWriter(response.Body, Encoding.UTF8);
-            string responseContent;
-
-            using (IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body"))
+            if (model == null && !CanWriteBody((HttpStatusCode)httpContext.Response.StatusCode))
             {
-                try
-                {
-                    responseContent = SerializeResponse(model, (HttpStatusCode)response.StatusCode);
-                }
-#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
-                catch (Exception exception)
-#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
-                {
-                    IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
-                    responseContent = _serializer.Serialize(errors);
-                    response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);
-                }
-
-                bool hasMatchingETag = SetETagResponseHeader(request, response, responseContent);
-
-                if (hasMatchingETag)
-                {
-                    response.StatusCode = (int)HttpStatusCode.NotModified;
-                    responseContent = string.Empty;
-                }
-
-                if (request.Method == HttpMethod.Head.Method)
-                {
-                    responseContent = string.Empty;
-                }
-
-                if (!string.IsNullOrEmpty(responseContent))
-                {
-                    response.ContentType = _serializer.ContentType;
-                }
+                // Prevent exception from Kestrel server, caused by writing data:null json response.
+                return;
             }
+
+            string responseBody = GetResponseBody(model, httpContext);
 
             _traceWriter.LogMessage(() =>
-                $"Sending {response.StatusCode} response for {request.Method} request at '{request.GetEncodedUrl()}' with body: <<{responseContent}>>");
+                $"Sending {httpContext.Response.StatusCode} response for {httpContext.Request.Method} request at '{httpContext.Request.GetEncodedUrl()}' with body: <<{responseBody}>>");
 
-            using (IDisposable _ = CodeTimingSessionManager.Current.Measure("Send response body"))
-            {
-                await writer.WriteAsync(responseContent);
-                await writer.FlushAsync();
-            }
+            await SendResponseBodyAsync(httpContext.Response, responseBody);
         }
 
-        private string SerializeResponse(object contextObject, HttpStatusCode statusCode)
+        private static bool CanWriteBody(HttpStatusCode statusCode)
         {
-            if (contextObject is ProblemDetails problemDetails)
-            {
-                throw new UnsuccessfulActionResultException(problemDetails);
-            }
+            return statusCode is not HttpStatusCode.NoContent and not HttpStatusCode.ResetContent and not HttpStatusCode.NotModified;
+        }
 
-            if (contextObject == null)
+        private string GetResponseBody(object model, HttpContext httpContext)
+        {
+            using IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body");
+
+            try
             {
-                if (!IsSuccessStatusCode(statusCode))
+                if (model is ProblemDetails problemDetails)
                 {
-                    throw new UnsuccessfulActionResultException(statusCode);
+                    throw new UnsuccessfulActionResultException(problemDetails);
                 }
 
-                if (statusCode is HttpStatusCode.NoContent or HttpStatusCode.ResetContent or HttpStatusCode.NotModified)
+                if (model == null && !IsSuccessStatusCode((HttpStatusCode)httpContext.Response.StatusCode))
                 {
-                    // Prevent exception from Kestrel server, caused by writing data:null json response.
+                    throw new UnsuccessfulActionResultException((HttpStatusCode)httpContext.Response.StatusCode);
+                }
+
+                string responseBody = RenderModel(model);
+
+                if (SetETagResponseHeader(httpContext.Request, httpContext.Response, responseBody))
+                {
+                    httpContext.Response.StatusCode = (int)HttpStatusCode.NotModified;
                     return null;
                 }
-            }
 
-            return _serializer.Serialize(contextObject);
+                if (httpContext.Request.Method == HttpMethod.Head.Method)
+                {
+                    return null;
+                }
+
+                return responseBody;
+            }
+#pragma warning disable AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
+            catch (Exception exception)
+#pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
+            {
+                IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(exception);
+                httpContext.Response.StatusCode = (int)ErrorObject.GetResponseStatusCode(errors);
+
+                return RenderModel(errors);
+            }
         }
 
-        private bool IsSuccessStatusCode(HttpStatusCode statusCode)
+        private static bool IsSuccessStatusCode(HttpStatusCode statusCode)
         {
             return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
+        }
+
+        private string RenderModel(object model)
+        {
+            Document document = _responseModelAdapter.Convert(model);
+            return SerializeDocument(document);
+        }
+
+        private string SerializeDocument(Document document)
+        {
+            using IDisposable _ =
+                CodeTimingSessionManager.Current.Measure("JsonSerializer.Serialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
+
+            return JsonSerializer.Serialize(document, _options.SerializerWriteOptions);
         }
 
         private bool SetETagResponseHeader(HttpRequest request, HttpResponse response, string responseContent)
@@ -158,6 +168,21 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             return false;
+        }
+
+        private async Task SendResponseBodyAsync(HttpResponse httpResponse, string responseBody)
+        {
+            if (!string.IsNullOrEmpty(responseBody))
+            {
+                httpResponse.ContentType =
+                    _request.Kind == EndpointKind.AtomicOperations ? HeaderConstants.AtomicOperationsMediaType : HeaderConstants.MediaType;
+
+                using IDisposable _ = CodeTimingSessionManager.Current.Measure("Send response body");
+
+                await using TextWriter writer = new HttpResponseStreamWriter(httpResponse.Body, Encoding.UTF8);
+                await writer.WriteAsync(responseBody);
+                await writer.FlushAsync();
+            }
         }
     }
 }

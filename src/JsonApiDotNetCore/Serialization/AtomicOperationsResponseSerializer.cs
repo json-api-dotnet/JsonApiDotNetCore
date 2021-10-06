@@ -27,9 +27,6 @@ namespace JsonApiDotNetCore.Serialization
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
 
-        /// <inheritdoc />
-        public string ContentType { get; } = HeaderConstants.AtomicOperationsMediaType;
-
         public AtomicOperationsResponseSerializer(IResourceObjectBuilder resourceObjectBuilder, IMetaBuilder metaBuilder, ILinkBuilder linkBuilder,
             IFieldsToSerialize fieldsToSerialize, IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache,
             ISparseFieldSetCache sparseFieldSetCache, IJsonApiRequest request, IJsonApiOptions options)
