@@ -29,10 +29,6 @@ namespace UnitTests.Extensions
             services.AddLogging();
             services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
 
-            // this is required because the DbContextResolver requires access to the current HttpContext
-            // to get the request scoped DbContext instance
-            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
-
             // Act
             services.AddJsonApi<TestDbContext>();
 
@@ -170,8 +166,6 @@ namespace UnitTests.Extensions
             var services = new ServiceCollection();
             services.AddLogging();
             services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-
-            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
 
             // Act
             services.AddJsonApi<TestDbContext>();

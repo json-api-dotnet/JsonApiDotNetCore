@@ -175,7 +175,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddSingleton<IJsonApiRoutingConvention, JsonApiRoutingConvention>();
             _services.AddSingleton<IControllerResourceMapping>(sp => sp.GetRequiredService<IJsonApiRoutingConvention>());
             _services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            _services.AddSingleton<IRequestScopedServiceProvider, RequestScopedServiceProvider>();
             _services.AddScoped<IJsonApiRequest, JsonApiRequest>();
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
