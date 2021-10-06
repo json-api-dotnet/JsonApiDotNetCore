@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes)
+        public IImmutableSet<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 

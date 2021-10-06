@@ -68,11 +68,11 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             ArgumentGuard.NotNull(chains, nameof(chains));
 
-            IImmutableList<IncludeElementExpression> elements = ConvertChainsToElements(chains);
+            IImmutableSet<IncludeElementExpression> elements = ConvertChainsToElements(chains);
             return elements.Any() ? new IncludeExpression(elements) : IncludeExpression.Empty;
         }
 
-        private static IImmutableList<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
+        private static IImmutableSet<IncludeElementExpression> ConvertChainsToElements(IEnumerable<ResourceFieldChainExpression> chains)
         {
             var rootNode = new MutableIncludeNode(null);
 
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
                 ConvertChainToElement(chain, rootNode);
             }
 
-            return rootNode.Children.Values.Select(child => child.ToExpression()).ToImmutableArray();
+            return rootNode.Children.Values.Select(child => child.ToExpression()).ToImmutableHashSet();
         }
 
         private static void ConvertChainToElement(ResourceFieldChainExpression chain, MutableIncludeNode rootNode)
@@ -161,7 +161,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             public IncludeElementExpression ToExpression()
             {
-                ImmutableArray<IncludeElementExpression> elementChildren = Children.Values.Select(child => child.ToExpression()).ToImmutableArray();
+                IImmutableSet<IncludeElementExpression> elementChildren = Children.Values.Select(child => child.ToExpression()).ToImmutableHashSet();
                 return new IncludeElementExpression(_relationship, elementChildren);
             }
         }

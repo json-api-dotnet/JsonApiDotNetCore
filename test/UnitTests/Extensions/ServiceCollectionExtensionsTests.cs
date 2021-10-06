@@ -410,7 +410,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceDefinition : IResourceDefinition<IntResource>
         {
-            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }
@@ -498,7 +498,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class GuidResourceDefinition : IResourceDefinition<GuidResource, Guid>
         {
-            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }

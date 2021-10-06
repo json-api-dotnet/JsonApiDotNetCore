@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             _hitCounter = hitCounter;
         }
 
-        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+        public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
             _hitCounter.TrackInvocation<Moon>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
 

@@ -14,14 +14,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class IncludeElementExpression : QueryExpression
     {
         public RelationshipAttribute Relationship { get; }
-        public IImmutableList<IncludeElementExpression> Children { get; }
+        public IImmutableSet<IncludeElementExpression> Children { get; }
 
         public IncludeElementExpression(RelationshipAttribute relationship)
-            : this(relationship, ImmutableArray<IncludeElementExpression>.Empty)
+            : this(relationship, ImmutableHashSet<IncludeElementExpression>.Empty)
         {
         }
 
-        public IncludeElementExpression(RelationshipAttribute relationship, IImmutableList<IncludeElementExpression> children)
+        public IncludeElementExpression(RelationshipAttribute relationship, IImmutableSet<IncludeElementExpression> children)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(children, nameof(children));
@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             if (Children.Any())
             {
                 builder.Append('{');
-                builder.Append(string.Join(",", Children.Select(child => child.ToString())));
+                builder.Append(string.Join(",", Children.Select(child => child.ToString()).OrderBy(name => name)));
                 builder.Append('}');
             }
 
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (IncludeElementExpression)obj;
 
-            return Relationship.Equals(other.Relationship) && Children.SequenceEqual(other.Children);
+            return Relationship.Equals(other.Relationship) && Children.SetEquals(other.Children);
         }
 
         public override int GetHashCode()

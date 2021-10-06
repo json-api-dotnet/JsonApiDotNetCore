@@ -18,7 +18,7 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyIncludes" /> for the specified resource type.
         /// </summary>
-        IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes);
+        IImmutableSet<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableSet<IncludeElementExpression> existingIncludes);
 
         /// <summary>
         /// Invokes <see cref="IResourceDefinition{TResource,TId}.OnApplyFilter" /> for the specified resource type.

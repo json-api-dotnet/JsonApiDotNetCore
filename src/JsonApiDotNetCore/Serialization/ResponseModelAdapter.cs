@@ -65,7 +65,7 @@ namespace JsonApiDotNetCore.Serialization
             var document = new Document();
 
             IncludeExpression include = _evaluatedIncludeCache.Get();
-            IImmutableList<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableArray<IncludeElementExpression>.Empty;
+            IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
             var includedCollection = new IncludedCollection();
 
@@ -111,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization
             return document;
         }
 
-        private AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableList<IncludeElementExpression> includeElements,
+        private AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableSet<IncludeElementExpression> includeElements,
             IncludedCollection includedCollection)
         {
             ResourceObject resourceObject = null;
@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.Serialization
             };
         }
 
-        private ResourceObject ConvertResource(IIdentifiable resource, EndpointKind requestKind, IImmutableList<IncludeElementExpression> includeElements,
+        private ResourceObject ConvertResource(IIdentifiable resource, EndpointKind requestKind, IImmutableSet<IncludeElementExpression> includeElements,
             IncludedCollection includedCollection, bool isInclude)
         {
             ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
@@ -203,7 +203,7 @@ namespace JsonApiDotNetCore.Serialization
         }
 
         private IDictionary<string, RelationshipObject> ConvertRelationships(IIdentifiable resource, ResourceContext resourceContext,
-            IImmutableSet<ResourceFieldAttribute> fieldSet, EndpointKind requestKind, IImmutableList<IncludeElementExpression> includeElements,
+            IImmutableSet<ResourceFieldAttribute> fieldSet, EndpointKind requestKind, IImmutableSet<IncludeElementExpression> includeElements,
             IncludedCollection includedCollection)
         {
             if (fieldSet != null)

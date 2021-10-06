@@ -268,7 +268,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Elements, argument);
+                IImmutableSet<IncludeElementExpression> newElements = VisitSet(expression.Elements, argument);
 
                 if (newElements.Count == 0)
                 {
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Children, argument);
+                IImmutableSet<IncludeElementExpression> newElements = VisitSet(expression.Children, argument);
 
                 var newExpression = new IncludeElementExpression(expression.Relationship, newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;

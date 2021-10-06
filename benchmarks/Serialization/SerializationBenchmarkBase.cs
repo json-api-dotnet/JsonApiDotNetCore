@@ -130,7 +130,7 @@ namespace Benchmarks.Serialization
 
         private sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
         {
-            public IImmutableList<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableList<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 return existingIncludes;
             }

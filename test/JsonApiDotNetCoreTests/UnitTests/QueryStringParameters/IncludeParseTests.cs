@@ -82,7 +82,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("includes", "posts.author", "posts.author")]
         [InlineData("includes", "posts.comments", "posts.comments")]
         [InlineData("includes", "posts,posts.comments", "posts.comments")]
-        [InlineData("includes", "posts,posts.comments,posts.labels", "posts.comments,posts.labels")]
+        [InlineData("includes", "posts,posts.labels,posts.comments", "posts.comments,posts.labels")]
         public void Reader_Read_Succeeds(string parameterName, string parameterValue, string valueExpected)
         {
             // Act
