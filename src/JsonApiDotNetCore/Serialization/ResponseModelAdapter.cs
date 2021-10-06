@@ -213,7 +213,9 @@ namespace JsonApiDotNetCore.Serialization
 
                 foreach (RelationshipAttribute relationship in resourceContext.Relationships)
                 {
-                    IncludeElementExpression includeElement = includeElements.FirstOrDefault(element => element.Relationship.Equals(relationship));
+                    IncludeElementExpression includeElement = GetFirstOrDefault(includeElements, relationship,
+                        (element, nextRelationship) => element.Relationship.Equals(nextRelationship));
+
                     RelationshipObject relationshipObject = ConvertRelationship(relationship, resource, requestKind, includeElement, includedCollection);
 
                     if (relationshipObject != null && fieldSet.Contains(relationship))
@@ -229,6 +231,22 @@ namespace JsonApiDotNetCore.Serialization
             }
 
             return null;
+        }
+
+        private static TSource GetFirstOrDefault<TSource, TContext>(IEnumerable<TSource> source, TContext context, Func<TSource, TContext, bool> condition)
+        {
+            // PERF: This replacement for Enumerable.FirstOrDefault() doesn't allocate a compiler-generated closure class <>c__DisplayClass.
+            // https://www.jetbrains.com/help/resharper/2021.2/Fixing_Issues_Found_by_DPA.html#closures-in-lambda-expressions
+
+            foreach (TSource item in source)
+            {
+                if (condition(item, context))
+                {
+                    return item;
+                }
+            }
+
+            return default;
         }
 
         private RelationshipObject ConvertRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, EndpointKind requestKind,
