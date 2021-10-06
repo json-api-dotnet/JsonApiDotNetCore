@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Request;
 
 namespace JsonApiDotNetCore.Serialization.JsonConverters
 {

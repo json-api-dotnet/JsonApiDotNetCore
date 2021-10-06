@@ -14,9 +14,8 @@ using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
-using JsonApiDotNetCore.Serialization;
-using JsonApiDotNetCore.Serialization.Building;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 

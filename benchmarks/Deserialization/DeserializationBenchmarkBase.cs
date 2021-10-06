@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.JsonConverters;
-using JsonApiDotNetCore.Serialization.RequestAdapters;
+using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Benchmarks.Deserialization
