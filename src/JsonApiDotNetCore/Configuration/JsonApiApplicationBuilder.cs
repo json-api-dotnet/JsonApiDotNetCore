@@ -180,7 +180,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IJsonApiWriter, JsonApiWriter>();
             _services.AddScoped<IJsonApiReader, JsonApiReader>();
             _services.AddScoped<ITargetedFields, TargetedFields>();
-            _services.AddScoped<IFieldsToSerialize, FieldsToSerialize>();
         }
 
         private void AddResourceLayer()
@@ -252,17 +251,6 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddSerializationLayer()
         {
-            _services.AddScoped<IIncludedResourceObjectBuilder, IncludedResourceObjectBuilder>();
-            _services.AddScoped<IJsonApiSerializerFactory, ResponseSerializerFactory>();
-            _services.AddScoped<ILinkBuilder, LinkBuilder>();
-            _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
-            _services.AddScoped<IMetaBuilder, MetaBuilder>();
-            _services.AddScoped(typeof(ResponseSerializer<>));
-            _services.AddScoped(typeof(AtomicOperationsResponseSerializer));
-            _services.AddScoped<IResourceObjectBuilder, ResponseResourceObjectBuilder>();
-            _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
-            _services.AddSingleton<IETagGenerator, ETagGenerator>();
-
             _services.AddScoped<IResourceIdentifierObjectAdapter, ResourceIdentifierObjectAdapter>();
             _services.AddScoped<IRelationshipDataAdapter, RelationshipDataAdapter>();
             _services.AddScoped<IResourceObjectAdapter, ResourceObjectAdapter>();
@@ -274,8 +262,12 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IDocumentInOperationsRequestAdapter, DocumentInOperationsRequestAdapter>();
             _services.AddScoped<IDocumentAdapter, DocumentAdapter>();
 
+            _services.AddScoped<ILinkBuilder, LinkBuilder>();
+            _services.AddScoped<IResponseMeta, EmptyResponseMeta>();
+            _services.AddScoped<IMetaBuilder, MetaBuilder>();
+            _services.AddSingleton<IFingerprintGenerator, FingerprintGenerator>();
+            _services.AddSingleton<IETagGenerator, ETagGenerator>();
             _services.AddScoped<IResponseModelAdapter, ResponseModelAdapter>();
-            _services.AddScoped<IJsonApiSerializer, TemporarySerializerBridge>();
         }
 
         private void AddOperationsLayer()

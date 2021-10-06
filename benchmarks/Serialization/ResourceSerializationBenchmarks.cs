@@ -111,12 +111,6 @@ namespace Benchmarks.Serialization
             return JsonSerializer.Serialize(responseDocument, SerializerWriteOptions);
         }
 
-        [Benchmark]
-        public string LegacySerializeResourceResponse()
-        {
-            return JsonApiResourceSerializer.Serialize(ResponseResource);
-        }
-
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
             return new JsonApiRequest

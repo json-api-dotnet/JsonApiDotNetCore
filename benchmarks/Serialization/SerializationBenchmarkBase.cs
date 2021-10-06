@@ -26,8 +26,6 @@ namespace Benchmarks.Serialization
     {
         protected readonly JsonSerializerOptions SerializerWriteOptions;
         protected readonly IResponseModelAdapter ResponseModelAdapter;
-        protected readonly IJsonApiSerializer JsonApiResourceSerializer;
-        protected readonly IJsonApiSerializer JsonApiOperationsSerializer;
         protected readonly IResourceGraph ResourceGraph;
 
         protected SerializationBenchmarkBase()
@@ -58,27 +56,8 @@ namespace Benchmarks.Serialization
             var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
             var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
-            {
-                IFieldsToSerialize fieldsToSerialize =
-                    new FieldsToSerialize(ResourceGraph, constraintProviders, resourceDefinitionAccessor, request, sparseFieldSetCache);
-
-                IIncludedResourceObjectBuilder includeBuilder = new IncludedResourceObjectBuilder(fieldsToSerialize, linkBuilder, ResourceGraph,
-                    constraintProviders, resourceDefinitionAccessor, requestQueryStringAccessor, options, sparseFieldSetCache);
-
-                var resourceObjectBuilder = new ResponseResourceObjectBuilder(linkBuilder, includeBuilder, constraintProviders, ResourceGraph,
-                    resourceDefinitionAccessor, options, evaluatedIncludeCache, sparseFieldSetCache);
-
-                JsonApiResourceSerializer = new ResponseSerializer<ResourceA>(metaBuilder, linkBuilder, includeBuilder, fieldsToSerialize,
-                    resourceObjectBuilder, resourceDefinitionAccessor, sparseFieldSetCache, options, request);
-
-                JsonApiOperationsSerializer = new AtomicOperationsResponseSerializer(resourceObjectBuilder, metaBuilder, linkBuilder, fieldsToSerialize,
-                    resourceDefinitionAccessor, evaluatedIncludeCache, sparseFieldSetCache, request, options);
-            }
-
-            {
-                ResponseModelAdapter = new ResponseModelAdapter(request, options, ResourceGraph, linkBuilder, metaBuilder, resourceDefinitionAccessor,
-                    evaluatedIncludeCache, sparseFieldSetCache, requestQueryStringAccessor);
-            }
+            ResponseModelAdapter = new ResponseModelAdapter(request, options, ResourceGraph, linkBuilder, metaBuilder, resourceDefinitionAccessor,
+                evaluatedIncludeCache, sparseFieldSetCache, requestQueryStringAccessor);
         }
 
         protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
