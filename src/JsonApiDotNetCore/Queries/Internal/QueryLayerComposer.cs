@@ -185,15 +185,12 @@ namespace JsonApiDotNetCore.Queries.Internal
 
                     parentLayer.Projection.Add(includeElement.Relationship, child);
 
-                    if (includeElement.Children.Any())
-                    {
-                        IImmutableSet<IncludeElementExpression> updatedChildren =
-                            ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
+                    IImmutableSet<IncludeElementExpression> updatedChildren =
+                        ProcessIncludeSet(includeElement.Children, child, relationshipChain, constraints);
 
-                        if (!ReferenceEquals(includeElement.Children, updatedChildren))
-                        {
-                            updatesInChildren.Add(includeElement, updatedChildren);
-                        }
+                    if (!ReferenceEquals(includeElement.Children, updatedChildren))
+                    {
+                        updatesInChildren.Add(includeElement, updatedChildren);
                     }
                 }
             }

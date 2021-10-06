@@ -124,7 +124,56 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+            }, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public async Task Include_from_included_resource_definition_is_added()
+        {
+            // Arrange
+            var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
+
+            var settingsProvider = (TestClientSettingsProvider)_testContext.Factory.Services.GetRequiredService<IClientSettingsProvider>();
+            settingsProvider.AutoIncludeOrbitingPlanetForMoons();
+
+            Planet planet = _fakers.Planet.Generate();
+            planet.Moons = _fakers.Moon.Generate(1).ToHashSet();
+            planet.Moons.ElementAt(0).OrbitsAround = _fakers.Planet.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Planets.Add(planet);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/planets/{planet.StringId}?include=moons";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+
+            responseDocument.Included.Should().HaveCount(2);
+
+            responseDocument.Included[0].Type.Should().Be("moons");
+            responseDocument.Included[0].Id.Should().Be(planet.Moons.ElementAt(0).StringId);
+            responseDocument.Included[0].Attributes["name"].Should().Be(planet.Moons.ElementAt(0).Name);
+
+            responseDocument.Included[1].Type.Should().Be("planets");
+            responseDocument.Included[1].Id.Should().Be(planet.Moons.ElementAt(0).OrbitsAround.StringId);
+            responseDocument.Included[1].Attributes["publicName"].Should().Be(planet.Moons.ElementAt(0).OrbitsAround.PublicName);
+
+            hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
+            {
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
+                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
             }, options => options.WithStrictOrdering());
         }
 
