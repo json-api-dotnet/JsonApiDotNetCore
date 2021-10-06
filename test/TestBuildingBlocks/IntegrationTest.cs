@@ -95,6 +95,11 @@ namespace TestBuildingBlocks
                 return (TResponseDocument)(object)responseText;
             }
 
+            if (string.IsNullOrEmpty(responseText))
+            {
+                return default;
+            }
+
             try
             {
                 return JsonSerializer.Deserialize<TResponseDocument>(responseText, SerializerOptions);
