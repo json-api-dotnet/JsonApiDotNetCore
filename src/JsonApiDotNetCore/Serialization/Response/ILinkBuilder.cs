@@ -1,3 +1,4 @@
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -17,7 +18,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         /// <summary>
         /// Builds the links object for a returned resource (primary or included).
         /// </summary>
-        ResourceLinks GetResourceLinks(string resourceName, string id);
+        ResourceLinks GetResourceLinks(ResourceType resourceType, string id);
 
         /// <summary>
         /// Builds the links object for a relationship inside a returned resource.

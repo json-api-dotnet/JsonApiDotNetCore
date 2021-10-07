@@ -107,15 +107,15 @@ namespace JsonApiDotNetCore.Configuration
                     // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
                     bool isShorthandInterface = openGenericInterface.GetTypeInfo().GenericTypeParameters.Length == 1;
 
-                    if (isShorthandInterface && resourceDescriptor.IdType != typeof(int))
+                    if (isShorthandInterface && resourceDescriptor.IdClrType != typeof(int))
                     {
                         // We can't create a shorthand for ID types other than int.
                         continue;
                     }
 
                     Type constructedType = isShorthandInterface
-                        ? openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType)
-                        : openGenericInterface.MakeGenericType(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+                        ? openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType)
+                        : openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
 
                     if (constructedType.IsAssignableFrom(implementationType))
                     {

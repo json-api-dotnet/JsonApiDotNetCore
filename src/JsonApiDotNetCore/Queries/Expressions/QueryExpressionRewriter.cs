@@ -197,14 +197,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder newTable =
-                    ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
+                ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder newTable =
+                    ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
-                foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in expression.Table)
+                foreach ((ResourceType resourceType, SparseFieldSetExpression sparseFieldSet) in expression.Table)
                 {
                     if (Visit(sparseFieldSet, argument) is SparseFieldSetExpression newSparseFieldSet)
                     {
-                        newTable[resourceContext] = newSparseFieldSet;
+                        newTable[resourceType] = newSparseFieldSet;
                     }
                 }
 

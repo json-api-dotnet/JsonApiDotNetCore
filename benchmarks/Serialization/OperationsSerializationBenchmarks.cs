@@ -122,10 +122,10 @@ namespace Benchmarks.Serialization
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new JsonApiRequest
+            return new()
             {
                 Kind = EndpointKind.AtomicOperations,
-                PrimaryResource = resourceGraph.GetResourceContext<ResourceA>()
+                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>()
             };
         }
 

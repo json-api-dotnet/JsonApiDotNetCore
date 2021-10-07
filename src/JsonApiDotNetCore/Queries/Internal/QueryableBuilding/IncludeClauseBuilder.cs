@@ -18,19 +18,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private static readonly IncludeChainConverter IncludeChainConverter = new();
 
         private readonly Expression _source;
-        private readonly ResourceContext _resourceContext;
-        private readonly IResourceGraph _resourceGraph;
+        private readonly ResourceType _resourceType;
 
-        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceContext resourceContext, IResourceGraph resourceGraph)
+        public IncludeClauseBuilder(Expression source, LambdaScope lambdaScope, ResourceType resourceType)
             : base(lambdaScope)
         {
             ArgumentGuard.NotNull(source, nameof(source));
-            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
             _source = source;
-            _resourceContext = resourceContext;
-            _resourceGraph = resourceGraph;
+            _resourceType = resourceType;
         }
 
         public Expression ApplyInclude(IncludeExpression include)
@@ -42,7 +39,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitInclude(IncludeExpression expression, object argument)
         {
-            Expression source = ApplyEagerLoads(_source, _resourceContext.EagerLoads, null);
+            Expression source = ApplyEagerLoads(_source, _resourceType.EagerLoads, null);
 
             foreach (ResourceFieldChainExpression chain in IncludeChainConverter.GetRelationshipChains(expression))
             {
@@ -61,8 +58,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             {
                 path = path == null ? relationship.Property.Name : $"{path}.{relationship.Property.Name}";
 
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
-                result = ApplyEagerLoads(result, resourceContext.EagerLoads, path);
+                result = ApplyEagerLoads(result, relationship.RightType.EagerLoads, path);
             }
 
             return IncludeExtensionMethodCall(result, path);

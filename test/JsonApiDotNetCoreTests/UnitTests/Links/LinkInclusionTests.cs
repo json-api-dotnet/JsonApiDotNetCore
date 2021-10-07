@@ -1,6 +1,5 @@
 using System;
 using FluentAssertions;
-using JsonApiDotNetCore;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries;
@@ -53,11 +52,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.Paging, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All)]
-        public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
+        public void Applies_cascading_settings_for_top_level_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), topLevelLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -66,7 +64,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest
             {
-                PrimaryResource = exampleResourceContext,
+                PrimaryResourceType = exampleResourceType,
                 PrimaryId = "1",
                 IsCollection = true,
                 Kind = EndpointKind.Relationship,
@@ -80,13 +78,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
                 TotalResourceCount = 10
             };
 
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
             TopLevelLinks topLevelLinks = linkBuilder.GetTopLevelLinks();
@@ -150,11 +145,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.None, LinkTypes.Self)]
         [InlineData(LinkTypes.All, LinkTypes.Self, LinkTypes.Self)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Self)]
-        public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceContext, LinkTypes linksInOptions, LinkTypes expected)
+        public void Applies_cascading_settings_for_resource_links(LinkTypes linksInResourceType, LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), resourceLinks: linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), resourceLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -163,16 +157,13 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            ResourceLinks resourceLinks = linkBuilder.GetResourceLinks(nameof(ExampleResource), "id");
+            ResourceLinks resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, "id");
 
             // Assert
             if (expected == LinkTypes.Self)
@@ -311,12 +302,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Self, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.Related, LinkTypes.All)]
         [InlineData(LinkTypes.All, LinkTypes.All, LinkTypes.All, LinkTypes.All)]
-        public void Applies_cascading_settings_for_relationship_links(LinkTypes linksInRelationshipAttribute, LinkTypes linksInResourceContext,
+        public void Applies_cascading_settings_for_relationship_links(LinkTypes linksInRelationshipAttribute, LinkTypes linksInResourceType,
             LinkTypes linksInOptions, LinkTypes expected)
         {
             // Arrange
-            var exampleResourceContext = new ResourceContext(nameof(ExampleResource), typeof(ExampleResource), typeof(int), Array.Empty<AttrAttribute>(),
-                Array.Empty<RelationshipAttribute>(), Array.Empty<EagerLoadAttribute>(), relationshipLinks: linksInResourceContext);
+            var exampleResourceType = new ResourceType(nameof(ExampleResource), typeof(ExampleResource), typeof(int), relationshipLinks: linksInResourceType);
 
             var options = new JsonApiOptions
             {
@@ -325,17 +315,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
             var request = new JsonApiRequest();
             var paginationContext = new PaginationContext();
-            var resourceGraph = new ResourceGraph(exampleResourceContext.AsHashSet());
             var httpContextAccessor = new FakeHttpContextAccessor();
             var linkGenerator = new FakeLinkGenerator();
             var controllerResourceMapping = new FakeControllerResourceMapping();
-
-            var linkBuilder = new LinkBuilder(options, request, paginationContext, resourceGraph, httpContextAccessor, linkGenerator,
-                controllerResourceMapping);
+            var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             var relationship = new HasOneAttribute
             {
-                Links = linksInRelationshipAttribute
+                Links = linksInRelationshipAttribute,
+                LeftType = exampleResourceType
             };
 
             // Act
@@ -386,12 +374,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
         private sealed class FakeControllerResourceMapping : IControllerResourceMapping
         {
-            public Type GetResourceTypeForController(Type controllerType)
+            public ResourceType TryGetResourceTypeForController(Type controllerType)
             {
                 throw new NotImplementedException();
             }
 
-            public string GetControllerNameForResourceType(Type resourceType)
+            public string TryGetControllerNameForResourceType(ResourceType resourceType)
             {
                 return null;
             }

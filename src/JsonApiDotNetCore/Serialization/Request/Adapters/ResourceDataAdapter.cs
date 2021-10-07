@@ -31,7 +31,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             using IDisposable _ = state.Position.PushElement("data");
             AssertHasSingleValue(data, false, state);
 
-            (IIdentifiable resource, ResourceContext _) = ConvertResourceObject(data, requirements, state);
+            (IIdentifiable resource, ResourceType _) = ConvertResourceObject(data, requirements, state);
 
             // Ensure that IResourceDefinition extensibility point sees the current operation, it case it injects IJsonApiRequest.
             state.RefreshInjectables();
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return resource;
         }
 
-        protected virtual (IIdentifiable resource, ResourceContext resourceContext) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
+        protected virtual (IIdentifiable resource, ResourceType resourceType) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
             ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
             return _resourceObjectAdapter.Convert(data.SingleValue, requirements, state);

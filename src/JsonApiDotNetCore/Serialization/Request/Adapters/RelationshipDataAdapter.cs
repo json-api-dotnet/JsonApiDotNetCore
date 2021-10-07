@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -14,15 +13,12 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
-        private readonly IResourceGraph _resourceGraph;
         private readonly IResourceIdentifierObjectAdapter _resourceIdentifierObjectAdapter;
 
-        public RelationshipDataAdapter(IResourceGraph resourceGraph, IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
+        public RelationshipDataAdapter(IResourceIdentifierObjectAdapter resourceIdentifierObjectAdapter)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceIdentifierObjectAdapter, nameof(resourceIdentifierObjectAdapter));
 
-            _resourceGraph = resourceGraph;
             _resourceIdentifierObjectAdapter = resourceIdentifierObjectAdapter;
         }
 
@@ -73,11 +69,10 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             AssertHasData(data, state);
 
             using IDisposable _ = state.Position.PushElement("data");
-            ResourceContext rightResourceContext = _resourceGraph.GetResourceContext(relationship.RightType);
 
             var requirements = new ResourceIdentityRequirements
             {
-                ResourceContext = rightResourceContext,
+                ResourceType = relationship.RightType,
                 IdConstraint = JsonElementConstraint.Required,
                 RelationshipName = relationship.PublicName
             };

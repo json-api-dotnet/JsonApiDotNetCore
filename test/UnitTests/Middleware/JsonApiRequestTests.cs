@@ -58,7 +58,8 @@ namespace UnitTests.Middleware
 
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
-            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(typeof(TodoItem));
+            ResourceType todoItemType = resourceGraph.GetResourceType<TodoItem>();
+            controllerResourceMappingMock.Setup(mapping => mapping.TryGetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);
@@ -68,16 +69,15 @@ namespace UnitTests.Middleware
             var middleware = new JsonApiMiddleware(_ => Task.CompletedTask, new HttpContextAccessor());
 
             // Act
-            await middleware.InvokeAsync(httpContext, controllerResourceMappingMock.Object, options, request, resourceGraph,
-                NullLogger<JsonApiMiddleware>.Instance);
+            await middleware.InvokeAsync(httpContext, controllerResourceMappingMock.Object, options, request, NullLogger<JsonApiMiddleware>.Instance);
 
             // Assert
             request.IsCollection.Should().Be(expectIsCollection);
             request.Kind.Should().Be(expectKind);
             request.WriteOperation.Should().Be(expectWriteOperation);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
-            request.PrimaryResource.Should().NotBeNull();
-            request.PrimaryResource.PublicName.Should().Be("todoItems");
+            request.PrimaryResourceType.Should().NotBeNull();
+            request.PrimaryResourceType.PublicName.Should().Be("todoItems");
         }
 
         private static void SetupRoutes(HttpContext httpContext, string requestMethod, string requestPath)

@@ -157,21 +157,21 @@ namespace JsonApiDotNetCore.Controllers
             }
         }
 
-        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceClrType, int operationIndex, List<ModelStateViolation> violations)
         {
             foreach ((string propertyName, ModelStateEntry entry) in modelState)
             {
-                AddValidationErrors(entry, propertyName, resourceType, operationIndex, violations);
+                AddValidationErrors(entry, propertyName, resourceClrType, operationIndex, violations);
             }
         }
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, int operationIndex,
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceClrType, int operationIndex,
             List<ModelStateViolation> violations)
         {
             foreach (ModelError error in entry.Errors)
             {
                 string prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
-                var violation = new ModelStateViolation(prefix, propertyName, resourceType, error);
+                var violation = new ModelStateViolation(prefix, propertyName, resourceClrType, error);
 
                 violations.Add(violation);
             }

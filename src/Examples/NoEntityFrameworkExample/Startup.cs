@@ -34,9 +34,9 @@ namespace NoEntityFrameworkExample
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [UsedImplicitly]
-        public void Configure(IApplicationBuilder app, AppDbContext context)
+        public void Configure(IApplicationBuilder app, AppDbContext dbContext)
         {
-            context.Database.EnsureCreated();
+            dbContext.Database.EnsureCreated();
 
             app.UseRouting();
             app.UseJsonApi();

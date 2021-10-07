@@ -41,12 +41,12 @@ namespace JsonApiDotNetCore.Repositories
         /// <inheritdoc />
         public virtual string TransactionId => _dbContext.Database.CurrentTransaction?.TransactionId.ToString();
 
-        public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+        public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
         {
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
-            ArgumentGuard.NotNull(contextResolver, nameof(contextResolver));
+            ArgumentGuard.NotNull(dbContextResolver, nameof(dbContextResolver));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
             ArgumentGuard.NotNull(constraintProviders, nameof(constraintProviders));
@@ -54,7 +54,7 @@ namespace JsonApiDotNetCore.Repositories
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
 
             _targetedFields = targetedFields;
-            _dbContext = contextResolver.GetContext();
+            _dbContext = dbContextResolver.GetContext();
             _resourceGraph = resourceGraph;
             _resourceFactory = resourceFactory;
             _constraintProviders = constraintProviders;
@@ -93,9 +93,9 @@ namespace JsonApiDotNetCore.Repositories
 
             using (CodeTimingSessionManager.Current.Measure("Repository - Count resources"))
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
+                ResourceType resourceType = _resourceGraph.GetResourceType<TResource>();
 
-                var layer = new QueryLayer(resourceContext)
+                var layer = new QueryLayer(resourceType)
                 {
                     Filter = topFilter
                 };
@@ -142,8 +142,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 var nameFactory = new LambdaParameterNameFactory();
 
-                var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _resourceGraph,
-                    _dbContext.Model);
+                var builder = new QueryableBuilder(source.Expression, source.ElementType, typeof(Queryable), nameFactory, _resourceFactory, _dbContext.Model);
 
                 Expression expression = builder.ApplyQuery(layer);
 
@@ -297,8 +296,8 @@ namespace JsonApiDotNetCore.Repositories
 
             if (relationshipIsRequired && relationshipIsBeingCleared)
             {
-                string resourceType = _resourceGraph.GetResourceContext<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceType);
+                string resourceName = _resourceGraph.GetResourceType<TResource>().PublicName;
+                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId, resourceName);
             }
         }
 
@@ -335,7 +334,7 @@ namespace JsonApiDotNetCore.Repositories
 
             var resourceTracked = (TResource)_dbContext.GetTrackedOrAttach(placeholderResource);
 
-            foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceContext<TResource>().Relationships)
+            foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceType<TResource>().Relationships)
             {
                 // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
                 // entities into memory is required for successfully executing the selected deletion behavior.
@@ -593,10 +592,10 @@ namespace JsonApiDotNetCore.Repositories
     public class EntityFrameworkCoreRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+        public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
         }
     }

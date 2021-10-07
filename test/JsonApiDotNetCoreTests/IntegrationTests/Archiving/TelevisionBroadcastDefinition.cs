@@ -43,7 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                 if (IsReturningCollectionOfTelevisionBroadcasts() && !HasFilterOnArchivedAt(existingFilter))
                 {
-                    AttrAttribute archivedAtAttribute = ResourceContext.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
+                    AttrAttribute archivedAtAttribute = ResourceType.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());
@@ -64,7 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         {
             if (_request.IsCollection)
             {
-                if (ResourceContext.Equals(_request.PrimaryResource) || ResourceContext.Equals(_request.SecondaryResource))
+                if (ResourceType.Equals(_request.PrimaryResourceType) || ResourceType.Equals(_request.SecondaryResourceType))
                 {
                     return true;
                 }
@@ -90,7 +90,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
             foreach (IncludeElementExpression includeElement in includeElements)
             {
-                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType == ResourceContext.ResourceType)
+                if (includeElement.Relationship is HasManyAttribute && includeElement.Relationship.RightType.Equals(ResourceType))
                 {
                     return true;
                 }

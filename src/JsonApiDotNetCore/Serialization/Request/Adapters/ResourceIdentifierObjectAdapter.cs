@@ -19,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             ArgumentGuard.NotNull(requirements, nameof(requirements));
             ArgumentGuard.NotNull(state, nameof(state));
 
-            (IIdentifiable resource, ResourceContext _) = ConvertResourceIdentity(resourceIdentifierObject, requirements, state);
+            (IIdentifiable resource, _) = ConvertResourceIdentity(resourceIdentifierObject, requirements, state);
             return resource;
         }
     }

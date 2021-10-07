@@ -12,9 +12,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class SparseFieldTableExpression : QueryExpression
     {
-        public IImmutableDictionary<ResourceContext, SparseFieldSetExpression> Table { get; }
+        public IImmutableDictionary<ResourceType, SparseFieldSetExpression> Table { get; }
 
-        public SparseFieldTableExpression(IImmutableDictionary<ResourceContext, SparseFieldSetExpression> table)
+        public SparseFieldTableExpression(IImmutableDictionary<ResourceType, SparseFieldSetExpression> table)
         {
             ArgumentGuard.NotNullNorEmpty(table, nameof(table), "entries");
 
@@ -30,7 +30,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var builder = new StringBuilder();
 
-            foreach ((ResourceContext resource, SparseFieldSetExpression fields) in Table)
+            foreach ((ResourceType resource, SparseFieldSetExpression fields) in Table)
             {
                 if (builder.Length > 0)
                 {
@@ -67,9 +67,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             var hashCode = new HashCode();
 
-            foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in Table)
+            foreach ((ResourceType resourceType, SparseFieldSetExpression sparseFieldSet) in Table)
             {
-                hashCode.Add(resourceContext);
+                hashCode.Add(resourceType);
                 hashCode.Add(sparseFieldSet);
             }
 

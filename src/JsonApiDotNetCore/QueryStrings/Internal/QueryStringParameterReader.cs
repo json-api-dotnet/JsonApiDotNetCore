@@ -1,4 +1,3 @@
-using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -12,7 +11,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IResourceGraph _resourceGraph;
         private readonly bool _isCollectionRequest;
 
-        protected ResourceContext RequestResource { get; }
+        protected ResourceType RequestResourceType { get; }
         protected bool IsAtomicOperationsRequest { get; }
 
         protected QueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
@@ -22,21 +21,25 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             _resourceGraph = resourceGraph;
             _isCollectionRequest = request.IsCollection;
-            RequestResource = request.SecondaryResource ?? request.PrimaryResource;
+            RequestResourceType = request.SecondaryResourceType ?? request.PrimaryResourceType;
             IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
         }
 
-        protected ResourceContext GetResourceContextForScope(ResourceFieldChainExpression scope)
+        protected ResourceType GetResourceTypeForScope(ResourceFieldChainExpression scope)
         {
             if (scope == null)
             {
-                return RequestResource;
+                return RequestResourceType;
             }
 
             ResourceFieldAttribute lastField = scope.Fields[^1];
-            Type type = lastField is RelationshipAttribute relationship ? relationship.RightType : lastField.Property.PropertyType;
 
-            return _resourceGraph.GetResourceContext(type);
+            if (lastField is RelationshipAttribute relationship)
+            {
+                return relationship.RightType;
+            }
+
+            return _resourceGraph.GetResourceType(lastField.Property.PropertyType);
         }
 
         protected void AssertIsCollectionRequest()

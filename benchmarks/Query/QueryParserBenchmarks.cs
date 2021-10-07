@@ -36,7 +36,7 @@ namespace Benchmarks.Query
 
             var request = new JsonApiRequest
             {
-                PrimaryResource = resourceGraph.GetResourceContext(typeof(BenchmarkResource)),
+                PrimaryResourceType = resourceGraph.GetResourceType(typeof(BenchmarkResource)),
                 IsCollection = true
             };
 

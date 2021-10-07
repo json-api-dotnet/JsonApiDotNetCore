@@ -19,18 +19,18 @@ namespace JsonApiDotNetCore.Queries.Internal
         /// <summary>
         /// Gets the set of sparse fields to retrieve from the underlying data store. Returns an empty set to retrieve all fields.
         /// </summary>
-        IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceContext resourceContext);
+        IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForQuery(ResourceType resourceType);
 
         /// <summary>
         /// Gets the set of attributes to retrieve from the underlying data store for relationship endpoints. This always returns 'id', along with any additional
         /// attributes from resource definition callback.
         /// </summary>
-        IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext);
+        IImmutableSet<AttrAttribute> GetIdAttributeSetForRelationshipQuery(ResourceType resourceType);
 
         /// <summary>
         /// Gets the evaluated set of sparse fields to serialize into the response body.
         /// </summary>
-        IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceContext resourceContext);
+        IImmutableSet<ResourceFieldAttribute> GetSparseFieldSetForSerializer(ResourceType resourceType);
 
         /// <summary>
         /// Resets the cached results from resource definition callbacks.

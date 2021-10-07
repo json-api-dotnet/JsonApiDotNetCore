@@ -10,7 +10,7 @@ namespace JsonApiDotNetCore.Configuration
     /// Metadata about the shape of a JSON:API resource in the resource graph.
     /// </summary>
     [PublicAPI]
-    public sealed class ResourceContext
+    public sealed class ResourceType
     {
         private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPublicName = new();
         private readonly Dictionary<string, ResourceFieldAttribute> _fieldsByPropertyName = new();
@@ -23,12 +23,12 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// The CLR type of the resource.
         /// </summary>
-        public Type ResourceType { get; }
+        public Type ClrType { get; }
 
         /// <summary>
-        /// The identity type of the resource.
+        /// The CLR type of the resource identity.
         /// </summary>
-        public Type IdentityType { get; }
+        public Type IdentityClrType { get; }
 
         /// <summary>
         /// Exposed resource attributes and relationships. See https://jsonapi.org/format/#document-resource-object-fields.
@@ -78,28 +78,25 @@ namespace JsonApiDotNetCore.Configuration
         /// </remarks>
         public LinkTypes RelationshipLinks { get; }
 
-        public ResourceContext(string publicName, Type resourceType, Type identityType, IReadOnlyCollection<AttrAttribute> attributes,
-            IReadOnlyCollection<RelationshipAttribute> relationships, IReadOnlyCollection<EagerLoadAttribute> eagerLoads,
+        public ResourceType(string publicName, Type clrType, Type identityClrType, IReadOnlyCollection<AttrAttribute> attributes = null,
+            IReadOnlyCollection<RelationshipAttribute> relationships = null, IReadOnlyCollection<EagerLoadAttribute> eagerLoads = null,
             LinkTypes topLevelLinks = LinkTypes.NotConfigured, LinkTypes resourceLinks = LinkTypes.NotConfigured,
             LinkTypes relationshipLinks = LinkTypes.NotConfigured)
         {
             ArgumentGuard.NotNullNorEmpty(publicName, nameof(publicName));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-            ArgumentGuard.NotNull(identityType, nameof(identityType));
-            ArgumentGuard.NotNull(attributes, nameof(attributes));
-            ArgumentGuard.NotNull(relationships, nameof(relationships));
-            ArgumentGuard.NotNull(eagerLoads, nameof(eagerLoads));
+            ArgumentGuard.NotNull(clrType, nameof(clrType));
+            ArgumentGuard.NotNull(identityClrType, nameof(identityClrType));
 
             PublicName = publicName;
-            ResourceType = resourceType;
-            IdentityType = identityType;
-            Fields = attributes.Cast<ResourceFieldAttribute>().Concat(relationships).ToArray();
-            Attributes = attributes;
-            Relationships = relationships;
-            EagerLoads = eagerLoads;
+            ClrType = clrType;
+            IdentityClrType = identityClrType;
+            Attributes = attributes ?? Array.Empty<AttrAttribute>();
+            Relationships = relationships ?? Array.Empty<RelationshipAttribute>();
+            EagerLoads = eagerLoads ?? Array.Empty<EagerLoadAttribute>();
             TopLevelLinks = topLevelLinks;
             ResourceLinks = resourceLinks;
             RelationshipLinks = relationshipLinks;
+            Fields = Attributes.Cast<ResourceFieldAttribute>().Concat(Relationships).ToArray();
 
             foreach (ResourceFieldAttribute field in Fields)
             {
@@ -126,7 +123,7 @@ namespace JsonApiDotNetCore.Configuration
             AttrAttribute attribute = TryGetAttributeByPropertyName(propertyName);
 
             return attribute ??
-                throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ResourceType.Name}'.");
+                throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
         public AttrAttribute TryGetAttributeByPropertyName(string propertyName)
@@ -156,7 +153,7 @@ namespace JsonApiDotNetCore.Configuration
             RelationshipAttribute relationship = TryGetRelationshipByPropertyName(propertyName);
 
             return relationship ??
-                throw new InvalidOperationException($"Relationship for property '{propertyName}' does not exist on resource type '{ResourceType.Name}'.");
+                throw new InvalidOperationException($"Relationship for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
         public RelationshipAttribute TryGetRelationshipByPropertyName(string propertyName)
@@ -185,9 +182,9 @@ namespace JsonApiDotNetCore.Configuration
                 return false;
             }
 
-            var other = (ResourceContext)obj;
+            var other = (ResourceType)obj;
 
-            return PublicName == other.PublicName && ResourceType == other.ResourceType && IdentityType == other.IdentityType &&
+            return PublicName == other.PublicName && ClrType == other.ClrType && IdentityClrType == other.IdentityClrType &&
                 Attributes.SequenceEqual(other.Attributes) && Relationships.SequenceEqual(other.Relationships) && EagerLoads.SequenceEqual(other.EagerLoads) &&
                 TopLevelLinks == other.TopLevelLinks && ResourceLinks == other.ResourceLinks && RelationshipLinks == other.RelationshipLinks;
         }
@@ -197,8 +194,8 @@ namespace JsonApiDotNetCore.Configuration
             var hashCode = new HashCode();
 
             hashCode.Add(PublicName);
-            hashCode.Add(ResourceType);
-            hashCode.Add(IdentityType);
+            hashCode.Add(ClrType);
+            hashCode.Add(IdentityClrType);
 
             foreach (AttrAttribute attribute in Attributes)
             {

@@ -14,17 +14,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
     {
         private readonly ICreateService<TResource, TId> _service;
         private readonly ILocalIdTracker _localIdTracker;
-        private readonly IResourceGraph _resourceGraph;
 
-        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker, IResourceGraph resourceGraph)
+        public CreateProcessor(ICreateService<TResource, TId> service, ILocalIdTracker localIdTracker)
         {
             ArgumentGuard.NotNull(service, nameof(service));
             ArgumentGuard.NotNull(localIdTracker, nameof(localIdTracker));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
             _service = service;
             _localIdTracker = localIdTracker;
-            _resourceGraph = resourceGraph;
         }
 
         /// <inheritdoc />
@@ -37,9 +34,9 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
             if (operation.Resource.LocalId != null)
             {
                 string serverId = newResource != null ? newResource.StringId : operation.Resource.StringId;
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
+                ResourceType resourceType = operation.Request.PrimaryResourceType;
 
-                _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, serverId);
+                _localIdTracker.Assign(operation.Resource.LocalId, resourceType.PublicName, serverId);
             }
 
             return newResource == null ? null : operation.WithResource(newResource);

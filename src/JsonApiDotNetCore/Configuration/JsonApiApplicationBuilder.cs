@@ -135,8 +135,8 @@ namespace JsonApiDotNetCore.Configuration
 
                 foreach (Type dbContextType in dbContextTypes)
                 {
-                    Type contextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                    _services.AddScoped(typeof(IDbContextResolver), contextResolverType);
+                    Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                    _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
                 }
 
                 _services.AddScoped<IOperationsTransactionFactory, EntityFrameworkCoreTransactionFactory>();

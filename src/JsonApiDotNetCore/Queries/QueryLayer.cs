@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Queries
     [PublicAPI]
     public sealed class QueryLayer
     {
-        public ResourceContext ResourceContext { get; }
+        public ResourceType ResourceType { get; }
 
         public IncludeExpression Include { get; set; }
         public FilterExpression Filter { get; set; }
@@ -22,11 +22,11 @@ namespace JsonApiDotNetCore.Queries
         public PaginationExpression Pagination { get; set; }
         public IDictionary<ResourceFieldAttribute, QueryLayer> Projection { get; set; }
 
-        public QueryLayer(ResourceContext resourceContext)
+        public QueryLayer(ResourceType resourceType)
         {
-            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            ResourceContext = resourceContext;
+            ResourceType = resourceType;
         }
 
         public override string ToString()
@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Queries
 
         private static void WriteLayer(IndentingStringWriter writer, QueryLayer layer, string prefix = null)
         {
-            writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceContext.ResourceType.Name}>");
+            writer.WriteLine($"{prefix}{nameof(QueryLayer)}<{layer.ResourceType.ClrType.Name}>");
 
             using (writer.Indent())
             {

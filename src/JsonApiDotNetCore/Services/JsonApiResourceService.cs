@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Services
 
             if (_options.IncludeTotalResourceCount)
             {
-                FilterExpression topFilter = _queryLayerComposer.GetTopFilterFromConstraints(_request.PrimaryResource);
+                FilterExpression topFilter = _queryLayerComposer.GetTopFilterFromConstraints(_request.PrimaryResourceType);
                 _paginationContext.TotalResourceCount = await _repositoryAccessor.CountAsync<TResource>(topFilter, cancellationToken);
 
                 if (_paginationContext.TotalResourceCount == 0)
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.Services
                 }
             }
 
-            QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResource);
+            QueryLayer queryLayer = _queryLayerComposer.ComposeFromConstraints(_request.PrimaryResourceType);
             IReadOnlyCollection<TResource> resources = await _repositoryAccessor.GetAsync<TResource>(queryLayer, cancellationToken);
 
             if (queryLayer.Pagination?.PageSize != null && queryLayer.Pagination.PageSize.Value == resources.Count)
@@ -112,8 +112,10 @@ namespace JsonApiDotNetCore.Services
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResource);
-            QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
+            QueryLayer secondaryLayer = _queryLayerComposer.ComposeFromConstraints(_request.SecondaryResourceType);
+
+            QueryLayer primaryLayer =
+                _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
 
             IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
@@ -145,8 +147,10 @@ namespace JsonApiDotNetCore.Services
 
             AssertHasRelationship(_request.Relationship, relationshipName);
 
-            QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResource);
-            QueryLayer primaryLayer = _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResource, id, _request.Relationship);
+            QueryLayer secondaryLayer = _queryLayerComposer.ComposeSecondaryLayerForRelationship(_request.SecondaryResourceType);
+
+            QueryLayer primaryLayer =
+                _queryLayerComposer.WrapLayerForSecondaryEndpoint(secondaryLayer, _request.PrimaryResourceType, id, _request.Relationship);
 
             IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
 
@@ -190,7 +194,7 @@ namespace JsonApiDotNetCore.Services
 
                     if (existingResource != null)
                     {
-                        throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResource.PublicName);
+                        throw new ResourceAlreadyExistsException(resourceFromRequest.StringId, _request.PrimaryResourceType.PublicName);
                     }
                 }
 
@@ -236,8 +240,8 @@ namespace JsonApiDotNetCore.Services
         private async IAsyncEnumerable<MissingResourceInRelationship> GetMissingRightResourcesAsync(QueryLayer existingRightResourceIdsQueryLayer,
             RelationshipAttribute relationship, ICollection<IIdentifiable> rightResourceIds, [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            IReadOnlyCollection<IIdentifiable> existingResources = await _repositoryAccessor.GetAsync(
-                existingRightResourceIdsQueryLayer.ResourceContext.ResourceType, existingRightResourceIdsQueryLayer, cancellationToken);
+            IReadOnlyCollection<IIdentifiable> existingResources = await _repositoryAccessor.GetAsync(existingRightResourceIdsQueryLayer.ResourceType,
+                existingRightResourceIdsQueryLayer, cancellationToken);
 
             string[] existingResourceIds = existingResources.Select(resource => resource.StringId).ToArray();
 
@@ -245,7 +249,7 @@ namespace JsonApiDotNetCore.Services
             {
                 if (!existingResourceIds.Contains(rightResourceId.StringId))
                 {
-                    yield return new MissingResourceInRelationship(relationship.PublicName, existingRightResourceIdsQueryLayer.ResourceContext.PublicName,
+                    yield return new MissingResourceInRelationship(relationship.PublicName, existingRightResourceIdsQueryLayer.ResourceType.PublicName,
                         rightResourceId.StringId);
                 }
             }
@@ -456,7 +460,7 @@ namespace JsonApiDotNetCore.Services
 
         private async Task<TResource> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
         {
-            QueryLayer primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResource, fieldSelection);
+            QueryLayer primaryLayer = _queryLayerComposer.ComposeForGetById(id, _request.PrimaryResourceType, fieldSelection);
 
             IReadOnlyCollection<TResource> primaryResources = await _repositoryAccessor.GetAsync<TResource>(primaryLayer, cancellationToken);
             return primaryResources.SingleOrDefault();
@@ -464,7 +468,7 @@ namespace JsonApiDotNetCore.Services
 
         protected async Task<TResource> GetPrimaryResourceForUpdateAsync(TId id, CancellationToken cancellationToken)
         {
-            QueryLayer queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResource);
+            QueryLayer queryLayer = _queryLayerComposer.ComposeForUpdate(id, _request.PrimaryResourceType);
             var resource = await _repositoryAccessor.GetForUpdateAsync<TResource>(queryLayer, cancellationToken);
 
             AssertPrimaryResourceExists(resource);
@@ -476,7 +480,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (resource == null)
             {
-                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResource.PublicName);
+                throw new ResourceNotFoundException(_request.PrimaryId, _request.PrimaryResourceType.PublicName);
             }
         }
 
@@ -485,7 +489,7 @@ namespace JsonApiDotNetCore.Services
         {
             if (relationship == null)
             {
-                throw new RelationshipNotFoundException(name, _request.PrimaryResource.PublicName);
+                throw new RelationshipNotFoundException(name, _request.PrimaryResourceType.PublicName);
             }
         }
     }

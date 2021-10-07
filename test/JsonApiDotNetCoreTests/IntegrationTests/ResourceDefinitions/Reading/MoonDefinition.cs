@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 return existingIncludes;
             }
 
-            RelationshipAttribute orbitsAroundRelationship = ResourceContext.GetRelationshipByPropertyName(nameof(Moon.OrbitsAround));
+            RelationshipAttribute orbitsAroundRelationship = ResourceType.GetRelationshipByPropertyName(nameof(Moon.OrbitsAround));
 
             return existingIncludes.Add(new IncludeElementExpression(orbitsAroundRelationship));
         }

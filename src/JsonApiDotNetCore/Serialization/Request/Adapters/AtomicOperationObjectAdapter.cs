@@ -13,19 +13,16 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private readonly IResourceDataInOperationsRequestAdapter _resourceDataInOperationsRequestAdapter;
         private readonly IAtomicReferenceAdapter _atomicReferenceAdapter;
         private readonly IRelationshipDataAdapter _relationshipDataAdapter;
-        private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiOptions _options;
 
-        public AtomicOperationObjectAdapter(IResourceGraph resourceGraph, IJsonApiOptions options, IAtomicReferenceAdapter atomicReferenceAdapter,
+        public AtomicOperationObjectAdapter(IJsonApiOptions options, IAtomicReferenceAdapter atomicReferenceAdapter,
             IResourceDataInOperationsRequestAdapter resourceDataInOperationsRequestAdapter, IRelationshipDataAdapter relationshipDataAdapter)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(atomicReferenceAdapter, nameof(atomicReferenceAdapter));
             ArgumentGuard.NotNull(resourceDataInOperationsRequestAdapter, nameof(resourceDataInOperationsRequestAdapter));
             ArgumentGuard.NotNull(relationshipDataAdapter, nameof(relationshipDataAdapter));
 
-            _resourceGraph = resourceGraph;
             _options = options;
             _atomicReferenceAdapter = atomicReferenceAdapter;
             _resourceDataInOperationsRequestAdapter = resourceDataInOperationsRequestAdapter;
@@ -112,7 +109,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             {
                 requirements = new ResourceIdentityRequirements
                 {
-                    ResourceContext = refResult.ResourceContext,
+                    ResourceType = refResult.ResourceType,
                     IdConstraint = requirements.IdConstraint,
                     IdValue = refResult.Resource.StringId,
                     LidValue = refResult.Resource.LocalId,
@@ -120,7 +117,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
                 };
 
                 state.WritableRequest.PrimaryId = refResult.Resource.StringId;
-                state.WritableRequest.PrimaryResource = refResult.ResourceContext;
+                state.WritableRequest.PrimaryResourceType = refResult.ResourceType;
                 state.WritableRequest.Relationship = refResult.Relationship;
                 state.WritableRequest.IsCollection = refResult.Relationship is HasManyAttribute;
 
@@ -148,8 +145,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         {
             if (refResult.Relationship != null)
             {
-                ResourceContext resourceContextInData = _resourceGraph.GetResourceContext(refResult.Relationship.RightType);
-                state.WritableRequest.SecondaryResource = resourceContextInData;
+                state.WritableRequest.SecondaryResourceType = refResult.Relationship.RightType;
 
                 state.WritableTargetedFields.Relationships.Add(refResult.Relationship);
 

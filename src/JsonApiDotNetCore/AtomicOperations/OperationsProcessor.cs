@@ -119,7 +119,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                DeclareLocalId(operation.Resource);
+                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType);
             }
             else
             {
@@ -132,12 +132,11 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private void DeclareLocalId(IIdentifiable resource)
+        private void DeclareLocalId(IIdentifiable resource, ResourceType resourceType)
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
+                _localIdTracker.Declare(resource.LocalId, resourceType.PublicName);
             }
         }
 
@@ -145,8 +144,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
+                ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
+                resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceType.PublicName);
             }
         }
     }

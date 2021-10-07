@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             DocumentAdapter documentAdapter = CreateDocumentAdapter<ResourceWithVariousDataTypes>(resourceGraph => new JsonApiRequest
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResource = resourceGraph.GetResourceContext<ResourceWithVariousDataTypes>(),
+                PrimaryResourceType = resourceGraph.GetResourceType<ResourceWithVariousDataTypes>(),
                 WriteOperation = WriteOperationKind.CreateResource
             });
 
@@ -145,7 +145,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             DocumentAdapter documentAdapter = CreateDocumentAdapter<ResourceWithVariousDataTypes>(resourceGraph => new JsonApiRequest
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResource = resourceGraph.GetResourceContext<ResourceWithVariousDataTypes>(),
+                PrimaryResourceType = resourceGraph.GetResourceType<ResourceWithVariousDataTypes>(),
                 WriteOperation = WriteOperationKind.CreateResource
             });
 
@@ -254,14 +254,14 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             var targetedFields = new TargetedFields();
 
             var resourceIdentifierObjectAdapter = new ResourceIdentifierObjectAdapter(resourceGraph, resourceFactory);
-            var relationshipDataAdapter = new RelationshipDataAdapter(resourceGraph, resourceIdentifierObjectAdapter);
+            var relationshipDataAdapter = new RelationshipDataAdapter(resourceIdentifierObjectAdapter);
             var resourceObjectAdapter = new ResourceObjectAdapter(resourceGraph, resourceFactory, options, relationshipDataAdapter);
             var resourceDataAdapter = new ResourceDataAdapter(resourceDefinitionAccessor, resourceObjectAdapter);
 
             var atomicReferenceAdapter = new AtomicReferenceAdapter(resourceGraph, resourceFactory);
             var atomicOperationResourceDataAdapter = new ResourceDataInOperationsRequestAdapter(resourceDefinitionAccessor, resourceObjectAdapter);
 
-            var atomicOperationObjectAdapter = new AtomicOperationObjectAdapter(resourceGraph, options, atomicReferenceAdapter,
+            var atomicOperationObjectAdapter = new AtomicOperationObjectAdapter(options, atomicReferenceAdapter,
                 atomicOperationResourceDataAdapter, relationshipDataAdapter);
 
             var resourceDocumentAdapter = new DocumentInResourceOrRelationshipRequestAdapter(options, resourceDataAdapter, relationshipDataAdapter);

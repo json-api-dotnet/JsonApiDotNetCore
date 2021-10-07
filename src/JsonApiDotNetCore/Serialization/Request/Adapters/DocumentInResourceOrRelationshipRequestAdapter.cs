@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             var requirements = new ResourceIdentityRequirements
             {
-                ResourceContext = state.Request.PrimaryResource,
+                ResourceType = state.Request.PrimaryResourceType,
                 IdConstraint = idConstraint,
                 IdValue = state.Request.PrimaryId
             };

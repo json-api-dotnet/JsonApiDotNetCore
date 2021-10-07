@@ -22,21 +22,21 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             ArgumentGuard.NotNull(state, nameof(state));
 
             using IDisposable _ = state.Position.PushElement("ref");
-            (IIdentifiable resource, ResourceContext resourceContext) = ConvertResourceIdentity(atomicReference, requirements, state);
+            (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(atomicReference, requirements, state);
 
             RelationshipAttribute relationship = atomicReference.Relationship != null
-                ? ConvertRelationship(atomicReference.Relationship, resourceContext, state)
+                ? ConvertRelationship(atomicReference.Relationship, resourceType, state)
                 : null;
 
-            return new AtomicReferenceResult(resource, resourceContext, relationship);
+            return new AtomicReferenceResult(resource, resourceType, relationship);
         }
 
-        private RelationshipAttribute ConvertRelationship(string relationshipName, ResourceContext resourceContext, RequestAdapterState state)
+        private RelationshipAttribute ConvertRelationship(string relationshipName, ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("relationship");
-            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
+            RelationshipAttribute relationship = resourceType.TryGetRelationshipByPublicName(relationshipName);
 
-            AssertIsKnownRelationship(relationship, relationshipName, resourceContext, state);
+            AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
             AssertToManyInAddOrRemoveRelationship(relationship, state);
 
             return relationship;

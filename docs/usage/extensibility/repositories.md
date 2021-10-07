@@ -39,12 +39,12 @@ public class ArticleRepository : EntityFrameworkCoreRepository<Article>
     private readonly IAuthenticationService _authenticationService;
 
     public ArticleRepository(IAuthenticationService authenticationService,
-        ITargetedFields targetedFields, IDbContextResolver contextResolver,
+        ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
             resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
@@ -68,13 +68,13 @@ public class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TRe
     where TResource : class, IIdentifiable<int>
 {
     public DbContextARepository(ITargetedFields targetedFields,
-        DbContextResolver<DbContextA> contextResolver,
+        DbContextResolver<DbContextA> dbContextResolver,
     //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable<IQueryConstraintProvider> constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
             resourceFactory, constraintProviders, loggerFactory)
     {
     }

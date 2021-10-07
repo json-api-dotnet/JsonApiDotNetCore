@@ -66,10 +66,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("1(", ", expected.")]
         [InlineData("posts:-abc", "Digits expected.")]
         [InlineData("posts:-1", "Page number cannot be negative or zero.")]
-        [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource 'blogPosts'.")]
-        [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource 'comments'.")]
-        [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource 'blogPosts'.")]
-        [InlineData("something", "Relationship 'something' does not exist on resource 'blogs'.")]
+        [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource type 'blogPosts'.")]
+        [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource type 'comments'.")]
+        [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
+        [InlineData("something", "Relationship 'something' does not exist on resource type 'blogs'.")]
         public void Reader_Read_Page_Number_Fails(string parameterValue, string errorMessage)
         {
             // Act
@@ -99,10 +99,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("1(", ", expected.")]
         [InlineData("posts:-abc", "Digits expected.")]
         [InlineData("posts:-1", "Page size cannot be negative.")]
-        [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource 'blogPosts'.")]
-        [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource 'comments'.")]
-        [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource 'blogPosts'.")]
-        [InlineData("something", "Relationship 'something' does not exist on resource 'blogs'.")]
+        [InlineData("posts.id", "Relationship 'id' in 'posts.id' does not exist on resource type 'blogPosts'.")]
+        [InlineData("posts.comments.id", "Relationship 'id' in 'posts.comments.id' does not exist on resource type 'comments'.")]
+        [InlineData("posts.author", "Relationship 'author' in 'posts.author' must be a to-many relationship on resource type 'blogPosts'.")]
+        [InlineData("something", "Relationship 'something' does not exist on resource type 'blogs'.")]
         public void Reader_Read_Page_Size_Fails(string parameterValue, string errorMessage)
         {
             // Act

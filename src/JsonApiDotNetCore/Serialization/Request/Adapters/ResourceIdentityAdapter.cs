@@ -25,30 +25,30 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             _resourceFactory = resourceFactory;
         }
 
-        protected (IIdentifiable resource, ResourceContext resourceContext) ConvertResourceIdentity(IResourceIdentity identity,
+        protected (IIdentifiable resource, ResourceType resourceType) ConvertResourceIdentity(IResourceIdentity identity,
             ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
             ArgumentGuard.NotNull(identity, nameof(identity));
             ArgumentGuard.NotNull(requirements, nameof(requirements));
             ArgumentGuard.NotNull(state, nameof(state));
 
-            ResourceContext resourceContext = ConvertType(identity, requirements, state);
-            IIdentifiable resource = CreateResource(identity, requirements, resourceContext.ResourceType, state);
+            ResourceType resourceType = ConvertType(identity, requirements, state);
+            IIdentifiable resource = CreateResource(identity, requirements, resourceType.ClrType, state);
 
-            return (resource, resourceContext);
+            return (resource, resourceType);
         }
 
-        private ResourceContext ConvertType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
+        private ResourceType ConvertType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
             AssertHasType(identity, state);
 
             using IDisposable _ = state.Position.PushElement("type");
-            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(identity.Type);
+            ResourceType resourceType = _resourceGraph.TryGetResourceType(identity.Type);
 
-            AssertIsKnownResourceType(resourceContext, identity.Type, state);
-            AssertIsCompatibleResourceType(resourceContext, requirements.ResourceContext, requirements.RelationshipName, state);
+            AssertIsKnownResourceType(resourceType, identity.Type, state);
+            AssertIsCompatibleResourceType(resourceType, requirements.ResourceType, requirements.RelationshipName, state);
 
-            return resourceContext;
+            return resourceType;
         }
 
         private static void AssertHasType(IResourceIdentity identity, RequestAdapterState state)
@@ -59,17 +59,17 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertIsKnownResourceType(ResourceContext resourceContext, string typeName, RequestAdapterState state)
+        private static void AssertIsKnownResourceType(ResourceType resourceType, string typeName, RequestAdapterState state)
         {
-            if (resourceContext == null)
+            if (resourceType == null)
             {
                 throw new ModelConversionException(state.Position, "Unknown resource type found.", $"Resource type '{typeName}' does not exist.");
             }
         }
 
-        private static void AssertIsCompatibleResourceType(ResourceContext actual, ResourceContext expected, string relationshipName, RequestAdapterState state)
+        private static void AssertIsCompatibleResourceType(ResourceType actual, ResourceType expected, string relationshipName, RequestAdapterState state)
         {
-            if (expected != null && !expected.ResourceType.IsAssignableFrom(actual.ResourceType))
+            if (expected != null && !expected.ClrType.IsAssignableFrom(actual.ClrType))
             {
                 string message = relationshipName != null
                     ? $"Type '{actual.PublicName}' is incompatible with type '{expected.PublicName}' of relationship '{relationshipName}'."
@@ -79,7 +79,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceType,
+        private IIdentifiable CreateResource(IResourceIdentity identity, ResourceIdentityRequirements requirements, Type resourceClrType,
             RequestAdapterState state)
         {
             if (state.Request.Kind != EndpointKind.AtomicOperations)
@@ -101,7 +101,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             AssertSameIdValue(identity, requirements.IdValue, state);
             AssertSameLidValue(identity, requirements.LidValue, state);
 
-            IIdentifiable resource = _resourceFactory.CreateInstance(resourceType);
+            IIdentifiable resource = _resourceFactory.CreateInstance(resourceClrType);
             AssignStringId(identity, resource, state);
             resource.LocalId = identity.Lid;
             return resource;
@@ -194,13 +194,13 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        protected static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, ResourceContext resourceContext,
+        protected static void AssertIsKnownRelationship(RelationshipAttribute relationship, string relationshipName, ResourceType resourceType,
             RequestAdapterState state)
         {
             if (relationship == null)
             {
                 throw new ModelConversionException(state.Position, "Unknown relationship found.",
-                    $"Relationship '{relationshipName}' does not exist on resource type '{resourceContext.PublicName}'.");
+                    $"Relationship '{relationshipName}' does not exist on resource type '{resourceType.PublicName}'.");
             }
         }
 

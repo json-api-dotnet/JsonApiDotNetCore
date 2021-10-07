@@ -17,7 +17,7 @@ namespace JsonApiDotNetCore.Configuration
     {
         private readonly IJsonApiOptions _options;
         private readonly ILogger<ResourceGraphBuilder> _logger;
-        private readonly HashSet<ResourceContext> _resourceContexts = new();
+        private readonly HashSet<ResourceType> _resourceTypes = new();
         private readonly TypeLocator _typeLocator = new();
 
         public ResourceGraphBuilder(IJsonApiOptions options, ILoggerFactory loggerFactory)
@@ -34,18 +34,26 @@ namespace JsonApiDotNetCore.Configuration
         /// </summary>
         public IResourceGraph Build()
         {
-            return new ResourceGraph(_resourceContexts);
+            var resourceGraph = new ResourceGraph(_resourceTypes);
+
+            foreach (RelationshipAttribute relationship in _resourceTypes.SelectMany(resourceType => resourceType.Relationships))
+            {
+                relationship.LeftType = resourceGraph.GetResourceType(relationship.LeftClrType);
+                relationship.RightType = resourceGraph.GetResourceType(relationship.RightClrType);
+            }
+
+            return resourceGraph;
         }
 
         /// <summary>
-        /// Adds a JSON:API resource with <code>int</code> as the identifier type.
+        /// Adds a JSON:API resource with <code>int</code> as the identifier CLR type.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource model type.
+        /// The resource CLR type.
         /// </typeparam>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
-        /// applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
+        /// type name.
         /// </param>
         public ResourceGraphBuilder Add<TResource>(string publicName = null)
             where TResource : class, IIdentifiable<int>
@@ -57,14 +65,14 @@ namespace JsonApiDotNetCore.Configuration
         /// Adds a JSON:API resource.
         /// </summary>
         /// <typeparam name="TResource">
-        /// The resource model type.
+        /// The resource CLR type.
         /// </typeparam>
         /// <typeparam name="TId">
-        /// The resource model identifier type.
+        /// The resource identifier CLR type.
         /// </typeparam>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
-        /// applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
+        /// type name.
         /// </param>
         public ResourceGraphBuilder Add<TResource, TId>(string publicName = null)
             where TResource : class, IIdentifiable<TId>
@@ -75,60 +83,60 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Adds a JSON:API resource.
         /// </summary>
-        /// <param name="resourceType">
-        /// The resource model type.
+        /// <param name="resourceClrType">
+        /// The resource CLR type.
         /// </param>
-        /// <param name="idType">
-        /// The resource model identifier type.
+        /// <param name="idClrType">
+        /// The resource identifier CLR type.
         /// </param>
         /// <param name="publicName">
-        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the configured naming convention formatter will be
-        /// applied.
+        /// The name under which the resource is publicly exposed by the API. If nothing is specified, the naming convention is applied on the pluralized CLR
+        /// type name.
         /// </param>
-        public ResourceGraphBuilder Add(Type resourceType, Type idType = null, string publicName = null)
+        public ResourceGraphBuilder Add(Type resourceClrType, Type idClrType = null, string publicName = null)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            if (_resourceContexts.Any(resourceContext => resourceContext.ResourceType == resourceType))
+            if (_resourceTypes.Any(resourceType => resourceType.ClrType == resourceClrType))
             {
                 return this;
             }
 
-            if (resourceType.IsOrImplementsInterface(typeof(IIdentifiable)))
+            if (resourceClrType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
-                string effectivePublicName = publicName ?? FormatResourceName(resourceType);
-                Type effectiveIdType = idType ?? _typeLocator.TryGetIdType(resourceType);
+                string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
+                Type effectiveIdType = idClrType ?? _typeLocator.TryGetIdType(resourceClrType) ?? typeof(int);
 
-                ResourceContext resourceContext = CreateResourceContext(effectivePublicName, resourceType, effectiveIdType);
-                _resourceContexts.Add(resourceContext);
+                ResourceType resourceType = CreateResourceType(effectivePublicName, resourceClrType, effectiveIdType);
+                _resourceTypes.Add(resourceType);
             }
             else
             {
-                _logger.LogWarning($"Entity '{resourceType}' does not implement '{nameof(IIdentifiable)}'.");
+                _logger.LogWarning($"Entity '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'.");
             }
 
             return this;
         }
 
-        private ResourceContext CreateResourceContext(string publicName, Type resourceType, Type idType)
+        private ResourceType CreateResourceType(string publicName, Type resourceClrType, Type idClrType)
         {
-            IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceType);
-            IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceType);
-            IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceType);
+            IReadOnlyCollection<AttrAttribute> attributes = GetAttributes(resourceClrType);
+            IReadOnlyCollection<RelationshipAttribute> relationships = GetRelationships(resourceClrType);
+            IReadOnlyCollection<EagerLoadAttribute> eagerLoads = GetEagerLoads(resourceClrType);
 
-            var linksAttribute = (ResourceLinksAttribute)resourceType.GetCustomAttribute(typeof(ResourceLinksAttribute));
+            var linksAttribute = (ResourceLinksAttribute)resourceClrType.GetCustomAttribute(typeof(ResourceLinksAttribute));
 
             return linksAttribute == null
-                ? new ResourceContext(publicName, resourceType, idType, attributes, relationships, eagerLoads)
-                : new ResourceContext(publicName, resourceType, idType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
+                ? new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads)
+                : new ResourceType(publicName, resourceClrType, idClrType, attributes, relationships, eagerLoads, linksAttribute.TopLevelLinks,
                     linksAttribute.ResourceLinks, linksAttribute.RelationshipLinks);
         }
 
-        private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceType)
+        private IReadOnlyCollection<AttrAttribute> GetAttributes(Type resourceClrType)
         {
             var attributes = new List<AttrAttribute>();
 
-            foreach (PropertyInfo property in resourceType.GetProperties())
+            foreach (PropertyInfo property in resourceClrType.GetProperties())
             {
                 var attribute = (AttrAttribute)property.GetCustomAttribute(typeof(AttrAttribute));
 
@@ -167,27 +175,27 @@ namespace JsonApiDotNetCore.Configuration
             return attributes;
         }
 
-        private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceType)
+        private IReadOnlyCollection<RelationshipAttribute> GetRelationships(Type resourceClrType)
         {
-            var attributes = new List<RelationshipAttribute>();
-            PropertyInfo[] properties = resourceType.GetProperties();
+            var relationships = new List<RelationshipAttribute>();
+            PropertyInfo[] properties = resourceClrType.GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
-                var attribute = (RelationshipAttribute)property.GetCustomAttribute(typeof(RelationshipAttribute));
+                var relationship = (RelationshipAttribute)property.GetCustomAttribute(typeof(RelationshipAttribute));
 
-                if (attribute != null)
+                if (relationship != null)
                 {
-                    attribute.Property = property;
-                    attribute.PublicName ??= FormatPropertyName(property);
-                    attribute.LeftType = resourceType;
-                    attribute.RightType = GetRelationshipType(attribute, property);
+                    relationship.Property = property;
+                    relationship.PublicName ??= FormatPropertyName(property);
+                    relationship.LeftClrType = resourceClrType;
+                    relationship.RightClrType = GetRelationshipType(relationship, property);
 
-                    attributes.Add(attribute);
+                    relationships.Add(relationship);
                 }
             }
 
-            return attributes;
+            return relationships;
         }
 
         private Type GetRelationshipType(RelationshipAttribute relationship, PropertyInfo property)
@@ -198,12 +206,12 @@ namespace JsonApiDotNetCore.Configuration
             return relationship is HasOneAttribute ? property.PropertyType : property.PropertyType.GetGenericArguments()[0];
         }
 
-        private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceType, int recursionDepth = 0)
+        private IReadOnlyCollection<EagerLoadAttribute> GetEagerLoads(Type resourceClrType, int recursionDepth = 0)
         {
             AssertNoInfiniteRecursion(recursionDepth);
 
             var attributes = new List<EagerLoadAttribute>();
-            PropertyInfo[] properties = resourceType.GetProperties();
+            PropertyInfo[] properties = resourceClrType.GetProperties();
 
             foreach (PropertyInfo property in properties)
             {
@@ -241,10 +249,10 @@ namespace JsonApiDotNetCore.Configuration
             return interfaces.Length == 1 ? interfaces.Single().GenericTypeArguments[0] : type;
         }
 
-        private string FormatResourceName(Type resourceType)
+        private string FormatResourceName(Type resourceClrType)
         {
             var formatter = new ResourceNameFormatter(_options.SerializerOptions.PropertyNamingPolicy);
-            return formatter.FormatResourceName(resourceType);
+            return formatter.FormatResourceName(resourceClrType);
         }
 
         private string FormatPropertyName(PropertyInfo resourceProperty)

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         /// <summary>
         /// Validates and converts the specified <paramref name="resourceObject" />.
         /// </summary>
-        (IIdentifiable resource, ResourceContext resourceContext) Convert(ResourceObject resourceObject, ResourceIdentityRequirements requirements,
+        (IIdentifiable resource, ResourceType resourceType) Convert(ResourceObject resourceObject, ResourceIdentityRequirements requirements,
             RequestAdapterState state);
     }
 }

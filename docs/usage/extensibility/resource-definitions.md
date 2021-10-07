@@ -172,11 +172,8 @@ public class AccountDefinition : JsonApiResourceDefinition<Account>
 
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
-        var resourceContext = ResourceGraph.GetResourceContext<Account>();
-
-        var isSuspendedAttribute =
-            resourceContext.Attributes.Single(account =>
-                account.Property.Name == nameof(Account.IsSuspended));
+        var isSuspendedAttribute = ResourceType.Attributes.Single(account =>
+            account.Property.Name == nameof(Account.IsSuspended));
 
         var isNotSuspended = new ComparisonExpression(ComparisonOperator.Equals,
             new ResourceFieldChainExpression(isSuspendedAttribute),

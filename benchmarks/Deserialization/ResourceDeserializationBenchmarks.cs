@@ -143,7 +143,7 @@ namespace Benchmarks.Deserialization
             return new()
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResource = resourceGraph.GetResourceContext<ResourceA>(),
+                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>(),
                 WriteOperation = WriteOperationKind.CreateResource
             };
         }

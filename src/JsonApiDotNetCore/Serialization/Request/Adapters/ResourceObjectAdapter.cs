@@ -27,60 +27,59 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public (IIdentifiable resource, ResourceContext resourceContext) Convert(ResourceObject resourceObject, ResourceIdentityRequirements requirements,
+        public (IIdentifiable resource, ResourceType resourceType) Convert(ResourceObject resourceObject, ResourceIdentityRequirements requirements,
             RequestAdapterState state)
         {
             ArgumentGuard.NotNull(resourceObject, nameof(resourceObject));
             ArgumentGuard.NotNull(requirements, nameof(requirements));
             ArgumentGuard.NotNull(state, nameof(state));
 
-            (IIdentifiable resource, ResourceContext resourceContext) = ConvertResourceIdentity(resourceObject, requirements, state);
+            (IIdentifiable resource, ResourceType resourceType) = ConvertResourceIdentity(resourceObject, requirements, state);
 
-            ConvertAttributes(resourceObject.Attributes, resource, resourceContext, state);
-            ConvertRelationships(resourceObject.Relationships, resource, resourceContext, state);
+            ConvertAttributes(resourceObject.Attributes, resource, resourceType, state);
+            ConvertRelationships(resourceObject.Relationships, resource, resourceType, state);
 
-            return (resource, resourceContext);
+            return (resource, resourceType);
         }
 
-        private void ConvertAttributes(IDictionary<string, object> resourceObjectAttributes, IIdentifiable resource, ResourceContext resourceContext,
+        private void ConvertAttributes(IDictionary<string, object> resourceObjectAttributes, IIdentifiable resource, ResourceType resourceType,
             RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("attributes");
 
             foreach ((string attributeName, object attributeValue) in resourceObjectAttributes.EmptyIfNull())
             {
-                ConvertAttribute(resource, attributeName, attributeValue, resourceContext, state);
+                ConvertAttribute(resource, attributeName, attributeValue, resourceType, state);
             }
         }
 
-        private void ConvertAttribute(IIdentifiable resource, string attributeName, object attributeValue, ResourceContext resourceContext,
-            RequestAdapterState state)
+        private void ConvertAttribute(IIdentifiable resource, string attributeName, object attributeValue, ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(attributeName);
-            AttrAttribute attr = resourceContext.TryGetAttributeByPublicName(attributeName);
+            AttrAttribute attr = resourceType.TryGetAttributeByPublicName(attributeName);
 
             if (attr == null && _options.AllowUnknownFieldsInRequestBody)
             {
                 return;
             }
 
-            AssertIsKnownAttribute(attr, attributeName, resourceContext, state);
+            AssertIsKnownAttribute(attr, attributeName, resourceType, state);
             AssertNoInvalidAttribute(attributeValue, state);
-            AssertNoBlockedCreate(attr, resourceContext, state);
-            AssertNoBlockedChange(attr, resourceContext, state);
-            AssertNotReadOnly(attr, resourceContext, state);
+            AssertNoBlockedCreate(attr, resourceType, state);
+            AssertNoBlockedChange(attr, resourceType, state);
+            AssertNotReadOnly(attr, resourceType, state);
 
             attr!.SetValue(resource, attributeValue);
             state.WritableTargetedFields.Attributes.Add(attr);
         }
 
         [AssertionMethod]
-        private static void AssertIsKnownAttribute(AttrAttribute attr, string attributeName, ResourceContext resourceContext, RequestAdapterState state)
+        private static void AssertIsKnownAttribute(AttrAttribute attr, string attributeName, ResourceType resourceType, RequestAdapterState state)
         {
             if (attr == null)
             {
                 throw new ModelConversionException(state.Position, "Unknown attribute found.",
-                    $"Attribute '{attributeName}' does not exist on resource type '{resourceContext.PublicName}'.");
+                    $"Attribute '{attributeName}' does not exist on resource type '{resourceType.PublicName}'.");
             }
         }
 
@@ -100,56 +99,56 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertNoBlockedCreate(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
+        private static void AssertNoBlockedCreate(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
         {
             if (state.Request.WriteOperation == WriteOperationKind.CreateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowCreate))
             {
                 throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when creating resource.",
-                    $"The attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' cannot be assigned to.");
+                    $"The attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' cannot be assigned to.");
             }
         }
 
-        private static void AssertNoBlockedChange(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
+        private static void AssertNoBlockedChange(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
         {
             if (state.Request.WriteOperation == WriteOperationKind.UpdateResource && !attr.Capabilities.HasFlag(AttrCapabilities.AllowChange))
             {
                 throw new ModelConversionException(state.Position, "Attribute value cannot be assigned when updating resource.",
-                    $"The attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' cannot be assigned to.");
+                    $"The attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' cannot be assigned to.");
             }
         }
 
-        private static void AssertNotReadOnly(AttrAttribute attr, ResourceContext resourceContext, RequestAdapterState state)
+        private static void AssertNotReadOnly(AttrAttribute attr, ResourceType resourceType, RequestAdapterState state)
         {
             if (attr.Property.SetMethod == null)
             {
                 throw new ModelConversionException(state.Position, "Attribute is read-only.",
-                    $"Attribute '{attr.PublicName}' on resource type '{resourceContext.PublicName}' is read-only.");
+                    $"Attribute '{attr.PublicName}' on resource type '{resourceType.PublicName}' is read-only.");
             }
         }
 
         private void ConvertRelationships(IDictionary<string, RelationshipObject> resourceObjectRelationships, IIdentifiable resource,
-            ResourceContext resourceContext, RequestAdapterState state)
+            ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("relationships");
 
             foreach ((string relationshipName, RelationshipObject relationshipObject) in resourceObjectRelationships.EmptyIfNull())
             {
-                ConvertRelationship(relationshipName, relationshipObject.Data, resource, resourceContext, state);
+                ConvertRelationship(relationshipName, relationshipObject.Data, resource, resourceType, state);
             }
         }
 
         private void ConvertRelationship(string relationshipName, SingleOrManyData<ResourceIdentifierObject> relationshipData, IIdentifiable resource,
-            ResourceContext resourceContext, RequestAdapterState state)
+            ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(relationshipName);
-            RelationshipAttribute relationship = resourceContext.TryGetRelationshipByPublicName(relationshipName);
+            RelationshipAttribute relationship = resourceType.TryGetRelationshipByPublicName(relationshipName);
 
             if (relationship == null && _options.AllowUnknownFieldsInRequestBody)
             {
                 return;
             }
 
-            AssertIsKnownRelationship(relationship, relationshipName, resourceContext, state);
+            AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
 
             object rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
 

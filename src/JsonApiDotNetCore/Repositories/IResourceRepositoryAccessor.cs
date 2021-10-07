@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources;
@@ -22,7 +22,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync" /> for the specified resource type.
         /// </summary>
-        Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer layer, CancellationToken cancellationToken);
 
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.CountAsync" /> for the specified resource type.

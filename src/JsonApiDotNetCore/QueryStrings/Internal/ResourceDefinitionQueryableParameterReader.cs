@@ -56,8 +56,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private object GetQueryableHandler(string parameterName)
         {
-            Type resourceType = (_request.SecondaryResource ?? _request.PrimaryResource).ResourceType;
-            object handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceType, parameterName);
+            Type resourceClrType = (_request.SecondaryResourceType ?? _request.PrimaryResourceType).ClrType;
+            object handler = _resourceDefinitionAccessor.GetQueryableHandlerForQueryStringParameter(resourceClrType, parameterName);
 
             if (handler != null && _request.Kind != EndpointKind.Primary)
             {

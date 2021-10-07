@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Creates a new resource object instance.
         /// </summary>
-        public IIdentifiable CreateInstance(Type resourceType);
+        public IIdentifiable CreateInstance(Type resourceClrType);
 
         /// <summary>
         /// Creates a new resource object instance.
@@ -22,6 +22,6 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// Returns an expression tree that represents creating a new resource object instance.
         /// </summary>
-        public NewExpression CreateNewExpression(Type resourceType);
+        public NewExpression CreateNewExpression(Type resourceClrType);
     }
 }

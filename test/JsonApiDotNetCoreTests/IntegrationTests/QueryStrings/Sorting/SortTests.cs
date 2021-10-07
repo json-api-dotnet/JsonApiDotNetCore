@@ -467,7 +467,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
             error.Source.Parameter.Should().Be($"sort[{Unknown.Relationship}]");
         }
 
@@ -488,7 +488,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
             error.Source.Parameter.Should().Be($"sort[posts.{Unknown.Relationship}]");
         }
 

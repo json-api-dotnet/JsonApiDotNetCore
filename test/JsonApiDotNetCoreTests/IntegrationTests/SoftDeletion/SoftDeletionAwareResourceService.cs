@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
         public override async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
-            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType)))
+            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
                 await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
             }
@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
         public override async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
-            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType)))
+            if (_targetedFields.Relationships.Any(relationship => IsSoftDeletable(relationship.RightType.ClrType)))
             {
                 await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
             }
@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
         public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
         {
-            if (IsSoftDeletable(_request.Relationship.RightType))
+            if (IsSoftDeletable(_request.Relationship.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightValue, cancellationToken);
             }
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                 _ = await GetPrimaryResourceByIdAsync(leftId, TopFieldSelection.OnlyIdAttribute, cancellationToken);
             }
 
-            if (IsSoftDeletable(_request.Relationship.RightType))
+            if (IsSoftDeletable(_request.Relationship.RightType.ClrType))
             {
                 await AssertRightResourcesExistAsync(rightResourceIds, cancellationToken);
             }
@@ -107,9 +107,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             await _repositoryAccessor.UpdateAsync(resourceFromDatabase, resourceFromDatabase, cancellationToken);
         }
 
-        private static bool IsSoftDeletable(Type resourceType)
+        private static bool IsSoftDeletable(Type resourceClrType)
         {
-            return typeof(ISoftDeletable).IsAssignableFrom(resourceType);
+            return typeof(ISoftDeletable).IsAssignableFrom(resourceClrType);
         }
     }
 

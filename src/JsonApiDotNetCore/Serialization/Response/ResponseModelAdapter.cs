@@ -23,7 +23,6 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private readonly IJsonApiRequest _request;
         private readonly IJsonApiOptions _options;
-        private readonly IResourceGraph _resourceGraph;
         private readonly ILinkBuilder _linkBuilder;
         private readonly IMetaBuilder _metaBuilder;
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
@@ -31,13 +30,12 @@ namespace JsonApiDotNetCore.Serialization.Response
         private readonly IRequestQueryStringAccessor _requestQueryStringAccessor;
         private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
-        public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, IResourceGraph resourceGraph, ILinkBuilder linkBuilder,
-            IMetaBuilder metaBuilder, IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache,
-            ISparseFieldSetCache sparseFieldSetCache, IRequestQueryStringAccessor requestQueryStringAccessor)
+        public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, ILinkBuilder linkBuilder, IMetaBuilder metaBuilder,
+            IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
+            IRequestQueryStringAccessor requestQueryStringAccessor)
         {
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(options, nameof(options));
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(linkBuilder, nameof(linkBuilder));
             ArgumentGuard.NotNull(metaBuilder, nameof(metaBuilder));
             ArgumentGuard.NotNull(resourceDefinitionAccessor, nameof(resourceDefinitionAccessor));
@@ -47,7 +45,6 @@ namespace JsonApiDotNetCore.Serialization.Response
 
             _request = request;
             _options = options;
-            _resourceGraph = resourceGraph;
             _linkBuilder = linkBuilder;
             _metaBuilder = metaBuilder;
             _resourceDefinitionAccessor = resourceDefinitionAccessor;
@@ -67,17 +64,18 @@ namespace JsonApiDotNetCore.Serialization.Response
             IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
             var includedCollection = new IncludedCollection();
+            ResourceType resourceType = _request.SecondaryResourceType ?? _request.PrimaryResourceType;
 
             if (model is IEnumerable<IIdentifiable> resources)
             {
-                IEnumerable<ResourceObject> resourceObjects =
-                    resources.Select(resource => ConvertResource(resource, _request.Kind, includeElements, includedCollection, false));
+                IEnumerable<ResourceObject> resourceObjects = resources.Select(resource =>
+                    ConvertResource(resource, resourceType, _request.Kind, includeElements, includedCollection, false));
 
                 document.Data = new SingleOrManyData<ResourceObject>(resourceObjects);
             }
             else if (model is IIdentifiable resource)
             {
-                ResourceObject resourceObject = ConvertResource(resource, _request.Kind, includeElements, includedCollection, false);
+                ResourceObject resourceObject = ConvertResource(resource, resourceType, _request.Kind, includeElements, includedCollection, false);
                 document.Data = new SingleOrManyData<ResourceObject>(resourceObject);
             }
             else if (model == null)
@@ -119,7 +117,8 @@ namespace JsonApiDotNetCore.Serialization.Response
             {
                 _request.CopyFrom(operation.Request);
 
-                resourceObject = ConvertResource(operation.Resource, operation.Request.Kind, includeElements, includedCollection, false);
+                ResourceType resourceType = operation.Request.SecondaryResourceType ?? operation.Request.PrimaryResourceType;
+                resourceObject = ConvertResource(operation.Resource, resourceType, operation.Request.Kind, includeElements, includedCollection, false);
 
                 _sparseFieldSetCache.Reset();
             }
@@ -130,17 +129,16 @@ namespace JsonApiDotNetCore.Serialization.Response
             };
         }
 
-        private ResourceObject ConvertResource(IIdentifiable resource, EndpointKind requestKind, IImmutableSet<IncludeElementExpression> includeElements,
-            IncludedCollection includedCollection, bool isInclude)
+        private ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind requestKind,
+            IImmutableSet<IncludeElementExpression> includeElements, IncludedCollection includedCollection, bool isInclude)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
             IImmutableSet<ResourceFieldAttribute> fieldSet = null;
 
             if (requestKind != EndpointKind.Relationship)
             {
                 _resourceDefinitionAccessor.OnSerialize(resource);
 
-                fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceContext);
+                fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
             }
 
             var resourceObject = new ResourceObject();
@@ -152,24 +150,23 @@ namespace JsonApiDotNetCore.Serialization.Response
 
             bool isRelationship = requestKind == EndpointKind.Relationship;
 
-            resourceObject.Type = resourceContext.PublicName;
+            resourceObject.Type = resourceType.PublicName;
             resourceObject.Id = resource.StringId;
-            resourceObject.Attributes = ConvertAttributes(resource, resourceContext, fieldSet);
-            resourceObject.Relationships = ConvertRelationships(resource, resourceContext, fieldSet, requestKind, includeElements, includedCollection);
-            resourceObject.Links = isRelationship ? null : _linkBuilder.GetResourceLinks(resourceContext.PublicName, resource.StringId);
-            resourceObject.Meta = isRelationship ? null : _resourceDefinitionAccessor.GetMeta(resource.GetType(), resource);
+            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
+            resourceObject.Relationships = ConvertRelationships(resource, resourceType, fieldSet, requestKind, includeElements, includedCollection);
+            resourceObject.Links = isRelationship ? null : _linkBuilder.GetResourceLinks(resourceType, resource.StringId);
+            resourceObject.Meta = isRelationship ? null : _resourceDefinitionAccessor.GetMeta(resourceType, resource);
 
             return resourceObject;
         }
 
-        private IDictionary<string, object> ConvertAttributes(IIdentifiable resource, ResourceContext resourceContext,
-            IImmutableSet<ResourceFieldAttribute> fieldSet)
+        private IDictionary<string, object> ConvertAttributes(IIdentifiable resource, ResourceType resourceType, IImmutableSet<ResourceFieldAttribute> fieldSet)
         {
             if (fieldSet != null)
             {
-                var attrMap = new Dictionary<string, object>(resourceContext.Attributes.Count);
+                var attrMap = new Dictionary<string, object>(resourceType.Attributes.Count);
 
-                foreach (AttrAttribute attr in resourceContext.Attributes)
+                foreach (AttrAttribute attr in resourceType.Attributes)
                 {
                     if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable.Id))
                     {
@@ -201,15 +198,15 @@ namespace JsonApiDotNetCore.Serialization.Response
             return null;
         }
 
-        private IDictionary<string, RelationshipObject> ConvertRelationships(IIdentifiable resource, ResourceContext resourceContext,
+        private IDictionary<string, RelationshipObject> ConvertRelationships(IIdentifiable resource, ResourceType resourceType,
             IImmutableSet<ResourceFieldAttribute> fieldSet, EndpointKind requestKind, IImmutableSet<IncludeElementExpression> includeElements,
             IncludedCollection includedCollection)
         {
             if (fieldSet != null)
             {
-                var relationshipMap = new Dictionary<string, RelationshipObject>(resourceContext.Relationships.Count);
+                var relationshipMap = new Dictionary<string, RelationshipObject>(resourceType.Relationships.Count);
 
-                foreach (RelationshipAttribute relationship in resourceContext.Relationships)
+                foreach (RelationshipAttribute relationship in resourceType.Relationships)
                 {
                     IncludeElementExpression includeElement = GetFirstOrDefault(includeElements, relationship,
                         (element, nextRelationship) => element.Relationship.Equals(nextRelationship));
@@ -263,13 +260,15 @@ namespace JsonApiDotNetCore.Serialization.Response
                 {
                     var resourceIdentifierObject = new ResourceIdentifierObject
                     {
-                        Type = _resourceGraph.GetResourceContext(rightResource.GetType()).PublicName,
+                        Type = relationship.RightType.PublicName,
                         Id = rightResource.StringId
                     };
 
                     resourceIdentifierObjects.Add(resourceIdentifierObject);
 
-                    ResourceObject includeResource = ConvertResource(rightResource, requestKind, includeElement.Children, includedCollection, true);
+                    ResourceObject includeResource = ConvertResource(rightResource, relationship.RightType, requestKind, includeElement.Children,
+                        includedCollection, true);
+
                     includedCollection.AddOrUpdate(rightResource, includeResource);
                 }
 

@@ -34,10 +34,10 @@ namespace UnitTests.Extensions
 
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
-            ResourceContext resourceContext = resourceGraph.GetResourceContext<Person>();
+            ResourceType personType = resourceGraph.GetResourceType<Person>();
 
             // Assert
-            Assert.Equal("people", resourceContext.PublicName);
+            Assert.Equal("people", personType.PublicName);
         }
 
         [Fact]
@@ -174,8 +174,8 @@ namespace UnitTests.Extensions
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
 
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("intResources", resourceContext.PublicName);
+            ResourceType intResourceType = resourceGraph.GetResourceType(typeof(IntResource));
+            Assert.Equal("intResources", intResourceType.PublicName);
         }
 
         private sealed class IntResource : Identifiable

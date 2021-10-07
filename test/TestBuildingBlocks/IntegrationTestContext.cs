@@ -113,7 +113,7 @@ namespace TestBuildingBlocks
 
         public void Dispose()
         {
-            RunOnDatabaseAsync(async context => await context.Database.EnsureDeletedAsync()).Wait();
+            RunOnDatabaseAsync(async dbContext => await dbContext.Database.EnsureDeletedAsync()).Wait();
 
             Factory.Dispose();
         }

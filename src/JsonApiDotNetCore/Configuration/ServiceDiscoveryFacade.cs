@@ -137,14 +137,14 @@ namespace JsonApiDotNetCore.Configuration
 
             foreach (Type dbContextType in dbContextTypes)
             {
-                Type resolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
-                _services.AddScoped(typeof(IDbContextResolver), resolverType);
+                Type dbContextResolverType = typeof(DbContextResolver<>).MakeGenericType(dbContextType);
+                _services.AddScoped(typeof(IDbContextResolver), dbContextResolverType);
             }
         }
 
         private void AddResource(ResourceDescriptor resourceDescriptor)
         {
-            _resourceGraphBuilder.Add(resourceDescriptor.ResourceType, resourceDescriptor.IdType);
+            _resourceGraphBuilder.Add(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
         }
 
         private void AddServices(Assembly assembly, ResourceDescriptor resourceDescriptor)
@@ -174,8 +174,8 @@ namespace JsonApiDotNetCore.Configuration
         private void RegisterImplementations(Assembly assembly, Type interfaceType, ResourceDescriptor resourceDescriptor)
         {
             Type[] genericArguments = interfaceType.GetTypeInfo().GenericTypeParameters.Length == 2
-                ? ArrayFactory.Create(resourceDescriptor.ResourceType, resourceDescriptor.IdType)
-                : ArrayFactory.Create(resourceDescriptor.ResourceType);
+                ? ArrayFactory.Create(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType)
+                : ArrayFactory.Create(resourceDescriptor.ResourceClrType);
 
             (Type implementation, Type registrationInterface)? result =
                 _typeLocator.GetGenericInterfaceImplementation(assembly, interfaceType, genericArguments);

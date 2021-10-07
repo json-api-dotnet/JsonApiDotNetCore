@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(Type resourceType, QueryLayer layer, CancellationToken cancellationToken)
+        public async Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer layer, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -122,13 +122,17 @@ namespace JsonApiDotNetCore.Repositories
             await repository.RemoveFromToManyRelationshipAsync(leftResource, rightResourceIds, cancellationToken);
         }
 
-        protected virtual object ResolveReadRepository(Type resourceType)
+        protected object ResolveReadRepository(Type resourceClrType)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+            return ResolveReadRepository(resourceType);
+        }
 
-            if (resourceContext.IdentityType == typeof(int))
+        protected virtual object ResolveReadRepository(ResourceType resourceType)
+        {
+            if (resourceType.IdentityClrType == typeof(int))
             {
-                Type intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceContext.ResourceType);
+                Type intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceType.ClrType);
                 object intRepository = _serviceProvider.GetService(intRepositoryType);
 
                 if (intRepository != null)
@@ -137,20 +141,20 @@ namespace JsonApiDotNetCore.Repositories
                 }
             }
 
-            Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
 
-        private object GetWriteRepository(Type resourceType)
+        private object GetWriteRepository(Type resourceClrType)
         {
-            object writeRepository = ResolveWriteRepository(resourceType);
+            object writeRepository = ResolveWriteRepository(resourceClrType);
 
             if (_request.TransactionId != null)
             {
                 if (writeRepository is not IRepositorySupportsTransaction repository)
                 {
-                    ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
-                    throw new MissingTransactionSupportException(resourceContext.PublicName);
+                    ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
+                    throw new MissingTransactionSupportException(resourceType.PublicName);
                 }
 
                 if (repository.TransactionId != _request.TransactionId)
@@ -162,13 +166,13 @@ namespace JsonApiDotNetCore.Repositories
             return writeRepository;
         }
 
-        protected virtual object ResolveWriteRepository(Type resourceType)
+        protected virtual object ResolveWriteRepository(Type resourceClrType)
         {
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(resourceType);
+            ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
 
-            if (resourceContext.IdentityType == typeof(int))
+            if (resourceType.IdentityClrType == typeof(int))
             {
-                Type intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceContext.ResourceType);
+                Type intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceType.ClrType);
                 object intRepository = _serviceProvider.GetService(intRepositoryType);
 
                 if (intRepository != null)
@@ -177,7 +181,7 @@ namespace JsonApiDotNetCore.Repositories
                 }
             }
 
-            Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
     }

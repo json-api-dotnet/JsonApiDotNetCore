@@ -25,10 +25,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
         public CarExpressionRewriter(IResourceGraph resourceGraph)
         {
-            ResourceContext carResourceContext = resourceGraph.GetResourceContext<Car>();
+            ResourceType carType = resourceGraph.GetResourceType<Car>();
 
-            _regionIdAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.RegionId));
-            _licensePlateAttribute = carResourceContext.GetAttributeByPropertyName(nameof(Car.LicensePlate));
+            _regionIdAttribute = carType.GetAttributeByPropertyName(nameof(Car.RegionId));
+            _licensePlateAttribute = carType.GetAttributeByPropertyName(nameof(Car.LicensePlate));
         }
 
         public override QueryExpression VisitComparison(ComparisonExpression expression, object argument)

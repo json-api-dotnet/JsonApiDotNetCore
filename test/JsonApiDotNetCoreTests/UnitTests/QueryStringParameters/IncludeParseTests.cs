@@ -56,9 +56,9 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
         [InlineData("includes", ",", "Relationship name expected.")]
         [InlineData("includes", "posts,", "Relationship name expected.")]
         [InlineData("includes", "posts[", ", expected.")]
-        [InlineData("includes", "title", "Relationship 'title' does not exist on resource 'blogs'.")]
+        [InlineData("includes", "title", "Relationship 'title' does not exist on resource type 'blogs'.")]
         [InlineData("includes", "posts.comments.publishTime,",
-            "Relationship 'publishTime' in 'posts.comments.publishTime' does not exist on resource 'comments'.")]
+            "Relationship 'publishTime' in 'posts.comments.publishTime' does not exist on resource type 'comments'.")]
         public void Reader_Read_Fails(string parameterName, string parameterValue, string errorMessage)
         {
             // Act

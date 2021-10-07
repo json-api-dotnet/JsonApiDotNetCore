@@ -55,8 +55,8 @@ namespace Benchmarks.Serialization
             var sparseFieldSetCache = new SparseFieldSetCache(constraintProviders, resourceDefinitionAccessor);
             var requestQueryStringAccessor = new FakeRequestQueryStringAccessor();
 
-            ResponseModelAdapter = new ResponseModelAdapter(request, options, ResourceGraph, linkBuilder, metaBuilder, resourceDefinitionAccessor,
-                evaluatedIncludeCache, sparseFieldSetCache, requestQueryStringAccessor);
+            ResponseModelAdapter = new ResponseModelAdapter(request, options, linkBuilder, metaBuilder, resourceDefinitionAccessor, evaluatedIncludeCache,
+                sparseFieldSetCache, requestQueryStringAccessor);
         }
 
         protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
@@ -129,37 +129,37 @@ namespace Benchmarks.Serialization
 
         private sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
         {
-            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(Type resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(ResourceType resourceType, IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 return existingIncludes;
             }
 
-            public FilterExpression OnApplyFilter(Type resourceType, FilterExpression existingFilter)
+            public FilterExpression OnApplyFilter(ResourceType resourceType, FilterExpression existingFilter)
             {
                 return existingFilter;
             }
 
-            public SortExpression OnApplySort(Type resourceType, SortExpression existingSort)
+            public SortExpression OnApplySort(ResourceType resourceType, SortExpression existingSort)
             {
                 return existingSort;
             }
 
-            public PaginationExpression OnApplyPagination(Type resourceType, PaginationExpression existingPagination)
+            public PaginationExpression OnApplyPagination(ResourceType resourceType, PaginationExpression existingPagination)
             {
                 return existingPagination;
             }
 
-            public SparseFieldSetExpression OnApplySparseFieldSet(Type resourceType, SparseFieldSetExpression existingSparseFieldSet)
+            public SparseFieldSetExpression OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression existingSparseFieldSet)
             {
                 return existingSparseFieldSet;
             }
 
-            public object GetQueryableHandlerForQueryStringParameter(Type resourceType, string parameterName)
+            public object GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
             {
                 return null;
             }
 
-            public IDictionary<string, object> GetMeta(Type resourceType, IIdentifiable resourceInstance)
+            public IDictionary<string, object> GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
             {
                 return null;
             }
@@ -223,15 +223,15 @@ namespace Benchmarks.Serialization
         {
             public TopLevelLinks GetTopLevelLinks()
             {
-                return new TopLevelLinks
+                return new()
                 {
                     Self = "TopLevel:Self"
                 };
             }
 
-            public ResourceLinks GetResourceLinks(string resourceName, string id)
+            public ResourceLinks GetResourceLinks(ResourceType resourceType, string id)
             {
-                return new ResourceLinks
+                return new()
                 {
                     Self = "Resource:Self"
                 };
@@ -239,7 +239,7 @@ namespace Benchmarks.Serialization
 
             public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
             {
-                return new RelationshipLinks
+                return new()
                 {
                     Self = "Relationship:Self",
                     Related = "Relationship:Related"

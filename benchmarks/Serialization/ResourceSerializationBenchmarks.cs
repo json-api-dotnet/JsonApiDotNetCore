@@ -113,21 +113,21 @@ namespace Benchmarks.Serialization
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new JsonApiRequest
+            return new()
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResource = resourceGraph.GetResourceContext<ResourceA>()
+                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>()
             };
         }
 
         protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
         {
-            ResourceContext resourceContext = resourceGraph.GetResourceContext<ResourceA>();
+            ResourceType resourceAType = resourceGraph.GetResourceType<ResourceA>();
 
-            RelationshipAttribute single2 = resourceContext.GetRelationshipByPropertyName(nameof(ResourceA.Single2));
-            RelationshipAttribute single3 = resourceContext.GetRelationshipByPropertyName(nameof(ResourceA.Single3));
-            RelationshipAttribute multi4 = resourceContext.GetRelationshipByPropertyName(nameof(ResourceA.Multi4));
-            RelationshipAttribute multi5 = resourceContext.GetRelationshipByPropertyName(nameof(ResourceA.Multi5));
+            RelationshipAttribute single2 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Single2));
+            RelationshipAttribute single3 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Single3));
+            RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Multi4));
+            RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Multi5));
 
             ImmutableArray<ResourceFieldAttribute> chain = ArrayFactory.Create<ResourceFieldAttribute>(single2, single3, multi4, multi5).ToImmutableArray();
             IEnumerable<ResourceFieldChainExpression> chains = new ResourceFieldChainExpression(chain).AsEnumerable();

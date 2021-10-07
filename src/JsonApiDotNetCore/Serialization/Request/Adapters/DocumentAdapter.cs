@@ -32,11 +32,11 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         {
             ArgumentGuard.NotNull(document, nameof(document));
 
-            using var context = new RequestAdapterState(_request, _targetedFields);
+            using var adapterState = new RequestAdapterState(_request, _targetedFields);
 
-            return context.Request.Kind == EndpointKind.AtomicOperations
-                ? _documentInOperationsRequestAdapter.Convert(document, context)
-                : _documentInResourceOrRelationshipRequestAdapter.Convert(document, context);
+            return adapterState.Request.Kind == EndpointKind.AtomicOperations
+                ? _documentInOperationsRequestAdapter.Convert(document, adapterState)
+                : _documentInResourceOrRelationshipRequestAdapter.Convert(document, adapterState);
         }
     }
 }

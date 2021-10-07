@@ -29,10 +29,10 @@ namespace UnitTests.Builders
 
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
-            ResourceContext dbResourceContext = resourceGraph.GetResourceContext("dbResources");
-            ResourceContext nonDbResourceContext = resourceGraph.GetResourceContext("nonDbResources");
-            Assert.Equal(typeof(DbResource), dbResourceContext.ResourceType);
-            Assert.Equal(typeof(NonDbResource), nonDbResourceContext.ResourceType);
+            ResourceType dbResourceType = resourceGraph.GetResourceType("dbResources");
+            ResourceType nonDbResourceType = resourceGraph.GetResourceType("nonDbResources");
+            Assert.Equal(typeof(DbResource), dbResourceType.ClrType);
+            Assert.Equal(typeof(NonDbResource), nonDbResourceType.ClrType);
         }
 
         [Fact]
@@ -41,13 +41,14 @@ namespace UnitTests.Builders
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.Add<TestResource>();
+            builder.Add<RelatedResource>();
 
             // Act
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("testResources", resourceContext.PublicName);
+            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
+            Assert.Equal("testResources", testResourceType.PublicName);
         }
 
         [Fact]
@@ -56,13 +57,14 @@ namespace UnitTests.Builders
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.Add<TestResource>();
+            builder.Add<RelatedResource>();
 
             // Act
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Contains(resourceContext.Attributes, attribute => attribute.PublicName == "compoundAttribute");
+            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
+            Assert.Contains(testResourceType.Attributes, attribute => attribute.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -71,14 +73,15 @@ namespace UnitTests.Builders
             // Arrange
             var builder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
             builder.Add<TestResource>();
+            builder.Add<RelatedResource>();
 
             // Act
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(TestResource));
-            Assert.Equal("relatedResource", resourceContext.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
-            Assert.Equal("relatedResources", resourceContext.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
+            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
+            Assert.Equal("relatedResource", testResourceType.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
+            Assert.Equal("relatedResources", testResourceType.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
         }
 
         private sealed class NonDbResource : Identifiable

@@ -13,7 +13,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         /// <summary>
         /// When not null, indicates that the "type" element must be compatible with the specified resource type.
         /// </summary>
-        public ResourceContext ResourceContext { get; init; }
+        public ResourceType ResourceType { get; init; }
 
         /// <summary>
         /// When not null, indicates the presence or absence of the "id" element.
