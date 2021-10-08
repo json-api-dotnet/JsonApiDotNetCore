@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket>
+    public sealed class SupportTicketDefinition : JsonApiResourceDefinition<SupportTicket, int>
     {
         private readonly ResourceDefinitionHitCounter _hitCounter;
 

@@ -200,17 +200,6 @@ namespace JsonApiDotNetCore.Resources
 
         protected virtual object ResolveResourceDefinition(ResourceType resourceType)
         {
-            if (resourceType.IdentityClrType == typeof(int))
-            {
-                Type intResourceDefinitionType = typeof(IResourceDefinition<>).MakeGenericType(resourceType.ClrType);
-                object intResourceDefinition = _serviceProvider.GetService(intResourceDefinitionType);
-
-                if (intResourceDefinition != null)
-                {
-                    return intResourceDefinition;
-                }
-            }
-
             Type resourceDefinitionType = typeof(IResourceDefinition<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }

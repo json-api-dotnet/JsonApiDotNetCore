@@ -14,23 +14,6 @@ using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCore.Resources
 {
-    /// <summary>
-    /// Provides a resource-centric extensibility point for executing custom code when something happens with a resource. The goal here is to reduce the need
-    /// for overriding the service and repository layers.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
-    [PublicAPI]
-    public class JsonApiResourceDefinition<TResource> : JsonApiResourceDefinition<TResource, int>, IResourceDefinition<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public JsonApiResourceDefinition(IResourceGraph resourceGraph)
-            : base(resourceGraph)
-        {
-        }
-    }
-
     /// <inheritdoc />
     [PublicAPI]
     public class JsonApiResourceDefinition<TResource, TId> : IResourceDefinition<TResource, TId>

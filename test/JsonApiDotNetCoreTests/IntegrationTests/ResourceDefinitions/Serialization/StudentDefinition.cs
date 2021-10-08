@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class StudentDefinition : JsonApiResourceDefinition<Student>
+    public sealed class StudentDefinition : JsonApiResourceDefinition<Student, int>
     {
         private readonly IEncryptionService _encryptionService;
         private readonly ResourceDefinitionHitCounter _hitCounter;

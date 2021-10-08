@@ -43,7 +43,6 @@ namespace JsonApiDotNetCore.Configuration
 
         internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new()
         {
-            typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
         };
 

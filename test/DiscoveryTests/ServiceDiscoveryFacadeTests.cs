@@ -127,7 +127,7 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
+            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource, int>>();
             resourceDefinition.Should().BeOfType<TestResourceDefinition>();
         }
     }

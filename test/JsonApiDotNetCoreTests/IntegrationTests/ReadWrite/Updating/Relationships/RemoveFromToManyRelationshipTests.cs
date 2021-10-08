@@ -32,10 +32,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddSingleton<IResourceDefinition<WorkItem>, RemoveExtraFromWorkItemDefinition>();
+                services.AddSingleton<IResourceDefinition<WorkItem, int>, RemoveExtraFromWorkItemDefinition>();
             });
 
-            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
             workItemDefinition.Reset();
         }
 
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
                 await dbContext.SaveChangesAsync();
             });
 
-            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
             workItemDefinition.ExtraSubscribersIdsToRemove.Add(existingWorkItem.Subscribers.ElementAt(2).Id);
 
             var requestBody = new
@@ -255,7 +255,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
                 await dbContext.SaveChangesAsync();
             });
 
-            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem>>();
+            var workItemDefinition = (RemoveExtraFromWorkItemDefinition)_testContext.Factory.Services.GetRequiredService<IResourceDefinition<WorkItem, int>>();
             workItemDefinition.ExtraTagIdsToRemove.Add(existingWorkItem.Tags.ElementAt(2).Id);
 
             var requestBody = new
@@ -1020,7 +1020,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        private sealed class RemoveExtraFromWorkItemDefinition : JsonApiResourceDefinition<WorkItem>
+        private sealed class RemoveExtraFromWorkItemDefinition : JsonApiResourceDefinition<WorkItem, int>
         {
             // Enables to verify that not the full relationship was loaded upfront.
             public ISet<UserAccount> PreloadedSubscribers { get; } = new HashSet<UserAccount>(IdentifiableComparer.Instance);

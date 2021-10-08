@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using FluentAssertions;
@@ -248,7 +248,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
 
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-            serviceContainer.AddService(typeof(IResourceDefinition<TResource>), new JsonApiResourceDefinition<TResource>(resourceGraph));
+            serviceContainer.AddService(typeof(IResourceDefinition<TResource, int>), new JsonApiResourceDefinition<TResource, int>(resourceGraph));
 
             JsonApiRequest request = createRequest(resourceGraph);
             var targetedFields = new TargetedFields();

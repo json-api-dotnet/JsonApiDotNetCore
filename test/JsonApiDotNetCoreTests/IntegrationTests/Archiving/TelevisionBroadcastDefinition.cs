@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast>
+    public sealed class TelevisionBroadcastDefinition : JsonApiResourceDefinition<TelevisionBroadcast, int>
     {
         private readonly TelevisionDbContext _dbContext;
         private readonly IJsonApiRequest _request;
