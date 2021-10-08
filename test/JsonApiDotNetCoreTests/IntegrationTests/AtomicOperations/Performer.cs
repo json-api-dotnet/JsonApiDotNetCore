@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Performer : Identifiable
+    public sealed class Performer : Identifiable<int>
     {
         [Attr]
         public string ArtistName { get; set; }

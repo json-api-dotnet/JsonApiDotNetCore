@@ -84,11 +84,11 @@ namespace UnitTests.Builders
             Assert.Equal("relatedResources", testResourceType.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
         }
 
-        private sealed class NonDbResource : Identifiable
+        private sealed class NonDbResource : Identifiable<int>
         {
         }
 
-        private sealed class DbResource : Identifiable
+        private sealed class DbResource : Identifiable<int>
         {
         }
 
@@ -104,7 +104,7 @@ namespace UnitTests.Builders
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class TestResource : Identifiable
+        public sealed class TestResource : Identifiable<int>
         {
             [Attr]
             public string CompoundAttribute { get; set; }
@@ -117,7 +117,7 @@ namespace UnitTests.Builders
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class RelatedResource : Identifiable
+        public sealed class RelatedResource : Identifiable<int>
         {
             [Attr]
             public string Unused { get; set; }

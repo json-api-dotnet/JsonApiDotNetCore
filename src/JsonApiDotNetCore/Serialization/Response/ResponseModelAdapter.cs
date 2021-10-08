@@ -215,7 +215,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
             foreach (AttrAttribute attr in resourceType.Attributes)
             {
-                if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable.Id))
+                if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable<object>.Id))
                 {
                     continue;
                 }

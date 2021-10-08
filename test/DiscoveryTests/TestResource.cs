@@ -4,7 +4,7 @@ using JsonApiDotNetCore.Resources;
 namespace DiscoveryTests
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TestResource : Identifiable
+    public sealed class TestResource : Identifiable<int>
     {
     }
 }

@@ -24,9 +24,13 @@ namespace JsonApiDotNetCore.Serialization.Response
         private const string PageSizeParameterName = "page[size]";
         private const string PageNumberParameterName = "page[number]";
 
-        private static readonly string GetPrimaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable, int>.GetAsync));
-        private static readonly string GetSecondaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable, int>.GetSecondaryAsync));
-        private static readonly string GetRelationshipControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable, int>.GetRelationshipAsync));
+        private static readonly string GetPrimaryControllerActionName = NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetAsync));
+
+        private static readonly string GetSecondaryControllerActionName =
+            NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetSecondaryAsync));
+
+        private static readonly string GetRelationshipControllerActionName =
+            NoAsyncSuffix(nameof(BaseJsonApiController<Identifiable<int>, int>.GetRelationshipAsync));
 
         private readonly IJsonApiOptions _options;
         private readonly IJsonApiRequest _request;

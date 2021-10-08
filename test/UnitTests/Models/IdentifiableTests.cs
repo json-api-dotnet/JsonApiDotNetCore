@@ -35,7 +35,7 @@ namespace UnitTests.Models
             Assert.Null(stringId);
         }
 
-        private sealed class IntId : Identifiable
+        private sealed class IntId : Identifiable<int>
         {
             public string ExposedGetStringId(int value)
             {

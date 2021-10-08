@@ -6,7 +6,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     [ResourceLinks(TopLevelLinks = LinkTypes.None, ResourceLinks = LinkTypes.None, RelationshipLinks = LinkTypes.Related)]
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class PhotoLocation : Identifiable
+    public sealed class PhotoLocation : Identifiable<int>
     {
         [Attr]
         public string PlaceName { get; set; }

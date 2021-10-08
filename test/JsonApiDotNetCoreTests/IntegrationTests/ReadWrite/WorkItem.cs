@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WorkItem : Identifiable
+    public sealed class WorkItem : Identifiable<int>
     {
         [Attr]
         public string Description { get; set; }

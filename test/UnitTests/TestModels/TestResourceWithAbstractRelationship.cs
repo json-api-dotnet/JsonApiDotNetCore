@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace UnitTests.TestModels
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TestResourceWithAbstractRelationship : Identifiable
+    public sealed class TestResourceWithAbstractRelationship : Identifiable<int>
     {
         [HasOne]
         public BaseModel ToOne { get; set; }

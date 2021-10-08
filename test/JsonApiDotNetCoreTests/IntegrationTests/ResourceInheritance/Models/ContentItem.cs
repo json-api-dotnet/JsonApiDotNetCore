@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public abstract class ContentItem : Identifiable
+    public abstract class ContentItem : Identifiable<int>
     {
         [Attr]
         public string Title { get; set; }

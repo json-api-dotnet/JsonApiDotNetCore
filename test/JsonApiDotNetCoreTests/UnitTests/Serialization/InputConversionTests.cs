@@ -237,7 +237,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
         }
 
         private static DocumentAdapter CreateDocumentAdapter<TResource>(Func<IResourceGraph, JsonApiRequest> createRequest)
-            where TResource : Identifiable
+            where TResource : Identifiable<int>
         {
             var options = new JsonApiOptions();
             IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<TResource>().Build();
@@ -271,7 +271,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceWithVariousDataTypes : Identifiable
+        public sealed class ResourceWithVariousDataTypes : Identifiable<int>
         {
             [Attr]
             public bool Boolean { get; set; }

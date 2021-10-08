@@ -64,7 +64,7 @@ namespace Benchmarks.Serialization
         protected abstract IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph);
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceA : Identifiable
+        public sealed class ResourceA : Identifiable<int>
         {
             [Attr]
             public bool Attribute01 { get; set; }

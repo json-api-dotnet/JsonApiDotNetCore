@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Tag : Identifiable
+    public sealed class Tag : Identifiable<int>
     {
         [Required]
         [MinLength(1)]

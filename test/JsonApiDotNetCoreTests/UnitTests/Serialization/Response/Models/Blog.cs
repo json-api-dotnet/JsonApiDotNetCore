@@ -1,11 +1,11 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Blog : Identifiable
+    public sealed class Blog : Identifiable<int>
     {
         [Attr]
         public string Title { get; set; }

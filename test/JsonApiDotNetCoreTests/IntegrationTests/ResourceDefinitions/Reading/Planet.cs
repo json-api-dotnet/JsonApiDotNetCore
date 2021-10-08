@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Planet : Identifiable
+    public sealed class Planet : Identifiable<int>
     {
         [Attr]
         public string PublicName { get; set; }

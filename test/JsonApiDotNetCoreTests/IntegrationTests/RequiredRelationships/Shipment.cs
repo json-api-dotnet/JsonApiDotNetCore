@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Shipment : Identifiable
+    public sealed class Shipment : Identifiable<int>
     {
         [Attr]
         public string TrackAndTraceCode { get; set; }

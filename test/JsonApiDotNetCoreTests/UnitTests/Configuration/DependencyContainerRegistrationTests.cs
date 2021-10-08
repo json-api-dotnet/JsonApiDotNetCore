@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Configuration
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class Resource : Identifiable
+        private sealed class Resource : Identifiable<int>
         {
             [Attr]
             public string Field { get; set; }

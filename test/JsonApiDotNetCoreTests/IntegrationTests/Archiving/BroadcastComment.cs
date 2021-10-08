@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class BroadcastComment : Identifiable
+    public sealed class BroadcastComment : Identifiable<int>
     {
         [Attr]
         public string Text { get; set; }

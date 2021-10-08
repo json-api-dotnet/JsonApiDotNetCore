@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TelevisionNetwork : Identifiable
+    public sealed class TelevisionNetwork : Identifiable<int>
     {
         [Attr]
         public string Name { get; set; }

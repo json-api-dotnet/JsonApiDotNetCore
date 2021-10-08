@@ -178,7 +178,7 @@ namespace UnitTests.Extensions
             Assert.Equal("resourceOfInt32s", intResourceType.PublicName);
         }
 
-        private sealed class ResourceOfInt32 : Identifiable
+        private sealed class ResourceOfInt32 : Identifiable<int>
         {
         }
 
@@ -599,7 +599,7 @@ namespace UnitTests.Extensions
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.Access)]
-        private sealed class Person : Identifiable
+        private sealed class Person : Identifiable<int>
         {
         }
     }

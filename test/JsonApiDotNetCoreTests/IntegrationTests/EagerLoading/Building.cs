@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Building : Identifiable
+    public sealed class Building : Identifiable<int>
     {
         private string _tempPrimaryDoorColor;
 

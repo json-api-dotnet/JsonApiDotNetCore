@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Order : Identifiable
+    public sealed class Order : Identifiable<int>
     {
         [Attr]
         public decimal Amount { get; set; }

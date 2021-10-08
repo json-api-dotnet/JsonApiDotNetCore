@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.EntityFrameworkCore;
@@ -130,14 +131,19 @@ namespace JsonApiDotNetCore.Configuration
             if (resourceClrType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
-                Type effectiveIdType = idClrType ?? _typeLocator.TryGetIdType(resourceClrType) ?? typeof(int);
+                Type effectiveIdType = idClrType ?? _typeLocator.TryGetIdType(resourceClrType);
+
+                if (effectiveIdType == null)
+                {
+                    throw new InvalidConfigurationException($"Resource type '{resourceClrType}' implements 'IIdentifiable', but not 'IIdentifiable<TId>'.");
+                }
 
                 ResourceType resourceType = CreateResourceType(effectivePublicName, resourceClrType, effectiveIdType);
                 _resourceTypes.Add(resourceType);
             }
             else
             {
-                _logger.LogWarning($"Entity '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'.");
+                _logger.LogWarning($"Skipping: Type '{resourceClrType}' does not implement '{nameof(IIdentifiable)}'.");
             }
 
             return this;
@@ -168,7 +174,7 @@ namespace JsonApiDotNetCore.Configuration
                 // Although strictly not correct, 'id' is added to the list of attributes for convenience.
                 // For example, it enables to filter on ID, without the need to special-case existing logic.
                 // And when using sparse fields, it silently adds 'id' to the set of attributes to retrieve.
-                if (property.Name == nameof(Identifiable.Id) && attribute == null)
+                if (property.Name == nameof(Identifiable<object>.Id) && attribute == null)
                 {
                     var idAttr = new AttrAttribute
                     {

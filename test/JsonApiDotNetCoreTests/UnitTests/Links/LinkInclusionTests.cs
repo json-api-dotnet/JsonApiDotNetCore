@@ -356,7 +356,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
         }
 
-        private sealed class ExampleResource : Identifiable
+        private sealed class ExampleResource : Identifiable<int>
         {
         }
 

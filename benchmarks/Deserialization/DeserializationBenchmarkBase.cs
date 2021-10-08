@@ -56,7 +56,7 @@ namespace Benchmarks.Deserialization
         protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceA : Identifiable
+        public sealed class ResourceA : Identifiable<int>
         {
             [Attr]
             public bool Attribute01 { get; set; }

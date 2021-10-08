@@ -265,7 +265,7 @@ namespace UnitTests.Controllers
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class Resource : Identifiable
+        public sealed class Resource : Identifiable<int>
         {
             [Attr]
             public string TestAttribute { get; set; }

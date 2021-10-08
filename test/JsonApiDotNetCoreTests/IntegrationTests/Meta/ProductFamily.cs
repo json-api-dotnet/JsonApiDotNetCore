@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ProductFamily : Identifiable
+    public sealed class ProductFamily : Identifiable<int>
     {
         [Attr]
         public string Name { get; set; }
