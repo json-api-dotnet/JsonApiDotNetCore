@@ -35,10 +35,10 @@ Install-Package JsonApiDotNetCore
 ### Define Models
 
 Define your domain models such that they implement `IIdentifiable<TId>`.
-The easiest way to do this is to inherit from `Identifiable`
+The easiest way to do this is to inherit from `Identifiable<TId>`.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr]
     public string Name { get; set; }
@@ -47,7 +47,7 @@ public class Person : Identifiable
 
 ### Define DbContext
 
-Nothing special here, just an ordinary `DbContext`
+Nothing special here, just an ordinary `DbContext`.
 
 ```
 public class AppDbContext : DbContext
@@ -63,14 +63,14 @@ public class AppDbContext : DbContext
 
 ### Define Controllers
 
-You need to create controllers that inherit from `JsonApiController<TResource>` or `JsonApiController<TResource, TId>`
-where `TResource` is the model that inherits from `Identifiable<TId>`
+You need to create controllers that inherit from `JsonApiController<TResource, TId>`
+where `TResource` is the model that inherits from `Identifiable<TId>`.
 
 ```c#
-public class PeopleController : JsonApiController<Person>
+public class PeopleController : JsonApiController<Person, int>
 {
     public PeopleController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Person> resourceService)
+        IResourceService<Person, int> resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }

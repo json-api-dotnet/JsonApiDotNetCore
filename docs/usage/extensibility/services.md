@@ -5,13 +5,13 @@ This allows you to customize it however you want. This is also a good place to i
 
 ## Supplementing Default Behavior
 
-If you don't need to alter the underlying mechanisms, you can inherit from `JsonApiResourceService<TResource>` and override the existing methods.
+If you don't need to alter the underlying mechanisms, you can inherit from `JsonApiResourceService<TResource, TId>` and override the existing methods.
 In simple cases, you can also just wrap the base implementation with your custom logic.
 
 A simple example would be to send notifications when a resource gets created.
 
 ```c#
-public class TodoItemService : JsonApiResourceService<TodoItem>
+public class TodoItemService : JsonApiResourceService<TodoItem, int>
 {
     private readonly INotificationService _notificationService;
 
@@ -43,21 +43,21 @@ public class TodoItemService : JsonApiResourceService<TodoItem>
 ## Not Using Entity Framework Core?
 
 As previously discussed, this library uses Entity Framework Core by default.
-If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource>` implementation.
+If you'd like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom `IResourceService<TResource, TId>` implementation.
 
 ```c#
 // Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     // add the service override for Product
-    services.AddScoped<IResourceService<Product>, ProductService>();
+    services.AddScoped<IResourceService<Product, int>, ProductService>();
 
     // add your own Data Access Object
     services.AddScoped<IProductDao, ProductDao>();
 }
 
 // ProductService.cs
-public class ProductService : IResourceService<Product>
+public class ProductService : IResourceService<Product, int>
 {
     private readonly IProductDao _dao;
 
@@ -154,7 +154,7 @@ public class Startup
 Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:
 
 ```c#
-public class ArticlesController : BaseJsonApiController<Article>
+public class ArticlesController : BaseJsonApiController<Article, int>
 {
     public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         ICreateService<Article, int> create, IDeleteService<Article, int> delete)

@@ -8,25 +8,12 @@ public class Person : Identifiable<Guid>
 }
 ```
 
-You can use the non-generic `Identifiable` if your primary key is an integer.
+**Note:** Earlier versions of JsonApiDotNetCore allowed a short-hand notation when `TId` is of type `int`. This was removed in v5.
+
+If you need to attach annotations or attributes on the `Id` property, you can override the virtual property.
 
 ```c#
-public class Person : Identifiable
-{
-}
-
-// is the same as:
-
 public class Person : Identifiable<int>
-{
-}
-```
-
-If you need to attach annotations or attributes on the `Id` property,
-you can override the virtual property.
-
-```c#
-public class Person : Identifiable
 {
     [Key]
     [Column("PersonID")]

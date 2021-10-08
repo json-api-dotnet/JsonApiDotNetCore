@@ -11,7 +11,7 @@ The left side of a relationship is where the relationship is declared, the right
 This exposes a to-one relationship.
 
 ```c#
-public class TodoItem : Identifiable
+public class TodoItem : Identifiable<int>
 {
     [HasOne]
     public Person Owner { get; set; }
@@ -25,7 +25,7 @@ The left side of this relationship is of type `TodoItem` (public name: "todoItem
 This exposes a to-many relationship.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [HasMany]
     public ICollection<TodoItem> TodoItems { get; set; }
@@ -44,7 +44,7 @@ which would expose the relationship to the client the same way as any other `Has
 However, under the covers it would use the join type and Entity Framework Core's APIs to get and set the relationship.
 
 ```c#
-public class Article : Identifiable
+public class Article : Identifiable<int>
 {
     // tells Entity Framework Core to ignore this property
     [NotMapped]
@@ -68,7 +68,7 @@ There are two ways the exposed relationship name is determined:
 
 2. Individually using the attribute's constructor.
 ```c#
-public class TodoItem : Identifiable
+public class TodoItem : Identifiable<int>
 {
     [HasOne(PublicName = "item-owner")]
     public Person Owner { get; set; }
@@ -80,7 +80,7 @@ public class TodoItem : Identifiable
 Relationships can be marked to disallow including them using the `?include=` query string parameter. When not allowed, it results in an HTTP 400 response.
 
 ```c#
-public class TodoItem : Identifiable
+public class TodoItem : Identifiable<int>
 {
     [HasOne(CanInclude: false)]
     public Person Owner { get; set; }
@@ -95,7 +95,7 @@ Your resource may expose a calculated property, whose value depends on a related
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using `EagerLoad`, for example:
 
 ```c#
-public class ShippingAddress : Identifiable
+public class ShippingAddress : Identifiable<int>
 {
     [Attr]
     public string Street { get; set; }

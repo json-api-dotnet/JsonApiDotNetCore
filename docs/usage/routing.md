@@ -23,14 +23,14 @@ Which results in URLs like: https://yourdomain.com/api/v1/people
 The library will configure routes for all controllers in your project. By default, routes are camel-cased. This is based on the [recommendations](https://jsonapi.org/recommendations/) outlined in the JSON:API spec.
 
 ```c#
-public class OrderLine : Identifiable
+public class OrderLine : Identifiable<int>
 {
 }
 
-public class OrderLineController : JsonApiController<OrderLine>
+public class OrderLineController : JsonApiController<OrderLine, int>
 {
     public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<OrderLine> resourceService)
+        IResourceService<OrderLine, int> resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }
@@ -45,7 +45,7 @@ The exposed name of the resource ([which can be customized](~/usage/resource-gra
 
 ### Non-JSON:API controllers
 
-If a controller does not inherit from `JsonApiController<TResource>`, the [configured naming convention](~/usage/options.md#customize-serializer-options) is applied to the name of the controller.
+If a controller does not inherit from `JsonApiController<TResource, TId>`, the [configured naming convention](~/usage/options.md#customize-serializer-options) is applied to the name of the controller.
 
 ```c#
 public class OrderLineController : ControllerBase
@@ -63,10 +63,10 @@ It is possible to bypass the default routing convention for a controller.
 
 ```c#
 [Route("v1/custom/route/lines-in-order"), DisableRoutingConvention]
-public class OrderLineController : JsonApiController<OrderLine>
+public class OrderLineController : JsonApiController<OrderLine, int>
 {
     public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<OrderLine> resourceService)
+        IResourceService<OrderLine, int> resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }
