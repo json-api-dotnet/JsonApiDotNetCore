@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
 {
-    public abstract class BaseToothbrushesController : BaseJsonApiController<Toothbrush>
+    public abstract class BaseToothbrushesController : BaseJsonApiController<Toothbrush, int>
     {
         internal const int EmptyActionResultId = 11111111;
         internal const int ActionResultWithErrorObjectId = 22222222;

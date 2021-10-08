@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
-    public sealed class BroadcastCommentsController : JsonApiController<BroadcastComment>
+    public sealed class BroadcastCommentsController : JsonApiController<BroadcastComment, int>
     {
         public BroadcastCommentsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<BroadcastComment> resourceService)
             : base(options, loggerFactory, resourceService)

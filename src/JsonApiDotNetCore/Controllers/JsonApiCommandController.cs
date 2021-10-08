@@ -76,15 +76,4 @@ namespace JsonApiDotNetCore.Controllers
             return await base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
         }
     }
-
-    /// <inheritdoc />
-    public abstract class JsonApiCommandController<TResource> : JsonApiCommandController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected JsonApiCommandController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceCommandService<TResource, int> commandService)
-            : base(options, loggerFactory, commandService)
-        {
-        }
-    }
 }

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
-    public abstract class ObfuscatedIdentifiableController<TResource> : BaseJsonApiController<TResource>
+    public abstract class ObfuscatedIdentifiableController<TResource> : BaseJsonApiController<TResource, int>
         where TResource : class, IIdentifiable<int>
     {
         private readonly HexadecimalCodec _codec = new();

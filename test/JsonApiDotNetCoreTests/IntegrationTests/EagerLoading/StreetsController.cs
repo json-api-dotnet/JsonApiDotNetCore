@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
-    public sealed class StreetsController : JsonApiController<Street>
+    public sealed class StreetsController : JsonApiController<Street, int>
     {
         public StreetsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Street> resourceService)
             : base(options, loggerFactory, resourceService)

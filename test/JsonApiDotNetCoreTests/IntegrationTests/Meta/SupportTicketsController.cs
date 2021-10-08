@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class SupportTicketsController : JsonApiController<SupportTicket>
+    public sealed class SupportTicketsController : JsonApiController<SupportTicket, int>
     {
         public SupportTicketsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SupportTicket> resourceService)
             : base(options, loggerFactory, resourceService)

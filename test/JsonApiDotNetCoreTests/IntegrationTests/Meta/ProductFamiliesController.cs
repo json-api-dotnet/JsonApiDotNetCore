@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class ProductFamiliesController : JsonApiController<ProductFamily>
+    public sealed class ProductFamiliesController : JsonApiController<ProductFamily, int>
     {
         public ProductFamiliesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ProductFamily> resourceService)
             : base(options, loggerFactory, resourceService)

@@ -271,7 +271,7 @@ namespace UnitTests.Controllers
             public string TestAttribute { get; set; }
         }
 
-        private sealed class ResourceController : BaseJsonApiController<Resource>
+        private sealed class ResourceController : BaseJsonApiController<Resource, int>
         {
             public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Resource> resourceService)
                 : base(options, loggerFactory, resourceService)

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
-    public sealed class DealershipsController : JsonApiController<Dealership>
+    public sealed class DealershipsController : JsonApiController<Dealership, int>
     {
         public DealershipsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Dealership> resourceService)
             : base(options, loggerFactory, resourceService)

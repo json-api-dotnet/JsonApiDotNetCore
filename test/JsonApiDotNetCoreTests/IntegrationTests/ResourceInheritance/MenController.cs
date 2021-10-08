@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
 {
-    public sealed class MenController : JsonApiController<Man>
+    public sealed class MenController : JsonApiController<Man, int>
     {
         public MenController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Man> resourceService)
             : base(options, loggerFactory, resourceService)

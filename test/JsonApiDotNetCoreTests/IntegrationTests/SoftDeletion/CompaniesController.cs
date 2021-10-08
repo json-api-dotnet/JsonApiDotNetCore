@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 {
-    public sealed class CompaniesController : JsonApiController<Company>
+    public sealed class CompaniesController : JsonApiController<Company, int>
     {
         public CompaniesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Company> resourceService)
             : base(options, loggerFactory, resourceService)

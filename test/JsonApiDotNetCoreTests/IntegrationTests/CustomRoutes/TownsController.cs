@@ -14,7 +14,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 {
     [DisableRoutingConvention]
     [Route("world-api/civilization/popular/towns")]
-    public sealed class TownsController : JsonApiController<Town>
+    public sealed class TownsController : JsonApiController<Town, int>
     {
         private readonly CustomRouteDbContext _dbContext;
 
