@@ -19,8 +19,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -83,7 +81,7 @@ namespace JsonApiDotNetCore.Configuration
             foreach (Type dbContextType in dbContextTypes)
             {
                 var dbContext = (DbContext)_intermediateProvider.GetRequiredService(dbContextType);
-                AddResourcesFromDbContext(dbContext, _resourceGraphBuilder);
+                _resourceGraphBuilder.Add(dbContext);
             }
 
             configureResourceGraph?.Invoke(_resourceGraphBuilder);
@@ -281,24 +279,6 @@ namespace JsonApiDotNetCore.Configuration
             _services.AddScoped<IOperationsProcessor, OperationsProcessor>();
             _services.AddScoped<IOperationProcessorAccessor, OperationProcessorAccessor>();
             _services.AddScoped<ILocalIdTracker, LocalIdTracker>();
-        }
-
-        private void AddResourcesFromDbContext(DbContext dbContext, ResourceGraphBuilder builder)
-        {
-            foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
-            {
-                if (!IsImplicitManyToManyJoinEntity(entityType))
-                {
-                    builder.Add(entityType.ClrType);
-                }
-            }
-        }
-
-        private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
-        {
-#pragma warning disable EF1001 // Internal EF Core API usage.
-            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal EF Core API usage.
         }
 
         public void Dispose()

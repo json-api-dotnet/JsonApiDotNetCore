@@ -5,6 +5,9 @@ using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCore.Configuration
@@ -43,6 +46,28 @@ namespace JsonApiDotNetCore.Configuration
             }
 
             return resourceGraph;
+        }
+
+        public ResourceGraphBuilder Add(DbContext dbContext)
+        {
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
+
+            foreach (IEntityType entityType in dbContext.Model.GetEntityTypes())
+            {
+                if (!IsImplicitManyToManyJoinEntity(entityType))
+                {
+                    Add(entityType.ClrType);
+                }
+            }
+
+            return this;
+        }
+
+        private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
+        {
+#pragma warning disable EF1001 // Internal EF Core API usage.
+            return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
+#pragma warning restore EF1001 // Internal EF Core API usage.
         }
 
         /// <summary>
