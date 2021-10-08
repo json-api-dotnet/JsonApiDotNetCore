@@ -110,9 +110,9 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceRepository<IntResource>)));
-            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceReadRepository<IntResource>)));
-            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceWriteRepository<IntResource>)));
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceRepository<IntResource, int>)));
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceReadRepository<IntResource, int>)));
+            Assert.IsType<IntResourceRepository>(provider.GetRequiredService(typeof(IResourceWriteRepository<IntResource, int>)));
         }
 
         [Fact]
@@ -300,7 +300,7 @@ namespace UnitTests.Extensions
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        private sealed class IntResourceRepository : IResourceRepository<IntResource>
+        private sealed class IntResourceRepository : IResourceRepository<IntResource, int>
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
             {

@@ -7,12 +7,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Repositories
 {
-    /// <inheritdoc />
-    public interface IResourceWriteRepository<TResource> : IResourceWriteRepository<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary>
     /// Groups write operations.
     /// </summary>

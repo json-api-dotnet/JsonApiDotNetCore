@@ -36,11 +36,8 @@ namespace JsonApiDotNetCore.Configuration
 
         internal static readonly HashSet<Type> RepositoryInterfaces = new()
         {
-            typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
-            typeof(IResourceWriteRepository<>),
             typeof(IResourceWriteRepository<,>),
-            typeof(IResourceReadRepository<>),
             typeof(IResourceReadRepository<,>)
         };
 

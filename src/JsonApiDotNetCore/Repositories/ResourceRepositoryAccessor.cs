@@ -130,17 +130,6 @@ namespace JsonApiDotNetCore.Repositories
 
         protected virtual object ResolveReadRepository(ResourceType resourceType)
         {
-            if (resourceType.IdentityClrType == typeof(int))
-            {
-                Type intRepositoryType = typeof(IResourceReadRepository<>).MakeGenericType(resourceType.ClrType);
-                object intRepository = _serviceProvider.GetService(intRepositoryType);
-
-                if (intRepository != null)
-                {
-                    return intRepository;
-                }
-            }
-
             Type resourceDefinitionType = typeof(IResourceReadRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);
         }
@@ -169,17 +158,6 @@ namespace JsonApiDotNetCore.Repositories
         protected virtual object ResolveWriteRepository(Type resourceClrType)
         {
             ResourceType resourceType = _resourceGraph.GetResourceType(resourceClrType);
-
-            if (resourceType.IdentityClrType == typeof(int))
-            {
-                Type intRepositoryType = typeof(IResourceWriteRepository<>).MakeGenericType(resourceType.ClrType);
-                object intRepository = _serviceProvider.GetService(intRepositoryType);
-
-                if (intRepository != null)
-                {
-                    return intRepository;
-                }
-            }
 
             Type resourceDefinitionType = typeof(IResourceWriteRepository<,>).MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return _serviceProvider.GetRequiredService(resourceDefinitionType);

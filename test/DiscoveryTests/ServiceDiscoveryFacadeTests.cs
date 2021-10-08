@@ -110,7 +110,7 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource>>();
+            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource, int>>();
             resourceRepository.Should().BeOfType<TestResourceRepository>();
         }
 

@@ -584,19 +584,4 @@ namespace JsonApiDotNetCore.Repositories
             }
         }
     }
-
-    /// <summary>
-    /// Implements the foundational Repository layer in the JsonApiDotNetCore architecture that uses Entity Framework Core.
-    /// </summary>
-    [PublicAPI]
-    public class EntityFrameworkCoreRepository<TResource> : EntityFrameworkCoreRepository<TResource, int>, IResourceRepository<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public EntityFrameworkCoreRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
-            IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
-            IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
-        {
-        }
-    }
 }

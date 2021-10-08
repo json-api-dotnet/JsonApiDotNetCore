@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddResourceRepository<CarCompositeKeyAwareRepository<Car, string>>();
-                services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership>>();
+                services.AddResourceRepository<CarCompositeKeyAwareRepository<Dealership, int>>();
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

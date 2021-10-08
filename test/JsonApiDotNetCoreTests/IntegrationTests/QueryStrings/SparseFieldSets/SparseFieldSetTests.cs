@@ -29,9 +29,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             {
                 services.AddSingleton<ResourceCaptureStore>();
 
-                services.AddResourceRepository<ResultCapturingRepository<Blog>>();
-                services.AddResourceRepository<ResultCapturingRepository<BlogPost>>();
-                services.AddResourceRepository<ResultCapturingRepository<WebAccount>>();
+                services.AddResourceRepository<ResultCapturingRepository<Blog, int>>();
+                services.AddResourceRepository<ResultCapturingRepository<BlogPost, int>>();
+                services.AddResourceRepository<ResultCapturingRepository<WebAccount, int>>();
             });
         }
 
