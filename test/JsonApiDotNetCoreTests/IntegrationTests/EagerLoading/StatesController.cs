@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     public sealed class StatesController : JsonApiController<State, int>
     {
-        public StatesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<State> resourceService)
+        public StatesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<State, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

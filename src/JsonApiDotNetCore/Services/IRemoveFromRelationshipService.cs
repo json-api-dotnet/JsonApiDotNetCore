@@ -7,12 +7,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <inheritdoc />
-    public interface IRemoveFromRelationshipService<TResource> : IRemoveFromRelationshipService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary />
     public interface IRemoveFromRelationshipService<TResource, in TId>
         where TResource : class, IIdentifiable<TId>

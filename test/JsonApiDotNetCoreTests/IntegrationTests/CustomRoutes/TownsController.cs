@@ -18,7 +18,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
     {
         private readonly CustomRouteDbContext _dbContext;
 
-        public TownsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Town> resourceService, CustomRouteDbContext dbContext)
+        public TownsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Town, int> resourceService,
+            CustomRouteDbContext dbContext)
             : base(options, loggerFactory, resourceService)
         {
             _dbContext = dbContext;

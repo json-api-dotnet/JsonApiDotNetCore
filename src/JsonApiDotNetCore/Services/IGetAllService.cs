@@ -5,12 +5,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <inheritdoc />
-    public interface IGetAllService<TResource> : IGetAllService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary />
     public interface IGetAllService<TResource, in TId>
         where TResource : class, IIdentifiable<TId>

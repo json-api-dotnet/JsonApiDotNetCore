@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     public sealed class EnginesController : JsonApiController<Engine, int>
     {
-        public EnginesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Engine> resourceService)
+        public EnginesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Engine, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

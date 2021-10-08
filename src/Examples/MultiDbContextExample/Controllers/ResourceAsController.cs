@@ -8,7 +8,7 @@ namespace MultiDbContextExample.Controllers
 {
     public sealed class ResourceAsController : JsonApiController<ResourceA, int>
     {
-        public ResourceAsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ResourceA> resourceService)
+        public ResourceAsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ResourceA, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

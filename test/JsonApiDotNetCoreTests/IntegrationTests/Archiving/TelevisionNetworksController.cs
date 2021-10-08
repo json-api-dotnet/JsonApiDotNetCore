@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 {
     public sealed class TelevisionNetworksController : JsonApiController<TelevisionNetwork, int>
     {
-        public TelevisionNetworksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TelevisionNetwork> resourceService)
+        public TelevisionNetworksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TelevisionNetwork, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

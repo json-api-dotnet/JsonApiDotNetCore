@@ -83,17 +83,4 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             await base.DeleteAsync(id, cancellationToken);
         }
     }
-
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public class MultiTenantResourceService<TResource> : MultiTenantResourceService<TResource, int>, IResourceService<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public MultiTenantResourceService(ITenantProvider tenantProvider, IResourceRepositoryAccessor repositoryAccessor,
-            IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(tenantProvider, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
-                resourceDefinitionAccessor)
-        {
-        }
-    }
 }

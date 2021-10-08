@@ -7,7 +7,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     public sealed class PhotoLocationsController : JsonApiController<PhotoLocation, int>
     {
-        public PhotoLocationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<PhotoLocation> resourceService)
+        public PhotoLocationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<PhotoLocation, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

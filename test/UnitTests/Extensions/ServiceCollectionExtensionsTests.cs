@@ -51,16 +51,16 @@ namespace UnitTests.Extensions
 
             // Assert
             ServiceProvider provider = services.BuildServiceProvider();
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceCommandService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceQueryService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetAllService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetByIdService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetSecondaryService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetRelationshipService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(ICreateService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IUpdateService<IntResource>)));
-            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IDeleteService<IntResource>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceCommandService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IResourceQueryService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetAllService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetByIdService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetSecondaryService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IGetRelationshipService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(ICreateService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IUpdateService<IntResource, int>)));
+            Assert.IsType<IntResourceService>(provider.GetRequiredService(typeof(IDeleteService<IntResource, int>)));
         }
 
         [Fact]
@@ -188,7 +188,7 @@ namespace UnitTests.Extensions
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        private sealed class IntResourceService : IResourceService<IntResource>
+        private sealed class IntResourceService : IResourceService<IntResource, int>
         {
             public Task<IReadOnlyCollection<IntResource>> GetAsync(CancellationToken cancellationToken)
             {

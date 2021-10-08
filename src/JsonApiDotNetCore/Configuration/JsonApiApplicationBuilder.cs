@@ -198,15 +198,16 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddServiceLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<>),
-                typeof(JsonApiResourceService<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, null, typeof(JsonApiResourceService<,>));
         }
 
         private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
         {
             foreach (Type openGenericInterface in openGenericInterfaces)
             {
-                Type implementationType = openGenericInterface.GetGenericArguments().Length == 1 ? intImplementation : implementation;
+                Type implementationType = openGenericInterface.GetGenericArguments().Length == 1 && intImplementation != null
+                    ? intImplementation
+                    : implementation;
 
                 _services.TryAddScoped(openGenericInterface, implementationType);
             }

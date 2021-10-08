@@ -493,23 +493,4 @@ namespace JsonApiDotNetCore.Services
             }
         }
     }
-
-    /// <summary>
-    /// Represents the foundational Resource Service layer in the JsonApiDotNetCore architecture that uses a Resource Repository for data access.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
-    [PublicAPI]
-    public class JsonApiResourceService<TResource> : JsonApiResourceService<TResource, int>, IResourceService<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public JsonApiResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer,
-            IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request,
-            IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request, resourceChangeTracker,
-                resourceDefinitionAccessor)
-        {
-        }
-    }
 }

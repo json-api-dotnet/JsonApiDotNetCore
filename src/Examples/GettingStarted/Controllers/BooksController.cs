@@ -8,7 +8,7 @@ namespace GettingStarted.Controllers
 {
     public sealed class BooksController : JsonApiController<Book, int>
     {
-        public BooksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Book> resourceService)
+        public BooksController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Book, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

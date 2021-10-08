@@ -25,7 +25,7 @@ namespace UnitTests.Controllers
         public async Task GetAsync_Calls_Service()
         {
             // Arrange
-            var serviceMock = new Mock<IGetAllService<Resource>>();
+            var serviceMock = new Mock<IGetAllService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, serviceMock.Object);
 
             // Act
@@ -55,7 +55,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var serviceMock = new Mock<IGetByIdService<Resource>>();
+            var serviceMock = new Mock<IGetByIdService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getById: serviceMock.Object);
 
             // Act
@@ -87,7 +87,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             const string relationshipName = "articles";
-            var serviceMock = new Mock<IGetRelationshipService<Resource>>();
+            var serviceMock = new Mock<IGetRelationshipService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
 
             // Act
@@ -119,7 +119,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             const string relationshipName = "articles";
-            var serviceMock = new Mock<IGetSecondaryService<Resource>>();
+            var serviceMock = new Mock<IGetSecondaryService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
 
             // Act
@@ -151,7 +151,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var resource = new Resource();
-            var serviceMock = new Mock<IUpdateService<Resource>>();
+            var serviceMock = new Mock<IUpdateService<Resource, int>>();
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, update: serviceMock.Object);
 
@@ -184,7 +184,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             var resource = new Resource();
-            var serviceMock = new Mock<ICreateService<Resource>>();
+            var serviceMock = new Mock<ICreateService<Resource, int>>();
 
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
             serviceMock.Setup(service => service.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
@@ -207,7 +207,7 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             const string relationshipName = "articles";
-            var serviceMock = new Mock<ISetRelationshipService<Resource>>();
+            var serviceMock = new Mock<ISetRelationshipService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
@@ -238,7 +238,7 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var serviceMock = new Mock<IDeleteService<Resource>>();
+            var serviceMock = new Mock<IDeleteService<Resource, int>>();
             var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, delete: serviceMock.Object);
 
             // Act
@@ -273,7 +273,7 @@ namespace UnitTests.Controllers
 
         private sealed class ResourceController : BaseJsonApiController<Resource, int>
         {
-            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Resource> resourceService)
+            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Resource, int> resourceService)
                 : base(options, loggerFactory, resourceService)
             {
             }
