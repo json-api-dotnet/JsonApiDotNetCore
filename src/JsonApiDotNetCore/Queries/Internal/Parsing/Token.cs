@@ -1,3 +1,5 @@
+#nullable disable
+
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Internal.Parsing

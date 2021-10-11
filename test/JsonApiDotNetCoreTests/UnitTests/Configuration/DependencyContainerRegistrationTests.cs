@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using FluentAssertions;
 using JetBrains.Annotations;

@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;

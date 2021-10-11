@@ -1,3 +1,5 @@
+#nullable disable
+
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;

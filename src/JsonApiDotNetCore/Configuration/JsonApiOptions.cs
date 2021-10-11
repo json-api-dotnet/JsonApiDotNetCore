@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using System.Data;
 using System.Text.Encodings.Web;

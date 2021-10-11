@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -600,7 +602,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
                 return null;
             }
 
-            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
+            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
             {
                 return null;
             }

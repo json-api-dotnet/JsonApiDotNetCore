@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Response

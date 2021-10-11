@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Text.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Objects

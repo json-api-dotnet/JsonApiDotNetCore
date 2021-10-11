@@ -1,3 +1,5 @@
+#nullable disable
+
 using Microsoft.EntityFrameworkCore;
 
 namespace JsonApiDotNetCore.Repositories

@@ -1,3 +1,5 @@
+#nullable disable
+
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;

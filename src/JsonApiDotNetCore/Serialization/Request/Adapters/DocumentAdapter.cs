@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;

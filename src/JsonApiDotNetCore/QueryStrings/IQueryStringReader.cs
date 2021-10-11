@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Controllers.Annotations;
 
 namespace JsonApiDotNetCore.QueryStrings

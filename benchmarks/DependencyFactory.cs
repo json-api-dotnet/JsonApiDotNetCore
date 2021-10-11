@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 

@@ -1,3 +1,5 @@
+#nullable disable
+
 using JetBrains.Annotations;
 
 #pragma warning disable AV1008 // Class should not be static

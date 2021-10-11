@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     public interface IClientSettingsProvider

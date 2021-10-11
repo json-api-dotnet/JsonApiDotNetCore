@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Text.Json;
 using JetBrains.Annotations;
 

@@ -1,3 +1,5 @@
+#nullable disable
+
 using BenchmarkDotNet.Running;
 using Benchmarks.Deserialization;
 using Benchmarks.LinkBuilding;

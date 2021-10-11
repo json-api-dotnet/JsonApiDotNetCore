@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace JsonApiDotNetCore.Middleware
 {
     /// <summary>

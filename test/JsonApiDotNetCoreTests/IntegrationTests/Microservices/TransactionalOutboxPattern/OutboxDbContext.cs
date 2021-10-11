@@ -1,3 +1,5 @@
+#nullable disable
+
 using JetBrains.Annotations;
 using JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages;
 using Microsoft.EntityFrameworkCore;

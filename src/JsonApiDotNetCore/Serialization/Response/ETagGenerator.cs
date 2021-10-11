@@ -1,3 +1,5 @@
+#nullable disable
+
 using Microsoft.Net.Http.Headers;
 
 namespace JsonApiDotNetCore.Serialization.Response

@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries

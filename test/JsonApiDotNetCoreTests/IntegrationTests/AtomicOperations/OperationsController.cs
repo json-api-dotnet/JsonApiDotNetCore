@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.AtomicOperations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;

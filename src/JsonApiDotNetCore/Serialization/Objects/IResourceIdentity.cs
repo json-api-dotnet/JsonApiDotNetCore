@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace JsonApiDotNetCore.Serialization.Objects
 {
     public interface IResourceIdentity

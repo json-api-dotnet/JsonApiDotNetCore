@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;

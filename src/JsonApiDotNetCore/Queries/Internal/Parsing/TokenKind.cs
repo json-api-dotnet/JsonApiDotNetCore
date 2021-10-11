@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace JsonApiDotNetCore.Queries.Internal.Parsing
 {
     public enum TokenKind

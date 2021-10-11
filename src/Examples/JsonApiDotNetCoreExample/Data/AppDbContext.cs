@@ -1,3 +1,5 @@
+#nullable disable
+
 using JetBrains.Annotations;
 using JsonApiDotNetCoreExample.Models;
 using Microsoft.EntityFrameworkCore;

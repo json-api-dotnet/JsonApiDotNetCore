@@ -1,3 +1,5 @@
+#nullable disable
+
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;

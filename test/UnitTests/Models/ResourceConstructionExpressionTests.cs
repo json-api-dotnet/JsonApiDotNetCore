@@ -1,3 +1,5 @@
+#nullable disable
+
 using System;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;

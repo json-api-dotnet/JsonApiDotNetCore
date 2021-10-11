@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Collections.Immutable;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;

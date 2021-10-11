@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Reflection;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Controllers.Annotations;

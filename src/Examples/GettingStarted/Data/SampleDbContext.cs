@@ -1,3 +1,5 @@
+#nullable disable
+
 using GettingStarted.Models;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;

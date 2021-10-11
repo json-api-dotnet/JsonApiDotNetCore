@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
 {
     public interface IMessageContent

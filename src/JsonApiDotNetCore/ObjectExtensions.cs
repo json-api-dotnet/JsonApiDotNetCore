@@ -1,3 +1,5 @@
+#nullable disable
+
 using System.Collections.Generic;
 
 #pragma warning disable AV1130 // Return type in method signature should be a collection interface instead of a concrete type

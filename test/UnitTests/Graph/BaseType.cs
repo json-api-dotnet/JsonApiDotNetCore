@@ -1,3 +1,5 @@
+#nullable disable
+
 // ReSharper disable UnusedTypeParameter
 
 namespace UnitTests.Graph
