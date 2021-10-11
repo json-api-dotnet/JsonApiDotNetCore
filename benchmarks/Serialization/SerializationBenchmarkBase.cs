@@ -239,7 +239,7 @@ namespace Benchmarks.Serialization
                 };
             }
 
-            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, IIdentifiable leftResource)
+            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
             {
                 return new()
                 {

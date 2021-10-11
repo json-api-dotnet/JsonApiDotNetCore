@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,12 +29,12 @@ namespace JsonApiDotNetCore.Controllers
         }
 
         /// <inheritdoc />
-        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, TId> getAll = null,
-            IGetByIdService<TResource, TId> getById = null, IGetSecondaryService<TResource, TId> getSecondary = null,
-            IGetRelationshipService<TResource, TId> getRelationship = null, ICreateService<TResource, TId> create = null,
-            IAddToRelationshipService<TResource, TId> addToRelationship = null, IUpdateService<TResource, TId> update = null,
-            ISetRelationshipService<TResource, TId> setRelationship = null, IDeleteService<TResource, TId> delete = null,
-            IRemoveFromRelationshipService<TResource, TId> removeFromRelationship = null)
+        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, TId>? getAll = null,
+            IGetByIdService<TResource, TId>? getById = null, IGetSecondaryService<TResource, TId>? getSecondary = null,
+            IGetRelationshipService<TResource, TId>? getRelationship = null, ICreateService<TResource, TId>? create = null,
+            IAddToRelationshipService<TResource, TId>? addToRelationship = null, IUpdateService<TResource, TId>? update = null,
+            ISetRelationshipService<TResource, TId>? setRelationship = null, IDeleteService<TResource, TId>? delete = null,
+            IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
             : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
                 removeFromRelationship)
         {
@@ -98,7 +96,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
+        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
             CancellationToken cancellationToken)
         {
             return await base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);

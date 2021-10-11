@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -12,9 +10,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class QueryStringParameterScopeExpression : QueryExpression
     {
         public LiteralConstantExpression ParameterName { get; }
-        public ResourceFieldChainExpression Scope { get; }
+        public ResourceFieldChainExpression? Scope { get; }
 
-        public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression scope)
+        public QueryStringParameterScopeExpression(LiteralConstantExpression parameterName, ResourceFieldChainExpression? scope)
         {
             ArgumentGuard.NotNull(parameterName, nameof(parameterName));
 
@@ -32,7 +30,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return Scope == null ? ParameterName.ToString() : $"{ParameterName}: {Scope}";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

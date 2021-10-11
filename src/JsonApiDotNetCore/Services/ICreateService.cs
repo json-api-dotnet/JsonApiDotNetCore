@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
@@ -13,6 +11,6 @@ namespace JsonApiDotNetCore.Services
         /// <summary>
         /// Handles a JSON:API request to create a new resource with attributes, relationships or both.
         /// </summary>
-        Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken);
+        Task<TResource?> CreateAsync(TResource resource, CancellationToken cancellationToken);
     }
 }

@@ -329,7 +329,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             };
 
             // Act
-            RelationshipLinks relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, new ExampleResource());
+            RelationshipLinks relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, "?");
 
             // Assert
             if (expected == LinkTypes.None)

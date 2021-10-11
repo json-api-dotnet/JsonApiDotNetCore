@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Repositories
@@ -13,6 +11,6 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Identifies the currently active transaction.
         /// </summary>
-        string TransactionId { get; }
+        string? TransactionId { get; }
     }
 }

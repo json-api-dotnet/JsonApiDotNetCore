@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -120,7 +118,7 @@ namespace JsonApiDotNetCore.Controllers
                 ValidateModelState(operations);
             }
 
-            IList<OperationContainer> results = await _processor.ProcessAsync(operations, cancellationToken);
+            IList<OperationContainer?> results = await _processor.ProcessAsync(operations, cancellationToken);
             return results.Any(result => result != null) ? Ok(results) : NoContent();
         }
 

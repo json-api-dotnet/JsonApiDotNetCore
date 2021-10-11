@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -16,7 +14,7 @@ namespace JsonApiDotNetCore.Queries
         /// <summary>
         /// Builds a top-level filter from constraints, used to determine total resource count.
         /// </summary>
-        FilterExpression GetTopFilterFromConstraints(ResourceType primaryResourceType);
+        FilterExpression? GetTopFilterFromConstraints(ResourceType primaryResourceType);
 
         /// <summary>
         /// Collects constraints and builds a <see cref="QueryLayer" /> out of them, used to retrieve the actual resources.

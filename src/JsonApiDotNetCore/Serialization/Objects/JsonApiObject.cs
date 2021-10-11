@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -14,18 +12,18 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("version")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         [JsonPropertyName("ext")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<string> Ext { get; set; }
+        public IList<string>? Ext { get; set; }
 
         [JsonPropertyName("profile")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IList<string> Profile { get; set; }
+        public IList<string>? Profile { get; set; }
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object?>? Meta { get; set; }
     }
 }

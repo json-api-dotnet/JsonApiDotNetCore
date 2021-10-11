@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -15,12 +13,12 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         /// <summary>
         /// Validates and converts the specified <paramref name="data" />.
         /// </summary>
-        object Convert(SingleOrManyData<ResourceObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state);
+        object? Convert(SingleOrManyData<ResourceObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state);
 
         /// <summary>
         /// Validates and converts the specified <paramref name="data" />.
         /// </summary>
-        object Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
+        object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
             RequestAdapterState state);
     }
 }

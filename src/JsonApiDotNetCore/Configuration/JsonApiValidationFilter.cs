@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using JsonApiDotNetCore.Middleware;
@@ -43,7 +41,7 @@ namespace JsonApiDotNetCore.Configuration
                 return false;
             }
 
-            if (_httpContextAccessor.HttpContext!.Request.Method == HttpMethods.Patch || request.WriteOperation == WriteOperationKind.UpdateResource)
+            if (request.WriteOperation == WriteOperationKind.UpdateResource)
             {
                 var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
                 return IsFieldTargeted(entry, targetedFields);
@@ -54,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private IServiceProvider GetScopedServiceProvider()
         {
-            HttpContext httpContext = _httpContextAccessor.HttpContext;
+            HttpContext? httpContext = _httpContextAccessor.HttpContext;
 
             if (httpContext == null)
             {
@@ -76,7 +74,8 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsFieldTargeted(ValidationEntry entry, ITargetedFields targetedFields)
         {
-            return targetedFields.Attributes.Any(attribute => attribute.Property.Name == entry.Key);
+            return targetedFields.Attributes.Any(attribute => attribute.Property.Name == entry.Key) ||
+                targetedFields.Relationships.Any(relationship => relationship.Property.Name == entry.Key);
         }
     }
 }

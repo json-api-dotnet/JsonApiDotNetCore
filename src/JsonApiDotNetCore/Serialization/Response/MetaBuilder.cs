@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -16,7 +14,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private readonly IJsonApiOptions _options;
         private readonly IResponseMeta _responseMeta;
 
-        private Dictionary<string, object> _meta = new();
+        private Dictionary<string, object?> _meta = new();
 
         public MetaBuilder(IPaginationContext paginationContext, IJsonApiOptions options, IResponseMeta responseMeta)
         {
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         /// <inheritdoc />
-        public void Add(IReadOnlyDictionary<string, object> values)
+        public void Add(IReadOnlyDictionary<string, object?> values)
         {
             ArgumentGuard.NotNull(values, nameof(values));
 
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         /// <inheritdoc />
-        public IDictionary<string, object> Build()
+        public IDictionary<string, object?>? Build()
         {
             if (_paginationContext.TotalResourceCount != null)
             {
@@ -51,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization.Response
                 _meta.Add(key, _paginationContext.TotalResourceCount);
             }
 
-            IReadOnlyDictionary<string, object> extraMeta = _responseMeta.GetMeta();
+            IReadOnlyDictionary<string, object?>? extraMeta = _responseMeta.GetMeta();
 
             if (extraMeta != null)
             {

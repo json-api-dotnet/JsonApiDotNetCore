@@ -1,5 +1,3 @@
-#nullable disable
-
 #pragma warning disable AV1008 // Class should not be static
 
 namespace JsonApiDotNetCore.Diagnostics

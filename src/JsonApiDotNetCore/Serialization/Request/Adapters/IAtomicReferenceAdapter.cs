@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters

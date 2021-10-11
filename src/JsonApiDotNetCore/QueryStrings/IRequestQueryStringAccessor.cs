@@ -1,5 +1,3 @@
-#nullable disable
-
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.QueryStrings

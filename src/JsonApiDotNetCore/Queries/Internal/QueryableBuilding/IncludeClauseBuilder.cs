@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,7 +13,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// Transforms <see cref="IncludeExpression" /> into <see cref="EntityFrameworkQueryableExtensions.Include{TEntity, TProperty}" /> calls.
     /// </summary>
     [PublicAPI]
-    public class IncludeClauseBuilder : QueryClauseBuilder<object>
+    public class IncludeClauseBuilder : QueryClauseBuilder<object?>
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new();
 
@@ -39,7 +37,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Visit(include, null);
         }
 
-        public override Expression VisitInclude(IncludeExpression expression, object argument)
+        public override Expression VisitInclude(IncludeExpression expression, object? argument)
         {
             Expression source = ApplyEagerLoads(_source, _resourceType.EagerLoads, null);
 
@@ -53,7 +51,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private Expression ProcessRelationshipChain(ResourceFieldChainExpression chain, Expression source)
         {
-            string path = null;
+            string? path = null;
             Expression result = source;
 
             foreach (RelationshipAttribute relationship in chain.Fields.Cast<RelationshipAttribute>())
@@ -63,10 +61,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 result = ApplyEagerLoads(result, relationship.RightType.EagerLoads, path);
             }
 
-            return IncludeExtensionMethodCall(result, path);
+            return IncludeExtensionMethodCall(result, path!);
         }
 
-        private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string pathPrefix)
+        private Expression ApplyEagerLoads(Expression source, IEnumerable<EagerLoadAttribute> eagerLoads, string? pathPrefix)
         {
             Expression result = source;
 

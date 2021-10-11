@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return _disposable;
         }
 
-        public string ToSourcePointer()
+        public string? ToSourcePointer()
         {
             if (!_stack.Any())
             {

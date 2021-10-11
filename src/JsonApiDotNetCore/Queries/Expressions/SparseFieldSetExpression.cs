@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -33,7 +31,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return string.Join(",", Fields.Select(child => child.PublicName).OrderBy(name => name));
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

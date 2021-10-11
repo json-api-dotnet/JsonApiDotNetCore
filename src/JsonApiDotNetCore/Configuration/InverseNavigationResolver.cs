@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -66,7 +64,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (RelationshipAttribute relationship in relationships)
             {
-                if (navigationMap.TryGetValue(relationship.Property.Name, out INavigationBase navigation))
+                if (navigationMap.TryGetValue(relationship.Property.Name, out INavigationBase? navigation))
                 {
                     relationship.InverseNavigationProperty = navigation.Inverse?.PropertyInfo;
                 }

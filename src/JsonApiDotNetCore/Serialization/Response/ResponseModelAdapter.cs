@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -61,21 +59,22 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         /// <inheritdoc />
-        public Document Convert(object model)
+        public Document Convert(object? model)
         {
             _sparseFieldSetCache.Reset();
             _resourceToTreeNodeCache.Clear();
 
             var document = new Document();
 
-            IncludeExpression include = _evaluatedIncludeCache.Get();
+            IncludeExpression? include = _evaluatedIncludeCache.Get();
             IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
             var rootNode = ResourceObjectTreeNode.CreateRoot();
-            ResourceType resourceType = _request.SecondaryResourceType ?? _request.PrimaryResourceType;
 
             if (model is IEnumerable<IIdentifiable> resources)
             {
+                ResourceType resourceType = (_request.SecondaryResourceType ?? _request.PrimaryResourceType)!;
+
                 foreach (IIdentifiable resource in resources)
                 {
                     TraverseResource(resource, resourceType, _request.Kind, includeElements, rootNode, null);
@@ -88,6 +87,8 @@ namespace JsonApiDotNetCore.Serialization.Response
             }
             else if (model is IIdentifiable resource)
             {
+                ResourceType resourceType = (_request.SecondaryResourceType ?? _request.PrimaryResourceType)!;
+
                 TraverseResource(resource, resourceType, _request.Kind, includeElements, rootNode, null);
                 PopulateRelationshipsInTree(rootNode, _request.Kind);
 
@@ -98,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             {
                 document.Data = new SingleOrManyData<ResourceObject>(null);
             }
-            else if (model is IEnumerable<OperationContainer> operations)
+            else if (model is IEnumerable<OperationContainer?> operations)
             {
                 using var _ = new RevertRequestStateOnDispose(_request, null);
                 document.Results = operations.Select(operation => ConvertOperation(operation, includeElements)).ToList();
@@ -124,15 +125,15 @@ namespace JsonApiDotNetCore.Serialization.Response
             return document;
         }
 
-        protected virtual AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableSet<IncludeElementExpression> includeElements)
+        protected virtual AtomicResultObject ConvertOperation(OperationContainer? operation, IImmutableSet<IncludeElementExpression> includeElements)
         {
-            ResourceObject resourceObject = null;
+            ResourceObject? resourceObject = null;
 
             if (operation != null)
             {
                 _request.CopyFrom(operation.Request);
 
-                ResourceType resourceType = operation.Request.SecondaryResourceType ?? operation.Request.PrimaryResourceType;
+                ResourceType resourceType = (operation.Request.SecondaryResourceType ?? operation.Request.PrimaryResourceType)!;
                 var rootNode = ResourceObjectTreeNode.CreateRoot();
 
                 TraverseResource(operation.Resource, resourceType, operation.Request.Kind, includeElements, rootNode, null);
@@ -151,7 +152,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         private void TraverseResource(IIdentifiable resource, ResourceType type, EndpointKind kind, IImmutableSet<IncludeElementExpression> includeElements,
-            ResourceObjectTreeNode parentTreeNode, RelationshipAttribute parentRelationship)
+            ResourceObjectTreeNode parentTreeNode, RelationshipAttribute? parentRelationship)
         {
             ResourceObjectTreeNode treeNode = GetOrCreateTreeNode(resource, type, kind);
 
@@ -172,7 +173,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private ResourceObjectTreeNode GetOrCreateTreeNode(IIdentifiable resource, ResourceType type, EndpointKind kind)
         {
-            if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode treeNode))
+            if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode? treeNode))
             {
                 ResourceObject resourceObject = ConvertResource(resource, type, kind);
                 treeNode = new ResourceObjectTreeNode(resource, type, resourceObject);
@@ -203,17 +204,17 @@ namespace JsonApiDotNetCore.Serialization.Response
                 IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(type);
 
                 resourceObject.Attributes = ConvertAttributes(resource, type, fieldSet);
-                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource.StringId);
+                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource.StringId!);
                 resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(type, resource);
             }
 
             return resourceObject;
         }
 
-        protected virtual IDictionary<string, object> ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
+        protected virtual IDictionary<string, object?>? ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
             IImmutableSet<ResourceFieldAttribute> fieldSet)
         {
-            var attrMap = new Dictionary<string, object>(resourceType.Attributes.Count);
+            var attrMap = new Dictionary<string, object?>(resourceType.Attributes.Count);
 
             foreach (AttrAttribute attr in resourceType.Attributes)
             {
@@ -222,7 +223,7 @@ namespace JsonApiDotNetCore.Serialization.Response
                     continue;
                 }
 
-                object value = attr.GetValue(resource);
+                object? value = attr.GetValue(resource);
 
                 if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && value == null)
                 {
@@ -253,7 +254,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private void TraverseRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
             IncludeElementExpression includeElement, EndpointKind kind)
         {
-            object rightValue = relationship.GetValue(leftResource);
+            object? rightValue = relationship.GetValue(leftResource);
             ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
             leftTreeNode.EnsureHasRelationship(relationship);
@@ -291,7 +292,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private void PopulateRelationshipInResourceObject(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
         {
             SingleOrManyData<ResourceIdentifierObject> data = GetRelationshipData(treeNode, relationship);
-            RelationshipLinks links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource);
+            RelationshipLinks? links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource.StringId!);
 
             if (links != null || data.IsAssigned)
             {
@@ -301,14 +302,14 @@ namespace JsonApiDotNetCore.Serialization.Response
                     Data = data
                 };
 
-                treeNode.ResourceObject.Relationships ??= new Dictionary<string, RelationshipObject>();
+                treeNode.ResourceObject.Relationships ??= new Dictionary<string, RelationshipObject?>();
                 treeNode.ResourceObject.Relationships.Add(relationship.PublicName, relationshipObject);
             }
         }
 
         private static SingleOrManyData<ResourceIdentifierObject> GetRelationshipData(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
         {
-            ISet<ResourceObjectTreeNode> rightNodes = treeNode.GetRightNodesInRelationship(relationship);
+            ISet<ResourceObjectTreeNode>? rightNodes = treeNode.GetRightNodesInRelationship(relationship);
 
             if (rightNodes != null)
             {
@@ -326,7 +327,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return default;
         }
 
-        protected virtual JsonApiObject GetApiObject()
+        protected virtual JsonApiObject? GetApiObject()
         {
             if (!_options.IncludeJsonApiVersion)
             {
@@ -349,7 +350,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return jsonApiObject;
         }
 
-        private IList<ResourceObject> GetIncluded(ResourceObjectTreeNode rootNode)
+        private IList<ResourceObject>? GetIncluded(ResourceObjectTreeNode rootNode)
         {
             IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
 

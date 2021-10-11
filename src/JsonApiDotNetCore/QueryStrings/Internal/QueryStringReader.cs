@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +35,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         }
 
         /// <inheritdoc />
-        public virtual void ReadAll(DisableQueryStringAttribute disableQueryStringAttribute)
+        public virtual void ReadAll(DisableQueryStringAttribute? disableQueryStringAttribute)
         {
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Parse query string");
 
@@ -45,7 +43,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             foreach ((string parameterName, StringValues parameterValue) in _queryStringAccessor.Query)
             {
-                IQueryStringParameterReader reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
+                IQueryStringParameterReader? reader = _parameterReaders.FirstOrDefault(nextReader => nextReader.CanRead(parameterName));
 
                 if (reader != null)
                 {

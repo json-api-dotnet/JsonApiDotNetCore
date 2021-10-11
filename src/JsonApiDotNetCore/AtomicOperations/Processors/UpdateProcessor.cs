@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -23,12 +21,12 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
             var resource = (TResource)operation.Resource;
-            TResource updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
+            TResource? updated = await _service.UpdateAsync(resource.Id, resource, cancellationToken);
 
             return updated == null ? null : operation.WithResource(updated);
         }

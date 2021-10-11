@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Immutable;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;

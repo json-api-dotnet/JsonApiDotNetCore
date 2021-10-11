@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -11,10 +9,10 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class PaginationElementQueryStringValueExpression : QueryExpression
     {
-        public ResourceFieldChainExpression Scope { get; }
+        public ResourceFieldChainExpression? Scope { get; }
         public int Value { get; }
 
-        public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression scope, int value)
+        public PaginationElementQueryStringValueExpression(ResourceFieldChainExpression? scope, int value)
         {
             Scope = scope;
             Value = value;
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return Scope == null ? Value.ToString() : $"{Scope}: {Value}";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

@@ -1,5 +1,4 @@
-#nullable disable
-
+using System;
 using Microsoft.AspNetCore.Http;
 
 namespace JsonApiDotNetCore.QueryStrings.Internal
@@ -9,7 +8,18 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IQueryCollection Query => _httpContextAccessor.HttpContext!.Request.Query;
+        public IQueryCollection Query
+        {
+            get
+            {
+                if (_httpContextAccessor.HttpContext == null)
+                {
+                    throw new InvalidOperationException("An active HTTP request is required.");
+                }
+
+                return _httpContextAccessor.HttpContext.Request.Query;
+            }
+        }
 
         public RequestQueryStringAccessor(IHttpContextAccessor httpContextAccessor)
         {

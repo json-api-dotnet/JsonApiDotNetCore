@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be(parameterName);
+            exception.ParameterName.Should().Be(parameterName);
             exception.Errors.Should().HaveCount(1);
             exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             exception.Errors[0].Title.Should().Be("The specified include is invalid.");

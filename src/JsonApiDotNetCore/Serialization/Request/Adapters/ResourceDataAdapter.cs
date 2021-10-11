@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -45,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         protected virtual (IIdentifiable resource, ResourceType resourceType) ConvertResourceObject(SingleOrManyData<ResourceObject> data,
             ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
-            return _resourceObjectAdapter.Convert(data.SingleValue, requirements, state);
+            return _resourceObjectAdapter.Convert(data.SingleValue!, requirements, state);
         }
     }
 }

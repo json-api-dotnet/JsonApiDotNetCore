@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -19,24 +17,24 @@ namespace JsonApiDotNetCore.Resources
         {
         }
 
-        public bool Equals(IIdentifiable x, IIdentifiable y)
+        public bool Equals(IIdentifiable? left, IIdentifiable? right)
         {
-            if (ReferenceEquals(x, y))
+            if (ReferenceEquals(left, right))
             {
                 return true;
             }
 
-            if (x is null || y is null || x.GetType() != y.GetType())
+            if (left is null || right is null || left.GetType() != right.GetType())
             {
                 return false;
             }
 
-            if (x.StringId == null && y.StringId == null)
+            if (left.StringId == null && right.StringId == null)
             {
-                return x.LocalId == y.LocalId;
+                return left.LocalId == right.LocalId;
             }
 
-            return x.StringId == y.StringId;
+            return left.StringId == right.StringId;
         }
 
         public int GetHashCode(IIdentifiable obj)

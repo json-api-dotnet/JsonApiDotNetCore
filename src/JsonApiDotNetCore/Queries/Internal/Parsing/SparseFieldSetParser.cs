@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -13,15 +11,15 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class SparseFieldSetParser : QueryExpressionParser
     {
-        private readonly Action<ResourceFieldAttribute, ResourceType, string> _validateSingleFieldCallback;
-        private ResourceType _resourceType;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
+        private ResourceType? _resourceType;
 
-        public SparseFieldSetParser(Action<ResourceFieldAttribute, ResourceType, string> validateSingleFieldCallback = null)
+        public SparseFieldSetParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public SparseFieldSetExpression Parse(string source, ResourceType resourceType)
+        public SparseFieldSetExpression? Parse(string source, ResourceType resourceType)
         {
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
@@ -29,14 +27,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             Tokenize(source);
 
-            SparseFieldSetExpression expression = ParseSparseFieldSet();
+            SparseFieldSetExpression? expression = ParseSparseFieldSet();
 
             AssertTokenStackIsEmpty();
 
             return expression;
         }
 
-        protected SparseFieldSetExpression ParseSparseFieldSet()
+        protected SparseFieldSetExpression? ParseSparseFieldSet()
         {
             ImmutableHashSet<ResourceFieldAttribute>.Builder fieldSetBuilder = ImmutableHashSet.CreateBuilder<ResourceFieldAttribute>();
 
@@ -57,9 +55,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType, path);
+            ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType!, path);
 
-            _validateSingleFieldCallback?.Invoke(field, _resourceType, path);
+            _validateSingleFieldCallback?.Invoke(field, _resourceType!, path);
 
             return ImmutableArray.Create(field);
         }

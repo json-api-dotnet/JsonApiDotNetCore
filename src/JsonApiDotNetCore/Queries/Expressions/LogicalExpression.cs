@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -53,7 +51,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return builder.ToString();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

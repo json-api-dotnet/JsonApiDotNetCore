@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -102,7 +100,7 @@ namespace JsonApiDotNetCore.Middleware
             {
                 foreach (ErrorObject error in errors)
                 {
-                    error.Meta ??= new Dictionary<string, object>();
+                    error.Meta ??= new Dictionary<string, object?>();
                     error.Meta["StackTrace"] = stackTraceLines;
                 }
             }

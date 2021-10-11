@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -14,8 +12,8 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidRequestBodyException : JsonApiException
     {
-        public InvalidRequestBodyException(string requestBody, string genericMessage, string specificMessage, string sourcePointer,
-            HttpStatusCode? alternativeStatusCode = null, Exception innerException = null)
+        public InvalidRequestBodyException(string? requestBody, string? genericMessage, string? specificMessage, string? sourcePointer,
+            HttpStatusCode? alternativeStatusCode = null, Exception? innerException = null)
             : base(new ErrorObject(alternativeStatusCode ?? HttpStatusCode.UnprocessableEntity)
             {
                 Title = genericMessage != null ? $"Failed to deserialize request body: {genericMessage}" : "Failed to deserialize request body.",
@@ -28,7 +26,7 @@ namespace JsonApiDotNetCore.Errors
                     },
                 Meta = string.IsNullOrEmpty(requestBody)
                     ? null
-                    : new Dictionary<string, object>
+                    : new Dictionary<string, object?>
                     {
                         ["RequestBody"] = requestBody
                     }

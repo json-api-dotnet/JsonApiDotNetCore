@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>
@@ -10,12 +8,12 @@ namespace JsonApiDotNetCore.Resources
         /// <summary>
         /// The value for element 'id' in a JSON:API request or response.
         /// </summary>
-        string StringId { get; set; }
+        string? StringId { get; set; }
 
         /// <summary>
         /// The value for element 'lid' in a JSON:API request.
         /// </summary>
-        string LocalId { get; set; }
+        string? LocalId { get; set; }
     }
 
     /// <summary>

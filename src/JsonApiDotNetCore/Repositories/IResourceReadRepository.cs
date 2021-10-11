@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,11 +24,11 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Executes a read query using the specified constraints and returns the collection of matching resources.
         /// </summary>
-        Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer layer, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<TResource>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes a read query using the specified top-level filter and returns the top-level count of matching resources.
         /// </summary>
-        Task<int> CountAsync(FilterExpression topFilter, CancellationToken cancellationToken);
+        Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken);
     }
 }

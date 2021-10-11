@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCore.Middleware
 {
     public enum EndpointKind

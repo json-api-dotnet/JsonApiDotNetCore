@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Linq;
@@ -13,10 +11,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class SortParser : QueryExpressionParser
     {
-        private readonly Action<ResourceFieldAttribute, ResourceType, string> _validateSingleFieldCallback;
-        private ResourceType _resourceTypeInScope;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
+        private ResourceType? _resourceTypeInScope;
 
-        public SortParser(Action<ResourceFieldAttribute, ResourceType, string> validateSingleFieldCallback = null)
+        public SortParser(Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
@@ -58,13 +56,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             bool isAscending = true;
 
-            if (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Minus)
+            if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Minus)
             {
                 TokenStack.Pop();
                 isAscending = false;
             }
 
-            CountExpression count = TryParseCount();
+            CountExpression? count = TryParseCount();
 
             if (count != null)
             {
@@ -80,12 +78,12 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {
-                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope, path);
+                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path);
             }
 
             if (chainRequirements == FieldChainRequirements.EndsInAttribute)
             {
-                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, _validateSingleFieldCallback);
             }
 
             throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

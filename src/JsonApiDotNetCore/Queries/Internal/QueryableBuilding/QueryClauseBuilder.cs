@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +25,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression collectionExpression = Visit(expression.TargetCollection, argument);
 
-            Expression propertyExpression = TryGetCollectionCount(collectionExpression);
+            Expression? propertyExpression = TryGetCollectionCount(collectionExpression);
 
             if (propertyExpression == null)
             {
@@ -37,7 +35,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return propertyExpression;
         }
 
-        private static Expression TryGetCollectionCount(Expression collectionExpression)
+        private static Expression? TryGetCollectionCount(Expression? collectionExpression)
         {
             if (collectionExpression != null)
             {
@@ -72,7 +70,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static MemberExpression CreatePropertyExpressionFromComponents(Expression source, IEnumerable<string> components)
         {
-            MemberExpression property = null;
+            MemberExpression? property = null;
 
             foreach (string propertyName in components)
             {
@@ -86,10 +84,10 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 property = property == null ? Expression.Property(source, propertyName) : Expression.Property(property, propertyName);
             }
 
-            return property;
+            return property!;
         }
 
-        protected Expression CreateTupleAccessExpressionForConstant(object value, Type type)
+        protected Expression CreateTupleAccessExpressionForConstant(object? value, Type type)
         {
             // To enable efficient query plan caching, inline constants (that vary per request) should be converted into query parameters.
             // https://stackoverflow.com/questions/54075758/building-a-parameterized-entityframework-core-expression

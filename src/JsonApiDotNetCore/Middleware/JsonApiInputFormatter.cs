@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Serialization.Request;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -25,7 +23,7 @@ namespace JsonApiDotNetCore.Middleware
 
             var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
 
-            object model = await reader.ReadAsync(context.HttpContext.Request);
+            object? model = await reader.ReadAsync(context.HttpContext.Request);
 
             return model == null ? await InputFormatterResult.NoValueAsync() : await InputFormatterResult.SuccessAsync(model);
         }

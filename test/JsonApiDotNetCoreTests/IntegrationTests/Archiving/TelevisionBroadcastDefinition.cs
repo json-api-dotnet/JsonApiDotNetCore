@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
                     AttrAttribute archivedAtAttribute = ResourceType.GetAttributeByPropertyName(nameof(TelevisionBroadcast.ArchivedAt));
                     var archivedAtChain = new ResourceFieldChainExpression(archivedAtAttribute);
 
-                    FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, new NullConstantExpression());
+                    FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
 
                     return existingFilter == null ? isUnarchived : new LogicalExpression(LogicalOperator.And, existingFilter, isUnarchived);
                 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using JetBrains.Annotations;
@@ -13,20 +11,20 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidQueryStringParameterException : JsonApiException
     {
-        public string QueryParameterName { get; }
+        public string ParameterName { get; }
 
-        public InvalidQueryStringParameterException(string queryParameterName, string genericMessage, string specificMessage, Exception innerException = null)
+        public InvalidQueryStringParameterException(string parameterName, string genericMessage, string specificMessage, Exception? innerException = null)
             : base(new ErrorObject(HttpStatusCode.BadRequest)
             {
                 Title = genericMessage,
                 Detail = specificMessage,
                 Source = new ErrorSource
                 {
-                    Parameter = queryParameterName
+                    Parameter = parameterName
                 }
             }, innerException)
         {
-            QueryParameterName = queryParameterName;
+            ParameterName = parameterName;
         }
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,10 +22,10 @@ namespace JsonApiDotNetCore.Serialization.Response
         private static readonly IIdentifiable RootResource = new EmptyResource();
 
         // Direct children from root. These are emitted in 'data'.
-        private List<ResourceObjectTreeNode> _directChildren;
+        private List<ResourceObjectTreeNode>? _directChildren;
 
         // Related resource objects per relationship. These are emitted in 'included'.
-        private Dictionary<RelationshipAttribute, HashSet<ResourceObjectTreeNode>> _childrenByRelationship;
+        private Dictionary<RelationshipAttribute, HashSet<ResourceObjectTreeNode>>? _childrenByRelationship;
 
         private bool IsTreeRoot => RootType.Equals(Type);
 
@@ -81,6 +79,11 @@ namespace JsonApiDotNetCore.Serialization.Response
             ArgumentGuard.NotNull(relationship, nameof(relationship));
             ArgumentGuard.NotNull(rightNode, nameof(rightNode));
 
+            if (_childrenByRelationship == null)
+            {
+                throw new InvalidOperationException("Call EnsureHasRelationship() first.");
+            }
+
             HashSet<ResourceObjectTreeNode> rightNodes = _childrenByRelationship[relationship];
             rightNodes.Add(rightNode);
         }
@@ -132,7 +135,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             {
                 foreach (RelationshipAttribute relationship in treeNode.Type.Relationships)
                 {
-                    if (treeNode._childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode> rightNodes))
+                    if (treeNode._childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes))
                     {
                         VisitRelationshipChildInSubtree(rightNodes, visited);
                     }
@@ -148,9 +151,9 @@ namespace JsonApiDotNetCore.Serialization.Response
             }
         }
 
-        public ISet<ResourceObjectTreeNode> GetRightNodesInRelationship(RelationshipAttribute relationship)
+        public ISet<ResourceObjectTreeNode>? GetRightNodesInRelationship(RelationshipAttribute relationship)
         {
-            return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode> rightNodes)
+            return _childrenByRelationship != null && _childrenByRelationship.TryGetValue(relationship, out HashSet<ResourceObjectTreeNode>? rightNodes)
                 ? rightNodes
                 : null;
         }
@@ -197,7 +200,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             }
         }
 
-        public bool Equals(ResourceObjectTreeNode other)
+        public bool Equals(ResourceObjectTreeNode? other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -212,7 +215,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return ResourceObjectComparer.Instance.Equals(ResourceObject, other.ResourceObject);
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             return Equals(other as ResourceObjectTreeNode);
         }
@@ -241,8 +244,8 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private sealed class EmptyResource : IIdentifiable
         {
-            public string StringId { get; set; }
-            public string LocalId { get; set; }
+            public string? StringId { get; set; }
+            public string? LocalId { get; set; }
         }
 
         private sealed class ResourceObjectComparer : IEqualityComparer<ResourceObject>
@@ -253,7 +256,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             {
             }
 
-            public bool Equals(ResourceObject x, ResourceObject y)
+            public bool Equals(ResourceObject? x, ResourceObject? y)
             {
                 if (ReferenceEquals(x, y))
                 {

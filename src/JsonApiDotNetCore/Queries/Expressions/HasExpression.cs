@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Text;
 using JetBrains.Annotations;
@@ -14,9 +12,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
     public class HasExpression : FilterExpression
     {
         public ResourceFieldChainExpression TargetCollection { get; }
-        public FilterExpression Filter { get; }
+        public FilterExpression? Filter { get; }
 
-        public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression filter)
+        public HasExpression(ResourceFieldChainExpression targetCollection, FilterExpression? filter)
         {
             ArgumentGuard.NotNull(targetCollection, nameof(targetCollection));
 
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return builder.ToString();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

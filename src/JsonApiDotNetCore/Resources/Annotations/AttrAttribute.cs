@@ -1,6 +1,5 @@
-#nullable disable
-
 using System;
+using System.Reflection;
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Resources.Annotations
@@ -35,37 +34,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
             set => _capabilities = value;
         }
 
-        /// <summary>
-        /// Get the value of the attribute for the given object. Throws if the attribute does not belong to the provided object.
-        /// </summary>
-        public object GetValue(object resource)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            if (Property.GetMethod == null)
-            {
-                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is write-only.");
-            }
-
-            return Property.GetValue(resource);
-        }
-
-        /// <summary>
-        /// Sets the value of the attribute on the given object.
-        /// </summary>
-        public void SetValue(object resource, object newValue)
-        {
-            ArgumentGuard.NotNull(resource, nameof(resource));
-
-            if (Property.SetMethod == null)
-            {
-                throw new InvalidOperationException($"Property '{Property.DeclaringType?.Name}.{Property.Name}' is read-only.");
-            }
-
-            Property.SetValue(resource, newValue);
-        }
-
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

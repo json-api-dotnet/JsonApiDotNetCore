@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,6 +13,6 @@ namespace JsonApiDotNetCore.AtomicOperations
         /// <summary>
         /// Processes the list of specified operations.
         /// </summary>
-        Task<IList<OperationContainer>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken);
+        Task<IList<OperationContainer?>> ProcessAsync(IList<OperationContainer> operations, CancellationToken cancellationToken);
     }
 }

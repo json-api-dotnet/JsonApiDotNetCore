@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,18 +16,18 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync" />.
         /// </summary>
-        Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer layer, CancellationToken cancellationToken)
+        Task<IReadOnlyCollection<TResource>> GetAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.GetAsync" /> for the specified resource type.
         /// </summary>
-        Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer layer, CancellationToken cancellationToken);
+        Task<IReadOnlyCollection<IIdentifiable>> GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken);
 
         /// <summary>
         /// Invokes <see cref="IResourceReadRepository{TResource,TId}.CountAsync" /> for the specified resource type.
         /// </summary>
-        Task<int> CountAsync<TResource>(FilterExpression topFilter, CancellationToken cancellationToken)
+        Task<int> CountAsync<TResource>(FilterExpression? topFilter, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.GetForUpdateAsync" />.
         /// </summary>
-        Task<TResource> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
+        Task<TResource?> GetForUpdateAsync<TResource>(QueryLayer queryLayer, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Invokes <see cref="IResourceWriteRepository{TResource,TId}.SetRelationshipAsync" />.
         /// </summary>
-        Task SetRelationshipAsync<TResource>(TResource leftResource, object rightValue, CancellationToken cancellationToken)
+        Task SetRelationshipAsync<TResource>(TResource leftResource, object? rightValue, CancellationToken cancellationToken)
             where TResource : class, IIdentifiable;
 
         /// <summary>

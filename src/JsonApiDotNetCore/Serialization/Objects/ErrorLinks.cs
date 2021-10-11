@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
@@ -13,10 +11,10 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("about")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string About { get; set; }
+        public string? About { get; set; }
 
         [JsonPropertyName("type")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Type { get; set; }
+        public string? Type { get; set; }
     }
 }

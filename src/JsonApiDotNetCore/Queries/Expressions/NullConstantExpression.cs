@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Queries.Internal.Parsing;
@@ -12,6 +10,12 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public class NullConstantExpression : IdentifierExpression
     {
+        public static readonly NullConstantExpression Instance = new();
+
+        private NullConstantExpression()
+        {
+        }
+
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
         {
             return visitor.VisitNullConstant(this, argument);
@@ -22,7 +26,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return Keywords.Null;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

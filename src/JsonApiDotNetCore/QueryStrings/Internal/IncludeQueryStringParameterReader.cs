@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -20,8 +18,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IJsonApiOptions _options;
         private readonly IncludeParser _includeParser;
 
-        private IncludeExpression _includeExpression;
-        private string _lastParameterName;
+        private IncludeExpression? _includeExpression;
+        private string? _lastParameterName;
 
         public IncludeQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
             : base(request, resourceGraph)
@@ -36,7 +34,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         {
             if (!relationship.CanInclude)
             {
-                throw new InvalidQueryStringParameterException(_lastParameterName, "Including the requested relationship is not allowed.",
+                throw new InvalidQueryStringParameterException(_lastParameterName!, "Including the requested relationship is not allowed.",
                     path == relationship.PublicName
                         ? $"Including the relationship '{relationship.PublicName}' on '{resourceType.PublicName}' is not allowed."
                         : $"Including the relationship '{relationship.PublicName}' in '{path}' on '{resourceType.PublicName}' is not allowed.");

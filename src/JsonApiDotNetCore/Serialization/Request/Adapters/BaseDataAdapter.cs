@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -12,7 +10,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     {
         [AssertionMethod]
         protected static void AssertHasData<T>(SingleOrManyData<T> data, RequestAdapterState state)
-            where T : class, IResourceIdentity
+            where T : class, IResourceIdentity, new()
         {
             if (!data.IsAssigned)
             {
@@ -22,7 +20,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
         [AssertionMethod]
         protected static void AssertHasSingleValue<T>(SingleOrManyData<T> data, bool allowNull, RequestAdapterState state)
-            where T : class, IResourceIdentity
+            where T : class, IResourceIdentity, new()
         {
             if (data.SingleValue == null)
             {
@@ -43,7 +41,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
         [AssertionMethod]
         protected static void AssertHasManyValue<T>(SingleOrManyData<T> data, RequestAdapterState state)
-            where T : class, IResourceIdentity
+            where T : class, IResourceIdentity, new()
         {
             if (data.ManyValue == null)
             {

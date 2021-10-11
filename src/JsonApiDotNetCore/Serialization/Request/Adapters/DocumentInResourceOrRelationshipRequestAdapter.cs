@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
@@ -28,7 +26,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public object Convert(Document document, RequestAdapterState state)
+        public object? Convert(Document document, RequestAdapterState state)
         {
             state.WritableTargetedFields = new TargetedFields();
 

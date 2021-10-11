@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCore.Resources
 {
     /// <summary>

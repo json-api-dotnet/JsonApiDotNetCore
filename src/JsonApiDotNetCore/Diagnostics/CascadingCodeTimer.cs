@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCore.Diagnostics
 
         private MeasureScope CreateChildScope(string name, bool excludeInRelativeCost)
         {
-            if (_activeScopeStack.TryPeek(out MeasureScope topScope))
+            if (_activeScopeStack.TryPeek(out MeasureScope? topScope))
             {
                 return topScope.SpawnChild(this, name, excludeInRelativeCost);
             }
@@ -57,7 +55,7 @@ namespace JsonApiDotNetCore.Diagnostics
 
         private void Close(MeasureScope scope)
         {
-            if (!_activeScopeStack.TryPeek(out MeasureScope topScope) || topScope != scope)
+            if (!_activeScopeStack.TryPeek(out MeasureScope? topScope) || topScope != scope)
             {
                 throw new InvalidOperationException($"Scope '{scope.Name}' cannot be disposed at this time, because it is not the currently active scope.");
             }

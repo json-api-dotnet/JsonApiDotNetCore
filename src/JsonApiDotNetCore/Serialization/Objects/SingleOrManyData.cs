@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -15,22 +13,24 @@ namespace JsonApiDotNetCore.Serialization.Objects
     /// </summary>
     [PublicAPI]
     public readonly struct SingleOrManyData<T>
-        where T : class, IResourceIdentity
+        // The "new()" constraint exists for parity with SingleOrManyDataConverterFactory, which creates empty instances
+        // to ensure ManyValue never contains null items.
+        where T : class, IResourceIdentity, new()
     {
         // ReSharper disable once MergeConditionalExpression
         // Justification: ReSharper reporting this is a bug, which is fixed in v2021.2.1. This condition cannot be merged.
-        public object Value => ManyValue != null ? ManyValue : SingleValue;
+        public object? Value => ManyValue != null ? ManyValue : SingleValue;
 
         [JsonIgnore]
         public bool IsAssigned { get; }
 
         [JsonIgnore]
-        public T SingleValue { get; }
+        public T? SingleValue { get; }
 
         [JsonIgnore]
-        public IList<T> ManyValue { get; }
+        public IList<T>? ManyValue { get; }
 
-        public SingleOrManyData(object value)
+        public SingleOrManyData(object? value)
         {
             IsAssigned = true;
 
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
             else
             {
                 ManyValue = null;
-                SingleValue = (T)value;
+                SingleValue = (T?)value;
             }
         }
     }

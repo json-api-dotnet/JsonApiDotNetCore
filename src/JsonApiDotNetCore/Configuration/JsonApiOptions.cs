@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Data;
 using System.Text.Encodings.Web;
@@ -29,7 +27,7 @@ namespace JsonApiDotNetCore.Configuration
         internal bool DisableChildrenPagination { get; set; }
 
         /// <inheritdoc />
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         /// <inheritdoc />
         public AttrCapabilities DefaultAttrCapabilities { get; set; } = AttrCapabilities.All;
@@ -59,13 +57,13 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeTotalResourceCount { get; set; }
 
         /// <inheritdoc />
-        public PageSize DefaultPageSize { get; set; } = new(10);
+        public PageSize? DefaultPageSize { get; set; } = new(10);
 
         /// <inheritdoc />
-        public PageSize MaximumPageSize { get; set; }
+        public PageSize? MaximumPageSize { get; set; }
 
         /// <inheritdoc />
-        public PageNumber MaximumPageNumber { get; set; }
+        public PageNumber? MaximumPageNumber { get; set; }
 
         /// <inheritdoc />
         public bool ValidateModelState { get; set; }

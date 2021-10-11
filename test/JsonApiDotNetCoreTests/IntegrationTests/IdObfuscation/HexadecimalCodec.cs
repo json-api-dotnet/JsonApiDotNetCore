@@ -28,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 });
             }
 
-            string stringValue = FromHexString(value.Substring(1));
+            string stringValue = FromHexString(value[1..]);
             return int.Parse(stringValue);
         }
 

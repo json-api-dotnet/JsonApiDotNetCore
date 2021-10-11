@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,14 +22,14 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         }
 
         /// <inheritdoc />
-        public virtual async Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
+        public virtual async Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
             var leftId = (TId)operation.Resource.GetTypedId();
             ISet<IIdentifiable> rightResourceIds = operation.GetSecondaryResources();
 
-            await _service.AddToToManyRelationshipAsync(leftId, operation.Request.Relationship.PublicName, rightResourceIds, cancellationToken);
+            await _service.AddToToManyRelationshipAsync(leftId, operation.Request.Relationship!.PublicName, rightResourceIds, cancellationToken);
 
             return null;
         }

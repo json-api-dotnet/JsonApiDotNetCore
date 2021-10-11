@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Queries.Expressions;
@@ -23,11 +21,12 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             _resourceGraph = resourceGraph;
             _isCollectionRequest = request.IsCollection;
-            RequestResourceType = request.SecondaryResourceType ?? request.PrimaryResourceType;
+            // There are currently no query string readers that work with operations, so non-nullable for convenience.
+            RequestResourceType = (request.SecondaryResourceType ?? request.PrimaryResourceType)!;
             IsAtomicOperationsRequest = request.Kind == EndpointKind.AtomicOperations;
         }
 
-        protected ResourceType GetResourceTypeForScope(ResourceFieldChainExpression scope)
+        protected ResourceType GetResourceTypeForScope(ResourceFieldChainExpression? scope)
         {
             if (scope == null)
             {

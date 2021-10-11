@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -59,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                         _isInQuotedSection = false;
 
-                        Token literalToken = ProduceTokenFromTextBuffer(true);
+                        Token literalToken = ProduceTokenFromTextBuffer(true)!;
                         yield return literalToken;
                     }
                     else
@@ -78,7 +76,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                     if (singleCharacterTokenKind != null && !IsMinusInsideText(singleCharacterTokenKind.Value))
                     {
-                        Token identifierToken = ProduceTokenFromTextBuffer(false);
+                        Token? identifierToken = ProduceTokenFromTextBuffer(false);
 
                         if (identifierToken != null)
                         {
@@ -106,7 +104,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
                 throw new QueryParseException("' expected.");
             }
 
-            Token lastToken = ProduceTokenFromTextBuffer(false);
+            Token? lastToken = ProduceTokenFromTextBuffer(false);
 
             if (lastToken != null)
             {
@@ -129,7 +127,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return SingleCharacterToTokenKinds.ContainsKey(ch) ? SingleCharacterToTokenKinds[ch] : null;
         }
 
-        private Token ProduceTokenFromTextBuffer(bool isQuotedText)
+        private Token? ProduceTokenFromTextBuffer(bool isQuotedText)
         {
             if (isQuotedText || _textBuffer.Length > 0)
             {

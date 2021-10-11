@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +15,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
     /// <see cref="Queryable.Where{TSource}(IQueryable{TSource}, System.Linq.Expressions.Expression{System.Func{TSource,bool}})" /> calls.
     /// </summary>
     [PublicAPI]
-    public class WhereClauseBuilder : QueryClauseBuilder<Type>
+    public class WhereClauseBuilder : QueryClauseBuilder<Type?>
     {
         private static readonly CollectionConverter CollectionConverter = new();
         private static readonly ConstantExpression NullConstant = Expression.Constant(null);
@@ -58,18 +56,18 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Expression.Call(_extensionType, "Where", LambdaScope.Parameter.Type.AsArray(), _source, predicate);
         }
 
-        public override Expression VisitHas(HasExpression expression, Type argument)
+        public override Expression VisitHas(HasExpression expression, Type? argument)
         {
             Expression property = Visit(expression.TargetCollection, argument);
 
-            Type elementType = CollectionConverter.TryGetCollectionElementType(property.Type);
+            Type? elementType = CollectionConverter.TryGetCollectionElementType(property.Type);
 
             if (elementType == null)
             {
                 throw new InvalidOperationException("Expression must be a collection.");
             }
 
-            Expression predicate = null;
+            Expression? predicate = null;
 
             if (expression.Filter != null)
             {
@@ -83,17 +81,14 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return AnyExtensionMethodCall(elementType, property, predicate);
         }
 
-        private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression predicate)
+        private static MethodCallExpression AnyExtensionMethodCall(Type elementType, Expression source, Expression? predicate)
         {
-            if (predicate != null)
-            {
-                return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source, predicate);
-            }
-
-            return Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
+            return predicate != null
+                ? Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source, predicate)
+                : Expression.Call(typeof(Enumerable), "Any", elementType.AsArray(), source);
         }
 
-        public override Expression VisitMatchText(MatchTextExpression expression, Type argument)
+        public override Expression VisitMatchText(MatchTextExpression expression, Type? argument)
         {
             Expression property = Visit(expression.TargetAttribute, argument);
 
@@ -117,16 +112,16 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Expression.Call(property, "Contains", null, text);
         }
 
-        public override Expression VisitAny(AnyExpression expression, Type argument)
+        public override Expression VisitAny(AnyExpression expression, Type? argument)
         {
             Expression property = Visit(expression.TargetAttribute, argument);
 
-            var valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type));
+            IList valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type))!;
 
             foreach (LiteralConstantExpression constant in expression.Constants)
             {
-                object value = ConvertTextToTargetType(constant.Value, property.Type);
-                valueList!.Add(value);
+                object? value = ConvertTextToTargetType(constant.Value, property.Type);
+                valueList.Add(value);
             }
 
             ConstantExpression collection = Expression.Constant(valueList);
@@ -138,7 +133,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return Expression.Call(typeof(Enumerable), "Contains", value.Type.AsArray(), collection, value);
         }
 
-        public override Expression VisitLogical(LogicalExpression expression, Type argument)
+        public override Expression VisitLogical(LogicalExpression expression, Type? argument)
         {
             var termQueue = new Queue<Expression>(expression.Terms.Select(filter => Visit(filter, argument)));
 
@@ -171,13 +166,13 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return tempExpression;
         }
 
-        public override Expression VisitNot(NotExpression expression, Type argument)
+        public override Expression VisitNot(NotExpression expression, Type? argument)
         {
             Expression child = Visit(expression.Child, argument);
             return Expression.Not(child);
         }
 
-        public override Expression VisitComparison(ComparisonExpression expression, Type argument)
+        public override Expression VisitComparison(ComparisonExpression expression, Type? argument)
         {
             Type commonType = ResolveCommonType(expression.Left, expression.Right);
 
@@ -225,7 +220,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
                 return typeof(Nullable<>).MakeGenericType(leftType);
             }
 
-            Type rightType = TryResolveFixedType(right);
+            Type? rightType = TryResolveFixedType(right);
 
             if (rightType != null && RuntimeTypeConverter.CanContainNull(rightType))
             {
@@ -241,7 +236,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return result.Type;
         }
 
-        private Type TryResolveFixedType(QueryExpression expression)
+        private Type? TryResolveFixedType(QueryExpression expression)
         {
             if (expression is CountExpression)
             {
@@ -257,7 +252,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return null;
         }
 
-        private static Expression WrapInConvert(Expression expression, Type targetType)
+        private static Expression WrapInConvert(Expression expression, Type? targetType)
         {
             try
             {
@@ -269,19 +264,19 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             }
         }
 
-        public override Expression VisitNullConstant(NullConstantExpression expression, Type expressionType)
+        public override Expression VisitNullConstant(NullConstantExpression expression, Type? expressionType)
         {
             return NullConstant;
         }
 
-        public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type expressionType)
+        public override Expression VisitLiteralConstant(LiteralConstantExpression expression, Type? expressionType)
         {
-            object convertedValue = expressionType != null ? ConvertTextToTargetType(expression.Value, expressionType) : expression.Value;
+            object? convertedValue = expressionType != null ? ConvertTextToTargetType(expression.Value, expressionType) : expression.Value;
 
             return CreateTupleAccessExpressionForConstant(convertedValue, expressionType ?? typeof(string));
         }
 
-        private static object ConvertTextToTargetType(string text, Type targetType)
+        private static object? ConvertTextToTargetType(string text, Type targetType)
         {
             try
             {

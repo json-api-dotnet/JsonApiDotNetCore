@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -24,8 +22,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         private readonly IJsonApiOptions _options;
         private readonly PaginationParser _paginationParser;
 
-        private PaginationQueryStringValueExpression _pageSizeConstraint;
-        private PaginationQueryStringValueExpression _pageNumberConstraint;
+        private PaginationQueryStringValueExpression? _pageSizeConstraint;
+        private PaginationQueryStringValueExpression? _pageNumberConstraint;
 
         public PaginationQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph, IJsonApiOptions options)
             : base(request, resourceGraph)
@@ -149,7 +147,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             private readonly MutablePaginationEntry _globalScope = new();
             private readonly Dictionary<ResourceFieldChainExpression, MutablePaginationEntry> _nestedScopes = new();
 
-            public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression scope)
+            public MutablePaginationEntry ResolveEntryInScope(ResourceFieldChainExpression? scope)
             {
                 if (scope == null)
                 {
@@ -191,21 +189,21 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
             private IEnumerable<ExpressionInScope> EnumerateExpressionsInScope()
             {
-                yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber, _globalScope.PageSize));
+                yield return new ExpressionInScope(null, new PaginationExpression(_globalScope.PageNumber!, _globalScope.PageSize));
 
                 foreach ((ResourceFieldChainExpression scope, MutablePaginationEntry entry) in _nestedScopes)
                 {
-                    yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber, entry.PageSize));
+                    yield return new ExpressionInScope(scope, new PaginationExpression(entry.PageNumber!, entry.PageSize));
                 }
             }
         }
 
         private sealed class MutablePaginationEntry
         {
-            public PageSize PageSize { get; set; }
+            public PageSize? PageSize { get; set; }
             public bool HasSetPageSize { get; set; }
 
-            public PageNumber PageNumber { get; set; }
+            public PageNumber? PageNumber { get; set; }
         }
     }
 }

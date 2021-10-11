@@ -80,7 +80,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be("page[number]");
+            exception.ParameterName.Should().Be("page[number]");
             exception.Errors.Should().HaveCount(1);
             exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             exception.Errors[0].Title.Should().Be("The specified paging is invalid.");
@@ -113,7 +113,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             // Assert
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
-            exception.QueryParameterName.Should().Be("page[size]");
+            exception.ParameterName.Should().Be("page[size]");
             exception.Errors.Should().HaveCount(1);
             exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             exception.Errors[0].Title.Should().Be("The specified paging is invalid.");

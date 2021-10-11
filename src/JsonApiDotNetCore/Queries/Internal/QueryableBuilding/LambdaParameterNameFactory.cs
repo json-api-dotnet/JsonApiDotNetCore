@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using Humanizer;
 using JetBrains.Annotations;

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -11,7 +9,7 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidConfigurationException : Exception
     {
-        public InvalidConfigurationException(string message, Exception innerException = null)
+        public InvalidConfigurationException(string message, Exception? innerException = null)
             : base(message, innerException)
         {
         }

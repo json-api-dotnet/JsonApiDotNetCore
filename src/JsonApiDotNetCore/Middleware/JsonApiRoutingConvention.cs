@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,15 +47,15 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         /// <inheritdoc />
-        public ResourceType GetResourceTypeForController(Type controllerType)
+        public ResourceType? GetResourceTypeForController(Type? controllerType)
         {
-            return controllerType != null && _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType resourceType) ? resourceType : null;
+            return controllerType != null && _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType? resourceType) ? resourceType : null;
         }
 
         /// <inheritdoc />
-        public string GetControllerNameForResourceType(ResourceType resourceType)
+        public string? GetControllerNameForResourceType(ResourceType? resourceType)
         {
-            return resourceType != null && _controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel controllerModel)
+            return resourceType != null && _controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel? controllerModel)
                 ? controllerModel.ControllerName
                 : null;
         }
@@ -73,11 +71,11 @@ namespace JsonApiDotNetCore.Middleware
 
                 if (!isOperationsController)
                 {
-                    Type resourceClrType = ExtractResourceClrTypeFromController(controller.ControllerType);
+                    Type? resourceClrType = ExtractResourceClrTypeFromController(controller.ControllerType);
 
                     if (resourceClrType != null)
                     {
-                        ResourceType resourceType = _resourceGraph.FindResourceType(resourceClrType);
+                        ResourceType? resourceType = _resourceGraph.FindResourceType(resourceClrType);
 
                         if (resourceType != null)
                         {
@@ -100,7 +98,7 @@ namespace JsonApiDotNetCore.Middleware
                         $"Cannot register '{controller.ControllerType.FullName}' for template '{template}' because '{_registeredControllerNameByTemplate[template]}' was already registered for this template.");
                 }
 
-                _registeredControllerNameByTemplate.Add(template, controller.ControllerType.FullName);
+                _registeredControllerNameByTemplate.Add(template, controller.ControllerType.FullName!);
 
                 controller.Selectors[0].AttributeRouteModel = new AttributeRouteModel
                 {
@@ -118,9 +116,9 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Derives a template from the resource type, and checks if this template was already registered.
         /// </summary>
-        private string TemplateFromResource(ControllerModel model)
+        private string? TemplateFromResource(ControllerModel model)
         {
-            if (_resourceTypePerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceType resourceType))
+            if (_resourceTypePerControllerTypeMap.TryGetValue(model.ControllerType, out ResourceType? resourceType))
             {
                 return $"{_options.Namespace}/{resourceType.PublicName}";
             }
@@ -143,20 +141,20 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Determines the resource associated to a controller by inspecting generic arguments in its inheritance tree.
         /// </summary>
-        private Type ExtractResourceClrTypeFromController(Type type)
+        private Type? ExtractResourceClrTypeFromController(Type type)
         {
             Type aspNetControllerType = typeof(ControllerBase);
             Type coreControllerType = typeof(CoreJsonApiController);
             Type baseControllerType = typeof(BaseJsonApiController<,>);
-            Type currentType = type;
+            Type? currentType = type;
 
             while (!currentType.IsGenericType || currentType.GetGenericTypeDefinition() != baseControllerType)
             {
-                Type nextBaseType = currentType.BaseType;
+                Type? nextBaseType = currentType.BaseType;
 
                 if ((nextBaseType == aspNetControllerType || nextBaseType == coreControllerType) && currentType.IsGenericType)
                 {
-                    Type resourceClrType = currentType.GetGenericArguments()
+                    Type? resourceClrType = currentType.GetGenericArguments()
                         .FirstOrDefault(typeArgument => typeArgument.IsOrImplementsInterface(typeof(IIdentifiable)));
 
                     if (resourceClrType != null)
@@ -167,7 +165,7 @@ namespace JsonApiDotNetCore.Middleware
 
                 currentType = nextBaseType;
 
-                if (nextBaseType == null)
+                if (currentType == null)
                 {
                     break;
                 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore.Queries.Expressions
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return $"'{value}'";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(this, obj))
             {

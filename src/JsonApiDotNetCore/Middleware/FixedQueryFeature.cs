@@ -1,7 +1,6 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Primitives;
@@ -15,16 +14,17 @@ namespace JsonApiDotNetCore.Middleware
     internal sealed class FixedQueryFeature : IQueryFeature
     {
         // Lambda hoisted to static readonly field to improve inlining https://github.com/dotnet/roslyn/issues/13624
-        private static readonly Func<IFeatureCollection, IHttpRequestFeature> NullRequestFeature = _ => null;
+        private static readonly Func<IFeatureCollection, IHttpRequestFeature?> NullRequestFeature = _ => null;
 
         private FeatureReferences<IHttpRequestFeature> _features;
 
-        private string _original;
-        private IQueryCollection _parsedValues;
+        private string? _original;
+        private IQueryCollection? _parsedValues;
 
-        private IHttpRequestFeature HttpRequestFeature => _features.Fetch(ref _features.Cache, NullRequestFeature);
+        private IHttpRequestFeature HttpRequestFeature => _features.Fetch(ref _features.Cache, NullRequestFeature)!;
 
         /// <inheritdoc />
+        [AllowNull]
         public IQueryCollection Query
         {
             get
@@ -40,7 +40,7 @@ namespace JsonApiDotNetCore.Middleware
                 {
                     _original = current;
 
-                    Dictionary<string, StringValues> result = FixedQueryHelpers.ParseNullableQuery(current);
+                    Dictionary<string, StringValues>? result = FixedQueryHelpers.ParseNullableQuery(current);
 
                     _parsedValues = result == null ? QueryCollection.Empty : new QueryCollection(result);
                 }
@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Middleware
                     }
                     else
                     {
-                        _original = QueryString.Create(_parsedValues).ToString();
+                        _original = QueryString.Create(_parsedValues!).ToString();
                         HttpRequestFeature.QueryString = _original;
                     }
                 }

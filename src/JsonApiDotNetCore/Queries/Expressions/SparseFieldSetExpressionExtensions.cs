@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
@@ -13,14 +11,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
     [PublicAPI]
     public static class SparseFieldSetExpressionExtensions
     {
-        public static SparseFieldSetExpression Including<TResource>(this SparseFieldSetExpression sparseFieldSet,
-            Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
+        public static SparseFieldSetExpression? Including<TResource>(this SparseFieldSetExpression? sparseFieldSet,
+            Expression<Func<TResource, dynamic?>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            SparseFieldSetExpression newSparseFieldSet = sparseFieldSet;
+            SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 
             foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return newSparseFieldSet;
         }
 
-        private static SparseFieldSetExpression IncludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToInclude)
+        private static SparseFieldSetExpression? IncludeField(SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute fieldToInclude)
         {
             if (sparseFieldSet == null || sparseFieldSet.Fields.Contains(fieldToInclude))
             {
@@ -41,14 +39,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return new SparseFieldSetExpression(newSparseFieldSet);
         }
 
-        public static SparseFieldSetExpression Excluding<TResource>(this SparseFieldSetExpression sparseFieldSet,
-            Expression<Func<TResource, dynamic>> fieldSelector, IResourceGraph resourceGraph)
+        public static SparseFieldSetExpression? Excluding<TResource>(this SparseFieldSetExpression? sparseFieldSet,
+            Expression<Func<TResource, dynamic?>> fieldSelector, IResourceGraph resourceGraph)
             where TResource : class, IIdentifiable
         {
             ArgumentGuard.NotNull(fieldSelector, nameof(fieldSelector));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
 
-            SparseFieldSetExpression newSparseFieldSet = sparseFieldSet;
+            SparseFieldSetExpression? newSparseFieldSet = sparseFieldSet;
 
             foreach (ResourceFieldAttribute field in resourceGraph.GetFields(fieldSelector))
             {
@@ -58,7 +56,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
             return newSparseFieldSet;
         }
 
-        private static SparseFieldSetExpression ExcludeField(SparseFieldSetExpression sparseFieldSet, ResourceFieldAttribute fieldToExclude)
+        private static SparseFieldSetExpression? ExcludeField(SparseFieldSetExpression? sparseFieldSet, ResourceFieldAttribute fieldToExclude)
         {
             // Design tradeoff: When the sparse fieldset is empty, it means all fields will be selected.
             // Adding an exclusion in that case is a no-op, which results in still retrieving the excluded field from data store.

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
@@ -14,6 +12,6 @@ namespace JsonApiDotNetCore.AtomicOperations.Processors
         /// <summary>
         /// Processes the specified operation.
         /// </summary>
-        Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken);
+        Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken);
     }
 }

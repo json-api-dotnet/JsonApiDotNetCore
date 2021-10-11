@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -43,13 +41,13 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public virtual FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
             return existingFilter;
         }
 
         /// <inheritdoc />
-        public virtual SortExpression OnApplySort(SortExpression existingSort)
+        public virtual SortExpression? OnApplySort(SortExpression? existingSort)
         {
             return existingSort;
         }
@@ -68,11 +66,11 @@ namespace JsonApiDotNetCore.Resources
         /// </example>
         protected SortExpression CreateSortExpressionFromLambda(PropertySortOrder keySelectors)
         {
-            ArgumentGuard.NotNull(keySelectors, nameof(keySelectors));
+            ArgumentGuard.NotNullNorEmpty(keySelectors, nameof(keySelectors));
 
             ImmutableArray<SortElementExpression>.Builder elementsBuilder = ImmutableArray.CreateBuilder<SortElementExpression>(keySelectors.Count);
 
-            foreach ((Expression<Func<TResource, dynamic>> keySelector, ListSortDirection sortDirection) in keySelectors)
+            foreach ((Expression<Func<TResource, dynamic?>> keySelector, ListSortDirection sortDirection) in keySelectors)
             {
                 bool isAscending = sortDirection == ListSortDirection.Ascending;
                 AttrAttribute attribute = ResourceGraph.GetAttributes(keySelector).Single();
@@ -85,25 +83,25 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual PaginationExpression OnApplyPagination(PaginationExpression existingPagination)
+        public virtual PaginationExpression? OnApplyPagination(PaginationExpression? existingPagination)
         {
             return existingPagination;
         }
 
         /// <inheritdoc />
-        public virtual SparseFieldSetExpression OnApplySparseFieldSet(SparseFieldSetExpression existingSparseFieldSet)
+        public virtual SparseFieldSetExpression? OnApplySparseFieldSet(SparseFieldSetExpression? existingSparseFieldSet)
         {
             return existingSparseFieldSet;
         }
 
         /// <inheritdoc />
-        public virtual QueryStringParameterHandlers<TResource> OnRegisterQueryableHandlersForQueryStringParameters()
+        public virtual QueryStringParameterHandlers<TResource>? OnRegisterQueryableHandlersForQueryStringParameters()
         {
             return null;
         }
 
         /// <inheritdoc />
-        public virtual IDictionary<string, object> GetMeta(TResource resource)
+        public virtual IDictionary<string, object?>? GetMeta(TResource resource)
         {
             return null;
         }
@@ -115,8 +113,8 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public virtual Task<IIdentifiable> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
-            IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public virtual Task<IIdentifiable?> OnSetToOneRelationshipAsync(TResource leftResource, HasOneAttribute hasOneRelationship,
+            IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             return Task.FromResult(rightResourceId);
         }
@@ -168,7 +166,7 @@ namespace JsonApiDotNetCore.Resources
         /// This is an alias type intended to simplify the implementation's method signature. See <see cref="CreateSortExpressionFromLambda" /> for usage
         /// details.
         /// </summary>
-        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic>> KeySelector, ListSortDirection SortDirection)>
+        public sealed class PropertySortOrder : List<(Expression<Func<TResource, dynamic?>> KeySelector, ListSortDirection SortDirection)>
         {
         }
     }

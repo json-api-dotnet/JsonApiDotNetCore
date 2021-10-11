@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -22,14 +20,14 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonPropertyName("ref")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public AtomicReference Ref { get; set; }
+        public AtomicReference? Ref { get; set; }
 
         [JsonPropertyName("href")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Href { get; set; }
+        public string? Href { get; set; }
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object?>? Meta { get; set; }
     }
 }

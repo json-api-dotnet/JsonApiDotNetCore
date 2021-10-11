@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +14,9 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to lookup the ID type of the specified resource type. Returns <c>null</c> if it does not implement <see cref="IIdentifiable{TId}" />.
         /// </summary>
-        public Type TryGetIdType(Type resourceClrType)
+        public Type? TryGetIdType(Type? resourceClrType)
         {
-            Type identifiableInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
+            Type? identifiableInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
                 @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
 
             return identifiableInterface?.GetGenericArguments()[0];
@@ -27,11 +25,11 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to get a descriptor for the specified resource type.
         /// </summary>
-        public ResourceDescriptor TryGetResourceDescriptor(Type type)
+        public ResourceDescriptor? TryGetResourceDescriptor(Type? type)
         {
             if (type != null && type.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
-                Type idType = TryGetIdType(type);
+                Type? idType = TryGetIdType(type);
 
                 if (idType != null)
                 {
@@ -128,6 +126,10 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public IReadOnlyCollection<Type> GetDerivedGenericTypes(Assembly assembly, Type openGenericType, params Type[] genericArguments)
         {
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+            ArgumentGuard.NotNull(openGenericType, nameof(openGenericType));
+            ArgumentGuard.NotNull(genericArguments, nameof(genericArguments));
+
             Type genericType = openGenericType.MakeGenericType(genericArguments);
             return GetDerivedTypes(assembly, genericType).ToArray();
         }
@@ -148,6 +150,9 @@ namespace JsonApiDotNetCore.Configuration
         /// </example>
         public IEnumerable<Type> GetDerivedTypes(Assembly assembly, Type inheritedType)
         {
+            ArgumentGuard.NotNull(assembly, nameof(assembly));
+            ArgumentGuard.NotNull(inheritedType, nameof(inheritedType));
+
             foreach (Type type in assembly.GetTypes())
             {
                 if (inheritedType.IsAssignableFrom(type))

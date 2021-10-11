@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 

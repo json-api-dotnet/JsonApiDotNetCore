@@ -1,8 +1,6 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
@@ -44,21 +42,22 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return (resource, resourceType);
         }
 
-        private void ConvertAttributes(IDictionary<string, object> resourceObjectAttributes, IIdentifiable resource, ResourceType resourceType,
+        private void ConvertAttributes(IDictionary<string, object?>? resourceObjectAttributes, IIdentifiable resource, ResourceType resourceType,
             RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("attributes");
 
-            foreach ((string attributeName, object attributeValue) in resourceObjectAttributes.EmptyIfNull())
+            foreach ((string attributeName, object? attributeValue) in resourceObjectAttributes.EmptyIfNull())
             {
                 ConvertAttribute(resource, attributeName, attributeValue, resourceType, state);
             }
         }
 
-        private void ConvertAttribute(IIdentifiable resource, string attributeName, object attributeValue, ResourceType resourceType, RequestAdapterState state)
+        private void ConvertAttribute(IIdentifiable resource, string attributeName, object? attributeValue, ResourceType resourceType,
+            RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(attributeName);
-            AttrAttribute attr = resourceType.FindAttributeByPublicName(attributeName);
+            AttrAttribute? attr = resourceType.FindAttributeByPublicName(attributeName);
 
             if (attr == null && _options.AllowUnknownFieldsInRequestBody)
             {
@@ -71,12 +70,11 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             AssertNoBlockedChange(attr, resourceType, state);
             AssertNotReadOnly(attr, resourceType, state);
 
-            attr!.SetValue(resource, attributeValue);
-            state.WritableTargetedFields.Attributes.Add(attr);
+            attr.SetValue(resource, attributeValue);
+            state.WritableTargetedFields!.Attributes.Add(attr);
         }
 
-        [AssertionMethod]
-        private static void AssertIsKnownAttribute(AttrAttribute attr, string attributeName, ResourceType resourceType, RequestAdapterState state)
+        private static void AssertIsKnownAttribute([NotNull] AttrAttribute? attr, string attributeName, ResourceType resourceType, RequestAdapterState state)
         {
             if (attr == null)
             {
@@ -85,7 +83,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private static void AssertNoInvalidAttribute(object attributeValue, RequestAdapterState state)
+        private static void AssertNoInvalidAttribute(object? attributeValue, RequestAdapterState state)
         {
             if (attributeValue is JsonInvalidAttributeInfo info)
             {
@@ -128,14 +126,15 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private void ConvertRelationships(IDictionary<string, RelationshipObject> resourceObjectRelationships, IIdentifiable resource,
+        private void ConvertRelationships(IDictionary<string, RelationshipObject?>? resourceObjectRelationships, IIdentifiable resource,
             ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("relationships");
 
-            foreach ((string relationshipName, RelationshipObject relationshipObject) in resourceObjectRelationships.EmptyIfNull())
+            foreach ((string relationshipName, RelationshipObject? relationshipObject) in resourceObjectRelationships.EmptyIfNull())
             {
-                ConvertRelationship(relationshipName, relationshipObject.Data, resource, resourceType, state);
+                // [TODO-NRT]: Add tests for downstream failure on `null` relationship value.
+                ConvertRelationship(relationshipName, relationshipObject?.Data ?? default, resource, resourceType, state);
             }
         }
 
@@ -143,7 +142,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(relationshipName);
-            RelationshipAttribute relationship = resourceType.FindRelationshipByPublicName(relationshipName);
+            RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(relationshipName);
 
             if (relationship == null && _options.AllowUnknownFieldsInRequestBody)
             {
@@ -152,10 +151,10 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
 
-            object rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
+            object? rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
 
-            relationship!.SetValue(resource, rightValue);
-            state.WritableTargetedFields.Relationships.Add(relationship);
+            relationship.SetValue(resource, rightValue);
+            state.WritableTargetedFields!.Relationships.Add(relationship);
         }
     }
 }

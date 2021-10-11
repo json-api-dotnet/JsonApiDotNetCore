@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -18,6 +16,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object?>? Meta { get; set; }
     }
 }

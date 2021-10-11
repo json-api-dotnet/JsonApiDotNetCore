@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +13,6 @@ namespace JsonApiDotNetCore.Serialization.Response
         /// <summary>
         /// Writes an object to the response body.
         /// </summary>
-        Task WriteAsync(object model, HttpContext httpContext);
+        Task WriteAsync(object? model, HttpContext httpContext);
     }
 }

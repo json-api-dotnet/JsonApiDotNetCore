@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Retrieves a resource with all of its attributes, including the set of targeted relationships, in preparation for <see cref="UpdateAsync" />.
         /// </summary>
-        Task<TResource> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
+        Task<TResource?> GetForUpdateAsync(QueryLayer queryLayer, CancellationToken cancellationToken);
 
         /// <summary>
         /// Updates the attributes and relationships of an existing resource in the underlying data store.
@@ -53,7 +51,7 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Performs a complete replacement of the relationship in the underlying data store.
         /// </summary>
-        Task SetRelationshipAsync(TResource leftResource, object rightValue, CancellationToken cancellationToken);
+        Task SetRelationshipAsync(TResource leftResource, object? rightValue, CancellationToken cancellationToken);
 
         /// <summary>
         /// Adds resources to a to-many relationship in the underlying data store.

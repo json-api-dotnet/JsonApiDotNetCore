@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -20,7 +18,7 @@ namespace JsonApiDotNetCore.Configuration
             Value = value;
         }
 
-        public bool Equals(PageSize other)
+        public bool Equals(PageSize? other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -35,7 +33,7 @@ namespace JsonApiDotNetCore.Configuration
             return Value == other.Value;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             return Equals(other as PageSize);
         }

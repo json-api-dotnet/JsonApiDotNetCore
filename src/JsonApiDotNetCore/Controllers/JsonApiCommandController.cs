@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +55,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpPatch("{id}/relationships/{relationshipName}")]
-        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object rightValue,
+        public override async Task<IActionResult> PatchRelationshipAsync(TId id, string relationshipName, [FromBody] object? rightValue,
             CancellationToken cancellationToken)
         {
             return await base.PatchRelationshipAsync(id, relationshipName, rightValue, cancellationToken);

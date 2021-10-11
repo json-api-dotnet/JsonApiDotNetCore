@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Threading;
 using JetBrains.Annotations;
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Resources.Annotations
         {
             if (InverseNavigationProperty != null)
             {
-                Type elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
+                Type? elementType = CollectionConverter.TryGetCollectionElementType(InverseNavigationProperty.PropertyType);
                 return elementType == null;
             }
 

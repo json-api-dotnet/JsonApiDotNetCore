@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,7 +49,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         }
 
         /// <inheritdoc />
-        public async Task WriteAsync(object model, HttpContext httpContext)
+        public async Task WriteAsync(object? model, HttpContext httpContext)
         {
             ArgumentGuard.NotNull(httpContext, nameof(httpContext));
 
@@ -61,11 +59,11 @@ namespace JsonApiDotNetCore.Serialization.Response
                 return;
             }
 
-            string responseBody = GetResponseBody(model, httpContext);
+            string? responseBody = GetResponseBody(model, httpContext);
 
             if (httpContext.Request.Method == HttpMethod.Head.Method)
             {
-                httpContext.Response.GetTypedHeaders().ContentLength = Encoding.UTF8.GetByteCount(responseBody);
+                httpContext.Response.GetTypedHeaders().ContentLength = responseBody == null ? 0 : Encoding.UTF8.GetByteCount(responseBody);
                 return;
             }
 
@@ -80,7 +78,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return statusCode is not HttpStatusCode.NoContent and not HttpStatusCode.ResetContent and not HttpStatusCode.NotModified;
         }
 
-        private string GetResponseBody(object model, HttpContext httpContext)
+        private string? GetResponseBody(object? model, HttpContext httpContext)
         {
             using IDisposable _ = CodeTimingSessionManager.Current.Measure("Write response body");
 
@@ -122,7 +120,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return new HttpResponseMessage(statusCode).IsSuccessStatusCode;
         }
 
-        private string RenderModel(object model)
+        private string RenderModel(object? model)
         {
             Document document = _responseModelAdapter.Convert(model);
             return SerializeDocument(document);
@@ -145,12 +143,9 @@ namespace JsonApiDotNetCore.Serialization.Response
                 string url = request.GetEncodedUrl();
                 EntityTagHeaderValue responseETag = _eTagGenerator.Generate(url, responseContent);
 
-                if (responseETag != null)
-                {
-                    response.Headers.Add(HeaderNames.ETag, responseETag.ToString());
+                response.Headers.Add(HeaderNames.ETag, responseETag.ToString());
 
-                    return RequestContainsMatchingETag(request.Headers, responseETag);
-                }
+                return RequestContainsMatchingETag(request.Headers, responseETag);
             }
 
             return false;
@@ -159,7 +154,7 @@ namespace JsonApiDotNetCore.Serialization.Response
         private static bool RequestContainsMatchingETag(IHeaderDictionary requestHeaders, EntityTagHeaderValue responseETag)
         {
             if (requestHeaders.Keys.Contains(HeaderNames.IfNoneMatch) &&
-                EntityTagHeaderValue.TryParseList(requestHeaders[HeaderNames.IfNoneMatch], out IList<EntityTagHeaderValue> requestETags))
+                EntityTagHeaderValue.TryParseList(requestHeaders[HeaderNames.IfNoneMatch], out IList<EntityTagHeaderValue>? requestETags))
             {
                 foreach (EntityTagHeaderValue requestETag in requestETags)
                 {
@@ -173,7 +168,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             return false;
         }
 
-        private async Task SendResponseBodyAsync(HttpResponse httpResponse, string responseBody)
+        private async Task SendResponseBodyAsync(HttpResponse httpResponse, string? responseBody)
         {
             if (!string.IsNullOrEmpty(responseBody))
             {

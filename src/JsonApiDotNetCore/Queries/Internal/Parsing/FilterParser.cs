@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using System.Reflection;
@@ -16,10 +14,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     public class FilterParser : QueryExpressionParser
     {
         private readonly IResourceFactory _resourceFactory;
-        private readonly Action<ResourceFieldAttribute, ResourceType, string> _validateSingleFieldCallback;
-        private ResourceType _resourceTypeInScope;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string>? _validateSingleFieldCallback;
+        private ResourceType? _resourceTypeInScope;
 
-        public FilterParser(IResourceFactory resourceFactory, Action<ResourceFieldAttribute, ResourceType, string> validateSingleFieldCallback = null)
+        public FilterParser(IResourceFactory resourceFactory, Action<ResourceFieldAttribute, ResourceType, string>? validateSingleFieldCallback = null)
         {
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
@@ -44,7 +42,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected FilterExpression ParseFilter()
         {
-            if (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Text)
+            if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text)
             {
                 switch (nextToken.Value)
                 {
@@ -112,7 +110,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             term = ParseFilter();
             termsBuilder.Add(term);
 
-            while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
+            while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
@@ -158,7 +156,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 if (leftProperty.Name == nameof(Identifiable<object>.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
-                    string id = DeObfuscateStringId(leftProperty.ReflectedType, rightConstant.Value);
+                    string id = DeObfuscateStringId(leftProperty.ReflectedType!, rightConstant.Value);
                     rightTerm = new LiteralConstantExpression(id);
                 }
             }
@@ -202,7 +200,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             constant = ParseConstant();
             constantsBuilder.Add(constant);
 
-            while (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
+            while (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
@@ -232,7 +230,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             foreach (LiteralConstantExpression idConstant in constantSet)
             {
                 string stringId = idConstant.Value;
-                string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType, stringId);
+                string id = DeObfuscateStringId(targetAttributeProperty.ReflectedType!, stringId);
 
                 idConstantsBuilder.Add(new LiteralConstantExpression(id));
             }
@@ -246,9 +244,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             EatSingleCharacterToken(TokenKind.OpenParen);
 
             ResourceFieldChainExpression targetCollection = ParseFieldChain(FieldChainRequirements.EndsInToMany, null);
-            FilterExpression filter = null;
+            FilterExpression? filter = null;
 
-            if (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Comma)
+            if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Comma)
             {
                 EatSingleCharacterToken(TokenKind.Comma);
 
@@ -262,7 +260,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)
         {
-            ResourceType outerScopeBackup = _resourceTypeInScope;
+            ResourceType outerScopeBackup = _resourceTypeInScope!;
 
             _resourceTypeInScope = hasManyRelationship.RightType;
 
@@ -274,7 +272,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected QueryExpression ParseCountOrField(FieldChainRequirements chainRequirements)
         {
-            CountExpression count = TryParseCount();
+            CountExpression? count = TryParseCount();
 
             if (count != null)
             {
@@ -286,14 +284,14 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected QueryExpression ParseCountOrConstantOrNullOrField(FieldChainRequirements chainRequirements)
         {
-            CountExpression count = TryParseCount();
+            CountExpression? count = TryParseCount();
 
             if (count != null)
             {
                 return count;
             }
 
-            IdentifierExpression constantOrNull = TryParseConstantOrNull();
+            IdentifierExpression? constantOrNull = TryParseConstantOrNull();
 
             if (constantOrNull != null)
             {
@@ -303,20 +301,20 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             return ParseFieldChain(chainRequirements, "Count function, value between quotes, null or field name expected.");
         }
 
-        protected IdentifierExpression TryParseConstantOrNull()
+        protected IdentifierExpression? TryParseConstantOrNull()
         {
-            if (TokenStack.TryPeek(out Token nextToken))
+            if (TokenStack.TryPeek(out Token? nextToken))
             {
                 if (nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Null)
                 {
                     TokenStack.Pop();
-                    return new NullConstantExpression();
+                    return NullConstantExpression.Instance;
                 }
 
                 if (nextToken.Kind == TokenKind.QuotedText)
                 {
                     TokenStack.Pop();
-                    return new LiteralConstantExpression(nextToken.Value);
+                    return new LiteralConstantExpression(nextToken.Value!);
                 }
             }
 
@@ -325,9 +323,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected LiteralConstantExpression ParseConstant()
         {
-            if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.QuotedText)
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.QuotedText)
             {
-                return new LiteralConstantExpression(token.Value);
+                return new LiteralConstantExpression(token.Value!);
             }
 
             throw new QueryParseException("Value between quotes expected.");
@@ -337,24 +335,24 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             IIdentifiable tempResource = _resourceFactory.CreateInstance(resourceClrType);
             tempResource.StringId = stringId;
-            return tempResource.GetTypedId().ToString();
+            return tempResource.GetTypedId().ToString()!;
         }
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {
-                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope!, path, _validateSingleFieldCallback);
             }
 
             if (chainRequirements == FieldChainRequirements.EndsInAttribute)
             {
-                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope!, path, _validateSingleFieldCallback);
             }
 
             if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
             {
-                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope!, path, _validateSingleFieldCallback);
             }
 
             throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

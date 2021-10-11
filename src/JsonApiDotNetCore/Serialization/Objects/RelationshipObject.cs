@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -14,7 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("links")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public RelationshipLinks Links { get; set; }
+        public RelationshipLinks? Links { get; set; }
 
         [JsonPropertyName("data")]
         // JsonIgnoreCondition is determined at runtime by WriteOnlyRelationshipObjectConverter.
@@ -22,6 +20,6 @@ namespace JsonApiDotNetCore.Serialization.Objects
 
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public IDictionary<string, object> Meta { get; set; }
+        public IDictionary<string, object?>? Meta { get; set; }
     }
 }

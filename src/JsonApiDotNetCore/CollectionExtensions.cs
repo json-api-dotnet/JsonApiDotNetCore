@@ -1,17 +1,15 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Contracts;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace JsonApiDotNetCore
 {
     internal static class CollectionExtensions
     {
         [Pure]
-        [ContractAnnotation("source: null => true")]
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
+        public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
         {
             if (source == null)
             {
@@ -37,10 +35,10 @@ namespace JsonApiDotNetCore
             return -1;
         }
 
-        public static bool DictionaryEqual<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> first, IReadOnlyDictionary<TKey, TValue> second,
-            IEqualityComparer<TValue> valueComparer = null)
+        public static bool DictionaryEqual<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue>? first, IReadOnlyDictionary<TKey, TValue>? second,
+            IEqualityComparer<TValue>? valueComparer = null)
         {
-            if (first == second)
+            if (ReferenceEquals(first, second))
             {
                 return true;
             }
@@ -59,7 +57,7 @@ namespace JsonApiDotNetCore
 
             foreach ((TKey firstKey, TValue firstValue) in first)
             {
-                if (!second.TryGetValue(firstKey, out TValue secondValue))
+                if (!second.TryGetValue(firstKey, out TValue? secondValue))
                 {
                     return false;
                 }
@@ -73,7 +71,7 @@ namespace JsonApiDotNetCore
             return true;
         }
 
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source)
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? source)
         {
             return source ?? Enumerable.Empty<T>();
         }

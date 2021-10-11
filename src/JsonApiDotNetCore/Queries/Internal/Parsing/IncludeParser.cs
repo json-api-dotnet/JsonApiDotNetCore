@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -16,10 +14,10 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     {
         private static readonly IncludeChainConverter IncludeChainConverter = new();
 
-        private readonly Action<RelationshipAttribute, ResourceType, string> _validateSingleRelationshipCallback;
-        private ResourceType _resourceTypeInScope;
+        private readonly Action<RelationshipAttribute, ResourceType, string>? _validateSingleRelationshipCallback;
+        private ResourceType? _resourceTypeInScope;
 
-        public IncludeParser(Action<RelationshipAttribute, ResourceType, string> validateSingleRelationshipCallback = null)
+        public IncludeParser(Action<RelationshipAttribute, ResourceType, string>? validateSingleRelationshipCallback = null)
         {
             _validateSingleRelationshipCallback = validateSingleRelationshipCallback;
         }
@@ -75,7 +73,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope, path, _validateSingleRelationshipCallback);
+            return ChainResolver.ResolveRelationshipChain(_resourceTypeInScope!, path, _validateSingleRelationshipCallback);
         }
     }
 }

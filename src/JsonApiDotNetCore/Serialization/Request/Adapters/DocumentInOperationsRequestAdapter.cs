@@ -1,7 +1,6 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -35,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             return ConvertOperations(document.Operations, state);
         }
 
-        private static void AssertHasOperations(IEnumerable<AtomicOperationObject> atomicOperationObjects, RequestAdapterState state)
+        private static void AssertHasOperations([NotNull] IEnumerable<AtomicOperationObject?>? atomicOperationObjects, RequestAdapterState state)
         {
             if (atomicOperationObjects.IsNullOrEmpty())
             {
@@ -43,7 +42,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private void AssertMaxOperationsNotExceeded(ICollection<AtomicOperationObject> atomicOperationObjects, RequestAdapterState state)
+        private void AssertMaxOperationsNotExceeded(ICollection<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
         {
             if (atomicOperationObjects.Count > _options.MaximumOperationsPerRequest)
             {
@@ -53,13 +52,19 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             }
         }
 
-        private IList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject> atomicOperationObjects, RequestAdapterState state)
+        private IList<OperationContainer> ConvertOperations(IEnumerable<AtomicOperationObject?> atomicOperationObjects, RequestAdapterState state)
         {
             var operations = new List<OperationContainer>();
             int operationIndex = 0;
 
-            foreach (AtomicOperationObject atomicOperationObject in atomicOperationObjects)
+            foreach (AtomicOperationObject? atomicOperationObject in atomicOperationObjects)
             {
+                // [TODO-NRT]: Add tests for downstream failure on `null` object.
+                if (atomicOperationObject == null)
+                {
+                    throw new ModelConversionException(state.Position, null, null);
+                }
+
                 using IDisposable _ = state.Position.PushArrayIndex(operationIndex);
 
                 OperationContainer operation = _atomicOperationObjectAdapter.Convert(atomicOperationObject, state);

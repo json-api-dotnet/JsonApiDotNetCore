@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +24,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         }
 
         /// <inheritdoc />
-        public Task<OperationContainer> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
+        public Task<OperationContainer?> ProcessAsync(OperationContainer operation, CancellationToken cancellationToken)
         {
             ArgumentGuard.NotNull(operation, nameof(operation));
 
@@ -37,7 +35,7 @@ namespace JsonApiDotNetCore.AtomicOperations
         protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
         {
             Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation.GetValueOrDefault());
-            ResourceType resourceType = operation.Request.PrimaryResourceType;
+            ResourceType resourceType = operation.Request.PrimaryResourceType!;
 
             Type processorType = processorInterface.MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return (IOperationProcessor)_serviceProvider.GetRequiredService(processorType);

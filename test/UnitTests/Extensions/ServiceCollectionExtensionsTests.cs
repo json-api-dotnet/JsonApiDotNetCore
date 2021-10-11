@@ -304,7 +304,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class ResourceRepositoryOfInt32 : IResourceRepository<ResourceOfInt32, int>
         {
-            public Task<IReadOnlyCollection<ResourceOfInt32>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+            public Task<IReadOnlyCollection<ResourceOfInt32>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
@@ -359,7 +359,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class ResourceRepositoryOfGuid : IResourceRepository<ResourceOfGuid, Guid>
         {
-            public Task<IReadOnlyCollection<ResourceOfGuid>> GetAsync(QueryLayer layer, CancellationToken cancellationToken)
+            public Task<IReadOnlyCollection<ResourceOfGuid>> GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }

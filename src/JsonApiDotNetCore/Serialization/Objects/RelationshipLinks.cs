@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
@@ -13,11 +11,11 @@ namespace JsonApiDotNetCore.Serialization.Objects
     {
         [JsonPropertyName("self")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Self { get; set; }
+        public string? Self { get; set; }
 
         [JsonPropertyName("related")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string Related { get; set; }
+        public string? Related { get; set; }
 
         internal bool HasValue()
         {

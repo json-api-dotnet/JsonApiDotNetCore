@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -22,7 +20,7 @@ namespace JsonApiDotNetCore.Configuration
             OneBasedValue = oneBasedValue;
         }
 
-        public bool Equals(PageNumber other)
+        public bool Equals(PageNumber? other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -37,7 +35,7 @@ namespace JsonApiDotNetCore.Configuration
             return OneBasedValue == other.OneBasedValue;
         }
 
-        public override bool Equals(object other)
+        public override bool Equals(object? other)
         {
             return Equals(other as PageNumber);
         }

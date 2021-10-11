@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -21,7 +19,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             (IIdentifiable resource, ResourceType resourceType) = base.ConvertResourceObject(data, requirements, state);
 
-            state.WritableRequest.PrimaryResourceType = resourceType;
+            state.WritableRequest!.PrimaryResourceType = resourceType;
             state.WritableRequest.PrimaryId = resource.StringId;
 
             return (resource, resourceType);

@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Queries
@@ -18,7 +16,7 @@ namespace JsonApiDotNetCore.Queries
         /// The default page size from options, unless specified in query string. Can be <c>null</c>, which means no paging. Cannot be higher than
         /// options.MaximumPageSize.
         /// </summary>
-        PageSize PageSize { get; set; }
+        PageSize? PageSize { get; set; }
 
         /// <summary>
         /// Indicates whether the number of resources on the current page equals the page size. When <c>true</c>, a subsequent page might exist (assuming

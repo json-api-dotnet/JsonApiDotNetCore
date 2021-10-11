@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Controllers.Annotations;
 using Microsoft.Extensions.Primitives;
 

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -77,11 +75,11 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceType))
             {
-                SparseFieldSetExpression inputExpression = _lazySourceTable.Value.ContainsKey(resourceType)
+                SparseFieldSetExpression? inputExpression = _lazySourceTable.Value.ContainsKey(resourceType)
                     ? new SparseFieldSetExpression(_lazySourceTable.Value[resourceType])
                     : null;
 
-                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+                SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
                 IImmutableSet<ResourceFieldAttribute> outputFields = outputExpression == null
                     ? ImmutableHashSet<ResourceFieldAttribute>.Empty
@@ -102,7 +100,7 @@ namespace JsonApiDotNetCore.Queries.Internal
             var inputExpression = new SparseFieldSetExpression(ImmutableHashSet.Create<ResourceFieldAttribute>(idAttribute));
 
             // Intentionally not cached, as we are fetching ID only (ignoring any sparse fieldset that came from query string).
-            SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+            SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
             ImmutableHashSet<AttrAttribute> outputAttributes = outputExpression == null
                 ? ImmutableHashSet<AttrAttribute>.Empty
@@ -124,7 +122,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                     : GetResourceFields(resourceType);
 
                 var inputExpression = new SparseFieldSetExpression(inputFields);
-                SparseFieldSetExpression outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
+                SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
                 IImmutableSet<ResourceFieldAttribute> outputFields =
                     outputExpression == null ? GetResourceFields(resourceType) : inputFields.Intersect(outputExpression.Fields);

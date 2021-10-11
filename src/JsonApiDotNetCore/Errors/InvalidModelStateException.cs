@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,12 +20,12 @@ namespace JsonApiDotNetCore.Errors
     public sealed class InvalidModelStateException : JsonApiException
     {
         public InvalidModelStateException(ModelStateDictionary modelState, Type resourceClrType, bool includeExceptionStackTraceInErrors,
-            JsonNamingPolicy namingPolicy)
+            JsonNamingPolicy? namingPolicy)
             : this(FromModelStateDictionary(modelState, resourceClrType), includeExceptionStackTraceInErrors, namingPolicy)
         {
         }
 
-        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors, JsonNamingPolicy namingPolicy)
+        public InvalidModelStateException(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors, JsonNamingPolicy? namingPolicy)
             : base(FromModelStateViolations(violations, includeExceptionStackTraceInErrors, namingPolicy))
         {
         }
@@ -57,7 +55,7 @@ namespace JsonApiDotNetCore.Errors
         }
 
         private static IEnumerable<ErrorObject> FromModelStateViolations(IEnumerable<ModelStateViolation> violations, bool includeExceptionStackTraceInErrors,
-            JsonNamingPolicy namingPolicy)
+            JsonNamingPolicy? namingPolicy)
         {
             ArgumentGuard.NotNull(violations, nameof(violations));
 
@@ -65,7 +63,7 @@ namespace JsonApiDotNetCore.Errors
         }
 
         private static IEnumerable<ErrorObject> FromModelStateViolation(ModelStateViolation violation, bool includeExceptionStackTraceInErrors,
-            JsonNamingPolicy namingPolicy)
+            JsonNamingPolicy? namingPolicy)
         {
             if (violation.Error.Exception is JsonApiException jsonApiException)
             {
@@ -83,9 +81,9 @@ namespace JsonApiDotNetCore.Errors
             }
         }
 
-        private static string GetDisplayNameForProperty(string propertyName, Type resourceClrType, JsonNamingPolicy namingPolicy)
+        private static string GetDisplayNameForProperty(string propertyName, Type resourceClrType, JsonNamingPolicy? namingPolicy)
         {
-            PropertyInfo property = resourceClrType.GetProperty(propertyName);
+            PropertyInfo? property = resourceClrType.GetProperty(propertyName);
 
             if (property != null)
             {
@@ -108,12 +106,10 @@ namespace JsonApiDotNetCore.Errors
             {
                 Title = "Input validation failed.",
                 Detail = modelError.ErrorMessage,
-                Source = attributePath == null
-                    ? null
-                    : new ErrorSource
-                    {
-                        Pointer = attributePath
-                    }
+                Source = new ErrorSource
+                {
+                    Pointer = attributePath
+                }
             };
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)
@@ -123,7 +119,7 @@ namespace JsonApiDotNetCore.Errors
 
                 if (stackTraceLines.Any())
                 {
-                    error.Meta ??= new Dictionary<string, object>();
+                    error.Meta ??= new Dictionary<string, object?>();
                     error.Meta["StackTrace"] = stackTraceLines;
                 }
             }

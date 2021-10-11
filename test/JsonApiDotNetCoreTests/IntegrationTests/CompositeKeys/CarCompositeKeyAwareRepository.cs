@@ -26,11 +26,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             _writer = new CarExpressionRewriter(resourceGraph);
         }
 
-        protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer layer)
+        protected override IQueryable<TResource> ApplyQueryLayer(QueryLayer queryLayer)
         {
-            RecursiveRewriteFilterInLayer(layer);
+            RecursiveRewriteFilterInLayer(queryLayer);
 
-            return base.ApplyQueryLayer(layer);
+            return base.ApplyQueryLayer(queryLayer);
         }
 
         private void RecursiveRewriteFilterInLayer(QueryLayer queryLayer)

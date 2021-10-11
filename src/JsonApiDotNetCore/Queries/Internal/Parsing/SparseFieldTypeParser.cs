@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Immutable;
 using JetBrains.Annotations;
@@ -33,7 +31,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceType ParseSparseFieldTarget()
         {
-            if (!TokenStack.TryPop(out Token token) || token.Kind != TokenKind.Text)
+            if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text)
             {
                 throw new QueryParseException("Parameter name expected.");
             }
@@ -49,9 +47,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceType ParseResourceName()
         {
-            if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
             {
-                return GetResourceType(token.Value);
+                return GetResourceType(token.Value!);
             }
 
             throw new QueryParseException("Resource type expected.");
@@ -59,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceType GetResourceType(string publicName)
         {
-            ResourceType resourceType = _resourceGraph.FindResourceType(publicName);
+            ResourceType? resourceType = _resourceGraph.FindResourceType(publicName);
 
             if (resourceType == null)
             {

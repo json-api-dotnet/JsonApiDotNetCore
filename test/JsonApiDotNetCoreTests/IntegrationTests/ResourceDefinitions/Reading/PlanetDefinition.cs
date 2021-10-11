@@ -54,7 +54,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 AttrAttribute privateNameAttribute = ResourceType.GetAttributeByPropertyName(nameof(Planet.PrivateName));
 
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
-                    new NullConstantExpression());
+                    NullConstantExpression.Instance);
 
                 return existingFilter == null ? hasNoPrivateName : new LogicalExpression(LogicalOperator.And, hasNoPrivateName, existingFilter);
             }

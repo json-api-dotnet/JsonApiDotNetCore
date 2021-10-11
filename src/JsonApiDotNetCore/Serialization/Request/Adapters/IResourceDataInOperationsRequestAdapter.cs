@@ -1,5 +1,4 @@
-#nullable disable
-
+using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -8,6 +7,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     /// <summary>
     /// Validates and converts the data from an entry in an atomic:operations request that creates or updates a resource.
     /// </summary>
+    [PublicAPI]
     public interface IResourceDataInOperationsRequestAdapter
     {
         /// <summary>

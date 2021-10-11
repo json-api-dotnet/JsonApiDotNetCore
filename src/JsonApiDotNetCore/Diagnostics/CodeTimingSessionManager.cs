@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +13,7 @@ namespace JsonApiDotNetCore.Diagnostics
     public static class CodeTimingSessionManager
     {
         public static readonly bool IsEnabled;
-        private static ICodeTimerSession _session;
+        private static ICodeTimerSession? _session;
 
         public static ICodeTimer Current
         {
@@ -28,7 +26,7 @@ namespace JsonApiDotNetCore.Diagnostics
 
                 AssertHasActiveSession();
 
-                return _session.CodeTimer;
+                return _session!.CodeTimer;
             }
         }
 
@@ -85,7 +83,7 @@ namespace JsonApiDotNetCore.Diagnostics
             }
         }
 
-        private static void SessionOnDisposed(object sender, EventArgs args)
+        private static void SessionOnDisposed(object? sender, EventArgs args)
         {
             if (_session != null)
             {

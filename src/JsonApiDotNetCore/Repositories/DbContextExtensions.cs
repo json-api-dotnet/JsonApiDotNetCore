@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using JetBrains.Annotations;
@@ -20,7 +18,7 @@ namespace JsonApiDotNetCore.Repositories
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            var trackedIdentifiable = (IIdentifiable)dbContext.GetTrackedIdentifiable(resource);
+            var trackedIdentifiable = (IIdentifiable?)dbContext.GetTrackedIdentifiable(resource);
 
             if (trackedIdentifiable == null)
             {
@@ -34,20 +32,20 @@ namespace JsonApiDotNetCore.Repositories
         /// <summary>
         /// Searches the change tracker for an entity that matches the type and ID of <paramref name="identifiable" />.
         /// </summary>
-        public static object GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
+        public static object? GetTrackedIdentifiable(this DbContext dbContext, IIdentifiable identifiable)
         {
             ArgumentGuard.NotNull(dbContext, nameof(dbContext));
             ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
             Type resourceClrType = identifiable.GetType();
-            string stringId = identifiable.StringId;
+            string? stringId = identifiable.StringId;
 
-            EntityEntry entityEntry = dbContext.ChangeTracker.Entries().FirstOrDefault(entry => IsResource(entry, resourceClrType, stringId));
+            EntityEntry? entityEntry = dbContext.ChangeTracker.Entries().FirstOrDefault(entry => IsResource(entry, resourceClrType, stringId));
 
             return entityEntry?.Entity;
         }
 
-        private static bool IsResource(EntityEntry entry, Type resourceClrType, string stringId)
+        private static bool IsResource(EntityEntry entry, Type resourceClrType, string? stringId)
         {
             return entry.Entity.GetType() == resourceClrType && ((IIdentifiable)entry.Entity).StringId == stringId;
         }

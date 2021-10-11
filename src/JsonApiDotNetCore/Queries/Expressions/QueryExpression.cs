@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Linq.Expressions;
 
 namespace JsonApiDotNetCore.Queries.Expressions

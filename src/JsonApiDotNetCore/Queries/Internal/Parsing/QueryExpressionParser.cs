@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -19,13 +17,8 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public abstract class QueryExpressionParser
     {
-        protected Stack<Token> TokenStack { get; private set; }
-        private protected ResourceFieldChainResolver ChainResolver { get; }
-
-        protected QueryExpressionParser()
-        {
-            ChainResolver = new ResourceFieldChainResolver();
-        }
+        protected Stack<Token> TokenStack { get; private set; } = null!;
+        private protected ResourceFieldChainResolver ChainResolver { get; } = new();
 
         /// <summary>
         /// Takes a dotted path and walks the resource graph to produce a chain of fields.
@@ -38,11 +31,11 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             TokenStack = new Stack<Token>(tokenizer.EnumerateTokens().Reverse());
         }
 
-        protected ResourceFieldChainExpression ParseFieldChain(FieldChainRequirements chainRequirements, string alternativeErrorMessage)
+        protected ResourceFieldChainExpression ParseFieldChain(FieldChainRequirements chainRequirements, string? alternativeErrorMessage)
         {
-            if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
+            if (TokenStack.TryPop(out Token? token) && token.Kind == TokenKind.Text)
             {
-                IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value, chainRequirements);
+                IImmutableList<ResourceFieldAttribute> chain = OnResolveFieldChain(token.Value!, chainRequirements);
 
                 if (chain.Any())
                 {
@@ -53,9 +46,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             throw new QueryParseException(alternativeErrorMessage ?? "Field name expected.");
         }
 
-        protected CountExpression TryParseCount()
+        protected CountExpression? TryParseCount()
         {
-            if (TokenStack.TryPeek(out Token nextToken) && nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Count)
+            if (TokenStack.TryPeek(out Token? nextToken) && nextToken.Kind == TokenKind.Text && nextToken.Value == Keywords.Count)
             {
                 TokenStack.Pop();
 
@@ -73,7 +66,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected void EatText(string text)
         {
-            if (!TokenStack.TryPop(out Token token) || token.Kind != TokenKind.Text || token.Value != text)
+            if (!TokenStack.TryPop(out Token? token) || token.Kind != TokenKind.Text || token.Value != text)
             {
                 throw new QueryParseException($"{text} expected.");
             }
@@ -81,7 +74,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected void EatSingleCharacterToken(TokenKind kind)
         {
-            if (!TokenStack.TryPop(out Token token) || token.Kind != kind)
+            if (!TokenStack.TryPop(out Token? token) || token.Kind != kind)
             {
                 char ch = QueryTokenizer.SingleCharacterToTokenKinds.Single(pair => pair.Value == kind).Key;
                 throw new QueryParseException($"{ch} expected.");

@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Middleware;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public object Convert(Document document)
+        public object? Convert(Document document)
         {
             ArgumentGuard.NotNull(document, nameof(document));
 

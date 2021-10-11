@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -15,9 +13,9 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     {
         public IIdentifiable Resource { get; }
         public ResourceType ResourceType { get; }
-        public RelationshipAttribute Relationship { get; }
+        public RelationshipAttribute? Relationship { get; }
 
-        public AtomicReferenceResult(IIdentifiable resource, ResourceType resourceType, RelationshipAttribute relationship)
+        public AtomicReferenceResult(IIdentifiable resource, ResourceType resourceType, RelationshipAttribute? relationship)
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));

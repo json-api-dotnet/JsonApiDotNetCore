@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -53,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 Type = TryPeekType(ref reader)
             };
 
-            ResourceType resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
+            ResourceType? resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
 
             while (reader.Read())
             {
@@ -65,7 +63,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                     }
                     case JsonTokenType.PropertyName:
                     {
-                        string propertyName = reader.GetString();
+                        string? propertyName = reader.GetString();
                         reader.Read();
 
                         switch (propertyName)
@@ -103,7 +101,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "relationships":
                             {
-                                resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject>>(ref reader, options);
+                                resourceObject.Relationships = ReadSubTree<IDictionary<string, RelationshipObject?>>(ref reader, options);
                                 break;
                             }
                             case "links":
@@ -113,7 +111,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "meta":
                             {
-                                resourceObject.Meta = ReadSubTree<IDictionary<string, object>>(ref reader, options);
+                                resourceObject.Meta = ReadSubTree<IDictionary<string, object?>>(ref reader, options);
                                 break;
                             }
                             default:
@@ -131,7 +129,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             throw GetEndOfStreamError();
         }
 
-        private static string TryPeekType(ref Utf8JsonReader reader)
+        private static string? TryPeekType(ref Utf8JsonReader reader)
         {
             // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#an-alternative-way-to-do-polymorphic-deserialization
             Utf8JsonReader readerClone = reader;
@@ -140,7 +138,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             {
                 if (readerClone.TokenType == JsonTokenType.PropertyName)
                 {
-                    string propertyName = readerClone.GetString();
+                    string? propertyName = readerClone.GetString();
                     readerClone.Read();
 
                     switch (propertyName)
@@ -161,9 +159,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             return null;
         }
 
-        private static IDictionary<string, object> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
+        private static IDictionary<string, object?> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
         {
-            var attributes = new Dictionary<string, object>();
+            var attributes = new Dictionary<string, object?>();
 
             while (reader.Read())
             {
@@ -175,15 +173,15 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                     }
                     case JsonTokenType.PropertyName:
                     {
-                        string attributeName = reader.GetString();
+                        string attributeName = reader.GetString() ?? string.Empty;
                         reader.Read();
 
-                        AttrAttribute attribute = resourceType.FindAttributeByPublicName(attributeName);
-                        PropertyInfo property = attribute?.Property;
+                        AttrAttribute? attribute = resourceType.FindAttributeByPublicName(attributeName);
+                        PropertyInfo? property = attribute?.Property;
 
                         if (property != null)
                         {
-                            object attributeValue;
+                            object? attributeValue;
 
                             if (property.Name == nameof(Identifiable<object>.Id))
                             {
@@ -207,11 +205,11 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                                 }
                             }
 
-                            attributes.Add(attributeName!, attributeValue);
+                            attributes.Add(attributeName, attributeValue);
                         }
                         else
                         {
-                            attributes.Add(attributeName!, null);
+                            attributes.Add(attributeName, null);
                             reader.Skip();
                         }
 

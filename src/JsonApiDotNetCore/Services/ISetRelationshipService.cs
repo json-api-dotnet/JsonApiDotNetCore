@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Threading;
 using System.Threading.Tasks;
 using JsonApiDotNetCore.Resources;
@@ -27,6 +25,6 @@ namespace JsonApiDotNetCore.Services
         /// <param name="cancellationToken">
         /// Propagates notification that request handling should be canceled.
         /// </param>
-        Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken);
+        Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken);
     }
 }

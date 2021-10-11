@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.AtomicOperations;
@@ -14,13 +12,13 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     [PublicAPI]
     public sealed class RequestAdapterState : IDisposable
     {
-        private readonly IDisposable _backupRequestState;
+        private readonly IDisposable? _backupRequestState;
 
         public IJsonApiRequest InjectableRequest { get; }
         public ITargetedFields InjectableTargetedFields { get; }
 
-        public JsonApiRequest WritableRequest { get; set; }
-        public TargetedFields WritableTargetedFields { get; set; }
+        public JsonApiRequest? WritableRequest { get; set; }
+        public TargetedFields? WritableTargetedFields { get; set; }
 
         public RequestAdapterPosition Position { get; } = new();
         public IJsonApiRequest Request => WritableRequest ?? InjectableRequest;

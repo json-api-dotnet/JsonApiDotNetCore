@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +23,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public object Convert(SingleOrManyData<ResourceObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)
+        public object? Convert(SingleOrManyData<ResourceObject> data, RelationshipAttribute relationship, bool useToManyElementType, RequestAdapterState state)
         {
             SingleOrManyData<ResourceIdentifierObject> identifierData = ToIdentifierData(data);
             return Convert(identifierData, relationship, useToManyElementType, state);
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
                 return default;
             }
 
-            object newValue = null;
+            object? newValue = null;
 
             if (data.ManyValue != null)
             {
@@ -63,7 +61,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         }
 
         /// <inheritdoc />
-        public object Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
+        public object? Convert(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship, bool useToManyElementType,
             RequestAdapterState state)
         {
             ArgumentGuard.NotNull(relationship, nameof(relationship));
@@ -84,7 +82,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
                 : ConvertToManyRelationshipData(data, relationship, requirements, useToManyElementType, state);
         }
 
-        private IIdentifiable ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, ResourceIdentityRequirements requirements,
+        private IIdentifiable? ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, ResourceIdentityRequirements requirements,
             RequestAdapterState state)
         {
             AssertHasSingleValue(data, true, state);
@@ -100,7 +98,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             int arrayIndex = 0;
             var rightResources = new List<IIdentifiable>();
 
-            foreach (ResourceIdentifierObject resourceIdentifierObject in data.ManyValue)
+            foreach (ResourceIdentifierObject resourceIdentifierObject in data.ManyValue!)
             {
                 using IDisposable _ = state.Position.PushArrayIndex(arrayIndex);
 

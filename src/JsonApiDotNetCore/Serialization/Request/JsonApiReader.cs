@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Text;
@@ -38,7 +36,7 @@ namespace JsonApiDotNetCore.Serialization.Request
         }
 
         /// <inheritdoc />
-        public async Task<object> ReadAsync(HttpRequest httpRequest)
+        public async Task<object?> ReadAsync(HttpRequest httpRequest)
         {
             ArgumentGuard.NotNull(httpRequest, nameof(httpRequest));
 
@@ -57,7 +55,7 @@ namespace JsonApiDotNetCore.Serialization.Request
             return await reader.ReadToEndAsync();
         }
 
-        private object GetModel(string requestBody)
+        private object? GetModel(string requestBody)
         {
             AssertHasRequestBody(requestBody);
 
@@ -83,7 +81,15 @@ namespace JsonApiDotNetCore.Serialization.Request
                 using IDisposable _ =
                     CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-                return JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
+                Document? document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
+
+                if (document == null)
+                {
+                    // [TODO-NRT]: Add tests for incoming body `null`.
+                    throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, null, null, null);
+                }
+
+                return document;
             }
             catch (JsonException exception)
             {
@@ -94,7 +100,7 @@ namespace JsonApiDotNetCore.Serialization.Request
             }
         }
 
-        private object ConvertDocumentToModel(Document document, string requestBody)
+        private object? ConvertDocumentToModel(Document document, string requestBody)
         {
             try
             {
