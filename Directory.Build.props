@@ -6,6 +6,7 @@
     <NpgsqlPostgreSQLVersion>5.0.*</NpgsqlPostgreSQLVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)CodingGuidelines.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>9999</WarningLevel>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
