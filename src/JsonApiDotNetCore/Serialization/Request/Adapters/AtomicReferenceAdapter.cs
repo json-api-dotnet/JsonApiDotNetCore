@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private RelationshipAttribute ConvertRelationship(string relationshipName, ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement("relationship");
-            RelationshipAttribute relationship = resourceType.TryGetRelationshipByPublicName(relationshipName);
+            RelationshipAttribute relationship = resourceType.FindRelationshipByPublicName(relationshipName);
 
             AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
             AssertToManyInAddOrRemoveRelationship(relationship, state);

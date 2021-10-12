@@ -56,10 +56,10 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceType personType = resourceGraph.TryGetResourceType(typeof(Person));
+            ResourceType personType = resourceGraph.FindResourceType(typeof(Person));
             personType.Should().NotBeNull();
 
-            ResourceType todoItemType = resourceGraph.TryGetResourceType(typeof(TodoItem));
+            ResourceType todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
             todoItemType.Should().NotBeNull();
         }
 
@@ -76,7 +76,7 @@ namespace DiscoveryTests
             // Assert
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
-            ResourceType testResourceType = resourceGraph.TryGetResourceType(typeof(TestResource));
+            ResourceType testResourceType = resourceGraph.FindResourceType(typeof(TestResource));
             testResourceType.Should().NotBeNull();
         }
 

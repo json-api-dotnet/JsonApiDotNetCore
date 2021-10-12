@@ -59,7 +59,7 @@ namespace UnitTests.Middleware
             var controllerResourceMappingMock = new Mock<IControllerResourceMapping>();
 
             ResourceType todoItemType = resourceGraph.GetResourceType<TodoItem>();
-            controllerResourceMappingMock.Setup(mapping => mapping.TryGetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
+            controllerResourceMappingMock.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(todoItemType);
 
             var httpContext = new DefaultHttpContext();
             SetupRoutes(httpContext, requestMethod, requestPath);

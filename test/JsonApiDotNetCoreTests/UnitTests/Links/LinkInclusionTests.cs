@@ -374,12 +374,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
         private sealed class FakeControllerResourceMapping : IControllerResourceMapping
         {
-            public ResourceType TryGetResourceTypeForController(Type controllerType)
+            public ResourceType GetResourceTypeForController(Type controllerType)
             {
                 throw new NotImplementedException();
             }
 
-            public string TryGetControllerNameForResourceType(ResourceType resourceType)
+            public string GetControllerNameForResourceType(ResourceType resourceType)
             {
                 return null;
             }

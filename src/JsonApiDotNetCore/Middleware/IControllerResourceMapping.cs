@@ -11,11 +11,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Gets the associated resource type for the provided controller type.
         /// </summary>
-        ResourceType TryGetResourceTypeForController(Type controllerType);
+        ResourceType GetResourceTypeForController(Type controllerType);
 
         /// <summary>
         /// Gets the associated controller name for the provided resource type.
         /// </summary>
-        string TryGetControllerNameForResourceType(ResourceType resourceType);
+        string GetControllerNameForResourceType(ResourceType resourceType);
     }
 }

@@ -99,7 +99,7 @@ namespace UnitTests.Middleware
             const string forcedNamespace = "api/v1";
             var mockMapping = new Mock<IControllerResourceMapping>();
             var resourceType = new ResourceType(resourceName, typeof(object), typeof(string));
-            mockMapping.Setup(mapping => mapping.TryGetResourceTypeForController(It.IsAny<Type>())).Returns(resourceType);
+            mockMapping.Setup(mapping => mapping.GetResourceTypeForController(It.IsAny<Type>())).Returns(resourceType);
 
             IJsonApiOptions options = CreateOptions(forcedNamespace);
             var request = new JsonApiRequest();

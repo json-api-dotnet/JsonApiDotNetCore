@@ -47,19 +47,17 @@ namespace JsonApiDotNetCore.Middleware
         }
 
         /// <inheritdoc />
-        public ResourceType TryGetResourceTypeForController(Type controllerType)
+        public ResourceType GetResourceTypeForController(Type controllerType)
         {
-            ArgumentGuard.NotNull(controllerType, nameof(controllerType));
-
-            return _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType resourceType) ? resourceType : null;
+            return controllerType != null && _resourceTypePerControllerTypeMap.TryGetValue(controllerType, out ResourceType resourceType) ? resourceType : null;
         }
 
         /// <inheritdoc />
-        public string TryGetControllerNameForResourceType(ResourceType resourceType)
+        public string GetControllerNameForResourceType(ResourceType resourceType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
-
-            return _controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel controllerModel) ? controllerModel.ControllerName : null;
+            return resourceType != null && _controllerPerResourceTypeMap.TryGetValue(resourceType, out ControllerModel controllerModel)
+                ? controllerModel.ControllerName
+                : null;
         }
 
         /// <inheritdoc />
@@ -77,7 +75,7 @@ namespace JsonApiDotNetCore.Middleware
 
                     if (resourceClrType != null)
                     {
-                        ResourceType resourceType = _resourceGraph.TryGetResourceType(resourceClrType);
+                        ResourceType resourceType = _resourceGraph.FindResourceType(resourceClrType);
 
                         if (resourceType != null)
                         {

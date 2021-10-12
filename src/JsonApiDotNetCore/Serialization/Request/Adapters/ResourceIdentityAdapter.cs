@@ -43,7 +43,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             AssertHasType(identity, state);
 
             using IDisposable _ = state.Position.PushElement("type");
-            ResourceType resourceType = _resourceGraph.TryGetResourceType(identity.Type);
+            ResourceType resourceType = _resourceGraph.FindResourceType(identity.Type);
 
             AssertIsKnownResourceType(resourceType, identity.Type, state);
             AssertIsCompatibleResourceType(resourceType, requirements.ResourceType, requirements.RelationshipName, state);

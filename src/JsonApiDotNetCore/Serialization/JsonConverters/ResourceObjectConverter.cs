@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 Type = TryPeekType(ref reader)
             };
 
-            ResourceType resourceType = resourceObject.Type != null ? _resourceGraph.TryGetResourceType(resourceObject.Type) : null;
+            ResourceType resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
 
             while (reader.Read())
             {
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         string attributeName = reader.GetString();
                         reader.Read();
 
-                        AttrAttribute attribute = resourceType.TryGetAttributeByPublicName(attributeName);
+                        AttrAttribute attribute = resourceType.FindAttributeByPublicName(attributeName);
                         PropertyInfo property = attribute?.Property;
 
                         if (property != null)

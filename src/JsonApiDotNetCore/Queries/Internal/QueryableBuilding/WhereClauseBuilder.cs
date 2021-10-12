@@ -177,7 +177,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         public override Expression VisitComparison(ComparisonExpression expression, Type argument)
         {
-            Type commonType = TryResolveCommonType(expression.Left, expression.Right);
+            Type commonType = ResolveCommonType(expression.Left, expression.Right);
 
             Expression left = WrapInConvert(Visit(expression.Left, commonType), commonType);
             Expression right = WrapInConvert(Visit(expression.Right, commonType), commonType);
@@ -209,7 +209,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             throw new InvalidOperationException($"Unknown comparison operator '{expression.Operator}'.");
         }
 
-        private Type TryResolveCommonType(QueryExpression left, QueryExpression right)
+        private Type ResolveCommonType(QueryExpression left, QueryExpression right)
         {
             Type leftType = ResolveFixedType(left);
 

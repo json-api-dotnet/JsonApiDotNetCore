@@ -56,7 +56,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private void ConvertAttribute(IIdentifiable resource, string attributeName, object attributeValue, ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(attributeName);
-            AttrAttribute attr = resourceType.TryGetAttributeByPublicName(attributeName);
+            AttrAttribute attr = resourceType.FindAttributeByPublicName(attributeName);
 
             if (attr == null && _options.AllowUnknownFieldsInRequestBody)
             {
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             ResourceType resourceType, RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(relationshipName);
-            RelationshipAttribute relationship = resourceType.TryGetRelationshipByPublicName(relationshipName);
+            RelationshipAttribute relationship = resourceType.FindRelationshipByPublicName(relationshipName);
 
             if (relationship == null && _options.AllowUnknownFieldsInRequestBody)
             {

@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Middleware
             var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();
 
             return controllerActionDescriptor != null
-                ? controllerResourceMapping.TryGetResourceTypeForController(controllerActionDescriptor.ControllerTypeInfo)
+                ? controllerResourceMapping.GetResourceTypeForController(controllerActionDescriptor.ControllerTypeInfo)
                 : null;
         }
 
@@ -241,7 +241,7 @@ namespace JsonApiDotNetCore.Middleware
                 // @formatter:keep_existing_linebreaks restore
                 // @formatter:wrap_chained_method_calls restore
 
-                RelationshipAttribute requestRelationship = primaryResourceType.TryGetRelationshipByPublicName(relationshipName);
+                RelationshipAttribute requestRelationship = primaryResourceType.FindRelationshipByPublicName(relationshipName);
 
                 if (requestRelationship != null)
                 {

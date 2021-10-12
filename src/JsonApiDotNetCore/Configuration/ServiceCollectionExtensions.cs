@@ -120,12 +120,11 @@ namespace JsonApiDotNetCore.Configuration
 
         private static ResourceDescriptor TryGetResourceTypeFromServiceImplementation(Type serviceType)
         {
-            foreach (Type @interface in serviceType.GetInterfaces())
+            if (serviceType != null)
             {
-                Type firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
-
-                if (firstGenericArgument != null)
+                foreach (Type @interface in serviceType.GetInterfaces())
                 {
+                    Type firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
                     ResourceDescriptor resourceDescriptor = TypeLocator.TryGetResourceDescriptor(firstGenericArgument);
 
                     if (resourceDescriptor != null)

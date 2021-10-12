@@ -107,11 +107,11 @@ namespace JsonApiDotNetCore.Configuration
 
         public AttrAttribute GetAttributeByPublicName(string publicName)
         {
-            AttrAttribute attribute = TryGetAttributeByPublicName(publicName);
+            AttrAttribute attribute = FindAttributeByPublicName(publicName);
             return attribute ?? throw new InvalidOperationException($"Attribute '{publicName}' does not exist on resource type '{PublicName}'.");
         }
 
-        public AttrAttribute TryGetAttributeByPublicName(string publicName)
+        public AttrAttribute FindAttributeByPublicName(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
@@ -120,13 +120,13 @@ namespace JsonApiDotNetCore.Configuration
 
         public AttrAttribute GetAttributeByPropertyName(string propertyName)
         {
-            AttrAttribute attribute = TryGetAttributeByPropertyName(propertyName);
+            AttrAttribute attribute = FindAttributeByPropertyName(propertyName);
 
             return attribute ??
                 throw new InvalidOperationException($"Attribute for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
-        public AttrAttribute TryGetAttributeByPropertyName(string propertyName)
+        public AttrAttribute FindAttributeByPropertyName(string propertyName)
         {
             ArgumentGuard.NotNull(propertyName, nameof(propertyName));
 
@@ -135,11 +135,11 @@ namespace JsonApiDotNetCore.Configuration
 
         public RelationshipAttribute GetRelationshipByPublicName(string publicName)
         {
-            RelationshipAttribute relationship = TryGetRelationshipByPublicName(publicName);
+            RelationshipAttribute relationship = FindRelationshipByPublicName(publicName);
             return relationship ?? throw new InvalidOperationException($"Relationship '{publicName}' does not exist on resource type '{PublicName}'.");
         }
 
-        public RelationshipAttribute TryGetRelationshipByPublicName(string publicName)
+        public RelationshipAttribute FindRelationshipByPublicName(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
@@ -150,13 +150,13 @@ namespace JsonApiDotNetCore.Configuration
 
         public RelationshipAttribute GetRelationshipByPropertyName(string propertyName)
         {
-            RelationshipAttribute relationship = TryGetRelationshipByPropertyName(propertyName);
+            RelationshipAttribute relationship = FindRelationshipByPropertyName(propertyName);
 
             return relationship ??
                 throw new InvalidOperationException($"Relationship for property '{propertyName}' does not exist on resource type '{ClrType.Name}'.");
         }
 
-        public RelationshipAttribute TryGetRelationshipByPropertyName(string propertyName)
+        public RelationshipAttribute FindRelationshipByPropertyName(string propertyName)
         {
             ArgumentGuard.NotNull(propertyName, nameof(propertyName));
 

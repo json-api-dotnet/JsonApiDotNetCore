@@ -41,7 +41,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceType GetResourceType(string publicName)
         {
-            ResourceType resourceType = TryGetResourceType(publicName);
+            ResourceType resourceType = FindResourceType(publicName);
 
             if (resourceType == null)
             {
@@ -52,7 +52,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceType TryGetResourceType(string publicName)
+        public ResourceType FindResourceType(string publicName)
         {
             ArgumentGuard.NotNull(publicName, nameof(publicName));
 
@@ -62,7 +62,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public ResourceType GetResourceType(Type resourceClrType)
         {
-            ResourceType resourceType = TryGetResourceType(resourceClrType);
+            ResourceType resourceType = FindResourceType(resourceClrType);
 
             if (resourceType == null)
             {
@@ -73,7 +73,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <inheritdoc />
-        public ResourceType TryGetResourceType(Type resourceClrType)
+        public ResourceType FindResourceType(Type resourceClrType)
         {
             ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 

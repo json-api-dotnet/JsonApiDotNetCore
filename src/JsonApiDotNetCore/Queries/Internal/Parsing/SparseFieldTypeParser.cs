@@ -57,7 +57,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private ResourceType GetResourceType(string publicName)
         {
-            ResourceType resourceType = _resourceGraph.TryGetResourceType(publicName);
+            ResourceType resourceType = _resourceGraph.FindResourceType(publicName);
 
             if (resourceType == null)
             {

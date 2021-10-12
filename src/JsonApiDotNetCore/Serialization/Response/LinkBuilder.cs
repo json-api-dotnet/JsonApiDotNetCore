@@ -254,7 +254,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private string GetLinkForResourceSelf(ResourceType resourceType, string resourceId)
         {
-            string controllerName = _controllerResourceMapping.TryGetControllerNameForResourceType(resourceType);
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(resourceType);
             IDictionary<string, object> routeValues = GetRouteValues(resourceId, null);
 
             return RenderLinkForAction(controllerName, GetPrimaryControllerActionName, routeValues);
@@ -283,7 +283,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private string GetLinkForRelationshipSelf(string leftId, RelationshipAttribute relationship)
         {
-            string controllerName = _controllerResourceMapping.TryGetControllerNameForResourceType(relationship.LeftType);
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetRelationshipControllerActionName, routeValues);
@@ -291,7 +291,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private string GetLinkForRelationshipRelated(string leftId, RelationshipAttribute relationship)
         {
-            string controllerName = _controllerResourceMapping.TryGetControllerNameForResourceType(relationship.LeftType);
+            string controllerName = _controllerResourceMapping.GetControllerNameForResourceType(relationship.LeftType);
             IDictionary<string, object> routeValues = GetRouteValues(leftId, relationship.PublicName);
 
             return RenderLinkForAction(controllerName, GetSecondaryControllerActionName, routeValues);

@@ -37,21 +37,24 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
 
         private static Expression TryGetCollectionCount(Expression collectionExpression)
         {
-            var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
-
-            if (collectionExpression.Type.IsInterface)
+            if (collectionExpression != null)
             {
-                foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(@interface => @interface.GetProperties()))
+                var properties = new HashSet<PropertyInfo>(collectionExpression.Type.GetProperties());
+
+                if (collectionExpression.Type.IsInterface)
                 {
-                    properties.Add(item);
+                    foreach (PropertyInfo item in collectionExpression.Type.GetInterfaces().SelectMany(@interface => @interface.GetProperties()))
+                    {
+                        properties.Add(item);
+                    }
                 }
-            }
 
-            foreach (PropertyInfo property in properties)
-            {
-                if (property.Name is "Count" or "Length")
+                foreach (PropertyInfo property in properties)
                 {
-                    return Expression.Property(collectionExpression, property);
+                    if (property.Name is "Count" or "Length")
+                    {
+                        return Expression.Property(collectionExpression, property);
+                    }
                 }
             }
 

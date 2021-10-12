@@ -38,12 +38,12 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to get the metadata for the resource that is publicly exposed by the specified name. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceType TryGetResourceType(string publicName);
+        ResourceType FindResourceType(string publicName);
 
         /// <summary>
         /// Attempts to get metadata for the resource of the specified CLR type. Returns <c>null</c> when not found.
         /// </summary>
-        ResourceType TryGetResourceType(Type resourceClrType);
+        ResourceType FindResourceType(Type resourceClrType);
 
         /// <summary>
         /// Gets the fields (attributes and relationships) for <typeparamref name="TResource" /> that are targeted by the selector.
