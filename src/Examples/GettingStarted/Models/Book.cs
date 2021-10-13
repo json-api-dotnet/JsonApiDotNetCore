@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,12 +8,12 @@ namespace GettingStarted.Models
     public sealed class Book : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public int PublishYear { get; set; }
 
         [HasOne]
-        public Person Author { get; set; }
+        public Person Author { get; set; } = null!;
     }
 }

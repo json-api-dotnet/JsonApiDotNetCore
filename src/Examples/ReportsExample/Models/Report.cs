@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,9 +8,9 @@ namespace ReportsExample.Models
     public sealed class Report : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
-        public ReportStatistics Statistics { get; set; }
+        public ReportStatistics Statistics { get; set; } = null!;
     }
 }

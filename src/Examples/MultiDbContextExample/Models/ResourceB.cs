@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,6 +8,6 @@ namespace MultiDbContextExample.Models
     public sealed class ResourceB : Identifiable<int>
     {
         [Attr]
-        public string NameB { get; set; }
+        public string? NameB { get; set; }
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Text.Json.Serialization;
 using JsonApiDotNetCore.Configuration;

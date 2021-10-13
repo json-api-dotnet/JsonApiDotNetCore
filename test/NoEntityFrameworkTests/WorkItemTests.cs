@@ -39,10 +39,15 @@ namespace NoEntityFrameworkTests
         [Fact]
         public async Task Can_get_WorkItems()
         {
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
+
             // Arrange
             await RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.WorkItems.Add(new WorkItem());
+                dbContext.WorkItems.Add(workItem);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -61,7 +66,10 @@ namespace NoEntityFrameworkTests
         public async Task Can_get_WorkItem_by_ID()
         {
             // Arrange
-            var workItem = new WorkItem();
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
 
             await RunOnDatabaseAsync(async dbContext =>
             {
@@ -127,7 +135,10 @@ namespace NoEntityFrameworkTests
         public async Task Can_delete_WorkItem()
         {
             // Arrange
-            var workItem = new WorkItem();
+            var workItem = new WorkItem
+            {
+                Title = "Write some code."
+            };
 
             await RunOnDatabaseAsync(async dbContext =>
             {

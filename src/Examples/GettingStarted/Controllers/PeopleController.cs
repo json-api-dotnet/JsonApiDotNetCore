@@ -1,5 +1,3 @@
-#nullable disable
-
 using GettingStarted.Models;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Controllers;

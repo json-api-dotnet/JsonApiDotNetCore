@@ -11,16 +11,16 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": false,
-      "launchUrl": "/api/reports",
+      "launchBrowser": true,
+      "launchUrl": "api/reports",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Kestrel": {
       "commandName": "Project",
-      "launchBrowser": false,
-      "launchUrl": "/api/reports",
+      "launchBrowser": true,
+      "launchUrl": "api/reports",
       "applicationUrl": "https://localhost:44348;http://localhost:14148",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

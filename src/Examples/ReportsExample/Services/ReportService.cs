@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,6 +33,7 @@ namespace ReportsExample.Services
             {
                 new()
                 {
+                    Id = 1,
                     Title = "Status Report",
                     Statistics = new ReportStatistics
                     {

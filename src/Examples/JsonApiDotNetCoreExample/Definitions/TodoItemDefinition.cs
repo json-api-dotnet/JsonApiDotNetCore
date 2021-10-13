@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +22,7 @@ namespace JsonApiDotNetCoreExample.Definitions
             _systemClock = systemClock;
         }
 
-        public override SortExpression OnApplySort(SortExpression existingSort)
+        public override SortExpression OnApplySort(SortExpression? existingSort)
         {
             return existingSort ?? GetDefaultSortOrder();
         }

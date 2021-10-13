@@ -1,5 +1,3 @@
-#nullable disable
-
 using GettingStarted.Data;
 using GettingStarted.Models;
 using JetBrains.Annotations;

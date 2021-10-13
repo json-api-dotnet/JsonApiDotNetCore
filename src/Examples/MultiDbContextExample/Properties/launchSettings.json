@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": false,
-      "launchUrl": "/resourceBs",
+      "launchUrl": "resourceBs",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "Kestrel": {
       "commandName": "Project",
       "launchBrowser": false,
-      "launchUrl": "/resourceBs",
+      "launchUrl": "resourceBs",
       "applicationUrl": "https://localhost:44350;http://localhost:14150",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
