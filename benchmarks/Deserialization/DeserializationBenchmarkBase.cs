@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -23,7 +21,7 @@ namespace Benchmarks.Deserialization
         protected DeserializationBenchmarkBase()
         {
             var options = new JsonApiOptions();
-            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceA>().Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<IncomingResource>().Build();
             options.SerializerOptions.Converters.Add(new ResourceObjectConverter(resourceGraph));
             SerializerReadOptions = ((IJsonApiOptions)options).SerializerReadOptions;
 
@@ -32,7 +30,7 @@ namespace Benchmarks.Deserialization
             var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
 
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-            serviceContainer.AddService(typeof(IResourceDefinition<ResourceA, int>), new JsonApiResourceDefinition<ResourceA, int>(resourceGraph));
+            serviceContainer.AddService(typeof(IResourceDefinition<IncomingResource, int>), new JsonApiResourceDefinition<IncomingResource, int>(resourceGraph));
 
             // ReSharper disable once VirtualMemberCallInConstructor
             JsonApiRequest request = CreateJsonApiRequest(resourceGraph);
@@ -58,7 +56,7 @@ namespace Benchmarks.Deserialization
         protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceA : Identifiable<int>
+        public sealed class IncomingResource : Identifiable<int>
         {
             [Attr]
             public bool Attribute01 { get; set; }
@@ -76,7 +74,7 @@ namespace Benchmarks.Deserialization
             public float? Attribute05 { get; set; }
 
             [Attr]
-            public string Attribute06 { get; set; }
+            public string Attribute06 { get; set; } = null!;
 
             [Attr]
             public DateTime? Attribute07 { get; set; }
@@ -91,34 +89,34 @@ namespace Benchmarks.Deserialization
             public DayOfWeek Attribute10 { get; set; }
 
             [HasOne]
-            public ResourceA Single1 { get; set; }
+            public IncomingResource Single1 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single2 { get; set; }
+            public IncomingResource Single2 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single3 { get; set; }
+            public IncomingResource Single3 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single4 { get; set; }
+            public IncomingResource Single4 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single5 { get; set; }
+            public IncomingResource Single5 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi1 { get; set; }
+            public ISet<IncomingResource> Multi1 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi2 { get; set; }
+            public ISet<IncomingResource> Multi2 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi3 { get; set; }
+            public ISet<IncomingResource> Multi3 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi4 { get; set; }
+            public ISet<IncomingResource> Multi4 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi5 { get; set; }
+            public ISet<IncomingResource> Multi5 { get; set; } = null!;
         }
     }
 }

@@ -1,7 +1,4 @@
-#nullable disable
-
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
 using BenchmarkDotNet.Attributes;
 using JsonApiDotNetCore;
@@ -14,51 +11,32 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Benchmarks.Query
+namespace Benchmarks.QueryString
 {
     // ReSharper disable once ClassCanBeSealed.Global
     [MarkdownExporter]
     [SimpleJob(3, 10, 20)]
     [MemoryDiagnoser]
-    public class QueryParserBenchmarks
+    public class QueryStringParserBenchmarks
     {
-        private readonly DependencyFactory _dependencyFactory = new();
         private readonly FakeRequestQueryStringAccessor _queryStringAccessor = new();
-        private readonly QueryStringReader _queryStringReaderForSort;
-        private readonly QueryStringReader _queryStringReaderForAll;
+        private readonly QueryStringReader _queryStringReader;
 
-        public QueryParserBenchmarks()
+        public QueryStringParserBenchmarks()
         {
             IJsonApiOptions options = new JsonApiOptions
             {
                 EnableLegacyFilterNotation = true
             };
 
-            IResourceGraph resourceGraph = _dependencyFactory.CreateResourceGraph(options);
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<QueryableResource>("alt-resource-name").Build();
 
             var request = new JsonApiRequest
             {
-                PrimaryResourceType = resourceGraph.GetResourceType(typeof(BenchmarkResource)),
+                PrimaryResourceType = resourceGraph.GetResourceType(typeof(QueryableResource)),
                 IsCollection = true
             };
 
-            _queryStringReaderForSort = CreateQueryParameterDiscoveryForSort(resourceGraph, request, options, _queryStringAccessor);
-            _queryStringReaderForAll = CreateQueryParameterDiscoveryForAll(resourceGraph, request, options, _queryStringAccessor);
-        }
-
-        private static QueryStringReader CreateQueryParameterDiscoveryForSort(IResourceGraph resourceGraph, JsonApiRequest request, IJsonApiOptions options,
-            FakeRequestQueryStringAccessor queryStringAccessor)
-        {
-            var sortReader = new SortQueryStringParameterReader(request, resourceGraph);
-
-            IEnumerable<SortQueryStringParameterReader> readers = sortReader.AsEnumerable();
-
-            return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
-        }
-
-        private static QueryStringReader CreateQueryParameterDiscoveryForAll(IResourceGraph resourceGraph, JsonApiRequest request, IJsonApiOptions options,
-            FakeRequestQueryStringAccessor queryStringAccessor)
-        {
             var resourceFactory = new ResourceFactory(new ServiceContainer());
 
             var includeReader = new IncludeQueryStringParameterReader(request, resourceGraph, options);
@@ -70,25 +48,25 @@ namespace Benchmarks.Query
             IQueryStringParameterReader[] readers = ArrayFactory.Create<IQueryStringParameterReader>(includeReader, filterReader, sortReader,
                 sparseFieldSetReader, paginationReader);
 
-            return new QueryStringReader(options, queryStringAccessor, readers, NullLoggerFactory.Instance);
+            _queryStringReader = new QueryStringReader(options, _queryStringAccessor, readers, NullLoggerFactory.Instance);
         }
 
         [Benchmark]
         public void AscendingSort()
         {
-            string queryString = $"?sort={BenchmarkResourcePublicNames.NameAttr}";
+            const string queryString = "?sort=alt-attr-name";
 
             _queryStringAccessor.SetQueryString(queryString);
-            _queryStringReaderForSort.ReadAll(null);
+            _queryStringReader.ReadAll(null);
         }
 
         [Benchmark]
         public void DescendingSort()
         {
-            string queryString = $"?sort=-{BenchmarkResourcePublicNames.NameAttr}";
+            const string queryString = "?sort=-alt-attr-name";
 
             _queryStringAccessor.SetQueryString(queryString);
-            _queryStringReaderForSort.ReadAll(null);
+            _queryStringReader.ReadAll(null);
         }
 
         [Benchmark]
@@ -96,13 +74,11 @@ namespace Benchmarks.Query
         {
             Run(100, () =>
             {
-                const string resourceName = BenchmarkResourcePublicNames.Type;
-                const string attrName = BenchmarkResourcePublicNames.NameAttr;
-
-                string queryString = $"?filter[{attrName}]=abc,eq:abc&sort=-{attrName}&include=child&page[size]=1&fields[{resourceName}]={attrName}";
+                const string queryString =
+                    "?filter[alt-attr-name]=abc,eq:abc&sort=-alt-attr-name&include=child&page[size]=1&fields[alt-resource-name]=alt-attr-name";
 
                 _queryStringAccessor.SetQueryString(queryString);
-                _queryStringReaderForAll.ReadAll(null);
+                _queryStringReader.ReadAll(null);
             });
         }
 
@@ -116,7 +92,7 @@ namespace Benchmarks.Query
 
         private sealed class FakeRequestQueryStringAccessor : IRequestQueryStringAccessor
         {
-            public IQueryCollection Query { get; private set; }
+            public IQueryCollection Query { get; private set; } = new QueryCollection();
 
             public void SetQueryString(string queryString)
             {

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,11 +17,11 @@ namespace Benchmarks.Serialization
     // ReSharper disable once ClassCanBeSealed.Global
     public class ResourceSerializationBenchmarks : SerializationBenchmarkBase
     {
-        private static readonly ResourceA ResponseResource = CreateResponseResource();
+        private static readonly OutgoingResource ResponseResource = CreateResponseResource();
 
-        private static ResourceA CreateResponseResource()
+        private static OutgoingResource CreateResponseResource()
         {
-            var resource1 = new ResourceA
+            var resource1 = new OutgoingResource
             {
                 Id = 1,
                 Attribute01 = true,
@@ -38,7 +36,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Sunday
             };
 
-            var resource2 = new ResourceA
+            var resource2 = new OutgoingResource
             {
                 Id = 2,
                 Attribute01 = false,
@@ -53,7 +51,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Monday
             };
 
-            var resource3 = new ResourceA
+            var resource3 = new OutgoingResource
             {
                 Id = 3,
                 Attribute01 = true,
@@ -68,7 +66,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Tuesday
             };
 
-            var resource4 = new ResourceA
+            var resource4 = new OutgoingResource
             {
                 Id = 4,
                 Attribute01 = false,
@@ -83,7 +81,7 @@ namespace Benchmarks.Serialization
                 Attribute10 = DayOfWeek.Wednesday
             };
 
-            var resource5 = new ResourceA
+            var resource5 = new OutgoingResource
             {
                 Id = 5,
                 Attribute01 = true,
@@ -118,18 +116,18 @@ namespace Benchmarks.Serialization
             return new()
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>()
+                PrimaryResourceType = resourceGraph.GetResourceType<OutgoingResource>()
             };
         }
 
         protected override IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph)
         {
-            ResourceType resourceAType = resourceGraph.GetResourceType<ResourceA>();
+            ResourceType resourceAType = resourceGraph.GetResourceType<OutgoingResource>();
 
-            RelationshipAttribute single2 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Single2));
-            RelationshipAttribute single3 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Single3));
-            RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Multi4));
-            RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(ResourceA.Multi5));
+            RelationshipAttribute single2 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single2));
+            RelationshipAttribute single3 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Single3));
+            RelationshipAttribute multi4 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi4));
+            RelationshipAttribute multi5 = resourceAType.GetRelationshipByPropertyName(nameof(OutgoingResource.Multi5));
 
             ImmutableArray<ResourceFieldAttribute> chain = ArrayFactory.Create<ResourceFieldAttribute>(single2, single3, multi4, multi5).ToImmutableArray();
             IEnumerable<ResourceFieldChainExpression> chains = new ResourceFieldChainExpression(chain).AsEnumerable();

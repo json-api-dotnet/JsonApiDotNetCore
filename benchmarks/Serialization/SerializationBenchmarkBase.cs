@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -42,7 +40,7 @@ namespace Benchmarks.Serialization
                 }
             };
 
-            ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<ResourceA>().Build();
+            ResourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Add<OutgoingResource>().Build();
             SerializerWriteOptions = ((IJsonApiOptions)options).SerializerWriteOptions;
 
             // ReSharper disable VirtualMemberCallInConstructor
@@ -66,7 +64,7 @@ namespace Benchmarks.Serialization
         protected abstract IEvaluatedIncludeCache CreateEvaluatedIncludeCache(IResourceGraph resourceGraph);
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceA : Identifiable<int>
+        public sealed class OutgoingResource : Identifiable<int>
         {
             [Attr]
             public bool Attribute01 { get; set; }
@@ -84,7 +82,7 @@ namespace Benchmarks.Serialization
             public float? Attribute05 { get; set; }
 
             [Attr]
-            public string Attribute06 { get; set; }
+            public string Attribute06 { get; set; } = null!;
 
             [Attr]
             public DateTime? Attribute07 { get; set; }
@@ -99,34 +97,34 @@ namespace Benchmarks.Serialization
             public DayOfWeek Attribute10 { get; set; }
 
             [HasOne]
-            public ResourceA Single1 { get; set; }
+            public OutgoingResource Single1 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single2 { get; set; }
+            public OutgoingResource Single2 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single3 { get; set; }
+            public OutgoingResource Single3 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single4 { get; set; }
+            public OutgoingResource Single4 { get; set; } = null!;
 
             [HasOne]
-            public ResourceA Single5 { get; set; }
+            public OutgoingResource Single5 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi1 { get; set; }
+            public ISet<OutgoingResource> Multi1 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi2 { get; set; }
+            public ISet<OutgoingResource> Multi2 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi3 { get; set; }
+            public ISet<OutgoingResource> Multi3 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi4 { get; set; }
+            public ISet<OutgoingResource> Multi4 { get; set; } = null!;
 
             [HasMany]
-            public ISet<ResourceA> Multi5 { get; set; }
+            public ISet<OutgoingResource> Multi5 { get; set; } = null!;
         }
 
         private sealed class FakeResourceDefinitionAccessor : IResourceDefinitionAccessor
@@ -136,32 +134,32 @@ namespace Benchmarks.Serialization
                 return existingIncludes;
             }
 
-            public FilterExpression OnApplyFilter(ResourceType resourceType, FilterExpression existingFilter)
+            public FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter)
             {
                 return existingFilter;
             }
 
-            public SortExpression OnApplySort(ResourceType resourceType, SortExpression existingSort)
+            public SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort)
             {
                 return existingSort;
             }
 
-            public PaginationExpression OnApplyPagination(ResourceType resourceType, PaginationExpression existingPagination)
+            public PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination)
             {
                 return existingPagination;
             }
 
-            public SparseFieldSetExpression OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression existingSparseFieldSet)
+            public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
             {
                 return existingSparseFieldSet;
             }
 
-            public object GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
+            public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
             {
                 return null;
             }
 
-            public IDictionary<string, object> GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
+            public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
             {
                 return null;
             }
@@ -172,8 +170,8 @@ namespace Benchmarks.Serialization
                 return Task.CompletedTask;
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-                IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+            public Task<IIdentifiable?> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+                IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
                 where TResource : class, IIdentifiable
             {
                 return Task.FromResult(rightResourceId);
@@ -251,11 +249,11 @@ namespace Benchmarks.Serialization
 
         private sealed class FakeMetaBuilder : IMetaBuilder
         {
-            public void Add(IReadOnlyDictionary<string, object> values)
+            public void Add(IReadOnlyDictionary<string, object?> values)
             {
             }
 
-            public IDictionary<string, object> Build()
+            public IDictionary<string, object?>? Build()
             {
                 return null;
             }

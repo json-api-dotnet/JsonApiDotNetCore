@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Text.Json;
 using BenchmarkDotNet.Attributes;
@@ -17,7 +15,7 @@ namespace Benchmarks.Deserialization
         {
             data = new
             {
-                type = "resourceAs",
+                type = "incomingResources",
                 attributes = new
                 {
                     attribute01 = true,
@@ -37,7 +35,7 @@ namespace Benchmarks.Deserialization
                     {
                         data = new
                         {
-                            type = "resourceAs",
+                            type = "incomingResources",
                             id = "101"
                         }
                     },
@@ -45,7 +43,7 @@ namespace Benchmarks.Deserialization
                     {
                         data = new
                         {
-                            type = "resourceAs",
+                            type = "incomingResources",
                             id = "102"
                         }
                     },
@@ -53,7 +51,7 @@ namespace Benchmarks.Deserialization
                     {
                         data = new
                         {
-                            type = "resourceAs",
+                            type = "incomingResources",
                             id = "103"
                         }
                     },
@@ -61,7 +59,7 @@ namespace Benchmarks.Deserialization
                     {
                         data = new
                         {
-                            type = "resourceAs",
+                            type = "incomingResources",
                             id = "104"
                         }
                     },
@@ -69,7 +67,7 @@ namespace Benchmarks.Deserialization
                     {
                         data = new
                         {
-                            type = "resourceAs",
+                            type = "incomingResources",
                             id = "105"
                         }
                     },
@@ -79,7 +77,7 @@ namespace Benchmarks.Deserialization
                         {
                             new
                             {
-                                type = "resourceAs",
+                                type = "incomingResources",
                                 id = "201"
                             }
                         }
@@ -90,7 +88,7 @@ namespace Benchmarks.Deserialization
                         {
                             new
                             {
-                                type = "resourceAs",
+                                type = "incomingResources",
                                 id = "202"
                             }
                         }
@@ -101,7 +99,7 @@ namespace Benchmarks.Deserialization
                         {
                             new
                             {
-                                type = "resourceAs",
+                                type = "incomingResources",
                                 id = "203"
                             }
                         }
@@ -112,7 +110,7 @@ namespace Benchmarks.Deserialization
                         {
                             new
                             {
-                                type = "resourceAs",
+                                type = "incomingResources",
                                 id = "204"
                             }
                         }
@@ -123,7 +121,7 @@ namespace Benchmarks.Deserialization
                         {
                             new
                             {
-                                type = "resourceAs",
+                                type = "incomingResources",
                                 id = "205"
                             }
                         }
@@ -133,10 +131,9 @@ namespace Benchmarks.Deserialization
         });
 
         [Benchmark]
-        public object DeserializeResourceRequest()
+        public object? DeserializeResourceRequest()
         {
-            var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions);
-
+            var document = JsonSerializer.Deserialize<Document>(RequestBody, SerializerReadOptions)!;
             return DocumentAdapter.Convert(document);
         }
 
@@ -145,7 +142,7 @@ namespace Benchmarks.Deserialization
             return new()
             {
                 Kind = EndpointKind.Primary,
-                PrimaryResourceType = resourceGraph.GetResourceType<ResourceA>(),
+                PrimaryResourceType = resourceGraph.GetResourceType<IncomingResource>(),
                 WriteOperation = WriteOperationKind.CreateResource
             };
         }

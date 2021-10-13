@@ -1,9 +1,6 @@
-#nullable disable
-
 using BenchmarkDotNet.Running;
 using Benchmarks.Deserialization;
-using Benchmarks.LinkBuilding;
-using Benchmarks.Query;
+using Benchmarks.QueryString;
 using Benchmarks.Serialization;
 
 namespace Benchmarks
@@ -18,8 +15,7 @@ namespace Benchmarks
                 typeof(OperationsDeserializationBenchmarks),
                 typeof(ResourceSerializationBenchmarks),
                 typeof(OperationsSerializationBenchmarks),
-                typeof(QueryParserBenchmarks),
-                typeof(LinkBuilderGetNamespaceFromPathBenchmarks)
+                typeof(QueryStringParserBenchmarks)
             });
 
             switcher.Run(args);
