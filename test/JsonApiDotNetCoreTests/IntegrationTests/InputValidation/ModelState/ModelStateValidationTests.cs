@@ -55,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
-            error.Source.Pointer.Should().Be("/data/attributes/name");
+            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        name = (string)null,
+                        directoryName = (string)null,
                         isCaseSensitive = true
                     }
                 }
@@ -89,7 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
-            error.Source.Pointer.Should().Be("/data/attributes/name");
+            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        name = "!@#$%^&*().-",
+                        directoryName = "!@#$%^&*().-",
                         isCaseSensitive = true
                     }
                 }
@@ -123,7 +123,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
-            error.Source.Pointer.Should().Be("/data/attributes/name");
+            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        name = "Projects",
+                        directoryName = "Projects",
                         isCaseSensitive = true
                     }
                 }
@@ -152,7 +152,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
             responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
@@ -186,7 +186,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Name field is required.");
-            error1.Source.Pointer.Should().Be("/data/attributes/name");
+            error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -237,7 +237,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        name = "Projects",
+                        directoryName = "Projects",
                         isCaseSensitive = true
                     },
                     relationships = new
@@ -285,7 +285,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("Projects");
+            responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
             responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
 
@@ -398,7 +398,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = (string)null
+                        directoryName = (string)null
                     }
                 }
             };
@@ -417,7 +417,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
-            error.Source.Pointer.Should().Be("/data/attributes/name");
+            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
         [Fact]
@@ -444,7 +444,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "!@#$%^&*().-"
+                        directoryName = "!@#$%^&*().-"
                     }
                 }
             };
@@ -463,7 +463,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
-            error.Source.Pointer.Should().Be("/data/attributes/name");
+            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
         [Fact]
@@ -490,7 +490,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = "-1",
                     attributes = new
                     {
-                        name = "Repositories"
+                        directoryName = "Repositories"
                     },
                     relationships = new
                     {
@@ -556,7 +556,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "Repositories"
+                        directoryName = "Repositories"
                     }
                 }
             };
@@ -634,7 +634,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "Project Files"
+                        directoryName = "Project Files"
                     },
                     relationships = new
                     {
@@ -707,7 +707,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "Project files"
+                        directoryName = "Project files"
                     },
                     relationships = new
                     {
@@ -766,7 +766,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "Project files"
+                        directoryName = "Project files"
                     },
                     relationships = new
                     {

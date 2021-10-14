@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        name = "!@#$%^&*().-",
+                        directoryName = "!@#$%^&*().-",
                         isCaseSensitive = false
                     }
                 }
@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.Should().NotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be("!@#$%^&*().-");
+            responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("!@#$%^&*().-");
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     id = directory.StringId,
                     attributes = new
                     {
-                        name = "!@#$%^&*().-"
+                        directoryName = "!@#$%^&*().-"
                     }
                 }
             };

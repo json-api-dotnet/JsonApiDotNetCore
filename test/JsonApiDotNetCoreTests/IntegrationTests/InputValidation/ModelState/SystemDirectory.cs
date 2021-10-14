@@ -15,7 +15,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         [RegularExpression("^[0-9]+$")]
         public override int Id { get; set; }
 
-        [Attr]
+        [Attr(PublicName = "directoryName")]
         [Required]
         [RegularExpression(@"^[\w\s]+$")]
         public string Name { get; set; }
