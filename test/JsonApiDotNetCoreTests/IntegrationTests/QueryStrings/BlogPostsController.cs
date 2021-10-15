@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     public sealed class BlogPostsController : JsonApiController<BlogPost, int>
     {
-        public BlogPostsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<BlogPost, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public BlogPostsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<BlogPost, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

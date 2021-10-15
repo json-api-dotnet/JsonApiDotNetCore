@@ -23,21 +23,24 @@ namespace JsonApiDotNetCore.Controllers
     public abstract class BaseJsonApiOperationsController : CoreJsonApiController
     {
         private readonly IJsonApiOptions _options;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IOperationsProcessor _processor;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
         private readonly TraceLogWriter<BaseJsonApiOperationsController> _traceWriter;
 
-        protected BaseJsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor,
-            IJsonApiRequest request, ITargetedFields targetedFields)
+        protected BaseJsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
         {
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
             ArgumentGuard.NotNull(processor, nameof(processor));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
             _options = options;
+            _resourceGraph = resourceGraph;
             _processor = processor;
             _request = request;
             _targetedFields = targetedFields;
@@ -122,15 +125,15 @@ namespace JsonApiDotNetCore.Controllers
             return results.Any(result => result != null) ? Ok(results) : NoContent();
         }
 
-        protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
+        protected virtual void ValidateModelState(IList<OperationContainer> operations)
         {
             // We must validate the resource inside each operation manually, because they are typed as IIdentifiable.
             // Instead of validating IIdentifiable we need to validate the resource runtime-type.
 
-            var violations = new List<ModelStateViolation>();
-
-            int index = 0;
             using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
+
+            int operationIndex = 0;
+            var requestModelState = new Dictionary<string, ModelStateEntry>();
 
             foreach (OperationContainer operation in operations)
             {
@@ -142,38 +145,35 @@ namespace JsonApiDotNetCore.Controllers
                     var validationContext = new ActionContext();
                     ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
 
-                    if (!validationContext.ModelState.IsValid)
-                    {
-                        AddValidationErrors(validationContext.ModelState, operation.Resource.GetType(), index, violations);
-                    }
+                    CopyValidationErrorsFromOperation(validationContext.ModelState, operationIndex, requestModelState);
                 }
 
-                index++;
+                operationIndex++;
             }
 
-            if (violations.Any())
+            if (requestModelState.Any())
             {
-                throw new InvalidModelStateException(violations, _options.IncludeExceptionStackTraceInErrors, _options.SerializerOptions.PropertyNamingPolicy);
-            }
-        }
-
-        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceClrType, int operationIndex, List<ModelStateViolation> violations)
-        {
-            foreach ((string propertyName, ModelStateEntry entry) in modelState)
-            {
-                AddValidationErrors(entry, propertyName, resourceClrType, operationIndex, violations);
+                throw new InvalidModelStateException(requestModelState, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
+                    _resourceGraph,
+                    (collectionType, index) => collectionType == typeof(IList<OperationContainer>) ? operations[index].Resource.GetType() : null);
             }
         }
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceClrType, int operationIndex,
-            List<ModelStateViolation> violations)
+        private static void CopyValidationErrorsFromOperation(ModelStateDictionary operationModelState, int operationIndex,
+            Dictionary<string, ModelStateEntry> requestModelState)
         {
-            foreach (ModelError error in entry.Errors)
+            if (!operationModelState.IsValid)
             {
-                string prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
-                var violation = new ModelStateViolation(prefix, propertyName, resourceClrType, error);
+                foreach (string key in operationModelState.Keys)
+                {
+                    ModelStateEntry entry = operationModelState[key];
 
-                violations.Add(violation);
+                    if (entry.ValidationState == ModelValidationState.Invalid)
+                    {
+                        string operationKey = $"[{operationIndex}].{nameof(OperationContainer.Resource)}." + key;
+                        requestModelState[operationKey] = entry;
+                    }
+                }
             }
         }
     }

@@ -28,7 +28,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             var serviceMock = new Mock<IGetAllService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, serviceMock.Object);
 
             // Act
             await controller.GetAsync(CancellationToken.None);
@@ -41,7 +43,9 @@ namespace UnitTests.Controllers
         public async Task GetAsync_Throws_405_If_No_Service()
         {
             // Arrange
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, null);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, null);
 
             // Act
             Func<Task> asyncAction = () => controller.GetAsync(CancellationToken.None);
@@ -58,7 +62,9 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var serviceMock = new Mock<IGetByIdService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getById: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, getById: serviceMock.Object);
 
             // Act
             await controller.GetAsync(id, CancellationToken.None);
@@ -72,7 +78,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetAsync(id, CancellationToken.None);
@@ -90,7 +98,9 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<IGetRelationshipService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, getRelationship: serviceMock.Object);
 
             // Act
             await controller.GetRelationshipAsync(id, relationshipName, CancellationToken.None);
@@ -104,7 +114,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetRelationshipAsync(id, "articles", CancellationToken.None);
@@ -122,7 +134,9 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<IGetSecondaryService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, getSecondary: serviceMock.Object);
 
             // Act
             await controller.GetSecondaryAsync(id, relationshipName, CancellationToken.None);
@@ -136,7 +150,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.GetSecondaryAsync(id, "articles", CancellationToken.None);
@@ -154,8 +170,9 @@ namespace UnitTests.Controllers
             const int id = 0;
             var resource = new Resource();
             var serviceMock = new Mock<IUpdateService<Resource, int>>();
-
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, update: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, update: serviceMock.Object);
 
             // Act
             await controller.PatchAsync(id, resource, CancellationToken.None);
@@ -170,7 +187,9 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var resource = new Resource();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.PatchAsync(id, resource, CancellationToken.None);
@@ -187,13 +206,15 @@ namespace UnitTests.Controllers
             // Arrange
             var resource = new Resource();
             var serviceMock = new Mock<ICreateService<Resource, int>>();
-
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, create: serviceMock.Object);
             serviceMock.Setup(service => service.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
-
-            controller.ControllerContext = new ControllerContext
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, create: serviceMock.Object)
             {
-                HttpContext = new DefaultHttpContext()
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
             };
 
             // Act
@@ -210,7 +231,9 @@ namespace UnitTests.Controllers
             const int id = 0;
             const string relationshipName = "articles";
             var serviceMock = new Mock<ISetRelationshipService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, setRelationship: serviceMock.Object);
 
             // Act
             await controller.PatchRelationshipAsync(id, relationshipName, null, CancellationToken.None);
@@ -224,7 +247,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.PatchRelationshipAsync(id, "articles", null, CancellationToken.None);
@@ -241,7 +266,9 @@ namespace UnitTests.Controllers
             // Arrange
             const int id = 0;
             var serviceMock = new Mock<IDeleteService<Resource, int>>();
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance, delete: serviceMock.Object);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, delete: serviceMock.Object);
 
             // Act
             await controller.DeleteAsync(id, CancellationToken.None);
@@ -255,7 +282,9 @@ namespace UnitTests.Controllers
         {
             // Arrange
             const int id = 0;
-            var controller = new ResourceController(new JsonApiOptions(), NullLoggerFactory.Instance);
+            var options = new JsonApiOptions();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+            var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance);
 
             // Act
             Func<Task> asyncAction = () => controller.DeleteAsync(id, CancellationToken.None);
@@ -275,19 +304,20 @@ namespace UnitTests.Controllers
 
         private sealed class ResourceController : BaseJsonApiController<Resource, int>
         {
-            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Resource, int> resourceService)
-                : base(options, loggerFactory, resourceService)
+            public ResourceController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+                IResourceService<Resource, int> resourceService)
+                : base(options, resourceGraph, loggerFactory, resourceService)
             {
             }
 
-            public ResourceController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Resource, int> getAll = null,
-                IGetByIdService<Resource, int> getById = null, IGetSecondaryService<Resource, int> getSecondary = null,
-                IGetRelationshipService<Resource, int> getRelationship = null, ICreateService<Resource, int> create = null,
-                IAddToRelationshipService<Resource, int> addToRelationship = null, IUpdateService<Resource, int> update = null,
-                ISetRelationshipService<Resource, int> setRelationship = null, IDeleteService<Resource, int> delete = null,
-                IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
-                : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
-                    removeFromRelationship)
+            public ResourceController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+                IGetAllService<Resource, int> getAll = null, IGetByIdService<Resource, int> getById = null,
+                IGetSecondaryService<Resource, int> getSecondary = null, IGetRelationshipService<Resource, int> getRelationship = null,
+                ICreateService<Resource, int> create = null, IAddToRelationshipService<Resource, int> addToRelationship = null,
+                IUpdateService<Resource, int> update = null, ISetRelationshipService<Resource, int> setRelationship = null,
+                IDeleteService<Resource, int> delete = null, IRemoveFromRelationshipService<Resource, int> removeFromRelationship = null)
+                : base(options, resourceGraph, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update,
+                    setRelationship, delete, removeFromRelationship)
             {
             }
         }

@@ -523,13 +523,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-            error1.Source.Pointer.Should().Be("/data/attributes/id");
+            error1.Source.Pointer.Should().Be("/data/id");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
-            error2.Source.Pointer.Should().Be("/data/attributes/Subdirectories[0].Id");
+            error2.Source.Pointer.Should().Be("/data/relationships/subdirectories/data[0]/id");
         }
 
         [Fact]

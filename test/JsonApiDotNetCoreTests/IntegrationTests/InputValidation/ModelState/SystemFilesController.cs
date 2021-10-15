@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
     public sealed class SystemFilesController : JsonApiController<SystemFile, int>
     {
-        public SystemFilesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<SystemFile, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public SystemFilesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<SystemFile, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

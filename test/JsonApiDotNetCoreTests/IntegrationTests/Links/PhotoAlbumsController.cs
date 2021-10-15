@@ -10,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 {
     public sealed class PhotoAlbumsController : JsonApiController<PhotoAlbum, Guid>
     {
-        public PhotoAlbumsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<PhotoAlbum, Guid> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public PhotoAlbumsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<PhotoAlbum, Guid> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

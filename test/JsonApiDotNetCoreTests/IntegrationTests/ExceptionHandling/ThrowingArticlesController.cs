@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
     public sealed class ThrowingArticlesController : JsonApiController<ThrowingArticle, int>
     {
-        public ThrowingArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ThrowingArticle, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public ThrowingArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<ThrowingArticle, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

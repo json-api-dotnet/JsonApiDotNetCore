@@ -25,6 +25,7 @@ namespace JsonApiDotNetCore.Controllers
         where TResource : class, IIdentifiable<TId>
     {
         private readonly IJsonApiOptions _options;
+        private readonly IResourceGraph _resourceGraph;
         private readonly IGetAllService<TResource, TId>? _getAll;
         private readonly IGetByIdService<TResource, TId>? _getById;
         private readonly IGetSecondaryService<TResource, TId>? _getSecondary;
@@ -40,17 +41,17 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a read/write service.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
-            : this(options, loggerFactory, resourceService, resourceService)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
+            : this(options, resourceGraph, loggerFactory, resourceService, resourceService)
         {
         }
 
         /// <summary>
         /// Creates an instance from separate services for reading and writing.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId>? queryService = null,
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId>? queryService = null,
             IResourceCommandService<TResource, TId>? commandService = null)
-            : this(options, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService, commandService,
+            : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService, commandService,
                 commandService, commandService, commandService)
         {
         }
@@ -58,7 +59,7 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from separate services for the various individual read and write methods.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, TId>? getAll = null,
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IGetAllService<TResource, TId>? getAll = null,
             IGetByIdService<TResource, TId>? getById = null, IGetSecondaryService<TResource, TId>? getSecondary = null,
             IGetRelationshipService<TResource, TId>? getRelationship = null, ICreateService<TResource, TId>? create = null,
             IAddToRelationshipService<TResource, TId>? addToRelationship = null, IUpdateService<TResource, TId>? update = null,
@@ -66,9 +67,11 @@ namespace JsonApiDotNetCore.Controllers
             IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
         {
             ArgumentGuard.NotNull(options, nameof(options));
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(loggerFactory, nameof(loggerFactory));
 
             _options = options;
+            _resourceGraph = resourceGraph;
             _traceWriter = new TraceLogWriter<BaseJsonApiController<TResource, TId>>(loggerFactory);
             _getAll = getAll;
             _getById = getById;
@@ -184,8 +187,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerOptions.PropertyNamingPolicy);
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, _resourceGraph);
             }
 
             TResource? newResource = await _create.CreateAsync(resource, cancellationToken);
@@ -261,8 +263,7 @@ namespace JsonApiDotNetCore.Controllers
 
             if (_options.ValidateModelState && !ModelState.IsValid)
             {
-                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors,
-                    _options.SerializerOptions.PropertyNamingPolicy);
+                throw new InvalidModelStateException(ModelState, typeof(TResource), _options.IncludeExceptionStackTraceInErrors, _resourceGraph);
             }
 
             TResource? updated = await _update.UpdateAsync(id, resource, cancellationToken);

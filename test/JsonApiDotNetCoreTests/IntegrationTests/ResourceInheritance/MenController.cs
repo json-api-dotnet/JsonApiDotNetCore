@@ -10,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
 {
     public sealed class MenController : JsonApiController<Man, int>
     {
-        public MenController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Man, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public MenController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Man, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

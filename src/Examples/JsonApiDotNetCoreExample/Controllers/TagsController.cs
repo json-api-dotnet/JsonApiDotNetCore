@@ -8,8 +8,8 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public sealed class TagsController : JsonApiController<Tag, int>
     {
-        public TagsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Tag, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public TagsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Tag, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

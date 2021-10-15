@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     public sealed class WebAccountsController : JsonApiController<WebAccount, int>
     {
-        public WebAccountsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<WebAccount, int> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public WebAccountsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<WebAccount, int> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

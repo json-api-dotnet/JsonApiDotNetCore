@@ -10,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
 {
     public sealed class MeetingAttendeesController : JsonApiController<MeetingAttendee, Guid>
     {
-        public MeetingAttendeesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<MeetingAttendee, Guid> resourceService)
-            : base(options, loggerFactory, resourceService)
+        public MeetingAttendeesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<MeetingAttendee, Guid> resourceService)
+            : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
     }

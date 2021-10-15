@@ -5,9 +5,9 @@ You need to create controllers that inherit from `JsonApiController<TResource, T
 ```c#
 public class ArticlesController : JsonApiController<Article, Guid>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article, Guid> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, Guid> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -24,9 +24,9 @@ This approach is ok, but introduces some boilerplate that can easily be avoided.
 ```c#
 public class ArticlesController : BaseJsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article, int> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 
@@ -61,9 +61,9 @@ An attempt to use one of the blacklisted methods will result in a HTTP 405 Metho
 [HttpReadOnly]
 public class ArticlesController : BaseJsonApiController<Article, int>
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService<Article, int> resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService<Article, int> resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -80,9 +80,9 @@ For more information about resource service injection, see [Replacing injected s
 ```c#
 public class ReportsController : BaseJsonApiController<Report, int>
 {
-    public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IGetAllService<Report, int> getAllService)
-        : base(options, loggerFactory, getAllService)
+    public ReportsController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IGetAllService<Report, int> getAllService)
+        : base(options, resourceGraph, loggerFactory, getAllService)
     {
     }
 
