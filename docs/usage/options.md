@@ -102,7 +102,9 @@ Because we copy resource properties into an intermediate object before serializa
 
 ## Enable ModelState Validation
 
-If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set `ValidateModelState` to `true`. By default, no model validation is performed.
+If you would like to use ASP.NET ModelState validation into your controllers when creating / updating resources, set `ValidateModelState` to `true`. By default, no model validation is performed.
+
+How nullability affects ModelState validation is described [here](~/usage/resources/nullability.md).
 
 ```c#
 options.ValidateModelState = true;

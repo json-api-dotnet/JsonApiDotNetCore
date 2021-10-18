@@ -5,7 +5,7 @@ _since v4.0_
 The query pipeline roughly looks like this:
 
 ```
-HTTP --[ASP.NET Core]--> QueryString --[JADNC:QueryStringParameterReader]--> QueryExpression[] --[JADNC:ResourceService]--> QueryLayer --[JADNC:Repository]--> IQueryable --[EF Core]--> SQL
+HTTP --[ASP.NET]--> QueryString --[JADNC:QueryStringParameterReader]--> QueryExpression[] --[JADNC:ResourceService]--> QueryLayer --[JADNC:Repository]--> IQueryable --[EF Core]--> SQL
 ```
 
 Processing a request involves the following steps:
