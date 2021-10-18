@@ -26,8 +26,8 @@ namespace JsonApiDotNetCore.Errors
         {
         }
 
-        private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry> modelState, Type modelType, IResourceGraph resourceGraph,
-            bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
+        private static IEnumerable<ErrorObject> FromModelStateDictionary(IReadOnlyDictionary<string, ModelStateEntry> modelState, Type modelType,
+            IResourceGraph resourceGraph, bool includeExceptionStackTraceInErrors, Func<Type, int, Type?>? getCollectionElementTypeCallback)
         {
             ArgumentGuard.NotNull(modelState, nameof(modelState));
             ArgumentGuard.NotNull(modelType, nameof(modelType));
@@ -179,7 +179,7 @@ namespace JsonApiDotNetCore.Errors
             var error = new ErrorObject(HttpStatusCode.UnprocessableEntity)
             {
                 Title = "Input validation failed.",
-                Detail = modelError.ErrorMessage,
+                Detail = modelError.Exception is TooManyModelErrorsException tooManyException ? tooManyException.Message : modelError.ErrorMessage,
                 Source = sourcePointer == null
                     ? null
                     : new ErrorSource

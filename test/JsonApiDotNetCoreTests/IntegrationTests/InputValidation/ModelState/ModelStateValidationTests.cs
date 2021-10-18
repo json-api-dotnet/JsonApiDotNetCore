@@ -167,6 +167,46 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
+                        isCaseSensitive = false,
+                        sizeInBytes = -1
+                    }
+                }
+            };
+
+            const string route = "/systemDirectories";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(2);
+
+            ErrorObject error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
+
+            ErrorObject error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
+            error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
+        }
+
+        [Fact]
+        public async Task Does_not_exceed_MaxModelValidationErrors()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "systemDirectories",
+                    attributes = new
+                    {
                         sizeInBytes = -1
                     }
                 }
@@ -185,14 +225,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
-            error1.Detail.Should().Be("The Name field is required.");
-            error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
+            error1.Detail.Should().Be("The maximum number of allowed model errors has been reached.");
+            error1.Source.Should().BeNull();
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
-            error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
-            error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
+            error2.Detail.Should().Be("The Name field is required.");
+            error2.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
             ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

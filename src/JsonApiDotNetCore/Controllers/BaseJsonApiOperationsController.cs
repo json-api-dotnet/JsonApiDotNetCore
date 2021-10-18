@@ -133,48 +133,79 @@ namespace JsonApiDotNetCore.Controllers
             using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
             int operationIndex = 0;
-            var requestModelState = new Dictionary<string, ModelStateEntry>();
+            var requestModelState = new List<(string key, ModelStateEntry entry)>();
+            int maxErrorsRemaining = ModelState.MaxAllowedErrors;
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
+                if (maxErrorsRemaining < 1)
                 {
-                    _targetedFields.CopyFrom(operation.TargetedFields);
-                    _request.CopyFrom(operation.Request);
-
-                    var validationContext = new ActionContext();
-                    ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
-
-                    CopyValidationErrorsFromOperation(validationContext.ModelState, operationIndex, requestModelState);
+                    break;
                 }
+
+                maxErrorsRemaining = ValidateOperation(operation, operationIndex, requestModelState, maxErrorsRemaining);
 
                 operationIndex++;
             }
 
             if (requestModelState.Any())
             {
-                throw new InvalidModelStateException(requestModelState, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
+                Dictionary<string, ModelStateEntry> modelStateDictionary = requestModelState.ToDictionary(tuple => tuple.key, tuple => tuple.entry);
+
+                throw new InvalidModelStateException(modelStateDictionary, typeof(IList<OperationContainer>), _options.IncludeExceptionStackTraceInErrors,
                     _resourceGraph,
                     (collectionType, index) => collectionType == typeof(IList<OperationContainer>) ? operations[index].Resource.GetType() : null);
             }
         }
 
-        private static void CopyValidationErrorsFromOperation(ModelStateDictionary operationModelState, int operationIndex,
-            Dictionary<string, ModelStateEntry> requestModelState)
+        private int ValidateOperation(OperationContainer operation, int operationIndex, List<(string key, ModelStateEntry entry)> requestModelState,
+            int maxErrorsRemaining)
         {
-            if (!operationModelState.IsValid)
+            if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
             {
-                foreach (string key in operationModelState.Keys)
-                {
-                    ModelStateEntry entry = operationModelState[key];
+                _targetedFields.CopyFrom(operation.TargetedFields);
+                _request.CopyFrom(operation.Request);
 
-                    if (entry.ValidationState == ModelValidationState.Invalid)
+                var validationContext = new ActionContext
+                {
+                    ModelState =
                     {
-                        string operationKey = $"[{operationIndex}].{nameof(OperationContainer.Resource)}." + key;
-                        requestModelState[operationKey] = entry;
+                        MaxAllowedErrors = maxErrorsRemaining
                     }
+                };
+
+                ObjectValidator.Validate(validationContext, null, string.Empty, operation.Resource);
+
+                if (!validationContext.ModelState.IsValid)
+                {
+                    int errorsRemaining = maxErrorsRemaining;
+
+                    foreach (string key in validationContext.ModelState.Keys)
+                    {
+                        ModelStateEntry entry = validationContext.ModelState[key];
+
+                        if (entry.ValidationState == ModelValidationState.Invalid)
+                        {
+                            string operationKey = $"[{operationIndex}].{nameof(OperationContainer.Resource)}.{key}";
+
+                            if (entry.Errors.Count > 0 && entry.Errors[0].Exception is TooManyModelErrorsException)
+                            {
+                                requestModelState.Insert(0, (operationKey, entry));
+                            }
+                            else
+                            {
+                                requestModelState.Add((operationKey, entry));
+                            }
+
+                            errorsRemaining -= entry.Errors.Count;
+                        }
+                    }
+
+                    return errorsRemaining;
                 }
             }
+
+            return maxErrorsRemaining;
         }
     }
 }
