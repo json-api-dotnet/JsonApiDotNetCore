@@ -20,7 +20,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
         internal const int ObjectResultWithErrorObjectId = 44444444;
         internal const int ObjectResultWithErrorCollectionId = 55555555;
 
-        public ToothbrushesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Toothbrush, int> resourceService)
+        public ToothbrushesController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Toothbrush, int> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

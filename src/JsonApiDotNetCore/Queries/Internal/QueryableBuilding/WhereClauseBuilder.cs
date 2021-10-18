@@ -116,7 +116,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression property = Visit(expression.TargetAttribute, argument);
 
-            IList valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type))!;
+            var valueList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(property.Type))!;
 
             foreach (LiteralConstantExpression constant in expression.Constants)
             {

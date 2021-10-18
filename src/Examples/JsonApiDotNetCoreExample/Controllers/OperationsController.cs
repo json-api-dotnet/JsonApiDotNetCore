@@ -9,8 +9,8 @@ namespace JsonApiDotNetCoreExample.Controllers
 {
     public sealed class OperationsController : JsonApiOperationsController
     {
-        public OperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request,
-            ITargetedFields targetedFields)
+        public OperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor,
+            IJsonApiRequest request, ITargetedFields targetedFields)
             : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
         {
         }

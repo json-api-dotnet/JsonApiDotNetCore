@@ -26,7 +26,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a write-only service.
         /// </summary>
-        protected JsonApiCommandController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceCommandService<TResource, TId> commandService)
+        protected JsonApiCommandController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceCommandService<TResource, TId> commandService)
             : base(options, resourceGraph, loggerFactory, null, commandService)
         {
         }

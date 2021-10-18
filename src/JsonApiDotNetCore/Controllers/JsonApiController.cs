@@ -23,20 +23,21 @@ namespace JsonApiDotNetCore.Controllers
         where TResource : class, IIdentifiable<TId>
     {
         /// <inheritdoc />
-        protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
+        protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<TResource, TId> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }
 
         /// <inheritdoc />
-        protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IGetAllService<TResource, TId>? getAll = null,
-            IGetByIdService<TResource, TId>? getById = null, IGetSecondaryService<TResource, TId>? getSecondary = null,
-            IGetRelationshipService<TResource, TId>? getRelationship = null, ICreateService<TResource, TId>? create = null,
-            IAddToRelationshipService<TResource, TId>? addToRelationship = null, IUpdateService<TResource, TId>? update = null,
-            ISetRelationshipService<TResource, TId>? setRelationship = null, IDeleteService<TResource, TId>? delete = null,
-            IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
-            : base(options, resourceGraph, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
-                removeFromRelationship)
+        protected JsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IGetAllService<TResource, TId>? getAll = null, IGetByIdService<TResource, TId>? getById = null,
+            IGetSecondaryService<TResource, TId>? getSecondary = null, IGetRelationshipService<TResource, TId>? getRelationship = null,
+            ICreateService<TResource, TId>? create = null, IAddToRelationshipService<TResource, TId>? addToRelationship = null,
+            IUpdateService<TResource, TId>? update = null, ISetRelationshipService<TResource, TId>? setRelationship = null,
+            IDeleteService<TResource, TId>? delete = null, IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
+            : base(options, resourceGraph, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship,
+                delete, removeFromRelationship)
         {
         }
 

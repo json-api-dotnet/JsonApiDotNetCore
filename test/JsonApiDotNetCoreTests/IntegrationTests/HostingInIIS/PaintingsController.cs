@@ -13,7 +13,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
     [Route("custom/path/to/paintings-of-the-world")]
     public sealed class PaintingsController : JsonApiController<Painting, int>
     {
-        public PaintingsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Painting, int> resourceService)
+        public PaintingsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Painting, int> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

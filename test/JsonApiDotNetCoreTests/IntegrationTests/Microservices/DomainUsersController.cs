@@ -10,7 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 {
     public sealed class DomainUsersController : JsonApiController<DomainUser, Guid>
     {
-        public DomainUsersController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<DomainUser, Guid> resourceService)
+        public DomainUsersController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<DomainUser, Guid> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

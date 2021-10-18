@@ -21,8 +21,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Controllers
     [Route("/operations/musicTracks/create")]
     public sealed class CreateMusicTrackOperationsController : JsonApiOperationsController
     {
-        public CreateMusicTrackOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor,
-            IJsonApiRequest request, ITargetedFields targetedFields)
+        public CreateMusicTrackOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)
             : base(options, resourceGraph, loggerFactory, processor, request, targetedFields)
         {
         }

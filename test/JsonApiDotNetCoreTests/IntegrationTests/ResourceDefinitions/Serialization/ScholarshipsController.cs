@@ -9,7 +9,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 {
     public sealed class ScholarshipsController : JsonApiController<Scholarship, int>
     {
-        public ScholarshipsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<Scholarship, int> resourceService)
+        public ScholarshipsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<Scholarship, int> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

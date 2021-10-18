@@ -25,7 +25,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a read-only service.
         /// </summary>
-        protected JsonApiQueryController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId> queryService)
+        protected JsonApiQueryController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceQueryService<TResource, TId> queryService)
             : base(options, resourceGraph, loggerFactory, queryService)
         {
         }

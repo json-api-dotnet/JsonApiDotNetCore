@@ -524,10 +524,8 @@ namespace JsonApiDotNetCore.Services
         {
             if (relationship == null)
             {
-                throw new InvalidOperationException(
-                    $"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.Relationship)} not to be null at this point.");
+                throw new InvalidOperationException($"Expected {nameof(IJsonApiRequest)}.{nameof(IJsonApiRequest.Relationship)} not to be null at this point.");
             }
         }
-
     }
 }

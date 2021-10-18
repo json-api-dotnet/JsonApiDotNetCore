@@ -41,7 +41,8 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from a read/write service.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceService<TResource, TId> resourceService)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceService<TResource, TId> resourceService)
             : this(options, resourceGraph, loggerFactory, resourceService, resourceService)
         {
         }
@@ -49,22 +50,22 @@ namespace JsonApiDotNetCore.Controllers
         /// <summary>
         /// Creates an instance from separate services for reading and writing.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IResourceQueryService<TResource, TId>? queryService = null,
-            IResourceCommandService<TResource, TId>? commandService = null)
-            : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService, commandService,
-                commandService, commandService, commandService)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IResourceQueryService<TResource, TId>? queryService = null, IResourceCommandService<TResource, TId>? commandService = null)
+            : this(options, resourceGraph, loggerFactory, queryService, queryService, queryService, queryService, commandService, commandService,
+                commandService, commandService, commandService, commandService)
         {
         }
 
         /// <summary>
         /// Creates an instance from separate services for the various individual read and write methods.
         /// </summary>
-        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IGetAllService<TResource, TId>? getAll = null,
-            IGetByIdService<TResource, TId>? getById = null, IGetSecondaryService<TResource, TId>? getSecondary = null,
-            IGetRelationshipService<TResource, TId>? getRelationship = null, ICreateService<TResource, TId>? create = null,
-            IAddToRelationshipService<TResource, TId>? addToRelationship = null, IUpdateService<TResource, TId>? update = null,
-            ISetRelationshipService<TResource, TId>? setRelationship = null, IDeleteService<TResource, TId>? delete = null,
-            IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
+        protected BaseJsonApiController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
+            IGetAllService<TResource, TId>? getAll = null, IGetByIdService<TResource, TId>? getById = null,
+            IGetSecondaryService<TResource, TId>? getSecondary = null, IGetRelationshipService<TResource, TId>? getRelationship = null,
+            ICreateService<TResource, TId>? create = null, IAddToRelationshipService<TResource, TId>? addToRelationship = null,
+            IUpdateService<TResource, TId>? update = null, ISetRelationshipService<TResource, TId>? setRelationship = null,
+            IDeleteService<TResource, TId>? delete = null, IRemoveFromRelationshipService<TResource, TId>? removeFromRelationship = null)
         {
             ArgumentGuard.NotNull(options, nameof(options));
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));

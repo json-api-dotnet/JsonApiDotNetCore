@@ -81,7 +81,7 @@ namespace JsonApiDotNetCore.Serialization.Request
                 using IDisposable _ =
                     CodeTimingSessionManager.Current.Measure("JsonSerializer.Deserialize", MeasurementSettings.ExcludeJsonSerializationInPercentages);
 
-                Document? document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
+                var document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
 
                 if (document == null)
                 {

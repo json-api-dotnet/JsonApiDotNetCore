@@ -209,6 +209,7 @@ namespace UnitTests.Controllers
             serviceMock.Setup(service => service.CreateAsync(It.IsAny<Resource>(), It.IsAny<CancellationToken>())).ReturnsAsync(resource);
             var options = new JsonApiOptions();
             IResourceGraph resourceGraph = new ResourceGraphBuilder(options, NullLoggerFactory.Instance).Build();
+
             var controller = new ResourceController(options, resourceGraph, NullLoggerFactory.Instance, create: serviceMock.Object)
             {
                 ControllerContext = new ControllerContext
