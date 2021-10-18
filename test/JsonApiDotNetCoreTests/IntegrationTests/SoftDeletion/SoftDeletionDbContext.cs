@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +8,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SoftDeletionDbContext : DbContext
     {
-        public DbSet<Company> Companies { get; set; }
-        public DbSet<Department> Departments { get; set; }
+        public DbSet<Company> Companies => Set<Company>();
+        public DbSet<Department> Departments => Set<Department>();
 
         public SoftDeletionDbContext(DbContextOptions<SoftDeletionDbContext> options)
             : base(options)

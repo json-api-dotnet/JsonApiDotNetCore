@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,15 +8,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class QueryStringDbContext : DbContext
     {
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogPost> Posts { get; set; }
-        public DbSet<Label> Labels { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<WebAccount> Accounts { get; set; }
-        public DbSet<AccountPreferences> AccountPreferences { get; set; }
-        public DbSet<LoginAttempt> LoginAttempts { get; set; }
-        public DbSet<Calendar> Calendars { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Blog> Blogs => Set<Blog>();
+        public DbSet<BlogPost> Posts => Set<BlogPost>();
+        public DbSet<Label> Labels => Set<Label>();
+        public DbSet<Comment> Comments => Set<Comment>();
+        public DbSet<WebAccount> Accounts => Set<WebAccount>();
+        public DbSet<AccountPreferences> AccountPreferences => Set<AccountPreferences>();
+        public DbSet<LoginAttempt> LoginAttempts => Set<LoginAttempt>();
+        public DbSet<Calendar> Calendars => Set<Calendar>();
+        public DbSet<Appointment> Appointments => Set<Appointment>();
 
         public QueryStringDbContext(DbContextOptions<QueryStringDbContext> options)
             : base(options)

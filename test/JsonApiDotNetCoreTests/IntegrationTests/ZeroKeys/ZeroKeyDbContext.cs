@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ZeroKeyDbContext : DbContext
     {
-        public DbSet<Game> Games { get; set; }
-        public DbSet<Player> Players { get; set; }
-        public DbSet<Map> Maps { get; set; }
+        public DbSet<Game> Games => Set<Game>();
+        public DbSet<Player> Players => Set<Player>();
+        public DbSet<Map> Maps => Set<Map>();
 
         public ZeroKeyDbContext(DbContextOptions<ZeroKeyDbContext> options)
             : base(options)

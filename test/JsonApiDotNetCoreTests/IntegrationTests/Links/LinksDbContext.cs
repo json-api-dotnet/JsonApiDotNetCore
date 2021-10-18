@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class LinksDbContext : DbContext
     {
-        public DbSet<PhotoAlbum> PhotoAlbums { get; set; }
-        public DbSet<Photo> Photos { get; set; }
-        public DbSet<PhotoLocation> PhotoLocations { get; set; }
+        public DbSet<PhotoAlbum> PhotoAlbums => Set<PhotoAlbum>();
+        public DbSet<Photo> Photos => Set<Photo>();
+        public DbSet<PhotoLocation> PhotoLocations => Set<PhotoLocation>();
 
         public LinksDbContext(DbContextOptions<LinksDbContext> options)
             : base(options)

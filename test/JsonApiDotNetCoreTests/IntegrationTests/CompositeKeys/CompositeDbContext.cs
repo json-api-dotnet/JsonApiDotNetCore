@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class CompositeDbContext : DbContext
     {
-        public DbSet<Car> Cars { get; set; }
-        public DbSet<Engine> Engines { get; set; }
-        public DbSet<Dealership> Dealerships { get; set; }
+        public DbSet<Car> Cars => Set<Car>();
+        public DbSet<Engine> Engines => Set<Engine>();
+        public DbSet<Dealership> Dealerships => Set<Dealership>();
 
         public CompositeDbContext(DbContextOptions<CompositeDbContext> options)
             : base(options)

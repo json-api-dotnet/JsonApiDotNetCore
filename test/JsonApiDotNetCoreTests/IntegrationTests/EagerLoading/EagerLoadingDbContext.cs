@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class EagerLoadingDbContext : DbContext
     {
-        public DbSet<State> States { get; set; }
-        public DbSet<Street> Streets { get; set; }
-        public DbSet<Building> Buildings { get; set; }
+        public DbSet<State> States => Set<State>();
+        public DbSet<Street> Streets => Set<Street>();
+        public DbSet<Building> Buildings => Set<Building>();
 
         public EagerLoadingDbContext(DbContextOptions<EagerLoadingDbContext> options)
             : base(options)

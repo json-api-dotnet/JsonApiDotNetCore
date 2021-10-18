@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
     {
         private readonly ITenantProvider _tenantProvider;
 
-        public DbSet<WebShop> WebShops { get; set; }
-        public DbSet<WebProduct> WebProducts { get; set; }
+        public DbSet<WebShop> WebShops => Set<WebShop>();
+        public DbSet<WebProduct> WebProducts => Set<WebProduct>();
 
         public MultiTenancyDbContext(DbContextOptions<MultiTenancyDbContext> options, ITenantProvider tenantProvider)
             : base(options)

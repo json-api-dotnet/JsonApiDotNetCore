@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +8,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class WorkflowDbContext : DbContext
     {
-        public DbSet<Workflow> Workflows { get; set; }
+        public DbSet<Workflow> Workflows => Set<Workflow>();
 
         public WorkflowDbContext(DbContextOptions<WorkflowDbContext> options)
             : base(options)

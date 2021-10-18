@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore;
 using Microsoft.AspNetCore.Authentication;
@@ -12,8 +10,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
     {
         public ISystemClock SystemClock { get; }
 
-        public DbSet<PostOffice> PostOffice { get; set; }
-        public DbSet<GiftCertificate> GiftCertificates { get; set; }
+        public DbSet<PostOffice> PostOffice => Set<PostOffice>();
+        public DbSet<GiftCertificate> GiftCertificates => Set<GiftCertificate>();
 
         public InjectionDbContext(DbContextOptions<InjectionDbContext> options, ISystemClock systemClock)
             : base(options)

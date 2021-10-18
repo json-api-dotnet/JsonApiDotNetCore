@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class DefaultBehaviorDbContext : DbContext
     {
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<Shipment> Shipments { get; set; }
+        public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Order> Orders => Set<Order>();
+        public DbSet<Shipment> Shipments => Set<Shipment>();
 
         public DefaultBehaviorDbContext(DbContextOptions<DefaultBehaviorDbContext> options)
             : base(options)

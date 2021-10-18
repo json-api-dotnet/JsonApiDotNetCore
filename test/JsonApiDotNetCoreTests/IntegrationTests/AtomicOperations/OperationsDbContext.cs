@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,12 +8,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class OperationsDbContext : DbContext
     {
-        public DbSet<Playlist> Playlists { get; set; }
-        public DbSet<MusicTrack> MusicTracks { get; set; }
-        public DbSet<Lyric> Lyrics { get; set; }
-        public DbSet<TextLanguage> TextLanguages { get; set; }
-        public DbSet<Performer> Performers { get; set; }
-        public DbSet<RecordCompany> RecordCompanies { get; set; }
+        public DbSet<Playlist> Playlists => Set<Playlist>();
+        public DbSet<MusicTrack> MusicTracks => Set<MusicTrack>();
+        public DbSet<Lyric> Lyrics => Set<Lyric>();
+        public DbSet<TextLanguage> TextLanguages => Set<TextLanguage>();
+        public DbSet<Performer> Performers => Set<Performer>();
+        public DbSet<RecordCompany> RecordCompanies => Set<RecordCompany>();
 
         public OperationsDbContext(DbContextOptions<OperationsDbContext> options)
             : base(options)

@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +8,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class ModelStateDbContext : DbContext
     {
-        public DbSet<SystemDirectory> Directories { get; set; }
-        public DbSet<SystemFile> Files { get; set; }
+        public DbSet<SystemDirectory> Directories => Set<SystemDirectory>();
+        public DbSet<SystemFile> Files => Set<SystemFile>();
 
         public ModelStateDbContext(DbContextOptions<ModelStateDbContext> options)
             : base(options)

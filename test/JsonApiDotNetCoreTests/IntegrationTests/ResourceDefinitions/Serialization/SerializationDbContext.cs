@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,8 +8,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
     public sealed class SerializationDbContext : DbContext
     {
-        public DbSet<Student> Students { get; set; }
-        public DbSet<Scholarship> Scholarships { get; set; }
+        public DbSet<Student> Students => Set<Student>();
+        public DbSet<Scholarship> Scholarships => Set<Scholarship>();
 
         public SerializationDbContext(DbContextOptions<SerializationDbContext> options)
             : base(options)
