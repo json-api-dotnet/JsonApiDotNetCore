@@ -14,6 +14,7 @@ using JsonApiDotNetCore.Serialization.JsonConverters;
 using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Request.Adapters;
 using Microsoft.Extensions.Logging.Abstractions;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Serialization
@@ -108,7 +109,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             var model = (ResourceWithVariousDataTypes)documentAdapter.Convert(document);
 
             // Assert
-            model.Should().NotBeNull();
+            model.ShouldNotBeNull();
 
             model.Boolean.Should().Be(booleanValue);
             model.NullableBoolean.Should().Be(nullableBooleanValue);
@@ -132,10 +133,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             model.Enum.Should().Be(enumValue);
             model.NullableEnum.Should().Be(nullableEnumValue);
 
-            model.ComplexObject.Should().NotBeNull();
+            model.ComplexObject.ShouldNotBeNull();
             model.ComplexObject.Value.Should().Be(complexObject.Value);
 
-            model.ComplexObjectList.Should().HaveCount(2);
+            model.ComplexObjectList.ShouldHaveCount(2);
             model.ComplexObjectList[0].Value.Should().Be(complexObjectList[0].Value);
             model.ComplexObjectList[1].Value.Should().Be(complexObjectList[1].Value);
         }
@@ -211,7 +212,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization
             var model = (ResourceWithVariousDataTypes)documentAdapter.Convert(document);
 
             // Assert
-            model.Should().NotBeNull();
+            model.ShouldNotBeNull();
 
             model.Boolean.Should().Be(booleanValue);
             model.NullableBoolean.Should().Be(nullableBooleanValue);

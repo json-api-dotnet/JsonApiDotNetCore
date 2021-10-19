@@ -58,7 +58,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -92,7 +92,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -166,7 +166,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                 existingShipmentInDatabase.Should().BeNull();
 
                 Customer existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
-                existingCustomerInDatabase.Should().NotBeNull();
+                existingCustomerInDatabase.ShouldNotBeNull();
             });
         }
 
@@ -208,7 +208,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -245,7 +245,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

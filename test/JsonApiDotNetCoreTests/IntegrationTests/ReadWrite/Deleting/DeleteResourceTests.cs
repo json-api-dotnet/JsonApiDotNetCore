@@ -71,7 +71,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -147,7 +147,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
                 RgbColor colorInDatabase = await dbContext.RgbColors.FirstWithIdOrDefaultAsync(existingGroup.Color.Id);
 
-                colorInDatabase.Should().NotBeNull();
+                colorInDatabase.ShouldNotBeNull();
                 colorInDatabase.Group.Should().BeNull();
             });
         }
@@ -219,7 +219,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Deleting
 
                 WorkTag tagInDatabase = await dbContext.WorkTags.FirstWithIdOrDefaultAsync(existingWorkItem.Tags.ElementAt(0).Id);
 
-                tagInDatabase.Should().NotBeNull();
+                tagInDatabase.ShouldNotBeNull();
             });
         }
     }

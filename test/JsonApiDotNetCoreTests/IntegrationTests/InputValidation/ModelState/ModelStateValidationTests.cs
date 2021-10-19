@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -83,7 +83,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -151,7 +151,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
             responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
@@ -181,7 +181,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(2);
+            responseDocument.Errors.ShouldHaveCount(2);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(3);
+            responseDocument.Errors.ShouldHaveCount(3);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -324,7 +324,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
             responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
         }
@@ -451,7 +451,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -497,7 +497,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -557,7 +557,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(2);
+            responseDocument.Errors.ShouldHaveCount(2);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

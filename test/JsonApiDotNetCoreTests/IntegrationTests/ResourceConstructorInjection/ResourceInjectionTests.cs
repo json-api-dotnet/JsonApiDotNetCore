@@ -61,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
             responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate);
             responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(false);
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
             responseDocument.Data.ManyValue[0].Attributes["address"].Should().Be(postOffices[1].Address);
             responseDocument.Data.ManyValue[0].Attributes["isOpen"].Should().Be(true);
@@ -121,9 +121,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
-            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
             responseDocument.Data.SingleValue.Attributes["isOpen"].Should().Be(true);
         }
 
@@ -175,12 +175,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(newIssueDate);
             responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(true);
             responseDocument.Data.SingleValue.Relationships["issuer"].Data.SingleValue.Id.Should().Be(existingOffice.StringId);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Id.Should().Be(existingOffice.StringId);
             responseDocument.Included[0].Attributes["address"].Should().Be(existingOffice.Address);
             responseDocument.Included[0].Attributes["isOpen"].Should().Be(false);
@@ -194,7 +194,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
                 certificateInDatabase.IssueDate.Should().Be(newIssueDate);
 
-                certificateInDatabase.Issuer.Should().NotBeNull();
+                certificateInDatabase.Issuer.ShouldNotBeNull();
                 certificateInDatabase.Issuer.Id.Should().Be(existingOffice.Id);
             });
         }
@@ -260,7 +260,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
                 officeInDatabase.Address.Should().Be(newAddress);
 
-                officeInDatabase.GiftCertificates.Should().HaveCount(1);
+                officeInDatabase.GiftCertificates.ShouldHaveCount(1);
                 officeInDatabase.GiftCertificates[0].Id.Should().Be(existingOffice.GiftCertificates[0].Id);
             });
         }
@@ -309,7 +309,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -358,7 +358,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             {
                 PostOffice officeInDatabase = await dbContext.PostOffice.Include(postOffice => postOffice.GiftCertificates).FirstWithIdAsync(existingOffice.Id);
 
-                officeInDatabase.GiftCertificates.Should().HaveCount(2);
+                officeInDatabase.GiftCertificates.ShouldHaveCount(2);
             });
         }
     }

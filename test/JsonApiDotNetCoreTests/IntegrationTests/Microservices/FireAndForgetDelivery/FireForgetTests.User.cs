@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
 
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
 
@@ -127,7 +127,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
 
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserLoginNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -259,7 +259,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -331,7 +331,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -405,7 +405,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserDisplayNameChangedContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserDeletedContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -487,7 +487,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(2);
+            messageBroker.SentMessages.ShouldHaveCount(2);
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
             content1.UserId.Should().Be(existingUser.Id);
@@ -536,7 +536,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserRemovedFromGroupContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -586,7 +586,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserAddedToGroupContent>();
             content.UserId.Should().Be(existingUser.Id);
@@ -638,7 +638,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
-            messageBroker.SentMessages.Should().HaveCount(1);
+            messageBroker.SentMessages.ShouldHaveCount(1);
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserMovedToGroupContent>();
             content.UserId.Should().Be(existingUser.Id);

@@ -72,8 +72,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results.ShouldHaveCount(1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
             responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newBornAt);
@@ -132,19 +132,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(elementCount);
+            responseDocument.Results.ShouldHaveCount(elementCount);
 
             for (int index = 0; index < elementCount; index++)
             {
                 ResourceObject singleData = responseDocument.Results[index].Data.SingleValue;
 
-                singleData.Should().NotBeNull();
+                singleData.ShouldNotBeNull();
                 singleData.Type.Should().Be("musicTracks");
                 singleData.Attributes["title"].Should().Be(newTracks[index].Title);
                 singleData.Attributes["lengthInSeconds"].As<decimal?>().Should().BeApproximately(newTracks[index].LengthInSeconds);
                 singleData.Attributes["genre"].Should().Be(newTracks[index].Genre);
                 singleData.Attributes["releasedAt"].As<DateTimeOffset>().Should().BeCloseTo(newTracks[index].ReleasedAt);
-                singleData.Relationships.Should().NotBeEmpty();
+                singleData.Relationships.ShouldNotBeEmpty();
             }
 
             Guid[] newTrackIds = responseDocument.Results.Select(result => Guid.Parse(result.Data.SingleValue.Id)).ToArray();
@@ -153,7 +153,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             {
                 List<MusicTrack> tracksInDatabase = await dbContext.MusicTracks.Where(musicTrack => newTrackIds.Contains(musicTrack.Id)).ToListAsync();
 
-                tracksInDatabase.Should().HaveCount(elementCount);
+                tracksInDatabase.ShouldHaveCount(elementCount);
 
                 for (int index = 0; index < elementCount; index++)
                 {
@@ -200,8 +200,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results.ShouldHaveCount(1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(default);
@@ -252,14 +252,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
             error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'playlists'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -299,11 +299,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results.ShouldHaveCount(1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
             responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newName);
-            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
             long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
@@ -353,14 +353,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
             error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'lyrics'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -404,11 +404,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results.ShouldHaveCount(1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("lyrics");
-            responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotBeEmpty();
-            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Attributes.ShouldNotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
             long newLyricId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
@@ -416,7 +416,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             {
                 Lyric lyricInDatabase = await dbContext.Lyrics.FirstWithIdAsync(newLyricId);
 
-                lyricInDatabase.Should().NotBeNull();
+                lyricInDatabase.ShouldNotBeNull();
             });
         }
 
@@ -455,14 +455,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Forbidden);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
             error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -489,14 +489,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -526,14 +526,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'relationship' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -559,14 +559,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -593,14 +593,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of 'null'.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -639,14 +639,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of an array.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -678,14 +678,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -715,14 +715,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -756,14 +756,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
             error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -800,14 +800,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
             error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -841,14 +841,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
             error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
-            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+            error.Meta["requestBody"].ToString().ShouldNotBeNullOrEmpty();
         }
 
         [Fact]
@@ -924,11 +924,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results.ShouldHaveCount(1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTitle);
-            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
             Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
 
@@ -948,13 +948,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
                 trackInDatabase.Title.Should().Be(newTitle);
 
-                trackInDatabase.Lyric.Should().NotBeNull();
+                trackInDatabase.Lyric.ShouldNotBeNull();
                 trackInDatabase.Lyric.Id.Should().Be(existingLyric.Id);
 
-                trackInDatabase.OwnedBy.Should().NotBeNull();
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(existingCompany.Id);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
             });
         }

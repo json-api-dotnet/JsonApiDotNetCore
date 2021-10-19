@@ -47,21 +47,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 
             responseDocument.Links.Should().BeNull();
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Should().BeNull();
             responseDocument.Data.SingleValue.Relationships["photo"].Links.Self.Should().BeNull();
-            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Relationships["album"].Links.Should().BeNull();
 
-            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Included.ShouldHaveCount(2);
 
-            responseDocument.Included[0].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["location"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[0].Relationships["location"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[0].Links.Self.ShouldNotBeNull();
+            responseDocument.Included[0].Relationships["location"].Links.Self.ShouldNotBeNull();
+            responseDocument.Included[0].Relationships["location"].Links.Related.ShouldNotBeNull();
 
-            responseDocument.Included[1].Links.Self.Should().NotBeNull();
-            responseDocument.Included[1].Relationships["photos"].Links.Self.Should().NotBeNull();
-            responseDocument.Included[1].Relationships["photos"].Links.Related.Should().NotBeNull();
+            responseDocument.Included[1].Links.Self.ShouldNotBeNull();
+            responseDocument.Included[1].Relationships["photos"].Links.Self.ShouldNotBeNull();
+            responseDocument.Included[1].Relationships["photos"].Links.Related.ShouldNotBeNull();
         }
 
         [Fact]
@@ -87,10 +87,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
 
             responseDocument.Links.Should().BeNull();
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Should().BeNull();
             responseDocument.Data.SingleValue.Relationships["photo"].Links.Self.Should().BeNull();
-            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships["photo"].Links.Related.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Relationships.Should().NotContainKey("album");
         }
     }

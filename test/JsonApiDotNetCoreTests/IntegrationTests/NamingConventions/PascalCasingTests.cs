@@ -47,13 +47,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ContainsKey("IsIndoor"));
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("WaterSlides"));
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("DivingBoards"));
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("DivingBoards");
             responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
             responseDocument.Included[0].Attributes["HeightInMeters"].As<decimal>().Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters);
@@ -87,10 +87,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Type.Should().Be("WaterSlides");
             responseDocument.Data.ManyValue[0].Id.Should().Be(pool.WaterSlides[1].StringId);
-            responseDocument.Data.ManyValue[0].Attributes.Should().HaveCount(1);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldHaveCount(1);
         }
 
         [Fact]
@@ -119,14 +119,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
             responseDocument.Data.SingleValue.Attributes["IsIndoor"].Should().Be(newPool.IsIndoor);
 
             int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id);
             string poolLink = $"{route}/{newPoolId}";
 
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
             responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
             responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Related.Should().Be($"{poolLink}/WaterSlides");
             responseDocument.Data.SingleValue.Relationships["DivingBoards"].Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
@@ -154,12 +154,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Meta.Should().ContainKey("StackTrace");
+            error.Meta.ShouldContainKey("StackTrace");
         }
 
         [Fact]
@@ -195,7 +195,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);

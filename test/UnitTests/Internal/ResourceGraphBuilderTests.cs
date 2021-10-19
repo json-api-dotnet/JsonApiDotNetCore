@@ -42,7 +42,7 @@ namespace UnitTests.Internal
             resourceGraphBuilder.Add(typeof(NonResource));
 
             // Assert
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
 
             FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
             message.LogLevel.Should().Be(LogLevel.Warning);

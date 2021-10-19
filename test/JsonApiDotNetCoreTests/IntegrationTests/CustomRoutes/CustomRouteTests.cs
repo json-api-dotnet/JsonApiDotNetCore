@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("towns");
             responseDocument.Data.SingleValue.Id.Should().Be(town.StringId);
             responseDocument.Data.SingleValue.Attributes["name"].Should().Be(town.Name);
@@ -81,7 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(5);
+            responseDocument.Data.ManyValue.ShouldHaveCount(5);
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.Any());
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.Any());

@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("men");
             responseDocument.Data.SingleValue.Attributes["familyName"].Should().Be(newMan.FamilyName);
             responseDocument.Data.SingleValue.Attributes["isRetired"].Should().Be(newMan.IsRetired);
@@ -114,7 +114,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
@@ -276,14 +276,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.Parents).FirstWithIdAsync(newManId);
 
-                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.ShouldHaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Woman);
             });
@@ -335,7 +335,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.Parents).FirstWithIdAsync(existingChild.Id);
 
-                manInDatabase.Parents.Should().HaveCount(2);
+                manInDatabase.Parents.ShouldHaveCount(2);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Man);
                 manInDatabase.Parents.Should().ContainSingle(human => human is Woman);
             });
@@ -390,14 +390,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.FavoriteContent).FirstWithIdAsync(newManId);
 
-                manInDatabase.FavoriteContent.Should().HaveCount(2);
+                manInDatabase.FavoriteContent.ShouldHaveCount(2);
                 manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Book && item.Id == existingBook.Id);
                 manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Video && item.Id == existingVideo.Id);
             });
@@ -449,7 +449,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.FavoriteContent).FirstWithIdAsync(existingMan.Id);
 
-                manInDatabase.FavoriteContent.Should().HaveCount(2);
+                manInDatabase.FavoriteContent.ShouldHaveCount(2);
                 manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Book && item.Id == existingBook.Id);
                 manInDatabase.FavoriteContent.Should().ContainSingle(item => item is Video && item.Id == existingVideo.Id);
             });

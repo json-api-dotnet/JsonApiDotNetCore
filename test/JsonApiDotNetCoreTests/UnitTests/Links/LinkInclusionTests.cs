@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 using JsonApiDotNetCore.Serialization.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.Links
@@ -97,7 +98,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             {
                 if (expected.HasFlag(LinkTypes.Self))
                 {
-                    topLevelLinks.Self.Should().NotBeNull();
+                    topLevelLinks.Self.ShouldNotBeNull();
                 }
                 else
                 {
@@ -106,7 +107,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Related))
                 {
-                    topLevelLinks.Related.Should().NotBeNull();
+                    topLevelLinks.Related.ShouldNotBeNull();
                 }
                 else
                 {
@@ -115,10 +116,10 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Paging))
                 {
-                    topLevelLinks.First.Should().NotBeNull();
-                    topLevelLinks.Last.Should().NotBeNull();
-                    topLevelLinks.Prev.Should().NotBeNull();
-                    topLevelLinks.Next.Should().NotBeNull();
+                    topLevelLinks.First.ShouldNotBeNull();
+                    topLevelLinks.Last.ShouldNotBeNull();
+                    topLevelLinks.Prev.ShouldNotBeNull();
+                    topLevelLinks.Next.ShouldNotBeNull();
                 }
                 else
                 {
@@ -170,7 +171,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             // Assert
             if (expected == LinkTypes.Self)
             {
-                resourceLinks.Self.Should().NotBeNull();
+                resourceLinks.Self.ShouldNotBeNull();
             }
             else
             {
@@ -340,7 +341,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             {
                 if (expected.HasFlag(LinkTypes.Self))
                 {
-                    relationshipLinks.Self.Should().NotBeNull();
+                    relationshipLinks.Self.ShouldNotBeNull();
                 }
                 else
                 {
@@ -349,7 +350,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
                 if (expected.HasFlag(LinkTypes.Related))
                 {
-                    relationshipLinks.Related.Should().NotBeNull();
+                    relationshipLinks.Related.ShouldNotBeNull();
                 }
                 else
                 {

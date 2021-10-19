@@ -70,7 +70,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
         }
 
@@ -100,7 +100,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
         }
 
@@ -130,11 +130,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Type.Should().Be("webShops");
             responseDocument.Data.ManyValue[0].Id.Should().Be(shops[1].StringId);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webProducts");
             responseDocument.Included[0].Id.Should().Be(shops[1].Products[0].StringId);
         }
@@ -160,7 +160,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -190,7 +190,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -220,7 +220,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -280,7 +280,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -314,9 +314,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["url"].Should().Be(newShopUrl);
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
             int newShopId = int.Parse(responseDocument.Data.SingleValue.Id);
 
@@ -379,7 +379,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -433,7 +433,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -526,7 +526,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -582,7 +582,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -635,7 +635,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -670,7 +670,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -715,7 +715,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -750,7 +750,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -792,7 +792,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -837,7 +837,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -881,7 +881,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -923,7 +923,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -985,7 +985,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -1025,14 +1025,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             string shopLink = $"/nld/shops/{shop.StringId}";
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Links.Self.Should().Be(shopLink);
             responseDocument.Data.ManyValue[0].Relationships["products"].Links.Self.Should().Be($"{shopLink}/relationships/products");
             responseDocument.Data.ManyValue[0].Relationships["products"].Links.Related.Should().Be($"{shopLink}/products");
 
             string productLink = $"/nld/products/{shop.Products[0].StringId}";
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(productLink);
             responseDocument.Included[0].Relationships["shop"].Links.Self.Should().Be($"{productLink}/relationships/shop");
             responseDocument.Included[0].Relationships["shop"].Links.Related.Should().Be($"{productLink}/shop");

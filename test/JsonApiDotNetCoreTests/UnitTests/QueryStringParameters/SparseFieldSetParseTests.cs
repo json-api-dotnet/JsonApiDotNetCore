@@ -11,6 +11,7 @@ using JsonApiDotNetCore.Queries;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.QueryStrings;
 using JsonApiDotNetCore.QueryStrings.Internal;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
@@ -77,7 +78,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
             InvalidQueryStringParameterException exception = action.Should().ThrowExactly<InvalidQueryStringParameterException>().And;
 
             exception.ParameterName.Should().Be(parameterName);
-            exception.Errors.Should().HaveCount(1);
+            exception.Errors.ShouldHaveCount(1);
             exception.Errors[0].StatusCode.Should().Be(HttpStatusCode.BadRequest);
             exception.Errors[0].Title.Should().Be("The specified fieldset is invalid.");
             exception.Errors[0].Detail.Should().Be(errorMessage);

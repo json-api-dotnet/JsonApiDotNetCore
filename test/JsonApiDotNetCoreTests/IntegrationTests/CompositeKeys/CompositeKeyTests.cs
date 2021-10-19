@@ -62,7 +62,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(car.StringId);
         }
 
@@ -120,7 +120,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -149,7 +149,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(car.StringId);
         }
 
@@ -189,7 +189,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             {
                 Car carInDatabase = await dbContext.Cars.FirstOrDefaultAsync(car => car.RegionId == 123 && car.LicensePlate == "AA-BB-11");
 
-                carInDatabase.Should().NotBeNull();
+                carInDatabase.ShouldNotBeNull();
                 carInDatabase.Id.Should().Be("123:AA-BB-11");
             });
         }
@@ -250,7 +250,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             {
                 Engine engineInDatabase = await dbContext.Engines.Include(engine => engine.Car).FirstWithIdAsync(existingEngine.Id);
 
-                engineInDatabase.Car.Should().NotBeNull();
+                engineInDatabase.Car.ShouldNotBeNull();
                 engineInDatabase.Car.Id.Should().Be(existingCar.StringId);
             });
         }
@@ -366,7 +366,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 Dealership dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(1);
+                dealershipInDatabase.Inventory.ShouldHaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(1).Id);
             });
         }
@@ -420,7 +420,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 Dealership dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(1);
+                dealershipInDatabase.Inventory.ShouldHaveCount(1);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
             });
         }
@@ -492,7 +492,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
                 Dealership dealershipInDatabase = await dbContext.Dealerships
                     .Include(dealership => dealership.Inventory).FirstWithIdOrDefaultAsync(existingDealership.Id);
 
-                dealershipInDatabase.Inventory.Should().HaveCount(2);
+                dealershipInDatabase.Inventory.ShouldHaveCount(2);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingCar.Id);
                 dealershipInDatabase.Inventory.Should().ContainSingle(car => car.Id == existingDealership.Inventory.ElementAt(0).Id);
             });
@@ -534,7 +534,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);

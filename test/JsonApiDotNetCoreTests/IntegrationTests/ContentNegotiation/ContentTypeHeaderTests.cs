@@ -34,7 +34,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            httpResponse.Content.Headers.ContentType.Should().NotBeNull().And.Subject.ToString().Should().Be(HeaderConstants.MediaType);
+            httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+            httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.MediaType);
         }
 
         [Fact]
@@ -67,7 +68,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
-            httpResponse.Content.Headers.ContentType.Should().NotBeNull().And.Subject.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
+            httpResponse.Content.Headers.ContentType.ShouldNotBeNull();
+            httpResponse.Content.Headers.ContentType.ToString().Should().Be(HeaderConstants.AtomicOperationsMediaType);
         }
 
         [Fact]
@@ -95,7 +97,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -189,7 +191,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -223,7 +225,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -257,7 +259,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -291,7 +293,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -325,7 +327,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
@@ -367,7 +369,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnsupportedMediaType);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             string detail = $"Please specify '{HeaderConstants.AtomicOperationsMediaType}' instead of '{contentType}' for the Content-Type header value.";
 

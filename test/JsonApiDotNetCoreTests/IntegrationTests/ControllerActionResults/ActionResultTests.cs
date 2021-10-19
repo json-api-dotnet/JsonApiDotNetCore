@@ -41,7 +41,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(toothbrush.StringId);
         }
 
@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -97,7 +97,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadGateway);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadGateway);
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ControllerActionResults
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(3);
+            responseDocument.Errors.ShouldHaveCount(3);
 
             ErrorObject error1 = responseDocument.Errors[0];
             error1.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);

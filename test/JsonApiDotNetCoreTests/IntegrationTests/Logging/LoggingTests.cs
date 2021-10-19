@@ -69,7 +69,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
                 message.Text.StartsWith("Received POST request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Trace &&
                 message.Text.StartsWith("Sending 200 response for GET request at 'http://localhost/auditEntries' with body: <<", StringComparison.Ordinal));
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            loggerFactory.Logger.Messages.Should().NotBeEmpty();
+            loggerFactory.Logger.Messages.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().ContainSingle(message => message.LogLevel == LogLevel.Information &&
                 message.Text.Contains("Failed to deserialize request body."));

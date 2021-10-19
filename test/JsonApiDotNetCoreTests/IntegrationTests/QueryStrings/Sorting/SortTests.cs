@@ -51,7 +51,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
             responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(posts[2].StringId);
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -110,7 +110,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(blog.Posts[0].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(blog.Posts[2].StringId);
@@ -136,7 +136,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -168,7 +168,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
         }
@@ -196,7 +196,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
@@ -225,10 +225,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-            responseDocument.Included.Should().HaveCount(3);
+            responseDocument.Included.ShouldHaveCount(3);
             responseDocument.Included[0].Id.Should().Be(account.Posts[1].StringId);
             responseDocument.Included[1].Id.Should().Be(account.Posts[0].StringId);
             responseDocument.Included[2].Id.Should().Be(account.Posts[2].StringId);
@@ -259,10 +259,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
 
-            responseDocument.Included.Should().HaveCount(3);
+            responseDocument.Included.ShouldHaveCount(3);
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[1].StringId);
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[0].StringId);
             responseDocument.Included[2].Id.Should().Be(blog.Owner.Posts[2].StringId);
@@ -292,10 +292,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
 
-            responseDocument.Included.Should().HaveCount(3);
+            responseDocument.Included.ShouldHaveCount(3);
             responseDocument.Included[0].Id.Should().Be(post.Labels.ElementAt(1).StringId);
             responseDocument.Included[1].Id.Should().Be(post.Labels.ElementAt(0).StringId);
             responseDocument.Included[2].Id.Should().Be(post.Labels.ElementAt(2).StringId);
@@ -339,11 +339,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-            responseDocument.Included.Should().HaveCount(7);
+            responseDocument.Included.ShouldHaveCount(7);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blogs[0].Posts[2].StringId);
@@ -393,7 +393,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(posts[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(posts[0].StringId);
         }
@@ -430,11 +430,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(blogs[0].StringId);
 
-            responseDocument.Included.Should().HaveCount(5);
+            responseDocument.Included.ShouldHaveCount(5);
 
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
@@ -464,7 +464,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -485,7 +485,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -506,7 +506,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -543,7 +543,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[2].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);
@@ -574,7 +574,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(4);
+            responseDocument.Data.ManyValue.ShouldHaveCount(4);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[2].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(accounts[1].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(accounts[0].StringId);

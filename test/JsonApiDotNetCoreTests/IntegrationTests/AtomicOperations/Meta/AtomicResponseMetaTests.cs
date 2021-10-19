@@ -64,13 +64,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Meta.Should().HaveCount(3);
+            responseDocument.Meta.ShouldHaveCount(3);
             ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
             ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
             string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
 
-            versionArray.Should().HaveCount(4);
+            versionArray.ShouldHaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");
@@ -116,13 +116,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Meta.Should().HaveCount(3);
+            responseDocument.Meta.ShouldHaveCount(3);
             ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
             ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
             string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
 
-            versionArray.Should().HaveCount(4);
+            versionArray.ShouldHaveCount(4);
             versionArray.Should().Contain("v4.0.0");
             versionArray.Should().Contain("v3.1.0");
             versionArray.Should().Contain("v2.5.2");

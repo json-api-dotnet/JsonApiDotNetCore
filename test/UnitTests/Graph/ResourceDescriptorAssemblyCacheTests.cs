@@ -6,6 +6,7 @@ using System.Linq;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph
@@ -25,7 +26,7 @@ namespace UnitTests.Graph
             IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            descriptors.Should().NotBeEmpty();
+            descriptors.ShouldNotBeEmpty();
             descriptors.Should().ContainSingle(descriptor => descriptor.ResourceClrType == resourceClrType);
         }
 
@@ -42,7 +43,7 @@ namespace UnitTests.Graph
             IReadOnlyCollection<ResourceDescriptor> descriptors = assemblyCache.GetResourceDescriptors();
 
             // Assert
-            descriptors.Should().NotBeEmpty();
+            descriptors.ShouldNotBeEmpty();
             descriptors.Select(descriptor => descriptor.ResourceClrType).Should().AllBeAssignableTo<IIdentifiable>();
         }
     }

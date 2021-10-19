@@ -46,7 +46,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
@@ -72,7 +72,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[1].StringId);
         }
 
@@ -88,7 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -116,7 +116,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(card.StringId);
         }
 
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(account.Cards[1].StringId);
         }
@@ -167,12 +167,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Id.Should().Be(account.Cards[0].StringId);
-            responseDocument.Included[0].Attributes.Should().HaveCount(1);
+            responseDocument.Included[0].Attributes.ShouldHaveCount(1);
             responseDocument.Included[0].Relationships.Should().BeNull();
         }
 
@@ -197,7 +197,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(account.Cards[0].StringId);
         }
 
@@ -259,7 +259,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
                 cardInDatabase.OwnerName.Should().Be(newCard.OwnerName);
                 cardInDatabase.PinCode.Should().Be(newCard.PinCode);
 
-                cardInDatabase.Account.Should().NotBeNull();
+                cardInDatabase.Account.ShouldNotBeNull();
                 cardInDatabase.Account.Id.Should().Be(existingAccount.Id);
                 cardInDatabase.Account.StringId.Should().Be(existingAccount.StringId);
             });
@@ -325,7 +325,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
                 accountInDatabase.Iban.Should().Be(newIban);
 
-                accountInDatabase.Cards.Should().HaveCount(1);
+                accountInDatabase.Cards.ShouldHaveCount(1);
                 accountInDatabase.Cards[0].Id.Should().Be(existingCard.Id);
                 accountInDatabase.Cards[0].StringId.Should().Be(existingCard.StringId);
             });
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             {
                 BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-                accountInDatabase.Cards.Should().HaveCount(2);
+                accountInDatabase.Cards.ShouldHaveCount(2);
             });
         }
 
@@ -415,7 +415,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             {
                 BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdAsync(existingAccount.Id);
 
-                accountInDatabase.Cards.Should().HaveCount(1);
+                accountInDatabase.Cards.ShouldHaveCount(1);
             });
         }
 
@@ -465,7 +465,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);

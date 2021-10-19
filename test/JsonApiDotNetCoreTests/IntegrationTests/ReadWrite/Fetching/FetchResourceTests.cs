@@ -47,21 +47,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes["description"].Should().Be(workItems[0].Description);
             item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[0].DueAt.GetValueOrDefault());
             item1.Attributes["priority"].Should().Be(workItems[0].Priority);
-            item1.Relationships.Should().NotBeEmpty();
+            item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes["description"].Should().Be(workItems[1].Description);
             item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[1].DueAt.GetValueOrDefault());
             item2.Attributes["priority"].Should().Be(workItems[1].Priority);
-            item2.Relationships.Should().NotBeEmpty();
+            item2.Relationships.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -99,13 +99,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItems");
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
             responseDocument.Data.SingleValue.Attributes["description"].Should().Be(workItem.Description);
             responseDocument.Data.SingleValue.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItem.DueAt.GetValueOrDefault());
             responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(workItem.Priority);
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -166,12 +166,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
             responseDocument.Data.SingleValue.Attributes["firstName"].Should().Be(workItem.Assignee.FirstName);
             responseDocument.Data.SingleValue.Attributes["lastName"].Should().Be(workItem.Assignee.LastName);
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeEmpty();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -218,21 +218,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
             item1.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(0).Description);
             item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(0).DueAt.GetValueOrDefault());
             item1.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(0).Priority);
-            item1.Relationships.Should().NotBeEmpty();
+            item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
             item2.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(1).Description);
             item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(1).DueAt.GetValueOrDefault());
             item2.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(1).Priority);
-            item2.Relationships.Should().NotBeEmpty();
+            item2.Relationships.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -279,19 +279,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
             item1.Attributes["text"].Should().Be(workItem.Tags.ElementAt(0).Text);
             item1.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn);
-            item1.Relationships.Should().NotBeEmpty();
+            item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
             item2.Attributes["text"].Should().Be(workItem.Tags.ElementAt(1).Text);
             item2.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn);
-            item2.Relationships.Should().NotBeEmpty();
+            item2.Relationships.ShouldNotBeEmpty();
         }
 
         [Fact]
@@ -346,7 +346,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -375,7 +375,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);

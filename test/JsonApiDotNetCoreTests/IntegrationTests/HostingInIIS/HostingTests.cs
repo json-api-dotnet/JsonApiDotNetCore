@@ -57,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 
             string galleryLink = $"{HostPrefix}/iis-application-virtual-directory/public-api/artGalleries/{gallery.StringId}";
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Links.Self.Should().Be(galleryLink);
             responseDocument.Data.ManyValue[0].Relationships["paintings"].Links.Self.Should().Be($"{galleryLink}/relationships/paintings");
             responseDocument.Data.ManyValue[0].Relationships["paintings"].Links.Related.Should().Be($"{galleryLink}/paintings");
@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
             string paintingLink =
                 $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{gallery.Paintings.ElementAt(0).StringId}";
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(paintingLink);
             responseDocument.Included[0].Relationships["exposedAt"].Links.Self.Should().Be($"{paintingLink}/relationships/exposedAt");
             responseDocument.Included[0].Relationships["exposedAt"].Links.Related.Should().Be($"{paintingLink}/exposedAt");
@@ -102,14 +102,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 
             string paintingLink = $"{HostPrefix}/iis-application-virtual-directory/custom/path/to/paintings-of-the-world/{painting.StringId}";
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Links.Self.Should().Be(paintingLink);
             responseDocument.Data.ManyValue[0].Relationships["exposedAt"].Links.Self.Should().Be($"{paintingLink}/relationships/exposedAt");
             responseDocument.Data.ManyValue[0].Relationships["exposedAt"].Links.Related.Should().Be($"{paintingLink}/exposedAt");
 
             string galleryLink = $"{HostPrefix}/iis-application-virtual-directory/public-api/artGalleries/{painting.ExposedAt.StringId}";
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Links.Self.Should().Be(galleryLink);
             responseDocument.Included[0].Relationships["paintings"].Links.Self.Should().Be($"{galleryLink}/relationships/paintings");
             responseDocument.Included[0].Relationships["paintings"].Links.Related.Should().Be($"{galleryLink}/paintings");

@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Gone);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             responseDocument.Meta.Should().BeNull();
 
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Warning);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Article with code 'X123' is no longer available.");
         }
@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
@@ -115,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Meta["requestBody"].ToString().Should().Be(requestBody);
 
             IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.Should().NotBeEmpty();
+            stackTraceLines.ShouldNotBeEmpty();
 
             loggerFactory.Logger.Messages.Should().BeEmpty();
         }
@@ -143,7 +143,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
@@ -155,7 +155,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 
             responseDocument.Meta.Should().BeNull();
 
-            loggerFactory.Logger.Messages.Should().HaveCount(1);
+            loggerFactory.Logger.Messages.ShouldHaveCount(1);
             loggerFactory.Logger.Messages.Single().LogLevel.Should().Be(LogLevel.Error);
             loggerFactory.Logger.Messages.Single().Text.Should().Contain("Exception has been thrown by the target of an invocation.");
         }

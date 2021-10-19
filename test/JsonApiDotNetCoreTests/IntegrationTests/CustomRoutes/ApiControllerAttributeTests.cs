@@ -33,7 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");

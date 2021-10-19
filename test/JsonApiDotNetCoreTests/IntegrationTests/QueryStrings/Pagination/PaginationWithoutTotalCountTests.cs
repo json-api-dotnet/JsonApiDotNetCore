@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().BeNull();
             responseDocument.Links.Last.Should().BeNull();
@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Last.Should().BeNull();
@@ -104,7 +104,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
@@ -135,7 +135,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
 
             responseDocument.Data.ManyValue.Count.Should().BeLessThan(DefaultPageSize);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
@@ -164,9 +164,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
+            responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
@@ -195,9 +195,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(DefaultPageSize);
+            responseDocument.Data.ManyValue.ShouldHaveCount(DefaultPageSize);
 
-            responseDocument.Links.Should().NotBeNull();
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/posts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();

@@ -56,7 +56,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Meta.Should().NotBeNull();
+            responseDocument.Meta.ShouldNotBeNull();
             ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
         }
 
@@ -77,7 +77,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Meta.Should().NotBeNull();
+            responseDocument.Meta.ShouldNotBeNull();
             ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(0);
         }
 

@@ -87,27 +87,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
             string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
             ResourceObject singleData1 = responseDocument.Results[0].Data.SingleValue;
-            singleData1.Should().NotBeNull();
-            singleData1.Links.Should().NotBeNull();
+            singleData1.ShouldNotBeNull();
+            singleData1.Links.ShouldNotBeNull();
             singleData1.Links.Self.Should().Be(languageLink);
-            singleData1.Relationships.Should().NotBeEmpty();
-            singleData1.Relationships["lyrics"].Links.Should().NotBeNull();
+            singleData1.Relationships.ShouldNotBeEmpty();
+            singleData1.Relationships["lyrics"].Links.ShouldNotBeNull();
             singleData1.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
             singleData1.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
 
             string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
 
             ResourceObject singleData2 = responseDocument.Results[1].Data.SingleValue;
-            singleData2.Should().NotBeNull();
-            singleData2.Links.Should().NotBeNull();
+            singleData2.ShouldNotBeNull();
+            singleData2.Links.ShouldNotBeNull();
             singleData2.Links.Self.Should().Be(companyLink);
-            singleData2.Relationships.Should().NotBeEmpty();
-            singleData2.Relationships["tracks"].Links.Should().NotBeNull();
+            singleData2.Relationships.ShouldNotBeEmpty();
+            singleData2.Relationships["tracks"].Links.ShouldNotBeNull();
             singleData2.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
             singleData2.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
         }
@@ -151,10 +151,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(1);
+            responseDocument.Results.ShouldHaveCount(1);
 
             ResourceObject singleData = responseDocument.Results[0].Data.SingleValue;
-            singleData.Should().NotBeNull();
+            singleData.ShouldNotBeNull();
             singleData.Links.Should().BeNull();
             singleData.Relationships.Should().BeNull();
         }

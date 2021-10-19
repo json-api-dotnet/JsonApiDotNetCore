@@ -9,6 +9,7 @@ using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging.Abstractions;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
@@ -47,7 +48,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             var exception = new InvalidModelStateException(modelState, typeof(Parent), false, resourceGraph);
 
             // Assert
-            exception.Errors.Should().HaveCount(1);
+            exception.Errors.ShouldHaveCount(1);
 
             if (expectedJsonPath == null)
             {
@@ -55,7 +56,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             }
             else
             {
-                exception.Errors[0].Source.Should().NotBeNull();
+                exception.Errors[0].Source.ShouldNotBeNull();
                 exception.Errors[0].Source!.Pointer.Should().Be(expectedJsonPath);
             }
         }
@@ -99,7 +100,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             var exception = new InvalidModelStateException(modelState, typeof(IList<OperationContainer>), false, resourceGraph, getOperationTypeCallback);
 
             // Assert
-            exception.Errors.Should().HaveCount(1);
+            exception.Errors.ShouldHaveCount(1);
 
             if (expectedJsonPath == null)
             {
@@ -107,7 +108,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             }
             else
             {
-                exception.Errors[0].Source.Should().NotBeNull();
+                exception.Errors[0].Source.ShouldNotBeNull();
                 exception.Errors[0].Source!.Pointer.Should().Be(expectedJsonPath);
             }
         }

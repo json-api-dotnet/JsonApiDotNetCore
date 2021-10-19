@@ -77,27 +77,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
 
             string languageLink = $"/api/textLanguages/{Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id)}";
 
-            responseDocument.Results[0].Data.SingleValue.Links.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Links.Self.Should().Be(languageLink);
-            responseDocument.Results[0].Data.SingleValue.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.Relationships.ShouldNotBeEmpty();
+            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
             responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
 
             string companyLink = $"/api/recordCompanies/{short.Parse(responseDocument.Results[1].Data.SingleValue.Id)}";
 
-            responseDocument.Results[1].Data.SingleValue.Links.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Links.Self.Should().Be(companyLink);
-            responseDocument.Results[1].Data.SingleValue.Relationships.Should().NotBeEmpty();
-            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.Relationships.ShouldNotBeEmpty();
+            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
             responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
         }

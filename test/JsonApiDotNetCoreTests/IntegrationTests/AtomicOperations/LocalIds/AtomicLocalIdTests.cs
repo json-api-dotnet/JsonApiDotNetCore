@@ -86,15 +86,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("recordCompanies");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newCompany.Name);
             responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompany.CountryOfResidence);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -108,7 +108,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.OwnedBy.Should().NotBeNull();
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(newCompanyId);
                 trackInDatabase.OwnedBy.Name.Should().Be(newCompany.Name);
                 trackInDatabase.OwnedBy.CountryOfResidence.Should().Be(newCompany.CountryOfResidence);
@@ -179,15 +179,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newPerformer.ArtistName);
             responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -201,7 +201,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(newPerformer.ArtistName);
                 trackInDatabase.Performers[0].BornAt.Should().BeCloseTo(newPerformer.BornAt);
@@ -271,14 +271,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("playlists");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
@@ -292,7 +292,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
                 playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
@@ -348,7 +348,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -414,7 +414,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -473,9 +473,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -591,19 +591,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(4);
+            responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
 
-            responseDocument.Results[2].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[2].Data.SingleValue.Type.Should().Be("recordCompanies");
             responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[2].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
@@ -629,10 +629,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.OwnedBy.Should().NotBeNull();
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(newCompanyId);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
             });
@@ -704,14 +704,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("recordCompanies");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
@@ -727,7 +727,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.OwnedBy.Should().NotBeNull();
+                trackInDatabase.OwnedBy.ShouldNotBeNull();
                 trackInDatabase.OwnedBy.Id.Should().Be(newCompanyId);
                 trackInDatabase.OwnedBy.Name.Should().Be(newCompanyName);
             });
@@ -802,14 +802,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
@@ -825,7 +825,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
             });
@@ -900,14 +900,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -923,7 +923,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
                 playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
@@ -1020,14 +1020,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
@@ -1043,7 +1043,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(newPerformerId);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(newArtistName);
             });
@@ -1140,14 +1140,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -1163,7 +1163,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(newTrackId);
                 playlistInDatabase.Tracks[0].Title.Should().Be(newTrackTitle);
             });
@@ -1260,14 +1260,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(3);
+            responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
@@ -1283,7 +1283,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.Performers.Should().HaveCount(2);
+                trackInDatabase.Performers.ShouldHaveCount(2);
 
                 trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(existingPerformer.ArtistName);
@@ -1402,14 +1402,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(4);
+            responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -1427,7 +1427,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 playlistInDatabase.Name.Should().Be(newPlaylistName);
 
-                playlistInDatabase.Tracks.Should().HaveCount(3);
+                playlistInDatabase.Tracks.ShouldHaveCount(3);
                 playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[0].Id);
                 playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == existingTracks[1].Id);
                 playlistInDatabase.Tracks.Should().ContainSingle(musicTrack => musicTrack.Id == newTrackId);
@@ -1555,19 +1555,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(4);
+            responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName1);
 
-            responseDocument.Results[1].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
             responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName2);
 
-            responseDocument.Results[2].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[2].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[2].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -1582,7 +1582,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
                 trackInDatabase.Title.Should().Be(newTrackTitle);
 
-                trackInDatabase.Performers.Should().HaveCount(1);
+                trackInDatabase.Performers.ShouldHaveCount(1);
                 trackInDatabase.Performers[0].Id.Should().Be(existingPerformer.Id);
                 trackInDatabase.Performers[0].ArtistName.Should().Be(existingPerformer.ArtistName);
             });
@@ -1687,9 +1687,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(4);
+            responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -1704,7 +1704,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             {
                 Playlist playlistInDatabase = await dbContext.Playlists.Include(playlist => playlist.Tracks).FirstWithIdAsync(existingPlaylist.Id);
 
-                playlistInDatabase.Tracks.Should().HaveCount(1);
+                playlistInDatabase.Tracks.ShouldHaveCount(1);
                 playlistInDatabase.Tracks[0].Id.Should().Be(existingPlaylist.Tracks[0].Id);
             });
         }
@@ -1754,9 +1754,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Should().NotBeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
             responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
             responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
             responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
@@ -1810,7 +1810,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1859,7 +1859,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1922,7 +1922,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -1978,7 +1978,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2037,7 +2037,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2096,7 +2096,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2153,7 +2153,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2213,7 +2213,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2287,7 +2287,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2360,7 +2360,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -2430,7 +2430,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

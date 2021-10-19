@@ -45,7 +45,7 @@ namespace MultiDbContextTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Attributes["nameA"].Should().Be("SampleA");
         }
 
@@ -61,7 +61,7 @@ namespace MultiDbContextTests
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Attributes["nameB"].Should().Be("SampleB");
         }
 

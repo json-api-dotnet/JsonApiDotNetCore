@@ -91,7 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
             responseDocument.Results[0].Data.SingleValue.Attributes["format"].Should().Be(newLyrics[0].Format);
             responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("text");
@@ -164,7 +164,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Results.Should().HaveCount(2);
+            responseDocument.Results.ShouldHaveCount(2);
 
             responseDocument.Results[0].Data.SingleValue.Attributes["format"].Should().Be(existingLyrics[0].Format);
             responseDocument.Results[0].Data.SingleValue.Attributes.Should().NotContainKey("text");

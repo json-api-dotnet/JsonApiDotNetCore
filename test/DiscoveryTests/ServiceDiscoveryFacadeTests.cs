@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace DiscoveryTests
@@ -59,10 +60,10 @@ namespace DiscoveryTests
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
             ResourceType personType = resourceGraph.FindResourceType(typeof(Person));
-            personType.Should().NotBeNull();
+            personType.ShouldNotBeNull();
 
             ResourceType todoItemType = resourceGraph.FindResourceType(typeof(TodoItem));
-            todoItemType.Should().NotBeNull();
+            todoItemType.ShouldNotBeNull();
         }
 
         [Fact]
@@ -79,7 +80,7 @@ namespace DiscoveryTests
             IResourceGraph resourceGraph = _resourceGraphBuilder.Build();
 
             ResourceType testResourceType = resourceGraph.FindResourceType(typeof(TestResource));
-            testResourceType.Should().NotBeNull();
+            testResourceType.ShouldNotBeNull();
         }
 
         [Fact]

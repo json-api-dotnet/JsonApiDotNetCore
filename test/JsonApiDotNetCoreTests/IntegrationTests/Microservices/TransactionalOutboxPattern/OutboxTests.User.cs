@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
 
@@ -68,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserCreatedContent>();
                 content.UserId.Should().Be(newUserId);
@@ -125,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
             responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
 
@@ -141,7 +141,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserCreatedContent>();
                 content1.UserId.Should().Be(newUserId);
@@ -205,7 +205,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserLoginNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -277,7 +277,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -352,7 +352,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -429,7 +429,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserDisplayNameChangedContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -476,7 +476,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserDeletedContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -517,7 +517,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(2);
+                messages.ShouldHaveCount(2);
 
                 var content1 = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content1.UserId.Should().Be(existingUser.Id);
@@ -569,7 +569,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserRemovedFromGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -622,7 +622,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserAddedToGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);
@@ -677,7 +677,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 List<OutgoingMessage> messages = await dbContext.OutboxMessages.OrderBy(message => message.Id).ToListAsync();
-                messages.Should().HaveCount(1);
+                messages.ShouldHaveCount(1);
 
                 var content = messages[0].GetContentAs<UserMovedToGroupContent>();
                 content.UserId.Should().Be(existingUser.Id);

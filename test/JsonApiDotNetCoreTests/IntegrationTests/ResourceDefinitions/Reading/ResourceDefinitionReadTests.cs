@@ -74,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -115,11 +115,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Relationships["orbitsAround"].Data.SingleValue.Type.Should().Be("planets");
             responseDocument.Data.SingleValue.Relationships["orbitsAround"].Data.SingleValue.Id.Should().Be(moon.OrbitsAround.StringId);
 
-            responseDocument.Included.Should().HaveCount(1);
+            responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("planets");
             responseDocument.Included[0].Id.Should().Be(moon.OrbitsAround.StringId);
             responseDocument.Included[0].Attributes["publicName"].Should().Be(moon.OrbitsAround.PublicName);
@@ -158,9 +158,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Type.Should().Be("moons");
             responseDocument.Included[0].Id.Should().Be(planet.Moons.ElementAt(0).StringId);
@@ -207,7 +207,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(2);
+            responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue[0].Id.Should().Be(planets[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(planets[3].StringId);
 
@@ -257,7 +257,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(planets[3].StringId);
 
             ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
@@ -302,7 +302,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
             responseDocument.Data.ManyValue[0].Id.Should().Be(stars[1].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(stars[0].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(stars[2].StringId);
@@ -348,7 +348,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(3);
+            responseDocument.Data.ManyValue.ShouldHaveCount(3);
             responseDocument.Data.ManyValue[0].Id.Should().Be(stars[2].StringId);
             responseDocument.Data.ManyValue[1].Id.Should().Be(stars[0].StringId);
             responseDocument.Data.ManyValue[2].Id.Should().Be(stars[1].StringId);
@@ -385,7 +385,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(5);
+            responseDocument.Data.ManyValue.ShouldHaveCount(5);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -418,11 +418,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
             responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
             responseDocument.Data.SingleValue.Attributes["kind"].Should().Be(star.Kind);
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -455,9 +455,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
-            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(2);
+            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(2);
             responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
             responseDocument.Data.SingleValue.Attributes["solarRadius"].As<decimal>().Should().BeApproximately(star.SolarRadius);
             responseDocument.Data.SingleValue.Relationships.Should().BeNull();
@@ -493,11 +493,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
             responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
             responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("isVisibleFromEarth");
-            responseDocument.Data.SingleValue.Relationships.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Relationships.ShouldNotBeNull();
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -530,9 +530,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(star.StringId);
-            responseDocument.Data.SingleValue.Attributes.Should().HaveCount(1);
+            responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
             responseDocument.Data.SingleValue.Attributes["name"].Should().Be(star.Name);
             responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
@@ -571,7 +571,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(moons[1].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -617,7 +617,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Should().HaveCount(1);
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(moons[2].StringId);
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
@@ -651,7 +651,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);

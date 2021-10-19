@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Middleware
@@ -78,7 +79,7 @@ namespace UnitTests.Middleware
             request.Kind.Should().Be(expectKind);
             request.WriteOperation.Should().Be(expectWriteOperation);
             request.IsReadOnly.Should().Be(expectIsReadOnly);
-            request.PrimaryResourceType.Should().NotBeNull();
+            request.PrimaryResourceType.ShouldNotBeNull();
             request.PrimaryResourceType.PublicName.Should().Be("todoItems");
         }
 

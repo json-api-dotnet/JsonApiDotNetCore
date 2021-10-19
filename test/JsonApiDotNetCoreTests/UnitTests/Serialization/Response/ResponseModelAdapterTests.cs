@@ -546,7 +546,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
             Document document = responseModelAdapter.Convert(articles);
 
             // Assert
-            document.Included.Should().HaveCount(1);
+            document.Included.ShouldHaveCount(1);
 
             document.Included[0].Attributes["name"].Should().Be(person.Name);
             document.Included[0].Id.Should().Be(person.StringId);
