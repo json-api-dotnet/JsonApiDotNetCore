@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Linq;
 using System.Reflection;
 using JsonApiDotNetCore;

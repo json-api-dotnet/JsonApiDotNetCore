@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -18,46 +16,46 @@ namespace TestBuildingBlocks
         protected abstract JsonSerializerOptions SerializerOptions { get; }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteHeadAsync<TResponseDocument>(string requestUrl,
-            Action<HttpRequestHeaders> setRequestHeaders = null)
+            Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Head, requestUrl, null, null, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteGetAsync<TResponseDocument>(string requestUrl,
-            Action<HttpRequestHeaders> setRequestHeaders = null)
+            Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Get, requestUrl, null, null, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
+            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePostAtomicAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
+            object requestBody, string contentType = HeaderConstants.AtomicOperationsMediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Post, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecutePatchAsync<TResponseDocument>(string requestUrl,
-            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
+            object requestBody, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Patch, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         public async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteDeleteAsync<TResponseDocument>(string requestUrl,
-            object requestBody = null, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders> setRequestHeaders = null)
+            object? requestBody = null, string contentType = HeaderConstants.MediaType, Action<HttpRequestHeaders>? setRequestHeaders = null)
         {
             return await ExecuteRequestAsync<TResponseDocument>(HttpMethod.Delete, requestUrl, requestBody, contentType, setRequestHeaders);
         }
 
         private async Task<(HttpResponseMessage httpResponse, TResponseDocument responseDocument)> ExecuteRequestAsync<TResponseDocument>(HttpMethod method,
-            string requestUrl, object requestBody, string contentType, Action<HttpRequestHeaders> setRequestHeaders)
+            string requestUrl, object? requestBody, string? contentType, Action<HttpRequestHeaders>? setRequestHeaders)
         {
             using var request = new HttpRequestMessage(method, requestUrl);
-            string requestText = SerializeRequest(requestBody);
+            string? requestText = SerializeRequest(requestBody);
 
             if (!string.IsNullOrEmpty(requestText))
             {
@@ -79,10 +77,10 @@ namespace TestBuildingBlocks
             string responseText = await responseMessage.Content.ReadAsStringAsync();
             var responseDocument = DeserializeResponse<TResponseDocument>(responseText);
 
-            return (responseMessage, responseDocument);
+            return (responseMessage, responseDocument!);
         }
 
-        private string SerializeRequest(object requestBody)
+        private string? SerializeRequest(object? requestBody)
         {
             return requestBody == null ? null :
                 requestBody is string stringRequestBody ? stringRequestBody : JsonSerializer.Serialize(requestBody, SerializerOptions);
@@ -90,7 +88,7 @@ namespace TestBuildingBlocks
 
         protected abstract HttpClient CreateClient();
 
-        private TResponseDocument DeserializeResponse<TResponseDocument>(string responseText)
+        private TResponseDocument? DeserializeResponse<TResponseDocument>(string responseText)
         {
             if (typeof(TResponseDocument) == typeof(string))
             {

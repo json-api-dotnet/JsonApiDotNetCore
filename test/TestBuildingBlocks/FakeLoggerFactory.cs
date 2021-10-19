@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -64,7 +62,20 @@ namespace TestBuildingBlocks
 
             public IDisposable BeginScope<TState>(TState state)
             {
-                return null;
+                return NullScope.Instance;
+            }
+
+            private sealed class NullScope : IDisposable
+            {
+                public static readonly NullScope Instance = new();
+
+                private NullScope()
+                {
+                }
+
+                public void Dispose()
+                {
+                }
             }
         }
 

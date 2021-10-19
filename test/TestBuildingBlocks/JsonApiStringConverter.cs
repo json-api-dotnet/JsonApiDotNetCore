@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using System.Text.Json;
@@ -16,7 +14,7 @@ namespace TestBuildingBlocks
             try
             {
                 using JsonDocument document = JsonDocument.Parse(responseBody);
-                return document.RootElement.GetProperty("errors").EnumerateArray().Single().GetProperty("id").GetString();
+                return document.RootElement.GetProperty("errors").EnumerateArray().Single()!.GetProperty("id").GetString()!;
             }
             catch (Exception exception)
             {

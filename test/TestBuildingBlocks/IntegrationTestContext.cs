@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -35,9 +33,9 @@ namespace TestBuildingBlocks
     {
         private readonly Lazy<WebApplicationFactory<TStartup>> _lazyFactory;
         private readonly TestControllerProvider _testControllerProvider = new();
-        private Action<ILoggingBuilder> _loggingConfiguration;
-        private Action<IServiceCollection> _beforeServicesConfiguration;
-        private Action<IServiceCollection> _afterServicesConfiguration;
+        private Action<ILoggingBuilder>? _loggingConfiguration;
+        private Action<IServiceCollection>? _beforeServicesConfiguration;
+        private Action<IServiceCollection>? _afterServicesConfiguration;
 
         protected override JsonSerializerOptions SerializerOptions
         {
@@ -145,21 +143,21 @@ namespace TestBuildingBlocks
 
         private sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<TStartup>
         {
-            private Action<ILoggingBuilder> _loggingConfiguration;
-            private Action<IServiceCollection> _beforeServicesConfiguration;
-            private Action<IServiceCollection> _afterServicesConfiguration;
+            private Action<ILoggingBuilder>? _loggingConfiguration;
+            private Action<IServiceCollection>? _beforeServicesConfiguration;
+            private Action<IServiceCollection>? _afterServicesConfiguration;
 
-            public void ConfigureLogging(Action<ILoggingBuilder> loggingConfiguration)
+            public void ConfigureLogging(Action<ILoggingBuilder>? loggingConfiguration)
             {
                 _loggingConfiguration = loggingConfiguration;
             }
 
-            public void ConfigureServicesBeforeStartup(Action<IServiceCollection> servicesConfiguration)
+            public void ConfigureServicesBeforeStartup(Action<IServiceCollection>? servicesConfiguration)
             {
                 _beforeServicesConfiguration = servicesConfiguration;
             }
 
-            public void ConfigureServicesAfterStartup(Action<IServiceCollection> servicesConfiguration)
+            public void ConfigureServicesAfterStartup(Action<IServiceCollection>? servicesConfiguration)
             {
                 _afterServicesConfiguration = servicesConfiguration;
             }

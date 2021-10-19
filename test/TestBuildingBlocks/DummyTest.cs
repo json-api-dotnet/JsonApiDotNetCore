@@ -1,5 +1,3 @@
-#nullable disable
-
 using Xunit;
 
 namespace TestBuildingBlocks
