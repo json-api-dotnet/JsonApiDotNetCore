@@ -9,12 +9,12 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     public enum JsonElementConstraint
     {
         /// <summary>
-        /// A value for the field is not allowed.
+        /// A value for the element is not allowed.
         /// </summary>
         Forbidden,
 
         /// <summary>
-        /// A value for the field is required.
+        /// A value for the element is required.
         /// </summary>
         Required
     }

@@ -33,7 +33,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             (IIdentifiable resource, ResourceType _) = ConvertResourceObject(data, requirements, state);
 
-            // Ensure that IResourceDefinition extensibility point sees the current operation, it case it injects IJsonApiRequest.
+            // Ensure that IResourceDefinition extensibility point sees the current operation, in case it injects IJsonApiRequest.
             state.RefreshInjectables();
 
             _resourceDefinitionAccessor.OnDeserialize(resource);

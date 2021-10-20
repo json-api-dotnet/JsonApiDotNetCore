@@ -32,13 +32,13 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             ArgumentGuard.NotNull(requirements, nameof(requirements));
             ArgumentGuard.NotNull(state, nameof(state));
 
-            ResourceType resourceType = ConvertType(identity, requirements, state);
+            ResourceType resourceType = ResolveType(identity, requirements, state);
             IIdentifiable resource = CreateResource(identity, requirements, resourceType.ClrType, state);
 
             return (resource, resourceType);
         }
 
-        private ResourceType ConvertType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
+        private ResourceType ResolveType(IResourceIdentity identity, ResourceIdentityRequirements requirements, RequestAdapterState state)
         {
             AssertHasType(identity, state);
 

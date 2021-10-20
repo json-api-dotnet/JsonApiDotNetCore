@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <inheritdoc />
         public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry)
         {
-            IServiceProvider serviceProvider = GetServiceProvider();
+            IServiceProvider serviceProvider = GetScopedServiceProvider();
 
             var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
 
@@ -50,7 +50,7 @@ namespace JsonApiDotNetCore.Configuration
             return true;
         }
 
-        private IServiceProvider GetServiceProvider()
+        private IServiceProvider GetScopedServiceProvider()
         {
             HttpContext httpContext = _httpContextAccessor.HttpContext;
 
