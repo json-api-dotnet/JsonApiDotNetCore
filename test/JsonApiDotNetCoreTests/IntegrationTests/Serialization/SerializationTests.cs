@@ -169,7 +169,54 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         }
 
         [Fact]
-        public async Task Can_get_primary_resources_with_empty_include()
+        public async Task Can_get_primary_resource_with_empty_ToOne_include()
+        {
+            // Arrange
+            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Attendees.Add(attendee);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/meetingAttendees/{attendee.StringId}?include=meeting";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"?include=meeting""
+  },
+  ""data"": {
+    ""type"": ""meetingAttendees"",
+    ""id"": """ + attendee.StringId + @""",
+    ""attributes"": {
+      ""displayName"": """ + attendee.DisplayName + @"""
+    },
+    ""relationships"": {
+      ""meeting"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/relationships/meeting"",
+          ""related"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+        },
+        ""data"": null
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"""
+    }
+  },
+  ""included"": []
+}");
+        }
+
+        [Fact]
+        public async Task Can_get_primary_resources_with_empty_ToMany_include()
         {
             // Arrange
             Meeting meeting = _fakers.Meeting.Generate();
