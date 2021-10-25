@@ -727,5 +727,34 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.SparseFieldSets
             postCaptured.Caption.Should().Be(post.Caption);
             postCaptured.Url.Should().Be(postCaptured.Url);
         }
+
+        [Fact]
+        public async Task Returns_related_resources_on_broken_resource_linkage()
+        {
+            // Arrange
+            WebAccount account = _fakers.WebAccount.Generate();
+            account.Posts = _fakers.BlogPost.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Accounts.Add(account);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/webAccounts/{account.StringId}?include=posts&fields[webAccounts]=displayName";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.SingleValue.Should().NotBeNull();
+            responseDocument.Data.SingleValue.Id.Should().Be(account.StringId);
+            responseDocument.Data.SingleValue.Relationships.Should().BeNull();
+
+            responseDocument.Included.Should().HaveCount(2);
+            responseDocument.Included.Should().OnlyContain(resourceObject => resourceObject.Type == "blogPosts");
+        }
     }
 }
