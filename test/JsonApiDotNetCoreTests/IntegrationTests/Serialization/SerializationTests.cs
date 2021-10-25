@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -91,13 +90,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Can_get_primary_resources_with_include()
         {
             // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(1);
-            meetings[0].Attendees = _fakers.MeetingAttendee.Generate(1);
+            Meeting meeting = _fakers.Meeting.Generate();
+            meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
+                dbContext.Meetings.Add(meeting);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -117,52 +116,52 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   ""data"": [
     {
       ""type"": ""meetings"",
-      ""id"": """ + meetings[0].StringId + @""",
+      ""id"": """ + meeting.StringId + @""",
       ""attributes"": {
-        ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
-        ""duration"": """ + meetings[0].Duration + @""",
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
         ""location"": {
-          ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
-          ""lng"": " + meetings[0].Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
         }
       },
       ""relationships"": {
         ""attendees"": {
           ""links"": {
-            ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"/relationships/attendees"",
-            ""related"": ""http://localhost/meetings/" + meetings[0].StringId + @"/attendees""
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
           },
           ""data"": [
             {
               ""type"": ""meetingAttendees"",
-              ""id"": """ + meetings[0].Attendees[0].StringId + @"""
+              ""id"": """ + meeting.Attendees[0].StringId + @"""
             }
           ]
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"""
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
       }
     }
   ],
   ""included"": [
     {
       ""type"": ""meetingAttendees"",
-      ""id"": """ + meetings[0].Attendees[0].StringId + @""",
+      ""id"": """ + meeting.Attendees[0].StringId + @""",
       ""attributes"": {
-        ""displayName"": """ + meetings[0].Attendees[0].DisplayName + @"""
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @"""
       },
       ""relationships"": {
         ""meeting"": {
           ""links"": {
-            ""self"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"/relationships/meeting"",
-            ""related"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"/meeting""
+            ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/relationships/meeting"",
+            ""related"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/meeting""
           }
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"""
+        ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
       }
     }
   ]
@@ -173,12 +172,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Can_get_primary_resources_with_empty_include()
         {
             // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(1);
+            Meeting meeting = _fakers.Meeting.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
+                dbContext.Meetings.Add(meeting);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -198,27 +197,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   ""data"": [
     {
       ""type"": ""meetings"",
-      ""id"": """ + meetings[0].StringId + @""",
+      ""id"": """ + meeting.StringId + @""",
       ""attributes"": {
-        ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
-        ""duration"": """ + meetings[0].Duration + @""",
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
         ""location"": {
-          ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
-          ""lng"": " + meetings[0].Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
         }
       },
       ""relationships"": {
         ""attendees"": {
           ""links"": {
-            ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"/relationships/attendees"",
-            ""related"": ""http://localhost/meetings/" + meetings[0].StringId + @"/attendees""
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
           },
           ""data"": []
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"""
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
       }
     }
   ],
