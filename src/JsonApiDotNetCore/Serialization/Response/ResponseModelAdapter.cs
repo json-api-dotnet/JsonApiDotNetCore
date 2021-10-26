@@ -32,6 +32,9 @@ namespace JsonApiDotNetCore.Serialization.Response
         private readonly IRequestQueryStringAccessor _requestQueryStringAccessor;
         private readonly ISparseFieldSetCache _sparseFieldSetCache;
 
+        // Ensures that at most one ResourceObject (and one tree node) is produced per resource instance.
+        private readonly Dictionary<IIdentifiable, ResourceObjectTreeNode> _resourceToTreeNodeCache = new(IdentifiableComparer.Instance);
+
         public ResponseModelAdapter(IJsonApiRequest request, IJsonApiOptions options, ILinkBuilder linkBuilder, IMetaBuilder metaBuilder,
             IResourceDefinitionAccessor resourceDefinitionAccessor, IEvaluatedIncludeCache evaluatedIncludeCache, ISparseFieldSetCache sparseFieldSetCache,
             IRequestQueryStringAccessor requestQueryStringAccessor)
@@ -59,25 +62,34 @@ namespace JsonApiDotNetCore.Serialization.Response
         public Document Convert(object model)
         {
             _sparseFieldSetCache.Reset();
+            _resourceToTreeNodeCache.Clear();
 
             var document = new Document();
 
             IncludeExpression include = _evaluatedIncludeCache.Get();
             IImmutableSet<IncludeElementExpression> includeElements = include?.Elements ?? ImmutableHashSet<IncludeElementExpression>.Empty;
 
-            var includedCollection = new IncludedCollection();
+            var rootNode = ResourceObjectTreeNode.CreateRoot();
             ResourceType resourceType = _request.SecondaryResourceType ?? _request.PrimaryResourceType;
 
             if (model is IEnumerable<IIdentifiable> resources)
             {
-                IEnumerable<ResourceObject> resourceObjects = resources.Select(resource =>
-                    ConvertResource(resource, resourceType, _request.Kind, includeElements, includedCollection, false));
+                foreach (IIdentifiable resource in resources)
+                {
+                    TraverseResource(resource, resourceType, _request.Kind, includeElements, rootNode, null);
+                }
 
+                PopulateRelationshipsInTree(rootNode, _request.Kind);
+
+                IEnumerable<ResourceObject> resourceObjects = rootNode.GetResponseData();
                 document.Data = new SingleOrManyData<ResourceObject>(resourceObjects);
             }
             else if (model is IIdentifiable resource)
             {
-                ResourceObject resourceObject = ConvertResource(resource, resourceType, _request.Kind, includeElements, includedCollection, false);
+                TraverseResource(resource, resourceType, _request.Kind, includeElements, rootNode, null);
+                PopulateRelationshipsInTree(rootNode, _request.Kind);
+
+                ResourceObject resourceObject = rootNode.GetResponseData().Single();
                 document.Data = new SingleOrManyData<ResourceObject>(resourceObject);
             }
             else if (model == null)
@@ -87,7 +99,7 @@ namespace JsonApiDotNetCore.Serialization.Response
             else if (model is IEnumerable<OperationContainer> operations)
             {
                 using var _ = new RevertRequestStateOnDispose(_request, null);
-                document.Results = operations.Select(operation => ConvertOperation(operation, includeElements, includedCollection)).ToList();
+                document.Results = operations.Select(operation => ConvertOperation(operation, includeElements)).ToList();
             }
             else if (model is IEnumerable<ErrorObject> errorObjects)
             {
@@ -105,13 +117,12 @@ namespace JsonApiDotNetCore.Serialization.Response
             document.JsonApi = GetApiObject();
             document.Links = _linkBuilder.GetTopLevelLinks();
             document.Meta = _metaBuilder.Build();
-            document.Included = GetIncluded(includedCollection);
+            document.Included = GetIncluded(rootNode);
 
             return document;
         }
 
-        protected virtual AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableSet<IncludeElementExpression> includeElements,
-            IncludedCollection includedCollection)
+        protected virtual AtomicResultObject ConvertOperation(OperationContainer operation, IImmutableSet<IncludeElementExpression> includeElements)
         {
             ResourceObject resourceObject = null;
 
@@ -120,9 +131,15 @@ namespace JsonApiDotNetCore.Serialization.Response
                 _request.CopyFrom(operation.Request);
 
                 ResourceType resourceType = operation.Request.SecondaryResourceType ?? operation.Request.PrimaryResourceType;
-                resourceObject = ConvertResource(operation.Resource, resourceType, operation.Request.Kind, includeElements, includedCollection, false);
+                var rootNode = ResourceObjectTreeNode.CreateRoot();
+
+                TraverseResource(operation.Resource, resourceType, operation.Request.Kind, includeElements, rootNode, null);
+                PopulateRelationshipsInTree(rootNode, operation.Request.Kind);
+
+                resourceObject = rootNode.GetResponseData().Single();
 
                 _sparseFieldSetCache.Reset();
+                _resourceToTreeNodeCache.Clear();
             }
 
             return new AtomicResultObject
@@ -131,33 +148,62 @@ namespace JsonApiDotNetCore.Serialization.Response
             };
         }
 
-        protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType resourceType, EndpointKind requestKind,
-            IImmutableSet<IncludeElementExpression> includeElements, IncludedCollection includedCollection, bool isInclude)
+        private void TraverseResource(IIdentifiable resource, ResourceType type, EndpointKind kind, IImmutableSet<IncludeElementExpression> includeElements,
+            ResourceObjectTreeNode parentTreeNode, RelationshipAttribute parentRelationship)
         {
-            IImmutableSet<ResourceFieldAttribute> fieldSet = null;
+            ResourceObjectTreeNode treeNode = GetOrCreateTreeNode(resource, type, kind);
 
-            if (requestKind != EndpointKind.Relationship)
+            if (parentRelationship != null)
+            {
+                parentTreeNode.AttachRelationshipChild(parentRelationship, treeNode);
+            }
+            else
+            {
+                parentTreeNode.AttachDirectChild(treeNode);
+            }
+
+            if (kind != EndpointKind.Relationship)
+            {
+                TraverseRelationships(resource, treeNode, includeElements, kind);
+            }
+        }
+
+        private ResourceObjectTreeNode GetOrCreateTreeNode(IIdentifiable resource, ResourceType type, EndpointKind kind)
+        {
+            if (!_resourceToTreeNodeCache.TryGetValue(resource, out ResourceObjectTreeNode treeNode))
+            {
+                ResourceObject resourceObject = ConvertResource(resource, type, kind);
+                treeNode = new ResourceObjectTreeNode(resource, type, resourceObject);
+
+                _resourceToTreeNodeCache.Add(resource, treeNode);
+            }
+
+            return treeNode;
+        }
+
+        protected virtual ResourceObject ConvertResource(IIdentifiable resource, ResourceType type, EndpointKind kind)
+        {
+            bool isRelationship = kind == EndpointKind.Relationship;
+
+            if (!isRelationship)
             {
                 _resourceDefinitionAccessor.OnSerialize(resource);
-
-                fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(resourceType);
             }
 
-            var resourceObject = new ResourceObject();
-
-            if (isInclude)
+            var resourceObject = new ResourceObject
             {
-                resourceObject = includedCollection.AddOrUpdate(resource, resourceObject);
+                Type = type.PublicName,
+                Id = resource.StringId
+            };
+
+            if (!isRelationship)
+            {
+                IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(type);
+
+                resourceObject.Attributes = ConvertAttributes(resource, type, fieldSet);
+                resourceObject.Links = _linkBuilder.GetResourceLinks(type, resource.StringId);
+                resourceObject.Meta = _resourceDefinitionAccessor.GetMeta(type, resource);
             }
-
-            bool isRelationship = requestKind == EndpointKind.Relationship;
-
-            resourceObject.Type = resourceType.PublicName;
-            resourceObject.Id = resource.StringId;
-            resourceObject.Attributes = ConvertAttributes(resource, resourceType, fieldSet);
-            resourceObject.Relationships = ConvertRelationships(resource, resourceType, fieldSet, requestKind, includeElements, includedCollection);
-            resourceObject.Links = isRelationship ? null : _linkBuilder.GetResourceLinks(resourceType, resource.StringId);
-            resourceObject.Meta = isRelationship ? null : _resourceDefinitionAccessor.GetMeta(resourceType, resource);
 
             return resourceObject;
         }
@@ -165,130 +211,117 @@ namespace JsonApiDotNetCore.Serialization.Response
         protected virtual IDictionary<string, object> ConvertAttributes(IIdentifiable resource, ResourceType resourceType,
             IImmutableSet<ResourceFieldAttribute> fieldSet)
         {
-            if (fieldSet != null)
+            var attrMap = new Dictionary<string, object>(resourceType.Attributes.Count);
+
+            foreach (AttrAttribute attr in resourceType.Attributes)
             {
-                var attrMap = new Dictionary<string, object>(resourceType.Attributes.Count);
-
-                foreach (AttrAttribute attr in resourceType.Attributes)
+                if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable.Id))
                 {
-                    if (!fieldSet.Contains(attr) || attr.Property.Name == nameof(Identifiable.Id))
-                    {
-                        continue;
-                    }
-
-                    object value = attr.GetValue(resource);
-
-                    if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && value == null)
-                    {
-                        continue;
-                    }
-
-                    if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
-                        Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
-                    {
-                        continue;
-                    }
-
-                    attrMap.Add(attr.PublicName, value);
+                    continue;
                 }
 
-                if (attrMap.Any())
+                object value = attr.GetValue(resource);
+
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingNull && value == null)
                 {
-                    return attrMap;
+                    continue;
                 }
+
+                if (_options.SerializerOptions.DefaultIgnoreCondition == JsonIgnoreCondition.WhenWritingDefault &&
+                    Equals(value, RuntimeTypeConverter.GetDefaultValue(attr.Property.PropertyType)))
+                {
+                    continue;
+                }
+
+                attrMap.Add(attr.PublicName, value);
             }
 
-            return null;
+            return attrMap.Any() ? attrMap : null;
         }
 
-        protected virtual IDictionary<string, RelationshipObject> ConvertRelationships(IIdentifiable resource, ResourceType resourceType,
-            IImmutableSet<ResourceFieldAttribute> fieldSet, EndpointKind requestKind, IImmutableSet<IncludeElementExpression> includeElements,
-            IncludedCollection includedCollection)
+        private void TraverseRelationships(IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
+            IImmutableSet<IncludeElementExpression> includeElements, EndpointKind kind)
         {
-            if (fieldSet != null)
+            foreach (IncludeElementExpression includeElement in includeElements)
             {
-                var relationshipMap = new Dictionary<string, RelationshipObject>(resourceType.Relationships.Count);
-
-                foreach (RelationshipAttribute relationship in resourceType.Relationships)
-                {
-                    IncludeElementExpression includeElement = GetFirstOrDefault(includeElements, relationship,
-                        (element, nextRelationship) => element.Relationship.Equals(nextRelationship));
-
-                    RelationshipObject relationshipObject = ConvertRelationship(relationship, resource, requestKind, includeElement, includedCollection);
-
-                    if (relationshipObject != null && fieldSet.Contains(relationship))
-                    {
-                        relationshipMap.Add(relationship.PublicName, relationshipObject);
-                    }
-                }
-
-                if (relationshipMap.Any())
-                {
-                    return relationshipMap;
-                }
+                TraverseRelationship(includeElement.Relationship, leftResource, leftTreeNode, includeElement, kind);
             }
-
-            return null;
         }
 
-        private static TSource GetFirstOrDefault<TSource, TContext>(IEnumerable<TSource> source, TContext context, Func<TSource, TContext, bool> condition)
+        private void TraverseRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, ResourceObjectTreeNode leftTreeNode,
+            IncludeElementExpression includeElement, EndpointKind kind)
         {
-            // PERF: This replacement for Enumerable.FirstOrDefault() doesn't allocate a compiler-generated closure class <>c__DisplayClass.
-            // https://www.jetbrains.com/help/resharper/2021.2/Fixing_Issues_Found_by_DPA.html#closures-in-lambda-expressions
+            object rightValue = relationship.GetValue(leftResource);
+            ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
 
-            foreach (TSource item in source)
+            leftTreeNode.EnsureHasRelationship(relationship);
+
+            foreach (IIdentifiable rightResource in rightResources)
             {
-                if (condition(item, context))
-                {
-                    return item;
-                }
+                TraverseResource(rightResource, relationship.RightType, kind, includeElement.Children, leftTreeNode, relationship);
             }
-
-            return default;
         }
 
-        protected virtual RelationshipObject ConvertRelationship(RelationshipAttribute relationship, IIdentifiable leftResource, EndpointKind requestKind,
-            IncludeElementExpression includeElement, IncludedCollection includedCollection)
+        private void PopulateRelationshipsInTree(ResourceObjectTreeNode rootNode, EndpointKind kind)
         {
-            SingleOrManyData<ResourceIdentifierObject> data = default;
-
-            if (includeElement != null)
+            if (kind != EndpointKind.Relationship)
             {
-                object rightValue = relationship.GetValue(leftResource);
-                ICollection<IIdentifiable> rightResources = CollectionConverter.ExtractResources(rightValue);
-
-                var resourceIdentifierObjects = new List<ResourceIdentifierObject>(rightResources.Count);
-
-                foreach (IIdentifiable rightResource in rightResources)
+                foreach (ResourceObjectTreeNode treeNode in rootNode.GetUniqueNodes())
                 {
-                    var resourceIdentifierObject = new ResourceIdentifierObject
-                    {
-                        Type = relationship.RightType.PublicName,
-                        Id = rightResource.StringId
-                    };
-
-                    resourceIdentifierObjects.Add(resourceIdentifierObject);
-
-                    ResourceObject includeResource = ConvertResource(rightResource, relationship.RightType, requestKind, includeElement.Children,
-                        includedCollection, true);
-
-                    includedCollection.AddOrUpdate(rightResource, includeResource);
+                    PopulateRelationshipsInResourceObject(treeNode);
                 }
-
-                data = relationship is HasOneAttribute
-                    ? new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObjects.SingleOrDefault())
-                    : new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObjects);
             }
+        }
 
-            RelationshipLinks links = _linkBuilder.GetRelationshipLinks(relationship, leftResource);
+        private void PopulateRelationshipsInResourceObject(ResourceObjectTreeNode treeNode)
+        {
+            IImmutableSet<ResourceFieldAttribute> fieldSet = _sparseFieldSetCache.GetSparseFieldSetForSerializer(treeNode.Type);
 
-            return links == null && !data.IsAssigned
-                ? null
-                : new RelationshipObject
+            foreach (RelationshipAttribute relationship in treeNode.Type.Relationships)
+            {
+                if (fieldSet.Contains(relationship))
+                {
+                    PopulateRelationshipInResourceObject(treeNode, relationship);
+                }
+            }
+        }
+
+        private void PopulateRelationshipInResourceObject(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
+        {
+            SingleOrManyData<ResourceIdentifierObject> data = GetRelationshipData(treeNode, relationship);
+            RelationshipLinks links = _linkBuilder.GetRelationshipLinks(relationship, treeNode.Resource);
+
+            if (links != null || data.IsAssigned)
+            {
+                var relationshipObject = new RelationshipObject
                 {
                     Links = links,
                     Data = data
                 };
+
+                treeNode.ResourceObject.Relationships ??= new Dictionary<string, RelationshipObject>();
+                treeNode.ResourceObject.Relationships.Add(relationship.PublicName, relationshipObject);
+            }
+        }
+
+        private static SingleOrManyData<ResourceIdentifierObject> GetRelationshipData(ResourceObjectTreeNode treeNode, RelationshipAttribute relationship)
+        {
+            ISet<ResourceObjectTreeNode> rightNodes = treeNode.GetRightNodesInRelationship(relationship);
+
+            if (rightNodes != null)
+            {
+                IEnumerable<ResourceIdentifierObject> resourceIdentifierObjects = rightNodes.Select(rightNode => new ResourceIdentifierObject
+                {
+                    Type = rightNode.Type.PublicName,
+                    Id = rightNode.ResourceObject.Id
+                });
+
+                return relationship is HasOneAttribute
+                    ? new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObjects.SingleOrDefault())
+                    : new SingleOrManyData<ResourceIdentifierObject>(resourceIdentifierObjects);
+            }
+
+            return default;
         }
 
         protected virtual JsonApiObject GetApiObject()
@@ -314,11 +347,13 @@ namespace JsonApiDotNetCore.Serialization.Response
             return jsonApiObject;
         }
 
-        protected virtual IList<ResourceObject> GetIncluded(IncludedCollection includedCollection)
+        private IList<ResourceObject> GetIncluded(ResourceObjectTreeNode rootNode)
         {
-            if (includedCollection.ResourceObjects.Any())
+            IList<ResourceObject> resourceObjects = rootNode.GetResponseIncluded();
+
+            if (resourceObjects.Any())
             {
-                return includedCollection.ResourceObjects;
+                return resourceObjects;
             }
 
             return _requestQueryStringAccessor.Query.ContainsKey("include") ? Array.Empty<ResourceObject>() : null;
