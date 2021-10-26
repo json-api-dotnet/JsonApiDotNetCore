@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         public static ResourceObjectTreeNode CreateRoot()
         {
-            return new ResourceObjectTreeNode(RootResource, RootType, new ResourceObject());
+            return new(RootResource, RootType, new ResourceObject());
         }
 
         public void AttachDirectChild(ResourceObjectTreeNode treeNode)
@@ -182,6 +182,8 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private IList<ResourceObjectTreeNode> GetDirectChildren()
         {
+            // ReSharper disable once MergeConditionalExpression
+            // Justification: ReSharper reporting this is a bug, which is fixed in v2021.2.1. This condition cannot be merged.
             return _directChildren == null ? Array.Empty<ResourceObjectTreeNode>() : _directChildren;
         }
 
