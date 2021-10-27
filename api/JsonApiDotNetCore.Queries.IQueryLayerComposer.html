@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IQueryLayerComposer
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,19 +86,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForGetById__1___0_JsonApiDotNetCore_Configuration_ResourceContext_JsonApiDotNetCore_Queries_TopFieldSelection_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForGetById%60%601(%60%600%2CJsonApiDotNetCore.Configuration.ResourceContext%2CJsonApiDotNetCore.Queries.TopFieldSelection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForGetById__1___0_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_TopFieldSelection_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForGetById%60%601(%60%600%2CJsonApiDotNetCore.Configuration.ResourceType%2CJsonApiDotNetCore.Queries.TopFieldSelection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForGetById_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForGetById*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForGetById__1___0_JsonApiDotNetCore_Configuration_ResourceContext_JsonApiDotNetCore_Queries_TopFieldSelection_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForGetById``1(``0,JsonApiDotNetCore.Configuration.ResourceContext,JsonApiDotNetCore.Queries.TopFieldSelection)">ComposeForGetById&lt;TId&gt;(TId, ResourceContext, TopFieldSelection)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForGetById__1___0_JsonApiDotNetCore_Configuration_ResourceType_JsonApiDotNetCore_Queries_TopFieldSelection_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForGetById``1(``0,JsonApiDotNetCore.Configuration.ResourceType,JsonApiDotNetCore.Queries.TopFieldSelection)">ComposeForGetById&lt;TId&gt;(TId, ResourceType, TopFieldSelection)</h4>
   <div class="markdown level1 summary"><p>Collects constraints and builds a <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> out of them, used to retrieve one resource.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryLayer ComposeForGetById&lt;TId&gt;(TId id, ResourceContext resourceContext, TopFieldSelection fieldSelection)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryLayer ComposeForGetById&lt;TId&gt;(TId id, ResourceType primaryResourceType, TopFieldSelection fieldSelection)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -116,8 +116,8 @@
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">primaryResourceType</span></td>
         <td></td>
       </tr>
       <tr>
@@ -333,20 +333,20 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForUpdate__1___0_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForUpdate%60%601(%60%600%2CJsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForUpdate__1___0_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForUpdate%60%601(%60%600%2CJsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L44">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForUpdate_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForUpdate*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForUpdate__1___0_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForUpdate``1(``0,JsonApiDotNetCore.Configuration.ResourceContext)">ComposeForUpdate&lt;TId&gt;(TId, ResourceContext)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeForUpdate__1___0_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeForUpdate``1(``0,JsonApiDotNetCore.Configuration.ResourceType)">ComposeForUpdate&lt;TId&gt;(TId, ResourceType)</h4>
   <div class="markdown level1 summary"><p>Builds a query that retrieves the primary resource, including all of its attributes and all targeted relationships, during a create/update/delete
 request.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryLayer ComposeForUpdate&lt;TId&gt;(TId id, ResourceContext primaryResource)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryLayer ComposeForUpdate&lt;TId&gt;(TId id, ResourceType primaryResource)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -364,7 +364,7 @@ request.</p>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td><span class="parametername">primaryResource</span></td>
         <td></td>
       </tr>
@@ -402,19 +402,19 @@ request.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L22">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeFromConstraints_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)">ComposeFromConstraints(ResourceContext)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)">ComposeFromConstraints(ResourceType)</h4>
   <div class="markdown level1 summary"><p>Collects constraints and builds a <a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a> out of them, used to retrieve the actual resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryLayer ComposeFromConstraints(ResourceContext requestResource)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryLayer ComposeFromConstraints(ResourceType requestResourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -427,8 +427,8 @@ request.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">requestResource</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">requestResourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -450,19 +450,19 @@ request.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L32">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceContext)">ComposeSecondaryLayerForRelationship(ResourceContext)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_ComposeSecondaryLayerForRelationship_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.ComposeSecondaryLayerForRelationship(JsonApiDotNetCore.Configuration.ResourceType)">ComposeSecondaryLayerForRelationship(ResourceType)</h4>
   <div class="markdown level1 summary"><p>Collects constraints and builds the secondary layer for a relationship endpoint.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryLayer ComposeSecondaryLayerForRelationship(ResourceContext secondaryResourceContext)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryLayer ComposeSecondaryLayerForRelationship(ResourceType secondaryResourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -475,8 +475,8 @@ request.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">secondaryResourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">secondaryResourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -498,19 +498,19 @@ request.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L17">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceContext)">GetTopFilterFromConstraints(ResourceContext)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_GetTopFilterFromConstraints_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.GetTopFilterFromConstraints(JsonApiDotNetCore.Configuration.ResourceType)">GetTopFilterFromConstraints(ResourceType)</h4>
   <div class="markdown level1 summary"><p>Builds a top-level filter from constraints, used to determine total resource count.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">FilterExpression GetTopFilterFromConstraints(ResourceContext resourceContext)</code></pre>
+    <pre><code class="lang-csharp hljs">FilterExpression GetTopFilterFromConstraints(ResourceType primaryResourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -523,8 +523,8 @@ request.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">primaryResourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -546,19 +546,19 @@ request.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceContext___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CJsonApiDotNetCore.Configuration.ResourceContext%2C%60%600%2CJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceType___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint%60%601(JsonApiDotNetCore.Queries.QueryLayer%2CJsonApiDotNetCore.Configuration.ResourceType%2C%60%600%2CJsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/IQueryLayerComposer.cs/#L37">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceContext___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceContext,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)">WrapLayerForSecondaryEndpoint&lt;TId&gt;(QueryLayer, ResourceContext, TId, RelationshipAttribute)</h4>
+  <h4 id="JsonApiDotNetCore_Queries_IQueryLayerComposer_WrapLayerForSecondaryEndpoint__1_JsonApiDotNetCore_Queries_QueryLayer_JsonApiDotNetCore_Configuration_ResourceType___0_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_" data-uid="JsonApiDotNetCore.Queries.IQueryLayerComposer.WrapLayerForSecondaryEndpoint``1(JsonApiDotNetCore.Queries.QueryLayer,JsonApiDotNetCore.Configuration.ResourceType,``0,JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute)">WrapLayerForSecondaryEndpoint&lt;TId&gt;(QueryLayer, ResourceType, TId, RelationshipAttribute)</h4>
   <div class="markdown level1 summary"><p>Wraps a layer for a secondary endpoint into a primary layer, rewriting top-level includes.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">QueryLayer WrapLayerForSecondaryEndpoint&lt;TId&gt;(QueryLayer secondaryLayer, ResourceContext primaryResourceContext, TId primaryId, RelationshipAttribute secondaryRelationship)</code></pre>
+    <pre><code class="lang-csharp hljs">QueryLayer WrapLayerForSecondaryEndpoint&lt;TId&gt;(QueryLayer secondaryLayer, ResourceType primaryResourceType, TId primaryId, RelationshipAttribute relationship)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -576,8 +576,8 @@ request.</p>
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">primaryResourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">primaryResourceType</span></td>
         <td></td>
       </tr>
       <tr>
@@ -587,7 +587,7 @@ request.</p>
       </tr>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html">RelationshipAttribute</a></td>
-        <td><span class="parametername">secondaryRelationship</span></td>
+        <td><span class="parametername">relationship</span></td>
         <td></td>
       </tr>
     </tbody>

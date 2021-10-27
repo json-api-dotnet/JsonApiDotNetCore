@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class JsonApiException
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -82,21 +82,22 @@
     <div class="level1"><span class="xref">System.Exception</span></div>
     <div class="level2"><span class="xref">JsonApiException</span></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.html">CannotClearRequiredRelationshipException</a></div>
+      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.DuplicateLocalIdValueException.html">DuplicateLocalIdValueException</a></div>
+      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.FailedOperationException.html">FailedOperationException</a></div>
+      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.IncompatibleLocalIdTypeException.html">IncompatibleLocalIdTypeException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.InvalidModelStateException.html">InvalidModelStateException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.InvalidQueryException.html">InvalidQueryException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.InvalidQueryStringParameterException.html">InvalidQueryStringParameterException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.InvalidRequestBodyException.html">InvalidRequestBodyException</a></div>
+      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.LocalIdSingleOperationException.html">LocalIdSingleOperationException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.MissingTransactionSupportException.html">MissingTransactionSupportException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.NonParticipatingTransactionException.html">NonParticipatingTransactionException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.RelationshipNotFoundException.html">RelationshipNotFoundException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.RequestMethodNotAllowedException.html">RequestMethodNotAllowedException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.html">ResourceAlreadyExistsException</a></div>
-      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html">ResourceIdInCreateResourceNotAllowedException</a></div>
-      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourceIdMismatchException.html">ResourceIdMismatchException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourceNotFoundException.html">ResourceNotFoundException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html">ResourcesInRelationshipsNotFoundException</a></div>
-      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html">ResourceTypeMismatchException</a></div>
-      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.ToManyRelationshipRequiredException.html">ToManyRelationshipRequiredException</a></div>
+      <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.UnknownLocalIdValueException.html">UnknownLocalIdValueException</a></div>
       <div class="level3"><a class="xref" href="JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.html">UnsuccessfulActionResultException</a></div>
   </div>
   <div classs="implements">
@@ -128,6 +129,9 @@
     </div>
     <div>
       <span class="xref">System.Exception.InnerException</span>
+    </div>
+    <div>
+      <span class="xref">System.Exception.Message</span>
     </div>
     <div>
       <span class="xref">System.Exception.Source</span>
@@ -171,7 +175,7 @@ public class JsonApiException : Exception, ISerializable</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_JsonApiException__ctor_JsonApiDotNetCore_Serialization_Objects_ErrorObject_System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.JsonApiException.%23ctor(JsonApiDotNetCore.Serialization.Objects.ErrorObject%2CSystem.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L29">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L27">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Errors_JsonApiException__ctor_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Errors_JsonApiException__ctor_JsonApiDotNetCore_Serialization_Objects_ErrorObject_System_Exception_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.#ctor(JsonApiDotNetCore.Serialization.Objects.ErrorObject,System.Exception)">JsonApiException(ErrorObject, Exception)</h4>
@@ -208,7 +212,7 @@ public class JsonApiException : Exception, ISerializable</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_JsonApiException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Serialization_Objects_ErrorObject__System_Exception_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.JsonApiException.%23ctor(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Serialization.Objects.ErrorObject%7D%2CSystem.Exception)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L37">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L35">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Errors_JsonApiException__ctor_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Errors_JsonApiException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Serialization_Objects_ErrorObject__System_Exception_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Serialization.Objects.ErrorObject},System.Exception)">JsonApiException(IEnumerable&lt;ErrorObject&gt;, Exception)</h4>
@@ -272,22 +276,24 @@ public class JsonApiException : Exception, ISerializable</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_JsonApiException_Message.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.JsonApiException.Message%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_JsonApiException_GetSummary.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.JsonApiException.GetSummary%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L27">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/JsonApiException.cs/#L44">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Errors_JsonApiException_Message_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.Message*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_JsonApiException_Message" data-uid="JsonApiDotNetCore.Errors.JsonApiException.Message">Message</h4>
+  <a id="JsonApiDotNetCore_Errors_JsonApiException_GetSummary_" data-uid="JsonApiDotNetCore.Errors.JsonApiException.GetSummary*"></a>
+  <h4 id="JsonApiDotNetCore_Errors_JsonApiException_GetSummary" data-uid="JsonApiDotNetCore.Errors.JsonApiException.GetSummary">GetSummary()</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override string Message { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string GetSummary()</code></pre>
   </div>
-  <h5 class="propertyValue">Property Value</h5>
+  <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
       <tr>
@@ -302,8 +308,6 @@ public class JsonApiException : Exception, ISerializable</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><span class="xref">System.Exception.Message</span></div>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.Runtime.Serialization.ISerializable</span>

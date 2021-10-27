@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IResourceDefinition&lt;TResource, TId&gt;
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -278,19 +278,19 @@ Implementing this method enables to perform validations and make changes to <cod
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Immutable.IImmutableList%7BJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Resources.IResourceDefinition%602.OnApplyIncludes(System.Collections.Immutable.IImmutableSet%7BJsonApiDotNetCore.Queries.Expressions.IncludeElementExpression%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Resources/IResourceDefinition.cs/#L47">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes*"></a>
-  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableList_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Immutable.IImmutableList{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">OnApplyIncludes(IImmutableList&lt;IncludeElementExpression&gt;)</h4>
+  <h4 id="JsonApiDotNetCore_Resources_IResourceDefinition_2_OnApplyIncludes_System_Collections_Immutable_IImmutableSet_JsonApiDotNetCore_Queries_Expressions_IncludeElementExpression__" data-uid="JsonApiDotNetCore.Resources.IResourceDefinition`2.OnApplyIncludes(System.Collections.Immutable.IImmutableSet{JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression})">OnApplyIncludes(IImmutableSet&lt;IncludeElementExpression&gt;)</h4>
   <div class="markdown level1 summary"><p>Enables to extend, replace or remove includes that are being applied on this resource type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IImmutableList&lt;IncludeElementExpression&gt; OnApplyIncludes(IImmutableList&lt;IncludeElementExpression&gt; existingIncludes)</code></pre>
+    <pre><code class="lang-csharp hljs">IImmutableSet&lt;IncludeElementExpression&gt; OnApplyIncludes(IImmutableSet&lt;IncludeElementExpression&gt; existingIncludes)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -303,7 +303,7 @@ Implementing this method enables to perform validations and make changes to <cod
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Immutable.IImmutableList</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableSet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
         <td><span class="parametername">existingIncludes</span></td>
         <td><p>An optional existing set of includes, coming from query string. Never <code>null</code>, but may be empty.</p>
 </td>
@@ -320,7 +320,7 @@ Implementing this method enables to perform validations and make changes to <cod
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Immutable.IImmutableList</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
+        <td><span class="xref">System.Collections.Immutable.IImmutableSet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Queries.Expressions.IncludeElementExpression.html">IncludeElementExpression</a>&gt;</td>
         <td><p>The new set of includes. Return an empty collection to remove all inclusions (never return <code>null</code>).</p>
 </td>
       </tr>

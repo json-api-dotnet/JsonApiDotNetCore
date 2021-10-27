@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class IncludeQueryStringParameterReader
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,13 +90,13 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_RequestResource">QueryStringParameterReader.RequestResource</a>
+      <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_RequestResourceType">QueryStringParameterReader.RequestResourceType</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_IsAtomicOperationsRequest">QueryStringParameterReader.IsAtomicOperationsRequest</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_GetResourceContextForScope_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_">QueryStringParameterReader.GetResourceContextForScope(ResourceFieldChainExpression)</a>
+      <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_GetResourceTypeForScope_JsonApiDotNetCore_Queries_Expressions_ResourceFieldChainExpression_">QueryStringParameterReader.GetResourceTypeForScope(ResourceFieldChainExpression)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html#JsonApiDotNetCore_QueryStrings_Internal_QueryStringParameterReader_AssertIsCollectionRequest">QueryStringParameterReader.AssertIsCollectionRequest()</a>
@@ -343,18 +343,18 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_ValidateSingleRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.ValidateSingleRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2CJsonApiDotNetCore.Configuration.ResourceContext%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_ValidateSingleRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Configuration_ResourceType_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.ValidateSingleRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute%2CJsonApiDotNetCore.Configuration.ResourceType%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/QueryStrings/Internal/IncludeQueryStringParameterReader.cs/#L33">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_ValidateSingleRelationship_" data-uid="JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.ValidateSingleRelationship*"></a>
-  <h4 id="JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_ValidateSingleRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Configuration_ResourceContext_System_String_" data-uid="JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.ValidateSingleRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Configuration.ResourceContext,System.String)">ValidateSingleRelationship(RelationshipAttribute, ResourceContext, String)</h4>
+  <h4 id="JsonApiDotNetCore_QueryStrings_Internal_IncludeQueryStringParameterReader_ValidateSingleRelationship_JsonApiDotNetCore_Resources_Annotations_RelationshipAttribute_JsonApiDotNetCore_Configuration_ResourceType_System_String_" data-uid="JsonApiDotNetCore.QueryStrings.Internal.IncludeQueryStringParameterReader.ValidateSingleRelationship(JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute,JsonApiDotNetCore.Configuration.ResourceType,System.String)">ValidateSingleRelationship(RelationshipAttribute, ResourceType, String)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceContext resourceContext, string path)</code></pre>
+    <pre><code class="lang-csharp hljs">protected void ValidateSingleRelationship(RelationshipAttribute relationship, ResourceType resourceType, string path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -372,8 +372,8 @@ public class IncludeQueryStringParameterReader : QueryStringParameterReader, IIn
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
       <tr>

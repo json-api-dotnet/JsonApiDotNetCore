@@ -8,7 +8,7 @@
     <title>Step-By-Step Guide to a Running API </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Step-By-Step Guide to a Running API ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -147,18 +147,18 @@ public void Configure(IApplicationBuilder app)
 }
 </code></pre><h3 id="seeding-the-database">Seeding the Database</h3>
 <p>One way to seed the database is in your Configure method:</p>
-<pre><code class="lang-c#">public void Configure(IApplicationBuilder app, AppDbContext context)
+<pre><code class="lang-c#">public void Configure(IApplicationBuilder app, AppDbContext dbContext)
 {
-    context.Database.EnsureCreated();
+    dbContext.Database.EnsureCreated();
 
-    if (!context.People.Any())
+    if (!dbContext.People.Any())
     {
-        context.People.Add(new Person
+        dbContext.People.Add(new Person
         {
             Name = &quot;John Doe&quot;
         });
 
-        context.SaveChanges();
+        dbContext.SaveChanges();
     }
 
     app.UseRouting();

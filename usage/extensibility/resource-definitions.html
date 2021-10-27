@@ -8,7 +8,7 @@
     <title>Resource Definitions </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Resource Definitions ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -200,11 +200,8 @@ Content-Type: application/vnd.api+json
 
     public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
     {
-        var resourceContext = ResourceGraph.GetResourceContext&lt;Account&gt;();
-
-        var isSuspendedAttribute =
-            resourceContext.Attributes.Single(account =&gt;
-                account.Property.Name == nameof(Account.IsSuspended));
+        var isSuspendedAttribute = ResourceType.Attributes.Single(account =&gt;
+            account.Property.Name == nameof(Account.IsSuspended));
 
         var isNotSuspended = new ComparisonExpression(ComparisonOperator.Equals,
             new ResourceFieldChainExpression(isSuspendedAttribute),

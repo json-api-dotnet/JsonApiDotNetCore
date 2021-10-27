@@ -8,7 +8,7 @@
     <title>Resource Repositories </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Resource Repositories ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../../favicon.ico">
     <link rel="stylesheet" href="../../styles/docfx.vendor.css">
@@ -95,12 +95,12 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
     private readonly IAuthenticationService _authenticationService;
 
     public ArticleRepository(IAuthenticationService authenticationService,
-        ITargetedFields targetedFields, IDbContextResolver contextResolver,
+        ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
             resourceFactory, constraintProviders, loggerFactory) 
     {
         _authenticationService = authenticationService;
@@ -119,13 +119,13 @@ This example shows a single <code>DbContextARepository</code> for all entities t
     where TResource : class, IIdentifiable&lt;int&gt;
 {
     public DbContextARepository(ITargetedFields targetedFields,
-        DbContextResolver&lt;DbContextA&gt; contextResolver,
+        DbContextResolver&lt;DbContextA&gt; dbContextResolver,
     //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
         IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
         ILoggerFactory loggerFactory)
-        : base(targetedFields, contextResolver, resourceGraph, genericServiceFactory,
+        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
             resourceFactory, constraintProviders, loggerFactory)
     {
     }

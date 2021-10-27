@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace JsonApiDotNetCore.Errors
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -80,6 +80,15 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.CannotClearRequiredRelationshipException.html">CannotClearRequiredRelationshipException</a></h4>
       <section><p>The error that is thrown when a required relationship is cleared.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.DuplicateLocalIdValueException.html">DuplicateLocalIdValueException</a></h4>
+      <section><p>The error that is thrown when assigning a local ID that was already assigned in an earlier operation.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.FailedOperationException.html">FailedOperationException</a></h4>
+      <section><p>The error that is thrown when an operation in an atomic:operations request failed to be processed for unknown reasons.</p>
+</section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.IncompatibleLocalIdTypeException.html">IncompatibleLocalIdTypeException</a></h4>
+      <section><p>The error that is thrown when referencing a local ID that was assigned to a different resource type.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.InvalidConfigurationException.html">InvalidConfigurationException</a></h4>
       <section><p>The error that is thrown when configured usage of this library is invalid.</p>
 </section>
@@ -98,6 +107,9 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.JsonApiException.html">JsonApiException</a></h4>
       <section><p>The base class for an <span class="xref">System.Exception</span> that represents one or more JSON:API error objects in an unsuccessful response.</p>
 </section>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.LocalIdSingleOperationException.html">LocalIdSingleOperationException</a></h4>
+      <section><p>The error that is thrown when assigning and referencing a local ID within the same operation.</p>
+</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.MissingResourceInRelationship.html">MissingResourceInRelationship</a></h4>
       <section></section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.MissingTransactionSupportException.html">MissingTransactionSupportException</a></h4>
@@ -115,23 +127,14 @@
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceAlreadyExistsException.html">ResourceAlreadyExistsException</a></h4>
       <section><p>The error that is thrown when creating a resource with an ID that already exists.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceIdInCreateResourceNotAllowedException.html">ResourceIdInCreateResourceNotAllowedException</a></h4>
-      <section><p>The error that is thrown when a resource creation request or operation is received that contains a client-generated ID.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceIdMismatchException.html">ResourceIdMismatchException</a></h4>
-      <section><p>The error that is thrown when the resource ID in the request body does not match the ID in the current endpoint URL.</p>
-</section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceNotFoundException.html">ResourceNotFoundException</a></h4>
       <section><p>The error that is thrown when a resource does not exist.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourcesInRelationshipsNotFoundException.html">ResourcesInRelationshipsNotFoundException</a></h4>
       <section><p>The error that is thrown when referencing one or more non-existing resources in one or more relationships.</p>
 </section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ResourceTypeMismatchException.html">ResourceTypeMismatchException</a></h4>
-      <section><p>The error that is thrown when the resource type in the request body does not match the type expected at the current endpoint URL.</p>
-</section>
-      <h4><a class="xref" href="JsonApiDotNetCore.Errors.ToManyRelationshipRequiredException.html">ToManyRelationshipRequiredException</a></h4>
-      <section><p>The error that is thrown when an attempt is made to update a to-one relationship from a to-many relationship endpoint.</p>
+      <h4><a class="xref" href="JsonApiDotNetCore.Errors.UnknownLocalIdValueException.html">UnknownLocalIdValueException</a></h4>
+      <section><p>The error that is thrown when referencing a local ID that hasn&apos;t been assigned.</p>
 </section>
       <h4><a class="xref" href="JsonApiDotNetCore.Errors.UnsuccessfulActionResultException.html">UnsuccessfulActionResultException</a></h4>
       <section><p>The error that is thrown when an <span class="xref">Microsoft.AspNetCore.Mvc.IActionResult</span> with non-success status is returned from a controller method.</p>

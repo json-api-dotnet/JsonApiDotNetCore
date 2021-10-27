@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class SparseFieldSetCache
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -82,6 +82,10 @@
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">SparseFieldSetCache</span></div>
   </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.html">ISparseFieldSetCache</a></div>
+  </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
@@ -110,9 +114,13 @@
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[PublicAPI]
-public sealed class SparseFieldSetCache</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SparseFieldSetCache : ISparseFieldSetCache</code></pre>
   </div>
+  <h5 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This cache ensures that for each request (or operation per request), the resource definition callback is executed only twice per resource type. The
+first invocation is used to obtain the fields to retrieve from the underlying data store, while the second invocation is used to determine which
+fields to write to the response body.</p>
+</div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
@@ -120,7 +128,7 @@ public sealed class SparseFieldSetCache</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.%23ctor(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Queries.IQueryConstraintProvider%7D%2CJsonApiDotNetCore.Resources.IResourceDefinitionAccessor)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L24">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache__ctor_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)">SparseFieldSetCache(IEnumerable&lt;IQueryConstraintProvider&gt;, IResourceDefinitionAccessor)</h4>
@@ -156,18 +164,20 @@ public sealed class SparseFieldSetCache</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L98">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L95">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceContext)">GetIdAttributeSetForRelationshipQuery(ResourceContext)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetIdAttributeSetForRelationshipQuery_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetIdAttributeSetForRelationshipQuery(JsonApiDotNetCore.Configuration.ResourceType)">GetIdAttributeSetForRelationshipQuery(ResourceType)</h4>
+  <div class="markdown level1 summary"><p>Gets the set of attributes to retrieve from the underlying data store for relationship endpoints. This always returns &apos;id&apos;, along with any additional
+attributes from resource definition callback.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;AttrAttribute&gt; GetIdAttributeSetForRelationshipQuery(ResourceContext resourceContext)</code></pre>
+    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;AttrAttribute&gt; GetIdAttributeSetForRelationshipQuery(ResourceType resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -180,8 +190,8 @@ public sealed class SparseFieldSetCache</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -203,18 +213,19 @@ public sealed class SparseFieldSetCache</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L76">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L72">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceContext)">GetSparseFieldSetForQuery(ResourceContext)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForQuery_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForQuery(JsonApiDotNetCore.Configuration.ResourceType)">GetSparseFieldSetForQuery(ResourceType)</h4>
+  <div class="markdown level1 summary"><p>Gets the set of sparse fields to retrieve from the underlying data store. Returns an empty set to retrieve all fields.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;ResourceFieldAttribute&gt; GetSparseFieldSetForQuery(ResourceContext resourceContext)</code></pre>
+    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;ResourceFieldAttribute&gt; GetSparseFieldSetForQuery(ResourceType resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -227,8 +238,8 @@ public sealed class SparseFieldSetCache</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -250,18 +261,19 @@ public sealed class SparseFieldSetCache</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceContext_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L116">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L114">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer*"></a>
-  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceContext_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceContext)">GetSparseFieldSetForSerializer(ResourceContext)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_GetSparseFieldSetForSerializer_JsonApiDotNetCore_Configuration_ResourceType_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.GetSparseFieldSetForSerializer(JsonApiDotNetCore.Configuration.ResourceType)">GetSparseFieldSetForSerializer(ResourceType)</h4>
+  <div class="markdown level1 summary"><p>Gets the evaluated set of sparse fields to serialize into the response body.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;ResourceFieldAttribute&gt; GetSparseFieldSetForSerializer(ResourceContext resourceContext)</code></pre>
+    <pre><code class="lang-csharp hljs">public IImmutableSet&lt;ResourceFieldAttribute&gt; GetSparseFieldSetForSerializer(ResourceType resourceType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -274,8 +286,8 @@ public sealed class SparseFieldSetCache</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
-        <td><span class="parametername">resourceContext</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
+        <td><span class="parametername">resourceType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -300,7 +312,7 @@ public sealed class SparseFieldSetCache</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_Reset.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L154">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L152">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_Reset_" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset*"></a>
   <h4 id="JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache_Reset" data-uid="JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.Reset">Reset()</h4>
@@ -309,6 +321,10 @@ public sealed class SparseFieldSetCache</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public void Reset()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="JsonApiDotNetCore.Queries.Internal.ISparseFieldSetCache.html">ISparseFieldSetCache</a>
   </div>
 </article>
           </div>
@@ -321,7 +337,7 @@ public sealed class SparseFieldSetCache</code></pre>
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Queries_Internal_SparseFieldSetCache.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Queries/Internal/SparseFieldSetCache.cs/#L13" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

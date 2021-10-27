@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IResourceGraph
    ">
-    <meta name="generator" content="docfx 2.58.4.0">
+    <meta name="generator" content="docfx 2.58.5.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -91,7 +91,7 @@ public interface IResourceGraph</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes%60%601(System.Linq.Expressions.Expression%7BSystem.Func%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L70">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L73">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetAttributes__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetAttributes``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">GetAttributes&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -116,7 +116,8 @@ public interface IResourceGraph</code></pre>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource r) =&gt; new { r.Attribute1, r.Attribute2 }</p>
+        <td><p>Should be of the form: 
+(TResource resource) =&gt; new { resource.attribute1, resource.Attribute2 }</p>
 </td>
       </tr>
     </tbody>
@@ -147,7 +148,7 @@ public interface IResourceGraph</code></pre>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource type for which to retrieve attributes.</p>
+        <td><p>The resource CLR type for which to retrieve attributes.</p>
 </td>
       </tr>
     </tbody>
@@ -157,7 +158,7 @@ public interface IResourceGraph</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetFields__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetFields%60%601(System.Linq.Expressions.Expression%7BSystem.Func%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L58">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L59">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetFields_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetFields*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetFields__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetFields``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">GetFields&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -182,7 +183,8 @@ public interface IResourceGraph</code></pre>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource r) =&gt; new { r.Field1, r.Field2 }</p>
+        <td><p>Should be of the form: 
+(TResource resource) =&gt; new { resource.Attribute1, resource.Relationship2 }</p>
 </td>
       </tr>
     </tbody>
@@ -213,7 +215,7 @@ public interface IResourceGraph</code></pre>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource type for which to retrieve fields.</p>
+        <td><p>The resource CLR type for which to retrieve fields.</p>
 </td>
       </tr>
     </tbody>
@@ -223,7 +225,7 @@ public interface IResourceGraph</code></pre>
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships%60%601(System.Linq.Expressions.Expression%7BSystem.Func%7B%60%600%2CSystem.Object%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L82">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L87">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships*"></a>
   <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetRelationships__1_System_Linq_Expressions_Expression_System_Func___0_System_Object___" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetRelationships``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">GetRelationships&lt;TResource&gt;(Expression&lt;Func&lt;TResource, Object&gt;&gt;)</h4>
@@ -248,7 +250,8 @@ public interface IResourceGraph</code></pre>
       <tr>
         <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TResource, <span class="xref">System.Object</span>&gt;&gt;</td>
         <td><span class="parametername">selector</span></td>
-        <td><p>Should be of the form: (TResource r) =&gt; new { r.Relationship1, r.Relationship2 }</p>
+        <td><p>Should be of the form: 
+(TResource resource) =&gt; new { resource.Relationship1, resource.Relationship2 }</p>
 </td>
       </tr>
     </tbody>
@@ -279,27 +282,26 @@ public interface IResourceGraph</code></pre>
     <tbody>
       <tr>
         <td><span class="parametername">TResource</span></td>
-        <td><p>The resource type for which to retrieve relationships.</p>
+        <td><p>The resource CLR type for which to retrieve relationships.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L26">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L25">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_System_String_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext(System.String)">GetResourceContext(String)</h4>
-  <div class="markdown level1 summary"><p>Gets the resource metadata for the resource that is publicly exposed by the specified name. Throws an <span class="xref">System.InvalidOperationException</span> when
-not found.</p>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_System_String_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType(System.String)">GetResourceType(String)</h4>
+  <div class="markdown level1 summary"><p>Gets the metadata for the resource that is publicly exposed by the specified name. Throws an <span class="xref">System.InvalidOperationException</span> when not found.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceContext GetResourceContext(string publicName)</code></pre>
+    <pre><code class="lang-csharp hljs">ResourceType GetResourceType(string publicName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -328,26 +330,26 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L31">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L30">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext(System.Type)">GetResourceContext(Type)</h4>
-  <div class="markdown level1 summary"><p>Gets the resource metadata for the specified resource type. Throws an <span class="xref">System.InvalidOperationException</span> when not found.</p>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType(System.Type)">GetResourceType(Type)</h4>
+  <div class="markdown level1 summary"><p>Gets the metadata for the resource of the specified CLR type. Throws an <span class="xref">System.InvalidOperationException</span> when not found.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceContext GetResourceContext(Type resourceType)</code></pre>
+    <pre><code class="lang-csharp hljs">ResourceType GetResourceType(Type resourceClrType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -361,7 +363,7 @@ not found.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">resourceType</span></td>
+        <td><span class="parametername">resourceClrType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -376,26 +378,26 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType__1.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L36">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L35">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContext__1" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContext``1">GetResourceContext&lt;TResource&gt;()</h4>
-  <div class="markdown level1 summary"><p>Gets the resource metadata for the specified resource type. Throws an <span class="xref">System.InvalidOperationException</span> when not found.</p>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceType__1" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceType``1">GetResourceType&lt;TResource&gt;()</h4>
+  <div class="markdown level1 summary"><p>Gets the metadata for the resource of the specified CLR type. Throws an <span class="xref">System.InvalidOperationException</span> when not found.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceContext GetResourceContext&lt;TResource&gt;()
+    <pre><code class="lang-csharp hljs">ResourceType GetResourceType&lt;TResource&gt;()
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -408,7 +410,7 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -430,19 +432,19 @@ not found.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContexts.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContexts%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceTypes.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceTypes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L20">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContexts_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContexts*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceContexts" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceContexts">GetResourceContexts()</h4>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceTypes_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceTypes*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_GetResourceTypes" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.GetResourceTypes">GetResourceTypes()</h4>
   <div class="markdown level1 summary"><p>Gets the metadata for all registered resources.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">IReadOnlySet&lt;ResourceContext&gt; GetResourceContexts()</code></pre>
+    <pre><code class="lang-csharp hljs">IReadOnlySet&lt;ResourceType&gt; GetResourceTypes()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -454,26 +456,26 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Collections.Generic.IReadOnlySet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a>&gt;</td>
+        <td><span class="xref">System.Collections.Generic.IReadOnlySet</span>&lt;<a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_System_String_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L42">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L41">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_System_String_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext(System.String)">TryGetResourceContext(String)</h4>
-  <div class="markdown level1 summary"><p>Attempts to get the resource metadata for the resource that is publicly exposed by the specified name. Returns <code>null</code> when not found.</p>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_System_String_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType(System.String)">TryGetResourceType(String)</h4>
+  <div class="markdown level1 summary"><p>Attempts to get the metadata for the resource that is publicly exposed by the specified name. Returns <code>null</code> when not found.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceContext TryGetResourceContext(string publicName)</code></pre>
+    <pre><code class="lang-csharp hljs">ResourceType TryGetResourceType(string publicName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -502,26 +504,26 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_System_Type_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L47">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Configuration/IResourceGraph.cs/#L46">View Source</a>
   </span>
-  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext*"></a>
-  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceContext_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceContext(System.Type)">TryGetResourceContext(Type)</h4>
-  <div class="markdown level1 summary"><p>Attempts to get the resource metadata for the specified resource type. Returns <code>null</code> when not found.</p>
+  <a id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType*"></a>
+  <h4 id="JsonApiDotNetCore_Configuration_IResourceGraph_TryGetResourceType_System_Type_" data-uid="JsonApiDotNetCore.Configuration.IResourceGraph.TryGetResourceType(System.Type)">TryGetResourceType(Type)</h4>
+  <div class="markdown level1 summary"><p>Attempts to get metadata for the resource of the specified CLR type. Returns <code>null</code> when not found.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ResourceContext TryGetResourceContext(Type resourceType)</code></pre>
+    <pre><code class="lang-csharp hljs">ResourceType TryGetResourceType(Type resourceClrType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -535,7 +537,7 @@ not found.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">resourceType</span></td>
+        <td><span class="parametername">resourceClrType</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -550,7 +552,7 @@ not found.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceContext.html">ResourceContext</a></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.ResourceType.html">ResourceType</a></td>
         <td></td>
       </tr>
     </tbody>
