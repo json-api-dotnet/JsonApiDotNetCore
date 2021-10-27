@@ -273,7 +273,7 @@ namespace JsonApiDotNetCore.Repositories
                 object? rightValueEvaluated = await VisitSetRelationshipAsync(resourceFromDatabase, relationship, rightValue, WriteOperationKind.UpdateResource,
                     cancellationToken);
 
-                AssertIsNotClearingRequiredRelationship(relationship, resourceFromDatabase, rightValueEvaluated);
+                AssertIsNotClearingRequiredToOneRelationship(relationship, resourceFromDatabase, rightValueEvaluated);
 
                 await UpdateRelationshipAsync(relationship, resourceFromDatabase, rightValueEvaluated, cancellationToken);
             }
@@ -292,40 +292,21 @@ namespace JsonApiDotNetCore.Repositories
             _dbContext.ResetChangeTracker();
         }
 
-        protected void AssertIsNotClearingRequiredRelationship(RelationshipAttribute relationship, TResource leftResource, object? rightValue)
+        protected void AssertIsNotClearingRequiredToOneRelationship(RelationshipAttribute relationship, TResource leftResource, object? rightValue)
         {
-            if (relationship is HasManyAttribute { IsManyToMany: true })
+            if (relationship is HasOneAttribute)
             {
-                // Many-to-many relationships cannot be required.
-                return;
+                INavigation? navigation = TryGetNavigation(relationship);
+                bool isRelationshipRequired = navigation?.ForeignKey?.IsRequired ?? false;
+
+                bool isClearingRelationship = rightValue == null;
+
+                if (isRelationshipRequired && isClearingRelationship)
+                {
+                    string resourceName = _resourceGraph.GetResourceType<TResource>().PublicName;
+                    throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId!, resourceName);
+                }
             }
-
-            INavigation? navigation = TryGetNavigation(relationship);
-            bool relationshipIsRequired = navigation?.ForeignKey?.IsRequired ?? false;
-
-            bool relationshipIsBeingCleared = relationship is HasManyAttribute hasManyRelationship
-                ? IsToManyRelationshipBeingCleared(hasManyRelationship, leftResource, rightValue)
-                : rightValue == null;
-
-            if (relationshipIsRequired && relationshipIsBeingCleared)
-            {
-                string resourceName = _resourceGraph.GetResourceType<TResource>().PublicName;
-                throw new CannotClearRequiredRelationshipException(relationship.PublicName, leftResource.StringId!, resourceName);
-            }
-        }
-
-        private bool IsToManyRelationshipBeingCleared(HasManyAttribute hasManyRelationship, TResource leftResource, object? valueToAssign)
-        {
-            ICollection<IIdentifiable> newRightResourceIds = _collectionConverter.ExtractResources(valueToAssign);
-
-            object? existingRightValue = hasManyRelationship.GetValue(leftResource);
-
-            HashSet<IIdentifiable> existingRightResourceIds =
-                _collectionConverter.ExtractResources(existingRightValue).ToHashSet(IdentifiableComparer.Instance);
-
-            existingRightResourceIds.ExceptWith(newRightResourceIds);
-
-            return existingRightResourceIds.Any();
         }
 
         /// <inheritdoc />
@@ -425,7 +406,7 @@ namespace JsonApiDotNetCore.Repositories
             object? rightValueEvaluated =
                 await VisitSetRelationshipAsync(leftResource, relationship, rightValue, WriteOperationKind.SetRelationship, cancellationToken);
 
-            AssertIsNotClearingRequiredRelationship(relationship, leftResource, rightValueEvaluated);
+            AssertIsNotClearingRequiredToOneRelationship(relationship, leftResource, rightValueEvaluated);
 
             await UpdateRelationshipAsync(relationship, leftResource, rightValueEvaluated, cancellationToken);
 
@@ -519,7 +500,7 @@ namespace JsonApiDotNetCore.Repositories
                 HashSet<IIdentifiable> rightResourceIdsToStore = rightResourceIdsStored.ToHashSet(IdentifiableComparer.Instance);
                 rightResourceIdsToStore.ExceptWith(rightResourceIdsToRemove);
 
-                AssertIsNotClearingRequiredRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
+                AssertIsNotClearingRequiredToOneRelationship(relationship, leftResourceTracked, rightResourceIdsToStore);
 
                 await UpdateRelationshipAsync(relationship, leftResourceTracked, rightResourceIdsToStore, cancellationToken);
 

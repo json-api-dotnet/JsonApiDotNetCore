@@ -256,7 +256,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_through_primary_endpoint()
+        public async Task Clearing_OneToMany_relationship_through_primary_endpoint_triggers_cascading_delete()
         {
             // Arrange
             Order existingOrder = _fakers.Orders.Generate();
@@ -288,23 +288,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             string route = $"/customers/{existingOrder.Customer.StringId}";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Should().BeEmpty();
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Failed to clear a required relationship.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                orderInDatabase.Should().BeNull();
 
-            error.Detail.Should().Be($"The relationship 'orders' on resource type 'customers' with ID '{existingOrder.StringId}' " +
-                "cannot be cleared because it is a required relationship.");
+                Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
+                customerInDatabase.Orders.Should().BeEmpty();
+            });
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_by_updating_through_relationship_endpoint()
+        public async Task Clearing_OneToMany_relationship_through_update_relationship_endpoint_triggers_cascading_delete()
         {
             // Arrange
             Order existingOrder = _fakers.Orders.Generate();
@@ -325,23 +327,25 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Should().BeEmpty();
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Failed to clear a required relationship.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                orderInDatabase.Should().BeNull();
 
-            error.Detail.Should().Be($"The relationship 'orders' on resource type 'customers' with ID '{existingOrder.StringId}' " +
-                "cannot be cleared because it is a required relationship.");
+                Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
+                customerInDatabase.Orders.Should().BeEmpty();
+            });
         }
 
         [Fact]
-        public async Task Cannot_clear_required_OneToMany_relationship_by_deleting_through_relationship_endpoint()
+        public async Task Clearing_OneToMany_relationship_through_delete_relationship_endpoint_triggers_cascading_delete()
         {
             // Arrange
             Order existingOrder = _fakers.Orders.Generate();
@@ -369,19 +373,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             string route = $"/customers/{existingOrder.Customer.StringId}/relationships/orders";
 
             // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteDeleteAsync<Document>(route, requestBody);
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.NoContent);
 
-            responseDocument.Errors.Should().HaveCount(1);
+            responseDocument.Should().BeEmpty();
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Failed to clear a required relationship.");
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                orderInDatabase.Should().BeNull();
 
-            error.Detail.Should().Be($"The relationship 'orders' on resource type 'customers' with ID '{existingOrder.StringId}' " +
-                "cannot be cleared because it is a required relationship.");
+                Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
+                customerInDatabase.Orders.Should().BeEmpty();
+            });
         }
 
         [Fact]
