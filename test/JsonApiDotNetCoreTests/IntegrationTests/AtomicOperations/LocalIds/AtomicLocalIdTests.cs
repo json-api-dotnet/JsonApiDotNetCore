@@ -2098,7 +2098,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
@@ -2155,7 +2155,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
@@ -2215,7 +2215,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
@@ -2289,7 +2289,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
@@ -2362,7 +2362,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
@@ -2432,7 +2432,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Type mismatch in local ID usage.");
+            error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }

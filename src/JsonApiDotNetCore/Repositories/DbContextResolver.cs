@@ -8,23 +8,23 @@ namespace JsonApiDotNetCore.Repositories
     public sealed class DbContextResolver<TDbContext> : IDbContextResolver
         where TDbContext : DbContext
     {
-        private readonly TDbContext _context;
+        private readonly TDbContext _dbContext;
 
-        public DbContextResolver(TDbContext context)
+        public DbContextResolver(TDbContext dbContext)
         {
-            ArgumentGuard.NotNull(context, nameof(context));
+            ArgumentGuard.NotNull(dbContext, nameof(dbContext));
 
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public DbContext GetContext()
         {
-            return _context;
+            return _dbContext;
         }
 
         public TDbContext GetTypedContext()
         {
-            return _context;
+            return _dbContext;
         }
     }
 }

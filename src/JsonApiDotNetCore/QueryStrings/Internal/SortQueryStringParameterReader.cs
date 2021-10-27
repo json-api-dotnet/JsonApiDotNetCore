@@ -24,11 +24,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
         public SortQueryStringParameterReader(IJsonApiRequest request, IResourceGraph resourceGraph)
             : base(request, resourceGraph)
         {
-            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
-            _sortParser = new SortParser(resourceGraph, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+            _sortParser = new SortParser(ValidateSingleField);
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowSort))
             {
@@ -75,7 +75,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
             if (parameterScope.Scope == null)
             {
@@ -87,8 +87,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private SortExpression GetSort(string parameterValue, ResourceFieldChainExpression scope)
         {
-            ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-            return _sortParser.Parse(parameterValue, resourceContextInScope);
+            ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
+            return _sortParser.Parse(parameterValue, resourceTypeInScope);
         }
 
         /// <inheritdoc />

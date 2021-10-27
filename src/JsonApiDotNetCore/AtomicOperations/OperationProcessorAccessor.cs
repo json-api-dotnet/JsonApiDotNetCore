@@ -14,15 +14,12 @@ namespace JsonApiDotNetCore.AtomicOperations
     [PublicAPI]
     public class OperationProcessorAccessor : IOperationProcessorAccessor
     {
-        private readonly IResourceGraph _resourceGraph;
         private readonly IServiceProvider _serviceProvider;
 
-        public OperationProcessorAccessor(IResourceGraph resourceGraph, IServiceProvider serviceProvider)
+        public OperationProcessorAccessor(IServiceProvider serviceProvider)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
 
-            _resourceGraph = resourceGraph;
             _serviceProvider = serviceProvider;
         }
 
@@ -37,10 +34,10 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
         {
-            Type processorInterface = GetProcessorInterface(operation.Kind);
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.Resource.GetType());
+            Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation.GetValueOrDefault());
+            ResourceType resourceType = operation.Request.PrimaryResourceType;
 
-            Type processorType = processorInterface.MakeGenericType(resourceContext.ResourceType, resourceContext.IdentityType);
+            Type processorType = processorInterface.MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);
             return (IOperationProcessor)_serviceProvider.GetRequiredService(processorType);
         }
 

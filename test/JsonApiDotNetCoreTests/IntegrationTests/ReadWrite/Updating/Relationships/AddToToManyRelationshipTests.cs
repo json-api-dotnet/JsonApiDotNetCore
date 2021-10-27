@@ -58,8 +58,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("Only to-many relationships can be updated through this endpoint.");
-            error.Detail.Should().Be("Relationship 'assignee' must be a to-many relationship.");
+            error.Title.Should().Be("Failed to deserialize request body: Only to-many relationships can be targeted through this endpoint.");
+            error.Detail.Should().Be("Relationship 'assignee' is not a to-many relationship.");
+            error.Source.Should().BeNull();
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -202,8 +204,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Missing request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Missing request body.");
             error.Detail.Should().BeNull();
+            error.Source.Should().BeNull();
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -241,8 +245,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -281,8 +287,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.Pointer.Should().Be("/data[0]/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -320,8 +328,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' element.");
-            error.Detail.Should().StartWith("Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -506,6 +516,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'workItems' with ID '{workItemId}' does not exist.");
+            error.Source.Should().BeNull();
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -546,6 +558,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
             error.StatusCode.Should().Be(HttpStatusCode.NotFound);
             error.Title.Should().Be("The requested relationship does not exist.");
             error.Detail.Should().Be($"Resource of type 'workItems' does not contain a relationship named '{Unknown.Relationship}'.");
+            error.Source.Should().BeNull();
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -585,10 +599,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-
-            error.Detail.Should().Be("Expected resource of type 'workTags' in POST request body at endpoint " +
-                $"'/workItems/{existingWorkItem.StringId}/relationships/tags', instead of 'userAccounts'.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'userAccounts' is incompatible with type 'workTags' of relationship 'tags'.");
+            error.Source.Pointer.Should().Be("/data[0]/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -676,7 +690,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
         }
 
         [Fact]
-        public async Task Cannot_add_with_null_data_in_OneToMany_relationship()
+        public async Task Cannot_add_with_missing_data_in_OneToMany_relationship()
         {
             // Arrange
             WorkItem existingWorkItem = _fakers.WorkItem.Generate();
@@ -689,7 +703,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             var requestBody = new
             {
-                data = (object)null
             };
 
             string route = $"/workItems/{existingWorkItem.StringId}/relationships/subscribers";
@@ -704,8 +717,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().StartWith("Expected data[] element for 'subscribers' relationship. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Should().BeNull();
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -737,8 +752,47 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Relationshi
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().StartWith("Expected data[] element for 'tags' relationship. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_add_with_object_data_in_ManyToMany_relationship()
+        {
+            // Arrange
+            WorkItem existingWorkItem = _fakers.WorkItem.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.WorkItems.Add(existingWorkItem);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                data = new
+                {
+                }
+            };
+
+            string route = $"/workItems/{existingWorkItem.StringId}/relationships/tags";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of an object.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             return base.GetLogLevel(exception);
         }
 
-        protected override Document CreateErrorDocument(Exception exception)
+        protected override IReadOnlyList<ErrorObject> CreateErrorResponse(Exception exception)
         {
             if (exception is ConsumerArticleIsNoLongerAvailableException articleException)
             {
@@ -34,7 +34,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
                 };
             }
 
-            return base.CreateErrorDocument(exception);
+            return base.CreateErrorResponse(exception);
         }
     }
 }

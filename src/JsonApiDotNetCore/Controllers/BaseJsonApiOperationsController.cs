@@ -113,8 +113,6 @@ namespace JsonApiDotNetCore.Controllers
 
             ArgumentGuard.NotNull(operations, nameof(operations));
 
-            ValidateClientGeneratedIds(operations);
-
             if (_options.ValidateModelState)
             {
                 ValidateModelState(operations);
@@ -122,24 +120,6 @@ namespace JsonApiDotNetCore.Controllers
 
             IList<OperationContainer> results = await _processor.ProcessAsync(operations, cancellationToken);
             return results.Any(result => result != null) ? Ok(results) : NoContent();
-        }
-
-        protected virtual void ValidateClientGeneratedIds(IEnumerable<OperationContainer> operations)
-        {
-            if (!_options.AllowClientGeneratedIds)
-            {
-                int index = 0;
-
-                foreach (OperationContainer operation in operations)
-                {
-                    if (operation.Kind == WriteOperationKind.CreateResource && operation.Resource.StringId != null)
-                    {
-                        throw new ResourceIdInCreateResourceNotAllowedException(index);
-                    }
-
-                    index++;
-                }
-            }
         }
 
         protected virtual void ValidateModelState(IEnumerable<OperationContainer> operations)
@@ -150,14 +130,13 @@ namespace JsonApiDotNetCore.Controllers
             var violations = new List<ModelStateViolation>();
 
             int index = 0;
+            using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
 
             foreach (OperationContainer operation in operations)
             {
-                if (operation.Kind == WriteOperationKind.CreateResource || operation.Kind == WriteOperationKind.UpdateResource)
+                if (operation.Request.WriteOperation is WriteOperationKind.CreateResource or WriteOperationKind.UpdateResource)
                 {
-                    _targetedFields.Attributes = operation.TargetedFields.Attributes;
-                    _targetedFields.Relationships = operation.TargetedFields.Relationships;
-
+                    _targetedFields.CopyFrom(operation.TargetedFields);
                     _request.CopyFrom(operation.Request);
 
                     var validationContext = new ActionContext();
@@ -178,21 +157,21 @@ namespace JsonApiDotNetCore.Controllers
             }
         }
 
-        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceType, int operationIndex, List<ModelStateViolation> violations)
+        private static void AddValidationErrors(ModelStateDictionary modelState, Type resourceClrType, int operationIndex, List<ModelStateViolation> violations)
         {
             foreach ((string propertyName, ModelStateEntry entry) in modelState)
             {
-                AddValidationErrors(entry, propertyName, resourceType, operationIndex, violations);
+                AddValidationErrors(entry, propertyName, resourceClrType, operationIndex, violations);
             }
         }
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, int operationIndex,
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceClrType, int operationIndex,
             List<ModelStateViolation> violations)
         {
             foreach (ModelError error in entry.Errors)
             {
                 string prefix = $"/atomic:operations[{operationIndex}]/data/attributes/";
-                var violation = new ModelStateViolation(prefix, propertyName, resourceType, error);
+                var violation = new ModelStateViolation(prefix, propertyName, resourceClrType, error);
 
                 violations.Add(violation);
             }

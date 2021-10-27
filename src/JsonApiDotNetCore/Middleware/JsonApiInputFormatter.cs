@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Request;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +22,10 @@ namespace JsonApiDotNetCore.Middleware
             ArgumentGuard.NotNull(context, nameof(context));
 
             var reader = context.HttpContext.RequestServices.GetRequiredService<IJsonApiReader>();
-            return await reader.ReadAsync(context);
+
+            object model = await reader.ReadAsync(context.HttpContext.Request);
+
+            return model == null ? await InputFormatterResult.NoValueAsync() : await InputFormatterResult.SuccessAsync(model);
         }
     }
 }

@@ -186,6 +186,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             error.Title.Should().Be("Another resource with the specified ID already exists.");
             error.Detail.Should().Be($"Another resource of type 'textLanguages' with ID '{languageToCreate.StringId}' already exists.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -225,9 +226,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int32'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -263,9 +265,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'data.id' or 'data.lid' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
     }
 }

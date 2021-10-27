@@ -1,4 +1,5 @@
 using System;
+using JsonApiDotNetCore.Configuration;
 
 namespace JsonApiDotNetCore.Middleware
 {
@@ -10,11 +11,11 @@ namespace JsonApiDotNetCore.Middleware
         /// <summary>
         /// Gets the associated resource type for the provided controller type.
         /// </summary>
-        Type GetResourceTypeForController(Type controllerType);
+        ResourceType TryGetResourceTypeForController(Type controllerType);
 
         /// <summary>
         /// Gets the associated controller name for the provided resource type.
         /// </summary>
-        string GetControllerNameForResourceType(Type resourceType);
+        string TryGetControllerNameForResourceType(ResourceType resourceType);
     }
 }

@@ -28,21 +28,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NonJsonApiControllers
                 return BadRequest("Please send your name.");
             }
 
-            string result = "Hello, " + name;
+            string result = $"Hello, {name}";
             return Ok(result);
         }
 
         [HttpPut]
         public IActionResult Put([FromBody] string name)
         {
-            string result = "Hi, " + name;
+            string result = $"Hi, {name}";
             return Ok(result);
         }
 
         [HttpPatch]
         public IActionResult Patch(string name)
         {
-            string result = "Good day, " + name;
+            string result = $"Good day, {name}";
             return Ok(result);
         }
 

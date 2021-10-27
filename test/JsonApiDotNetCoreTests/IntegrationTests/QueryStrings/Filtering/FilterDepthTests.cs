@@ -415,7 +415,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Data.ManyValue.Should().HaveCount(1);
 
             responseDocument.Included.Should().HaveCount(2);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blog.Owner.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blog.Owner.Posts[1].StringId);
         }
 
@@ -530,8 +534,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
             responseDocument.Included.Should().HaveCount(3);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+
+            responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
         }
     }

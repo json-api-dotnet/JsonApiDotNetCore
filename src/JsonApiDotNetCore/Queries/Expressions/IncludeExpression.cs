@@ -16,9 +16,9 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         public static readonly IncludeExpression Empty = new();
 
-        public IImmutableList<IncludeElementExpression> Elements { get; }
+        public IImmutableSet<IncludeElementExpression> Elements { get; }
 
-        public IncludeExpression(IImmutableList<IncludeElementExpression> elements)
+        public IncludeExpression(IImmutableSet<IncludeElementExpression> elements)
         {
             ArgumentGuard.NotNullNorEmpty(elements, nameof(elements));
 
@@ -27,7 +27,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
         private IncludeExpression()
         {
-            Elements = ImmutableArray<IncludeElementExpression>.Empty;
+            Elements = ImmutableHashSet<IncludeElementExpression>.Empty;
         }
 
         public override TResult Accept<TArgument, TResult>(QueryExpressionVisitor<TArgument, TResult> visitor, TArgument argument)
@@ -38,7 +38,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         public override string ToString()
         {
             IReadOnlyCollection<ResourceFieldChainExpression> chains = IncludeChainConverter.GetRelationshipChains(this);
-            return string.Join(",", chains.Select(child => child.ToString()));
+            return string.Join(",", chains.Select(child => child.ToString()).OrderBy(name => name));
         }
 
         public override bool Equals(object obj)
@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
 
             var other = (IncludeExpression)obj;
 
-            return Elements.SequenceEqual(other.Elements);
+            return Elements.SetEquals(other.Elements);
         }
 
         public override int GetHashCode()

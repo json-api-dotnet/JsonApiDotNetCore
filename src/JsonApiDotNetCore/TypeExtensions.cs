@@ -39,7 +39,7 @@ namespace JsonApiDotNetCore
                 string genericArguments = type.GetGenericArguments().Select(GetFriendlyTypeName)
                     .Aggregate((firstType, secondType) => $"{firstType}, {secondType}");
 
-                return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}" + $"<{genericArguments}>";
+                return $"{type.Name[..type.Name.IndexOf("`", StringComparison.Ordinal)]}<{genericArguments}>";
             }
 
             return type.Name;

@@ -30,9 +30,14 @@ namespace JsonApiDotNetCore.Configuration
         bool IncludeJsonApiVersion { get; }
 
         /// <summary>
-        /// Whether or not <see cref="Exception" /> stack traces should be serialized in <see cref="ErrorObject.Meta" />. False by default.
+        /// Whether or not <see cref="Exception" /> stack traces should be included in <see cref="ErrorObject.Meta" />. False by default.
         /// </summary>
         bool IncludeExceptionStackTraceInErrors { get; }
+
+        /// <summary>
+        /// Whether or not the request body should be included in <see cref="Document.Meta" /> when it is invalid. False by default.
+        /// </summary>
+        bool IncludeRequestBodyInErrors { get; }
 
         /// <summary>
         /// Use relative links for all resources. False by default.
@@ -112,6 +117,11 @@ namespace JsonApiDotNetCore.Configuration
         /// Whether or not to produce an error on unknown query string parameters. False by default.
         /// </summary>
         bool AllowUnknownQueryStringParameters { get; }
+
+        /// <summary>
+        /// Whether or not to produce an error on unknown attribute and relationship keys in request bodies. False by default.
+        /// </summary>
+        bool AllowUnknownFieldsInRequestBody { get; }
 
         /// <summary>
         /// Determines whether legacy filter notation in query strings, such as =eq:, =like:, and =in: is enabled. False by default.

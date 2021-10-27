@@ -85,29 +85,29 @@ namespace UnitTests.Graph
         public void TryGetResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
         {
             // Arrange
-            Type resourceType = typeof(Model);
+            Type resourceClrType = typeof(Model);
 
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
 
             // Assert
             Assert.NotNull(descriptor);
-            Assert.Equal(resourceType, descriptor.ResourceType);
-            Assert.Equal(typeof(int), descriptor.IdType);
+            Assert.Equal(resourceClrType, descriptor.ResourceClrType);
+            Assert.Equal(typeof(int), descriptor.IdClrType);
         }
 
         [Fact]
         public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
         {
             // Arrange
-            Type resourceType = typeof(string);
+            Type resourceClrType = typeof(string);
 
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceType);
+            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
 
             // Assert
             Assert.Null(descriptor);

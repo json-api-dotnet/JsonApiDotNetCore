@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             _hitCounter = hitCounter;
         }
 
-        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+        public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
             _hitCounter.TrackInvocation<Moon>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
 
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 return existingIncludes;
             }
 
-            RelationshipAttribute orbitsAroundRelationship = ResourceContext.GetRelationshipByPropertyName(nameof(Moon.OrbitsAround));
+            RelationshipAttribute orbitsAroundRelationship = ResourceType.GetRelationshipByPropertyName(nameof(Moon.OrbitsAround));
 
             return existingIncludes.Add(new IncludeElementExpression(orbitsAroundRelationship));
         }

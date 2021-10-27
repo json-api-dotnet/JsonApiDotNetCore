@@ -33,6 +33,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
             options.UseRelativeLinks = false;
             options.AllowClientGeneratedIds = false;
+            options.AllowUnknownFieldsInRequestBody = false;
         }
 
         [Fact]
@@ -253,9 +254,49 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_attribute()
+        {
+            // Arrange
+            WorkItem newWorkItem = _fakers.WorkItem.Generate();
+
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    attributes = new
+                    {
+                        doesNotExist = "ignored",
+                        description = newWorkItem.Description
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
+            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'workItems'.");
+            error.Source.Pointer.Should().Be("/data/attributes/doesNotExist");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             WorkItem newWorkItem = _fakers.WorkItem.Generate();
 
             var requestBody = new
@@ -295,9 +336,53 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new
+                {
+                    type = "workItems",
+                    relationships = new
+                    {
+                        doesNotExist = new
+                        {
+                            data = new
+                            {
+                                type = Unknown.ResourceType,
+                                id = Unknown.StringId.Int32
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'workItems'.");
+            error.Source.Pointer.Should().Be("/data/relationships/doesNotExist");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             var requestBody = new
             {
                 data = new
@@ -352,7 +437,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                     id = "0A0B0C",
                     attributes = new
                     {
-                        name = "Black"
+                        displayName = "Black"
                     }
                 }
             };
@@ -369,9 +454,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("Specifying the resource ID in POST requests is not allowed.");
+            error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/data/id");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -392,8 +478,100 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Missing request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Missing request body.");
             error.Detail.Should().BeNull();
+            error.Source.Should().BeNull();
+            error.Meta.Should().NotContainKey("requestBody");
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_missing_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                meta = new
+                {
+                    key = "value"
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Should().BeNull();
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_null_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = (object)null
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of 'null'.");
+            error.Source.Pointer.Should().Be("/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_array_data()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                data = new[]
+                {
+                    new
+                    {
+                        type = "workItems"
+                    }
+                }
+            };
+
+            const string route = "/workItems";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of an array.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -422,8 +600,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().StartWith("Expected 'type' element in 'data' element. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -453,8 +633,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().StartWith($"Resource type '{Unknown.ResourceType}' does not exist. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.Pointer.Should().Be("/data/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -508,8 +690,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
-            error.Title.Should().Be("Resource type mismatch between request body and endpoint URL.");
-            error.Detail.Should().Be("Expected resource of type 'workItems' in POST request body at endpoint '/workItems', instead of 'rgbColors'.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'rgbColors' is incompatible with type 'workItems'.");
+            error.Source.Pointer.Should().Be("/data/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -540,8 +724,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().StartWith("Setting the initial value of 'isImportant' is not allowed. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
+            error.Detail.Should().Be("The attribute 'isImportant' on resource type 'workItems' cannot be assigned to.");
+            error.Source.Pointer.Should().Be("/data/attributes/isImportant");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -573,7 +759,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().StartWith("Attribute 'isDeprecated' is read-only. - Request body: <<");
+            error.Detail.Should().Be("Attribute 'isDeprecated' on resource type 'workItemGroups' is read-only.");
+            error.Source.Pointer.Should().Be("/data/attributes/isDeprecated");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -595,7 +783,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body.");
-            error.Detail.Should().Match("'{' is invalid after a property name. * - Request body: <<*");
+            error.Detail.Should().StartWith("'{' is invalid after a property name.");
+            error.Source.Should().BeNull();
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -626,10 +816,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
-
-            error.Detail.Should().StartWith("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' " +
-                "of type 'String' to type 'Nullable<DateTimeOffset>'. - Request body: <<");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
+            error.Detail.Should().Be("Failed to convert attribute 'dueAt' with value 'not-a-valid-time' of type 'String' to type 'Nullable<DateTimeOffset>'.");
+            error.Source.Pointer.Should().Be("/data/attributes/dueAt");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

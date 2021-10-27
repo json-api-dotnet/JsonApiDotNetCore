@@ -55,6 +55,7 @@ namespace JsonApiDotNetCoreExample
                         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 #if DEBUG
                         options.IncludeExceptionStackTraceInErrors = true;
+                        options.IncludeRequestBodyInErrors = true;
 #endif
                     }, discovery => discovery.AddCurrentAssembly());
                 }

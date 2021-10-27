@@ -114,18 +114,18 @@ public void Configure(IApplicationBuilder app)
 One way to seed the database is in your Configure method:
 
 ```c#
-public void Configure(IApplicationBuilder app, AppDbContext context)
+public void Configure(IApplicationBuilder app, AppDbContext dbContext)
 {
-    context.Database.EnsureCreated();
+    dbContext.Database.EnsureCreated();
 
-    if (!context.People.Any())
+    if (!dbContext.People.Any())
     {
-        context.People.Add(new Person
+        dbContext.People.Add(new Person
         {
             Name = "John Doe"
         });
 
-        context.SaveChanges();
+        dbContext.SaveChanges();
     }
 
     app.UseRouting();

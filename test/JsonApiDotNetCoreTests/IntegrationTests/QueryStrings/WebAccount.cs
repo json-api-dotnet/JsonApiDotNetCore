@@ -29,5 +29,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 
         [HasOne]
         public AccountPreferences Preferences { get; set; }
+
+        [HasMany]
+        public IList<LoginAttempt> LoginAttempts { get; set; }
     }
 }

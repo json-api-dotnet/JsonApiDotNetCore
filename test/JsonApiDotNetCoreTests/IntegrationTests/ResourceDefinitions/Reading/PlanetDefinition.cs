@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             _hitCounter = hitCounter;
         }
 
-        public override IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+        public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
             _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
 
@@ -49,7 +49,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             if (_clientSettingsProvider.ArePlanetsWithPrivateNameHidden)
             {
-                AttrAttribute privateNameAttribute = ResourceContext.GetAttributeByPropertyName(nameof(Planet.PrivateName));
+                AttrAttribute privateNameAttribute = ResourceType.GetAttributeByPropertyName(nameof(Planet.PrivateName));
 
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
                     new NullConstantExpression());

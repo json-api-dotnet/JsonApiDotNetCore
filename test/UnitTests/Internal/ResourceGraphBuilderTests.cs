@@ -24,7 +24,7 @@ namespace UnitTests.Internal
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Assert
-            Assert.Empty(resourceGraph.GetResourceContexts());
+            Assert.Empty(resourceGraph.GetResourceTypes());
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace UnitTests.Internal
         }
 
         [Fact]
-        public void GetResourceContext_Yields_Right_Type_For_LazyLoadingProxy()
+        public void GetResourceType_Yields_Right_Type_For_LazyLoadingProxy()
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
@@ -57,14 +57,14 @@ namespace UnitTests.Internal
 
             // Act
             var proxy = proxyGenerator.CreateClassProxy<Bar>();
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(proxy.GetType());
+            ResourceType barType = resourceGraph.GetResourceType(proxy.GetType());
 
             // Assert
-            Assert.Equal(typeof(Bar), resourceContext.ResourceType);
+            Assert.Equal(typeof(Bar), barType.ClrType);
         }
 
         [Fact]
-        public void GetResourceContext_Yields_Right_Type_For_Identifiable()
+        public void GetResourceType_Yields_Right_Type_For_Identifiable()
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
@@ -72,10 +72,10 @@ namespace UnitTests.Internal
             var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
 
             // Act
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(Bar));
+            ResourceType barType = resourceGraph.GetResourceType(typeof(Bar));
 
             // Assert
-            Assert.Equal(typeof(Bar), resourceContext.ResourceType);
+            Assert.Equal(typeof(Bar), barType.ClrType);
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

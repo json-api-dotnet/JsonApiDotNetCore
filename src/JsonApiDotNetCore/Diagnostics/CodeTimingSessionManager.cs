@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 
 #pragma warning disable AV1008 // Class should not be static
 
@@ -32,7 +33,7 @@ namespace JsonApiDotNetCore.Diagnostics
         static CodeTimingSessionManager()
         {
 #if DEBUG
-            IsEnabled = !IsRunningInTest();
+            IsEnabled = !IsRunningInTest() && !IsRunningInBenchmark();
 #else
             IsEnabled = false;
 #endif
@@ -45,6 +46,12 @@ namespace JsonApiDotNetCore.Diagnostics
 
             return AppDomain.CurrentDomain.GetAssemblies().Any(assembly =>
                 assembly.FullName != null && assembly.FullName.StartsWith(testAssemblyName, StringComparison.Ordinal));
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static bool IsRunningInBenchmark()
+        {
+            return Assembly.GetEntryAssembly()?.GetName().Name == "Benchmarks";
         }
 
         private static void AssertHasActiveSession()

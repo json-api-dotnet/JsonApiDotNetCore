@@ -13,28 +13,23 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class FilterParser : QueryExpressionParser
     {
-        private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;
-        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
-        private ResourceContext _resourceContextInScope;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string> _validateSingleFieldCallback;
+        private ResourceType _resourceTypeInScope;
 
-        public FilterParser(IResourceGraph resourceGraph, IResourceFactory resourceFactory,
-            Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
-            : base(resourceGraph)
+        public FilterParser(IResourceFactory resourceFactory, Action<ResourceFieldAttribute, ResourceType, string> validateSingleFieldCallback = null)
         {
-            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(resourceFactory, nameof(resourceFactory));
 
-            _resourceGraph = resourceGraph;
             _resourceFactory = resourceFactory;
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public FilterExpression Parse(string source, ResourceContext resourceContextInScope)
+        public FilterExpression Parse(string source, ResourceType resourceTypeInScope)
         {
-            ArgumentGuard.NotNull(resourceContextInScope, nameof(resourceContextInScope));
+            ArgumentGuard.NotNull(resourceTypeInScope, nameof(resourceTypeInScope));
 
-            _resourceContextInScope = resourceContextInScope;
+            _resourceTypeInScope = resourceTypeInScope;
 
             Tokenize(source);
 
@@ -265,14 +260,13 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private FilterExpression ParseFilterInHas(HasManyAttribute hasManyRelationship)
         {
-            ResourceContext outerScopeBackup = _resourceContextInScope;
+            ResourceType outerScopeBackup = _resourceTypeInScope;
 
-            Type innerResourceType = hasManyRelationship.RightType;
-            _resourceContextInScope = _resourceGraph.GetResourceContext(innerResourceType);
+            _resourceTypeInScope = hasManyRelationship.RightType;
 
             FilterExpression filter = ParseFilter();
 
-            _resourceContextInScope = outerScopeBackup;
+            _resourceTypeInScope = outerScopeBackup;
             return filter;
         }
 
@@ -337,9 +331,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
             throw new QueryParseException("Value between quotes expected.");
         }
 
-        private string DeObfuscateStringId(Type resourceType, string stringId)
+        private string DeObfuscateStringId(Type resourceClrType, string stringId)
         {
-            IIdentifiable tempResource = _resourceFactory.CreateInstance(resourceType);
+            IIdentifiable tempResource = _resourceFactory.CreateInstance(resourceClrType);
             tempResource.StringId = stringId;
             return tempResource.GetTypedId().ToString();
         }
@@ -348,17 +342,17 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         {
             if (chainRequirements == FieldChainRequirements.EndsInToMany)
             {
-                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceContextInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInToMany(_resourceTypeInScope, path, _validateSingleFieldCallback);
             }
 
             if (chainRequirements == FieldChainRequirements.EndsInAttribute)
             {
-                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceContextInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInAttribute(_resourceTypeInScope, path, _validateSingleFieldCallback);
             }
 
             if (chainRequirements.HasFlag(FieldChainRequirements.EndsInAttribute) && chainRequirements.HasFlag(FieldChainRequirements.EndsInToOne))
             {
-                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceContextInScope, path, _validateSingleFieldCallback);
+                return ChainResolver.ResolveToOneChainEndingInAttributeOrToOne(_resourceTypeInScope, path, _validateSingleFieldCallback);
             }
 
             throw new InvalidOperationException($"Unexpected combination of chain requirement flags '{chainRequirements}'.");

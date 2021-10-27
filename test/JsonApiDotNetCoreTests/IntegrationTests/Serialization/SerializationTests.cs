@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -65,6 +64,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+
             responseDocument.Should().BeEmpty();
         }
 
@@ -80,6 +81,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.NotFound);
 
+            httpResponse.Content.Headers.ContentLength.Should().BeGreaterThan(0);
+
             responseDocument.Should().BeEmpty();
         }
 
@@ -87,13 +90,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         public async Task Can_get_primary_resources_with_include()
         {
             // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(1);
-            meetings[0].Attendees = _fakers.MeetingAttendee.Generate(1);
+            Meeting meeting = _fakers.Meeting.Generate();
+            meeting.Attendees = _fakers.MeetingAttendee.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
+                dbContext.Meetings.Add(meeting);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -113,52 +116,52 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   ""data"": [
     {
       ""type"": ""meetings"",
-      ""id"": """ + meetings[0].StringId + @""",
+      ""id"": """ + meeting.StringId + @""",
       ""attributes"": {
-        ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
-        ""duration"": """ + meetings[0].Duration + @""",
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
         ""location"": {
-          ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
-          ""lng"": " + meetings[0].Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
         }
       },
       ""relationships"": {
         ""attendees"": {
           ""links"": {
-            ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"/relationships/attendees"",
-            ""related"": ""http://localhost/meetings/" + meetings[0].StringId + @"/attendees""
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
           },
           ""data"": [
             {
               ""type"": ""meetingAttendees"",
-              ""id"": """ + meetings[0].Attendees[0].StringId + @"""
+              ""id"": """ + meeting.Attendees[0].StringId + @"""
             }
           ]
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"""
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
       }
     }
   ],
   ""included"": [
     {
       ""type"": ""meetingAttendees"",
-      ""id"": """ + meetings[0].Attendees[0].StringId + @""",
+      ""id"": """ + meeting.Attendees[0].StringId + @""",
       ""attributes"": {
-        ""displayName"": """ + meetings[0].Attendees[0].DisplayName + @"""
+        ""displayName"": """ + meeting.Attendees[0].DisplayName + @"""
       },
       ""relationships"": {
         ""meeting"": {
           ""links"": {
-            ""self"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"/relationships/meeting"",
-            ""related"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"/meeting""
+            ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/relationships/meeting"",
+            ""related"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"/meeting""
           }
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetingAttendees/" + meetings[0].Attendees[0].StringId + @"""
+        ""self"": ""http://localhost/meetingAttendees/" + meeting.Attendees[0].StringId + @"""
       }
     }
   ]
@@ -166,15 +169,62 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
         }
 
         [Fact]
-        public async Task Can_get_primary_resources_with_empty_include()
+        public async Task Can_get_primary_resource_with_empty_ToOne_include()
         {
             // Arrange
-            List<Meeting> meetings = _fakers.Meeting.Generate(1);
+            MeetingAttendee attendee = _fakers.MeetingAttendee.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Attendees.Add(attendee);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/meetingAttendees/{attendee.StringId}?include=meeting";
+
+            // Act
+            (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteGetAsync<string>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"?include=meeting""
+  },
+  ""data"": {
+    ""type"": ""meetingAttendees"",
+    ""id"": """ + attendee.StringId + @""",
+    ""attributes"": {
+      ""displayName"": """ + attendee.DisplayName + @"""
+    },
+    ""relationships"": {
+      ""meeting"": {
+        ""links"": {
+          ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/relationships/meeting"",
+          ""related"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"/meeting""
+        },
+        ""data"": null
+      }
+    },
+    ""links"": {
+      ""self"": ""http://localhost/meetingAttendees/" + attendee.StringId + @"""
+    }
+  },
+  ""included"": []
+}");
+        }
+
+        [Fact]
+        public async Task Can_get_primary_resources_with_empty_ToMany_include()
+        {
+            // Arrange
+            Meeting meeting = _fakers.Meeting.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 await dbContext.ClearTableAsync<Meeting>();
-                dbContext.Meetings.AddRange(meetings);
+                dbContext.Meetings.Add(meeting);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -194,27 +244,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
   ""data"": [
     {
       ""type"": ""meetings"",
-      ""id"": """ + meetings[0].StringId + @""",
+      ""id"": """ + meeting.StringId + @""",
       ""attributes"": {
-        ""title"": """ + meetings[0].Title + @""",
-        ""startTime"": """ + meetings[0].StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
-        ""duration"": """ + meetings[0].Duration + @""",
+        ""title"": """ + meeting.Title + @""",
+        ""startTime"": """ + meeting.StartTime.ToString(JsonDateTimeOffsetFormatSpecifier) + @""",
+        ""duration"": """ + meeting.Duration + @""",
         ""location"": {
-          ""lat"": " + meetings[0].Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
-          ""lng"": " + meetings[0].Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
+          ""lat"": " + meeting.Location.Latitude.ToString(CultureInfo.InvariantCulture) + @",
+          ""lng"": " + meeting.Location.Longitude.ToString(CultureInfo.InvariantCulture) + @"
         }
       },
       ""relationships"": {
         ""attendees"": {
           ""links"": {
-            ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"/relationships/attendees"",
-            ""related"": ""http://localhost/meetings/" + meetings[0].StringId + @"/attendees""
+            ""self"": ""http://localhost/meetings/" + meeting.StringId + @"/relationships/attendees"",
+            ""related"": ""http://localhost/meetings/" + meeting.StringId + @"/attendees""
           },
           ""data"": []
         }
       },
       ""links"": {
-        ""self"": ""http://localhost/meetings/" + meetings[0].StringId + @"""
+        ""self"": ""http://localhost/meetings/" + meeting.StringId + @"""
       }
     }
   ],
@@ -290,6 +340,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             string errorId = JsonApiStringConverter.ExtractErrorId(responseDocument);
 
             responseDocument.Should().BeJson(@"{
+  ""links"": {
+    ""self"": ""http://localhost/meetings/ffffffff-ffff-ffff-ffff-ffffffffffff""
+  },
   ""errors"": [
     {
       ""id"": """ + errorId + @""",
@@ -760,6 +813,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             responseDocument.Should().BeJson(@"{
   ""jsonapi"": {
     ""version"": ""1.1""
+  },
+  ""links"": {
+    ""self"": ""http://localhost/meetingAttendees/ffffffff-ffff-ffff-ffff-ffffffffffff""
   },
   ""errors"": [
     {

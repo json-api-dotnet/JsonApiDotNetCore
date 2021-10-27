@@ -71,8 +71,7 @@ namespace JsonApiDotNetCore.Resources.Internal
                 // https://bradwilson.typepad.com/blog/2008/07/creating-nullab.html
                 return Convert.ChangeType(stringValue, nonNullableType);
             }
-            catch (Exception exception) when (exception is FormatException || exception is OverflowException || exception is InvalidCastException ||
-                exception is ArgumentException)
+            catch (Exception exception) when (exception is FormatException or OverflowException or InvalidCastException or ArgumentException)
             {
                 string runtimeTypeName = runtimeType.GetFriendlyTypeName();
                 string targetTypeName = type.GetFriendlyTypeName();

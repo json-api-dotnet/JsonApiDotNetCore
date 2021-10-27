@@ -16,10 +16,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     {
         private readonly CarExpressionRewriter _writer;
 
-        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
             _writer = new CarExpressionRewriter(resourceGraph);
         }
@@ -57,10 +57,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     public class CarCompositeKeyAwareRepository<TResource> : CarCompositeKeyAwareRepository<TResource, int>, IResourceRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver contextResolver, IResourceGraph resourceGraph,
+        public CarCompositeKeyAwareRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
         }
     }

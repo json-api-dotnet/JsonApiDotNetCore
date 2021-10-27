@@ -36,11 +36,11 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
             ArgumentGuard.NotNull(options, nameof(options));
 
             _options = options;
-            _scopeParser = new QueryStringParameterScopeParser(resourceGraph, FieldChainRequirements.EndsInToMany);
-            _filterParser = new FilterParser(resourceGraph, resourceFactory, ValidateSingleField);
+            _scopeParser = new QueryStringParameterScopeParser(FieldChainRequirements.EndsInToMany);
+            _filterParser = new FilterParser(resourceFactory, ValidateSingleField);
         }
 
-        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceContext resourceContext, string path)
+        protected void ValidateSingleField(ResourceFieldAttribute field, ResourceType resourceType, string path)
         {
             if (field is AttrAttribute attribute && !attribute.Capabilities.HasFlag(AttrCapabilities.AllowFilter))
             {
@@ -117,7 +117,7 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private ResourceFieldChainExpression GetScope(string parameterName)
         {
-            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResource);
+            QueryStringParameterScopeExpression parameterScope = _scopeParser.Parse(parameterName, RequestResourceType);
 
             if (parameterScope.Scope == null)
             {
@@ -129,8 +129,8 @@ namespace JsonApiDotNetCore.QueryStrings.Internal
 
         private FilterExpression GetFilter(string parameterValue, ResourceFieldChainExpression scope)
         {
-            ResourceContext resourceContextInScope = GetResourceContextForScope(scope);
-            return _filterParser.Parse(parameterValue, resourceContextInScope);
+            ResourceType resourceTypeInScope = GetResourceTypeForScope(scope);
+            return _filterParser.Parse(parameterValue, resourceTypeInScope);
         }
 
         private void StoreFilterInScope(FilterExpression filter, ResourceFieldChainExpression scope)

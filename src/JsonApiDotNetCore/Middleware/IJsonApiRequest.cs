@@ -19,15 +19,15 @@ namespace JsonApiDotNetCore.Middleware
         string PrimaryId { get; }
 
         /// <summary>
-        /// The primary (top-level) resource for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author".
+        /// The primary (top-level) resource type for this request. This would be "blogs" in "/blogs", "/blogs/123" or "/blogs/123/author".
         /// </summary>
-        ResourceContext PrimaryResource { get; }
+        ResourceType PrimaryResourceType { get; }
 
         /// <summary>
-        /// The secondary (nested) resource for this request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "people" in
+        /// The secondary (nested) resource type for this request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "people" in
         /// "/blogs/123/author" and "/blogs/123/relationships/author".
         /// </summary>
-        ResourceContext SecondaryResource { get; }
+        ResourceType SecondaryResourceType { get; }
 
         /// <summary>
         /// The relationship for this nested request. This would be null in "/blogs", "/blogs/123" and "/blogs/123/unknownResource" or "author" in

@@ -356,9 +356,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -391,6 +392,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             error.Title.Should().Be("Failed to deserialize request body: The 'ref' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -424,9 +426,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'ref.type' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -461,9 +464,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -497,9 +501,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -539,6 +544,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
             error.Title.Should().Be("The requested resource does not exist.");
             error.Detail.Should().Be($"Resource of type 'performers' with ID '{performerId}' does not exist.");
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Meta.Should().NotContainKey("requestBody");
         }
 
         [Fact]
@@ -575,9 +581,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible 'id' value found.");
             error.Detail.Should().Be($"Failed to convert '{guid}' of type 'String' to type 'Int64'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref/id");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -613,9 +620,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Deleting
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'ref.id' or 'ref.lid' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
     }
 }

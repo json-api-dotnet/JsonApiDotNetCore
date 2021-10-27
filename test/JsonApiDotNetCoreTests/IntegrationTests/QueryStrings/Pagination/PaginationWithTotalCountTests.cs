@@ -368,8 +368,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Data.ManyValue[0].Id.Should().Be(blogs[1].StringId);
 
             responseDocument.Included.Should().HaveCount(3);
+
+            responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(blogs[1].Owner.StringId);
+
+            responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(blogs[1].Owner.Posts[1].StringId);
+
+            responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(blogs[1].Owner.Posts[1].Comments.ElementAt(1).StringId);
 
             string linkPrefix = $"{HostPrefix}/blogs?include=owner.posts.comments";
@@ -399,7 +405,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource 'webAccounts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
             error.Source.Parameter.Should().Be("page[number]");
         }
 
@@ -420,7 +426,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified paging is invalid.");
-            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource 'blogPosts'.");
+            error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
             error.Source.Parameter.Should().Be("page[size]");
         }
 

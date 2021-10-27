@@ -292,7 +292,59 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
         }
 
         [Fact]
-        public async Task Cannot_replace_for_null_relationship_data()
+        public async Task Cannot_replace_for_missing_data_in_relationship()
+        {
+            // Arrange
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationships = new
+                            {
+                                performers = new
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_replace_for_null_data_in_relationship()
         {
             // Arrange
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
@@ -338,9 +390,65 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected data[] element for to-many relationship.");
-            error.Detail.Should().Be("Expected data[] element for 'performers' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of 'null'.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_replace_for_object_data_in_relationship()
+        {
+            // Arrange
+            MusicTrack existingTrack = _fakers.MusicTrack.Generate();
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.MusicTracks.Add(existingTrack);
+                await dbContext.SaveChangesAsync();
+            });
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "update",
+                        data = new
+                        {
+                            type = "musicTracks",
+                            id = existingTrack.StringId,
+                            relationships = new
+                            {
+                                performers = new
+                                {
+                                    data = new
+                                    {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of an object.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -388,9 +496,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'type' element.");
-            error.Detail.Should().Be("Expected 'type' element in 'tracks' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/tracks/data[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -439,9 +548,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -489,9 +599,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
-            error.Detail.Should().Be("Expected 'id' or 'lid' element in 'performers' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' or 'lid' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -541,9 +652,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body must include 'id' or 'lid' element.");
-            error.Detail.Should().Be("Expected 'id' or 'lid' element in 'performers' relationship.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: The 'id' and 'lid' element are mutually exclusive.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -670,15 +782,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.Conflict);
 
             responseDocument.Errors.Should().HaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Relationship contains incompatible resource type.");
-            error.Detail.Should().Be("Relationship 'performers' contains incompatible resource type 'playlists'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.StatusCode.Should().Be(HttpStatusCode.Conflict);
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible resource type found.");
+            error.Detail.Should().Be("Type 'playlists' is incompatible with type 'performers' of relationship 'performers'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data[0]/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
     }
 }

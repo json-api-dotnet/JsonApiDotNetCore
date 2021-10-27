@@ -12,18 +12,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         [NotMapped]
         public override string Id
         {
-            get => $"{RegionId}:{LicensePlate}";
+            get => RegionId == default && LicensePlate == default ? null : $"{RegionId}:{LicensePlate}";
             set
             {
+                if (value == null)
+                {
+                    RegionId = default;
+                    LicensePlate = default;
+                    return;
+                }
+
                 string[] elements = value.Split(':');
 
-                if (elements.Length == 2)
+                if (elements.Length == 2 && int.TryParse(elements[0], out int regionId))
                 {
-                    if (int.TryParse(elements[0], out int regionId))
-                    {
-                        RegionId = regionId;
-                        LicensePlate = elements[1];
-                    }
+                    RegionId = regionId;
+                    LicensePlate = elements[1];
                 }
                 else
                 {

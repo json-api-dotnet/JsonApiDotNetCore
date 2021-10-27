@@ -20,11 +20,11 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public IIdentifiable CreateInstance(Type resourceType)
+        public IIdentifiable CreateInstance(Type resourceClrType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            return InnerCreateInstance(resourceType, _serviceProvider);
+            return InnerCreateInstance(resourceClrType, _serviceProvider);
         }
 
         /// <inheritdoc />
@@ -56,18 +56,18 @@ namespace JsonApiDotNetCore.Resources
         }
 
         /// <inheritdoc />
-        public NewExpression CreateNewExpression(Type resourceType)
+        public NewExpression CreateNewExpression(Type resourceClrType)
         {
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
-            if (HasSingleConstructorWithoutParameters(resourceType))
+            if (HasSingleConstructorWithoutParameters(resourceClrType))
             {
-                return Expression.New(resourceType);
+                return Expression.New(resourceClrType);
             }
 
             var constructorArguments = new List<Expression>();
 
-            ConstructorInfo longestConstructor = GetLongestConstructor(resourceType);
+            ConstructorInfo longestConstructor = GetLongestConstructor(resourceClrType);
 
             foreach (ParameterInfo constructorParameter in longestConstructor.GetParameters())
             {
@@ -84,7 +84,7 @@ namespace JsonApiDotNetCore.Resources
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
                 {
                     throw new InvalidOperationException(
-                        $"Failed to create an instance of '{resourceType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.",
+                        $"Failed to create an instance of '{resourceClrType.FullName}': Parameter '{constructorParameter.Name}' could not be resolved.",
                         exception);
                 }
             }

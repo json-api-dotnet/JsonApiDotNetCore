@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Running;
-using Benchmarks.LinkBuilder;
+using Benchmarks.Deserialization;
+using Benchmarks.LinkBuilding;
 using Benchmarks.Query;
 using Benchmarks.Serialization;
 
@@ -11,8 +12,10 @@ namespace Benchmarks
         {
             var switcher = new BenchmarkSwitcher(new[]
             {
-                typeof(JsonApiDeserializerBenchmarks),
-                typeof(JsonApiSerializerBenchmarks),
+                typeof(ResourceDeserializationBenchmarks),
+                typeof(OperationsDeserializationBenchmarks),
+                typeof(ResourceSerializationBenchmarks),
+                typeof(OperationsSerializationBenchmarks),
                 typeof(QueryParserBenchmarks),
                 typeof(LinkBuilderGetNamespaceFromPathBenchmarks)
             });

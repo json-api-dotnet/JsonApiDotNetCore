@@ -11,7 +11,7 @@ namespace JsonApiDotNetCore.Resources
     public sealed class ResourceChangeTracker<TResource> : IResourceChangeTracker<TResource>
         where TResource : class, IIdentifiable
     {
-        private readonly IResourceGraph _resourceGraph;
+        private readonly ResourceType _resourceType;
         private readonly ITargetedFields _targetedFields;
 
         private IDictionary<string, string> _initiallyStoredAttributeValues;
@@ -23,7 +23,7 @@ namespace JsonApiDotNetCore.Resources
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
 
-            _resourceGraph = resourceGraph;
+            _resourceType = resourceGraph.GetResourceType<TResource>();
             _targetedFields = targetedFields;
         }
 
@@ -32,8 +32,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-            _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
+            _initiallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
         }
 
         /// <inheritdoc />
@@ -49,8 +48,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(resource, nameof(resource));
 
-            ResourceContext resourceContext = _resourceGraph.GetResourceContext<TResource>();
-            _finallyStoredAttributeValues = CreateAttributeDictionary(resource, resourceContext.Attributes);
+            _finallyStoredAttributeValues = CreateAttributeDictionary(resource, _resourceType.Attributes);
         }
 
         private IDictionary<string, string> CreateAttributeDictionary(TResource resource, IEnumerable<AttrAttribute> attributes)

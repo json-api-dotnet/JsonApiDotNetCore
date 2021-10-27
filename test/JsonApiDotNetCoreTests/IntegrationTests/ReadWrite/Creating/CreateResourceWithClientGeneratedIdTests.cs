@@ -248,6 +248,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             error.StatusCode.Should().Be(HttpStatusCode.Conflict);
             error.Title.Should().Be("Another resource with the specified ID already exists.");
             error.Detail.Should().Be($"Another resource of type 'rgbColors' with ID '{existingColor.StringId}' already exists.");
+            error.Source.Should().BeNull();
+            error.Meta.Should().NotContainKey("requestBody");
         }
     }
 }

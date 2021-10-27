@@ -12,23 +12,24 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         private readonly IResourceGraph _resourceGraph;
 
         public SparseFieldTypeParser(IResourceGraph resourceGraph)
-            : base(resourceGraph)
         {
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
             _resourceGraph = resourceGraph;
         }
 
-        public ResourceContext Parse(string source)
+        public ResourceType Parse(string source)
         {
             Tokenize(source);
 
-            ResourceContext resourceContext = ParseSparseFieldTarget();
+            ResourceType resourceType = ParseSparseFieldTarget();
 
             AssertTokenStackIsEmpty();
 
-            return resourceContext;
+            return resourceType;
         }
 
-        private ResourceContext ParseSparseFieldTarget()
+        private ResourceType ParseSparseFieldTarget()
         {
             if (!TokenStack.TryPop(out Token token) || token.Kind != TokenKind.Text)
             {
@@ -37,33 +38,33 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             EatSingleCharacterToken(TokenKind.OpenBracket);
 
-            ResourceContext resourceContext = ParseResourceName();
+            ResourceType resourceType = ParseResourceName();
 
             EatSingleCharacterToken(TokenKind.CloseBracket);
 
-            return resourceContext;
+            return resourceType;
         }
 
-        private ResourceContext ParseResourceName()
+        private ResourceType ParseResourceName()
         {
             if (TokenStack.TryPop(out Token token) && token.Kind == TokenKind.Text)
             {
-                return GetResourceContext(token.Value);
+                return GetResourceType(token.Value);
             }
 
             throw new QueryParseException("Resource type expected.");
         }
 
-        private ResourceContext GetResourceContext(string publicName)
+        private ResourceType GetResourceType(string publicName)
         {
-            ResourceContext resourceContext = _resourceGraph.TryGetResourceContext(publicName);
+            ResourceType resourceType = _resourceGraph.TryGetResourceType(publicName);
 
-            if (resourceContext == null)
+            if (resourceType == null)
             {
                 throw new QueryParseException($"Resource type '{publicName}' does not exist.");
             }
 
-            return resourceContext;
+            return resourceType;
         }
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)

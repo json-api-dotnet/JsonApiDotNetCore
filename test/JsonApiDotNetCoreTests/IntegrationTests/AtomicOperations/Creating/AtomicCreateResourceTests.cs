@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Extensions;
+using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TestBuildingBlocks;
 using Xunit;
 
@@ -28,6 +30,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             testContext.UseController<LyricsController>();
             testContext.UseController<MusicTracksController>();
             testContext.UseController<PlaylistsController>();
+
+            var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = false;
         }
 
         [Fact]
@@ -212,9 +217,56 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_attribute()
+        {
+            // Arrange
+            string newName = _fakers.Playlist.Generate().Name;
+
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "playlists",
+                            attributes = new
+                            {
+                                doesNotExist = "ignored",
+                                name = newName
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown attribute found.");
+            error.Detail.Should().Be("Attribute 'doesNotExist' does not exist on resource type 'playlists'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/doesNotExist");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_attribute()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             string newName = _fakers.Playlist.Generate().Name;
 
             var requestBody = new
@@ -262,9 +314,60 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
         }
 
         [Fact]
+        public async Task Cannot_create_resource_with_unknown_relationship()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = "lyrics",
+                            relationships = new
+                            {
+                                doesNotExist = new
+                                {
+                                    data = new
+                                    {
+                                        type = Unknown.ResourceType,
+                                        id = Unknown.StringId.Int32
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown relationship found.");
+            error.Detail.Should().Be("Relationship 'doesNotExist' does not exist on resource type 'lyrics'.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/doesNotExist");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
         public async Task Can_create_resource_with_unknown_relationship()
         {
             // Arrange
+            var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();
+            options.AllowUnknownFieldsInRequestBody = true;
+
             var requestBody = new
             {
                 atomic__operations = new[]
@@ -354,9 +457,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.Forbidden);
-            error.Title.Should().Be("Specifying the resource ID in operations that create a resource is not allowed.");
+            error.Title.Should().Be("Failed to deserialize request body: The use of client-generated IDs is disabled.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/id");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -387,9 +491,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Usage of the 'href' element is not supported.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'href' element is not supported.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/href");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -423,9 +528,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'ref.relationship' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: The 'relationship' element is required.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/ref");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -458,25 +564,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             error.Title.Should().Be("Failed to deserialize request body: The 'data' element is required.");
             error.Detail.Should().BeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_missing_type()
+        public async Task Cannot_create_resource_for_null_data()
         {
             // Arrange
             var requestBody = new
             {
-                atomic__operations = new[]
+                atomic__operations = new object[]
                 {
                     new
                     {
                         op = "add",
-                        data = new
-                        {
-                            attributes = new
-                            {
-                            }
-                        }
+                        data = (object)null
                     }
                 }
             };
@@ -493,49 +595,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: The 'data.type' element is required.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of 'null'.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public async Task Cannot_create_resource_for_unknown_type()
-        {
-            // Arrange
-            var requestBody = new
-            {
-                atomic__operations = new[]
-                {
-                    new
-                    {
-                        op = "add",
-                        data = new
-                        {
-                            type = Unknown.ResourceType
-                        }
-                    }
-                }
-            };
-
-            const string route = "/operations";
-
-            // Act
-            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
-
-            // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
-
-            responseDocument.Errors.Should().HaveCount(1);
-
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Request body includes unknown resource type.");
-            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
-        }
-
-        [Fact]
-        public async Task Cannot_create_resource_for_array()
+        public async Task Cannot_create_resource_for_array_data()
         {
             // Arrange
             string newArtistName = _fakers.Performer.Generate().ArtistName;
@@ -574,9 +641,86 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected single data element for create/update resource operation.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an object in 'data' element, instead of an array.");
             error.Detail.Should().BeNull();
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_missing_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            attributes = new
+                            {
+                            }
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: The 'type' element is required.");
+            error.Detail.Should().BeNull();
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Cannot_create_resource_for_unknown_type()
+        {
+            // Arrange
+            var requestBody = new
+            {
+                atomic__operations = new[]
+                {
+                    new
+                    {
+                        op = "add",
+                        data = new
+                        {
+                            type = Unknown.ResourceType
+                        }
+                    }
+                }
+            };
+
+            const string route = "/operations";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAtomicAsync<Document>(route, requestBody);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
+
+            responseDocument.Errors.Should().HaveCount(1);
+
+            ErrorObject error = responseDocument.Errors[0];
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
+            error.Detail.Should().Be($"Resource type '{Unknown.ResourceType}' does not exist.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/type");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -614,9 +758,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Setting the initial value of the requested attribute is not allowed.");
-            error.Detail.Should().Be("Setting the initial value of 'createdAt' is not allowed.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Title.Should().Be("Failed to deserialize request body: Attribute value cannot be assigned when creating resource.");
+            error.Detail.Should().Be("The attribute 'createdAt' on resource type 'lyrics' cannot be assigned to.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/createdAt");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -658,8 +803,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Attribute is read-only.");
-            error.Detail.Should().Be("Attribute 'isArchived' is read-only.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Detail.Should().Be("Attribute 'isArchived' on resource type 'playlists' is read-only.");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/isArchived");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]
@@ -697,9 +843,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body.");
+            error.Title.Should().Be("Failed to deserialize request body: Incompatible attribute value found.");
             error.Detail.Should().Be("Failed to convert attribute 'bornAt' with value '12345' of type 'Number' to type 'DateTimeOffset'.");
-            error.Source.Pointer.Should().Be("/atomic:operations[0]");
+            error.Source.Pointer.Should().Be("/atomic:operations[0]/data/attributes/bornAt");
+            error.Meta["requestBody"].ToString().Should().NotBeNullOrEmpty();
         }
 
         [Fact]

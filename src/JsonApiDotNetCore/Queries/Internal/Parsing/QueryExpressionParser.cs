@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using JetBrains.Annotations;
-using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Queries.Expressions;
 using JsonApiDotNetCore.Resources.Annotations;
 
@@ -21,9 +20,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
         protected Stack<Token> TokenStack { get; private set; }
         private protected ResourceFieldChainResolver ChainResolver { get; }
 
-        protected QueryExpressionParser(IResourceGraph resourceGraph)
+        protected QueryExpressionParser()
         {
-            ChainResolver = new ResourceFieldChainResolver(resourceGraph);
+            ChainResolver = new ResourceFieldChainResolver();
         }
 
         /// <summary>

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Middleware;
+using JsonApiDotNetCore.Queries.Internal;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -22,10 +22,12 @@ namespace JsonApiDotNetCore.AtomicOperations
         private readonly IResourceGraph _resourceGraph;
         private readonly IJsonApiRequest _request;
         private readonly ITargetedFields _targetedFields;
+        private readonly ISparseFieldSetCache _sparseFieldSetCache;
         private readonly LocalIdValidator _localIdValidator;
 
         public OperationsProcessor(IOperationProcessorAccessor operationProcessorAccessor, IOperationsTransactionFactory operationsTransactionFactory,
-            ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields)
+            ILocalIdTracker localIdTracker, IResourceGraph resourceGraph, IJsonApiRequest request, ITargetedFields targetedFields,
+            ISparseFieldSetCache sparseFieldSetCache)
         {
             ArgumentGuard.NotNull(operationProcessorAccessor, nameof(operationProcessorAccessor));
             ArgumentGuard.NotNull(operationsTransactionFactory, nameof(operationsTransactionFactory));
@@ -33,6 +35,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
             ArgumentGuard.NotNull(request, nameof(request));
             ArgumentGuard.NotNull(targetedFields, nameof(targetedFields));
+            ArgumentGuard.NotNull(sparseFieldSetCache, nameof(sparseFieldSetCache));
 
             _operationProcessorAccessor = operationProcessorAccessor;
             _operationsTransactionFactory = operationsTransactionFactory;
@@ -40,6 +43,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             _resourceGraph = resourceGraph;
             _request = request;
             _targetedFields = targetedFields;
+            _sparseFieldSetCache = sparseFieldSetCache;
             _localIdValidator = new LocalIdValidator(_localIdTracker, _resourceGraph);
         }
 
@@ -57,6 +61,8 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             try
             {
+                using IDisposable _ = new RevertRequestStateOnDispose(_request, _targetedFields);
+
                 foreach (OperationContainer operation in operations)
                 {
                     operation.SetTransactionId(transaction.TransactionId);
@@ -67,6 +73,8 @@ namespace JsonApiDotNetCore.AtomicOperations
                     results.Add(result);
 
                     await transaction.AfterProcessOperationAsync(cancellationToken);
+
+                    _sparseFieldSetCache.Reset();
                 }
 
                 await transaction.CommitAsync(cancellationToken);
@@ -89,15 +97,7 @@ namespace JsonApiDotNetCore.AtomicOperations
             catch (Exception exception)
 #pragma warning restore AV1210 // Catch a specific exception instead of Exception, SystemException or ApplicationException
             {
-                throw new JsonApiException(new ErrorObject(HttpStatusCode.InternalServerError)
-                {
-                    Title = "An unhandled error occurred while processing an operation in this request.",
-                    Detail = exception.Message,
-                    Source = new ErrorSource
-                    {
-                        Pointer = $"/atomic:operations[{results.Count}]"
-                    }
-                }, exception);
+                throw new FailedOperationException(results.Count, exception);
             }
 
             return results;
@@ -109,9 +109,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
             TrackLocalIdsForOperation(operation);
 
-            _targetedFields.Attributes = operation.TargetedFields.Attributes;
-            _targetedFields.Relationships = operation.TargetedFields.Relationships;
-
+            _targetedFields.CopyFrom(operation.TargetedFields);
             _request.CopyFrom(operation.Request);
 
             return await _operationProcessorAccessor.ProcessAsync(operation, cancellationToken);
@@ -119,9 +117,9 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         protected void TrackLocalIdsForOperation(OperationContainer operation)
         {
-            if (operation.Kind == WriteOperationKind.CreateResource)
+            if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                DeclareLocalId(operation.Resource);
+                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType);
             }
             else
             {
@@ -134,12 +132,11 @@ namespace JsonApiDotNetCore.AtomicOperations
             }
         }
 
-        private void DeclareLocalId(IIdentifiable resource)
+        private void DeclareLocalId(IIdentifiable resource, ResourceType resourceType)
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
+                _localIdTracker.Declare(resource.LocalId, resourceType.PublicName);
             }
         }
 
@@ -147,8 +144,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
+                ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
+                resource.StringId = _localIdTracker.GetValue(resource.LocalId, resourceType.PublicName);
             }
         }
     }

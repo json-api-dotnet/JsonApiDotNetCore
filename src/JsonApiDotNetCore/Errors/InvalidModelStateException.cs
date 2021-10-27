@@ -19,9 +19,9 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidModelStateException : JsonApiException
     {
-        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceType, bool includeExceptionStackTraceInErrors,
+        public InvalidModelStateException(ModelStateDictionary modelState, Type resourceClrType, bool includeExceptionStackTraceInErrors,
             JsonNamingPolicy namingPolicy)
-            : this(FromModelStateDictionary(modelState, resourceType), includeExceptionStackTraceInErrors, namingPolicy)
+            : this(FromModelStateDictionary(modelState, resourceClrType), includeExceptionStackTraceInErrors, namingPolicy)
         {
         }
 
@@ -30,26 +30,26 @@ namespace JsonApiDotNetCore.Errors
         {
         }
 
-        private static IEnumerable<ModelStateViolation> FromModelStateDictionary(ModelStateDictionary modelState, Type resourceType)
+        private static IEnumerable<ModelStateViolation> FromModelStateDictionary(ModelStateDictionary modelState, Type resourceClrType)
         {
             ArgumentGuard.NotNull(modelState, nameof(modelState));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
 
             var violations = new List<ModelStateViolation>();
 
             foreach ((string propertyName, ModelStateEntry entry) in modelState)
             {
-                AddValidationErrors(entry, propertyName, resourceType, violations);
+                AddValidationErrors(entry, propertyName, resourceClrType, violations);
             }
 
             return violations;
         }
 
-        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceType, List<ModelStateViolation> violations)
+        private static void AddValidationErrors(ModelStateEntry entry, string propertyName, Type resourceClrType, List<ModelStateViolation> violations)
         {
             foreach (ModelError error in entry.Errors)
             {
-                var violation = new ModelStateViolation("/data/attributes/", propertyName, resourceType, error);
+                var violation = new ModelStateViolation("/data/attributes/", propertyName, resourceClrType, error);
                 violations.Add(violation);
             }
         }
@@ -74,16 +74,16 @@ namespace JsonApiDotNetCore.Errors
             }
             else
             {
-                string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceType, namingPolicy);
+                string attributeName = GetDisplayNameForProperty(violation.PropertyName, violation.ResourceClrType, namingPolicy);
                 string attributePath = $"{violation.Prefix}{attributeName}";
 
                 yield return FromModelError(violation.Error, attributePath, includeExceptionStackTraceInErrors);
             }
         }
 
-        private static string GetDisplayNameForProperty(string propertyName, Type resourceType, JsonNamingPolicy namingPolicy)
+        private static string GetDisplayNameForProperty(string propertyName, Type resourceClrType, JsonNamingPolicy namingPolicy)
         {
-            PropertyInfo property = resourceType.GetProperty(propertyName);
+            PropertyInfo property = resourceClrType.GetProperty(propertyName);
 
             if (property != null)
             {
@@ -116,10 +116,14 @@ namespace JsonApiDotNetCore.Errors
 
             if (includeExceptionStackTraceInErrors && modelError.Exception != null)
             {
-                string[] stackTraceLines = modelError.Exception.Demystify().ToString().Split(Environment.NewLine);
+                Exception exception = modelError.Exception.Demystify();
+                string[] stackTraceLines = exception.ToString().Split(Environment.NewLine);
 
-                error.Meta ??= new Dictionary<string, object>();
-                error.Meta["StackTrace"] = stackTraceLines;
+                if (stackTraceLines.Any())
+                {
+                    error.Meta ??= new Dictionary<string, object>();
+                    error.Meta["StackTrace"] = stackTraceLines;
+                }
             }
 
             return error;

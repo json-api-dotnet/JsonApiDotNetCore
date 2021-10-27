@@ -11,20 +11,19 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
     [PublicAPI]
     public class SparseFieldSetParser : QueryExpressionParser
     {
-        private readonly Action<ResourceFieldAttribute, ResourceContext, string> _validateSingleFieldCallback;
-        private ResourceContext _resourceContext;
+        private readonly Action<ResourceFieldAttribute, ResourceType, string> _validateSingleFieldCallback;
+        private ResourceType _resourceType;
 
-        public SparseFieldSetParser(IResourceGraph resourceGraph, Action<ResourceFieldAttribute, ResourceContext, string> validateSingleFieldCallback = null)
-            : base(resourceGraph)
+        public SparseFieldSetParser(Action<ResourceFieldAttribute, ResourceType, string> validateSingleFieldCallback = null)
         {
             _validateSingleFieldCallback = validateSingleFieldCallback;
         }
 
-        public SparseFieldSetExpression Parse(string source, ResourceContext resourceContext)
+        public SparseFieldSetExpression Parse(string source, ResourceType resourceType)
         {
-            ArgumentGuard.NotNull(resourceContext, nameof(resourceContext));
+            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            _resourceContext = resourceContext;
+            _resourceType = resourceType;
 
             Tokenize(source);
 
@@ -56,9 +55,9 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         protected override IImmutableList<ResourceFieldAttribute> OnResolveFieldChain(string path, FieldChainRequirements chainRequirements)
         {
-            ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceContext, path);
+            ResourceFieldAttribute field = ChainResolver.GetField(path, _resourceType, path);
 
-            _validateSingleFieldCallback?.Invoke(field, _resourceContext, path);
+            _validateSingleFieldCallback?.Invoke(field, _resourceType, path);
 
             return ImmutableArray.Create(field);
         }

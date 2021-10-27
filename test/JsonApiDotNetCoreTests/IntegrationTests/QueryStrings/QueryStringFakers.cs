@@ -43,6 +43,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
                 .RuleFor(webAccount => webAccount.DateOfBirth, faker => faker.Person.DateOfBirth)
                 .RuleFor(webAccount => webAccount.EmailAddress, faker => faker.Internet.Email()));
 
+        private readonly Lazy<Faker<LoginAttempt>> _lazyLoginAttemptFaker = new(() =>
+            new Faker<LoginAttempt>()
+                .UseSeed(GetFakerSeed())
+                .RuleFor(loginAttempt => loginAttempt.TriedAt, faker => faker.Date.PastOffset())
+                .RuleFor(loginAttempt => loginAttempt.IsSucceeded, faker => faker.Random.Bool()));
+
         private readonly Lazy<Faker<AccountPreferences>> _lazyAccountPreferencesFaker = new(() =>
             new Faker<AccountPreferences>()
                 .UseSeed(GetFakerSeed())
@@ -67,6 +73,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         public Faker<Label> Label => _lazyLabelFaker.Value;
         public Faker<Comment> Comment => _lazyCommentFaker.Value;
         public Faker<WebAccount> WebAccount => _lazyWebAccountFaker.Value;
+        public Faker<LoginAttempt> LoginAttempt => _lazyLoginAttemptFaker.Value;
         public Faker<AccountPreferences> AccountPreferences => _lazyAccountPreferencesFaker.Value;
         public Faker<Calendar> Calendar => _lazyCalendarFaker.Value;
         public Faker<Appointment> Appointment => _lazyAppointmentFaker.Value;

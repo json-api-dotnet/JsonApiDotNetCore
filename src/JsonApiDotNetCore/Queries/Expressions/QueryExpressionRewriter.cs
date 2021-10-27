@@ -197,14 +197,14 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                ImmutableDictionary<ResourceContext, SparseFieldSetExpression>.Builder newTable =
-                    ImmutableDictionary.CreateBuilder<ResourceContext, SparseFieldSetExpression>();
+                ImmutableDictionary<ResourceType, SparseFieldSetExpression>.Builder newTable =
+                    ImmutableDictionary.CreateBuilder<ResourceType, SparseFieldSetExpression>();
 
-                foreach ((ResourceContext resourceContext, SparseFieldSetExpression sparseFieldSet) in expression.Table)
+                foreach ((ResourceType resourceType, SparseFieldSetExpression sparseFieldSet) in expression.Table)
                 {
                     if (Visit(sparseFieldSet, argument) is SparseFieldSetExpression newSparseFieldSet)
                     {
-                        newTable[resourceContext] = newSparseFieldSet;
+                        newTable[resourceType] = newSparseFieldSet;
                     }
                 }
 
@@ -268,7 +268,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Elements, argument);
+                IImmutableSet<IncludeElementExpression> newElements = VisitSet(expression.Elements, argument);
 
                 if (newElements.Count == 0)
                 {
@@ -286,7 +286,7 @@ namespace JsonApiDotNetCore.Queries.Expressions
         {
             if (expression != null)
             {
-                IImmutableList<IncludeElementExpression> newElements = VisitList(expression.Children, argument);
+                IImmutableSet<IncludeElementExpression> newElements = VisitSet(expression.Children, argument);
 
                 var newExpression = new IncludeElementExpression(expression.Relationship, newElements);
                 return newExpression.Equals(expression) ? expression : newExpression;

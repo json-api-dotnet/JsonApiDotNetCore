@@ -12,19 +12,19 @@ namespace JsonApiDotNetCore.Controllers
     {
         public string Prefix { get; }
         public string PropertyName { get; }
-        public Type ResourceType { get; set; }
+        public Type ResourceClrType { get; set; }
         public ModelError Error { get; }
 
-        public ModelStateViolation(string prefix, string propertyName, Type resourceType, ModelError error)
+        public ModelStateViolation(string prefix, string propertyName, Type resourceClrType, ModelError error)
         {
             ArgumentGuard.NotNullNorEmpty(prefix, nameof(prefix));
             ArgumentGuard.NotNullNorEmpty(propertyName, nameof(propertyName));
-            ArgumentGuard.NotNull(resourceType, nameof(resourceType));
+            ArgumentGuard.NotNull(resourceClrType, nameof(resourceClrType));
             ArgumentGuard.NotNull(error, nameof(error));
 
             Prefix = prefix;
             PropertyName = propertyName;
-            ResourceType = resourceType;
+            ResourceClrType = resourceClrType;
             Error = error;
         }
     }

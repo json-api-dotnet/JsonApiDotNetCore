@@ -29,19 +29,15 @@ namespace UnitTests.Extensions
             services.AddLogging();
             services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase("UnitTestDb"));
 
-            // this is required because the DbContextResolver requires access to the current HttpContext
-            // to get the request scoped DbContext instance
-            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
-
             // Act
             services.AddJsonApi<TestDbContext>();
 
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
-            ResourceContext resourceContext = resourceGraph.GetResourceContext<Person>();
+            ResourceType personType = resourceGraph.GetResourceType<Person>();
 
             // Assert
-            Assert.Equal("people", resourceContext.PublicName);
+            Assert.Equal("people", personType.PublicName);
         }
 
         [Fact]
@@ -171,8 +167,6 @@ namespace UnitTests.Extensions
             services.AddLogging();
             services.AddDbContext<TestDbContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
-            services.AddScoped<IRequestScopedServiceProvider, TestScopedServiceProvider>();
-
             // Act
             services.AddJsonApi<TestDbContext>();
 
@@ -180,8 +174,8 @@ namespace UnitTests.Extensions
             ServiceProvider provider = services.BuildServiceProvider();
             var resourceGraph = provider.GetRequiredService<IResourceGraph>();
 
-            ResourceContext resourceContext = resourceGraph.GetResourceContext(typeof(IntResource));
-            Assert.Equal("intResources", resourceContext.PublicName);
+            ResourceType intResourceType = resourceGraph.GetResourceType(typeof(IntResource));
+            Assert.Equal("intResources", intResourceType.PublicName);
         }
 
         private sealed class IntResource : Identifiable
@@ -416,7 +410,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class IntResourceDefinition : IResourceDefinition<IntResource>
         {
-            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }
@@ -504,7 +498,7 @@ namespace UnitTests.Extensions
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
         private sealed class GuidResourceDefinition : IResourceDefinition<GuidResource, Guid>
         {
-            public IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes)
+            public IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
             {
                 throw new NotImplementedException();
             }

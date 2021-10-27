@@ -57,9 +57,9 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         private void ValidateOperation(OperationContainer operation)
         {
-            if (operation.Kind == WriteOperationKind.CreateResource)
+            if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                DeclareLocalId(operation.Resource);
+                DeclareLocalId(operation.Resource, operation.Request.PrimaryResourceType);
             }
             else
             {
@@ -71,27 +71,25 @@ namespace JsonApiDotNetCore.AtomicOperations
                 AssertLocalIdIsAssigned(secondaryResource);
             }
 
-            if (operation.Kind == WriteOperationKind.CreateResource)
+            if (operation.Request.WriteOperation == WriteOperationKind.CreateResource)
             {
-                AssignLocalId(operation);
+                AssignLocalId(operation, operation.Request.PrimaryResourceType);
             }
         }
 
-        private void DeclareLocalId(IIdentifiable resource)
+        private void DeclareLocalId(IIdentifiable resource, ResourceType resourceType)
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                _localIdTracker.Declare(resource.LocalId, resourceContext.PublicName);
+                _localIdTracker.Declare(resource.LocalId, resourceType.PublicName);
             }
         }
 
-        private void AssignLocalId(OperationContainer operation)
+        private void AssignLocalId(OperationContainer operation, ResourceType resourceType)
         {
             if (operation.Resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(operation.Resource.GetType());
-                _localIdTracker.Assign(operation.Resource.LocalId, resourceContext.PublicName, "placeholder");
+                _localIdTracker.Assign(operation.Resource.LocalId, resourceType.PublicName, "placeholder");
             }
         }
 
@@ -99,8 +97,8 @@ namespace JsonApiDotNetCore.AtomicOperations
         {
             if (resource.LocalId != null)
             {
-                ResourceContext resourceContext = _resourceGraph.GetResourceContext(resource.GetType());
-                _localIdTracker.GetValue(resource.LocalId, resourceContext.PublicName);
+                ResourceType resourceType = _resourceGraph.GetResourceType(resource.GetType());
+                _localIdTracker.GetValue(resource.LocalId, resourceType.PublicName);
             }
         }
     }

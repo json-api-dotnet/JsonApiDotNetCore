@@ -4,13 +4,13 @@ namespace JsonApiDotNetCore.Configuration
 {
     internal sealed class ResourceDescriptor
     {
-        public Type ResourceType { get; }
-        public Type IdType { get; }
+        public Type ResourceClrType { get; }
+        public Type IdClrType { get; }
 
-        public ResourceDescriptor(Type resourceType, Type idType)
+        public ResourceDescriptor(Type resourceClrType, Type idClrType)
         {
-            ResourceType = resourceType;
-            IdType = idType;
+            ResourceClrType = resourceClrType;
+            IdClrType = idClrType;
         }
     }
 }

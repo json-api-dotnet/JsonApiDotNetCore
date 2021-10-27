@@ -7,6 +7,7 @@ using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
+using JsonApiDotNetCore.Serialization.Request;
 
 namespace JsonApiDotNetCore.Serialization.JsonConverters
 {
@@ -28,6 +29,8 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         public ResourceObjectConverter(IResourceGraph resourceGraph)
         {
+            ArgumentGuard.NotNull(resourceGraph, nameof(resourceGraph));
+
             _resourceGraph = resourceGraph;
         }
 
@@ -48,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                 Type = TryPeekType(ref reader)
             };
 
-            ResourceContext resourceContext = resourceObject.Type != null ? _resourceGraph.TryGetResourceContext(resourceObject.Type) : null;
+            ResourceType resourceType = resourceObject.Type != null ? _resourceGraph.TryGetResourceType(resourceObject.Type) : null;
 
             while (reader.Read())
             {
@@ -85,9 +88,9 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                             }
                             case "attributes":
                             {
-                                if (resourceContext != null)
+                                if (resourceType != null)
                                 {
-                                    resourceObject.Attributes = ReadAttributes(ref reader, options, resourceContext);
+                                    resourceObject.Attributes = ReadAttributes(ref reader, options, resourceType);
                                 }
                                 else
                                 {
@@ -156,7 +159,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             return null;
         }
 
-        private static IDictionary<string, object> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceContext resourceContext)
+        private static IDictionary<string, object> ReadAttributes(ref Utf8JsonReader reader, JsonSerializerOptions options, ResourceType resourceType)
         {
             var attributes = new Dictionary<string, object>();
 
@@ -173,7 +176,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         string attributeName = reader.GetString();
                         reader.Read();
 
-                        AttrAttribute attribute = resourceContext.TryGetAttributeByPublicName(attributeName);
+                        AttrAttribute attribute = resourceType.TryGetAttributeByPublicName(attributeName);
                         PropertyInfo property = attribute?.Property;
 
                         if (property != null)
@@ -206,6 +209,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         }
                         else
                         {
+                            attributes.Add(attributeName!, null);
                             reader.Skip();
                         }
 

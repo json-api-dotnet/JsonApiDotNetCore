@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using JsonApiDotNetCore.Serialization;
+using JsonApiDotNetCore.Serialization.Response;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 {

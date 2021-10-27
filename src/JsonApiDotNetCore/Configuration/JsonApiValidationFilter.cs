@@ -13,19 +13,21 @@ namespace JsonApiDotNetCore.Configuration
     /// </summary>
     internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
     {
-        private readonly IRequestScopedServiceProvider _serviceProvider;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public JsonApiValidationFilter(IRequestScopedServiceProvider serviceProvider)
+        public JsonApiValidationFilter(IHttpContextAccessor httpContextAccessor)
         {
-            ArgumentGuard.NotNull(serviceProvider, nameof(serviceProvider));
+            ArgumentGuard.NotNull(httpContextAccessor, nameof(httpContextAccessor));
 
-            _serviceProvider = serviceProvider;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc />
         public bool ShouldValidateEntry(ValidationEntry entry, ValidationEntry parentEntry)
         {
-            var request = _serviceProvider.GetRequiredService<IJsonApiRequest>();
+            IServiceProvider serviceProvider = GetScopedServiceProvider();
+
+            var request = serviceProvider.GetRequiredService<IJsonApiRequest>();
 
             if (IsId(entry.Key))
             {
@@ -39,15 +41,25 @@ namespace JsonApiDotNetCore.Configuration
                 return false;
             }
 
-            var httpContextAccessor = _serviceProvider.GetRequiredService<IHttpContextAccessor>();
-
-            if (httpContextAccessor.HttpContext!.Request.Method == HttpMethods.Patch || request.WriteOperation == WriteOperationKind.UpdateResource)
+            if (_httpContextAccessor.HttpContext!.Request.Method == HttpMethods.Patch || request.WriteOperation == WriteOperationKind.UpdateResource)
             {
-                var targetedFields = _serviceProvider.GetRequiredService<ITargetedFields>();
+                var targetedFields = serviceProvider.GetRequiredService<ITargetedFields>();
                 return IsFieldTargeted(entry, targetedFields);
             }
 
             return true;
+        }
+
+        private IServiceProvider GetScopedServiceProvider()
+        {
+            HttpContext httpContext = _httpContextAccessor.HttpContext;
+
+            if (httpContext == null)
+            {
+                throw new InvalidOperationException("Cannot resolve scoped services outside the context of an HTTP request.");
+            }
+
+            return httpContext.RequestServices;
         }
 
         private static bool IsId(string key)
@@ -57,7 +69,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsAtPrimaryEndpoint(IJsonApiRequest request)
         {
-            return request.Kind == EndpointKind.Primary || request.Kind == EndpointKind.AtomicOperations;
+            return request.Kind is EndpointKind.Primary or EndpointKind.AtomicOperations;
         }
 
         private static bool IsFieldTargeted(ValidationEntry entry, ITargetedFields targetedFields)

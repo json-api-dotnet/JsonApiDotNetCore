@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
@@ -54,6 +55,24 @@ namespace JsonApiDotNetCore.Serialization.Objects
         public ErrorObject(HttpStatusCode statusCode)
         {
             StatusCode = statusCode;
+        }
+
+        public static HttpStatusCode GetResponseStatusCode(IReadOnlyList<ErrorObject> errorObjects)
+        {
+            if (errorObjects.IsNullOrEmpty())
+            {
+                return HttpStatusCode.InternalServerError;
+            }
+
+            int[] statusCodes = errorObjects.Select(error => (int)error.StatusCode).Distinct().ToArray();
+
+            if (statusCodes.Length == 1)
+            {
+                return (HttpStatusCode)statusCodes[0];
+            }
+
+            int statusCode = int.Parse($"{statusCodes.Max().ToString()[0]}00");
+            return (HttpStatusCode)statusCode;
         }
     }
 }

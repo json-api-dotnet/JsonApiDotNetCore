@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
 
@@ -12,33 +12,26 @@ namespace JsonApiDotNetCore.Errors
     [PublicAPI]
     public sealed class InvalidRequestBodyException : JsonApiException
     {
-        public InvalidRequestBodyException(string reason, string details, string requestBody, Exception innerException = null)
-            : base(new ErrorObject(HttpStatusCode.UnprocessableEntity)
+        public InvalidRequestBodyException(string requestBody, string genericMessage, string specificMessage, string sourcePointer,
+            HttpStatusCode? alternativeStatusCode = null, Exception innerException = null)
+            : base(new ErrorObject(alternativeStatusCode ?? HttpStatusCode.UnprocessableEntity)
             {
-                Title = reason != null ? $"Failed to deserialize request body: {reason}" : "Failed to deserialize request body.",
-                Detail = FormatErrorDetail(details, requestBody, innerException)
+                Title = genericMessage != null ? $"Failed to deserialize request body: {genericMessage}" : "Failed to deserialize request body.",
+                Detail = specificMessage,
+                Source = sourcePointer == null
+                    ? null
+                    : new ErrorSource
+                    {
+                        Pointer = sourcePointer
+                    },
+                Meta = string.IsNullOrEmpty(requestBody)
+                    ? null
+                    : new Dictionary<string, object>
+                    {
+                        ["RequestBody"] = requestBody
+                    }
             }, innerException)
         {
-        }
-
-        private static string FormatErrorDetail(string details, string requestBody, Exception innerException)
-        {
-            var builder = new StringBuilder();
-            builder.Append(details ?? innerException?.Message);
-
-            if (requestBody != null)
-            {
-                if (builder.Length > 0)
-                {
-                    builder.Append(" - ");
-                }
-
-                builder.Append("Request body: <<");
-                builder.Append(requestBody);
-                builder.Append(">>");
-            }
-
-            return builder.Length > 0 ? builder.ToString() : null;
         }
     }
 }

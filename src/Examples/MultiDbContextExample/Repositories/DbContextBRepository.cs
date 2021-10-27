@@ -13,10 +13,10 @@ namespace MultiDbContextExample.Repositories
     public sealed class DbContextBRepository<TResource> : EntityFrameworkCoreRepository<TResource>
         where TResource : class, IIdentifiable<int>
     {
-        public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> contextResolver, IResourceGraph resourceGraph,
+        public DbContextBRepository(ITargetedFields targetedFields, DbContextResolver<DbContextB> dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,
             IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(targetedFields, contextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
+            : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory, constraintProviders, loggerFactory, resourceDefinitionAccessor)
         {
         }
     }

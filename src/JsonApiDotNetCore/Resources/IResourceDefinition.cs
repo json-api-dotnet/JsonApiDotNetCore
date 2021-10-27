@@ -44,7 +44,7 @@ namespace JsonApiDotNetCore.Resources
         /// <returns>
         /// The new set of includes. Return an empty collection to remove all inclusions (never return <c>null</c>).
         /// </returns>
-        IImmutableList<IncludeElementExpression> OnApplyIncludes(IImmutableList<IncludeElementExpression> existingIncludes);
+        IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes);
 
         /// <summary>
         /// Enables to extend, replace or remove a filter that is being applied on a set of this resource type.

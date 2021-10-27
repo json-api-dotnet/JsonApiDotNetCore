@@ -25,6 +25,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
                 .Add<Comment>()
                 .Add<WebAccount>()
                 .Add<AccountPreferences>()
+                .Add<LoginAttempt>()
                 .Build();
 
             // @formatter:wrap_chained_method_calls restore
@@ -32,7 +33,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.QueryStringParameters
 
             Request = new JsonApiRequest
             {
-                PrimaryResource = ResourceGraph.GetResourceContext<Blog>(),
+                PrimaryResourceType = ResourceGraph.GetResourceType<Blog>(),
                 IsCollection = true
             };
         }

@@ -16,16 +16,16 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Gets the publicly visible resource name for the internal type name using the configured naming convention.
+        /// Gets the publicly exposed resource name by applying the configured naming convention on the pluralized CLR type name.
         /// </summary>
-        public string FormatResourceName(Type resourceType)
+        public string FormatResourceName(Type resourceClrType)
         {
-            if (resourceType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
+            if (resourceClrType.GetCustomAttribute(typeof(ResourceAttribute)) is ResourceAttribute attribute)
             {
                 return attribute.PublicName;
             }
 
-            string publicName = resourceType.Name.Pluralize();
+            string publicName = resourceClrType.Name.Pluralize();
             return _namingPolicy != null ? _namingPolicy.ConvertName(publicName) : publicName;
         }
     }

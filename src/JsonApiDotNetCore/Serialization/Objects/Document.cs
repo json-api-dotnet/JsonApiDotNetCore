@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text.Json.Serialization;
 
 namespace JsonApiDotNetCore.Serialization.Objects
@@ -42,23 +39,5 @@ namespace JsonApiDotNetCore.Serialization.Objects
         [JsonPropertyName("meta")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IDictionary<string, object> Meta { get; set; }
-
-        internal HttpStatusCode GetErrorStatusCode()
-        {
-            if (Errors.IsNullOrEmpty())
-            {
-                throw new InvalidOperationException("No errors found.");
-            }
-
-            int[] statusCodes = Errors.Select(error => (int)error.StatusCode).Distinct().ToArray();
-
-            if (statusCodes.Length == 1)
-            {
-                return (HttpStatusCode)statusCodes[0];
-            }
-
-            int statusCode = int.Parse($"{statusCodes.Max().ToString()[0]}00");
-            return (HttpStatusCode)statusCode;
-        }
     }
 }

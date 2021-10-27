@@ -39,6 +39,9 @@ namespace JsonApiDotNetCore.Configuration
         public bool IncludeExceptionStackTraceInErrors { get; set; }
 
         /// <inheritdoc />
+        public bool IncludeRequestBodyInErrors { get; set; }
+
+        /// <inheritdoc />
         public bool UseRelativeLinks { get; set; }
 
         /// <inheritdoc />
@@ -70,6 +73,9 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <inheritdoc />
         public bool AllowUnknownQueryStringParameters { get; set; }
+
+        /// <inheritdoc />
+        public bool AllowUnknownFieldsInRequestBody { get; set; }
 
         /// <inheritdoc />
         public bool EnableLegacyFilterNotation { get; set; }

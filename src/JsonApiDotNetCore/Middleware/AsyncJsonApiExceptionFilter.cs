@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Serialization.Objects;
@@ -26,11 +27,11 @@ namespace JsonApiDotNetCore.Middleware
 
             if (context.HttpContext.IsJsonApiRequest())
             {
-                Document document = _exceptionHandler.HandleException(context.Exception);
+                IReadOnlyList<ErrorObject> errors = _exceptionHandler.HandleException(context.Exception);
 
-                context.Result = new ObjectResult(document)
+                context.Result = new ObjectResult(errors)
                 {
-                    StatusCode = (int)document.GetErrorStatusCode()
+                    StatusCode = (int)ErrorObject.GetResponseStatusCode(errors)
                 };
             }
 
