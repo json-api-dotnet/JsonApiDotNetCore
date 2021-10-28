@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
@@ -19,11 +17,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             _hitCounter = hitCounter;
         }
 
-        public override IDictionary<string, object> GetMeta(TextLanguage resource)
+        public override IDictionary<string, object?> GetMeta(TextLanguage resource)
         {
             _hitCounter.TrackInvocation<TextLanguage>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
 
-            return new Dictionary<string, object>
+            return new Dictionary<string, object?>
             {
                 ["Notice"] = NoticeText
             };

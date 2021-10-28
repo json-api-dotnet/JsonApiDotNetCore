@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -548,11 +546,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
             // Assert
             document.Included.ShouldHaveCount(1);
 
-            document.Included[0].Attributes["name"].Should().Be(person.Name);
+            document.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(person.Name));
             document.Included[0].Id.Should().Be(person.StringId);
         }
 
-        private ResponseModelAdapter CreateAdapter(IJsonApiOptions options, string primaryId, string includeChains)
+        private ResponseModelAdapter CreateAdapter(IJsonApiOptions options, string? primaryId, string includeChains)
         {
             // @formatter:wrap_chained_method_calls chop_always
             // @formatter:keep_existing_linebreaks true
@@ -592,17 +590,17 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
 
         private sealed class FakeLinkBuilder : ILinkBuilder
         {
-            public TopLevelLinks GetTopLevelLinks()
+            public TopLevelLinks? GetTopLevelLinks()
             {
                 return null;
             }
 
-            public ResourceLinks GetResourceLinks(ResourceType resourceType, string id)
+            public ResourceLinks? GetResourceLinks(ResourceType resourceType, string id)
             {
                 return null;
             }
 
-            public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
+            public RelationshipLinks? GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
             {
                 return null;
             }
@@ -610,11 +608,11 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
 
         private sealed class FakeMetaBuilder : IMetaBuilder
         {
-            public void Add(IReadOnlyDictionary<string, object> values)
+            public void Add(IReadOnlyDictionary<string, object?> values)
             {
             }
 
-            public IDictionary<string, object> Build()
+            public IDictionary<string, object?>? Build()
             {
                 return null;
             }
@@ -627,32 +625,32 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
                 return existingIncludes;
             }
 
-            public FilterExpression OnApplyFilter(ResourceType resourceType, FilterExpression existingFilter)
+            public FilterExpression? OnApplyFilter(ResourceType resourceType, FilterExpression? existingFilter)
             {
                 return existingFilter;
             }
 
-            public SortExpression OnApplySort(ResourceType resourceType, SortExpression existingSort)
+            public SortExpression? OnApplySort(ResourceType resourceType, SortExpression? existingSort)
             {
                 return existingSort;
             }
 
-            public PaginationExpression OnApplyPagination(ResourceType resourceType, PaginationExpression existingPagination)
+            public PaginationExpression? OnApplyPagination(ResourceType resourceType, PaginationExpression? existingPagination)
             {
                 return existingPagination;
             }
 
-            public SparseFieldSetExpression OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression existingSparseFieldSet)
+            public SparseFieldSetExpression? OnApplySparseFieldSet(ResourceType resourceType, SparseFieldSetExpression? existingSparseFieldSet)
             {
                 return existingSparseFieldSet;
             }
 
-            public object GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
+            public object? GetQueryableHandlerForQueryStringParameter(Type resourceClrType, string parameterName)
             {
                 return null;
             }
 
-            public IDictionary<string, object> GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
+            public IDictionary<string, object?>? GetMeta(ResourceType resourceType, IIdentifiable resourceInstance)
             {
                 return null;
             }
@@ -663,8 +661,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response
                 return Task.CompletedTask;
             }
 
-            public Task<IIdentifiable> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
-                IIdentifiable rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+            public Task<IIdentifiable?> OnSetToOneRelationshipAsync<TResource>(TResource leftResource, HasOneAttribute hasOneRelationship,
+                IIdentifiable? rightResourceId, WriteOperationKind writeOperation, CancellationToken cancellationToken)
                 where TResource : class, IIdentifiable
             {
                 return Task.FromResult(rightResourceId);

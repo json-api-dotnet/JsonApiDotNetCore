@@ -23,8 +23,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
         {
             builder.Entity<WebShop>()
                 .HasMany(webShop => webShop.Products)
-                .WithOne(webProduct => webProduct.Shop)
-                .IsRequired();
+                .WithOne(webProduct => webProduct.Shop);
 
             builder.Entity<WebShop>()
                 .HasQueryFilter(webShop => webShop.TenantId == _tenantProvider.TenantId);

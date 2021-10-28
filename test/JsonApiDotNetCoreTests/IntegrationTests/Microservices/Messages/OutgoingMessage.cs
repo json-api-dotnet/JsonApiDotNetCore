@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Text.Json;
 using JetBrains.Annotations;
 
@@ -13,23 +11,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
         public int FormatVersion { get; set; }
         public string Content { get; set; }
 
+        private OutgoingMessage(string type, int formatVersion, string content)
+        {
+            Type = type;
+            FormatVersion = formatVersion;
+            Content = content;
+        }
+
         public T GetContentAs<T>()
             where T : IMessageContent
         {
-            string namespacePrefix = typeof(IMessageContent).Namespace;
-            var contentType = System.Type.GetType($"{namespacePrefix}.{Type}", true);
+            string namespacePrefix = typeof(IMessageContent).Namespace!;
+            var contentType = System.Type.GetType($"{namespacePrefix}.{Type}", true)!;
 
-            return (T)JsonSerializer.Deserialize(Content, contentType);
+            return (T)JsonSerializer.Deserialize(Content, contentType)!;
         }
 
         public static OutgoingMessage CreateFromContent(IMessageContent content)
         {
-            return new()
-            {
-                Type = content.GetType().Name,
-                FormatVersion = content.FormatVersion,
-                Content = JsonSerializer.Serialize(content, content.GetType())
-            };
+            string value = JsonSerializer.Serialize(content, content.GetType());
+            return new OutgoingMessage(content.GetType().Name, content.FormatVersion, value);
         }
     }
 }

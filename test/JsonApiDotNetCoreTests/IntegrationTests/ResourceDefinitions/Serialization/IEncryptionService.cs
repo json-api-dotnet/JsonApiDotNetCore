@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
     public interface IEncryptionService

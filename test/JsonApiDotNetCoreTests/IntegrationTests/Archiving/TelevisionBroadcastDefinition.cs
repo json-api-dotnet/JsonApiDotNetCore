@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +35,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             _constraintProviders = constraintProviders;
         }
 
-        public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
             if (_request.IsReadOnly)
             {
@@ -101,7 +99,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             return false;
         }
 
-        private bool HasFilterOnArchivedAt(FilterExpression existingFilter)
+        private bool HasFilterOnArchivedAt(FilterExpression? existingFilter)
         {
             if (existingFilter == null)
             {
@@ -184,11 +182,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
             }
         }
 
-        private sealed class FilterWalker : QueryExpressionRewriter<object>
+        private sealed class FilterWalker : QueryExpressionRewriter<object?>
         {
             public bool HasFilterOnArchivedAt { get; private set; }
 
-            public override QueryExpression VisitResourceFieldChain(ResourceFieldChainExpression expression, object argument)
+            public override QueryExpression? VisitResourceFieldChain(ResourceFieldChainExpression expression, object? argument)
             {
                 if (expression.Fields[0].Property.Name == nameof(TelevisionBroadcast.ArchivedAt))
                 {

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -65,20 +63,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
+
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
             responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
             responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+                groupInDatabase.Name.Should().Be(groupName);
             });
 
-            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+            PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
             property.ShouldNotBeNull();
             property.PropertyType.Should().Be(typeof(Guid));
         }
@@ -111,21 +111,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
+            string groupName = $"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}";
+
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItemGroups");
             responseDocument.Data.SingleValue.Id.Should().Be(newGroup.StringId);
             responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(groupName));
             responseDocument.Data.SingleValue.Relationships.Should().BeNull();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 WorkItemGroup groupInDatabase = await dbContext.Groups.FirstWithIdAsync(newGroup.Id);
 
-                groupInDatabase.Name.Should().Be($"{newGroup.Name}{ImplicitlyChangingWorkItemGroupDefinition.Suffix}");
+                groupInDatabase.Name.Should().Be(groupName);
             });
 
-            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
+            PropertyInfo? property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
             property.ShouldNotBeNull();
             property.PropertyType.Should().Be(typeof(Guid));
         }
@@ -166,7 +168,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
 
-            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+            PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
             property.ShouldNotBeNull();
             property.PropertyType.Should().Be(typeof(string));
         }
@@ -207,7 +209,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Creating
                 colorInDatabase.DisplayName.Should().Be(newColor.DisplayName);
             });
 
-            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
+            PropertyInfo? property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
             property.ShouldNotBeNull();
             property.PropertyType.Should().Be(typeof(string));
         }

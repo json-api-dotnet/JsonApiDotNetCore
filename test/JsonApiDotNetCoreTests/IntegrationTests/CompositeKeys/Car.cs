@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
@@ -9,10 +7,10 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Car : Identifiable<string>
+    public sealed class Car : Identifiable<string?>
     {
         [NotMapped]
-        public override string Id
+        public override string? Id
         {
             get => RegionId == default && LicensePlate == default ? null : $"{RegionId}:{LicensePlate}";
             set
@@ -26,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
                 string[] elements = value.Split(':');
 
-                if (elements.Length == 2 && int.TryParse(elements[0], out int regionId))
+                if (elements.Length == 2 && long.TryParse(elements[0], out long regionId))
                 {
                     RegionId = regionId;
                     LicensePlate = elements[1];
@@ -39,15 +37,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         }
 
         [Attr]
-        public string LicensePlate { get; set; }
+        public string? LicensePlate { get; set; }
 
         [Attr]
         public long RegionId { get; set; }
 
         [HasOne]
-        public Engine Engine { get; set; }
+        public Engine Engine { get; set; } = null!;
 
         [HasOne]
-        public Dealership Dealership { get; set; }
+        public Dealership? Dealership { get; set; }
     }
 }

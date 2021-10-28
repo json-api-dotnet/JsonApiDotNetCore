@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,19 +11,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
     public sealed class WorkItemGroup : Identifiable<Guid>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public bool IsPublic { get; set; }
 
         [NotMapped]
         [Attr]
-        public bool IsDeprecated => Name != null && Name.StartsWith("DEPRECATED:", StringComparison.OrdinalIgnoreCase);
+        public bool IsDeprecated => !string.IsNullOrEmpty(Name) && Name.StartsWith("DEPRECATED:", StringComparison.OrdinalIgnoreCase);
 
         [HasOne]
-        public RgbColor Color { get; set; }
+        public RgbColor? Color { get; set; }
 
         [HasMany]
-        public IList<WorkItem> Items { get; set; }
+        public IList<WorkItem> Items { get; set; } = new List<WorkItem>();
     }
 }

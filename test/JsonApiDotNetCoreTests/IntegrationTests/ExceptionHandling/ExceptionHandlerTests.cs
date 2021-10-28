@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -80,7 +78,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.StatusCode.Should().Be(HttpStatusCode.Gone);
             error.Title.Should().Be("The requested article is no longer available.");
             error.Detail.Should().Be("Article with code 'X123' is no longer available.");
-            ((JsonElement)error.Meta["support"]).GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
+
+            error.Meta.ShouldContainKey("support").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("Please contact us for info about similar articles at company@email.com.");
+            });
 
             responseDocument.Meta.Should().BeNull();
 
@@ -112,10 +115,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Failed to deserialize request body: Unknown resource type found.");
             error.Detail.Should().Be("Resource type '' does not exist.");
-            error.Meta["requestBody"].ToString().Should().Be(requestBody);
 
-            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.ShouldNotBeEmpty();
+            error.Meta.ShouldContainKey("requestBody").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be(requestBody);
+            });
+
+            error.Meta.ShouldContainKey("stackTrace").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+
+                stackTraceLines.ShouldNotBeEmpty();
+            });
 
             loggerFactory.Logger.Messages.Should().BeEmpty();
         }
@@ -150,8 +163,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
             error.Title.Should().Be("An unhandled error occurred while processing this request.");
             error.Detail.Should().Be("Exception has been thrown by the target of an invocation.");
 
-            IEnumerable<string> stackTraceLines = ((JsonElement)error.Meta["stackTrace"]).EnumerateArray().Select(token => token.GetString());
-            stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
+            error.Meta.ShouldContainKey("stackTrace").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                IEnumerable<string?> stackTraceLines = element.EnumerateArray().Select(token => token.GetString());
+
+                stackTraceLines.Should().ContainMatch("*ThrowingArticle*");
+            });
 
             responseDocument.Meta.Should().BeNull();
 

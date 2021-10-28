@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
@@ -87,7 +85,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            TopLevelLinks topLevelLinks = linkBuilder.GetTopLevelLinks();
+            TopLevelLinks? topLevelLinks = linkBuilder.GetTopLevelLinks();
 
             // Assert
             if (expected == LinkTypes.None)
@@ -96,6 +94,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
             else
             {
+                topLevelLinks.ShouldNotBeNull();
+
                 if (expected.HasFlag(LinkTypes.Self))
                 {
                     topLevelLinks.Self.ShouldNotBeNull();
@@ -166,11 +166,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             var linkBuilder = new LinkBuilder(options, request, paginationContext, httpContextAccessor, linkGenerator, controllerResourceMapping);
 
             // Act
-            ResourceLinks resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, "id");
+            ResourceLinks? resourceLinks = linkBuilder.GetResourceLinks(exampleResourceType, "id");
 
             // Assert
             if (expected == LinkTypes.Self)
             {
+                resourceLinks.ShouldNotBeNull();
                 resourceLinks.Self.ShouldNotBeNull();
             }
             else
@@ -330,7 +331,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             };
 
             // Act
-            RelationshipLinks relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, "?");
+            RelationshipLinks? relationshipLinks = linkBuilder.GetRelationshipLinks(relationship, "?");
 
             // Assert
             if (expected == LinkTypes.None)
@@ -339,6 +340,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
             }
             else
             {
+                relationshipLinks.ShouldNotBeNull();
+
                 if (expected.HasFlag(LinkTypes.Self))
                 {
                     relationshipLinks.Self.ShouldNotBeNull();
@@ -365,7 +368,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
         private sealed class FakeHttpContextAccessor : IHttpContextAccessor
         {
-            public HttpContext HttpContext { get; set; } = new DefaultHttpContext
+            public HttpContext? HttpContext { get; set; } = new DefaultHttpContext
             {
                 Request =
                 {
@@ -377,12 +380,12 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
 
         private sealed class FakeControllerResourceMapping : IControllerResourceMapping
         {
-            public ResourceType GetResourceTypeForController(Type controllerType)
+            public ResourceType GetResourceTypeForController(Type? controllerType)
             {
                 throw new NotImplementedException();
             }
 
-            public string GetControllerNameForResourceType(ResourceType resourceType)
+            public string? GetControllerNameForResourceType(ResourceType? resourceType)
             {
                 return null;
             }
@@ -391,26 +394,26 @@ namespace JsonApiDotNetCoreTests.UnitTests.Links
         private sealed class FakeLinkGenerator : LinkGenerator
         {
             public override string GetPathByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
-                RouteValueDictionary ambientValues = null, PathString? pathBase = null, FragmentString fragment = new(), LinkOptions options = null)
+                RouteValueDictionary? ambientValues = null, PathString? pathBase = null, FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }
 
             public override string GetPathByAddress<TAddress>(TAddress address, RouteValueDictionary values, PathString pathBase = new(),
-                FragmentString fragment = new(), LinkOptions options = null)
+                FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }
 
             public override string GetUriByAddress<TAddress>(HttpContext httpContext, TAddress address, RouteValueDictionary values,
-                RouteValueDictionary ambientValues = null, string scheme = null, HostString? host = null, PathString? pathBase = null,
-                FragmentString fragment = new(), LinkOptions options = null)
+                RouteValueDictionary? ambientValues = null, string? scheme = null, HostString? host = null, PathString? pathBase = null,
+                FragmentString fragment = new(), LinkOptions? options = null)
             {
                 return "https://domain.com/some/path";
             }
 
             public override string GetUriByAddress<TAddress>(TAddress address, RouteValueDictionary values, string scheme, HostString host,
-                PathString pathBase = new(), FragmentString fragment = new(), LinkOptions options = null)
+                PathString pathBase = new(), FragmentString fragment = new(), LinkOptions? options = null)
             {
                 throw new NotImplementedException();
             }

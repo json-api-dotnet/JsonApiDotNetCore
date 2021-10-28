@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -87,6 +85,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Mixed
             error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
             error.Title.Should().Be("An unhandled error occurred while processing an operation in this request.");
             error.Detail.Should().Be("Simulated failure.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]");
 
             loggerFactory.Logger.Messages.ShouldNotBeEmpty();

@@ -58,12 +58,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             new Faker<Calendar>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(calendar => calendar.TimeZone, faker => faker.Date.TimeZoneString())
+                .RuleFor(calendar => calendar.ShowWeekNumbers, faker => faker.Random.Bool())
                 .RuleFor(calendar => calendar.DefaultAppointmentDurationInMinutes, faker => faker.PickRandom(15, 30, 45, 60)));
 
         private readonly Lazy<Faker<Appointment>> _lazyAppointmentFaker = new(() =>
             new Faker<Appointment>()
                 .UseSeed(GetFakerSeed())
                 .RuleFor(appointment => appointment.Title, faker => faker.Random.Word())
+                .RuleFor(appointment => appointment.Description, faker => faker.Lorem.Sentence())
                 .RuleFor(appointment => appointment.StartTime, faker => faker.Date.FutureOffset()
                     .TruncateToWholeMilliseconds())
                 .RuleFor(appointment => appointment.EndTime, (faker, appointment) => appointment.StartTime.AddHours(faker.Random.Double(1, 4))));

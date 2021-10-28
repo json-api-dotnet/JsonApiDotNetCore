@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -13,12 +11,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class ResourceMetaTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
-        private readonly SupportFakers _fakers = new();
+        private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
+        private readonly MetaFakers _fakers = new();
 
-        public ResourceMetaTests(IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public ResourceMetaTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
         {
             _testContext = testContext;
 

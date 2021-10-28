@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
     public sealed class Label : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public LabelColor Color { get; set; }
 
         [HasMany]
-        public ISet<BlogPost> Posts { get; set; }
+        public ISet<BlogPost> Posts { get; set; } = new HashSet<BlogPost>();
     }
 }

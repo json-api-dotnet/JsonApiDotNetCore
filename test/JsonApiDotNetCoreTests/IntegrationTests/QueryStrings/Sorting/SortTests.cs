@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -83,6 +81,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("sort");
         }
 
@@ -142,6 +141,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("sort");
         }
 
@@ -375,8 +375,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             posts[0].Author = _fakers.WebAccount.Generate();
             posts[1].Author = _fakers.WebAccount.Generate();
 
-            posts[0].Author.DisplayName = "Conner";
-            posts[1].Author.DisplayName = "Smith";
+            posts[0].Author!.DisplayName = "Conner";
+            posts[1].Author!.DisplayName = "Smith";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -470,6 +470,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be($"sort[{Unknown.Relationship}]");
         }
 
@@ -491,6 +492,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified sort is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be($"sort[posts.{Unknown.Relationship}]");
         }
 
@@ -512,6 +514,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Sorting
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Sorting on the requested attribute is not allowed.");
             error.Detail.Should().Be("Sorting on attribute 'dateOfBirth' is not allowed.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("sort");
         }
 

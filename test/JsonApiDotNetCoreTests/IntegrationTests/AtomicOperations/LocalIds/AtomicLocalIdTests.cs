@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -88,19 +86,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("recordCompanies");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newCompany.Name);
-            responseDocument.Results[0].Data.SingleValue.Attributes["countryOfResidence"].Should().Be(newCompany.CountryOfResidence);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("recordCompanies");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompany.Name));
+                resource.Attributes.ShouldContainKey("countryOfResidence").With(value => value.Should().Be(newCompany.CountryOfResidence));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            short newCompanyId = short.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            short newCompanyId = short.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -181,19 +183,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newPerformer.ArtistName);
-            responseDocument.Results[0].Data.SingleValue.Attributes["bornAt"].As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newPerformer.ArtistName));
+                resource.Attributes.ShouldContainKey("bornAt").With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newPerformer.BornAt));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            int newPerformerId = int.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -273,18 +279,22 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("playlists");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("playlists");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            });
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            long newPlaylistId = long.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            long newPlaylistId = long.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -303,6 +313,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             const string companyLocalId = "company-1";
+
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             var requestBody = new
             {
@@ -324,6 +336,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         {
                             type = "recordCompanies",
                             lid = companyLocalId,
+                            attributes = new
+                            {
+                                name = newCompanyName
+                            },
                             relationships = new
                             {
                                 parent = new
@@ -354,6 +370,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Local ID cannot be both defined and used within the same operation.");
             error.Detail.Should().Be("Local ID 'company-1' cannot be both defined and used within the same operation.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -420,6 +437,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Another local ID with the same name is already defined at this point.");
             error.Detail.Should().Be("Another local ID with name 'playlist-1' is already defined at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
@@ -428,7 +446,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newTrackGenre = _fakers.MusicTrack.Generate().Genre;
+            string newTrackGenre = _fakers.MusicTrack.Generate().Genre!;
 
             const string trackLocalId = "track-1";
 
@@ -475,15 +493,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
-            responseDocument.Results[0].Data.SingleValue.Attributes["genre"].Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+                resource.Attributes.ShouldContainKey("genre").With(value => value.Should().BeNull());
+            });
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -499,7 +519,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newArtistName = _fakers.Performer.Generate().ArtistName!;
             string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             const string trackLocalId = "track-1";
@@ -593,26 +613,32 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            });
 
-            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[2].Data.SingleValue.Type.Should().Be("recordCompanies");
-            responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[2].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
+            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("recordCompanies");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanyName));
+            });
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
-            short newCompanyId = short.Parse(responseDocument.Results[2].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
+            short newCompanyId = short.Parse(responseDocument.Results[2].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -706,20 +732,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("recordCompanies");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["name"].Should().Be(newCompanyName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("recordCompanies");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newCompanyName));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            short newCompanyId = short.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            short newCompanyId = short.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -738,7 +768,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newArtistName = _fakers.Performer.Generate().ArtistName!;
 
             const string trackLocalId = "track-1";
             const string performerLocalId = "performer-1";
@@ -804,20 +834,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -902,20 +936,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("playlists");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -936,7 +974,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Performer existingPerformer = _fakers.Performer.Generate();
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newArtistName = _fakers.Performer.Generate().ArtistName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1022,20 +1060,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1142,20 +1184,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("playlists");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1176,7 +1222,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Performer existingPerformer = _fakers.Performer.Generate();
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newArtistName = _fakers.Performer.Generate().ArtistName;
+            string newArtistName = _fakers.Performer.Generate().ArtistName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1262,20 +1308,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(3);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            int newPerformerId = int.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1404,22 +1454,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("playlists");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["name"].Should().Be(newPlaylistName);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("playlists");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newPlaylistName));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[2].Data.Value.Should().BeNull();
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue.Id);
-            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue.Id);
+            long newPlaylistId = long.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
+            Guid newTrackId = Guid.Parse(responseDocument.Results[1].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1441,8 +1495,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             Performer existingPerformer = _fakers.Performer.Generate();
 
             string newTrackTitle = _fakers.MusicTrack.Generate().Title;
-            string newArtistName1 = _fakers.Performer.Generate().ArtistName;
-            string newArtistName2 = _fakers.Performer.Generate().ArtistName;
+            string newArtistName1 = _fakers.Performer.Generate().ArtistName!;
+            string newArtistName2 = _fakers.Performer.Generate().ArtistName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1557,24 +1611,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName1);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName1));
+            });
 
-            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Type.Should().Be("performers");
-            responseDocument.Results[1].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[1].Data.SingleValue.Attributes["artistName"].Should().Be(newArtistName2);
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("performers");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("artistName").With(value => value.Should().Be(newArtistName2));
+            });
 
-            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[2].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[2].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[2].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[2].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[3].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[2].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[2].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -1689,10 +1749,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(4);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
@@ -1756,18 +1818,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Type.Should().Be("musicTracks");
-            responseDocument.Results[0].Data.SingleValue.Lid.Should().BeNull();
-            responseDocument.Results[0].Data.SingleValue.Attributes["title"].Should().Be(newTrackTitle);
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Type.Should().Be("musicTracks");
+                resource.Lid.Should().BeNull();
+                resource.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTrackTitle));
+            });
 
             responseDocument.Results[1].Data.Value.Should().BeNull();
 
-            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id);
+            Guid newTrackId = Guid.Parse(responseDocument.Results[0].Data.SingleValue!.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                MusicTrack trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(newTrackId);
+                MusicTrack? trackInDatabase = await dbContext.MusicTracks.FirstWithIdOrDefaultAsync(newTrackId);
 
                 trackInDatabase.Should().BeNull();
             });
@@ -1816,6 +1880,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1865,6 +1930,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1928,6 +1994,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1935,6 +2002,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         public async Task Cannot_consume_unassigned_local_ID_in_relationship_data_element()
         {
             // Arrange
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
+
             var requestBody = new
             {
                 atomic__operations = new object[]
@@ -1954,6 +2023,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "musicTracks",
+                            attributes = new
+                            {
+                                title = newTrackTitle
+                            },
                             relationships = new
                             {
                                 ownedBy = new
@@ -1984,6 +2057,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -1991,6 +2065,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         public async Task Cannot_consume_unassigned_local_ID_in_relationship_data_array()
         {
             // Arrange
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
+
             var requestBody = new
             {
                 atomic__operations = new object[]
@@ -2010,6 +2086,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "playlists",
+                            attributes = new
+                            {
+                                name = newPlaylistName
+                            },
                             relationships = new
                             {
                                 tracks = new
@@ -2043,6 +2123,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Server-generated value for local ID is not available at this point.");
             error.Detail.Should().Be($"Server-generated value for local ID '{Unknown.LocalId}' is not available at this point.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -2051,6 +2132,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             const string trackLocalId = "track-1";
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             var requestBody = new
             {
@@ -2072,6 +2154,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         {
                             type = "musicTracks",
                             lid = trackLocalId,
+                            attributes = new
+                            {
+                                title = newTrackTitle
+                            },
                             relationships = new
                             {
                                 ownedBy = new
@@ -2102,6 +2188,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'track-1' belongs to resource type 'musicTracks' instead of 'recordCompanies'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[1]");
         }
 
@@ -2110,6 +2197,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             const string companyLocalId = "company-1";
+
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             var requestBody = new
             {
@@ -2130,7 +2219,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "recordCompanies",
-                            lid = companyLocalId
+                            lid = companyLocalId,
+                            attributes = new
+                            {
+                                name = newCompanyName
+                            }
                         }
                     },
                     new
@@ -2159,6 +2252,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'musicTracks'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
@@ -2219,6 +2313,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'playlists'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
@@ -2229,6 +2324,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             MusicTrack existingTrack = _fakers.MusicTrack.Generate();
 
             const string companyLocalId = "company-1";
+
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -2255,7 +2352,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "recordCompanies",
-                            lid = companyLocalId
+                            lid = companyLocalId,
+                            attributes = new
+                            {
+                                name = newCompanyName
+                            }
                         }
                     },
                     new
@@ -2293,6 +2394,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'company-1' belongs to resource type 'recordCompanies' instead of 'performers'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
@@ -2301,6 +2403,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             string newPlaylistName = _fakers.Playlist.Generate().Name;
+            string newTrackTitle = _fakers.MusicTrack.Generate().Title;
 
             const string playlistLocalId = "playlist-1";
 
@@ -2336,6 +2439,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "musicTracks",
+                            attributes = new
+                            {
+                                title = newTrackTitle
+                            },
                             relationships = new
                             {
                                 ownedBy = new
@@ -2366,6 +2473,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'playlist-1' belongs to resource type 'playlists' instead of 'recordCompanies'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
 
@@ -2374,6 +2482,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
         {
             // Arrange
             const string performerLocalId = "performer-1";
+            string newPlaylistName = _fakers.Playlist.Generate().Name;
 
             var requestBody = new
             {
@@ -2403,6 +2512,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
                         data = new
                         {
                             type = "playlists",
+                            attributes = new
+                            {
+                                name = newPlaylistName
+                            },
                             relationships = new
                             {
                                 tracks = new
@@ -2436,6 +2549,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.LocalIds
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Incompatible type in Local ID usage.");
             error.Detail.Should().Be("Local ID 'performer-1' belongs to resource type 'performers' instead of 'musicTracks'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[2]");
         }
     }

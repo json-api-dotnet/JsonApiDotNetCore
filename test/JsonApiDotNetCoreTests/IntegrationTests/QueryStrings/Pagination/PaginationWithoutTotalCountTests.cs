@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -133,7 +131,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
-            responseDocument.Data.ManyValue.Count.Should().BeLessThan(DefaultPageSize);
+            responseDocument.Data.ManyValue.Should().HaveCountLessThan(DefaultPageSize);
 
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");

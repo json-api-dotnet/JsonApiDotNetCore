@@ -21,7 +21,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
         {
             builder.Entity<Photo>()
                 .HasOne(photo => photo.Location)
-                .WithOne(location => location.Photo)
+                .WithOne(location => location!.Photo)
                 .HasForeignKey<Photo>("LocationId");
         }
     }

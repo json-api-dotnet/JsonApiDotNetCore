@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
     public sealed class ProductFamily : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public IList<SupportTicket> Tickets { get; set; }
+        public IList<SupportTicket> Tickets { get; set; } = new List<SupportTicket>();
     }
 }

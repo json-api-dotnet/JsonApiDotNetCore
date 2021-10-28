@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,7 +9,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
     public sealed class Star : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
         public StarKind Kind { get; set; }
@@ -26,6 +24,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
         public bool IsVisibleFromEarth { get; set; }
 
         [HasMany]
-        public ISet<Planet> Planets { get; set; }
+        public ISet<Planet> Planets { get; set; } = new HashSet<Planet>();
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     internal sealed class TestClientSettingsProvider : IClientSettingsProvider

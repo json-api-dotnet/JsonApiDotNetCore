@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -101,6 +99,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         {
             // Arrange
             DebitCard card = _fakers.DebitCard.Generate();
+            card.Account = _fakers.BankAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -246,8 +245,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
-            responseDocument.Data.SingleValue.Attributes["ownerName"].Should().Be(newCard.OwnerName);
-            responseDocument.Data.SingleValue.Attributes["pinCode"].Should().Be(newCard.PinCode);
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("ownerName").With(value => value.Should().Be(newCard.OwnerName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("pinCode").With(value => value.Should().Be(newCard.PinCode));
 
             var codec = new HexadecimalCodec();
             int newCardId = codec.Decode(responseDocument.Data.SingleValue.Id);
@@ -273,6 +273,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
             DebitCard existingCard = _fakers.DebitCard.Generate();
+            existingCard.Account = _fakers.BankAccount.Generate();
 
             string newIban = _fakers.BankAccount.Generate().Iban;
 
@@ -339,6 +340,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             existingAccount.Cards = _fakers.DebitCard.Generate(1);
 
             DebitCard existingDebitCard = _fakers.DebitCard.Generate();
+            existingDebitCard.Account = _fakers.BankAccount.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -444,7 +446,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                BankAccount accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
+                BankAccount? accountInDatabase = await dbContext.BankAccounts.Include(account => account.Cards).FirstWithIdOrDefaultAsync(existingAccount.Id);
 
                 accountInDatabase.Should().BeNull();
             });
@@ -455,7 +457,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
         {
             // Arrange
             var codec = new HexadecimalCodec();
-            string stringId = codec.Encode(Unknown.TypedId.Int32);
+            string? stringId = codec.Encode(Unknown.TypedId.Int32);
 
             string route = $"/bankAccounts/{stringId}";
 

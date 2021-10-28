@@ -21,11 +21,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
         {
             builder.Entity<Game>()
                 .HasMany(game => game.Maps)
-                .WithOne(map => map.Game);
+                .WithOne(map => map.Game!);
 
             builder.Entity<Player>()
                 .HasOne(player => player.ActiveGame)
-                .WithMany(game => game.ActivePlayers);
+                .WithMany(game => game!.ActivePlayers);
         }
     }
 }

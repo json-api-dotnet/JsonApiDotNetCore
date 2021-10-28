@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -23,7 +21,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             var messageBroker = _testContext.Factory.Services.GetRequiredService<MessageBroker>();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             var requestBody = new
             {
@@ -47,8 +45,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newDisplayName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -59,7 +57,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.ShouldHaveCount(1);
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content.UserId.Should().Be(newUserId);
@@ -116,8 +114,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().BeNull());
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -129,7 +127,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.ShouldHaveCount(2);
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<UserCreatedContent>();
             content1.UserId.Should().Be(newUserId);
@@ -151,7 +149,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -213,7 +211,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -235,7 +233,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
                     {
                         group = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -281,7 +279,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             DomainUser existingUser = _fakers.DomainUser.Generate();
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -355,7 +353,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -515,7 +513,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/domainUsers/{existingUser.StringId}/relationships/group";

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -47,6 +45,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             error.Detail.Should().Be("Query string parameter 'foo' is unknown. " +
                 "Set 'AllowUnknownQueryStringParameters' to 'true' in options to ignore unknown parameters.");
 
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("foo");
         }
 
@@ -92,6 +91,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Missing query string parameter value.");
             error.Detail.Should().Be($"Missing value for '{parameterName}' query string parameter.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be(parameterName);
         }
     }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,15 +9,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     public sealed class RecordCompany : Identifiable<short>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [Attr]
-        public string CountryOfResidence { get; set; }
+        public string? CountryOfResidence { get; set; }
 
         [HasMany]
-        public IList<MusicTrack> Tracks { get; set; }
+        public IList<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
 
         [HasOne]
-        public RecordCompany Parent { get; set; }
+        public RecordCompany? Parent { get; set; }
     }
 }

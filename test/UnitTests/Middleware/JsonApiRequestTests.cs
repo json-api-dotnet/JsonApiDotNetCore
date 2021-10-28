@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -132,17 +130,17 @@ namespace UnitTests.Middleware
         private sealed class Tag : Identifiable<int>
         {
             [HasMany]
-            public ISet<TodoItem> TodoItems { get; set; }
+            public ISet<TodoItem> TodoItems { get; set; } = new HashSet<TodoItem>();
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TodoItem : Identifiable<int>
         {
             [HasOne]
-            public Person Owner { get; set; }
+            public Person? Owner { get; set; }
 
             [HasMany]
-            public ISet<Tag> Tags { get; set; }
+            public ISet<Tag> Tags { get; set; } = new HashSet<Tag>();
         }
     }
 }

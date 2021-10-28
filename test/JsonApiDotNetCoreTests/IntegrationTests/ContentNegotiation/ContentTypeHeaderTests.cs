@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -103,6 +101,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be("Please specify 'application/vnd.api+json' instead of 'text/html' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -197,6 +196,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -231,6 +231,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -265,6 +266,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -299,6 +301,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -333,6 +336,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be($"Please specify 'application/vnd.api+json' instead of '{contentType}' for the Content-Type header value.");
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
 
@@ -377,6 +381,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
             error.StatusCode.Should().Be(HttpStatusCode.UnsupportedMediaType);
             error.Title.Should().Be("The specified Content-Type header value is not supported.");
             error.Detail.Should().Be(detail);
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("Content-Type");
         }
     }

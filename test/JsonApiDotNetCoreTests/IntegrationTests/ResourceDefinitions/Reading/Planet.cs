@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,10 +9,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
     public sealed class Planet : Identifiable<int>
     {
         [Attr]
-        public string PublicName { get; set; }
+        public string PublicName { get; set; } = null!;
 
         [Attr]
-        public string PrivateName { get; set; }
+        public string? PrivateName { get; set; }
 
         [Attr]
         public bool HasRingSystem { get; set; }
@@ -23,9 +21,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
         public decimal SolarMass { get; set; }
 
         [HasMany]
-        public ISet<Moon> Moons { get; set; }
+        public ISet<Moon> Moons { get; set; } = new HashSet<Moon>();
 
         [HasOne]
-        public Star BelongsTo { get; set; }
+        public Star? BelongsTo { get; set; }
     }
 }

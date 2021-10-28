@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,15 +9,15 @@ namespace JsonApiDotNetCoreTests.UnitTests.Serialization.Response.Models
     public sealed class Person : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public ISet<Blog> Blogs { get; set; }
+        public ISet<Blog> Blogs { get; set; } = new HashSet<Blog>();
 
         [HasOne]
-        public Food FavoriteFood { get; set; }
+        public Food FavoriteFood { get; set; } = null!;
 
         [HasOne]
-        public Song FavoriteSong { get; set; }
+        public Song FavoriteSong { get; set; } = null!;
     }
 }

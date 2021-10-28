@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,8 +24,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
         {
             Building building = await base.GetForCreateAsync(id, cancellationToken);
 
-            // Must ensure that an instance exists for this required relationship, so that POST succeeds.
-            building.PrimaryDoor = new Door();
+            // Must ensure that an instance exists for this required relationship, so that POST Resource succeeds.
+            building.PrimaryDoor = new Door
+            {
+                Color = "(unspecified)"
+            };
 
             return building;
         }

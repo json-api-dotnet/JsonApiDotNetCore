@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -65,16 +63,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.ShouldHaveCount(3);
-            ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
-            ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
-            string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
+            responseDocument.Meta.ShouldContainKey("license").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("MIT");
+            });
 
-            versionArray.ShouldHaveCount(4);
-            versionArray.Should().Contain("v4.0.0");
-            versionArray.Should().Contain("v3.1.0");
-            versionArray.Should().Contain("v2.5.2");
-            versionArray.Should().Contain("v1.3.1");
+            responseDocument.Meta.ShouldContainKey("projectUrl").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
+            });
+
+            responseDocument.Meta.ShouldContainKey("versions").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
+
+                versionArray.ShouldHaveCount(4);
+                versionArray.Should().Contain("v4.0.0");
+                versionArray.Should().Contain("v3.1.0");
+                versionArray.Should().Contain("v2.5.2");
+                versionArray.Should().Contain("v1.3.1");
+            });
         }
 
         [Fact]
@@ -117,16 +129,30 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.ShouldHaveCount(3);
-            ((JsonElement)responseDocument.Meta["license"]).GetString().Should().Be("MIT");
-            ((JsonElement)responseDocument.Meta["projectUrl"]).GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
 
-            string[] versionArray = ((JsonElement)responseDocument.Meta["versions"]).EnumerateArray().Select(element => element.GetString()).ToArray();
+            responseDocument.Meta.ShouldContainKey("license").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("MIT");
+            });
 
-            versionArray.ShouldHaveCount(4);
-            versionArray.Should().Contain("v4.0.0");
-            versionArray.Should().Contain("v3.1.0");
-            versionArray.Should().Contain("v2.5.2");
-            versionArray.Should().Contain("v1.3.1");
+            responseDocument.Meta.ShouldContainKey("projectUrl").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetString().Should().Be("https://github.com/json-api-dotnet/JsonApiDotNetCore/");
+            });
+
+            responseDocument.Meta.ShouldContainKey("versions").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                string?[] versionArray = element.EnumerateArray().Select(arrayItem => arrayItem.GetString()).ToArray();
+
+                versionArray.ShouldHaveCount(4);
+                versionArray.Should().Contain("v4.0.0");
+                versionArray.Should().Contain("v3.1.0");
+                versionArray.Should().Contain("v2.5.2");
+                versionArray.Should().Contain("v1.3.1");
+            });
         }
     }
 }

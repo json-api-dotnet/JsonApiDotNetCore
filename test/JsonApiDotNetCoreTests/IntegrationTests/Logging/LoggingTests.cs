@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -12,12 +10,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
-    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext>>
+    public sealed class LoggingTests : IClassFixture<IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> _testContext;
-        private readonly AuditFakers _fakers = new();
+        private readonly IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> _testContext;
+        private readonly LoggingFakers _fakers = new();
 
-        public LoggingTests(IntegrationTestContext<TestableStartup<AuditDbContext>, AuditDbContext> testContext)
+        public LoggingTests(IntegrationTestContext<TestableStartup<LoggingDbContext>, LoggingDbContext> testContext)
         {
             _testContext = testContext;
 

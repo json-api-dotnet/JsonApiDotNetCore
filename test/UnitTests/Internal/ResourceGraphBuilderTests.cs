@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using Castle.DynamicProxy;
@@ -79,8 +77,8 @@ namespace UnitTests.Internal
 
         private sealed class ResourceWithoutId : IIdentifiable
         {
-            public string StringId { get; set; }
-            public string LocalId { get; set; }
+            public string? StringId { get; set; }
+            public string? LocalId { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]

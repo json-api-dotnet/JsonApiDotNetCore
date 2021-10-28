@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -48,21 +46,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
         // To optimize performance, the default resource service does not always fetch all resources on write operations.
         // We do that here, to assure everything belongs to the active tenant. On mismatch, a 404 error is thrown.
 
-        public override async Task<TResource> CreateAsync(TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> CreateAsync(TResource resource, CancellationToken cancellationToken)
         {
             await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
 
             return await base.CreateAsync(resource, cancellationToken);
         }
 
-        public override async Task<TResource> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
+        public override async Task<TResource?> UpdateAsync(TId id, TResource resource, CancellationToken cancellationToken)
         {
             await AssertResourcesToAssignInRelationshipsExistAsync(resource, cancellationToken);
 
             return await base.UpdateAsync(id, resource, cancellationToken);
         }
 
-        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object rightValue, CancellationToken cancellationToken)
+        public override async Task SetRelationshipAsync(TId leftId, string relationshipName, object? rightValue, CancellationToken cancellationToken)
         {
             await AssertRightResourcesExistAsync(rightValue, cancellationToken);
 

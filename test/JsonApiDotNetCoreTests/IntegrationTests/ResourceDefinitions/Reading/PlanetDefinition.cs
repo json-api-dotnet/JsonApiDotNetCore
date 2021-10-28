@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
@@ -45,7 +43,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
             return existingIncludes;
         }
 
-        public override FilterExpression OnApplyFilter(FilterExpression existingFilter)
+        public override FilterExpression? OnApplyFilter(FilterExpression? existingFilter)
         {
             _hitCounter.TrackInvocation<Planet>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter);
 

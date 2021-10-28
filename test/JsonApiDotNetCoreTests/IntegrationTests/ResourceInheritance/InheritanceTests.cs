@@ -1,11 +1,8 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
@@ -15,6 +12,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
     public sealed class InheritanceTests : IClassFixture<IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext>>
     {
         private readonly IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> _testContext;
+        private readonly InheritanceFakers _fakers = new();
 
         public InheritanceTests(IntegrationTestContext<TestableStartup<InheritanceDbContext>, InheritanceDbContext> testContext)
         {
@@ -27,12 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_inherited_attributes()
         {
             // Arrange
-            var newMan = new Man
-            {
-                FamilyName = "Smith",
-                IsRetired = true,
-                HasBeard = true
-            };
+            Man newMan = _fakers.Man.Generate();
 
             var requestBody = new
             {
@@ -58,11 +51,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("men");
-            responseDocument.Data.SingleValue.Attributes["familyName"].Should().Be(newMan.FamilyName);
-            responseDocument.Data.SingleValue.Attributes["isRetired"].Should().Be(newMan.IsRetired);
-            responseDocument.Data.SingleValue.Attributes["hasBeard"].Should().Be(newMan.HasBeard);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("familyName").With(value => value.Should().Be(newMan.FamilyName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isRetired").With(value => value.Should().Be(newMan.IsRetired));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasBeard").With(value => value.Should().Be(newMan.HasBeard));
 
-            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -78,7 +71,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_ToOne_relationship()
         {
             // Arrange
-            var existingInsurance = new CompanyHealthInsurance();
+            CompanyHealthInsurance existingInsurance = _fakers.CompanyHealthInsurance.Generate();
+
+            string newFamilyName = _fakers.Man.Generate().FamilyName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -92,6 +87,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
                 data = new
                 {
                     type = "men",
+                    attributes = new
+                    {
+                        familyName = newFamilyName
+                    },
                     relationships = new
                     {
                         healthInsurance = new
@@ -115,12 +114,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.HealthInsurance).FirstWithIdAsync(newManId);
 
+                manInDatabase.HealthInsurance.ShouldNotBeNull();
                 manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
             });
@@ -130,19 +130,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_update_resource()
         {
             // Arrange
-            var existingMan = new Man
-            {
-                FamilyName = "Smith",
-                IsRetired = false,
-                HasBeard = true
-            };
+            Man existingMan = _fakers.Man.Generate();
 
-            var newMan = new Man
-            {
-                FamilyName = "Jackson",
-                IsRetired = true,
-                HasBeard = false
-            };
+            Man newMan = _fakers.Man.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -189,8 +179,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_assign_ToOne_relationship()
         {
             // Arrange
-            var existingMan = new Man();
-            var existingInsurance = new CompanyHealthInsurance();
+            Man existingMan = _fakers.Man.Generate();
+            FamilyHealthInsurance existingInsurance = _fakers.FamilyHealthInsurance.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -203,7 +193,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             {
                 data = new
                 {
-                    type = "companyHealthInsurances",
+                    type = "familyHealthInsurances",
                     id = existingInsurance.StringId
                 }
             };
@@ -222,7 +212,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             {
                 Man manInDatabase = await dbContext.Men.Include(man => man.HealthInsurance).FirstWithIdAsync(existingMan.Id);
 
-                manInDatabase.HealthInsurance.Should().BeOfType<CompanyHealthInsurance>();
+                manInDatabase.HealthInsurance.ShouldNotBeNull();
+                manInDatabase.HealthInsurance.Should().BeOfType<FamilyHealthInsurance>();
                 manInDatabase.HealthInsurance.Id.Should().Be(existingInsurance.Id);
             });
         }
@@ -231,8 +222,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_OneToMany_relationship()
         {
             // Arrange
-            var existingFather = new Man();
-            var existingMother = new Woman();
+            Man existingFather = _fakers.Man.Generate();
+            Woman existingMother = _fakers.Woman.Generate();
+
+            string newFamilyName = _fakers.Man.Generate().FamilyName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -246,6 +239,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
                 data = new
                 {
                     type = "men",
+                    attributes = new
+                    {
+                        familyName = newFamilyName
+                    },
                     relationships = new
                     {
                         parents = new
@@ -277,7 +274,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -293,9 +290,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_assign_OneToMany_relationship()
         {
             // Arrange
-            var existingChild = new Man();
-            var existingFather = new Man();
-            var existingMother = new Woman();
+            Man existingChild = _fakers.Man.Generate();
+            Man existingFather = _fakers.Man.Generate();
+            Woman existingMother = _fakers.Woman.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -345,8 +342,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_create_resource_with_ManyToMany_relationship()
         {
             // Arrange
-            var existingBook = new Book();
-            var existingVideo = new Video();
+            Book existingBook = _fakers.Book.Generate();
+            Video existingVideo = _fakers.Video.Generate();
+
+            string newFamilyName = _fakers.Man.Generate().FamilyName;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -360,6 +359,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
                 data = new
                 {
                     type = "men",
+                    attributes = new
+                    {
+                        familyName = newFamilyName
+                    },
                     relationships = new
                     {
                         favoriteContent = new
@@ -391,7 +394,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            int newManId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newManId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -407,9 +410,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance
         public async Task Can_assign_ManyToMany_relationship()
         {
             // Arrange
-            var existingBook = new Book();
-            var existingVideo = new Video();
-            var existingMan = new Man();
+            Book existingBook = _fakers.Book.Generate();
+            Video existingVideo = _fakers.Video.Generate();
+            Man existingMan = _fakers.Man.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

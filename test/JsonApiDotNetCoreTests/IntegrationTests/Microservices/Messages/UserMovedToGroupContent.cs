@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -10,8 +8,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
     {
         public int FormatVersion => 1;
 
-        public Guid UserId { get; set; }
-        public Guid BeforeGroupId { get; set; }
-        public Guid AfterGroupId { get; set; }
+        public Guid UserId { get; }
+        public Guid BeforeGroupId { get; }
+        public Guid AfterGroupId { get; }
+
+        public UserMovedToGroupContent(Guid userId, Guid beforeGroupId, Guid afterGroupId)
+        {
+            UserId = userId;
+            BeforeGroupId = beforeGroupId;
+            AfterGroupId = afterGroupId;
+        }
     }
 }

@@ -56,8 +56,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             }
             else
             {
-                exception.Errors[0].Source.ShouldNotBeNull();
-                exception.Errors[0].Source!.Pointer.Should().Be(expectedJsonPath);
+                exception.Errors[0].Source.ShouldNotBeNull().With(value => value.Pointer.Should().Be(expectedJsonPath));
             }
         }
 
@@ -108,8 +107,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.ModelStateValidation
             }
             else
             {
-                exception.Errors[0].Source.ShouldNotBeNull();
-                exception.Errors[0].Source!.Pointer.Should().Be(expectedJsonPath);
+                exception.Errors[0].Source.ShouldNotBeNull().With(value => value.Pointer.Should().Be(expectedJsonPath));
             }
         }
 

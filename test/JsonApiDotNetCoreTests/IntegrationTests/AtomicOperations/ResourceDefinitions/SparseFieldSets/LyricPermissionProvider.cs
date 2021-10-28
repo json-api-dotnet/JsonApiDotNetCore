@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefinitions.SparseFieldSets
 {
     public sealed class LyricPermissionProvider

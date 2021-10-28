@@ -1,7 +1,4 @@
-#nullable disable
-
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -13,14 +10,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
     public sealed class Playlist : Identifiable<long>
     {
         [Attr]
-        [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [NotMapped]
         [Attr]
         public bool IsArchived => false;
 
         [HasMany]
-        public IList<MusicTrack> Tracks { get; set; }
+        public IList<MusicTrack> Tracks { get; set; } = new List<MusicTrack>();
     }
 }

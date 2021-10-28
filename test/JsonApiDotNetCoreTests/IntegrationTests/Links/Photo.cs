@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
     public sealed class Photo : Identifiable<Guid>
     {
         [Attr]
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         [HasOne]
-        public PhotoLocation Location { get; set; }
+        public PhotoLocation? Location { get; set; }
 
         [HasOne]
-        public PhotoAlbum Album { get; set; }
+        public PhotoAlbum? Album { get; set; }
     }
 }

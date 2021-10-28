@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,16 +49,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[0].StringId);
             item1.Type.Should().Be("workItems");
-            item1.Attributes["description"].Should().Be(workItems[0].Description);
-            item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[0].DueAt.GetValueOrDefault());
-            item1.Attributes["priority"].Should().Be(workItems[0].Priority);
+            item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[0].Description));
+            item1.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(workItems[0].DueAt!.Value));
+            item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[0].Priority));
             item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItems[1].StringId);
             item2.Type.Should().Be("workItems");
-            item2.Attributes["description"].Should().Be(workItems[1].Description);
-            item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItems[1].DueAt.GetValueOrDefault());
-            item2.Attributes["priority"].Should().Be(workItems[1].Priority);
+            item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItems[1].Description));
+            item2.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(workItems[1].DueAt!.Value));
+            item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItems[1].Priority));
             item2.Relationships.ShouldNotBeEmpty();
         }
 
@@ -99,12 +97,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            DateTimeOffset dueAt = workItem.DueAt!.Value;
+
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("workItems");
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.StringId);
-            responseDocument.Data.SingleValue.Attributes["description"].Should().Be(workItem.Description);
-            responseDocument.Data.SingleValue.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(workItem.DueAt.GetValueOrDefault());
-            responseDocument.Data.SingleValue.Attributes["priority"].Should().Be(workItem.Priority);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("description").With(value => value.Should().Be(workItem.Description));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(workItem.Priority));
             responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
         }
 
@@ -169,8 +169,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("userAccounts");
             responseDocument.Data.SingleValue.Id.Should().Be(workItem.Assignee.StringId);
-            responseDocument.Data.SingleValue.Attributes["firstName"].Should().Be(workItem.Assignee.FirstName);
-            responseDocument.Data.SingleValue.Attributes["lastName"].Should().Be(workItem.Assignee.LastName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("firstName").With(value => value.Should().Be(workItem.Assignee.FirstName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("lastName").With(value => value.Should().Be(workItem.Assignee.LastName));
             responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
         }
 
@@ -220,18 +220,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
 
             responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
+            DateTimeOffset dueAt1 = userAccount.AssignedItems.ElementAt(0).DueAt!.Value;
+            DateTimeOffset dueAt2 = userAccount.AssignedItems.ElementAt(1).DueAt!.Value;
+
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(0).StringId);
             item1.Type.Should().Be("workItems");
-            item1.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(0).Description);
-            item1.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(0).DueAt.GetValueOrDefault());
-            item1.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(0).Priority);
+            item1.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Description));
+            item1.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt1));
+            item1.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(0).Priority));
             item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == userAccount.AssignedItems.ElementAt(1).StringId);
             item2.Type.Should().Be("workItems");
-            item2.Attributes["description"].Should().Be(userAccount.AssignedItems.ElementAt(1).Description);
-            item2.Attributes["dueAt"].As<DateTimeOffset?>().Should().BeCloseTo(userAccount.AssignedItems.ElementAt(1).DueAt.GetValueOrDefault());
-            item2.Attributes["priority"].Should().Be(userAccount.AssignedItems.ElementAt(1).Priority);
+            item2.Attributes.ShouldContainKey("description").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Description));
+            item2.Attributes.ShouldContainKey("dueAt").With(value => value.As<DateTimeOffset?>().Should().BeCloseTo(dueAt2));
+            item2.Attributes.ShouldContainKey("priority").With(value => value.Should().Be(userAccount.AssignedItems.ElementAt(1).Priority));
             item2.Relationships.ShouldNotBeEmpty();
         }
 
@@ -283,14 +286,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Fetching
 
             ResourceObject item1 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(0).StringId);
             item1.Type.Should().Be("workTags");
-            item1.Attributes["text"].Should().Be(workItem.Tags.ElementAt(0).Text);
-            item1.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn);
+            item1.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(0).Text));
+            item1.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(0).IsBuiltIn));
             item1.Relationships.ShouldNotBeEmpty();
 
             ResourceObject item2 = responseDocument.Data.ManyValue.Single(resource => resource.Id == workItem.Tags.ElementAt(1).StringId);
             item2.Type.Should().Be("workTags");
-            item2.Attributes["text"].Should().Be(workItem.Tags.ElementAt(1).Text);
-            item2.Attributes["isBuiltIn"].Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn);
+            item2.Attributes.ShouldContainKey("text").With(value => value.Should().Be(workItem.Tags.ElementAt(1).Text));
+            item2.Attributes.ShouldContainKey("isBuiltIn").With(value => value.Should().Be(workItem.Tags.ElementAt(1).IsBuiltIn));
             item2.Relationships.ShouldNotBeEmpty();
         }
 

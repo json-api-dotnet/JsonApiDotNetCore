@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -19,8 +17,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
         private readonly ResourceDefinitionHitCounter _hitCounter;
         private readonly List<OutgoingMessage> _pendingMessages = new();
 
-        private string _beforeLoginName;
-        private string _beforeDisplayName;
+        private string? _beforeLoginName;
+        private string? _beforeDisplayName;
 
         protected MessagingUserDefinition(IResourceGraph resourceGraph, DbSet<DomainUser> userSet, ResourceDefinitionHitCounter hitCounter)
             : base(resourceGraph)
@@ -46,7 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
             return Task.CompletedTask;
         }
 
-        public override Task<IIdentifiable> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable rightResourceId,
+        public override Task<IIdentifiable?> OnSetToOneRelationshipAsync(DomainUser user, HasOneAttribute hasOneRelationship, IIdentifiable? rightResourceId,
             WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
             _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnSetToOneRelationshipAsync);
@@ -54,32 +52,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
             if (hasOneRelationship.Property.Name == nameof(DomainUser.Group))
             {
                 var afterGroupId = (Guid?)rightResourceId?.GetTypedId();
-                IMessageContent content = null;
+                IMessageContent? content = null;
 
                 if (user.Group != null && afterGroupId == null)
                 {
-                    content = new UserRemovedFromGroupContent
-                    {
-                        UserId = user.Id,
-                        GroupId = user.Group.Id
-                    };
+                    content = new UserRemovedFromGroupContent(user.Id, user.Group.Id);
                 }
                 else if (user.Group == null && afterGroupId != null)
                 {
-                    content = new UserAddedToGroupContent
-                    {
-                        UserId = user.Id,
-                        GroupId = afterGroupId.Value
-                    };
+                    content = new UserAddedToGroupContent(user.Id, afterGroupId.Value);
                 }
                 else if (user.Group != null && afterGroupId != null && user.Group.Id != afterGroupId)
                 {
-                    content = new UserMovedToGroupContent
-                    {
-                        UserId = user.Id,
-                        BeforeGroupId = user.Group.Id,
-                        AfterGroupId = afterGroupId.Value
-                    };
+                    content = new UserMovedToGroupContent(user.Id, user.Group.Id, afterGroupId.Value);
                 }
 
                 if (content != null)
@@ -96,61 +81,38 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
         {
             if (writeOperation == WriteOperationKind.CreateResource)
             {
-                var message = OutgoingMessage.CreateFromContent(new UserCreatedContent
-                {
-                    UserId = user.Id,
-                    UserLoginName = user.LoginName,
-                    UserDisplayName = user.DisplayName
-                });
-
+                var content = new UserCreatedContent(user.Id, user.LoginName, user.DisplayName);
+                var message = OutgoingMessage.CreateFromContent(content);
                 await FlushMessageAsync(message, cancellationToken);
             }
             else if (writeOperation == WriteOperationKind.UpdateResource)
             {
                 if (_beforeLoginName != user.LoginName)
                 {
-                    var message = OutgoingMessage.CreateFromContent(new UserLoginNameChangedContent
-                    {
-                        UserId = user.Id,
-                        BeforeUserLoginName = _beforeLoginName,
-                        AfterUserLoginName = user.LoginName
-                    });
-
+                    var content = new UserLoginNameChangedContent(user.Id, _beforeLoginName!, user.LoginName);
+                    var message = OutgoingMessage.CreateFromContent(content);
                     await FlushMessageAsync(message, cancellationToken);
                 }
 
                 if (_beforeDisplayName != user.DisplayName)
                 {
-                    var message = OutgoingMessage.CreateFromContent(new UserDisplayNameChangedContent
-                    {
-                        UserId = user.Id,
-                        BeforeUserDisplayName = _beforeDisplayName,
-                        AfterUserDisplayName = user.DisplayName
-                    });
-
+                    var content = new UserDisplayNameChangedContent(user.Id, _beforeDisplayName!, user.DisplayName);
+                    var message = OutgoingMessage.CreateFromContent(content);
                     await FlushMessageAsync(message, cancellationToken);
                 }
             }
             else if (writeOperation == WriteOperationKind.DeleteResource)
             {
-                DomainUser userToDelete = await GetUserToDeleteAsync(user.Id, cancellationToken);
+                DomainUser? userToDelete = await GetUserToDeleteAsync(user.Id, cancellationToken);
 
                 if (userToDelete?.Group != null)
                 {
-                    var removeMessage = OutgoingMessage.CreateFromContent(new UserRemovedFromGroupContent
-                    {
-                        UserId = user.Id,
-                        GroupId = userToDelete.Group.Id
-                    });
-
-                    await FlushMessageAsync(removeMessage, cancellationToken);
+                    var content = new UserRemovedFromGroupContent(user.Id, userToDelete.Group.Id);
+                    var message = OutgoingMessage.CreateFromContent(content);
+                    await FlushMessageAsync(message, cancellationToken);
                 }
 
-                var deleteMessage = OutgoingMessage.CreateFromContent(new UserDeletedContent
-                {
-                    UserId = user.Id
-                });
-
+                var deleteMessage = OutgoingMessage.CreateFromContent(new UserDeletedContent(user.Id));
                 await FlushMessageAsync(deleteMessage, cancellationToken);
             }
 
@@ -162,7 +124,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices
 
         protected abstract Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken);
 
-        protected virtual async Task<DomainUser> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
+        protected virtual async Task<DomainUser?> GetUserToDeleteAsync(Guid userId, CancellationToken cancellationToken)
         {
             return await _userSet.Include(domainUser => domainUser.Group).FirstOrDefaultAsync(domainUser => domainUser.Id == userId, cancellationToken);
         }

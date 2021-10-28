@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -14,12 +12,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
 {
-    public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext>>
+    public sealed class TopLevelCountTests : IClassFixture<IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext>>
     {
-        private readonly IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> _testContext;
-        private readonly SupportFakers _fakers = new();
+        private readonly IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> _testContext;
+        private readonly MetaFakers _fakers = new();
 
-        public TopLevelCountTests(IntegrationTestContext<TestableStartup<SupportDbContext>, SupportDbContext> testContext)
+        public TopLevelCountTests(IntegrationTestContext<TestableStartup<MetaDbContext>, MetaDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -57,7 +55,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.ShouldNotBeNull();
-            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(1);
+
+            responseDocument.Meta.ShouldContainKey("total").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetInt32().Should().Be(1);
+            });
         }
 
         [Fact]
@@ -78,7 +81,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Meta.ShouldNotBeNull();
-            ((JsonElement)responseDocument.Meta["total"]).GetInt32().Should().Be(0);
+
+            responseDocument.Meta.ShouldContainKey("total").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetInt32().Should().Be(0);
+            });
         }
 
         [Fact]

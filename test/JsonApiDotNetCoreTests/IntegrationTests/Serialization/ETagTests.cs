@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -48,7 +46,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
             httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument.Should().BeEmpty();
@@ -76,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
             httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument.ShouldNotBeEmpty();
@@ -177,6 +175,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             error.StatusCode.Should().Be(HttpStatusCode.PreconditionFailed);
             error.Title.Should().Be("Detection of mid-air edit collisions using ETags is not supported.");
             error.Detail.Should().BeNull();
+            error.Source.ShouldNotBeNull();
             error.Source.Header.Should().Be("If-Match");
         }
 
@@ -211,7 +210,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             httpResponse2.Should().HaveStatusCode(HttpStatusCode.NotModified);
 
             httpResponse2.Headers.ETag.ShouldNotBeNull();
-            httpResponse2.Headers.ETag!.IsWeak.Should().BeFalse();
+            httpResponse2.Headers.ETag.IsWeak.Should().BeFalse();
             httpResponse2.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument2.Should().BeEmpty();
@@ -244,7 +243,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             httpResponse.Headers.ETag.ShouldNotBeNull();
-            httpResponse.Headers.ETag!.IsWeak.Should().BeFalse();
+            httpResponse.Headers.ETag.IsWeak.Should().BeFalse();
             httpResponse.Headers.ETag.Tag.ShouldNotBeNullOrEmpty();
 
             responseDocument.ShouldNotBeEmpty();

@@ -1,8 +1,7 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Resources;
@@ -31,10 +30,12 @@ namespace UnitTests.Builders
 
             // Assert
             var resourceGraph = container.GetRequiredService<IResourceGraph>();
+
             ResourceType dbResourceType = resourceGraph.GetResourceType("dbResources");
+            dbResourceType.ClrType.Should().Be(typeof(DbResource));
+
             ResourceType nonDbResourceType = resourceGraph.GetResourceType("nonDbResources");
-            Assert.Equal(typeof(DbResource), dbResourceType.ClrType);
-            Assert.Equal(typeof(NonDbResource), nonDbResourceType.ClrType);
+            nonDbResourceType.ClrType.Should().Be(typeof(NonDbResource));
         }
 
         [Fact]
@@ -49,8 +50,8 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
-            Assert.Equal("testResources", testResourceType.PublicName);
+            ResourceType testResourceType = resourceGraph.GetResourceType<TestResource>();
+            testResourceType.PublicName.Should().Be("testResources");
         }
 
         [Fact]
@@ -65,8 +66,8 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
-            Assert.Contains(testResourceType.Attributes, attribute => attribute.PublicName == "compoundAttribute");
+            ResourceType testResourceType = resourceGraph.GetResourceType<TestResource>();
+            testResourceType.Attributes.Should().ContainSingle(attribute => attribute.PublicName == "compoundAttribute");
         }
 
         [Fact]
@@ -81,9 +82,15 @@ namespace UnitTests.Builders
             IResourceGraph resourceGraph = builder.Build();
 
             // Assert
-            ResourceType testResourceType = resourceGraph.GetResourceType(typeof(TestResource));
-            Assert.Equal("relatedResource", testResourceType.Relationships.Single(relationship => relationship is HasOneAttribute).PublicName);
-            Assert.Equal("relatedResources", testResourceType.Relationships.Single(relationship => relationship is not HasOneAttribute).PublicName);
+            ResourceType testResourceType = resourceGraph.GetResourceType<TestResource>();
+
+            testResourceType.Relationships.Should().HaveCount(2);
+
+            testResourceType.Relationships.ElementAt(0).Should().BeOfType<HasOneAttribute>();
+            testResourceType.Relationships.ElementAt(0).PublicName.Should().Be("relatedResource");
+
+            testResourceType.Relationships.ElementAt(1).Should().BeOfType<HasManyAttribute>();
+            testResourceType.Relationships.ElementAt(1).PublicName.Should().Be("relatedResources");
         }
 
         private sealed class NonDbResource : Identifiable<int>
@@ -97,7 +104,7 @@ namespace UnitTests.Builders
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class TestDbContext : DbContext
         {
-            public DbSet<DbResource> DbResources { get; set; }
+            public DbSet<DbResource> DbResources => Set<DbResource>();
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
@@ -109,20 +116,20 @@ namespace UnitTests.Builders
         public sealed class TestResource : Identifiable<int>
         {
             [Attr]
-            public string CompoundAttribute { get; set; }
+            public string? CompoundAttribute { get; set; }
 
             [HasOne]
-            public RelatedResource RelatedResource { get; set; }
+            public RelatedResource? RelatedResource { get; set; }
 
             [HasMany]
-            public ISet<RelatedResource> RelatedResources { get; set; }
+            public ISet<RelatedResource> RelatedResources { get; set; } = new HashSet<RelatedResource>();
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         public sealed class RelatedResource : Identifiable<int>
         {
             [Attr]
-            public string Unused { get; set; }
+            public string? Unused { get; set; }
         }
     }
 }

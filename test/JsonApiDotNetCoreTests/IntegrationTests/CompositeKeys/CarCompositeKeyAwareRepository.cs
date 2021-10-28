@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -37,19 +35,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
         {
             if (queryLayer.Filter != null)
             {
-                queryLayer.Filter = (FilterExpression)_writer.Visit(queryLayer.Filter, null);
+                queryLayer.Filter = (FilterExpression?)_writer.Visit(queryLayer.Filter, null);
             }
 
             if (queryLayer.Sort != null)
             {
-                queryLayer.Sort = (SortExpression)_writer.Visit(queryLayer.Sort, null);
+                queryLayer.Sort = (SortExpression?)_writer.Visit(queryLayer.Sort, null);
             }
 
             if (queryLayer.Projection != null)
             {
-                foreach (QueryLayer nextLayer in queryLayer.Projection.Values.Where(layer => layer != null))
+                foreach (QueryLayer? nextLayer in queryLayer.Projection.Values.Where(layer => layer != null))
                 {
-                    RecursiveRewriteFilterInLayer(nextLayer);
+                    RecursiveRewriteFilterInLayer(nextLayer!);
                 }
             }
         }

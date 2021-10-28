@@ -34,7 +34,7 @@ namespace JsonApiDotNetCore.AtomicOperations
 
         protected virtual IOperationProcessor ResolveProcessor(OperationContainer operation)
         {
-            Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation.GetValueOrDefault());
+            Type processorInterface = GetProcessorInterface(operation.Request.WriteOperation!.Value);
             ResourceType resourceType = operation.Request.PrimaryResourceType!;
 
             Type processorType = processorInterface.MakeGenericType(resourceType.ClrType, resourceType.IdentityClrType);

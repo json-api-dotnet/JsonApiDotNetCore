@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +13,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
     {
         private readonly MessageBroker _messageBroker;
         private readonly ResourceDefinitionHitCounter _hitCounter;
-        private DomainGroup _groupToDelete;
+        private DomainGroup? _groupToDelete;
 
         public FireForgetGroupDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
             ResourceDefinitionHitCounter hitCounter)
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             return _messageBroker.PostMessageAsync(message, cancellationToken);
         }
 
-        protected override Task<DomainGroup> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
+        protected override Task<DomainGroup?> GetGroupToDeleteAsync(Guid groupId, CancellationToken cancellationToken)
         {
             return Task.FromResult(_groupToDelete);
         }

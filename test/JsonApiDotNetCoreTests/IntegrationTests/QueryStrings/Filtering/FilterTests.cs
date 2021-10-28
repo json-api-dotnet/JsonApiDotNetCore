@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -46,6 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be($"filter[{Unknown.Relationship}]");
         }
 
@@ -67,6 +66,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be($"filter[posts.{Unknown.Relationship}]");
         }
 
@@ -88,6 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Filtering on the requested attribute is not allowed.");
             error.Detail.Should().Be("Filtering on attribute 'dateOfBirth' is not allowed.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("filter");
         }
 
@@ -114,7 +115,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(accounts[0].StringId);
-            responseDocument.Data.ManyValue[0].Attributes["userName"].Should().Be(accounts[0].UserName);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(accounts[0].UserName));
         }
     }
 }

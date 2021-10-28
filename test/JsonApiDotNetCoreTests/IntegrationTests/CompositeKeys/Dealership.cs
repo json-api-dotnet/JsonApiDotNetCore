@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     public sealed class Dealership : Identifiable<int>
     {
         [Attr]
-        public string Address { get; set; }
+        public string Address { get; set; } = null!;
 
         [HasMany]
-        public ISet<Car> Inventory { get; set; }
+        public ISet<Car> Inventory { get; set; } = new HashSet<Car>();
     }
 }

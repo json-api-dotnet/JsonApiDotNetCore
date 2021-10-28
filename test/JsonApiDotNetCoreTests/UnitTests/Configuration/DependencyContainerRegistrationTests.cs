@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using FluentAssertions;
 using JetBrains.Annotations;
@@ -46,8 +44,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Configuration
             };
 
             // Assert
-            action.Should().ThrowExactly<AggregateException>().WithMessage("Some services are not able to be constructed * " +
-                "Singleton * Cannot consume scoped service *");
+            action.Should().ThrowExactly<AggregateException>()
+                .WithMessage("Some services are not able to be constructed * Singleton * Cannot consume scoped service *");
         }
 
         [Fact]
@@ -69,8 +67,8 @@ namespace JsonApiDotNetCoreTests.UnitTests.Configuration
             };
 
             // Assert
-            action.Should().ThrowExactly<AggregateException>().WithMessage("Some services are not able to be constructed * " +
-                "A circular dependency was detected *");
+            action.Should().ThrowExactly<AggregateException>()
+                .WithMessage("Some services are not able to be constructed * A circular dependency was detected *");
         }
 
         private static IHostBuilder CreateValidatingHostBuilder()
@@ -130,7 +128,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Configuration
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
         private sealed class DependencyContainerRegistrationDbContext : DbContext
         {
-            public DbSet<Resource> Resources { get; set; }
+            public DbSet<Resource> Resources => Set<Resource>();
 
             public DependencyContainerRegistrationDbContext(DbContextOptions<DependencyContainerRegistrationDbContext> options)
                 : base(options)
@@ -142,7 +140,7 @@ namespace JsonApiDotNetCoreTests.UnitTests.Configuration
         private sealed class Resource : Identifiable<int>
         {
             [Attr]
-            public string Field { get; set; }
+            public string? Field { get; set; }
         }
     }
 }

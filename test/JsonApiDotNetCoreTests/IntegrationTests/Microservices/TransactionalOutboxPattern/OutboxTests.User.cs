@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +23,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             var hitCounter = _testContext.Factory.Services.GetRequiredService<ResourceDefinitionHitCounter>();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -54,8 +52,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(newDisplayName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(newDisplayName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -63,7 +61,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -126,8 +124,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["loginName"].Should().Be(newLoginName);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().BeNull();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("loginName").With(value => value.Should().Be(newLoginName));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().BeNull());
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -136,7 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                 (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
-            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newUserId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -163,7 +161,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
 
             string newLoginName = _fakers.DomainUser.Generate().LoginName;
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -228,7 +226,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
             existingUser.Group = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -251,7 +249,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                     {
                         group = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -299,7 +297,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
             DomainUser existingUser = _fakers.DomainUser.Generate();
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -376,7 +374,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             DomainGroup existingGroup = _fakers.DomainGroup.Generate();
 
-            string newDisplayName = _fakers.DomainUser.Generate().DisplayName;
+            string newDisplayName = _fakers.DomainUser.Generate().DisplayName!;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -546,7 +544,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/domainUsers/{existingUser.StringId}/relationships/group";

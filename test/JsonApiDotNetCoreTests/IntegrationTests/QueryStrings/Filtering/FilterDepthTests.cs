@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -87,6 +85,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("filter");
         }
 
@@ -143,6 +142,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified filter is invalid.");
             error.Detail.Should().Be("This query string parameter can only be used on a collection of resources (not on a single resource).");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("filter");
         }
 
@@ -152,9 +152,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Arrange
             List<BlogPost> posts = _fakers.BlogPost.Generate(3);
             posts[0].Author = _fakers.WebAccount.Generate();
-            posts[0].Author.UserName = "Conner";
+            posts[0].Author!.UserName = "Conner";
             posts[1].Author = _fakers.WebAccount.Generate();
-            posts[1].Author.UserName = "Smith";
+            posts[1].Author!.UserName = "Smith";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -176,7 +176,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             responseDocument.Data.ManyValue.Should().ContainSingle(post => post.Id == posts[2].StringId);
 
             responseDocument.Included.ShouldHaveCount(1);
-            responseDocument.Included[0].Id.Should().Be(posts[1].Author.StringId);
+            responseDocument.Included[0].Id.Should().Be(posts[1].Author!.StringId);
         }
 
         [Fact]
@@ -466,14 +466,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             posts[1].Author = _fakers.WebAccount.Generate();
             posts[2].Author = _fakers.WebAccount.Generate();
 
-            posts[0].Author.UserName = "Joe";
-            posts[0].Author.DisplayName = "Smith";
+            posts[0].Author!.UserName = "Joe";
+            posts[0].Author!.DisplayName = "Smith";
 
-            posts[1].Author.UserName = "John";
-            posts[1].Author.DisplayName = "Doe";
+            posts[1].Author!.UserName = "John";
+            posts[1].Author!.DisplayName = "Doe";
 
-            posts[2].Author.UserName = "Jack";
-            posts[2].Author.DisplayName = "Miller";
+            posts[2].Author!.UserName = "Jack";
+            posts[2].Author!.DisplayName = "Miller";
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {

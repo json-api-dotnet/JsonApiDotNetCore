@@ -1,5 +1,4 @@
-#nullable disable
-
+using FluentAssertions;
 using JsonApiDotNetCore.Resources;
 using Xunit;
 
@@ -15,7 +14,7 @@ namespace UnitTests.Models
                 StringId = "1"
             };
 
-            Assert.Equal(1, resource.Id);
+            resource.Id.Should().Be(1);
         }
 
         [Fact]
@@ -26,20 +25,22 @@ namespace UnitTests.Models
                 StringId = null
             };
 
-            Assert.Equal(0, resource.Id);
+            resource.Id.Should().Be(0);
         }
 
         [Fact]
         public void GetStringId_Returns_Null_If_Object_Is_Default()
         {
             var resource = new IntId();
-            string stringId = resource.ExposedGetStringId(default);
-            Assert.Null(stringId);
+
+            string? stringId = resource.ExposedGetStringId(default);
+
+            stringId.Should().BeNull();
         }
 
         private sealed class IntId : Identifiable<int>
         {
-            public string ExposedGetStringId(int value)
+            public string? ExposedGetStringId(int value)
             {
                 return GetStringId(value);
             }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using System.Net;
@@ -41,6 +39,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 
         [Theory]
         [InlineData(nameof(FilterableResource.SomeString), "text")]
+        [InlineData(nameof(FilterableResource.SomeNullableString), "text")]
         [InlineData(nameof(FilterableResource.SomeBoolean), true)]
         [InlineData(nameof(FilterableResource.SomeNullableBoolean), true)]
         [InlineData(nameof(FilterableResource.SomeInt32), 1)]
@@ -51,12 +50,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         [InlineData(nameof(FilterableResource.SomeNullableDouble), 0.5d)]
         [InlineData(nameof(FilterableResource.SomeEnum), DayOfWeek.Saturday)]
         [InlineData(nameof(FilterableResource.SomeNullableEnum), DayOfWeek.Saturday)]
-        public async Task Can_filter_equality_on_type(string propertyName, object value)
+        public async Task Can_filter_equality_on_type(string propertyName, object propertyValue)
         {
             // Arrange
             var resource = new FilterableResource();
-            PropertyInfo property = typeof(FilterableResource).GetProperty(propertyName);
-            property?.SetValue(resource, value);
+            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
+            property?.SetValue(resource, propertyValue);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -66,7 +65,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             });
 
             string attributeName = propertyName.Camelize();
-            string route = $"/filterableResources?filter=equals({attributeName},'{value}')";
+            string route = $"/filterableResources?filter=equals({attributeName},'{propertyValue}')";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -75,7 +74,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().Be(value);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().Be(value));
         }
 
         [Fact]
@@ -103,7 +102,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["someDecimal"].Should().Be(resource.SomeDecimal);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDecimal").With(value => value.Should().Be(resource.SomeDecimal));
         }
 
         [Fact]
@@ -131,7 +130,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["someGuid"].Should().Be(resource.SomeGuid);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someGuid").With(value => value.Should().Be(resource.SomeGuid));
         }
 
         [Fact]
@@ -159,7 +158,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["someDateTime"].As<DateTime>().Should().BeCloseTo(resource.SomeDateTime);
+
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTime")
+                .With(value => value.As<DateTime>().Should().BeCloseTo(resource.SomeDateTime));
         }
 
         [Fact]
@@ -187,7 +188,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["someDateTimeOffset"].As<DateTimeOffset>().Should().BeCloseTo(resource.SomeDateTimeOffset);
+
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someDateTimeOffset")
+                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(resource.SomeDateTimeOffset));
         }
 
         [Fact]
@@ -215,7 +218,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["someTimeSpan"].Should().Be(resource.SomeTimeSpan);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("someTimeSpan").With(value => value.Should().Be(resource.SomeTimeSpan));
         }
 
         [Fact]
@@ -252,7 +255,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         }
 
         [Theory]
-        [InlineData(nameof(FilterableResource.SomeString))]
+        [InlineData(nameof(FilterableResource.SomeNullableString))]
         [InlineData(nameof(FilterableResource.SomeNullableBoolean))]
         [InlineData(nameof(FilterableResource.SomeNullableInt32))]
         [InlineData(nameof(FilterableResource.SomeNullableUnsignedInt64))]
@@ -267,12 +270,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
         {
             // Arrange
             var resource = new FilterableResource();
-            PropertyInfo property = typeof(FilterableResource).GetProperty(propertyName);
+            PropertyInfo? property = typeof(FilterableResource).GetProperty(propertyName);
             property?.SetValue(resource, null);
 
             var otherResource = new FilterableResource
             {
-                SomeString = "X",
+                SomeNullableString = "X",
                 SomeNullableBoolean = true,
                 SomeNullableInt32 = 1,
                 SomeNullableUnsignedInt64 = 1,
@@ -302,11 +305,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().Be(null);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().BeNull());
         }
 
         [Theory]
-        [InlineData(nameof(FilterableResource.SomeString))]
+        [InlineData(nameof(FilterableResource.SomeNullableString))]
         [InlineData(nameof(FilterableResource.SomeNullableBoolean))]
         [InlineData(nameof(FilterableResource.SomeNullableInt32))]
         [InlineData(nameof(FilterableResource.SomeNullableUnsignedInt64))]
@@ -322,7 +325,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             // Arrange
             var resource = new FilterableResource
             {
-                SomeString = "X",
+                SomeNullableString = "X",
                 SomeNullableBoolean = true,
                 SomeNullableInt32 = 1,
                 SomeNullableUnsignedInt64 = 1,
@@ -352,7 +355,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes[attributeName].Should().NotBe(null);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey(attributeName).With(value => value.Should().NotBeNull());
         }
     }
 }

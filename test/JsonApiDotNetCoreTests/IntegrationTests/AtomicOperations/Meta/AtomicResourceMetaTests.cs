@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -89,11 +87,27 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            responseDocument.Results[0].Data.SingleValue.Meta.ShouldHaveCount(1);
-            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 2018. All rights reserved.");
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
 
-            responseDocument.Results[1].Data.SingleValue.Meta.ShouldHaveCount(1);
-            ((JsonElement)responseDocument.Results[1].Data.SingleValue.Meta["copyright"]).GetString().Should().Be("(C) 1994. All rights reserved.");
+                resource.Meta.ShouldContainKey("copyright").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be("(C) 2018. All rights reserved.");
+                });
+            });
+
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
+
+                resource.Meta.ShouldContainKey("copyright").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be("(C) 1994. All rights reserved.");
+                });
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -144,8 +158,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Results.ShouldHaveCount(1);
-            responseDocument.Results[0].Data.SingleValue.Meta.ShouldHaveCount(1);
-            ((JsonElement)responseDocument.Results[0].Data.SingleValue.Meta["notice"]).GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
+
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.Meta.ShouldHaveCount(1);
+
+                resource.Meta.ShouldContainKey("notice").With(value =>
+                {
+                    JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                    element.GetString().Should().Be(TextLanguageMetaDefinition.NoticeText);
+                });
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

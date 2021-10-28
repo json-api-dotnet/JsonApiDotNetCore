@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Serialization
     public sealed class MeetingAttendee : Identifiable<Guid>
     {
         [Attr]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = null!;
 
         [HasOne]
-        public Meeting Meeting { get; set; }
+        public Meeting? Meeting { get; set; }
     }
 }

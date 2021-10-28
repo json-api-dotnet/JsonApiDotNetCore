@@ -1,9 +1,10 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Graph
@@ -27,9 +28,9 @@ namespace UnitTests.Graph
             (Type implementation, Type registrationInterface)? result = typeLocator.GetGenericInterfaceImplementation(assembly, openGeneric, genericArg);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(expectedImplementation, result.Value.implementation);
-            Assert.Equal(expectedInterface, result.Value.registrationInterface);
+            result.ShouldNotBeNull();
+            result.Value.implementation.Should().Be(expectedImplementation);
+            result.Value.registrationInterface.Should().Be(expectedInterface);
         }
 
         [Fact]
@@ -48,9 +49,8 @@ namespace UnitTests.Graph
             IReadOnlyCollection<Type> results = typeLocator.GetDerivedGenericTypes(assembly, openGeneric, genericArg);
 
             // Assert
-            Assert.NotNull(results);
-            Type result = Assert.Single(results);
-            Assert.Equal(expectedImplementation, result);
+            results.ShouldHaveCount(1);
+            results.ElementAt(0).Should().Be(expectedImplementation);
         }
 
         [Fact]
@@ -62,10 +62,10 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            Type idType = typeLocator.TryGetIdType(type);
+            Type? idType = typeLocator.TryGetIdType(type);
 
             // Assert
-            Assert.Equal(typeof(int), idType);
+            idType.Should().Be(typeof(int));
         }
 
         [Fact]
@@ -77,10 +77,10 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            Type idType = typeLocator.TryGetIdType(type);
+            Type? idType = typeLocator.TryGetIdType(type);
 
             // Assert
-            Assert.Null(idType);
+            idType.Should().BeNull();
         }
 
         [Fact]
@@ -92,12 +92,12 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
+            ResourceDescriptor? descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
 
             // Assert
-            Assert.NotNull(descriptor);
-            Assert.Equal(resourceClrType, descriptor.ResourceClrType);
-            Assert.Equal(typeof(int), descriptor.IdClrType);
+            descriptor.ShouldNotBeNull();
+            descriptor.ResourceClrType.Should().Be(resourceClrType);
+            descriptor.IdClrType.Should().Be(typeof(int));
         }
 
         [Fact]
@@ -109,10 +109,10 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
+            ResourceDescriptor? descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
 
             // Assert
-            Assert.Null(descriptor);
+            descriptor.Should().BeNull();
         }
     }
 }

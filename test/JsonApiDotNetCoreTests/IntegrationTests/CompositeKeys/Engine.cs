@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
 using JsonApiDotNetCore.Resources.Annotations;
@@ -10,9 +8,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
     public sealed class Engine : Identifiable<int>
     {
         [Attr]
-        public string SerialCode { get; set; }
+        public string SerialCode { get; set; } = null!;
 
         [HasOne]
-        public Car Car { get; set; }
+        public Car? Car { get; set; }
     }
 }

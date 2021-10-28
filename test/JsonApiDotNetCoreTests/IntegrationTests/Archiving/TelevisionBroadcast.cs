@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -12,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
     public sealed class TelevisionBroadcast : Identifiable<int>
     {
         [Attr]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Attr]
         public DateTimeOffset AiredAt { get; set; }
@@ -21,9 +19,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
         public DateTimeOffset? ArchivedAt { get; set; }
 
         [HasOne]
-        public TelevisionStation AiredOn { get; set; }
+        public TelevisionStation? AiredOn { get; set; }
 
         [HasMany]
-        public ISet<BroadcastComment> Comments { get; set; }
+        public ISet<BroadcastComment> Comments { get; set; } = new HashSet<BroadcastComment>();
     }
 }

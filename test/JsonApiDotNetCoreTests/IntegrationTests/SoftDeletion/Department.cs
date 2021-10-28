@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,11 +9,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
     public sealed class Department : Identifiable<int>, ISoftDeletable
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         public DateTimeOffset? SoftDeletedAt { get; set; }
 
         [HasOne]
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -749,7 +747,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/departments/{existingDepartment.StringId}/relationships/company";

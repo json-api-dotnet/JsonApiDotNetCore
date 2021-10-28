@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Linq;
 using System.Net;
@@ -46,7 +44,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -57,7 +55,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.ShouldHaveCount(1);
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content.GroupId.Should().Be(newGroupId);
@@ -124,7 +122,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(newGroupName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(newGroupName));
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -136,7 +134,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             messageBroker.SentMessages.ShouldHaveCount(3);
 
-            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id);
+            Guid newGroupId = Guid.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             var content1 = messageBroker.SentMessages[0].GetContentAs<GroupCreatedContent>();
             content1.GroupId.Should().Be(newGroupId);

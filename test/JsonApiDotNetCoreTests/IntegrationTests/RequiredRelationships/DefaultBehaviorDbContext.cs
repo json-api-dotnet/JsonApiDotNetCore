@@ -21,8 +21,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         {
             builder.Entity<Customer>()
                 .HasMany(customer => customer.Orders)
-                .WithOne(order => order.Customer)
-                .IsRequired();
+                .WithOne(order => order.Customer);
 
             // By default, EF Core generates an identifying foreign key for a required 1-to-1 relationship.
             // This means no foreign key column is generated, instead the primary keys point to each other directly.
@@ -31,8 +30,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             builder.Entity<Order>()
                 .HasOne(order => order.Shipment)
                 .WithOne(shipment => shipment.Order)
-                .HasForeignKey<Shipment>("OrderId")
-                .IsRequired();
+                .HasForeignKey<Shipment>("OrderId");
         }
     }
 }

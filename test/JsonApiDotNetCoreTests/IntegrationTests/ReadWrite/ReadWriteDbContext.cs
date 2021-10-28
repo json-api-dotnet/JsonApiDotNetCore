@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
         {
             builder.Entity<WorkItem>()
                 .HasOne(workItem => workItem.Assignee)
-                .WithMany(userAccount => userAccount.AssignedItems);
+                .WithMany(userAccount => userAccount!.AssignedItems);
 
             builder.Entity<WorkItem>()
                 .HasMany(workItem => workItem.Subscribers)
@@ -32,12 +32,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite
 
             builder.Entity<WorkItemGroup>()
                 .HasOne(workItemGroup => workItemGroup.Color)
-                .WithOne(color => color.Group)
+                .WithOne(color => color!.Group!)
                 .HasForeignKey<RgbColor>("GroupId");
 
             builder.Entity<WorkItem>()
                 .HasOne(workItem => workItem.Parent)
-                .WithMany(workItem => workItem.Children);
+                .WithMany(workItem => workItem!.Children);
 
             builder.Entity<WorkItem>()
                 .HasMany(workItem => workItem.RelatedFrom)

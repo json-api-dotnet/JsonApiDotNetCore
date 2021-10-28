@@ -1,5 +1,3 @@
-#nullable disable
-
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 {
     public enum WorkflowStage

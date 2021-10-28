@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading

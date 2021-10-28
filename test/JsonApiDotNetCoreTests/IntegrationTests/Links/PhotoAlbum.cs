@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -12,9 +10,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Links
     public sealed class PhotoAlbum : Identifiable<Guid>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public ISet<Photo> Photos { get; set; }
+        public ISet<Photo> Photos { get; set; } = new HashSet<Photo>();
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -51,12 +49,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("towns");
             responseDocument.Data.SingleValue.Id.Should().Be(town.StringId);
-            responseDocument.Data.SingleValue.Attributes["name"].Should().Be(town.Name);
-            responseDocument.Data.SingleValue.Attributes["latitude"].Should().Be(town.Latitude);
-            responseDocument.Data.SingleValue.Attributes["longitude"].Should().Be(town.Longitude);
-            responseDocument.Data.SingleValue.Relationships["civilians"].Links.Self.Should().Be($"{HostPrefix}{route}/relationships/civilians");
-            responseDocument.Data.SingleValue.Relationships["civilians"].Links.Related.Should().Be($"{HostPrefix}{route}/civilians");
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("name").With(value => value.Should().Be(town.Name));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("latitude").With(value => value.Should().Be(town.Latitude));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("longitude").With(value => value.Should().Be(town.Longitude));
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("civilians").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{HostPrefix}{route}/relationships/civilians");
+                value.Links.Related.Should().Be($"{HostPrefix}{route}/civilians");
+            });
+
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
         }
 
@@ -83,8 +90,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
 
             responseDocument.Data.ManyValue.ShouldHaveCount(5);
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "towns");
-            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.Any());
-            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.Any());
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldNotBeNull().Any());
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldNotBeNull().Any());
         }
     }
 }

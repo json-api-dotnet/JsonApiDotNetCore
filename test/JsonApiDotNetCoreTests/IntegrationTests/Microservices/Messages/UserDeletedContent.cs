@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -10,6 +8,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
     {
         public int FormatVersion => 1;
 
-        public Guid UserId { get; set; }
+        public Guid UserId { get; }
+
+        public UserDeletedContent(Guid userId)
+        {
+            UserId = userId;
+        }
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
@@ -8,12 +6,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
     {
         private static readonly HexadecimalCodec Codec = new();
 
-        protected override string GetStringId(int value)
+        protected override string? GetStringId(int value)
         {
             return value == default ? null : Codec.Encode(value);
         }
 
-        protected override int GetTypedId(string value)
+        protected override int GetTypedId(string? value)
         {
             return value == null ? default : Codec.Decode(value);
         }

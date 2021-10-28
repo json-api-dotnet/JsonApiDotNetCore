@@ -1,5 +1,3 @@
-#nullable disable
-
 using JetBrains.Annotations;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
@@ -8,6 +6,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
     public sealed class Door
     {
         public int Id { get; set; }
-        public string Color { get; set; }
+        public string Color { get; set; } = null!;
     }
 }

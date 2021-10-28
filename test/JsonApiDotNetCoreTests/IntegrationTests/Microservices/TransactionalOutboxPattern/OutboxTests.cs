@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +67,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.TransactionalOut
                     new
                     {
                         type = "domainUsers",
-                        id = existingUser.StringId
+                        id = existingUser.StringId!
                     },
                     new
                     {

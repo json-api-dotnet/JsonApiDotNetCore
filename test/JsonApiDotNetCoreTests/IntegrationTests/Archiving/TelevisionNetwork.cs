@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
     public sealed class TelevisionNetwork : Identifiable<int>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasMany]
-        public ISet<TelevisionStation> Stations { get; set; }
+        public ISet<TelevisionStation> Stations { get; set; } = new HashSet<TelevisionStation>();
     }
 }

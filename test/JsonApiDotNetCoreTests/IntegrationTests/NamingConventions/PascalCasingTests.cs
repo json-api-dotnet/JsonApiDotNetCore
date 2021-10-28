@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -12,12 +10,12 @@ using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
-    public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<PascalCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext>>
+    public sealed class PascalCasingTests : IClassFixture<IntegrationTestContext<PascalCasingConventionStartup<NamingDbContext>, NamingDbContext>>
     {
-        private readonly IntegrationTestContext<PascalCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> _testContext;
-        private readonly SwimmingFakers _fakers = new();
+        private readonly IntegrationTestContext<PascalCasingConventionStartup<NamingDbContext>, NamingDbContext> _testContext;
+        private readonly NamingFakers _fakers = new();
 
-        public PascalCasingTests(IntegrationTestContext<PascalCasingConventionStartup<SwimmingDbContext>, SwimmingDbContext> testContext)
+        public PascalCasingTests(IntegrationTestContext<PascalCasingConventionStartup<NamingDbContext>, NamingDbContext> testContext)
         {
             _testContext = testContext;
 
@@ -49,18 +47,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 
             responseDocument.Data.ManyValue.ShouldHaveCount(2);
             responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Type == "SwimmingPools");
-            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ContainsKey("IsIndoor"));
-            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("WaterSlides"));
-            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ContainsKey("DivingBoards"));
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Attributes.ShouldContainKey("IsIndoor") != null);
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("WaterSlides") != null);
+            responseDocument.Data.ManyValue.Should().OnlyContain(resourceObject => resourceObject.Relationships.ShouldContainKey("DivingBoards") != null);
+
+            decimal height = pools[1].DivingBoards[0].HeightInMeters;
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("DivingBoards");
             responseDocument.Included[0].Id.Should().Be(pools[1].DivingBoards[0].StringId);
-            responseDocument.Included[0].Attributes["HeightInMeters"].As<decimal>().Should().BeApproximately(pools[1].DivingBoards[0].HeightInMeters);
+            responseDocument.Included[0].Attributes.ShouldContainKey("HeightInMeters").With(value => value.As<decimal>().Should().BeApproximately(height));
             responseDocument.Included[0].Relationships.Should().BeNull();
-            responseDocument.Included[0].Links.Self.Should().Be($"/PublicApi/DivingBoards/{pools[1].DivingBoards[0].StringId}");
+            responseDocument.Included[0].Links.ShouldNotBeNull().Self.Should().Be($"/PublicApi/DivingBoards/{pools[1].DivingBoards[0].StringId}");
 
-            ((JsonElement)responseDocument.Meta["Total"]).GetInt32().Should().Be(2);
+            responseDocument.Meta.ShouldContainKey("Total").With(value =>
+            {
+                JsonElement element = value.Should().BeOfType<JsonElement>().Subject;
+                element.GetInt32().Should().Be(2);
+            });
         }
 
         [Fact]
@@ -121,16 +125,26 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("SwimmingPools");
-            responseDocument.Data.SingleValue.Attributes["IsIndoor"].Should().Be(newPool.IsIndoor);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("IsIndoor").With(value => value.Should().Be(newPool.IsIndoor));
 
-            int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id);
+            int newPoolId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
             string poolLink = $"{route}/{newPoolId}";
 
-            responseDocument.Data.SingleValue.Relationships.ShouldNotBeEmpty();
-            responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
-            responseDocument.Data.SingleValue.Relationships["WaterSlides"].Links.Related.Should().Be($"{poolLink}/WaterSlides");
-            responseDocument.Data.SingleValue.Relationships["DivingBoards"].Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
-            responseDocument.Data.SingleValue.Relationships["DivingBoards"].Links.Related.Should().Be($"{poolLink}/DivingBoards");
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("WaterSlides").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{poolLink}/relationships/WaterSlides");
+                value.Links.Related.Should().Be($"{poolLink}/WaterSlides");
+            });
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("DivingBoards").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Links.ShouldNotBeNull();
+                value.Links.Self.Should().Be($"{poolLink}/relationships/DivingBoards");
+                value.Links.Related.Should().Be($"{poolLink}/DivingBoards");
+            });
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -201,6 +215,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field HeightInMeters must be between 1 and 20.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/HeightInMeters");
         }
     }

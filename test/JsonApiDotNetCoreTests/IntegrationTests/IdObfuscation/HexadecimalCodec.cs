@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,7 +10,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
     internal sealed class HexadecimalCodec
     {
-        public int Decode(string value)
+        public int Decode(string? value)
         {
             if (value == null)
             {
@@ -47,7 +45,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
             return new string(chars);
         }
 
-        public string Encode(int value)
+        public string? Encode(int value)
         {
             if (value == 0)
             {

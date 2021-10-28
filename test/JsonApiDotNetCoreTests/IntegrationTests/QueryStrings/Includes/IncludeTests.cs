@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,12 +55,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(post.StringId);
-            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
-            responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
+            responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
         }
 
         [Fact]
@@ -88,12 +86,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(post.Author.StringId);
-            responseDocument.Included[0].Attributes["displayName"].Should().Be(post.Author.DisplayName);
+            responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(post.Author.DisplayName));
         }
 
         [Fact]
@@ -120,12 +118,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(blog.Owner.StringId);
-            responseDocument.Data.SingleValue.Attributes["displayName"].Should().Be(blog.Owner.DisplayName);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Owner.DisplayName));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blog.Owner.Posts[0].StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Owner.Posts[0].Caption);
+            responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Owner.Posts[0].Caption));
         }
 
         [Fact]
@@ -152,12 +150,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.Data.ManyValue[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Posts[0].Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].Author.StringId);
-            responseDocument.Included[0].Attributes["displayName"].Should().Be(blog.Posts[0].Author.DisplayName);
+            responseDocument.Included[0].Id.Should().Be(blog.Posts[0].Author!.StringId);
+            responseDocument.Included[0].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(blog.Posts[0].Author!.DisplayName));
         }
 
         [Fact]
@@ -184,17 +182,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
             responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(comment.Author.StringId);
-            responseDocument.Included[0].Attributes["userName"].Should().Be(comment.Author.UserName);
+            responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(comment.Author.UserName));
 
             responseDocument.Included[1].Type.Should().Be("blogPosts");
             responseDocument.Included[1].Id.Should().Be(comment.Parent.StringId);
-            responseDocument.Included[1].Attributes["caption"].Should().Be(comment.Parent.Caption);
+            responseDocument.Included[1].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
         }
 
         [Fact]
@@ -220,12 +218,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
+
+            DateTime createdAt = post.Comments.Single().CreatedAt;
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("comments");
             responseDocument.Included[0].Id.Should().Be(post.Comments.Single().StringId);
-            responseDocument.Included[0].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(post.Comments.Single().CreatedAt);
+            responseDocument.Included[0].Attributes.ShouldContainKey("createdAt").With(value => value.As<DateTime>().Should().BeCloseTo(createdAt));
         }
 
         [Fact]
@@ -251,12 +251,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("labels");
             responseDocument.Included[0].Id.Should().Be(post.Labels.Single().StringId);
-            responseDocument.Included[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
+            responseDocument.Included[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
         }
 
         [Fact]
@@ -283,12 +283,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Type.Should().Be("labels");
             responseDocument.Data.ManyValue[0].Id.Should().Be(post.Labels.ElementAt(0).StringId);
-            responseDocument.Data.ManyValue[0].Attributes["name"].Should().Be(post.Labels.Single().Name);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("name").With(value => value.Should().Be(post.Labels.Single().Name));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(post.StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
         }
 
         [Fact]
@@ -316,21 +316,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
             responseDocument.Included.ShouldHaveCount(3);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(comment.Parent.Caption);
+            responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
 
             responseDocument.Included[1].Type.Should().Be("webAccounts");
             responseDocument.Included[1].Id.Should().Be(comment.Parent.Author.StringId);
-            responseDocument.Included[1].Attributes["displayName"].Should().Be(comment.Parent.Author.DisplayName);
+            responseDocument.Included[1].Attributes.ShouldContainKey("displayName").With(value => value.Should().Be(comment.Parent.Author.DisplayName));
+
+            bool useDarkTheme = comment.Parent.Author.Preferences.UseDarkTheme;
 
             responseDocument.Included[2].Type.Should().Be("accountPreferences");
             responseDocument.Included[2].Id.Should().Be(comment.Parent.Author.Preferences.StringId);
-            responseDocument.Included[2].Attributes["useDarkTheme"].Should().Be(comment.Parent.Author.Preferences.UseDarkTheme);
+            responseDocument.Included[2].Attributes.ShouldContainKey("useDarkTheme").With(value => value.Should().Be(useDarkTheme));
         }
 
         [Fact]
@@ -357,17 +359,19 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
-            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(blog.Title);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(blog.Title));
 
             responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(blog.Posts[0].Caption);
+            responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(blog.Posts[0].Caption));
+
+            DateTime createdAt = blog.Posts[0].Comments.Single().CreatedAt;
 
             responseDocument.Included[1].Type.Should().Be("comments");
             responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Comments.Single().StringId);
-            responseDocument.Included[1].Attributes["createdAt"].As<DateTime>().Should().BeCloseTo(blog.Posts[0].Comments.Single().CreatedAt);
+            responseDocument.Included[1].Attributes.ShouldContainKey("createdAt").With(value => value.As<DateTime>().Should().BeCloseTo(createdAt));
         }
 
         [Fact]
@@ -396,29 +400,31 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(comment.StringId);
-            responseDocument.Data.SingleValue.Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
             responseDocument.Included.ShouldHaveCount(5);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(comment.Parent.StringId);
-            responseDocument.Included[0].Attributes["caption"].Should().Be(comment.Parent.Caption);
+            responseDocument.Included[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(comment.Parent.Caption));
 
             responseDocument.Included[1].Type.Should().Be("comments");
             responseDocument.Included[1].Id.Should().Be(comment.StringId);
-            responseDocument.Included[1].Attributes["text"].Should().Be(comment.Text);
+            responseDocument.Included[1].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Text));
 
             responseDocument.Included[2].Type.Should().Be("comments");
             responseDocument.Included[2].Id.Should().Be(comment.Parent.Comments.ElementAt(0).StringId);
-            responseDocument.Included[2].Attributes["text"].Should().Be(comment.Parent.Comments.ElementAt(0).Text);
+            responseDocument.Included[2].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(0).Text));
+
+            string userName = comment.Parent.Comments.ElementAt(0).Author.UserName;
 
             responseDocument.Included[3].Type.Should().Be("webAccounts");
             responseDocument.Included[3].Id.Should().Be(comment.Parent.Comments.ElementAt(0).Author.StringId);
-            responseDocument.Included[3].Attributes["userName"].Should().Be(comment.Parent.Comments.ElementAt(0).Author.UserName);
+            responseDocument.Included[3].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(userName));
 
             responseDocument.Included[4].Type.Should().Be("comments");
             responseDocument.Included[4].Id.Should().Be(comment.Parent.Comments.ElementAt(1).StringId);
-            responseDocument.Included[4].Attributes["text"].Should().Be(comment.Parent.Comments.ElementAt(1).Text);
+            responseDocument.Included[4].Attributes.ShouldContainKey("text").With(value => value.Should().Be(comment.Parent.Comments.ElementAt(1).Text));
         }
 
         [Fact]
@@ -428,7 +434,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             Blog blog = _fakers.Blog.Generate();
             blog.Posts = _fakers.BlogPost.Generate(1);
             blog.Posts[0].Author = _fakers.WebAccount.Generate();
-            blog.Posts[0].Author.Preferences = _fakers.AccountPreferences.Generate();
+            blog.Posts[0].Author!.Preferences = _fakers.AccountPreferences.Generate();
             blog.Posts[0].Comments = _fakers.Comment.Generate(2).ToHashSet();
             blog.Posts[0].Comments.ElementAt(0).Author = _fakers.WebAccount.Generate();
             blog.Posts[0].Comments.ElementAt(0).Author.Posts = _fakers.BlogPost.Generate(1);
@@ -449,46 +455,107 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
-            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
-            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("blogPosts");
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            });
 
             responseDocument.Included.ShouldHaveCount(7);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.StringId);
-            responseDocument.Included[0].Relationships["comments"].Data.ManyValue[0].Type.Should().Be("comments");
-            responseDocument.Included[0].Relationships["comments"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
+
+            responseDocument.Included[0].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
+            });
+
+            responseDocument.Included[0].Relationships.ShouldContainKey("comments").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("comments");
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
+            });
 
             responseDocument.Included[1].Type.Should().Be("webAccounts");
-            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author.StringId);
-            responseDocument.Included[1].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
-            responseDocument.Included[1].Relationships["preferences"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.Preferences.StringId);
-            responseDocument.Included[1].Relationships["posts"].Data.Value.Should().BeNull();
+            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author!.StringId);
+
+            responseDocument.Included[1].Relationships.ShouldContainKey("preferences").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("accountPreferences");
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.Preferences.StringId);
+            });
+
+            responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
 
             responseDocument.Included[2].Type.Should().Be("accountPreferences");
-            responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author.Preferences.StringId);
+            responseDocument.Included[2].Id.Should().Be(blog.Posts[0].Author!.Preferences.StringId);
 
             responseDocument.Included[3].Type.Should().Be("comments");
             responseDocument.Included[3].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).StringId);
-            responseDocument.Included[3].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Included[3].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
+
+            responseDocument.Included[3].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
+            });
 
             responseDocument.Included[4].Type.Should().Be("webAccounts");
             responseDocument.Included[4].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.StringId);
-            responseDocument.Included[4].Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
-            responseDocument.Included[4].Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
-            responseDocument.Included[4].Relationships["preferences"].Data.Value.Should().BeNull();
+
+            responseDocument.Included[4].Relationships.ShouldContainKey("posts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("blogPosts");
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
+            });
+
+            responseDocument.Included[4].Relationships.ShouldContainKey("preferences").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
 
             responseDocument.Included[5].Type.Should().Be("blogPosts");
             responseDocument.Included[5].Id.Should().Be(blog.Posts[0].Comments.ElementAt(0).Author.Posts[0].StringId);
-            responseDocument.Included[5].Relationships["author"].Data.Value.Should().BeNull();
-            responseDocument.Included[5].Relationships["comments"].Data.Value.Should().BeNull();
+
+            responseDocument.Included[5].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
+
+            responseDocument.Included[5].Relationships.ShouldContainKey("comments").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
 
             responseDocument.Included[6].Type.Should().Be("comments");
             responseDocument.Included[6].Id.Should().Be(blog.Posts[0].Comments.ElementAt(1).StringId);
-            responseDocument.Included[5].Relationships["author"].Data.Value.Should().BeNull();
+
+            responseDocument.Included[5].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
         }
 
         [Fact]
@@ -533,44 +600,102 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.ManyValue[0].Type.Should().Be("blogPosts");
             responseDocument.Data.ManyValue[0].Id.Should().Be(post1.StringId);
-            responseDocument.Data.ManyValue[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Data.ManyValue[0].Relationships["author"].Data.SingleValue.Id.Should().Be(author.StringId);
-            responseDocument.Data.ManyValue[0].Relationships["reviewer"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Data.ManyValue[0].Relationships["reviewer"].Data.SingleValue.Id.Should().Be(reviewer.StringId);
+
+            responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(author.StringId);
+            });
+
+            responseDocument.Data.ManyValue[0].Relationships.ShouldContainKey("reviewer").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(reviewer.StringId);
+            });
 
             responseDocument.Data.ManyValue[1].Type.Should().Be("blogPosts");
             responseDocument.Data.ManyValue[1].Id.Should().Be(post2.StringId);
-            responseDocument.Data.ManyValue[1].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Data.ManyValue[1].Relationships["author"].Data.SingleValue.Id.Should().Be(person.StringId);
-            responseDocument.Data.ManyValue[1].Relationships["reviewer"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Data.ManyValue[1].Relationships["reviewer"].Data.SingleValue.Id.Should().Be(person.StringId);
+
+            responseDocument.Data.ManyValue[1].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(person.StringId);
+            });
+
+            responseDocument.Data.ManyValue[1].Relationships.ShouldContainKey("reviewer").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(person.StringId);
+            });
 
             responseDocument.Included.ShouldHaveCount(7);
 
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(author.StringId);
-            responseDocument.Included[0].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
-            responseDocument.Included[0].Relationships["preferences"].Data.SingleValue.Id.Should().Be(author.Preferences.StringId);
-            responseDocument.Included[0].Relationships["loginAttempts"].Data.Value.Should().BeNull();
+
+            responseDocument.Included[0].Relationships.ShouldContainKey("preferences").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("accountPreferences");
+                value.Data.SingleValue.Id.Should().Be(author.Preferences.StringId);
+            });
+
+            responseDocument.Included[0].Relationships.ShouldContainKey("loginAttempts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
 
             responseDocument.Included[1].Type.Should().Be("accountPreferences");
             responseDocument.Included[1].Id.Should().Be(author.Preferences.StringId);
 
             responseDocument.Included[2].Type.Should().Be("webAccounts");
             responseDocument.Included[2].Id.Should().Be(reviewer.StringId);
-            responseDocument.Included[2].Relationships["preferences"].Data.Value.Should().BeNull();
-            responseDocument.Included[2].Relationships["loginAttempts"].Data.ManyValue[0].Type.Should().Be("loginAttempts");
-            responseDocument.Included[2].Relationships["loginAttempts"].Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
+
+            responseDocument.Included[2].Relationships.ShouldContainKey("preferences").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.Value.Should().BeNull();
+            });
+
+            responseDocument.Included[2].Relationships.ShouldContainKey("loginAttempts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
+                value.Data.ManyValue[0].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
+            });
 
             responseDocument.Included[3].Type.Should().Be("loginAttempts");
             responseDocument.Included[3].Id.Should().Be(reviewer.LoginAttempts[0].StringId);
 
             responseDocument.Included[4].Type.Should().Be("webAccounts");
             responseDocument.Included[4].Id.Should().Be(person.StringId);
-            responseDocument.Included[4].Relationships["preferences"].Data.SingleValue.Type.Should().Be("accountPreferences");
-            responseDocument.Included[4].Relationships["preferences"].Data.SingleValue.Id.Should().Be(person.Preferences.StringId);
-            responseDocument.Included[4].Relationships["loginAttempts"].Data.ManyValue[0].Type.Should().Be("loginAttempts");
-            responseDocument.Included[4].Relationships["loginAttempts"].Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
+
+            responseDocument.Included[4].Relationships.ShouldContainKey("preferences").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("accountPreferences");
+                value.Data.SingleValue.Id.Should().Be(person.Preferences.StringId);
+            });
+
+            responseDocument.Included[4].Relationships.ShouldContainKey("loginAttempts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("loginAttempts");
+                value.Data.ManyValue[0].Id.Should().Be(person.LoginAttempts[0].StringId);
+            });
 
             responseDocument.Included[5].Type.Should().Be("accountPreferences");
             responseDocument.Included[5].Id.Should().Be(person.Preferences.StringId);
@@ -587,7 +712,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             Blog blog = _fakers.Blog.Generate();
             blog.Posts = posts;
             blog.Posts[0].Author = _fakers.WebAccount.Generate();
-            blog.Posts[0].Author.Posts = posts;
+            blog.Posts[0].Author!.Posts = posts;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -603,22 +728,41 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
+            responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Type.Should().Be("blogs");
             responseDocument.Data.SingleValue.Id.Should().Be(blog.StringId);
-            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
-            responseDocument.Data.SingleValue.Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("posts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("blogPosts");
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            });
 
             responseDocument.Included.ShouldHaveCount(2);
 
             responseDocument.Included[0].Type.Should().Be("blogPosts");
             responseDocument.Included[0].Id.Should().Be(blog.Posts[0].StringId);
-            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Relationships["author"].Data.SingleValue.Id.Should().Be(blog.Posts[0].Author.StringId);
+
+            responseDocument.Included[0].Relationships.ShouldContainKey("author").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Type.Should().Be("webAccounts");
+                value.Data.SingleValue.Id.Should().Be(blog.Posts[0].Author!.StringId);
+            });
 
             responseDocument.Included[1].Type.Should().Be("webAccounts");
-            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author.StringId);
-            responseDocument.Included[1].Relationships["posts"].Data.ManyValue[0].Type.Should().Be("blogPosts");
-            responseDocument.Included[1].Relationships["posts"].Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            responseDocument.Included[1].Id.Should().Be(blog.Posts[0].Author!.StringId);
+
+            responseDocument.Included[1].Relationships.ShouldContainKey("posts").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.ManyValue.ShouldNotBeEmpty();
+                value.Data.ManyValue[0].Type.Should().Be("blogPosts");
+                value.Data.ManyValue[0].Id.Should().Be(blog.Posts[0].StringId);
+            });
         }
 
         [Fact]
@@ -647,12 +791,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(post.StringId);
-            responseDocument.Data.SingleValue.Attributes["caption"].Should().Be(post.Caption);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("caption").With(value => value.Should().Be(post.Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(account.StringId);
-            responseDocument.Included[0].Attributes["userName"].Should().Be(account.UserName);
+            responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
         }
 
         [Fact]
@@ -685,7 +829,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
             responseDocument.Included[0].Id.Should().Be(account.StringId);
-            responseDocument.Included[0].Attributes["userName"].Should().Be(account.UserName);
+            responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(account.UserName));
         }
 
         [Fact]
@@ -706,6 +850,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' does not exist on resource type 'webAccounts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -727,6 +872,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be($"Relationship '{Unknown.Relationship}' in 'posts.{Unknown.Relationship}' does not exist on resource type 'blogPosts'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -748,6 +894,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("Including the requested relationship is not allowed.");
             error.Detail.Should().Be("Including the relationship 'parent' on 'blogPosts' is not allowed.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("include");
         }
 
@@ -775,22 +922,24 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
 
             responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
+            responseDocument.Data.ManyValue.Should().OnlyContain(resource => resource.Relationships.ShouldContainKey("reviewer") != null);
+
             ResourceObject[] postWithReviewer = responseDocument.Data.ManyValue
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue != null).ToArray();
+                .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue != null).ToArray();
 
             postWithReviewer.ShouldHaveCount(1);
-            postWithReviewer[0].Attributes["caption"].Should().Be(posts[0].Caption);
+            postWithReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[0].Caption));
 
             ResourceObject[] postWithoutReviewer = responseDocument.Data.ManyValue
-                .Where(resource => resource.Relationships.First(pair => pair.Key == "reviewer").Value.Data.SingleValue == null).ToArray();
+                .Where(resource => resource.Relationships!.First(pair => pair.Key == "reviewer").Value!.Data.SingleValue == null).ToArray();
 
             postWithoutReviewer.ShouldHaveCount(1);
-            postWithoutReviewer[0].Attributes["caption"].Should().Be(posts[1].Caption);
+            postWithoutReviewer[0].Attributes.ShouldContainKey("caption").With(value => value.Should().Be(posts[1].Caption));
 
             responseDocument.Included.ShouldHaveCount(1);
             responseDocument.Included[0].Type.Should().Be("webAccounts");
-            responseDocument.Included[0].Id.Should().Be(posts[0].Reviewer.StringId);
-            responseDocument.Included[0].Attributes["userName"].Should().Be(posts[0].Reviewer.UserName);
+            responseDocument.Included[0].Id.Should().Be(posts[0].Reviewer!.StringId);
+            responseDocument.Included[0].Attributes.ShouldContainKey("userName").With(value => value.Should().Be(posts[0].Reviewer!.UserName));
         }
 
         [Fact]
@@ -838,6 +987,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Includes
             error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
             error.Title.Should().Be("The specified include is invalid.");
             error.Detail.Should().Be("Including 'posts.comments' exceeds the maximum inclusion depth of 1.");
+            error.Source.ShouldNotBeNull();
             error.Source.Parameter.Should().Be("include");
         }
     }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -36,6 +34,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
             responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
+            error.Links.ShouldNotBeNull();
             error.Links.About.Should().Be("https://tools.ietf.org/html/rfc7231#section-6.5.4");
         }
     }

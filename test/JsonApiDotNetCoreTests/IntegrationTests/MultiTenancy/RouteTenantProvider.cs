@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
@@ -26,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                     throw new InvalidOperationException();
                 }
 
-                string countryCode = (string)_httpContextAccessor.HttpContext.Request.RouteValues["countryCode"];
+                string? countryCode = (string?)_httpContextAccessor.HttpContext.Request.RouteValues["countryCode"];
                 return countryCode != null && TenantRegistry.ContainsKey(countryCode) ? TenantRegistry[countryCode] : Guid.Empty;
             }
         }

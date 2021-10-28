@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,9 +9,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
     public sealed class Map : Identifiable<Guid?>
     {
         [Attr]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [HasOne]
-        public Game Game { get; set; }
+        public Game? Game { get; set; }
     }
 }

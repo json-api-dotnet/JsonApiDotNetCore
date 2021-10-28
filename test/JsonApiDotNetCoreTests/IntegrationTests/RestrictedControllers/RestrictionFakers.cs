@@ -11,19 +11,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
     {
         private readonly Lazy<Faker<Table>> _lazyTableFaker = new(() =>
             new Faker<Table>()
-                .UseSeed(GetFakerSeed()));
+                .UseSeed(GetFakerSeed())
+                .RuleFor(table => table.LegCount, faker => faker.Random.Int(1, 4)));
 
         private readonly Lazy<Faker<Chair>> _lazyChairFaker = new(() =>
             new Faker<Chair>()
-                .UseSeed(GetFakerSeed()));
+                .UseSeed(GetFakerSeed())
+                .RuleFor(chair => chair.LegCount, faker => faker.Random.Int(2, 4)));
 
         private readonly Lazy<Faker<Sofa>> _lazySofaFaker = new(() =>
             new Faker<Sofa>()
-                .UseSeed(GetFakerSeed()));
+                .UseSeed(GetFakerSeed())
+                .RuleFor(sofa => sofa.SeatCount, faker => faker.Random.Int(2, 6)));
 
         private readonly Lazy<Faker<Bed>> _lazyBedFaker = new(() =>
             new Faker<Bed>()
-                .UseSeed(GetFakerSeed()));
+                .UseSeed(GetFakerSeed())
+                .RuleFor(bed => bed.IsDouble, faker => faker.Random.Bool()));
 
         public Faker<Table> Table => _lazyTableFaker.Value;
         public Faker<Chair> Chair => _lazyChairFaker.Value;

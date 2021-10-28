@@ -27,7 +27,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
         {
             builder.Entity<WebAccount>()
                 .HasMany(webAccount => webAccount.Posts)
-                .WithOne(blogPost => blogPost.Author);
+                .WithOne(blogPost => blogPost.Author!);
         }
     }
 }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -63,8 +61,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(certificate.StringId);
-            responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate);
-            responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(false);
+
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
+                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(certificate.IssueDate));
+
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(false));
         }
 
         [Fact]
@@ -93,8 +94,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be(postOffices[1].StringId);
-            responseDocument.Data.ManyValue[0].Attributes["address"].Should().Be(postOffices[1].Address);
-            responseDocument.Data.ManyValue[0].Attributes["isOpen"].Should().Be(true);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("address").With(value => value.Should().Be(postOffices[1].Address));
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
         }
 
         [Fact]
@@ -124,7 +125,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be(certificate.Issuer.StringId);
             responseDocument.Data.SingleValue.Attributes.ShouldHaveCount(1);
-            responseDocument.Data.SingleValue.Attributes["isOpen"].Should().Be(true);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(true));
         }
 
         [Fact]
@@ -176,16 +177,29 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["issueDate"].As<DateTimeOffset>().Should().BeCloseTo(newIssueDate);
-            responseDocument.Data.SingleValue.Attributes["hasExpired"].Should().Be(true);
-            responseDocument.Data.SingleValue.Relationships["issuer"].Data.SingleValue.Id.Should().Be(existingOffice.StringId);
+
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("issueDate")
+                .With(value => value.As<DateTimeOffset>().Should().BeCloseTo(newIssueDate));
+
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("hasExpired").With(value => value.Should().Be(true));
+
+            responseDocument.Data.SingleValue.Relationships.ShouldContainKey("issuer").With(value =>
+            {
+                value.ShouldNotBeNull();
+                value.Data.SingleValue.ShouldNotBeNull();
+                value.Data.SingleValue.Id.Should().Be(existingOffice.StringId);
+            });
 
             responseDocument.Included.ShouldHaveCount(1);
-            responseDocument.Included[0].Id.Should().Be(existingOffice.StringId);
-            responseDocument.Included[0].Attributes["address"].Should().Be(existingOffice.Address);
-            responseDocument.Included[0].Attributes["isOpen"].Should().Be(false);
 
-            int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id);
+            responseDocument.Included[0].With(resource =>
+            {
+                resource.Id.Should().Be(existingOffice.StringId);
+                resource.Attributes.ShouldContainKey("address").With(value => value.Should().Be(existingOffice.Address));
+                resource.Attributes.ShouldContainKey("isOpen").With(value => value.Should().Be(false));
+            });
+
+            int newCertificateId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -289,7 +303,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                PostOffice officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
+                PostOffice? officeInDatabase = await dbContext.PostOffice.FirstWithIdOrDefaultAsync(existingOffice.Id);
 
                 officeInDatabase.Should().BeNull();
             });

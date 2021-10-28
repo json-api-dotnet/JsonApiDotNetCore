@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -36,7 +34,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Cannot_create_dependent_side_of_required_ManyToOne_relationship_without_providing_principal_side()
         {
             // Arrange
-            Order order = _fakers.Orders.Generate();
+            Order order = _fakers.Order.Generate();
 
             var requestBody = new
             {
@@ -70,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Cannot_create_dependent_side_of_required_OneToOne_relationship_without_providing_principal_side()
         {
             // Arrange
-            Shipment shipment = _fakers.Shipments.Generate();
+            Shipment shipment = _fakers.Shipment.Generate();
 
             var requestBody = new
             {
@@ -104,8 +102,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Deleting_principal_side_of_required_OneToMany_relationship_triggers_cascading_delete()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -125,11 +123,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Customer existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
-                existingCustomerInDatabase.Should().BeNull();
+                Customer? customerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
+                customerInDatabase.Should().BeNull();
 
-                Order existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
-                existingOrderInDatabase.Should().BeNull();
+                Order? orderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
+                orderInDatabase.Should().BeNull();
             });
         }
 
@@ -137,9 +135,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Deleting_principal_side_of_required_OneToOne_relationship_triggers_cascading_delete()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -159,14 +157,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Order existingOrderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
-                existingOrderInDatabase.Should().BeNull();
+                Order? orderInDatabase = await dbContext.Orders.FirstWithIdOrDefaultAsync(existingOrder.Id);
+                orderInDatabase.Should().BeNull();
 
-                Shipment existingShipmentInDatabase = await dbContext.Shipments.FirstWithIdOrDefaultAsync(existingOrder.Shipment.Id);
-                existingShipmentInDatabase.Should().BeNull();
+                Shipment? shipmentInDatabase = await dbContext.Shipments.FirstWithIdOrDefaultAsync(existingOrder.Shipment.Id);
+                shipmentInDatabase.Should().BeNull();
 
-                Customer existingCustomerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
-                existingCustomerInDatabase.ShouldNotBeNull();
+                Customer? customerInDatabase = await dbContext.Customers.FirstWithIdOrDefaultAsync(existingOrder.Customer.Id);
+                customerInDatabase.ShouldNotBeNull();
             });
         }
 
@@ -174,9 +172,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Cannot_clear_required_ManyToOne_relationship_through_primary_endpoint()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -194,7 +192,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
                     {
                         customer = new
                         {
-                            data = (object)null
+                            data = (object?)null
                         }
                     }
                 }
@@ -222,9 +220,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Cannot_clear_required_ManyToOne_relationship_through_relationship_endpoint()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -234,7 +232,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/orders/{existingOrder.StringId}/relationships/customer";
@@ -259,9 +257,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Clearing_OneToMany_relationship_through_primary_endpoint_triggers_cascading_delete()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -297,7 +295,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                Order? orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
                 orderInDatabase.Should().BeNull();
 
                 Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
@@ -309,9 +307,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Clearing_OneToMany_relationship_through_update_relationship_endpoint_triggers_cascading_delete()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -336,7 +334,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                Order? orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
                 orderInDatabase.Should().BeNull();
 
                 Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
@@ -348,9 +346,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Clearing_OneToMany_relationship_through_delete_relationship_endpoint_triggers_cascading_delete()
         {
             // Arrange
-            Order existingOrder = _fakers.Orders.Generate();
-            existingOrder.Shipment = _fakers.Shipments.Generate();
-            existingOrder.Customer = _fakers.Customers.Generate();
+            Order existingOrder = _fakers.Order.Generate();
+            existingOrder.Shipment = _fakers.Shipment.Generate();
+            existingOrder.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -382,7 +380,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Order orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
+                Order? orderInDatabase = await dbContext.Orders.Include(order => order.Customer).FirstWithIdOrDefaultAsync(existingOrder.Id);
                 orderInDatabase.Should().BeNull();
 
                 Customer customerInDatabase = await dbContext.Customers.Include(customer => customer.Orders).FirstWithIdAsync(existingOrder.Customer.Id);
@@ -394,12 +392,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_primary_endpoint()
         {
             // Arrange
-            Order orderWithShipment = _fakers.Orders.Generate();
-            orderWithShipment.Shipment = _fakers.Shipments.Generate();
-            orderWithShipment.Customer = _fakers.Customers.Generate();
+            Order orderWithShipment = _fakers.Order.Generate();
+            orderWithShipment.Shipment = _fakers.Shipment.Generate();
+            orderWithShipment.Customer = _fakers.Customer.Generate();
 
-            Order orderWithoutShipment = _fakers.Orders.Generate();
-            orderWithoutShipment.Customer = _fakers.Customers.Generate();
+            Order orderWithoutShipment = _fakers.Order.Generate();
+            orderWithoutShipment.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -439,10 +437,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Shipment existingShipmentInDatabase =
-                    await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdOrDefaultAsync(orderWithShipment.Shipment.Id);
+                Shipment shipmentInDatabase = await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdAsync(orderWithShipment.Shipment.Id);
 
-                existingShipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
+                shipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
             });
         }
 
@@ -450,12 +447,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
         public async Task Can_reassign_dependent_side_of_ZeroOrOneToOne_relationship_through_relationship_endpoint()
         {
             // Arrange
-            Order orderWithShipment = _fakers.Orders.Generate();
-            orderWithShipment.Shipment = _fakers.Shipments.Generate();
-            orderWithShipment.Customer = _fakers.Customers.Generate();
+            Order orderWithShipment = _fakers.Order.Generate();
+            orderWithShipment.Shipment = _fakers.Shipment.Generate();
+            orderWithShipment.Customer = _fakers.Customer.Generate();
 
-            Order orderWithoutShipment = _fakers.Orders.Generate();
-            orderWithoutShipment.Customer = _fakers.Customers.Generate();
+            Order orderWithoutShipment = _fakers.Order.Generate();
+            orderWithoutShipment.Customer = _fakers.Customer.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -484,10 +481,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Shipment existingShipmentInDatabase =
-                    await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdOrDefaultAsync(orderWithShipment.Shipment.Id);
+                Shipment shipmentInDatabase = await dbContext.Shipments.Include(shipment => shipment.Order).FirstWithIdAsync(orderWithShipment.Shipment.Id);
 
-                existingShipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
+                shipmentInDatabase.Order.Id.Should().Be(orderWithoutShipment.Id);
             });
         }
     }

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -89,27 +87,39 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.ShouldHaveCount(2);
 
-            string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                string languageLink = $"{HostPrefix}/textLanguages/{existingLanguage.StringId}";
 
-            ResourceObject singleData1 = responseDocument.Results[0].Data.SingleValue;
-            singleData1.ShouldNotBeNull();
-            singleData1.Links.ShouldNotBeNull();
-            singleData1.Links.Self.Should().Be(languageLink);
-            singleData1.Relationships.ShouldNotBeEmpty();
-            singleData1.Relationships["lyrics"].Links.ShouldNotBeNull();
-            singleData1.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
-            singleData1.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
+                resource.ShouldNotBeNull();
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(languageLink);
 
-            string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
+                resource.Relationships.ShouldContainKey("lyrics").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
+                    value.Links.Related.Should().Be($"{languageLink}/lyrics");
+                });
+            });
 
-            ResourceObject singleData2 = responseDocument.Results[1].Data.SingleValue;
-            singleData2.ShouldNotBeNull();
-            singleData2.Links.ShouldNotBeNull();
-            singleData2.Links.Self.Should().Be(companyLink);
-            singleData2.Relationships.ShouldNotBeEmpty();
-            singleData2.Relationships["tracks"].Links.ShouldNotBeNull();
-            singleData2.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
-            singleData2.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                string companyLink = $"{HostPrefix}/recordCompanies/{existingCompany.StringId}";
+
+                resource.ShouldNotBeNull();
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(companyLink);
+
+                resource.Relationships.ShouldContainKey("tracks").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{companyLink}/relationships/tracks");
+                    value.Links.Related.Should().Be($"{companyLink}/tracks");
+                });
+            });
         }
 
         [Fact]
@@ -153,10 +163,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results.ShouldHaveCount(1);
 
-            ResourceObject singleData = responseDocument.Results[0].Data.SingleValue;
-            singleData.ShouldNotBeNull();
-            singleData.Links.Should().BeNull();
-            singleData.Relationships.Should().BeNull();
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                resource.ShouldNotBeNull();
+                resource.Links.Should().BeNull();
+                resource.Relationships.Should().BeNull();
+            });
         }
     }
 }

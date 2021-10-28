@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -18,6 +16,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
         : IClassFixture<IntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext>>
     {
         private readonly IntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> _testContext;
+        private readonly OperationsFakers _fakers = new();
 
         public AtomicRelativeLinksWithNamespaceTests(
             IntegrationTestContext<RelativeLinksInApiNamespaceStartup<OperationsDbContext>, OperationsDbContext> testContext)
@@ -40,6 +39,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
         public async Task Create_resource_with_side_effects_returns_relative_links()
         {
             // Arrange
+            string newCompanyName = _fakers.RecordCompany.Generate().Name;
+
             var requestBody = new
             {
                 atomic__operations = new object[]
@@ -63,6 +64,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
                             type = "recordCompanies",
                             attributes = new
                             {
+                                name = newCompanyName
                             }
                         }
                     }
@@ -81,25 +83,39 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Links
 
             responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull();
 
-            string languageLink = $"/api/textLanguages/{Guid.Parse(responseDocument.Results[0].Data.SingleValue.Id)}";
+            responseDocument.Results[0].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                string languageLink = $"/api/textLanguages/{Guid.Parse(resource.Id.ShouldNotBeNull())}";
 
-            responseDocument.Results[0].Data.SingleValue.Links.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Links.Self.Should().Be(languageLink);
-            responseDocument.Results[0].Data.SingleValue.Relationships.ShouldNotBeEmpty();
-            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.ShouldNotBeNull();
-            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
-            responseDocument.Results[0].Data.SingleValue.Relationships["lyrics"].Links.Related.Should().Be($"{languageLink}/lyrics");
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(languageLink);
+
+                resource.Relationships.ShouldContainKey("lyrics").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{languageLink}/relationships/lyrics");
+                    value.Links.Related.Should().Be($"{languageLink}/lyrics");
+                });
+            });
 
             responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull();
 
-            string companyLink = $"/api/recordCompanies/{short.Parse(responseDocument.Results[1].Data.SingleValue.Id)}";
+            responseDocument.Results[1].Data.SingleValue.ShouldNotBeNull().With(resource =>
+            {
+                string companyLink = $"/api/recordCompanies/{short.Parse(resource.Id.ShouldNotBeNull())}";
 
-            responseDocument.Results[1].Data.SingleValue.Links.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Links.Self.Should().Be(companyLink);
-            responseDocument.Results[1].Data.SingleValue.Relationships.ShouldNotBeEmpty();
-            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.ShouldNotBeNull();
-            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Self.Should().Be($"{companyLink}/relationships/tracks");
-            responseDocument.Results[1].Data.SingleValue.Relationships["tracks"].Links.Related.Should().Be($"{companyLink}/tracks");
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be(companyLink);
+
+                resource.Relationships.ShouldContainKey("tracks").With(value =>
+                {
+                    value.ShouldNotBeNull();
+                    value.Links.ShouldNotBeNull();
+                    value.Links.Self.Should().Be($"{companyLink}/relationships/tracks");
+                    value.Links.Related.Should().Be($"{companyLink}/tracks");
+                });
+            });
         }
     }
 }

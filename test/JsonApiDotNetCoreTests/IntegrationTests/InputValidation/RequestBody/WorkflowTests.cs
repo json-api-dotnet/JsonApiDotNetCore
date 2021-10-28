@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -85,6 +83,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Initial stage of workflow must be 'Created'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/stage");
         }
 
@@ -130,6 +129,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Invalid workflow stage.");
             error.Detail.Should().Be("Cannot transition from 'OnHold' to 'Succeeded'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/stage");
         }
 

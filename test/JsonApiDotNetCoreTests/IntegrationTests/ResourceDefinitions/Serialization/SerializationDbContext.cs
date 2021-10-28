@@ -20,7 +20,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
         {
             builder.Entity<Scholarship>()
                 .HasMany(scholarship => scholarship.Participants)
-                .WithOne(student => student.Scholarship);
+                .WithOne(student => student.Scholarship!);
         }
     }
 }

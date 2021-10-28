@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using JetBrains.Annotations;
 
@@ -10,8 +8,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.Messages
     {
         public int FormatVersion => 1;
 
-        public Guid UserId { get; set; }
-        public string BeforeUserLoginName { get; set; }
-        public string AfterUserLoginName { get; set; }
+        public Guid UserId { get; }
+        public string BeforeUserLoginName { get; }
+        public string AfterUserLoginName { get; }
+
+        public UserLoginNameChangedContent(Guid userId, string beforeUserLoginName, string afterUserLoginName)
+        {
+            UserId = userId;
+            BeforeUserLoginName = beforeUserLoginName;
+            AfterUserLoginName = afterUserLoginName;
+        }
     }
 }

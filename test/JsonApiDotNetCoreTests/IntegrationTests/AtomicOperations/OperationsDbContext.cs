@@ -24,7 +24,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations
         {
             builder.Entity<MusicTrack>()
                 .HasOne(musicTrack => musicTrack.Lyric)
-                .WithOne(lyric => lyric.Track)
+                .WithOne(lyric => lyric!.Track!)
                 .HasForeignKey<MusicTrack>("LyricId");
 
             builder.Entity<MusicTrack>()

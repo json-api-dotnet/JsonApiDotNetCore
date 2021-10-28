@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using JsonApiDotNetCore.Configuration;
@@ -30,7 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
         {
             if (exception is ConsumerArticleIsNoLongerAvailableException articleException)
             {
-                articleException.Errors[0].Meta = new Dictionary<string, object>
+                articleException.Errors[0].Meta = new Dictionary<string, object?>
                 {
                     ["Support"] = $"Please contact us for info about similar articles at {articleException.SupportEmailAddress}."
                 };

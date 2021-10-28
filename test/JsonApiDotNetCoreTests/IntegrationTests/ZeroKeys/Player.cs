@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Resources;
@@ -11,12 +9,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
     public sealed class Player : Identifiable<string>
     {
         [Attr]
-        public string EmailAddress { get; set; }
+        public string EmailAddress { get; set; } = null!;
 
         [HasOne]
-        public Game ActiveGame { get; set; }
+        public Game? ActiveGame { get; set; }
 
         [HasMany]
-        public ICollection<Game> RecentlyPlayed { get; set; }
+        public ICollection<Game> RecentlyPlayed { get; set; } = new List<Game>();
     }
 }

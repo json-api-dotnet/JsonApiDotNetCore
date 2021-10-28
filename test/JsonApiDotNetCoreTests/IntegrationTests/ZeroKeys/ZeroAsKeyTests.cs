@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +56,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
             responseDocument.Data.ManyValue[0].Id.Should().Be("0");
-            responseDocument.Data.ManyValue[0].Links.Self.Should().Be("/games/0");
+
+            responseDocument.Data.ManyValue[0].With(resource =>
+            {
+                resource.Links.ShouldNotBeNull();
+                resource.Links.Self.Should().Be("/games/0");
+            });
         }
 
         [Fact]
@@ -86,6 +89,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be("0");
+            responseDocument.Data.SingleValue.Links.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Links.Self.Should().Be("/games/0");
 
             responseDocument.Included.ShouldHaveCount(1);
@@ -177,7 +181,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
             responseDocument.Data.SingleValue.Id.Should().Be("0");
-            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newTitle);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newTitle));
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -205,7 +209,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             var requestBody = new
             {
-                data = (object)null
+                data = (object?)null
             };
 
             string route = $"/players/{existingPlayer.StringId}/relationships/activeGame";
@@ -267,6 +271,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.ShouldNotBeNull();
+                playerInDatabase.ActiveGame.ShouldNotBeNull();
                 playerInDatabase.ActiveGame.Id.Should().Be(0);
             });
         }
@@ -312,6 +317,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
                 Player playerInDatabase = await dbContext.Players.Include(player => player.ActiveGame).FirstWithIdAsync(existingPlayer.Id);
 
                 playerInDatabase.ShouldNotBeNull();
+                playerInDatabase.ActiveGame.ShouldNotBeNull();
                 playerInDatabase.ActiveGame.Id.Should().Be(0);
             });
         }
@@ -574,7 +580,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ZeroKeys
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                Game gameInDatabase = await dbContext.Games.FirstWithIdOrDefaultAsync(existingGame.Id);
+                Game? gameInDatabase = await dbContext.Games.FirstWithIdOrDefaultAsync(existingGame.Id);
 
                 gameInDatabase.Should().BeNull();
             });

@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -125,10 +123,11 @@ namespace NoEntityFrameworkTests
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["isBlocked"].Should().Be(newWorkItem.IsBlocked);
-            responseDocument.Data.SingleValue.Attributes["title"].Should().Be(newWorkItem.Title);
-            responseDocument.Data.SingleValue.Attributes["durationInHours"].Should().Be(newWorkItem.DurationInHours);
-            responseDocument.Data.SingleValue.Attributes["projectId"].Should().Be(newWorkItem.ProjectId);
+            responseDocument.Data.SingleValue.Attributes.ShouldNotBeEmpty();
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isBlocked").With(value => value.Should().Be(newWorkItem.IsBlocked));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("title").With(value => value.Should().Be(newWorkItem.Title));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("durationInHours").With(value => value.Should().Be(newWorkItem.DurationInHours));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("projectId").With(value => value.Should().Be(newWorkItem.ProjectId));
         }
 
         [Fact]

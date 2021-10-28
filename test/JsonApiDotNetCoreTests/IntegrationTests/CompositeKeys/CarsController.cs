@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
-    public sealed class CarsController : JsonApiController<Car, string>
+    public sealed class CarsController : JsonApiController<Car, string?>
     {
         public CarsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory,
-            IResourceService<Car, string> resourceService)
+            IResourceService<Car, string?> resourceService)
             : base(options, resourceGraph, loggerFactory, resourceService)
         {
         }

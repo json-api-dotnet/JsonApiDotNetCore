@@ -1,7 +1,4 @@
-#nullable disable
-
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,6 +13,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
     public sealed class ModelStateValidationTests : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext>>
     {
         private readonly IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> _testContext;
+        private readonly ModelStateFakers _fakers = new();
 
         public ModelStateValidationTests(IntegrationTestContext<ModelStateValidationStartup<ModelStateDbContext>, ModelStateDbContext> testContext)
         {
@@ -55,6 +53,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
@@ -69,7 +68,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        directoryName = (string)null,
+                        directoryName = (string?)null,
                         isCaseSensitive = true
                     }
                 }
@@ -89,6 +88,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The Name field is required.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
@@ -123,6 +123,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
@@ -130,6 +131,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_create_resource_with_valid_attribute_value()
         {
             // Arrange
+            SystemDirectory newDirectory = _fakers.SystemDirectory.Generate();
+
             var requestBody = new
             {
                 data = new
@@ -137,8 +140,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        directoryName = "Projects",
-                        isCaseSensitive = true
+                        directoryName = newDirectory.Name,
+                        isCaseSensitive = newDirectory.IsCaseSensitive
                     }
                 }
             };
@@ -152,8 +155,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
-            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
         }
 
         [Fact]
@@ -187,12 +190,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.ShouldNotBeNull();
             error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field SizeInBytes must be between 0 and 9223372036854775807.");
+            error2.Source.ShouldNotBeNull();
             error2.Source.Pointer.Should().Be("/data/attributes/sizeInBytes");
         }
 
@@ -232,12 +237,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The Name field is required.");
+            error2.Source.ShouldNotBeNull();
             error2.Source.Pointer.Should().Be("/data/attributes/directoryName");
 
             ErrorObject error3 = responseDocument.Errors[2];
             error3.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error3.Title.Should().Be("Input validation failed.");
             error3.Detail.Should().Be("The IsCaseSensitive field is required.");
+            error3.Source.ShouldNotBeNull();
             error3.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
         }
 
@@ -245,28 +252,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_create_resource_with_annotated_relationships()
         {
             // Arrange
-            var parentDirectory = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = true
-            };
+            SystemDirectory existingParentDirectory = _fakers.SystemDirectory.Generate();
+            SystemDirectory existingSubdirectory = _fakers.SystemDirectory.Generate();
+            SystemFile existingFile = _fakers.SystemFile.Generate();
 
-            var subdirectory = new SystemDirectory
-            {
-                Name = "Open Source",
-                IsCaseSensitive = true
-            };
-
-            var file = new SystemFile
-            {
-                FileName = "Main.cs",
-                SizeInBytes = 100
-            };
+            SystemDirectory newDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.AddRange(parentDirectory, subdirectory);
-                dbContext.Files.Add(file);
+                dbContext.Directories.AddRange(existingParentDirectory, existingSubdirectory);
+                dbContext.Files.Add(existingFile);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -277,8 +272,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     type = "systemDirectories",
                     attributes = new
                     {
-                        directoryName = "Projects",
-                        isCaseSensitive = true
+                        directoryName = newDirectory.Name,
+                        isCaseSensitive = newDirectory.IsCaseSensitive
                     },
                     relationships = new
                     {
@@ -289,7 +284,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemDirectories",
-                                    id = subdirectory.StringId
+                                    id = existingSubdirectory.StringId
                                 }
                             }
                         },
@@ -300,7 +295,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemFiles",
-                                    id = file.StringId
+                                    id = existingFile.StringId
                                 }
                             }
                         },
@@ -309,7 +304,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                             data = new
                             {
                                 type = "systemDirectories",
-                                id = parentDirectory.StringId
+                                id = existingParentDirectory.StringId
                             }
                         }
                     }
@@ -325,29 +320,20 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             httpResponse.Should().HaveStatusCode(HttpStatusCode.Created);
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
-            responseDocument.Data.SingleValue.Attributes["directoryName"].Should().Be("Projects");
-            responseDocument.Data.SingleValue.Attributes["isCaseSensitive"].Should().Be(true);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("directoryName").With(value => value.Should().Be(newDirectory.Name));
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("isCaseSensitive").With(value => value.Should().Be(newDirectory.IsCaseSensitive));
         }
 
         [Fact]
         public async Task Can_add_to_annotated_ToMany_relationship()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
-
-            var file = new SystemFile
-            {
-                FileName = "Main.cs",
-                SizeInBytes = 100
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+            SystemFile existingFile = _fakers.SystemFile.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddInRange(directory, file);
+                dbContext.AddInRange(existingDirectory, existingFile);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -358,12 +344,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     new
                     {
                         type = "systemFiles",
-                        id = file.StringId
+                        id = existingFile.StringId
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
+            string route = $"/systemDirectories/{existingDirectory.StringId}/relationships/files";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePostAsync<string>(route, requestBody);
@@ -378,15 +364,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_update_resource_with_omitted_required_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+
+            long newSizeInBytes = _fakers.SystemDirectory.Generate().SizeInBytes;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -395,15 +379,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
+                    id = existingDirectory.StringId,
                     attributes = new
                     {
-                        sizeInBytes = 100
+                        sizeInBytes = newSizeInBytes
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -415,18 +399,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         }
 
         [Fact]
-        public async Task Cannot_update_resource_with_null_for_required_attribute_value()
+        public async Task Cannot_update_resource_with_null_for_required_attribute_values()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -435,15 +415,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
+                    id = existingDirectory.StringId,
                     attributes = new
                     {
-                        directoryName = (string)null
+                        directoryName = (string?)null,
+                        isCaseSensitive = (bool?)null
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -451,28 +432,32 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             // Assert
             httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(2);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Input validation failed.");
-            error.Detail.Should().Be("The Name field is required.");
-            error.Source.Pointer.Should().Be("/data/attributes/directoryName");
+            ErrorObject error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Name field is required.");
+            error1.Source.ShouldNotBeNull();
+            error1.Source.Pointer.Should().Be("/data/attributes/directoryName");
+
+            ErrorObject error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The IsCaseSensitive field is required.");
+            error2.Source.ShouldNotBeNull();
+            error2.Source.Pointer.Should().Be("/data/attributes/isCaseSensitive");
         }
 
         [Fact]
         public async Task Cannot_update_resource_with_invalid_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -481,7 +466,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
+                    id = existingDirectory.StringId,
                     attributes = new
                     {
                         directoryName = "!@#$%^&*().-"
@@ -489,7 +474,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
@@ -503,6 +488,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error.Title.Should().Be("Input validation failed.");
             error.Detail.Should().Be("The field Name must match the regular expression '^[\\w\\s]+$'.");
+            error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/data/attributes/directoryName");
         }
 
@@ -510,28 +496,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Cannot_update_resource_with_invalid_ID()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
-
-            await _testContext.RunOnDatabaseAsync(async dbContext =>
-            {
-                dbContext.Directories.Add(directory);
-                await dbContext.SaveChangesAsync();
-            });
-
             var requestBody = new
             {
                 data = new
                 {
                     type = "systemDirectories",
                     id = "-1",
-                    attributes = new
-                    {
-                        directoryName = "Repositories"
-                    },
                     relationships = new
                     {
                         subdirectories = new
@@ -563,12 +533,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
             error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error1.Title.Should().Be("Input validation failed.");
             error1.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            error1.Source.ShouldNotBeNull();
             error1.Source.Pointer.Should().Be("/data/id");
 
             ErrorObject error2 = responseDocument.Errors[1];
             error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
             error2.Title.Should().Be("Input validation failed.");
             error2.Detail.Should().Be("The field Id must match the regular expression '^[0-9]+$'.");
+            error2.Source.ShouldNotBeNull();
             error2.Source.Pointer.Should().Be("/data/relationships/subdirectories/data[0]/id");
         }
 
@@ -576,15 +548,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_update_resource_with_valid_attribute_value()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+
+            string newDirectoryName = _fakers.SystemDirectory.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -593,15 +563,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
+                    id = existingDirectory.StringId,
                     attributes = new
                     {
-                        directoryName = "Repositories"
+                        directoryName = newDirectoryName
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -616,53 +586,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_update_resource_with_annotated_relationships()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false,
-                Subdirectories = new List<SystemDirectory>
-                {
-                    new()
-                    {
-                        Name = "C#",
-                        IsCaseSensitive = false
-                    }
-                },
-                Files = new List<SystemFile>
-                {
-                    new()
-                    {
-                        FileName = "readme.txt"
-                    }
-                },
-                Parent = new SystemDirectory
-                {
-                    Name = "Data",
-                    IsCaseSensitive = false
-                }
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+            existingDirectory.Subdirectories = _fakers.SystemDirectory.Generate(1);
+            existingDirectory.Files = _fakers.SystemFile.Generate(1);
+            existingDirectory.Parent = _fakers.SystemDirectory.Generate();
 
-            var otherParent = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = false
-            };
+            SystemDirectory existingParent = _fakers.SystemDirectory.Generate();
+            SystemDirectory existingSubdirectory = _fakers.SystemDirectory.Generate();
+            SystemFile existingFile = _fakers.SystemFile.Generate();
 
-            var otherSubdirectory = new SystemDirectory
-            {
-                Name = "Shared",
-                IsCaseSensitive = false
-            };
-
-            var otherFile = new SystemFile
-            {
-                FileName = "readme.md"
-            };
+            string newDirectoryName = _fakers.SystemDirectory.Generate().Name;
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.AddRange(directory, otherParent, otherSubdirectory);
-                dbContext.Files.Add(otherFile);
+                dbContext.Directories.AddRange(existingDirectory, existingParent, existingSubdirectory);
+                dbContext.Files.Add(existingFile);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -671,10 +609,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
+                    id = existingDirectory.StringId,
                     attributes = new
                     {
-                        directoryName = "Project Files"
+                        directoryName = newDirectoryName
                     },
                     relationships = new
                     {
@@ -685,7 +623,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemDirectories",
-                                    id = otherSubdirectory.StringId
+                                    id = existingSubdirectory.StringId
                                 }
                             }
                         },
@@ -696,7 +634,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemFiles",
-                                    id = otherFile.StringId
+                                    id = existingFile.StringId
                                 }
                             }
                         },
@@ -705,14 +643,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                             data = new
                             {
                                 type = "systemDirectories",
-                                id = otherParent.StringId
+                                id = existingParent.StringId
                             }
                         }
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -727,15 +665,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_update_resource_with_multiple_self_references()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -744,11 +678,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        directoryName = "Project files"
-                    },
+                    id = existingDirectory.StringId,
                     relationships = new
                     {
                         self = new
@@ -756,7 +686,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                             data = new
                             {
                                 type = "systemDirectories",
-                                id = directory.StringId
+                                id = existingDirectory.StringId
                             }
                         },
                         alsoSelf = new
@@ -764,14 +694,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                             data = new
                             {
                                 type = "systemDirectories",
-                                id = directory.StringId
+                                id = existingDirectory.StringId
                             }
                         }
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -786,15 +716,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_update_resource_with_collection_of_self_references()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = false
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -803,11 +729,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = directory.StringId,
-                    attributes = new
-                    {
-                        directoryName = "Project files"
-                    },
+                    id = existingDirectory.StringId,
                     relationships = new
                     {
                         subdirectories = new
@@ -817,7 +739,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                                 new
                                 {
                                     type = "systemDirectories",
-                                    id = directory.StringId
+                                    id = existingDirectory.StringId
                                 }
                             }
                         }
@@ -825,7 +747,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}";
+            string route = $"/systemDirectories/{existingDirectory.StringId}";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -840,26 +762,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_replace_annotated_ToOne_relationship()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true,
-                Parent = new SystemDirectory
-                {
-                    Name = "Data",
-                    IsCaseSensitive = true
-                }
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+            existingDirectory.Parent = _fakers.SystemDirectory.Generate();
 
-            var otherParent = new SystemDirectory
-            {
-                Name = "Data files",
-                IsCaseSensitive = true
-            };
+            SystemDirectory otherExistingDirectory = _fakers.SystemDirectory.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.AddRange(directory, otherParent);
+                dbContext.Directories.AddRange(existingDirectory, otherExistingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -868,11 +778,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 data = new
                 {
                     type = "systemDirectories",
-                    id = otherParent.StringId
+                    id = otherExistingDirectory.StringId
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}/relationships/parent";
+            string route = $"/systemDirectories/{existingDirectory.StringId}/relationships/parent";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -887,32 +797,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_replace_annotated_ToMany_relationship()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true,
-                Files = new List<SystemFile>
-                {
-                    new()
-                    {
-                        FileName = "Main.cs"
-                    },
-                    new()
-                    {
-                        FileName = "Program.cs"
-                    }
-                }
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+            existingDirectory.Files = _fakers.SystemFile.Generate(2);
 
-            var otherFile = new SystemFile
-            {
-                FileName = "EntryPoint.cs"
-            };
+            SystemFile existingFile = _fakers.SystemFile.Generate();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Directories.Add(directory);
-                dbContext.Files.Add(otherFile);
+                dbContext.AddInRange(existingDirectory, existingFile);
                 await dbContext.SaveChangesAsync();
             });
 
@@ -923,12 +815,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                     new
                     {
                         type = "systemFiles",
-                        id = otherFile.StringId
+                        id = existingFile.StringId
                     }
                 }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
+            string route = $"/systemDirectories/{existingDirectory.StringId}/relationships/files";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecutePatchAsync<string>(route, requestBody);
@@ -943,32 +835,28 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
         public async Task Can_remove_from_annotated_ToMany_relationship()
         {
             // Arrange
-            var directory = new SystemDirectory
-            {
-                Name = "Projects",
-                IsCaseSensitive = true,
-                Files = new List<SystemFile>
-                {
-                    new()
-                    {
-                        FileName = "Main.cs",
-                        SizeInBytes = 100
-                    }
-                }
-            };
+            SystemDirectory existingDirectory = _fakers.SystemDirectory.Generate();
+            existingDirectory.Files = _fakers.SystemFile.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.AddInRange(directory);
+                dbContext.Directories.Add(existingDirectory);
                 await dbContext.SaveChangesAsync();
             });
 
             var requestBody = new
             {
-                data = Array.Empty<object>()
+                data = new[]
+                {
+                    new
+                    {
+                        type = "systemFiles",
+                        id = existingDirectory.Files.ElementAt(0).StringId
+                    }
+                }
             };
 
-            string route = $"/systemDirectories/{directory.StringId}/relationships/files";
+            string route = $"/systemDirectories/{existingDirectory.StringId}/relationships/files";
 
             // Act
             (HttpResponseMessage httpResponse, string responseDocument) = await _testContext.ExecuteDeleteAsync<string>(route, requestBody);

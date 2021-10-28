@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -40,7 +38,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             calendar.DefaultAppointmentDurationInMinutes = default;
             calendar.ShowWeekNumbers = true;
             calendar.Appointments = _fakers.Appointment.Generate(1).ToHashSet();
-            calendar.Appointments.Single().Title = null;
+            calendar.Appointments.Single().Description = null;
             calendar.Appointments.Single().StartTime = default;
             calendar.Appointments.Single().EndTime = 1.January(2001);
 
@@ -64,12 +62,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
             if (expectNullValueInDocument)
             {
                 responseDocument.Data.SingleValue.Attributes.ShouldContainKey("timeZone");
-                responseDocument.Included[0].Attributes.ShouldContainKey("title");
+                responseDocument.Included[0].Attributes.ShouldContainKey("description");
             }
             else
             {
                 responseDocument.Data.SingleValue.Attributes.Should().NotContainKey("timeZone");
-                responseDocument.Included[0].Attributes.Should().NotContainKey("title");
+                responseDocument.Included[0].Attributes.Should().NotContainKey("description");
             }
 
             if (expectDefaultValueInDocument)

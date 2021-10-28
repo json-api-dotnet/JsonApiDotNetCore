@@ -1,9 +1,11 @@
-#nullable disable
-
 using System;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
+using FluentAssertions;
+using JetBrains.Annotations;
+using JsonApiDotNetCore;
 using JsonApiDotNetCore.Resources;
+using TestBuildingBlocks;
 using Xunit;
 
 namespace UnitTests.Models
@@ -20,10 +22,10 @@ namespace UnitTests.Models
             NewExpression newExpression = factory.CreateNewExpression(typeof(ResourceWithoutConstructor));
 
             // Assert
-            Func<ResourceWithoutConstructor> function = Expression.Lambda<Func<ResourceWithoutConstructor>>(newExpression).Compile();
+            Func<ResourceWithoutConstructor> createFunction = Expression.Lambda<Func<ResourceWithoutConstructor>>(newExpression).Compile();
+            ResourceWithoutConstructor resource = createFunction();
 
-            ResourceWithoutConstructor resource = function();
-            Assert.NotNull(resource);
+            resource.ShouldNotBeNull();
         }
 
         [Fact]
@@ -36,10 +38,25 @@ namespace UnitTests.Models
             Action action = () => factory.CreateNewExpression(typeof(ResourceWithStringConstructor));
 
             // Assert
-            var exception = Assert.Throws<InvalidOperationException>(action);
+            action.Should().ThrowExactly<InvalidOperationException>()
+                .WithMessage($"Failed to create an instance of '{typeof(ResourceWithStringConstructor).FullName}': Parameter 'text' could not be resolved.");
+        }
 
-            Assert.Equal("Failed to create an instance of 'UnitTests.Models.ResourceWithStringConstructor': Parameter 'text' could not be resolved.",
-                exception.Message);
+        private sealed class ResourceWithoutConstructor : Identifiable<int>
+        {
+        }
+
+        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+        private sealed class ResourceWithStringConstructor : Identifiable<int>
+        {
+            public string Text { get; }
+
+            public ResourceWithStringConstructor(string text)
+            {
+                ArgumentGuard.NotNullNorEmpty(text, nameof(text));
+
+                Text = text;
+            }
         }
     }
 }

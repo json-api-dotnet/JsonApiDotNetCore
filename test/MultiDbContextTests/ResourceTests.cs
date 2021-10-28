@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -46,7 +44,7 @@ namespace MultiDbContextTests
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["nameA"].Should().Be("SampleA");
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameA").With(value => value.Should().Be("SampleA"));
         }
 
         [Fact]
@@ -62,7 +60,7 @@ namespace MultiDbContextTests
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Attributes["nameB"].Should().Be("SampleB");
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("nameB").With(value => value.Should().Be("SampleB"));
         }
 
         protected override HttpClient CreateClient()

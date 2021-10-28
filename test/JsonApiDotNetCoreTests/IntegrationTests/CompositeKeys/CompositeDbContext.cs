@@ -28,12 +28,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
             builder.Entity<Engine>()
                 .HasOne(engine => engine.Car)
-                .WithOne(car => car.Engine)
+                .WithOne(car => car!.Engine)
                 .HasForeignKey<Engine>();
 
             builder.Entity<Dealership>()
                 .HasMany(dealership => dealership.Inventory)
-                .WithOne(car => car.Dealership);
+                .WithOne(car => car.Dealership!);
         }
     }
 }

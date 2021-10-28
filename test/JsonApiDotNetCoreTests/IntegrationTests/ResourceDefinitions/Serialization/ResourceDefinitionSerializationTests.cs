@@ -1,5 +1,3 @@
-#nullable disable
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -67,11 +65,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber1.Should().Be(students[0].SocialSecurityNumber);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[1].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber2.Should().Be(students[1].SocialSecurityNumber);
+                socialSecurityNumber.Should().Be(students[0].SocialSecurityNumber);
+            });
+
+            responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(students[1].SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -110,17 +118,37 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Included.ShouldHaveCount(4);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber1.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
+            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Included[1].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber2.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
+                socialSecurityNumber.Should().Be(scholarships[0].Participants[0].SocialSecurityNumber);
+            });
 
-            string socialSecurityNumber3 = encryptionService.Decrypt((string)responseDocument.Included[2].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber3.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
+            responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string socialSecurityNumber4 = encryptionService.Decrypt((string)responseDocument.Included[3].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber4.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
+                socialSecurityNumber.Should().Be(scholarships[0].Participants[1].SocialSecurityNumber);
+            });
+
+            responseDocument.Included[2].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(scholarships[1].Participants[0].SocialSecurityNumber);
+            });
+
+            responseDocument.Included[3].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(scholarships[1].Participants[1].SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -156,8 +184,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(student.SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -191,11 +224,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.ManyValue.ShouldHaveCount(2);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber1.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
+            responseDocument.Data.ManyValue[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Data.ManyValue[1].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber2.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
+                socialSecurityNumber.Should().Be(scholarship.Participants[0].SocialSecurityNumber);
+            });
+
+            responseDocument.Data.ManyValue[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(scholarship.Participants[1].SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -230,8 +273,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -267,8 +315,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Included.ShouldHaveCount(1);
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(scholarship.PrimaryContact.SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -309,10 +362,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id);
+                socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+            });
+
+            int newStudentId = int.Parse(responseDocument.Data.SingleValue.Id.ShouldNotBeNull());
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -382,8 +440,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Included.ShouldHaveCount(1);
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
+            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(existingStudent.SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
@@ -431,8 +494,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Data.SingleValue.ShouldNotBeNull();
 
-            string socialSecurityNumber = encryptionService.Decrypt((string)responseDocument.Data.SingleValue.Attributes["socialSecurityNumber"]);
-            socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+            responseDocument.Data.SingleValue.Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(newSocialSecurityNumber);
+            });
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -510,11 +578,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serializat
 
             responseDocument.Included.ShouldHaveCount(2);
 
-            string socialSecurityNumber1 = encryptionService.Decrypt((string)responseDocument.Included[0].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber1.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
+            responseDocument.Included[0].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
 
-            string socialSecurityNumber2 = encryptionService.Decrypt((string)responseDocument.Included[1].Attributes["socialSecurityNumber"]);
-            socialSecurityNumber2.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
+                socialSecurityNumber.Should().Be(existingScholarship.Participants[0].SocialSecurityNumber);
+            });
+
+            responseDocument.Included[1].Attributes.ShouldContainKey("socialSecurityNumber").With(value =>
+            {
+                string stringValue = value.Should().BeOfType<string?>().Subject.ShouldNotBeNull();
+                string socialSecurityNumber = encryptionService.Decrypt(stringValue);
+
+                socialSecurityNumber.Should().Be(existingScholarship.Participants[2].SocialSecurityNumber);
+            });
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {

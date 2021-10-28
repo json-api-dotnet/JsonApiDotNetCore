@@ -1,5 +1,3 @@
-#nullable disable
-
 using System;
 using System.Net;
 using System.Net.Http;
@@ -116,7 +114,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                DomainUser user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
+                DomainUser? user = await dbContext.Users.FirstWithIdOrDefaultAsync(existingUser.Id);
                 user.Should().BeNull();
             });
         }
