@@ -94,14 +94,14 @@ dotnet new webapi
 Install-Package JsonApiDotNetCore
 </code></pre><h3 id="define-models">Define Models</h3>
 <p>Define your domain models such that they implement <code>IIdentifiable&lt;TId&gt;</code>.
-The easiest way to do this is to inherit from <code>Identifiable</code></p>
-<pre><code class="lang-c#">public class Person : Identifiable
+The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</code>.</p>
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
     public string Name { get; set; }
 }
 </code></pre><h3 id="define-dbcontext">Define DbContext</h3>
-<p>Nothing special here, just an ordinary <code>DbContext</code></p>
+<p>Nothing special here, just an ordinary <code>DbContext</code>.</p>
 <pre><code>public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions&lt;AppDbContext&gt; options)
@@ -112,12 +112,12 @@ The easiest way to do this is to inherit from <code>Identifiable</code></p>
     public DbSet&lt;Person&gt; People { get; set; }
 }
 </code></pre><h3 id="define-controllers">Define Controllers</h3>
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource&gt;</code> or <code>JsonApiController&lt;TResource, TId&gt;</code>
-where <code>TResource</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code></p>
-<pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person&gt;
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code>
+where <code>TResource</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code>.</p>
+<pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person, int&gt;
 {
     public PeopleController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Person&gt; resourceService)
+        IResourceService&lt;Person, int&gt; resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }

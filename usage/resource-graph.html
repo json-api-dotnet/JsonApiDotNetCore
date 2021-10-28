@@ -126,13 +126,13 @@ public void ConfigureServices(IServiceCollection services)
 </code></pre></li>
 <li><p>The model is decorated with a <code>ResourceAttribute</code></p>
 <pre><code class="lang-c#">[Resource(&quot;myResources&quot;)]
-public class MyModel : Identifiable
+public class MyModel : Identifiable&lt;int&gt;
 {
 }
 </code></pre></li>
 <li><p>The configured naming convention (by default this is camel-case).</p>
 <pre><code class="lang-c#">// this will be registered as &quot;myModels&quot;
-public class MyModel : Identifiable
+public class MyModel : Identifiable&lt;int&gt;
 {
 }
 </code></pre></li>

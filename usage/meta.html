@@ -98,8 +98,8 @@ public sealed class CopyrightResponseMeta : IResponseMeta
   &quot;data&quot;: []
 }
 </code></pre><h2 id="resource-meta">Resource Meta</h2>
-<p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition</code>):</p>
-<pre><code class="lang-c#">public class PersonDefinition : JsonApiResourceDefinition&lt;Person&gt;
+<p>Resource-specific metadata can be added by implementing <code>IResourceDefinition&lt;TResource, TId&gt;.GetMeta</code> (or overriding it on <code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code>):</p>
+<pre><code class="lang-c#">public class PersonDefinition : JsonApiResourceDefinition&lt;Person, int&gt;
 {
     public PersonDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)

@@ -72,10 +72,10 @@
 <p>The <code>IResourceService</code> acts as a service layer between the controller and the data access layer.
 This allows you to customize it however you want. This is also a good place to implement custom business logic.</p>
 <h2 id="supplementing-default-behavior">Supplementing Default Behavior</h2>
-<p>If you don&#39;t need to alter the underlying mechanisms, you can inherit from <code>JsonApiResourceService&lt;TResource&gt;</code> and override the existing methods.
+<p>If you don&#39;t need to alter the underlying mechanisms, you can inherit from <code>JsonApiResourceService&lt;TResource, TId&gt;</code> and override the existing methods.
 In simple cases, you can also just wrap the base implementation with your custom logic.</p>
 <p>A simple example would be to send notifications when a resource gets created.</p>
-<pre><code class="lang-c#">public class TodoItemService : JsonApiResourceService&lt;TodoItem&gt;
+<pre><code class="lang-c#">public class TodoItemService : JsonApiResourceService&lt;TodoItem, int&gt;
 {
     private readonly INotificationService _notificationService;
 
@@ -104,19 +104,19 @@ In simple cases, you can also just wrap the base implementation with your custom
 }
 </code></pre><h2 id="not-using-entity-framework-core">Not Using Entity Framework Core?</h2>
 <p>As previously discussed, this library uses Entity Framework Core by default.
-If you&#39;d like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;TResource&gt;</code> implementation.</p>
+If you&#39;d like to use another ORM that does not provide what JsonApiResourceService depends upon, you can use a custom <code>IResourceService&lt;TResource, TId&gt;</code> implementation.</p>
 <pre><code class="lang-c#">// Startup.cs
 public void ConfigureServices(IServiceCollection services)
 {
     // add the service override for Product
-    services.AddScoped&lt;IResourceService&lt;Product&gt;, ProductService&gt;();
+    services.AddScoped&lt;IResourceService&lt;Product, int&gt;, ProductService&gt;();
 
     // add your own Data Access Object
     services.AddScoped&lt;IProductDao, ProductDao&gt;();
 }
 
 // ProductService.cs
-public class ProductService : IResourceService&lt;Product&gt;
+public class ProductService : IResourceService&lt;Product, int&gt;
 {
     private readonly IProductDao _dao;
 
@@ -194,7 +194,7 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
     }
 }
 </code></pre><p>Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:</p>
-<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
+<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
     public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         ICreateService&lt;Article, int&gt; create, IDeleteService&lt;Article, int&gt; delete)

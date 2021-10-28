@@ -2671,51 +2671,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.Methods
   nameWithType: NoHttpPostAttribute.Methods
-- uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`1
-  name: BaseJsonApiController<TResource>
-  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html
-  commentId: T:JsonApiDotNetCore.Controllers.BaseJsonApiController`1
-  name.vb: BaseJsonApiController(Of TResource)
-  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiController<TResource>
-  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource)
-  nameWithType: BaseJsonApiController<TResource>
-  nameWithType.vb: BaseJsonApiController(Of TResource)
-- uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.ISetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,System.Int32})
-  name: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService<TResource, Int32>, IGetByIdService<TResource, Int32>, IGetSecondaryService<TResource, Int32>, IGetRelationshipService<TResource, Int32>, ICreateService<TResource, Int32>, IAddToRelationshipService<TResource, Int32>, IUpdateService<TResource, Int32>, ISetRelationshipService<TResource, Int32>, IDeleteService<TResource, Int32>, IRemoveFromRelationshipService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IAddToRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_ISetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.ISetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,System.Int32})
-  name.vb: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService(Of TResource, Int32), IGetByIdService(Of TResource, Int32), IGetSecondaryService(Of TResource, Int32), IGetRelationshipService(Of TResource, Int32), ICreateService(Of TResource, Int32), IAddToRelationshipService(Of TResource, Int32), IUpdateService(Of TResource, Int32), ISetRelationshipService(Of TResource, Int32), IDeleteService(Of TResource, Int32), IRemoveFromRelationshipService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiController<TResource>.BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IGetAllService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetByIdService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetSecondaryService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.ICreateService<TResource, System.Int32>, JsonApiDotNetCore.Services.IAddToRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.IUpdateService<TResource, System.Int32>, JsonApiDotNetCore.Services.ISetRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.IDeleteService<TResource, System.Int32>, JsonApiDotNetCore.Services.IRemoveFromRelationshipService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource).BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IGetAllService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetByIdService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetSecondaryService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.ICreateService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IAddToRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IUpdateService(Of TResource, System.Int32), JsonApiDotNetCore.Services.ISetRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IDeleteService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IRemoveFromRelationshipService(Of TResource, System.Int32))
-  nameWithType: BaseJsonApiController<TResource>.BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService<TResource, Int32>, IGetByIdService<TResource, Int32>, IGetSecondaryService<TResource, Int32>, IGetRelationshipService<TResource, Int32>, ICreateService<TResource, Int32>, IAddToRelationshipService<TResource, Int32>, IUpdateService<TResource, Int32>, ISetRelationshipService<TResource, Int32>, IDeleteService<TResource, Int32>, IRemoveFromRelationshipService<TResource, Int32>)
-  nameWithType.vb: BaseJsonApiController(Of TResource).BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService(Of TResource, Int32), IGetByIdService(Of TResource, Int32), IGetSecondaryService(Of TResource, Int32), IGetRelationshipService(Of TResource, Int32), ICreateService(Of TResource, Int32), IAddToRelationshipService(Of TResource, Int32), IUpdateService(Of TResource, Int32), ISetRelationshipService(Of TResource, Int32), IDeleteService(Of TResource, Int32), IRemoveFromRelationshipService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceQueryService{`0,System.Int32},JsonApiDotNetCore.Services.IResourceCommandService{`0,System.Int32})
-  name: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceQueryService<TResource, Int32>, IResourceCommandService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceQueryService__0_System_Int32__JsonApiDotNetCore_Services_IResourceCommandService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceQueryService{`0,System.Int32},JsonApiDotNetCore.Services.IResourceCommandService{`0,System.Int32})
-  name.vb: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceQueryService(Of TResource, Int32), IResourceCommandService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiController<TResource>.BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceQueryService<TResource, System.Int32>, JsonApiDotNetCore.Services.IResourceCommandService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource).BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceQueryService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IResourceCommandService(Of TResource, System.Int32))
-  nameWithType: BaseJsonApiController<TResource>.BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceQueryService<TResource, Int32>, IResourceCommandService<TResource, Int32>)
-  nameWithType.vb: BaseJsonApiController(Of TResource).BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceQueryService(Of TResource, Int32), IResourceCommandService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})
-  name: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})
-  name.vb: BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiController<TResource>.BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource).BaseJsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceService(Of TResource, System.Int32))
-  nameWithType: BaseJsonApiController<TResource>.BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService<TResource, Int32>)
-  nameWithType.vb: BaseJsonApiController(Of TResource).BaseJsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor*
-  name: BaseJsonApiController
-  href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-1.html#JsonApiDotNetCore_Controllers_BaseJsonApiController_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Controllers.BaseJsonApiController`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.BaseJsonApiController<TResource>.BaseJsonApiController
-  fullName.vb: JsonApiDotNetCore.Controllers.BaseJsonApiController(Of TResource).BaseJsonApiController
-  nameWithType: BaseJsonApiController<TResource>.BaseJsonApiController
-  nameWithType.vb: BaseJsonApiController(Of TResource).BaseJsonApiController
 - uid: JsonApiDotNetCore.Controllers.BaseJsonApiController`2
   name: BaseJsonApiController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html
@@ -3003,33 +2958,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Controllers.CoreJsonApiController.Error
   nameWithType: CoreJsonApiController.Error
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`1
-  name: JsonApiCommandController<TResource>
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-1.html
-  commentId: T:JsonApiDotNetCore.Controllers.JsonApiCommandController`1
-  name.vb: JsonApiCommandController(Of TResource)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource>
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource)
-  nameWithType: JsonApiCommandController<TResource>
-  nameWithType.vb: JsonApiCommandController(Of TResource)
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceCommandService{`0,System.Int32})
-  name: JsonApiCommandController(IJsonApiOptions, ILoggerFactory, IResourceCommandService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-1.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceCommandService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiCommandController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceCommandService{`0,System.Int32})
-  name.vb: JsonApiCommandController(IJsonApiOptions, ILoggerFactory, IResourceCommandService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource>.JsonApiCommandController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceCommandService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource).JsonApiCommandController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceCommandService(Of TResource, System.Int32))
-  nameWithType: JsonApiCommandController<TResource>.JsonApiCommandController(IJsonApiOptions, ILoggerFactory, IResourceCommandService<TResource, Int32>)
-  nameWithType.vb: JsonApiCommandController(Of TResource).JsonApiCommandController(IJsonApiOptions, ILoggerFactory, IResourceCommandService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`1.#ctor*
-  name: JsonApiCommandController
-  href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-1.html#JsonApiDotNetCore_Controllers_JsonApiCommandController_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiCommandController`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiCommandController<TResource>.JsonApiCommandController
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource).JsonApiCommandController
-  nameWithType: JsonApiCommandController<TResource>.JsonApiCommandController
-  nameWithType.vb: JsonApiCommandController(Of TResource).JsonApiCommandController
 - uid: JsonApiDotNetCore.Controllers.JsonApiCommandController`2
   name: JsonApiCommandController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html
@@ -3161,42 +3089,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Controllers.JsonApiCommandController(Of TResource, TId).PostRelationshipAsync
   nameWithType: JsonApiCommandController<TResource, TId>.PostRelationshipAsync
   nameWithType.vb: JsonApiCommandController(Of TResource, TId).PostRelationshipAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiController`1
-  name: JsonApiController<TResource>
-  href: api/JsonApiDotNetCore.Controllers.JsonApiController-1.html
-  commentId: T:JsonApiDotNetCore.Controllers.JsonApiController`1
-  name.vb: JsonApiController(Of TResource)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiController<TResource>
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiController(Of TResource)
-  nameWithType: JsonApiController<TResource>
-  nameWithType.vb: JsonApiController(Of TResource)
-- uid: JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.ISetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,System.Int32})
-  name: JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService<TResource, Int32>, IGetByIdService<TResource, Int32>, IGetSecondaryService<TResource, Int32>, IGetRelationshipService<TResource, Int32>, ICreateService<TResource, Int32>, IAddToRelationshipService<TResource, Int32>, IUpdateService<TResource, Int32>, ISetRelationshipService<TResource, Int32>, IDeleteService<TResource, Int32>, IRemoveFromRelationshipService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiController-1.html#JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IGetAllService__0_System_Int32__JsonApiDotNetCore_Services_IGetByIdService__0_System_Int32__JsonApiDotNetCore_Services_IGetSecondaryService__0_System_Int32__JsonApiDotNetCore_Services_IGetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_ICreateService__0_System_Int32__JsonApiDotNetCore_Services_IAddToRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IUpdateService__0_System_Int32__JsonApiDotNetCore_Services_ISetRelationshipService__0_System_Int32__JsonApiDotNetCore_Services_IDeleteService__0_System_Int32__JsonApiDotNetCore_Services_IRemoveFromRelationshipService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IGetAllService{`0,System.Int32},JsonApiDotNetCore.Services.IGetByIdService{`0,System.Int32},JsonApiDotNetCore.Services.IGetSecondaryService{`0,System.Int32},JsonApiDotNetCore.Services.IGetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.ICreateService{`0,System.Int32},JsonApiDotNetCore.Services.IAddToRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IUpdateService{`0,System.Int32},JsonApiDotNetCore.Services.ISetRelationshipService{`0,System.Int32},JsonApiDotNetCore.Services.IDeleteService{`0,System.Int32},JsonApiDotNetCore.Services.IRemoveFromRelationshipService{`0,System.Int32})
-  name.vb: JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService(Of TResource, Int32), IGetByIdService(Of TResource, Int32), IGetSecondaryService(Of TResource, Int32), IGetRelationshipService(Of TResource, Int32), ICreateService(Of TResource, Int32), IAddToRelationshipService(Of TResource, Int32), IUpdateService(Of TResource, Int32), ISetRelationshipService(Of TResource, Int32), IDeleteService(Of TResource, Int32), IRemoveFromRelationshipService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.JsonApiController<TResource>.JsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IGetAllService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetByIdService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetSecondaryService<TResource, System.Int32>, JsonApiDotNetCore.Services.IGetRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.ICreateService<TResource, System.Int32>, JsonApiDotNetCore.Services.IAddToRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.IUpdateService<TResource, System.Int32>, JsonApiDotNetCore.Services.ISetRelationshipService<TResource, System.Int32>, JsonApiDotNetCore.Services.IDeleteService<TResource, System.Int32>, JsonApiDotNetCore.Services.IRemoveFromRelationshipService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiController(Of TResource).JsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IGetAllService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetByIdService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetSecondaryService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IGetRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.ICreateService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IAddToRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IUpdateService(Of TResource, System.Int32), JsonApiDotNetCore.Services.ISetRelationshipService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IDeleteService(Of TResource, System.Int32), JsonApiDotNetCore.Services.IRemoveFromRelationshipService(Of TResource, System.Int32))
-  nameWithType: JsonApiController<TResource>.JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService<TResource, Int32>, IGetByIdService<TResource, Int32>, IGetSecondaryService<TResource, Int32>, IGetRelationshipService<TResource, Int32>, ICreateService<TResource, Int32>, IAddToRelationshipService<TResource, Int32>, IUpdateService<TResource, Int32>, ISetRelationshipService<TResource, Int32>, IDeleteService<TResource, Int32>, IRemoveFromRelationshipService<TResource, Int32>)
-  nameWithType.vb: JsonApiController(Of TResource).JsonApiController(IJsonApiOptions, ILoggerFactory, IGetAllService(Of TResource, Int32), IGetByIdService(Of TResource, Int32), IGetSecondaryService(Of TResource, Int32), IGetRelationshipService(Of TResource, Int32), ICreateService(Of TResource, Int32), IAddToRelationshipService(Of TResource, Int32), IUpdateService(Of TResource, Int32), ISetRelationshipService(Of TResource, Int32), IDeleteService(Of TResource, Int32), IRemoveFromRelationshipService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})
-  name: JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiController-1.html#JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceService{`0,System.Int32})
-  name.vb: JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.JsonApiController<TResource>.JsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiController(Of TResource).JsonApiController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceService(Of TResource, System.Int32))
-  nameWithType: JsonApiController<TResource>.JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService<TResource, Int32>)
-  nameWithType.vb: JsonApiController(Of TResource).JsonApiController(IJsonApiOptions, ILoggerFactory, IResourceService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor*
-  name: JsonApiController
-  href: api/JsonApiDotNetCore.Controllers.JsonApiController-1.html#JsonApiDotNetCore_Controllers_JsonApiController_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiController`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiController<TResource>.JsonApiController
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiController(Of TResource).JsonApiController
-  nameWithType: JsonApiController<TResource>.JsonApiController
-  nameWithType.vb: JsonApiController(Of TResource).JsonApiController
 - uid: JsonApiDotNetCore.Controllers.JsonApiController`2
   name: JsonApiController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.JsonApiController-2.html
@@ -3431,33 +3323,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Controllers.JsonApiOperationsController.PostOperationsAsync
   nameWithType: JsonApiOperationsController.PostOperationsAsync
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`1
-  name: JsonApiQueryController<TResource>
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html
-  commentId: T:JsonApiDotNetCore.Controllers.JsonApiQueryController`1
-  name.vb: JsonApiQueryController(Of TResource)
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource>
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource)
-  nameWithType: JsonApiQueryController<TResource>
-  nameWithType.vb: JsonApiQueryController(Of TResource)
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceQueryService{`0,System.Int32})
-  name: JsonApiQueryController(IJsonApiOptions, ILoggerFactory, IResourceQueryService<TResource, Int32>)
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_1__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Services_IResourceQueryService__0_System_Int32__
-  commentId: M:JsonApiDotNetCore.Controllers.JsonApiQueryController`1.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Services.IResourceQueryService{`0,System.Int32})
-  name.vb: JsonApiQueryController(IJsonApiOptions, ILoggerFactory, IResourceQueryService(Of TResource, Int32))
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource>.JsonApiQueryController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceQueryService<TResource, System.Int32>)
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource).JsonApiQueryController(JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Services.IResourceQueryService(Of TResource, System.Int32))
-  nameWithType: JsonApiQueryController<TResource>.JsonApiQueryController(IJsonApiOptions, ILoggerFactory, IResourceQueryService<TResource, Int32>)
-  nameWithType.vb: JsonApiQueryController(Of TResource).JsonApiQueryController(IJsonApiOptions, ILoggerFactory, IResourceQueryService(Of TResource, Int32))
-- uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`1.#ctor*
-  name: JsonApiQueryController
-  href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-1.html#JsonApiDotNetCore_Controllers_JsonApiQueryController_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Controllers.JsonApiQueryController`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Controllers.JsonApiQueryController<TResource>.JsonApiQueryController
-  fullName.vb: JsonApiDotNetCore.Controllers.JsonApiQueryController(Of TResource).JsonApiQueryController
-  nameWithType: JsonApiQueryController<TResource>.JsonApiQueryController
-  nameWithType.vb: JsonApiQueryController(Of TResource).JsonApiQueryController
 - uid: JsonApiDotNetCore.Controllers.JsonApiQueryController`2
   name: JsonApiQueryController<TResource, TId>
   href: api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html
@@ -11679,33 +11544,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.DbContextResolver(Of TDbContext).GetTypedContext
   nameWithType: DbContextResolver<TDbContext>.GetTypedContext
   nameWithType.vb: DbContextResolver(Of TDbContext).GetTypedContext
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1
-  name: EntityFrameworkCoreRepository<TResource>
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-1.html
-  commentId: T:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1
-  name.vb: EntityFrameworkCoreRepository(Of TResource)
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource>
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource)
-  nameWithType: EntityFrameworkCoreRepository<TResource>
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource)
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name: EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor)
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-1.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_JsonApiDotNetCore_Resources_ITargetedFields_JsonApiDotNetCore_Repositories_IDbContextResolver_JsonApiDotNetCore_Configuration_IResourceGraph_JsonApiDotNetCore_Resources_IResourceFactory_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Queries_IQueryConstraintProvider__Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
-  commentId: M:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor(JsonApiDotNetCore.Resources.ITargetedFields,JsonApiDotNetCore.Repositories.IDbContextResolver,JsonApiDotNetCore.Configuration.IResourceGraph,JsonApiDotNetCore.Resources.IResourceFactory,System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Queries.IQueryConstraintProvider},Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name.vb: EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor)
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource>.EntityFrameworkCoreRepository(JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable<JsonApiDotNetCore.Queries.IQueryConstraintProvider>, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource).EntityFrameworkCoreRepository(JsonApiDotNetCore.Resources.ITargetedFields, JsonApiDotNetCore.Repositories.IDbContextResolver, JsonApiDotNetCore.Configuration.IResourceGraph, JsonApiDotNetCore.Resources.IResourceFactory, System.Collections.Generic.IEnumerable(Of JsonApiDotNetCore.Queries.IQueryConstraintProvider), Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  nameWithType: EntityFrameworkCoreRepository<TResource>.EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable<IQueryConstraintProvider>, ILoggerFactory, IResourceDefinitionAccessor)
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource).EntityFrameworkCoreRepository(ITargetedFields, IDbContextResolver, IResourceGraph, IResourceFactory, IEnumerable(Of IQueryConstraintProvider), ILoggerFactory, IResourceDefinitionAccessor)
-- uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor*
-  name: EntityFrameworkCoreRepository
-  href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-1.html#JsonApiDotNetCore_Repositories_EntityFrameworkCoreRepository_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository<TResource>.EntityFrameworkCoreRepository
-  fullName.vb: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository(Of TResource).EntityFrameworkCoreRepository
-  nameWithType: EntityFrameworkCoreRepository<TResource>.EntityFrameworkCoreRepository
-  nameWithType.vb: EntityFrameworkCoreRepository(Of TResource).EntityFrameworkCoreRepository
 - uid: JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository`2
   name: EntityFrameworkCoreRepository<TResource, TId>
   href: api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html
@@ -12045,15 +11883,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Repositories.IRepositorySupportsTransaction.TransactionId
   nameWithType: IRepositorySupportsTransaction.TransactionId
-- uid: JsonApiDotNetCore.Repositories.IResourceReadRepository`1
-  name: IResourceReadRepository<TResource>
-  href: api/JsonApiDotNetCore.Repositories.IResourceReadRepository-1.html
-  commentId: T:JsonApiDotNetCore.Repositories.IResourceReadRepository`1
-  name.vb: IResourceReadRepository(Of TResource)
-  fullName: JsonApiDotNetCore.Repositories.IResourceReadRepository<TResource>
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceReadRepository(Of TResource)
-  nameWithType: IResourceReadRepository<TResource>
-  nameWithType.vb: IResourceReadRepository(Of TResource)
 - uid: JsonApiDotNetCore.Repositories.IResourceReadRepository`2
   name: IResourceReadRepository<TResource, TId>
   href: api/JsonApiDotNetCore.Repositories.IResourceReadRepository-2.html
@@ -12097,15 +11926,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceReadRepository(Of TResource, TId).GetAsync
   nameWithType: IResourceReadRepository<TResource, TId>.GetAsync
   nameWithType.vb: IResourceReadRepository(Of TResource, TId).GetAsync
-- uid: JsonApiDotNetCore.Repositories.IResourceRepository`1
-  name: IResourceRepository<TResource>
-  href: api/JsonApiDotNetCore.Repositories.IResourceRepository-1.html
-  commentId: T:JsonApiDotNetCore.Repositories.IResourceRepository`1
-  name.vb: IResourceRepository(Of TResource)
-  fullName: JsonApiDotNetCore.Repositories.IResourceRepository<TResource>
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepository(Of TResource)
-  nameWithType: IResourceRepository<TResource>
-  nameWithType.vb: IResourceRepository(Of TResource)
 - uid: JsonApiDotNetCore.Repositories.IResourceRepository`2
   name: IResourceRepository<TResource, TId>
   href: api/JsonApiDotNetCore.Repositories.IResourceRepository-2.html
@@ -12287,15 +12107,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.UpdateAsync(Of TResource)(TResource, TResource, System.Threading.CancellationToken)
   nameWithType: IResourceRepositoryAccessor.UpdateAsync<TResource>(TResource, TResource, CancellationToken)
   nameWithType.vb: IResourceRepositoryAccessor.UpdateAsync(Of TResource)(TResource, TResource, CancellationToken)
-- uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`1
-  name: IResourceWriteRepository<TResource>
-  href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-1.html
-  commentId: T:JsonApiDotNetCore.Repositories.IResourceWriteRepository`1
-  name.vb: IResourceWriteRepository(Of TResource)
-  fullName: JsonApiDotNetCore.Repositories.IResourceWriteRepository<TResource>
-  fullName.vb: JsonApiDotNetCore.Repositories.IResourceWriteRepository(Of TResource)
-  nameWithType: IResourceWriteRepository<TResource>
-  nameWithType.vb: IResourceWriteRepository(Of TResource)
 - uid: JsonApiDotNetCore.Repositories.IResourceWriteRepository`2
   name: IResourceWriteRepository<TResource, TId>
   href: api/JsonApiDotNetCore.Repositories.IResourceWriteRepository-2.html
@@ -13174,12 +12985,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.Annotations.ResourceLinksAttribute.TopLevelLinks
   nameWithType: ResourceLinksAttribute.TopLevelLinks
-- uid: JsonApiDotNetCore.Resources.Identifiable
-  name: Identifiable
-  href: api/JsonApiDotNetCore.Resources.Identifiable.html
-  commentId: T:JsonApiDotNetCore.Resources.Identifiable
-  fullName: JsonApiDotNetCore.Resources.Identifiable
-  nameWithType: Identifiable
 - uid: JsonApiDotNetCore.Resources.Identifiable`1
   name: Identifiable<TId>
   href: api/JsonApiDotNetCore.Resources.Identifiable-1.html
@@ -13498,15 +13303,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource).SetRequestAttributeValues
   nameWithType: IResourceChangeTracker<TResource>.SetRequestAttributeValues
   nameWithType.vb: IResourceChangeTracker(Of TResource).SetRequestAttributeValues
-- uid: JsonApiDotNetCore.Resources.IResourceDefinition`1
-  name: IResourceDefinition<TResource>
-  href: api/JsonApiDotNetCore.Resources.IResourceDefinition-1.html
-  commentId: T:JsonApiDotNetCore.Resources.IResourceDefinition`1
-  name.vb: IResourceDefinition(Of TResource)
-  fullName: JsonApiDotNetCore.Resources.IResourceDefinition<TResource>
-  fullName.vb: JsonApiDotNetCore.Resources.IResourceDefinition(Of TResource)
-  nameWithType: IResourceDefinition<TResource>
-  nameWithType.vb: IResourceDefinition(Of TResource)
 - uid: JsonApiDotNetCore.Resources.IResourceDefinition`2
   name: IResourceDefinition<TResource, TId>
   href: api/JsonApiDotNetCore.Resources.IResourceDefinition-2.html
@@ -14116,32 +13912,6 @@ references:
   isSpec: "True"
   fullName: JsonApiDotNetCore.Resources.ITargetedFields.Relationships
   nameWithType: ITargetedFields.Relationships
-- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1
-  name: JsonApiResourceDefinition<TResource>
-  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html
-  commentId: T:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1
-  name.vb: JsonApiResourceDefinition(Of TResource)
-  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>
-  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource)
-  nameWithType: JsonApiResourceDefinition<TResource>
-  nameWithType.vb: JsonApiResourceDefinition(Of TResource)
-- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
-  name: JsonApiResourceDefinition(IResourceGraph)
-  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_1__ctor_JsonApiDotNetCore_Configuration_IResourceGraph_
-  commentId: M:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor(JsonApiDotNetCore.Configuration.IResourceGraph)
-  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
-  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition(JsonApiDotNetCore.Configuration.IResourceGraph)
-  nameWithType: JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition(IResourceGraph)
-  nameWithType.vb: JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition(IResourceGraph)
-- uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor*
-  name: JsonApiResourceDefinition
-  href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-1.html#JsonApiDotNetCore_Resources_JsonApiResourceDefinition_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Resources.JsonApiResourceDefinition`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Resources.JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition
-  fullName.vb: JsonApiDotNetCore.Resources.JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition
-  nameWithType: JsonApiResourceDefinition<TResource>.JsonApiResourceDefinition
-  nameWithType.vb: JsonApiResourceDefinition(Of TResource).JsonApiResourceDefinition
 - uid: JsonApiDotNetCore.Resources.JsonApiResourceDefinition`2
   name: JsonApiResourceDefinition<TResource, TId>
   href: api/JsonApiDotNetCore.Resources.JsonApiResourceDefinition-2.html
@@ -18003,15 +17773,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.AsyncCollectionExtensions.ToListAsync(Of T)(System.Collections.Generic.IAsyncEnumerable(Of T), System.Threading.CancellationToken)
   nameWithType: AsyncCollectionExtensions.ToListAsync<T>(IAsyncEnumerable<T>, CancellationToken)
   nameWithType.vb: AsyncCollectionExtensions.ToListAsync(Of T)(IAsyncEnumerable(Of T), CancellationToken)
-- uid: JsonApiDotNetCore.Services.IAddToRelationshipService`1
-  name: IAddToRelationshipService<TResource>
-  href: api/JsonApiDotNetCore.Services.IAddToRelationshipService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IAddToRelationshipService`1
-  name.vb: IAddToRelationshipService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IAddToRelationshipService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IAddToRelationshipService(Of TResource)
-  nameWithType: IAddToRelationshipService<TResource>
-  nameWithType.vb: IAddToRelationshipService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IAddToRelationshipService`2
   name: IAddToRelationshipService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IAddToRelationshipService-2.html
@@ -18039,15 +17800,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IAddToRelationshipService(Of TResource, TId).AddToToManyRelationshipAsync
   nameWithType: IAddToRelationshipService<TResource, TId>.AddToToManyRelationshipAsync
   nameWithType.vb: IAddToRelationshipService(Of TResource, TId).AddToToManyRelationshipAsync
-- uid: JsonApiDotNetCore.Services.ICreateService`1
-  name: ICreateService<TResource>
-  href: api/JsonApiDotNetCore.Services.ICreateService-1.html
-  commentId: T:JsonApiDotNetCore.Services.ICreateService`1
-  name.vb: ICreateService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.ICreateService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.ICreateService(Of TResource)
-  nameWithType: ICreateService<TResource>
-  nameWithType.vb: ICreateService(Of TResource)
 - uid: JsonApiDotNetCore.Services.ICreateService`2
   name: ICreateService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.ICreateService-2.html
@@ -18074,15 +17826,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.ICreateService(Of TResource, TId).CreateAsync
   nameWithType: ICreateService<TResource, TId>.CreateAsync
   nameWithType.vb: ICreateService(Of TResource, TId).CreateAsync
-- uid: JsonApiDotNetCore.Services.IDeleteService`1
-  name: IDeleteService<TResource>
-  href: api/JsonApiDotNetCore.Services.IDeleteService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IDeleteService`1
-  name.vb: IDeleteService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IDeleteService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IDeleteService(Of TResource)
-  nameWithType: IDeleteService<TResource>
-  nameWithType.vb: IDeleteService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IDeleteService`2
   name: IDeleteService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IDeleteService-2.html
@@ -18109,15 +17852,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IDeleteService(Of TResource, TId).DeleteAsync
   nameWithType: IDeleteService<TResource, TId>.DeleteAsync
   nameWithType.vb: IDeleteService(Of TResource, TId).DeleteAsync
-- uid: JsonApiDotNetCore.Services.IGetAllService`1
-  name: IGetAllService<TResource>
-  href: api/JsonApiDotNetCore.Services.IGetAllService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IGetAllService`1
-  name.vb: IGetAllService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IGetAllService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IGetAllService(Of TResource)
-  nameWithType: IGetAllService<TResource>
-  nameWithType.vb: IGetAllService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IGetAllService`2
   name: IGetAllService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IGetAllService-2.html
@@ -18144,15 +17878,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IGetAllService(Of TResource, TId).GetAsync
   nameWithType: IGetAllService<TResource, TId>.GetAsync
   nameWithType.vb: IGetAllService(Of TResource, TId).GetAsync
-- uid: JsonApiDotNetCore.Services.IGetByIdService`1
-  name: IGetByIdService<TResource>
-  href: api/JsonApiDotNetCore.Services.IGetByIdService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IGetByIdService`1
-  name.vb: IGetByIdService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IGetByIdService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IGetByIdService(Of TResource)
-  nameWithType: IGetByIdService<TResource>
-  nameWithType.vb: IGetByIdService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IGetByIdService`2
   name: IGetByIdService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IGetByIdService-2.html
@@ -18179,15 +17904,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IGetByIdService(Of TResource, TId).GetAsync
   nameWithType: IGetByIdService<TResource, TId>.GetAsync
   nameWithType.vb: IGetByIdService(Of TResource, TId).GetAsync
-- uid: JsonApiDotNetCore.Services.IGetRelationshipService`1
-  name: IGetRelationshipService<TResource>
-  href: api/JsonApiDotNetCore.Services.IGetRelationshipService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IGetRelationshipService`1
-  name.vb: IGetRelationshipService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IGetRelationshipService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IGetRelationshipService(Of TResource)
-  nameWithType: IGetRelationshipService<TResource>
-  nameWithType.vb: IGetRelationshipService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IGetRelationshipService`2
   name: IGetRelationshipService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IGetRelationshipService-2.html
@@ -18214,15 +17930,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IGetRelationshipService(Of TResource, TId).GetRelationshipAsync
   nameWithType: IGetRelationshipService<TResource, TId>.GetRelationshipAsync
   nameWithType.vb: IGetRelationshipService(Of TResource, TId).GetRelationshipAsync
-- uid: JsonApiDotNetCore.Services.IGetSecondaryService`1
-  name: IGetSecondaryService<TResource>
-  href: api/JsonApiDotNetCore.Services.IGetSecondaryService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IGetSecondaryService`1
-  name.vb: IGetSecondaryService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IGetSecondaryService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IGetSecondaryService(Of TResource)
-  nameWithType: IGetSecondaryService<TResource>
-  nameWithType.vb: IGetSecondaryService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IGetSecondaryService`2
   name: IGetSecondaryService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IGetSecondaryService-2.html
@@ -18249,15 +17956,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IGetSecondaryService(Of TResource, TId).GetSecondaryAsync
   nameWithType: IGetSecondaryService<TResource, TId>.GetSecondaryAsync
   nameWithType.vb: IGetSecondaryService(Of TResource, TId).GetSecondaryAsync
-- uid: JsonApiDotNetCore.Services.IRemoveFromRelationshipService`1
-  name: IRemoveFromRelationshipService<TResource>
-  href: api/JsonApiDotNetCore.Services.IRemoveFromRelationshipService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IRemoveFromRelationshipService`1
-  name.vb: IRemoveFromRelationshipService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IRemoveFromRelationshipService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IRemoveFromRelationshipService(Of TResource)
-  nameWithType: IRemoveFromRelationshipService<TResource>
-  nameWithType.vb: IRemoveFromRelationshipService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IRemoveFromRelationshipService`2
   name: IRemoveFromRelationshipService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IRemoveFromRelationshipService-2.html
@@ -18285,15 +17983,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IRemoveFromRelationshipService(Of TResource, TId).RemoveFromToManyRelationshipAsync
   nameWithType: IRemoveFromRelationshipService<TResource, TId>.RemoveFromToManyRelationshipAsync
   nameWithType.vb: IRemoveFromRelationshipService(Of TResource, TId).RemoveFromToManyRelationshipAsync
-- uid: JsonApiDotNetCore.Services.IResourceCommandService`1
-  name: IResourceCommandService<TResource>
-  href: api/JsonApiDotNetCore.Services.IResourceCommandService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IResourceCommandService`1
-  name.vb: IResourceCommandService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IResourceCommandService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IResourceCommandService(Of TResource)
-  nameWithType: IResourceCommandService<TResource>
-  nameWithType.vb: IResourceCommandService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IResourceCommandService`2
   name: IResourceCommandService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IResourceCommandService-2.html
@@ -18303,15 +17992,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IResourceCommandService(Of TResource, TId)
   nameWithType: IResourceCommandService<TResource, TId>
   nameWithType.vb: IResourceCommandService(Of TResource, TId)
-- uid: JsonApiDotNetCore.Services.IResourceQueryService`1
-  name: IResourceQueryService<TResource>
-  href: api/JsonApiDotNetCore.Services.IResourceQueryService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IResourceQueryService`1
-  name.vb: IResourceQueryService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IResourceQueryService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IResourceQueryService(Of TResource)
-  nameWithType: IResourceQueryService<TResource>
-  nameWithType.vb: IResourceQueryService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IResourceQueryService`2
   name: IResourceQueryService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IResourceQueryService-2.html
@@ -18321,15 +18001,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IResourceQueryService(Of TResource, TId)
   nameWithType: IResourceQueryService<TResource, TId>
   nameWithType.vb: IResourceQueryService(Of TResource, TId)
-- uid: JsonApiDotNetCore.Services.IResourceService`1
-  name: IResourceService<TResource>
-  href: api/JsonApiDotNetCore.Services.IResourceService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IResourceService`1
-  name.vb: IResourceService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IResourceService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IResourceService(Of TResource)
-  nameWithType: IResourceService<TResource>
-  nameWithType.vb: IResourceService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IResourceService`2
   name: IResourceService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IResourceService-2.html
@@ -18339,15 +18010,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IResourceService(Of TResource, TId)
   nameWithType: IResourceService<TResource, TId>
   nameWithType.vb: IResourceService(Of TResource, TId)
-- uid: JsonApiDotNetCore.Services.ISetRelationshipService`1
-  name: ISetRelationshipService<TResource>
-  href: api/JsonApiDotNetCore.Services.ISetRelationshipService-1.html
-  commentId: T:JsonApiDotNetCore.Services.ISetRelationshipService`1
-  name.vb: ISetRelationshipService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.ISetRelationshipService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.ISetRelationshipService(Of TResource)
-  nameWithType: ISetRelationshipService<TResource>
-  nameWithType.vb: ISetRelationshipService(Of TResource)
 - uid: JsonApiDotNetCore.Services.ISetRelationshipService`2
   name: ISetRelationshipService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.ISetRelationshipService-2.html
@@ -18374,15 +18036,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.ISetRelationshipService(Of TResource, TId).SetRelationshipAsync
   nameWithType: ISetRelationshipService<TResource, TId>.SetRelationshipAsync
   nameWithType.vb: ISetRelationshipService(Of TResource, TId).SetRelationshipAsync
-- uid: JsonApiDotNetCore.Services.IUpdateService`1
-  name: IUpdateService<TResource>
-  href: api/JsonApiDotNetCore.Services.IUpdateService-1.html
-  commentId: T:JsonApiDotNetCore.Services.IUpdateService`1
-  name.vb: IUpdateService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.IUpdateService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.IUpdateService(Of TResource)
-  nameWithType: IUpdateService<TResource>
-  nameWithType.vb: IUpdateService(Of TResource)
 - uid: JsonApiDotNetCore.Services.IUpdateService`2
   name: IUpdateService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.IUpdateService-2.html
@@ -18409,33 +18062,6 @@ references:
   fullName.vb: JsonApiDotNetCore.Services.IUpdateService(Of TResource, TId).UpdateAsync
   nameWithType: IUpdateService<TResource, TId>.UpdateAsync
   nameWithType.vb: IUpdateService(Of TResource, TId).UpdateAsync
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1
-  name: JsonApiResourceService<TResource>
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html
-  commentId: T:JsonApiDotNetCore.Services.JsonApiResourceService`1
-  name.vb: JsonApiResourceService(Of TResource)
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource)
-  nameWithType: JsonApiResourceService<TResource>
-  nameWithType.vb: JsonApiResourceService(Of TResource)
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceDefinitionAccessor)
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_JsonApiDotNetCore_Repositories_IResourceRepositoryAccessor_JsonApiDotNetCore_Queries_IQueryLayerComposer_JsonApiDotNetCore_Queries_IPaginationContext_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_IResourceChangeTracker__0__JsonApiDotNetCore_Resources_IResourceDefinitionAccessor_
-  commentId: M:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor,JsonApiDotNetCore.Queries.IQueryLayerComposer,JsonApiDotNetCore.Queries.IPaginationContext,JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.IResourceChangeTracker{`0},JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  name.vb: JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceDefinitionAccessor)
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker<TResource>, JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService(JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor, JsonApiDotNetCore.Queries.IQueryLayerComposer, JsonApiDotNetCore.Queries.IPaginationContext, JsonApiDotNetCore.Configuration.IJsonApiOptions, Microsoft.Extensions.Logging.ILoggerFactory, JsonApiDotNetCore.Middleware.IJsonApiRequest, JsonApiDotNetCore.Resources.IResourceChangeTracker(Of TResource), JsonApiDotNetCore.Resources.IResourceDefinitionAccessor)
-  nameWithType: JsonApiResourceService<TResource>.JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker<TResource>, IResourceDefinitionAccessor)
-  nameWithType.vb: JsonApiResourceService(Of TResource).JsonApiResourceService(IResourceRepositoryAccessor, IQueryLayerComposer, IPaginationContext, IJsonApiOptions, ILoggerFactory, IJsonApiRequest, IResourceChangeTracker(Of TResource), IResourceDefinitionAccessor)
-- uid: JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor*
-  name: JsonApiResourceService
-  href: api/JsonApiDotNetCore.Services.JsonApiResourceService-1.html#JsonApiDotNetCore_Services_JsonApiResourceService_1__ctor_
-  commentId: Overload:JsonApiDotNetCore.Services.JsonApiResourceService`1.#ctor
-  isSpec: "True"
-  fullName: JsonApiDotNetCore.Services.JsonApiResourceService<TResource>.JsonApiResourceService
-  fullName.vb: JsonApiDotNetCore.Services.JsonApiResourceService(Of TResource).JsonApiResourceService
-  nameWithType: JsonApiResourceService<TResource>.JsonApiResourceService
-  nameWithType.vb: JsonApiResourceService(Of TResource).JsonApiResourceService
 - uid: JsonApiDotNetCore.Services.JsonApiResourceService`2
   name: JsonApiResourceService<TResource, TId>
   href: api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html

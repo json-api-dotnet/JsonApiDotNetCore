@@ -74,9 +74,9 @@ If you only need minor changes you can override the methods defined in <code>Ent
 <p>The repository should then be registered in Startup.cs.</p>
 <pre><code class="lang-c#">public void ConfigureServices(IServiceCollection services)
 {
-    services.AddScoped&lt;IResourceRepository&lt;Article&gt;, ArticleRepository&gt;();
-    services.AddScoped&lt;IResourceReadRepository&lt;Article&gt;, ArticleRepository&gt;();
-    services.AddScoped&lt;IResourceWriteRepository&lt;Article&gt;, ArticleRepository&gt;();
+    services.AddScoped&lt;IResourceRepository&lt;Article, int&gt;, ArticleRepository&gt;();
+    services.AddScoped&lt;IResourceReadRepository&lt;Article, int&gt;, ArticleRepository&gt;();
+    services.AddScoped&lt;IResourceWriteRepository&lt;Article, int&gt;, ArticleRepository&gt;();
 }
 </code></pre><p>In v4.0 we introduced an extension method that you can use to register a resource repository on all of its JsonApiDotNetCore interfaces.
 This is helpful when you implement (a subset of) the resource interfaces and want to register them all in one go.</p>
@@ -90,18 +90,18 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
 }
 </code></pre><p>A sample implementation that performs authorization might look like this.</p>
 <p>All of the methods in EntityFrameworkCoreRepository will use the <code>GetAll()</code> method to get the <code>DbSet&lt;TResource&gt;</code>, so this is a good method to apply filters such as user or tenant authorization.</p>
-<pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article&gt;
+<pre><code class="lang-c#">public class ArticleRepository : EntityFrameworkCoreRepository&lt;Article, int&gt;
 {
     private readonly IAuthenticationService _authenticationService;
 
     public ArticleRepository(IAuthenticationService authenticationService,
         ITargetedFields targetedFields, IDbContextResolver dbContextResolver,
-        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
-        ILoggerFactory loggerFactory)
-        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
-            resourceFactory, constraintProviders, loggerFactory) 
+        ILoggerFactory loggerFactory,
+        IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory,
+            constraintProviders, loggerFactory, resourceDefinitionAccessor)
     {
         _authenticationService = authenticationService;
     }
@@ -115,18 +115,17 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
 </code></pre><h2 id="multiple-dbcontexts">Multiple DbContexts</h2>
 <p>If you need to use multiple Entity Framework Core DbContexts, first create a repository for each context and inject its typed resolver.
 This example shows a single <code>DbContextARepository</code> for all entities that are members of <code>DbContextA</code>.</p>
-<pre><code class="lang-c#">public class DbContextARepository&lt;TResource&gt; : EntityFrameworkCoreRepository&lt;TResource&gt;
-    where TResource : class, IIdentifiable&lt;int&gt;
+<pre><code class="lang-c#">public class DbContextARepository&lt;TResource, TId&gt; : EntityFrameworkCoreRepository&lt;TResource, TId&gt;
+    where TResource : class, IIdentifiable&lt;TId&gt;
 {
     public DbContextARepository(ITargetedFields targetedFields,
         DbContextResolver&lt;DbContextA&gt; dbContextResolver,
     //  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        IResourceGraph resourceGraph, IGenericServiceFactory genericServiceFactory,
-        IResourceFactory resourceFactory,
+        IResourceGraph resourceGraph, IResourceFactory resourceFactory,
         IEnumerable&lt;IQueryConstraintProvider&gt; constraintProviders,
-        ILoggerFactory loggerFactory)
-        : base(targetedFields, dbContextResolver, resourceGraph, genericServiceFactory,
-            resourceFactory, constraintProviders, loggerFactory)
+        ILoggerFactory loggerFactory, IResourceDefinitionAccessor resourceDefinitionAccessor)
+        : base(targetedFields, dbContextResolver, resourceGraph, resourceFactory,
+            constraintProviders, loggerFactory, resourceDefinitionAccessor)
     {
     }
 }

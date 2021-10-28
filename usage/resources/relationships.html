@@ -75,7 +75,7 @@ They are similar to <a href="https://docs.microsoft.com/en-us/ef/core/modeling/r
 The left side of a relationship is where the relationship is declared, the right side is the resource type it points to.</p>
 <h2 id="hasone">HasOne</h2>
 <p>This exposes a to-one relationship.</p>
-<pre><code class="lang-c#">public class TodoItem : Identifiable
+<pre><code class="lang-c#">public class TodoItem : Identifiable&lt;int&gt;
 {
     [HasOne]
     public Person Owner { get; set; }
@@ -83,7 +83,7 @@ The left side of a relationship is where the relationship is declared, the right
 </code></pre><p>The left side of this relationship is of type <code>TodoItem</code> (public name: &quot;todoItems&quot;) and the right side is of type <code>Person</code> (public name: &quot;persons&quot;).</p>
 <h2 id="hasmany">HasMany</h2>
 <p>This exposes a to-many relationship.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [HasMany]
     public ICollection&lt;TodoItem&gt; TodoItems { get; set; }
@@ -95,7 +95,7 @@ The left side of a relationship is where the relationship is declared, the right
 For this reason, earlier versions of JsonApiDotNetCore filled this gap by allowing applications to declare a relationship as <code>HasManyThrough</code>,
 which would expose the relationship to the client the same way as any other <code>HasMany</code> relationship.
 However, under the covers it would use the join type and Entity Framework Core&#39;s APIs to get and set the relationship.</p>
-<pre><code class="lang-c#">public class Article : Identifiable
+<pre><code class="lang-c#">public class Article : Identifiable&lt;int&gt;
 {
     // tells Entity Framework Core to ignore this property
     [NotMapped]
@@ -114,7 +114,7 @@ However, under the covers it would use the join type and Entity Framework Core&#
 <li><p>Using the configured <a href="../options.html#customize-serializer-options">naming convention</a>.</p>
 </li>
 <li><p>Individually using the attribute&#39;s constructor.</p>
-<pre><code class="lang-c#">public class TodoItem : Identifiable
+<pre><code class="lang-c#">public class TodoItem : Identifiable&lt;int&gt;
 {
  [HasOne(PublicName = &quot;item-owner&quot;)]
  public Person Owner { get; set; }
@@ -123,7 +123,7 @@ However, under the covers it would use the join type and Entity Framework Core&#
 </ol>
 <h2 id="includibility">Includibility</h2>
 <p>Relationships can be marked to disallow including them using the <code>?include=</code> query string parameter. When not allowed, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">public class TodoItem : Identifiable
+<pre><code class="lang-c#">public class TodoItem : Identifiable&lt;int&gt;
 {
     [HasOne(CanInclude: false)]
     public Person Owner { get; set; }
@@ -132,7 +132,7 @@ However, under the covers it would use the join type and Entity Framework Core&#
 <p><em>since v4.0</em></p>
 <p>Your resource may expose a calculated property, whose value depends on a related entity that is not exposed as a JSON:API resource.
 So for the calculated property to be evaluated correctly, the related entity must always be retrieved. You can achieve that using <code>EagerLoad</code>, for example:</p>
-<pre><code class="lang-c#">public class ShippingAddress : Identifiable
+<pre><code class="lang-c#">public class ShippingAddress : Identifiable&lt;int&gt;
 {
     [Attr]
     public string Street { get; set; }

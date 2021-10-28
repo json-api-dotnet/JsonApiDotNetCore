@@ -69,23 +69,11 @@
             <article class="content wrap" id="_content" data-uid="">
 <h1 id="controllers">Controllers</h1>
 
-<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource&gt;</code></p>
-<pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article&gt;
-{
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
-    {
-    }
-}
-</code></pre><h2 id="non-integer-type-keys">Non-Integer Type Keys</h2>
-<p>If your model is using a type other than <code>int</code> for the primary key, you must explicitly declare it in the controller/service/repository definitions.</p>
+<p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code></p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
-//---------------------------------------------------------- ^^^^
 {
     public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
         IResourceService&lt;Article, Guid&gt; resourceService)
-        //----------------------- ^^^^
         : base(options, loggerFactory, resourceService)
     {
     }
@@ -94,10 +82,10 @@
 <p>It is often desirable to limit what methods are exposed on your controller. The first way you can do this, is to simply inherit from <code>BaseJsonApiController</code> and explicitly declare what methods are available.</p>
 <p>In this example, if a client attempts to do anything other than GET a resource, an HTTP 404 Not Found response will be returned since no other methods are exposed.</p>
 <p>This approach is ok, but introduces some boilerplate that can easily be avoided.</p>
-<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article&gt;
+<pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
     public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article&gt; resourceService)
+        IResourceService&lt;Article, int&gt; resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }
@@ -126,10 +114,10 @@
 <p>Not only does this reduce boilerplate, but it also provides a more meaningful HTTP response code.
 An attempt to use one of the blacklisted methods will result in a HTTP 405 Method Not Allowed response.</p>
 <pre><code class="lang-c#">[HttpReadOnly]
-public class ArticlesController : BaseJsonApiController&lt;Article&gt;
+public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
     public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article&gt; resourceService)
+        IResourceService&lt;Article, int&gt; resourceService)
         : base(options, loggerFactory, resourceService)
     {
     }
@@ -138,10 +126,10 @@ public class ArticlesController : BaseJsonApiController&lt;Article&gt;
 <p>Finally, you can control the allowed methods by supplying only the available service implementations. In some cases, resources may be an aggregation of entities or a view on top of the underlying entities. In these cases, there may not be a writable <code>IResourceService</code> implementation, so simply inject the implementation that is available.</p>
 <p>As with the ActionFilter attributes, if a service implementation is not available to service a request, HTTP 405 Method Not Allowed will be returned.</p>
 <p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
-<pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report&gt;
+<pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report, int&gt;
 {
     public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IGetAllService&lt;Report&gt; getAllService)
+        IGetAllService&lt;Report, int&gt; getAllService)
         : base(options, loggerFactory, getAllService)
     {
     }

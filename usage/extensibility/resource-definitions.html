@@ -83,11 +83,11 @@ They are resolved from the dependency injection container, so you can inject dep
 }
 </code></pre><p><strong>Note:</strong> Prior to the introduction of auto-discovery (in v3), you needed to register the
 resource definition on the container yourself:</p>
-<pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Product&gt;, ProductResource&gt;();
+<pre><code class="lang-c#">services.AddScoped&lt;ResourceDefinition&lt;Product, int&gt;, ProductDefinition&gt;();
 </code></pre><h2 id="customizing-queries">Customizing queries</h2>
 <p><em>since v4.0</em></p>
 <p>For various reasons (see examples below) you may need to change parts of the query, depending on resource type.
-<code>JsonApiResourceDefinition&lt;TResource&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
+<code>JsonApiResourceDefinition&lt;TResource, TId&gt;</code> (which is an empty implementation of <code>IResourceDefinition&lt;TResource, TId&gt;</code>) provides overridable methods that pass you the result of query string parameter parsing.
 The value returned by you determines what will be used to execute the query.</p>
 <p>An intermediate format (<code>QueryExpression</code> and derived types) is used, which enables us to separate JSON:API implementation 
 from Entity Framework Core <code>IQueryable</code> execution.</p>
@@ -95,7 +95,7 @@ from Entity Framework Core <code>IQueryable</code> execution.</p>
 <p>There are some cases where you want attributes (or relationships) conditionally excluded from your resource response.
 For example, you may accept some sensitive data that should only be exposed to administrators after creation.</p>
 <p><strong>Note:</strong> to exclude attributes unconditionally, use <code>[Attr(Capabilities = ~AttrCapabilities.AllowView)]</code> on a resource class property.</p>
-<pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User&gt;
+<pre><code class="lang-c#">public class UserDefinition : JsonApiResourceDefinition&lt;User, int&gt;
 {
     public UserDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -142,7 +142,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h3 id="default-sort-order">Default sort order</h3>
 <p>You can define the default sort order if no <code>sort</code> query string parameter is provided.</p>
-<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
+<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account, int&gt;
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -165,7 +165,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h3 id="enforce-page-size">Enforce page size</h3>
 <p>You may want to enforce pagination on large database tables.</p>
-<pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog&gt;
+<pre><code class="lang-c#">public class AccessLogDefinition : JsonApiResourceDefinition&lt;AccessLog, int&gt;
 {
     public AccessLogDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -191,7 +191,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h3 id="change-filters">Change filters</h3>
 <p>The next example filters out <code>Account</code> resources that are suspended.</p>
-<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account&gt;
+<pre><code class="lang-c#">public class AccountDefinition : JsonApiResourceDefinition&lt;Account, int&gt;
 {
     public AccountDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -215,7 +215,7 @@ Content-Type: application/vnd.api+json
 }
 </code></pre><h3 id="block-including-related-resources">Block including related resources</h3>
 <p>In the example below, an error is returned when a user tries to include the manager of an employee.</p>
-<pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee&gt;
+<pre><code class="lang-c#">public class EmployeeDefinition : JsonApiResourceDefinition&lt;Employee, int&gt;
 {
     public EmployeeDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)
@@ -243,7 +243,7 @@ Content-Type: application/vnd.api+json
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.</p>
 <p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
-<pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item&gt;
+<pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item, int&gt;
 {
     public ItemDefinition(IResourceGraph resourceGraph)
         : base(resourceGraph)

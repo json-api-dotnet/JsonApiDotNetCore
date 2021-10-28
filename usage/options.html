@@ -128,7 +128,7 @@ options.SerializerOptions.DictionaryKeyPolicy = null;
 <h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
 <p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState</code> to <code>true</code>. By default, no model validation is performed.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
-</code></pre><pre><code class="lang-c#">public class Person : Identifiable
+</code></pre><pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
     [Required]

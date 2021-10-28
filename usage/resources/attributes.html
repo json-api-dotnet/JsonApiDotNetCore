@@ -70,7 +70,7 @@
 <h1 id="attributes">Attributes</h1>
 
 <p>If you want an attribute on your model to be publicly available, add the <code>AttrAttribute</code>.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr]
     public string FirstName { get; set; }
@@ -81,7 +81,7 @@
 <li><p>Using the configured <a href="../options.html#customize-serializer-options">naming convention</a>.</p>
 </li>
 <li><p>Individually using the attribute&#39;s constructor.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
  [Attr(PublicName = &quot;first-name&quot;)]
  public string FirstName { get; set; }
@@ -95,28 +95,28 @@
 </code></pre><p>This can be overridden per attribute.</p>
 <h3 id="viewability">Viewability</h3>
 <p>Attributes can be marked to allow returning their value in responses. When not allowed and requested using <code>?fields[]=</code>, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">public class User : Identifiable
+<pre><code class="lang-c#">public class User : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
 }
 </code></pre><h3 id="creatability">Creatability</h3>
 <p>Attributes can be marked as creatable, which will allow <code>POST</code> requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string CreatorName { get; set; }
 }
 </code></pre><h3 id="changeability">Changeability</h3>
 <p>Attributes can be marked as changeable, which will allow <code>PATCH</code> requests to update them. When sent but not allowed, an HTTP 422 response is returned.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string FirstName { get; set; }
 }
 </code></pre><h3 id="filtersort-ability">Filter/Sort-ability</h3>
 <p>Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.</p>
-<pre><code class="lang-c#">public class Person : Identifiable
+<pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
     [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }
@@ -126,7 +126,7 @@
 Serialization of these types is done by <a href="https://www.nuget.org/packages/System.Text.Json">System.Text.Json</a>,
 so you should use their APIs to specify serialization format.
 You can also use <a href="../options.html#customize-serializer-options">global options</a> to control the <code>JsonSerializer</code> behavior.</p>
-<pre><code class="lang-c#">public class Foo : Identifiable
+<pre><code class="lang-c#">public class Foo : Identifiable&lt;int&gt;
 {
     [Attr]
     public Bar Bar { get; set; }
@@ -142,7 +142,7 @@ public class Bar
 JSON string in your database, but you need access to it as a concrete type, you can define two members on your resource.
 The first member is the concrete type that you will directly interact with in your application. You can use the <code>NotMapped</code> attribute to prevent Entity Framework Core from mapping it to the database. The second is the raw JSON property that will be persisted to the database. How you use these members should determine which one is responsible for serialization. In this example, we only serialize and deserialize at the time of persistence
 and retrieval.</p>
-<pre><code class="lang-c#">public class Foo : Identifiable
+<pre><code class="lang-c#">public class Foo : Identifiable&lt;int&gt;
 {
     [Attr, NotMapped]
     public Bar Bar { get; set; }
