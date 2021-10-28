@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Moon : Identifiable
+    public sealed class Moon : Identifiable<int>
     {
         [Attr]
         public string Name { get; set; }

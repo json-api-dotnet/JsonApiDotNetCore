@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace ReportsExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Report : Identifiable
+    public sealed class Report : Identifiable<int>
     {
         [Attr]
         public string Title { get; set; }

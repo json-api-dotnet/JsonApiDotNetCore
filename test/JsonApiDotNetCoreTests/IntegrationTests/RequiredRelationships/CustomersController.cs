@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
 {
-    public sealed class CustomersController : JsonApiController<Customer>
+    public sealed class CustomersController : JsonApiController<Customer, int>
     {
-        public CustomersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Customer> resourceService)
+        public CustomersController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Customer, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WebProduct : Identifiable
+    public sealed class WebProduct : Identifiable<int>
     {
         [Attr]
         public string Name { get; set; }

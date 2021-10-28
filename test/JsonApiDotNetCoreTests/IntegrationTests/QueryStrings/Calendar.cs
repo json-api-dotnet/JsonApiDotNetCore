@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Calendar : Identifiable
+    public sealed class Calendar : Identifiable<int>
     {
         [Attr]
         public string TimeZone { get; set; }

@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace NoEntityFrameworkExample.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WorkItem : Identifiable
+    public sealed class WorkItem : Identifiable<int>
     {
         [Attr]
         public bool IsBlocked { get; set; }

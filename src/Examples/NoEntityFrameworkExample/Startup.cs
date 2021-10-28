@@ -1,7 +1,6 @@
 using System;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
-using JsonApiDotNetCore.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +26,7 @@ namespace NoEntityFrameworkExample
         {
             services.AddJsonApi(options => options.Namespace = "api/v1", resources: builder => builder.Add<WorkItem>("workItems"));
 
-            services.AddScoped<IResourceService<WorkItem>, WorkItemService>();
+            services.AddResourceService<WorkItemService>();
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(_connectionString));
         }

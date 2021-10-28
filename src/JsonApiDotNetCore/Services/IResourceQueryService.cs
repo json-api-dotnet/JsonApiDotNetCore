@@ -8,19 +8,6 @@ namespace JsonApiDotNetCore.Services
     /// <typeparam name="TResource">
     /// The resource type.
     /// </typeparam>
-    public interface IResourceQueryService<TResource>
-        : IGetAllService<TResource>, IGetByIdService<TResource>, IGetRelationshipService<TResource>, IGetSecondaryService<TResource>,
-            IResourceQueryService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
-    /// <summary>
-    /// Groups read operations.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
     /// <typeparam name="TId">
     /// The resource identifier type.
     /// </typeparam>

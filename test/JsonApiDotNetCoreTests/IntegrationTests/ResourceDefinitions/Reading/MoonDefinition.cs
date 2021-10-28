@@ -10,7 +10,7 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class MoonDefinition : JsonApiResourceDefinition<Moon>
+    public sealed class MoonDefinition : JsonApiResourceDefinition<Moon, int>
     {
         private readonly IClientSettingsProvider _clientSettingsProvider;
         private readonly ResourceDefinitionHitCounter _hitCounter;

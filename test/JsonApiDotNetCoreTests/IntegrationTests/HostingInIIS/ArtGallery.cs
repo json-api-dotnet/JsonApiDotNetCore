@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class ArtGallery : Identifiable
+    public sealed class ArtGallery : Identifiable<int>
     {
         [Attr]
         public string Theme { get; set; }

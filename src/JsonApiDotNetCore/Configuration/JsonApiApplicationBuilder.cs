@@ -181,8 +181,7 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddResourceLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, typeof(JsonApiResourceDefinition<>),
-                typeof(JsonApiResourceDefinition<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ResourceDefinitionInterfaces, typeof(JsonApiResourceDefinition<,>));
 
             _services.AddScoped<IResourceDefinitionAccessor, ResourceDefinitionAccessor>();
             _services.AddScoped<IResourceFactory, ResourceFactory>();
@@ -190,24 +189,20 @@ namespace JsonApiDotNetCore.Configuration
 
         private void AddRepositoryLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, typeof(EntityFrameworkCoreRepository<>),
-                typeof(EntityFrameworkCoreRepository<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.RepositoryInterfaces, typeof(EntityFrameworkCoreRepository<,>));
 
             _services.AddScoped<IResourceRepositoryAccessor, ResourceRepositoryAccessor>();
         }
 
         private void AddServiceLayer()
         {
-            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<>),
-                typeof(JsonApiResourceService<,>));
+            RegisterImplementationForOpenInterfaces(ServiceDiscoveryFacade.ServiceInterfaces, typeof(JsonApiResourceService<,>));
         }
 
-        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type intImplementation, Type implementation)
+        private void RegisterImplementationForOpenInterfaces(HashSet<Type> openGenericInterfaces, Type implementationType)
         {
             foreach (Type openGenericInterface in openGenericInterfaces)
             {
-                Type implementationType = openGenericInterface.GetGenericArguments().Length == 1 ? intImplementation : implementation;
-
                 _services.TryAddScoped(openGenericInterface, implementationType);
             }
         }

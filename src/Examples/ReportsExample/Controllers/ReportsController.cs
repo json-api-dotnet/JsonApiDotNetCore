@@ -10,9 +10,9 @@ using ReportsExample.Models;
 namespace ReportsExample.Controllers
 {
     [Route("api/[controller]")]
-    public class ReportsController : BaseJsonApiController<Report>
+    public class ReportsController : BaseJsonApiController<Report, int>
     {
-        public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Report> getAllService)
+        public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<Report, int> getAllService)
             : base(options, loggerFactory, getAllService)
         {
         }

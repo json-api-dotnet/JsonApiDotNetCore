@@ -78,7 +78,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 
         private static bool IsCarId(PropertyInfo property)
         {
-            return property.Name == nameof(Identifiable.Id) && property.DeclaringType == typeof(Car);
+            return property.Name == nameof(Identifiable<object>.Id) && property.DeclaringType == typeof(Car);
         }
 
         private QueryExpression RewriteFilterOnCarStringIds(ResourceFieldChainExpression existingCarIdChain, IEnumerable<string> carStringIds)

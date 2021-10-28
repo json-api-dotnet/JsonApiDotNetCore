@@ -183,7 +183,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         {
                             object attributeValue;
 
-                            if (property.Name == nameof(Identifiable.Id))
+                            if (property.Name == nameof(Identifiable<object>.Id))
                             {
                                 attributeValue = JsonInvalidAttributeInfo.Id;
                             }

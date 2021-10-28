@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreExample.Controllers
 {
-    public sealed class TodoItemsController : JsonApiController<TodoItem>
+    public sealed class TodoItemsController : JsonApiController<TodoItem, int>
     {
-        public TodoItemsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TodoItem> resourceService)
+        public TodoItemsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TodoItem, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

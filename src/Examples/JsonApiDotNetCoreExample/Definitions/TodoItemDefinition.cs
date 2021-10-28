@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authentication;
 namespace JsonApiDotNetCoreExample.Definitions
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem>
+    public sealed class TodoItemDefinition : JsonApiResourceDefinition<TodoItem, int>
     {
         private readonly ISystemClock _systemClock;
 

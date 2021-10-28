@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ContentNegotiation
 {
-    public sealed class PoliciesController : JsonApiController<Policy>
+    public sealed class PoliciesController : JsonApiController<Policy, int>
     {
-        public PoliciesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Policy> resourceService)
+        public PoliciesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Policy, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

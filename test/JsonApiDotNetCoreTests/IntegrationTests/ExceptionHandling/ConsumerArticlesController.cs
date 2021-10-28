@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ExceptionHandling
 {
-    public sealed class ConsumerArticlesController : JsonApiController<ConsumerArticle>
+    public sealed class ConsumerArticlesController : JsonApiController<ConsumerArticle, int>
     {
-        public ConsumerArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ConsumerArticle> resourceService)
+        public ConsumerArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<ConsumerArticle, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

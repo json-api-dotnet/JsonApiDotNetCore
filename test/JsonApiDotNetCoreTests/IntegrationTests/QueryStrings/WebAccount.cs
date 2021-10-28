@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class WebAccount : Identifiable
+    public sealed class WebAccount : Identifiable<int>
     {
         [Attr]
         public string UserName { get; set; }

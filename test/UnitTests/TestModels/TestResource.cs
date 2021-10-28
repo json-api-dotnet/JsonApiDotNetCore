@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace UnitTests.TestModels
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class TestResource : Identifiable
+    public sealed class TestResource : Identifiable<int>
     {
         [Attr]
         public string StringField { get; set; }

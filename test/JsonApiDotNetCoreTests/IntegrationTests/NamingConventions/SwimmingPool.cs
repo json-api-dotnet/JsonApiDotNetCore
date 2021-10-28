@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class SwimmingPool : Identifiable
+    public sealed class SwimmingPool : Identifiable<int>
     {
         [Attr]
         public bool IsIndoor { get; set; }

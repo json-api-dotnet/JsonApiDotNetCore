@@ -325,7 +325,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 groupInDatabase.IsPublic.Should().Be(existingGroup.IsPublic);
             });
 
-            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(WorkItemGroup).GetProperty(nameof(Identifiable<object>.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(Guid));
         }
 
@@ -372,7 +372,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ReadWrite.Updating.Resources
                 colorInDatabase.DisplayName.Should().Be(newDisplayName);
             });
 
-            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = typeof(RgbColor).GetProperty(nameof(Identifiable<object>.Id));
             property.Should().NotBeNull().And.Subject.PropertyType.Should().Be(typeof(string));
         }
 

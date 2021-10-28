@@ -6,12 +6,6 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCore.Services
 {
-    /// <inheritdoc />
-    public interface IGetSecondaryService<TResource> : IGetSecondaryService<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
     /// <summary />
     public interface IGetSecondaryService<TResource, in TId>
         where TResource : class, IIdentifiable<TId>

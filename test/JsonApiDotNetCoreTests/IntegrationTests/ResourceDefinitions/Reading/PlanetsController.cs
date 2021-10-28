@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
-    public sealed class PlanetsController : JsonApiController<Planet>
+    public sealed class PlanetsController : JsonApiController<Planet, int>
     {
-        public PlanetsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Planet> resourceService)
+        public PlanetsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Planet, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

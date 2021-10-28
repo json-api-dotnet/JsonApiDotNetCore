@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace DiscoveryTests
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TestResourceService : JsonApiResourceService<TestResource>
+    public sealed class TestResourceService : JsonApiResourceService<TestResource, int>
     {
         public TestResourceService(IResourceRepositoryAccessor repositoryAccessor, IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext,
             IJsonApiOptions options, ILoggerFactory loggerFactory, IJsonApiRequest request, IResourceChangeTracker<TestResource> resourceChangeTracker,

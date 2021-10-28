@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.Logging
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class AuditEntry : Identifiable
+    public sealed class AuditEntry : Identifiable<int>
     {
         [Attr]
         public string UserName { get; set; }

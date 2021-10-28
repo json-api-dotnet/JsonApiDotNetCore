@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class LoginAttempt : Identifiable
+    public sealed class LoginAttempt : Identifiable<int>
     {
         [Attr]
         public DateTimeOffset TriedAt { get; set; }

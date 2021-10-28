@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace DiscoveryTests
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource>
+    public sealed class TestResourceRepository : EntityFrameworkCoreRepository<TestResource, int>
     {
         public TestResourceRepository(ITargetedFields targetedFields, IDbContextResolver dbContextResolver, IResourceGraph resourceGraph,
             IResourceFactory resourceFactory, IEnumerable<IQueryConstraintProvider> constraintProviders, ILoggerFactory loggerFactory,

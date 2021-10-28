@@ -9,7 +9,7 @@ namespace JsonApiDotNetCore.Resources
         {
             ArgumentGuard.NotNull(identifiable, nameof(identifiable));
 
-            PropertyInfo property = identifiable.GetType().GetProperty(nameof(Identifiable.Id));
+            PropertyInfo property = identifiable.GetType().GetProperty(nameof(Identifiable<object>.Id));
 
             if (property == null)
             {

@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Filtering
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class FilterableResource : Identifiable
+    public sealed class FilterableResource : Identifiable<int>
     {
         [Attr]
         public string SomeString { get; set; }

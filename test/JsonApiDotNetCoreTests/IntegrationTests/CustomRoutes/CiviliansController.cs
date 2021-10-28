@@ -11,9 +11,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.CustomRoutes
     [ApiController]
     [DisableRoutingConvention]
     [Route("world-civilians")]
-    public sealed class CiviliansController : JsonApiController<Civilian>
+    public sealed class CiviliansController : JsonApiController<Civilian, int>
     {
-        public CiviliansController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Civilian> resourceService)
+        public CiviliansController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Civilian, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

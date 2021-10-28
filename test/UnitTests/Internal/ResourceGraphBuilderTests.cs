@@ -1,9 +1,11 @@
+using System;
 using System.Linq;
 using Castle.DynamicProxy;
+using FluentAssertions;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Configuration;
+using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Resources;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestBuildingBlocks;
@@ -14,84 +16,79 @@ namespace UnitTests.Internal
     public sealed class ResourceGraphBuilderTests
     {
         [Fact]
-        public void AddDbContext_Does_Not_Throw_If_Context_Contains_Members_That_Do_Not_Implement_IIdentifiable()
+        public void Throws_when_adding_resource_type_that_implements_only_non_generic_IIdentifiable()
         {
             // Arrange
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
 
             // Act
-            resourceGraphBuilder.Add(typeof(TestDbContext));
-            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+            Action action = () => resourceGraphBuilder.Add(typeof(ResourceWithoutId));
 
             // Assert
-            Assert.Empty(resourceGraph.GetResourceTypes());
+            action.Should().ThrowExactly<InvalidConfigurationException>()
+                .WithMessage($"Resource type '{typeof(ResourceWithoutId)}' implements 'IIdentifiable', but not 'IIdentifiable<TId>'.");
         }
 
         [Fact]
-        public void Adding_DbContext_Members_That_Do_Not_Implement_IIdentifiable_Logs_Warning()
+        public void Logs_warning_when_adding_non_resource_type()
         {
             // Arrange
             var loggerFactory = new FakeLoggerFactory(LogLevel.Warning);
             var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), loggerFactory);
-            resourceGraphBuilder.Add(typeof(TestDbContext));
 
             // Act
-            resourceGraphBuilder.Build();
+            resourceGraphBuilder.Add(typeof(NonResource));
 
             // Assert
-            Assert.Single(loggerFactory.Logger.Messages);
-            Assert.Equal(LogLevel.Warning, loggerFactory.Logger.Messages.Single().LogLevel);
+            loggerFactory.Logger.Messages.Should().HaveCount(1);
 
-            Assert.Equal("Entity 'UnitTests.Internal.ResourceGraphBuilderTests+TestDbContext' does not implement 'IIdentifiable'.",
-                loggerFactory.Logger.Messages.Single().Text);
+            FakeLoggerFactory.FakeLogMessage message = loggerFactory.Logger.Messages.ElementAt(0);
+            message.LogLevel.Should().Be(LogLevel.Warning);
+            message.Text.Should().Be($"Skipping: Type '{typeof(NonResource)}' does not implement 'IIdentifiable'.");
         }
 
         [Fact]
-        public void GetResourceType_Yields_Right_Type_For_LazyLoadingProxy()
+        public void Can_resolve_correct_type_for_lazy_loading_proxy()
         {
             // Arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.Add<Bar>();
-            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<ResourceOfInt32>().Build();
             var proxyGenerator = new ProxyGenerator();
+            var proxy = proxyGenerator.CreateClassProxy<ResourceOfInt32>();
 
             // Act
-            var proxy = proxyGenerator.CreateClassProxy<Bar>();
-            ResourceType barType = resourceGraph.GetResourceType(proxy.GetType());
+            ResourceType resourceType = resourceGraph.GetResourceType(proxy.GetType());
 
             // Assert
-            Assert.Equal(typeof(Bar), barType.ClrType);
+            resourceType.ClrType.Should().Be(typeof(ResourceOfInt32));
         }
 
         [Fact]
-        public void GetResourceType_Yields_Right_Type_For_Identifiable()
+        public void Can_resolve_correct_type_for_resource()
         {
             // Arrange
-            var resourceGraphBuilder = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance);
-            resourceGraphBuilder.Add<Bar>();
-            var resourceGraph = (ResourceGraph)resourceGraphBuilder.Build();
+            IResourceGraph resourceGraph = new ResourceGraphBuilder(new JsonApiOptions(), NullLoggerFactory.Instance).Add<ResourceOfInt32>().Build();
 
             // Act
-            ResourceType barType = resourceGraph.GetResourceType(typeof(Bar));
+            ResourceType resourceType = resourceGraph.GetResourceType(typeof(ResourceOfInt32));
 
             // Assert
-            Assert.Equal(typeof(Bar), barType.ClrType);
+            resourceType.ClrType.Should().Be(typeof(ResourceOfInt32));
+        }
+
+        private sealed class ResourceWithoutId : IIdentifiable
+        {
+            public string StringId { get; set; }
+            public string LocalId { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-        private sealed class Foo
+        private sealed class NonResource
         {
-        }
-
-        [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TestDbContext : DbContext
-        {
-            public DbSet<Foo> Foos { get; set; }
         }
 
         // ReSharper disable once ClassCanBeSealed.Global
         // ReSharper disable once MemberCanBePrivate.Global
-        public class Bar : Identifiable
+        public class ResourceOfInt32 : Identifiable<int>
         {
         }
     }

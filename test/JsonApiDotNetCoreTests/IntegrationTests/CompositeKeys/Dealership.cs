@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.CompositeKeys
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Dealership : Identifiable
+    public sealed class Dealership : Identifiable<int>
     {
         [Attr]
         public string Address { get; set; }

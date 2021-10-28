@@ -12,7 +12,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class PlanetDefinition : JsonApiResourceDefinition<Planet>
+    public sealed class PlanetDefinition : JsonApiResourceDefinition<Planet, int>
     {
         private readonly IClientSettingsProvider _clientSettingsProvider;
         private readonly ResourceDefinitionHitCounter _hitCounter;

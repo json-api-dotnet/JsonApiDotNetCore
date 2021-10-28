@@ -15,7 +15,7 @@ using Npgsql;
 namespace NoEntityFrameworkExample.Services
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class WorkItemService : IResourceService<WorkItem>
+    public sealed class WorkItemService : IResourceService<WorkItem, int>
     {
         private readonly string _connectionString;
 

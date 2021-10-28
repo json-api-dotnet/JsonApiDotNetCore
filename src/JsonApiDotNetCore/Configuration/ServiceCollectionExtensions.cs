@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using JetBrains.Annotations;
 using JsonApiDotNetCore.Errors;
 using JsonApiDotNetCore.Repositories;
@@ -56,8 +55,8 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Adds IoC container registrations for the various JsonApiDotNetCore resource service interfaces, such as <see cref="IGetAllService{TResource}" />,
-        /// <see cref="ICreateService{TResource}" /> and the various others.
+        /// Adds IoC container registrations for the various JsonApiDotNetCore resource service interfaces, such as <see cref="IGetAllService{TResource,TId}" />,
+        /// <see cref="ICreateService{TResource, TId}" /> and the various others.
         /// </summary>
         public static IServiceCollection AddResourceService<TService>(this IServiceCollection services)
         {
@@ -70,7 +69,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Adds IoC container registrations for the various JsonApiDotNetCore resource repository interfaces, such as
-        /// <see cref="IResourceReadRepository{TResource}" /> and <see cref="IResourceWriteRepository{TResource}" />.
+        /// <see cref="IResourceReadRepository{TResource,TId}" /> and <see cref="IResourceWriteRepository{TResource, TId}" />.
         /// </summary>
         public static IServiceCollection AddResourceRepository<TRepository>(this IServiceCollection services)
         {
@@ -83,7 +82,7 @@ namespace JsonApiDotNetCore.Configuration
 
         /// <summary>
         /// Adds IoC container registrations for the various JsonApiDotNetCore resource definition interfaces, such as
-        /// <see cref="IResourceDefinition{TResource}" /> and <see cref="IResourceDefinition{TResource,TId}" />.
+        /// <see cref="IResourceDefinition{TResource,TId}" />.
         /// </summary>
         public static IServiceCollection AddResourceDefinition<TResourceDefinition>(this IServiceCollection services)
         {
@@ -103,19 +102,7 @@ namespace JsonApiDotNetCore.Configuration
             {
                 foreach (Type openGenericInterface in openGenericInterfaces)
                 {
-                    // A shorthand interface is one where the ID type is omitted.
-                    // e.g. IResourceService<TResource> is the shorthand for IResourceService<TResource, TId>
-                    bool isShorthandInterface = openGenericInterface.GetTypeInfo().GenericTypeParameters.Length == 1;
-
-                    if (isShorthandInterface && resourceDescriptor.IdClrType != typeof(int))
-                    {
-                        // We can't create a shorthand for ID types other than int.
-                        continue;
-                    }
-
-                    Type constructedType = isShorthandInterface
-                        ? openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType)
-                        : openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
+                    Type constructedType = openGenericInterface.MakeGenericType(resourceDescriptor.ResourceClrType, resourceDescriptor.IdClrType);
 
                     if (constructedType.IsAssignableFrom(implementationType))
                     {

@@ -16,18 +16,6 @@ namespace JsonApiDotNetCore.Resources
     /// <typeparam name="TResource">
     /// The resource type.
     /// </typeparam>
-    [PublicAPI]
-    public interface IResourceDefinition<TResource> : IResourceDefinition<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-    }
-
-    /// <summary>
-    /// Provides an extensibility point to add business logic that is resource-oriented instead of endpoint-oriented.
-    /// </summary>
-    /// <typeparam name="TResource">
-    /// The resource type.
-    /// </typeparam>
     /// <typeparam name="TId">
     /// The resource identifier type.
     /// </typeparam>

@@ -38,8 +38,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
                     UtcNow = 1.January(2005).ToDateTimeOffset()
                 });
 
-                services.AddResourceService<SoftDeletionAwareResourceService<Company>>();
-                services.AddResourceService<SoftDeletionAwareResourceService<Department>>();
+                services.AddResourceService<SoftDeletionAwareResourceService<Company, int>>();
+                services.AddResourceService<SoftDeletionAwareResourceService<Department, int>>();
             });
         }
 

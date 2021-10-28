@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceInheritance.Models
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public abstract class Human : Identifiable
+    public abstract class Human : Identifiable<int>
     {
         [Attr]
         public string FamilyName { get; set; }

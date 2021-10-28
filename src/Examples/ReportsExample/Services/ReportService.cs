@@ -9,7 +9,7 @@ using ReportsExample.Models;
 namespace ReportsExample.Services
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public class ReportService : IGetAllService<Report>
+    public class ReportService : IGetAllService<Report, int>
     {
         private readonly ILogger<ReportService> _logger;
 

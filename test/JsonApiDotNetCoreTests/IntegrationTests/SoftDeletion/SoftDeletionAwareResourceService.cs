@@ -112,17 +112,4 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.SoftDeletion
             return typeof(ISoftDeletable).IsAssignableFrom(resourceClrType);
         }
     }
-
-    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public class SoftDeletionAwareResourceService<TResource> : SoftDeletionAwareResourceService<TResource, int>, IResourceService<TResource>
-        where TResource : class, IIdentifiable<int>
-    {
-        public SoftDeletionAwareResourceService(ISystemClock systemClock, ITargetedFields targetedFields, IResourceRepositoryAccessor repositoryAccessor,
-            IQueryLayerComposer queryLayerComposer, IPaginationContext paginationContext, IJsonApiOptions options, ILoggerFactory loggerFactory,
-            IJsonApiRequest request, IResourceChangeTracker<TResource> resourceChangeTracker, IResourceDefinitionAccessor resourceDefinitionAccessor)
-            : base(systemClock, targetedFields, repositoryAccessor, queryLayerComposer, paginationContext, options, loggerFactory, request,
-                resourceChangeTracker, resourceDefinitionAccessor)
-        {
-        }
-    }
 }

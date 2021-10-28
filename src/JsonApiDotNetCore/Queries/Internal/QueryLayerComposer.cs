@@ -483,7 +483,7 @@ namespace JsonApiDotNetCore.Queries.Internal
 
         private static AttrAttribute GetIdAttribute(ResourceType resourceType)
         {
-            return resourceType.GetAttributeByPropertyName(nameof(Identifiable.Id));
+            return resourceType.GetAttributeByPropertyName(nameof(Identifiable<object>.Id));
         }
     }
 }

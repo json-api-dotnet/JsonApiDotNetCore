@@ -2,7 +2,7 @@ using JsonApiDotNetCore.Resources;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.IdObfuscation
 {
-    public abstract class ObfuscatedIdentifiable : Identifiable
+    public abstract class ObfuscatedIdentifiable : Identifiable<int>
     {
         private static readonly HexadecimalCodec Codec = new();
 

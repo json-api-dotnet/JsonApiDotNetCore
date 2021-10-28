@@ -154,7 +154,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
                 PropertyInfo leftProperty = leftChain.Fields[^1].Property;
 
-                if (leftProperty.Name == nameof(Identifiable.Id) && rightTerm is LiteralConstantExpression rightConstant)
+                if (leftProperty.Name == nameof(Identifiable<object>.Id) && rightTerm is LiteralConstantExpression rightConstant)
                 {
                     string id = DeObfuscateStringId(leftProperty.ReflectedType, rightConstant.Value);
                     rightTerm = new LiteralConstantExpression(id);
@@ -214,7 +214,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
             PropertyInfo targetAttributeProperty = targetAttribute.Fields[^1].Property;
 
-            if (targetAttributeProperty.Name == nameof(Identifiable.Id))
+            if (targetAttributeProperty.Name == nameof(Identifiable<object>.Id))
             {
                 constantSet = DeObfuscateIdConstants(constantSet, targetAttributeProperty);
             }

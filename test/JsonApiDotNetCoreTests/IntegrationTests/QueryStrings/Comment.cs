@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Comment : Identifiable
+    public sealed class Comment : Identifiable<int>
     {
         [Attr]
         public string Text { get; set; }

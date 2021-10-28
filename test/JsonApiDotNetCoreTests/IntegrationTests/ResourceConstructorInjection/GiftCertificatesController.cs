@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
-    public sealed class GiftCertificatesController : JsonApiController<GiftCertificate>
+    public sealed class GiftCertificatesController : JsonApiController<GiftCertificate, int>
     {
-        public GiftCertificatesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<GiftCertificate> resourceService)
+        public GiftCertificatesController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<GiftCertificate, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

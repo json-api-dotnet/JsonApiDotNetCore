@@ -37,8 +37,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
 
             testContext.ConfigureServicesAfterStartup(services =>
             {
-                services.AddResourceService<MultiTenantResourceService<WebShop>>();
-                services.AddResourceService<MultiTenantResourceService<WebProduct>>();
+                services.AddResourceService<MultiTenantResourceService<WebShop, int>>();
+                services.AddResourceService<MultiTenantResourceService<WebProduct, int>>();
             });
 
             var options = (JsonApiOptions)_testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

@@ -7,7 +7,7 @@ using JsonApiDotNetCore.Resources;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class StarDefinition : JsonApiResourceDefinition<Star>
+    public sealed class StarDefinition : JsonApiResourceDefinition<Star, int>
     {
         private readonly ResourceDefinitionHitCounter _hitCounter;
 

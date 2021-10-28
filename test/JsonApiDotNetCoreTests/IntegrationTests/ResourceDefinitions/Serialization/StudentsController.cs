@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Serialization
 {
-    public sealed class StudentsController : JsonApiController<Student>
+    public sealed class StudentsController : JsonApiController<Student, int>
     {
-        public StudentsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Student> resourceService)
+        public StudentsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Student, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

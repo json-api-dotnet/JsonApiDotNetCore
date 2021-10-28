@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCoreTests.IntegrationTests.RestrictedControllers
 {
     [NoHttpPatch]
-    public sealed class BlockingHttpPatchController : JsonApiController<Chair>
+    public sealed class BlockingHttpPatchController : JsonApiController<Chair, int>
     {
-        public BlockingHttpPatchController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Chair> resourceService)
+        public BlockingHttpPatchController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<Chair, int> resourceService)
             : base(options, loggerFactory, resourceService)
         {
         }

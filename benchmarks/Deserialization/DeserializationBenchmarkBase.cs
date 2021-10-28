@@ -30,7 +30,7 @@ namespace Benchmarks.Deserialization
             var resourceDefinitionAccessor = new ResourceDefinitionAccessor(resourceGraph, serviceContainer);
 
             serviceContainer.AddService(typeof(IResourceDefinitionAccessor), resourceDefinitionAccessor);
-            serviceContainer.AddService(typeof(IResourceDefinition<ResourceA>), new JsonApiResourceDefinition<ResourceA>(resourceGraph));
+            serviceContainer.AddService(typeof(IResourceDefinition<ResourceA, int>), new JsonApiResourceDefinition<ResourceA, int>(resourceGraph));
 
             // ReSharper disable once VirtualMemberCallInConstructor
             JsonApiRequest request = CreateJsonApiRequest(resourceGraph);
@@ -56,7 +56,7 @@ namespace Benchmarks.Deserialization
         protected abstract JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph);
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        public sealed class ResourceA : Identifiable
+        public sealed class ResourceA : Identifiable<int>
         {
             [Attr]
             public bool Attribute01 { get; set; }

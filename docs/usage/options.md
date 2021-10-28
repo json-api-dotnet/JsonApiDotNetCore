@@ -109,7 +109,7 @@ options.ValidateModelState = true;
 ```
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr]
     [Required]

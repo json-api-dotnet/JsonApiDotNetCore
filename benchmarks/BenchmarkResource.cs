@@ -5,7 +5,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace Benchmarks
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class BenchmarkResource : Identifiable
+    public sealed class BenchmarkResource : Identifiable<int>
     {
         [Attr(PublicName = BenchmarkResourcePublicNames.NameAttr)]
         public string Name { get; set; }

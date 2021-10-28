@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceConstructorInjection
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class PostOffice : Identifiable
+    public sealed class PostOffice : Identifiable<int>
     {
         private readonly ISystemClock _systemClock;
 

@@ -117,27 +117,4 @@ namespace JsonApiDotNetCore.Controllers
             return await base.DeleteRelationshipAsync(id, relationshipName, rightResourceIds, cancellationToken);
         }
     }
-
-    /// <inheritdoc />
-    public abstract class JsonApiController<TResource> : JsonApiController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceService<TResource, int> resourceService)
-            : base(options, loggerFactory, resourceService)
-        {
-        }
-
-        /// <inheritdoc />
-        protected JsonApiController(IJsonApiOptions options, ILoggerFactory loggerFactory, IGetAllService<TResource, int> getAll = null,
-            IGetByIdService<TResource, int> getById = null, IGetSecondaryService<TResource, int> getSecondary = null,
-            IGetRelationshipService<TResource, int> getRelationship = null, ICreateService<TResource, int> create = null,
-            IAddToRelationshipService<TResource, int> addToRelationship = null, IUpdateService<TResource, int> update = null,
-            ISetRelationshipService<TResource, int> setRelationship = null, IDeleteService<TResource, int> delete = null,
-            IRemoveFromRelationshipService<TResource, int> removeFromRelationship = null)
-            : base(options, loggerFactory, getAll, getById, getSecondary, getRelationship, create, addToRelationship, update, setRelationship, delete,
-                removeFromRelationship)
-        {
-        }
-    }
 }

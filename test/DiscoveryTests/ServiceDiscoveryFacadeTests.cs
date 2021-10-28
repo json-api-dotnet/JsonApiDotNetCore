@@ -93,7 +93,7 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceService = services.GetRequiredService<IResourceService<TestResource>>();
+            var resourceService = services.GetRequiredService<IResourceService<TestResource, int>>();
             resourceService.Should().BeOfType<TestResourceService>();
         }
 
@@ -110,7 +110,7 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource>>();
+            var resourceRepository = services.GetRequiredService<IResourceRepository<TestResource, int>>();
             resourceRepository.Should().BeOfType<TestResourceRepository>();
         }
 
@@ -127,7 +127,7 @@ namespace DiscoveryTests
             // Assert
             ServiceProvider services = _services.BuildServiceProvider();
 
-            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource>>();
+            var resourceDefinition = services.GetRequiredService<IResourceDefinition<TestResource, int>>();
             resourceDefinition.Should().BeOfType<TestResourceDefinition>();
         }
     }

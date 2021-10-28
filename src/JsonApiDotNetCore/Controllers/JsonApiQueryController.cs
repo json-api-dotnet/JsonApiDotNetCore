@@ -58,15 +58,4 @@ namespace JsonApiDotNetCore.Controllers
             return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
         }
     }
-
-    /// <inheritdoc />
-    public abstract class JsonApiQueryController<TResource> : JsonApiQueryController<TResource, int>
-        where TResource : class, IIdentifiable<int>
-    {
-        /// <inheritdoc />
-        protected JsonApiQueryController(IJsonApiOptions options, ILoggerFactory loggerFactory, IResourceQueryService<TResource, int> queryService)
-            : base(options, loggerFactory, queryService)
-        {
-        }
-    }
 }

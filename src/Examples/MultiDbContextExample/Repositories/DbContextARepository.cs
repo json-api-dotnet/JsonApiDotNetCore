@@ -10,7 +10,7 @@ using MultiDbContextExample.Data;
 namespace MultiDbContextExample.Repositories
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource>
+    public sealed class DbContextARepository<TResource> : EntityFrameworkCoreRepository<TResource, int>
         where TResource : class, IIdentifiable<int>
     {
         public DbContextARepository(ITargetedFields targetedFields, DbContextResolver<DbContextA> dbContextResolver, IResourceGraph resourceGraph,

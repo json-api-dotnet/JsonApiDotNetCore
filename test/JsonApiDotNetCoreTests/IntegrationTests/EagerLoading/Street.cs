@@ -8,7 +8,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class Street : Identifiable
+    public sealed class Street : Identifiable<int>
     {
         [Attr]
         public string Name { get; set; }

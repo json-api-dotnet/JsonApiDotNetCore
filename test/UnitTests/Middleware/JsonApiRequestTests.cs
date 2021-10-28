@@ -121,19 +121,19 @@ namespace UnitTests.Middleware
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Itself)]
-        private sealed class Person : Identifiable
+        private sealed class Person : Identifiable<int>
         {
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class Tag : Identifiable
+        private sealed class Tag : Identifiable<int>
         {
             [HasMany]
             public ISet<TodoItem> TodoItems { get; set; }
         }
 
         [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-        private sealed class TodoItem : Identifiable
+        private sealed class TodoItem : Identifiable<int>
         {
             [HasOne]
             public Person Owner { get; set; }

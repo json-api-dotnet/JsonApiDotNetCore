@@ -19,47 +19,30 @@ namespace JsonApiDotNetCore.Configuration
     {
         internal static readonly HashSet<Type> ServiceInterfaces = new()
         {
-            typeof(IResourceService<>),
             typeof(IResourceService<,>),
-            typeof(IResourceCommandService<>),
             typeof(IResourceCommandService<,>),
-            typeof(IResourceQueryService<>),
             typeof(IResourceQueryService<,>),
-            typeof(IGetAllService<>),
             typeof(IGetAllService<,>),
-            typeof(IGetByIdService<>),
             typeof(IGetByIdService<,>),
-            typeof(IGetSecondaryService<>),
             typeof(IGetSecondaryService<,>),
-            typeof(IGetRelationshipService<>),
             typeof(IGetRelationshipService<,>),
-            typeof(ICreateService<>),
             typeof(ICreateService<,>),
-            typeof(IAddToRelationshipService<>),
             typeof(IAddToRelationshipService<,>),
-            typeof(IUpdateService<>),
             typeof(IUpdateService<,>),
-            typeof(ISetRelationshipService<>),
             typeof(ISetRelationshipService<,>),
-            typeof(IDeleteService<>),
             typeof(IDeleteService<,>),
-            typeof(IRemoveFromRelationshipService<>),
             typeof(IRemoveFromRelationshipService<,>)
         };
 
         internal static readonly HashSet<Type> RepositoryInterfaces = new()
         {
-            typeof(IResourceRepository<>),
             typeof(IResourceRepository<,>),
-            typeof(IResourceWriteRepository<>),
             typeof(IResourceWriteRepository<,>),
-            typeof(IResourceReadRepository<>),
             typeof(IResourceReadRepository<,>)
         };
 
         internal static readonly HashSet<Type> ResourceDefinitionInterfaces = new()
         {
-            typeof(IResourceDefinition<>),
             typeof(IResourceDefinition<,>)
         };
 

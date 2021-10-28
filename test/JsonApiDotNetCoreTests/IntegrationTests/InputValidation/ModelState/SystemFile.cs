@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Resources.Annotations;
 namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
     [UsedImplicitly(ImplicitUseTargetFlags.Members)]
-    public sealed class SystemFile : Identifiable
+    public sealed class SystemFile : Identifiable<int>
     {
         [Attr]
         [Required]

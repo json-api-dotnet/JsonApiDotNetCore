@@ -3,7 +3,7 @@
 If you want an attribute on your model to be publicly available, add the `AttrAttribute`.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr]
     public string FirstName { get; set; }
@@ -18,7 +18,7 @@ There are two ways the exposed attribute name is determined:
 
 2. Individually using the attribute's constructor.
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr(PublicName = "first-name")]
     public string FirstName { get; set; }
@@ -42,7 +42,7 @@ This can be overridden per attribute.
 Attributes can be marked to allow returning their value in responses. When not allowed and requested using `?fields[]=`, it results in an HTTP 400 response.
 
 ```c#
-public class User : Identifiable
+public class User : Identifiable<int>
 {
     [Attr(Capabilities = ~AttrCapabilities.AllowView)]
     public string Password { get; set; }
@@ -54,7 +54,7 @@ public class User : Identifiable
 Attributes can be marked as creatable, which will allow `POST` requests to assign a value to them. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr(Capabilities = AttrCapabilities.AllowCreate)]
     public string CreatorName { get; set; }
@@ -66,7 +66,7 @@ public class Person : Identifiable
 Attributes can be marked as changeable, which will allow `PATCH` requests to update them. When sent but not allowed, an HTTP 422 response is returned.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr(Capabilities = AttrCapabilities.AllowChange)]
     public string FirstName { get; set; }
@@ -78,7 +78,7 @@ public class Person : Identifiable
 Attributes can be marked to allow filtering and/or sorting. When not allowed, it results in an HTTP 400 response.
 
 ```c#
-public class Person : Identifiable
+public class Person : Identifiable<int>
 {
     [Attr(Capabilities = AttrCapabilities.AllowSort | AttrCapabilities.AllowFilter)]
     public string FirstName { get; set; }
@@ -93,7 +93,7 @@ so you should use their APIs to specify serialization format.
 You can also use [global options](~/usage/options.md#customize-serializer-options) to control the `JsonSerializer` behavior.
 
 ```c#
-public class Foo : Identifiable
+public class Foo : Identifiable<int>
 {
     [Attr]
     public Bar Bar { get; set; }
@@ -113,7 +113,7 @@ The first member is the concrete type that you will directly interact with in yo
 and retrieval.
 
 ```c#
-public class Foo : Identifiable
+public class Foo : Identifiable<int>
 {
     [Attr, NotMapped]
     public Bar Bar { get; set; }
