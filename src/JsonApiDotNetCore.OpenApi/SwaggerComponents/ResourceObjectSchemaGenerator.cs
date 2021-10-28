@@ -32,17 +32,15 @@ namespace JsonApiDotNetCore.OpenApi.SwaggerComponents
             _resourceTypeSchemaGenerator = new ResourceTypeSchemaGenerator(schemaRepositoryAccessor, resourceGraph);
             _allowClientGeneratedIds = options.AllowClientGeneratedIds;
 
-            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph, options, schemaRepositoryAccessor,
-                _resourceTypeSchemaGenerator);
+            _createFieldObjectBuilderFactory = CreateFieldObjectBuilderFactory(defaultSchemaGenerator, resourceGraph,
+                options.SerializerOptions.PropertyNamingPolicy, schemaRepositoryAccessor, _resourceTypeSchemaGenerator);
         }
 
         private static Func<ResourceTypeInfo, ResourceFieldObjectSchemaBuilder> CreateFieldObjectBuilderFactory(SchemaGenerator defaultSchemaGenerator,
-            IResourceGraph resourceGraph, IJsonApiOptions options, ISchemaRepositoryAccessor schemaRepositoryAccessor,
+            IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy, ISchemaRepositoryAccessor schemaRepositoryAccessor,
             ResourceTypeSchemaGenerator resourceTypeSchemaGenerator)
         {
-            JsonNamingPolicy namingPolicy = options.SerializerOptions.PropertyNamingPolicy;
-            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
-            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(resourceNameFormatter, resourceGraph);
+            var jsonApiSchemaIdSelector = new JsonApiSchemaIdSelector(namingPolicy, resourceGraph);
 
             return resourceTypeInfo => new ResourceFieldObjectSchemaBuilder(resourceTypeInfo, schemaRepositoryAccessor, defaultSchemaGenerator,
                 jsonApiSchemaIdSelector, resourceTypeSchemaGenerator);

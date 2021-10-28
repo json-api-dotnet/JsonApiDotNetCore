@@ -103,8 +103,7 @@ namespace JsonApiDotNetCore.OpenApi
 
         private static void SetSchemaIdSelector(SwaggerGenOptions swaggerGenOptions, IResourceGraph resourceGraph, JsonNamingPolicy namingPolicy)
         {
-            ResourceNameFormatter resourceNameFormatter = new(namingPolicy);
-            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(resourceNameFormatter, resourceGraph);
+            JsonApiSchemaIdSelector jsonApiObjectSchemaSelector = new(namingPolicy, resourceGraph);
 
             swaggerGenOptions.CustomSchemaIds(type => jsonApiObjectSchemaSelector.GetSchemaId(type));
         }
