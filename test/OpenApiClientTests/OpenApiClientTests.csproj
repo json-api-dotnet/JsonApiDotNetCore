@@ -28,16 +28,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json">
+    <OpenApiReference Include="..\OpenApiTests\SwaggerDocuments\LegacyOpenApiIntegration.json">
       <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
       <ClassName>OpenApiClient</ClassName>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
       <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal</Options>
     </OpenApiReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="..\OpenApiTests\LegacyOpenApiIntegration\swagger.json" />
   </ItemGroup>
 
   <!-- Fixes IntelliSense errors on openapi.json in Visual Studio 2019, which uses the schema for OpenAPI 3.1 by default. -->

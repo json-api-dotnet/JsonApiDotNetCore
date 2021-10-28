@@ -4,26 +4,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj"/>
-        <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj"/>
+        <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi\JsonApiDotNetCore.OpenApi.csproj" />
+        <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)"/>
-        <PackageReference Include="BlushingPenguin.JsonPath" Version="$(BlushingPenguinVersion)"/>
-        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3"/>
+        <PackageReference Include="coverlet.collector" Version="$(CoverletVersion)" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="$(AspNetCoreVersion)" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
+        <PackageReference Include="BlushingPenguin.JsonPath" Version="$(BlushingPenguinVersion)" />
+        <PackageReference Include="Microsoft.OpenApi.Readers" Version="1.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="LegacyOpenApiIntegration\swagger.json"/>
+        <EmbeddedResource Include="SwaggerDocuments\LegacyOpenApiIntegration.json" />
     </ItemGroup>
-
+    
     <!-- Fixes IntelliSense errors on openapi.json in Visual Studio 2019, which uses the schema for OpenAPI 3.1 by default. -->
     <ProjectExtensions>
         <VisualStudio>
-            <UserProperties swagger_1json__JsonSchema="https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"/>
+            <UserProperties swagger_1json__JsonSchema="https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json" />
         </VisualStudio>
     </ProjectExtensions>
 </Project>

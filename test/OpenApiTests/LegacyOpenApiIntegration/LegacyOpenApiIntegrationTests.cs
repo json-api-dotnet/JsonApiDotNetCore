@@ -24,7 +24,7 @@ namespace OpenApiTests.LegacyOpenApiIntegration
         public async Task Retrieved_document_matches_expected_document()
         {
             // Arrange
-            string embeddedResourceName = $"{nameof(OpenApiTests)}.{nameof(LegacyOpenApiIntegration)}.swagger.json";
+            string embeddedResourceName = $"{nameof(OpenApiTests)}.SwaggerDocuments.{nameof(LegacyOpenApiIntegration)}.json";
             string expectedDocument = await LoadEmbeddedResourceAsync(embeddedResourceName);
             const string requestUrl = "swagger/v1/swagger.json";
 

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -22,8 +23,10 @@ namespace OpenApiTests.NamingConvention.KebabCase
             _lazyOpenApiDocument ??= new Lazy<Task<JsonDocument>>(async () =>
             {
                 testContext.UseController<SupermarketsController>();
-                const string requestUrl = "swagger/v1/swagger.json";
-                string content = await GetAsync(requestUrl);
+
+                string content = await GetAsync("swagger/v1/swagger.json");
+
+                await WriteToSwaggerDocumentsFolderAsync(content);
 
                 return JsonDocument.Parse(content);
             }, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -37,6 +40,18 @@ namespace OpenApiTests.NamingConvention.KebabCase
             HttpResponseMessage responseMessage = await client.SendAsync(request);
 
             return await responseMessage.Content.ReadAsStringAsync();
+        }
+
+        private static async Task WriteToSwaggerDocumentsFolderAsync(string content)
+        {
+            string path = GetSwaggerDocumentPath(nameof(KebabCase));
+            await File.WriteAllTextAsync(path, content);
+        }
+
+        private static string GetSwaggerDocumentPath(string fileName)
+        {
+            string swaggerDocumentsDirectory = Directory.GetParent(Environment.CurrentDirectory)!.Parent!.Parent!.FullName;
+            return Path.Join(swaggerDocumentsDirectory, "SwaggerDocuments", $"{fileName}.json");
         }
 
         [Fact]
