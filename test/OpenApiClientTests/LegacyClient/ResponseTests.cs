@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentAssertions.Specialized;
+using OpenApiClientTests.Exceptions;
 using OpenApiClientTests.LegacyClient.GeneratedCode;
 using Xunit;
 

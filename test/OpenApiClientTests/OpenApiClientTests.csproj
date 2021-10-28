@@ -5,6 +5,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\JsonApiDotNetCore.OpenApi.Client\JsonApiDotNetCore.OpenApi.Client.csproj" />
+    <ProjectReference Include="..\OpenApiTests\OpenApiTests.csproj" />
     <ProjectReference Include="..\TestBuildingBlocks\TestBuildingBlocks.csproj" />
   </ItemGroup>
 
@@ -32,7 +33,16 @@
       <Namespace>OpenApiClientTests.LegacyClient.GeneratedCode</Namespace>
       <ClassName>OpenApiClient</ClassName>
       <CodeGenerator>NSwagCSharp</CodeGenerator>
-      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal</Options>
+      <Options>/UseBaseUrl:false /GenerateClientInterfaces:true /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:OpenApiClientTests.Exceptions</Options>
+    </OpenApiReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="..\OpenApiTests\SwaggerDocuments\KebabCase.json">
+      <Namespace>OpenApiClientTests.NamingConvention.KebabCase.GeneratedCode</Namespace>
+      <ClassName>KebabCaseClient</ClassName>
+      <CodeGenerator>NSwagCSharp</CodeGenerator>
+      <Options>/UseBaseUrl:false /ClientClassAccessModifier:internal /GenerateExceptionClasses:false /AdditionalNamespaceUsages:OpenApiClientTests.Exceptions</Options>
     </OpenApiReference>
   </ItemGroup>
 
