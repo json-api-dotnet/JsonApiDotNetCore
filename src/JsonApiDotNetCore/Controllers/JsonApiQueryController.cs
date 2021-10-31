@@ -33,6 +33,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet]
+        [HttpHead]
         public override async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
         {
             return await base.GetAsync(cancellationToken);
@@ -40,6 +41,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}")]
+        [HttpHead("{id}")]
         public override async Task<IActionResult> GetAsync(TId id, CancellationToken cancellationToken)
         {
             return await base.GetAsync(id, cancellationToken);
@@ -47,6 +49,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}/{relationshipName}")]
+        [HttpHead("{id}/{relationshipName}")]
         public override async Task<IActionResult> GetSecondaryAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             return await base.GetSecondaryAsync(id, relationshipName, cancellationToken);
@@ -54,6 +57,7 @@ namespace JsonApiDotNetCore.Controllers
 
         /// <inheritdoc />
         [HttpGet("{id}/relationships/{relationshipName}")]
+        [HttpHead("{id}/relationships/{relationshipName}")]
         public override async Task<IActionResult> GetRelationshipAsync(TId id, string relationshipName, CancellationToken cancellationToken)
         {
             return await base.GetRelationshipAsync(id, relationshipName, cancellationToken);
