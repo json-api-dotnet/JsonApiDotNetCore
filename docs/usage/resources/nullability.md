@@ -2,7 +2,7 @@
 
 Properties on a resource class can be declared as nullable or non-nullable. This affects both ASP.NET ModelState validation and the way Entity Framework Core generates database columns.
 
-Note that ModelState validation is turned off by default. It can be enabled in [options](~/usage/options.md#enable-modelstate-validation).
+ModelState validation is enabled by default since v5.0. In earlier versions, it can be enabled in [options](~/usage/options.md#enable-modelstate-validation).
 
 # Value types
 

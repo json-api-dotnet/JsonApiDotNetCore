@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.
+    /// Implements the foundational ASP.NET controller layer in the JsonApiDotNetCore architecture that delegates to a Resource Service.
     /// </summary>
     /// <typeparam name="TResource">
     /// The resource type.

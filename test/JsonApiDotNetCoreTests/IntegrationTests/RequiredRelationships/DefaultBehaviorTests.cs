@@ -54,14 +54,23 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
-            responseDocument.Errors.ShouldHaveCount(1);
+            responseDocument.Errors.ShouldHaveCount(2);
 
-            ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
+            ErrorObject error1 = responseDocument.Errors[0];
+            error1.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error1.Title.Should().Be("Input validation failed.");
+            error1.Detail.Should().Be("The Customer field is required.");
+            error1.Source.ShouldNotBeNull();
+            error1.Source.Pointer.Should().Be("/data/relationships/customer/data");
+
+            ErrorObject error2 = responseDocument.Errors[1];
+            error2.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error2.Title.Should().Be("Input validation failed.");
+            error2.Detail.Should().Be("The Shipment field is required.");
+            error2.Source.ShouldNotBeNull();
+            error2.Source.Pointer.Should().Be("/data/relationships/shipment/data");
         }
 
         [Fact]
@@ -88,14 +97,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePostAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.InternalServerError);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-            error.Title.Should().Be("An unhandled error occurred while processing this request.");
-            error.Detail.Should().Be("Failed to persist changes in the underlying data store.");
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The Order field is required.");
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/order/data");
         }
 
         [Fact]
@@ -186,8 +197,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.StringId,
                     type = "orders",
+                    id = existingOrder.StringId,
                     relationships = new
                     {
                         customer = new
@@ -204,16 +215,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecutePatchAsync<Document>(route, requestBody);
 
             // Assert
-            httpResponse.Should().HaveStatusCode(HttpStatusCode.BadRequest);
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.UnprocessableEntity);
 
             responseDocument.Errors.ShouldHaveCount(1);
 
             ErrorObject error = responseDocument.Errors[0];
-            error.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            error.Title.Should().Be("Failed to clear a required relationship.");
-
-            error.Detail.Should().Be($"The relationship 'customer' on resource type 'orders' with ID '{existingOrder.StringId}' " +
-                "cannot be cleared because it is a required relationship.");
+            error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+            error.Title.Should().Be("Input validation failed.");
+            error.Detail.Should().Be("The Customer field is required.");
+            error.Source.ShouldNotBeNull();
+            error.Source.Pointer.Should().Be("/data/relationships/customer/data");
         }
 
         [Fact]
@@ -271,8 +282,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = existingOrder.Customer.StringId,
                     type = "customers",
+                    id = existingOrder.Customer.StringId,
                     relationships = new
                     {
                         orders = new
@@ -409,16 +420,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithoutShipment.StringId,
                     type = "orders",
+                    id = orderWithoutShipment.StringId,
                     relationships = new
                     {
                         shipment = new
                         {
                             data = new
                             {
-                                id = orderWithShipment.Shipment.StringId,
-                                type = "shipments"
+                                type = "shipments",
+                                id = orderWithShipment.Shipment.StringId
                             }
                         }
                     }
@@ -464,8 +475,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.RequiredRelationships
             {
                 data = new
                 {
-                    id = orderWithShipment.Shipment.StringId,
-                    type = "shipments"
+                    type = "shipments",
+                    id = orderWithShipment.Shipment.StringId
                 }
             };
 

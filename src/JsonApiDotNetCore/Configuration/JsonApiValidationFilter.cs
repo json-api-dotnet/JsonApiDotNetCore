@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace JsonApiDotNetCore.Configuration
 {
     /// <summary>
-    /// Validation filter that blocks ASP.NET Core ModelState validation on data according to the JSON:API spec.
+    /// Validation filter that blocks ASP.NET ModelState validation on data according to the JSON:API spec.
     /// </summary>
     internal sealed class JsonApiValidationFilter : IPropertyValidationFilter
     {

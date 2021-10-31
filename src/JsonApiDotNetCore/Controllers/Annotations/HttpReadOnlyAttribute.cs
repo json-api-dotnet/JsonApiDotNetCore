@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 namespace JsonApiDotNetCore.Controllers.Annotations
 {
     /// <summary>
-    /// Used on an ASP.NET Core controller class to indicate write actions must be blocked.
+    /// Used on an ASP.NET controller class to indicate write actions must be blocked.
     /// </summary>
     /// <example><![CDATA[
     /// [HttpReadOnly]

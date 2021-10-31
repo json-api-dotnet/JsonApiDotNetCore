@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         }
 
         /// <summary>
-        /// Configures built-in ASP.NET Core MVC components. Most of this configuration can be adjusted for the developers' need.
+        /// Configures built-in ASP.NET MVC components. Most of this configuration can be adjusted for the developers' need.
         /// </summary>
         public void ConfigureMvc()
         {

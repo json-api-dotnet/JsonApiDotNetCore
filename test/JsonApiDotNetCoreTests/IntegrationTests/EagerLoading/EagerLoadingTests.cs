@@ -4,19 +4,18 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using JsonApiDotNetCore.Configuration;
 using JsonApiDotNetCore.Serialization.Objects;
-using JsonApiDotNetCoreTests.Startups;
 using Microsoft.EntityFrameworkCore;
 using TestBuildingBlocks;
 using Xunit;
 
 namespace JsonApiDotNetCoreTests.IntegrationTests.EagerLoading
 {
-    public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<ModelStateValidationStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
+    public sealed class EagerLoadingTests : IClassFixture<IntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext>>
     {
-        private readonly IntegrationTestContext<ModelStateValidationStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
+        private readonly IntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> _testContext;
         private readonly EagerLoadingFakers _fakers = new();
 
-        public EagerLoadingTests(IntegrationTestContext<ModelStateValidationStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext)
+        public EagerLoadingTests(IntegrationTestContext<TestableStartup<EagerLoadingDbContext>, EagerLoadingDbContext> testContext)
         {
             _testContext = testContext;
 

@@ -9,6 +9,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
 {
     internal sealed class ModelStateFakers : FakerContainer
     {
+        private readonly Lazy<Faker<SystemVolume>> _lazySystemVolumeFaker = new(() =>
+            new Faker<SystemVolume>()
+                .UseSeed(GetFakerSeed())
+                .RuleFor(systemVolume => systemVolume.Name, faker => faker.Lorem.Word()));
+
         private readonly Lazy<Faker<SystemFile>> _lazySystemFileFaker = new(() =>
             new Faker<SystemFile>()
                 .UseSeed(GetFakerSeed())
@@ -22,6 +27,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.ModelState
                 .RuleFor(systemDirectory => systemDirectory.IsCaseSensitive, faker => faker.Random.Bool())
                 .RuleFor(systemDirectory => systemDirectory.SizeInBytes, faker => faker.Random.Long(0, 1_000_000)));
 
+        public Faker<SystemVolume> SystemVolume => _lazySystemVolumeFaker.Value;
         public Faker<SystemFile> SystemFile => _lazySystemFileFaker.Value;
         public Faker<SystemDirectory> SystemDirectory => _lazySystemDirectoryFaker.Value;
     }

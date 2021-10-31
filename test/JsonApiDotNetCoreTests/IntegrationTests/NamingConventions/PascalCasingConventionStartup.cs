@@ -16,7 +16,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.NamingConventions
             options.Namespace = "PublicApi";
             options.UseRelativeLinks = true;
             options.IncludeTotalResourceCount = true;
-            options.ValidateModelState = true;
 
             options.SerializerOptions.PropertyNamingPolicy = null;
             options.SerializerOptions.DictionaryKeyPolicy = null;

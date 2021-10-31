@@ -32,8 +32,8 @@ namespace JsonApiDotNetCore.Resources.Annotations
         internal Type? RightClrType { get; set; }
 
         /// <summary>
-        /// The <see cref="PropertyInfo" /> of the EF Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed as a JSON:API
-        /// relationship.
+        /// The <see cref="PropertyInfo" /> of the Entity Framework Core inverse navigation, which may or may not exist. Even if it exists, it may not be exposed
+        /// as a JSON:API relationship.
         /// </summary>
         /// <example>
         /// <code><![CDATA[

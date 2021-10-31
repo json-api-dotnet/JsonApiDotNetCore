@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace JsonApiDotNetCore.Errors
 {
     /// <summary>
-    /// The error that is thrown when model state validation fails.
+    /// The error that is thrown when ASP.NET ModelState validation fails.
     /// </summary>
     [PublicAPI]
     public sealed class InvalidModelStateException : JsonApiException

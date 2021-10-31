@@ -12,7 +12,9 @@ namespace TestBuildingBlocks
     {
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddJsonApi<TDbContext>(SetJsonApiOptions);
+            IMvcCoreBuilder mvcBuilder = services.AddMvcCore(options => options.MaxModelValidationErrors = 3);
+
+            services.AddJsonApi<TDbContext>(SetJsonApiOptions, mvcBuilder: mvcBuilder);
         }
 
         protected virtual void SetJsonApiOptions(JsonApiOptions options)

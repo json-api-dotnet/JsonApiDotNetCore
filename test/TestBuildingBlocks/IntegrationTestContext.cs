@@ -24,7 +24,7 @@ namespace TestBuildingBlocks
     /// The server Startup class, which can be defined in the test project or API project.
     /// </typeparam>
     /// <typeparam name="TDbContext">
-    /// The EF Core database context, which can be defined in the test project or API project.
+    /// The Entity Framework Core database context, which can be defined in the test project or API project.
     /// </typeparam>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
     public class IntegrationTestContext<TStartup, TDbContext> : IntegrationTest, IDisposable
@@ -82,12 +82,12 @@ namespace TestBuildingBlocks
                 services.AddDbContext<TDbContext>(options =>
                 {
                     options.UseNpgsql(dbConnectionString, builder =>
-                        // The next line suppresses EF Core Warning:
+                        // The next line suppresses Entity Framework Core Warning:
                         //    "Compiling a query which loads related collections for more than one collection navigation
                         //    either via 'Include' or through projection but no 'QuerySplittingBehavior' has been configured."
                         // We'd like to use `QuerySplittingBehavior.SplitQuery` because of improved performance, but unfortunately
-                        // it makes EF Core 5 crash on queries that load related data in a projection without Include.
-                        // This is fixed in EF Core 6, tracked at https://github.com/dotnet/efcore/issues/21234.
+                        // it makes Entity Framework Core 5 crash on queries that load related data in a projection without Include.
+                        // This is fixed in Entity Framework Core 6, tracked at https://github.com/dotnet/efcore/issues/21234.
                         builder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
 
 #if DEBUG

@@ -49,7 +49,6 @@ namespace JsonApiDotNetCoreExample
                     {
                         options.Namespace = "api/v1";
                         options.UseRelativeLinks = true;
-                        options.ValidateModelState = true;
                         options.IncludeTotalResourceCount = true;
                         options.SerializerOptions.WriteIndented = true;
                         options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());

@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 namespace JsonApiDotNetCore.Controllers
 {
     /// <summary>
-    /// Implements the foundational ASP.NET Core controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
+    /// Implements the foundational ASP.NET controller layer in the JsonApiDotNetCore architecture for handling atomic:operations requests. See
     /// https://jsonapi.org/ext/atomic/ for details. Delegates work to <see cref="IOperationsProcessor" />.
     /// </summary>
     [PublicAPI]

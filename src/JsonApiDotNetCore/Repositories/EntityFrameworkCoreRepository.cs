@@ -330,8 +330,8 @@ namespace JsonApiDotNetCore.Repositories
 
             foreach (RelationshipAttribute relationship in _resourceGraph.GetResourceType<TResource>().Relationships)
             {
-                // Loads the data of the relationship, if in EF Core it is configured in such a way that loading the related
-                // entities into memory is required for successfully executing the selected deletion behavior.
+                // Loads the data of the relationship, if in Entity Framework Core it is configured in such a way that loading
+                // the related entities into memory is required for successfully executing the selected deletion behavior.
                 if (RequiresLoadOfRelationshipForDeletion(relationship))
                 {
                     NavigationEntry navigation = GetNavigationEntry(resourceTracked, relationship);
@@ -475,7 +475,7 @@ namespace JsonApiDotNetCore.Repositories
             {
                 var leftResourceTracked = (TResource)_dbContext.GetTrackedOrAttach(leftResource);
 
-                // Make EF Core believe any additional resources added from ResourceDefinition already exist in database.
+                // Make Entity Framework Core believe any additional resources added from ResourceDefinition already exist in database.
                 IIdentifiable[] extraResourceIdsToRemove = rightResourceIdsToRemove.Where(rightId => !rightResourceIds.Contains(rightId)).ToArray();
 
                 object? rightValueStored = relationship.GetValue(leftResource);

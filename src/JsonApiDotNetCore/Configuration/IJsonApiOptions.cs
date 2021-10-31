@@ -103,7 +103,7 @@ namespace JsonApiDotNetCore.Configuration
         PageNumber? MaximumPageNumber { get; }
 
         /// <summary>
-        /// Whether or not to enable ASP.NET Core model state validation. False by default.
+        /// Whether or not to enable ASP.NET ModelState validation. True by default.
         /// </summary>
         bool ValidateModelState { get; }
 

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 namespace JsonApiDotNetCore.Serialization.Request
 {
     /// <summary>
-    /// Deserializes the incoming JSON:API request body and converts it to models, which are passed to controller actions by ASP.NET Core on `FromBody`
+    /// Deserializes the incoming JSON:API request body and converts it to models, which are passed to controller actions by ASP.NET on `FromBody`
     /// parameters.
     /// </summary>
     [PublicAPI]

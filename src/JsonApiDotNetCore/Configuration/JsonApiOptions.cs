@@ -66,7 +66,7 @@ namespace JsonApiDotNetCore.Configuration
         public PageNumber? MaximumPageNumber { get; set; }
 
         /// <inheritdoc />
-        public bool ValidateModelState { get; set; }
+        public bool ValidateModelState { get; set; } = true;
 
         /// <inheritdoc />
         public bool AllowClientGeneratedIds { get; set; }

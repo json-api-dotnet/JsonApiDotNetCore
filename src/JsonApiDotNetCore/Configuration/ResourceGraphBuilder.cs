@@ -66,9 +66,9 @@ namespace JsonApiDotNetCore.Configuration
 
         private static bool IsImplicitManyToManyJoinEntity(IEntityType entityType)
         {
-#pragma warning disable EF1001 // Internal EF Core API usage.
+#pragma warning disable EF1001 // Internal Entity Framework Core API usage.
             return entityType is EntityType { IsImplicitlyCreatedJoinEntityType: true };
-#pragma warning restore EF1001 // Internal EF Core API usage.
+#pragma warning restore EF1001 // Internal Entity Framework Core API usage.
         }
 
         /// <summary>
