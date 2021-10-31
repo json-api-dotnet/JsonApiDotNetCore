@@ -2,12 +2,19 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using Bogus.DataSets;
+using FluentAssertions.Extensions;
 using Xunit;
 
 namespace TestBuildingBlocks
 {
     public abstract class FakerContainer
     {
+        static FakerContainer()
+        {
+            Date.SystemClock = () => 1.January(2020);
+        }
+
         protected static int GetFakerSeed()
         {
             // The goal here is to have stable data over multiple test runs, but at the same time different data per test case.
