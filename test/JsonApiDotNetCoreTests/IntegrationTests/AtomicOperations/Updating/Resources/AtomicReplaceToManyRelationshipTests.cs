@@ -391,7 +391,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of 'null'.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of 'null'.");
             error.Detail.Should().BeNull();
             error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data");
@@ -447,7 +447,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Updating.Reso
 
             ErrorObject error = responseDocument.Errors[0];
             error.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-            error.Title.Should().Be("Failed to deserialize request body: Expected an array in 'data' element, instead of an object.");
+            error.Title.Should().Be("Failed to deserialize request body: Expected an array, instead of an object.");
             error.Detail.Should().BeNull();
             error.Source.ShouldNotBeNull();
             error.Source.Pointer.Should().Be("/atomic:operations[0]/data/relationships/performers/data");

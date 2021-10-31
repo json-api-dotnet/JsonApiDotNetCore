@@ -50,7 +50,6 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
                         {
                             if (isManyData)
                             {
-                                // [TODO-NRT]: Add tests for downstream failure on `null` array element.
                                 objects.Add(new T());
                             }
 

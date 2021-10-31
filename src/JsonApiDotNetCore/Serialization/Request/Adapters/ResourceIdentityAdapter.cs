@@ -12,7 +12,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
     /// <summary>
     /// Base class for validating and converting objects that represent an identity.
     /// </summary>
-    public abstract class ResourceIdentityAdapter
+    public abstract class ResourceIdentityAdapter : BaseAdapter
     {
         private readonly IResourceGraph _resourceGraph;
         private readonly IResourceFactory _resourceFactory;

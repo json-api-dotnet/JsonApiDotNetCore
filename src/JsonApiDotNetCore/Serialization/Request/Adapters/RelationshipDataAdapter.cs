@@ -9,7 +9,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.Request.Adapters
 {
     /// <inheritdoc cref="IRelationshipDataAdapter" />
-    public sealed class RelationshipDataAdapter : BaseDataAdapter, IRelationshipDataAdapter
+    public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdapter
     {
         private static readonly CollectionConverter CollectionConverter = new();
 
@@ -85,7 +85,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private IIdentifiable? ConvertToOneRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, ResourceIdentityRequirements requirements,
             RequestAdapterState state)
         {
-            AssertHasSingleValue(data, true, state);
+            AssertDataHasSingleValue(data, true, state);
 
             return data.SingleValue != null ? _resourceIdentifierObjectAdapter.Convert(data.SingleValue, requirements, state) : null;
         }
@@ -93,7 +93,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
         private IEnumerable ConvertToManyRelationshipData(SingleOrManyData<ResourceIdentifierObject> data, RelationshipAttribute relationship,
             ResourceIdentityRequirements requirements, bool useToManyElementType, RequestAdapterState state)
         {
-            AssertHasManyValue(data, state);
+            AssertDataHasManyValue(data, state);
 
             int arrayIndex = 0;
             var rightResources = new List<IIdentifiable>();

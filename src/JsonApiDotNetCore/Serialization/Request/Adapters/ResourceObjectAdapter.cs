@@ -133,15 +133,16 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             foreach ((string relationshipName, RelationshipObject? relationshipObject) in resourceObjectRelationships.EmptyIfNull())
             {
-                // [TODO-NRT]: Add tests for downstream failure on `null` relationship value.
-                ConvertRelationship(relationshipName, relationshipObject?.Data ?? default, resource, resourceType, state);
+                ConvertRelationship(relationshipName, relationshipObject, resource, resourceType, state);
             }
         }
 
-        private void ConvertRelationship(string relationshipName, SingleOrManyData<ResourceIdentifierObject> relationshipData, IIdentifiable resource,
-            ResourceType resourceType, RequestAdapterState state)
+        private void ConvertRelationship(string relationshipName, RelationshipObject? relationshipObject, IIdentifiable resource, ResourceType resourceType,
+            RequestAdapterState state)
         {
             using IDisposable _ = state.Position.PushElement(relationshipName);
+            AssertObjectIsNotNull(relationshipObject, state);
+
             RelationshipAttribute? relationship = resourceType.FindRelationshipByPublicName(relationshipName);
 
             if (relationship == null && _options.AllowUnknownFieldsInRequestBody)
@@ -151,7 +152,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             AssertIsKnownRelationship(relationship, relationshipName, resourceType, state);
 
-            object? rightValue = _relationshipDataAdapter.Convert(relationshipData, relationship, true, state);
+            object? rightValue = _relationshipDataAdapter.Convert(relationshipObject.Data, relationship, true, state);
 
             relationship.SetValue(resource, rightValue);
             state.WritableTargetedFields!.Relationships.Add(relationship);

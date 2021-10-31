@@ -6,7 +6,7 @@ using JsonApiDotNetCore.Serialization.Objects;
 namespace JsonApiDotNetCore.Serialization.Request.Adapters
 {
     /// <inheritdoc cref="IResourceDataAdapter" />
-    public class ResourceDataAdapter : BaseDataAdapter, IResourceDataAdapter
+    public class ResourceDataAdapter : BaseAdapter, IResourceDataAdapter
     {
         private readonly IResourceDefinitionAccessor _resourceDefinitionAccessor;
         private readonly IResourceObjectAdapter _resourceObjectAdapter;
@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             AssertHasData(data, state);
 
             using IDisposable _ = state.Position.PushElement("data");
-            AssertHasSingleValue(data, false, state);
+            AssertDataHasSingleValue(data, false, state);
 
             (IIdentifiable resource, ResourceType _) = ConvertResourceObject(data, requirements, state);
 

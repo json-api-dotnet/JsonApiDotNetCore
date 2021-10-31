@@ -7,8 +7,8 @@ using JsonApiDotNetCore.Serialization.Objects;
 
 namespace JsonApiDotNetCore.Serialization.Request.Adapters
 {
-    /// <inheritdoc />
-    public sealed class DocumentInOperationsRequestAdapter : IDocumentInOperationsRequestAdapter
+    /// <inheritdoc cref="IDocumentInOperationsRequestAdapter" />
+    public sealed class DocumentInOperationsRequestAdapter : BaseAdapter, IDocumentInOperationsRequestAdapter
     {
         private readonly IJsonApiOptions _options;
         private readonly IAtomicOperationObjectAdapter _atomicOperationObjectAdapter;
@@ -59,13 +59,8 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
 
             foreach (AtomicOperationObject? atomicOperationObject in atomicOperationObjects)
             {
-                // [TODO-NRT]: Add tests for downstream failure on `null` object.
-                if (atomicOperationObject == null)
-                {
-                    throw new ModelConversionException(state.Position, null, null);
-                }
-
                 using IDisposable _ = state.Position.PushArrayIndex(operationIndex);
+                AssertObjectIsNotNull(atomicOperationObject, state);
 
                 OperationContainer operation = _atomicOperationObjectAdapter.Convert(atomicOperationObject, state);
                 operations.Add(operation);

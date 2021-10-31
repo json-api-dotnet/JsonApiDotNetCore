@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using SysNotNull = System.Diagnostics.CodeAnalysis.NotNullAttribute;
 
 namespace JsonApiDotNetCore.Serialization.Request
 {
@@ -83,11 +84,7 @@ namespace JsonApiDotNetCore.Serialization.Request
 
                 var document = JsonSerializer.Deserialize<Document>(requestBody, _options.SerializerReadOptions);
 
-                if (document == null)
-                {
-                    // [TODO-NRT]: Add tests for incoming body `null`.
-                    throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, null, null, null);
-                }
+                AssertHasDocument(document, requestBody);
 
                 return document;
             }
@@ -97,6 +94,15 @@ namespace JsonApiDotNetCore.Serialization.Request
                 // This is due to the use of custom converters, which are unable to interact with internal position tracking.
                 // https://github.com/dotnet/runtime/issues/50205#issuecomment-808401245
                 throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, null, exception.Message, null, null, exception);
+            }
+        }
+
+        private void AssertHasDocument([SysNotNull] Document? document, string requestBody)
+        {
+            if (document == null)
+            {
+                throw new InvalidRequestBodyException(_options.IncludeRequestBodyInErrors ? requestBody : null, "Expected an object, instead of 'null'.", null,
+                    null);
             }
         }
 
