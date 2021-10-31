@@ -124,7 +124,7 @@ namespace JsonApiDotNetCore.Queries.Internal.Parsing
 
         private static TokenKind? TryGetSingleCharacterTokenKind(char ch)
         {
-            return SingleCharacterToTokenKinds.ContainsKey(ch) ? SingleCharacterToTokenKinds[ch] : null;
+            return SingleCharacterToTokenKinds.TryGetValue(ch, out TokenKind tokenKind) ? tokenKind : null;
         }
 
         private Token? ProduceTokenFromTextBuffer(bool isQuotedText)

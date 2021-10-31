@@ -75,9 +75,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceType))
             {
-                SparseFieldSetExpression? inputExpression = _lazySourceTable.Value.ContainsKey(resourceType)
-                    ? new SparseFieldSetExpression(_lazySourceTable.Value[resourceType])
-                    : null;
+                SparseFieldSetExpression? inputExpression =
+                    _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? inputFields)
+                        ? new SparseFieldSetExpression(inputFields)
+                        : null;
 
                 SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);
 
@@ -117,9 +118,10 @@ namespace JsonApiDotNetCore.Queries.Internal
 
             if (!_visitedTable.ContainsKey(resourceType))
             {
-                IImmutableSet<ResourceFieldAttribute> inputFields = _lazySourceTable.Value.ContainsKey(resourceType)
-                    ? _lazySourceTable.Value[resourceType]
-                    : GetResourceFields(resourceType);
+                IImmutableSet<ResourceFieldAttribute> inputFields =
+                    _lazySourceTable.Value.TryGetValue(resourceType, out IImmutableSet<ResourceFieldAttribute>? fields)
+                        ? fields
+                        : GetResourceFields(resourceType);
 
                 var inputExpression = new SparseFieldSetExpression(inputFields);
                 SparseFieldSetExpression? outputExpression = _resourceDefinitionAccessor.OnApplySparseFieldSet(resourceType, inputExpression);

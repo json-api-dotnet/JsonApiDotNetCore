@@ -25,7 +25,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.MultiTenancy
                 }
 
                 string? countryCode = (string?)_httpContextAccessor.HttpContext.Request.RouteValues["countryCode"];
-                return countryCode != null && TenantRegistry.ContainsKey(countryCode) ? TenantRegistry[countryCode] : Guid.Empty;
+                return countryCode != null && TenantRegistry.TryGetValue(countryCode, out Guid tenantId) ? tenantId : Guid.Empty;
             }
         }
 

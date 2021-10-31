@@ -72,9 +72,8 @@ namespace JsonApiDotNetCore.Resources
             {
                 foreach (string key in _initiallyStoredAttributeValues.Keys)
                 {
-                    if (_requestAttributeValues.ContainsKey(key))
+                    if (_requestAttributeValues.TryGetValue(key, out string? requestValue))
                     {
-                        string requestValue = _requestAttributeValues[key];
                         string actualValue = _finallyStoredAttributeValues[key];
 
                         if (requestValue != actualValue)

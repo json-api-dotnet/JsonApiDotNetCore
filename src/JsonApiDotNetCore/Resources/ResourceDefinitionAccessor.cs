@@ -82,7 +82,15 @@ namespace JsonApiDotNetCore.Resources
             dynamic resourceDefinition = ResolveResourceDefinition(resourceClrType);
             dynamic handlers = resourceDefinition.OnRegisterQueryableHandlersForQueryStringParameters();
 
-            return handlers != null && handlers!.ContainsKey(parameterName) ? handlers![parameterName] : null;
+            if (handlers != null)
+            {
+                if (handlers.ContainsKey(parameterName))
+                {
+                    return handlers[parameterName];
+                }
+            }
+
+            return null;
         }
 
         /// <inheritdoc />

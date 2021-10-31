@@ -102,9 +102,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.InputValidation.RequestBody
 
         private static bool CanTransitionToStage(WorkflowStage fromStage, WorkflowStage toStage)
         {
-            if (StageTransitionTable.ContainsKey(fromStage))
+            if (StageTransitionTable.TryGetValue(fromStage, out ICollection<WorkflowStage>? possibleNextStages))
             {
-                ICollection<WorkflowStage> possibleNextStages = StageTransitionTable[fromStage];
                 return possibleNextStages.Contains(toStage);
             }
 
