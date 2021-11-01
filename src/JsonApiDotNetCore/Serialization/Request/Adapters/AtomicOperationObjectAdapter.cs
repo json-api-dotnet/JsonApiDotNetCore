@@ -69,7 +69,10 @@ namespace JsonApiDotNetCore.Serialization.Request.Adapters
             {
                 case AtomicOperationCode.Add:
                 {
-                    if (atomicOperationObject.Ref is { Relationship: null })
+                    // ReSharper disable once MergeIntoPattern
+                    // Justification: Merging this into a pattern crashes the command-line versions of CleanupCode/InspectCode.
+                    // Tracked at: https://youtrack.jetbrains.com/issue/RSRP-486717
+                    if (atomicOperationObject.Ref != null && atomicOperationObject.Ref.Relationship == null)
                     {
                         using IDisposable _ = state.Position.PushElement("ref");
                         throw new ModelConversionException(state.Position, "The 'relationship' element is required.", null);
