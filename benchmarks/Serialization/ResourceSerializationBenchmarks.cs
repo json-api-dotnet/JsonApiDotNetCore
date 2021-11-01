@@ -113,7 +113,7 @@ namespace Benchmarks.Serialization
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new()
+            return new JsonApiRequest
             {
                 Kind = EndpointKind.Primary,
                 PrimaryResourceType = resourceGraph.GetResourceType<OutgoingResource>()

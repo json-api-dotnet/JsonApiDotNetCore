@@ -51,7 +51,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         public static ResourceObjectTreeNode CreateRoot()
         {
-            return new(RootResource, RootType, new ResourceObject());
+            return new ResourceObjectTreeNode(RootResource, RootType, new ResourceObject());
         }
 
         public void AttachDirectChild(ResourceObjectTreeNode treeNode)

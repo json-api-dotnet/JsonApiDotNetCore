@@ -29,7 +29,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
 
         protected static JsonException GetEndOfStreamError()
         {
-            return new("Unexpected end of JSON stream.");
+            return new JsonException("Unexpected end of JSON stream.");
         }
     }
 }

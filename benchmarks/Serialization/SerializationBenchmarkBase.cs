@@ -223,7 +223,7 @@ namespace Benchmarks.Serialization
         {
             public TopLevelLinks GetTopLevelLinks()
             {
-                return new()
+                return new TopLevelLinks
                 {
                     Self = "TopLevel:Self"
                 };
@@ -231,7 +231,7 @@ namespace Benchmarks.Serialization
 
             public ResourceLinks GetResourceLinks(ResourceType resourceType, string id)
             {
-                return new()
+                return new ResourceLinks
                 {
                     Self = "Resource:Self"
                 };
@@ -239,7 +239,7 @@ namespace Benchmarks.Serialization
 
             public RelationshipLinks GetRelationshipLinks(RelationshipAttribute relationship, string leftId)
             {
-                return new()
+                return new RelationshipLinks
                 {
                     Self = "Relationship:Self",
                     Related = "Relationship:Related"

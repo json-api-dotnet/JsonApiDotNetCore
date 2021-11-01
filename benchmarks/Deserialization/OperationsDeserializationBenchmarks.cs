@@ -276,7 +276,7 @@ namespace Benchmarks.Deserialization
 
         protected override JsonApiRequest CreateJsonApiRequest(IResourceGraph resourceGraph)
         {
-            return new()
+            return new JsonApiRequest
             {
                 Kind = EndpointKind.AtomicOperations
             };
