@@ -155,7 +155,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         private Expression CreateAssignmentRightHandSideForLayer(QueryLayer layer, LambdaScope outerLambdaScope, MemberExpression propertyAccess,
             PropertyInfo selectorPropertyInfo, LambdaScopeFactory lambdaScopeFactory)
         {
-            Type? collectionElementType = CollectionConverter.TryGetCollectionElementType(selectorPropertyInfo.PropertyType);
+            Type? collectionElementType = CollectionConverter.FindCollectionElementType(selectorPropertyInfo.PropertyType);
             Type bodyElementType = collectionElementType ?? selectorPropertyInfo.PropertyType;
 
             if (collectionElementType != null)

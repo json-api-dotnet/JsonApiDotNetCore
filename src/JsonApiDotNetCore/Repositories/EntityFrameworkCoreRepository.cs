@@ -296,7 +296,7 @@ namespace JsonApiDotNetCore.Repositories
         {
             if (relationship is HasOneAttribute)
             {
-                INavigation? navigation = TryGetNavigation(relationship);
+                INavigation? navigation = GetNavigation(relationship);
                 bool isRelationshipRequired = navigation?.ForeignKey?.IsRequired ?? false;
 
                 bool isClearingRelationship = rightValue == null;
@@ -369,7 +369,7 @@ namespace JsonApiDotNetCore.Repositories
 
         private bool RequiresLoadOfRelationshipForDeletion(RelationshipAttribute relationship)
         {
-            INavigation? navigation = TryGetNavigation(relationship);
+            INavigation? navigation = GetNavigation(relationship);
             bool isClearOfForeignKeyRequired = navigation?.ForeignKey.DeleteBehavior == DeleteBehavior.ClientSetNull;
 
             bool hasForeignKeyAtLeftSide = HasForeignKeyAtLeftSide(relationship, navigation);
@@ -377,7 +377,7 @@ namespace JsonApiDotNetCore.Repositories
             return isClearOfForeignKeyRequired && !hasForeignKeyAtLeftSide;
         }
 
-        private INavigation? TryGetNavigation(RelationshipAttribute relationship)
+        private INavigation? GetNavigation(RelationshipAttribute relationship)
         {
             IEntityType entityType = _dbContext.Model.FindEntityType(typeof(TResource));
             return entityType?.FindNavigation(relationship.Property.Name);

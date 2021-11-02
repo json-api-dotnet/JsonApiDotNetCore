@@ -55,7 +55,7 @@ namespace JsonApiDotNetCore.Middleware
                 }
 
                 RouteValueDictionary routeValues = httpContext.GetRouteData().Values;
-                ResourceType? primaryResourceType = TryCreatePrimaryResourceType(httpContext, controllerResourceMapping);
+                ResourceType? primaryResourceType = CreatePrimaryResourceType(httpContext, controllerResourceMapping);
 
                 if (primaryResourceType != null)
                 {
@@ -121,7 +121,7 @@ namespace JsonApiDotNetCore.Middleware
             return true;
         }
 
-        private static ResourceType? TryCreatePrimaryResourceType(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping)
+        private static ResourceType? CreatePrimaryResourceType(HttpContext httpContext, IControllerResourceMapping controllerResourceMapping)
         {
             Endpoint? endpoint = httpContext.GetEndpoint();
             var controllerActionDescriptor = endpoint?.Metadata.GetMetadata<ControllerActionDescriptor>();

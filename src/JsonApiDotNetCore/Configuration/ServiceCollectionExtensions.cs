@@ -96,7 +96,7 @@ namespace JsonApiDotNetCore.Configuration
         private static void RegisterForConstructedType(IServiceCollection services, Type implementationType, IEnumerable<Type> openGenericInterfaces)
         {
             bool seenCompatibleInterface = false;
-            ResourceDescriptor? resourceDescriptor = TryGetResourceTypeFromServiceImplementation(implementationType);
+            ResourceDescriptor? resourceDescriptor = ResolveResourceTypeFromServiceImplementation(implementationType);
 
             if (resourceDescriptor != null)
             {
@@ -118,14 +118,14 @@ namespace JsonApiDotNetCore.Configuration
             }
         }
 
-        private static ResourceDescriptor? TryGetResourceTypeFromServiceImplementation(Type? serviceType)
+        private static ResourceDescriptor? ResolveResourceTypeFromServiceImplementation(Type? serviceType)
         {
             if (serviceType != null)
             {
                 foreach (Type @interface in serviceType.GetInterfaces())
                 {
                     Type? firstGenericArgument = @interface.IsGenericType ? @interface.GenericTypeArguments.First() : null;
-                    ResourceDescriptor? resourceDescriptor = TypeLocator.TryGetResourceDescriptor(firstGenericArgument);
+                    ResourceDescriptor? resourceDescriptor = TypeLocator.ResolveResourceDescriptor(firstGenericArgument);
 
                     if (resourceDescriptor != null)
                     {

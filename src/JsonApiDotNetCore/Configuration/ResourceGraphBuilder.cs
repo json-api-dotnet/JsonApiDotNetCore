@@ -131,7 +131,7 @@ namespace JsonApiDotNetCore.Configuration
             if (resourceClrType.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
                 string effectivePublicName = publicName ?? FormatResourceName(resourceClrType);
-                Type? effectiveIdType = idClrType ?? _typeLocator.TryGetIdType(resourceClrType);
+                Type? effectiveIdType = idClrType ?? _typeLocator.LookupIdType(resourceClrType);
 
                 if (effectiveIdType == null)
                 {

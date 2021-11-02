@@ -341,7 +341,7 @@ namespace JsonApiDotNetCore.Errors
             {
                 if (ModelType != typeof(string))
                 {
-                    Type? elementType = CollectionConverter.TryGetCollectionElementType(ModelType);
+                    Type? elementType = CollectionConverter.FindCollectionElementType(ModelType);
 
                     if (elementType != null)
                     {

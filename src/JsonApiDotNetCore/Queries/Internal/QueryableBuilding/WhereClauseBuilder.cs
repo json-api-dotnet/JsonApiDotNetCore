@@ -60,7 +60,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression property = Visit(expression.TargetCollection, argument);
 
-            Type? elementType = CollectionConverter.TryGetCollectionElementType(property.Type);
+            Type? elementType = CollectionConverter.FindCollectionElementType(property.Type);
 
             if (elementType == null)
             {

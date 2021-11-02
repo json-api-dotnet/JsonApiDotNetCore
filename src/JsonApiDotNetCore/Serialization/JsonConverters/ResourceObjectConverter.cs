@@ -48,7 +48,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             {
                 // The 'attributes' element may occur before 'type', but we need to know the resource type before we can deserialize attributes
                 // into their corresponding CLR types.
-                Type = TryPeekType(ref reader)
+                Type = PeekType(ref reader)
             };
 
             ResourceType? resourceType = resourceObject.Type != null ? _resourceGraph.FindResourceType(resourceObject.Type) : null;
@@ -129,7 +129,7 @@ namespace JsonApiDotNetCore.Serialization.JsonConverters
             throw GetEndOfStreamError();
         }
 
-        private static string? TryPeekType(ref Utf8JsonReader reader)
+        private static string? PeekType(ref Utf8JsonReader reader)
         {
             // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to?pivots=dotnet-5-0#an-alternative-way-to-do-polymorphic-deserialization
             Utf8JsonReader readerClone = reader;

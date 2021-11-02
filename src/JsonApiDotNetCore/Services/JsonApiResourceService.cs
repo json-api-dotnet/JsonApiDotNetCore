@@ -196,7 +196,7 @@ namespace JsonApiDotNetCore.Services
                 if (!Equals(resourceFromRequest.Id, default(TId)))
                 {
                     TResource? existingResource =
-                        await TryGetPrimaryResourceByIdAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
+                        await GetPrimaryResourceByIdOrDefaultAsync(resourceFromRequest.Id, TopFieldSelection.OnlyIdAttribute, cancellationToken);
 
                     if (existingResource != null)
                     {
@@ -462,13 +462,13 @@ namespace JsonApiDotNetCore.Services
 
         protected async Task<TResource> GetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
         {
-            TResource? primaryResource = await TryGetPrimaryResourceByIdAsync(id, fieldSelection, cancellationToken);
+            TResource? primaryResource = await GetPrimaryResourceByIdOrDefaultAsync(id, fieldSelection, cancellationToken);
             AssertPrimaryResourceExists(primaryResource);
 
             return primaryResource;
         }
 
-        private async Task<TResource?> TryGetPrimaryResourceByIdAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
+        private async Task<TResource?> GetPrimaryResourceByIdOrDefaultAsync(TId id, TopFieldSelection fieldSelection, CancellationToken cancellationToken)
         {
             AssertPrimaryResourceTypeInJsonApiRequestIsNotNull(_request.PrimaryResourceType);
 

@@ -92,7 +92,7 @@ namespace JsonApiDotNetCore
         /// <summary>
         /// Returns the element type if the specified type is a generic collection, for example: IList{string} -> string or IList -> null.
         /// </summary>
-        public Type? TryGetCollectionElementType(Type? type)
+        public Type? FindCollectionElementType(Type? type)
         {
             if (type != null)
             {

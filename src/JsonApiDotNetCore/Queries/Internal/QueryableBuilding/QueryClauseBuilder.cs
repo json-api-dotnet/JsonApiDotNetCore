@@ -25,7 +25,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
         {
             Expression collectionExpression = Visit(expression.TargetCollection, argument);
 
-            Expression? propertyExpression = TryGetCollectionCount(collectionExpression);
+            Expression? propertyExpression = GetCollectionCount(collectionExpression);
 
             if (propertyExpression == null)
             {
@@ -35,7 +35,7 @@ namespace JsonApiDotNetCore.Queries.Internal.QueryableBuilding
             return propertyExpression;
         }
 
-        private static Expression? TryGetCollectionCount(Expression? collectionExpression)
+        private static Expression? GetCollectionCount(Expression? collectionExpression)
         {
             if (collectionExpression != null)
             {

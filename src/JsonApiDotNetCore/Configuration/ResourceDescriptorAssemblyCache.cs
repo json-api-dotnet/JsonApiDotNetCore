@@ -47,7 +47,7 @@ namespace JsonApiDotNetCore.Configuration
         {
             foreach (Type type in assembly.GetTypes())
             {
-                ResourceDescriptor? resourceDescriptor = _typeLocator.TryGetResourceDescriptor(type);
+                ResourceDescriptor? resourceDescriptor = _typeLocator.ResolveResourceDescriptor(type);
 
                 if (resourceDescriptor != null)
                 {

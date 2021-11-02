@@ -14,7 +14,7 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to lookup the ID type of the specified resource type. Returns <c>null</c> if it does not implement <see cref="IIdentifiable{TId}" />.
         /// </summary>
-        public Type? TryGetIdType(Type? resourceClrType)
+        public Type? LookupIdType(Type? resourceClrType)
         {
             Type? identifiableInterface = resourceClrType?.GetInterfaces().FirstOrDefault(@interface =>
                 @interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IIdentifiable<>));
@@ -25,11 +25,11 @@ namespace JsonApiDotNetCore.Configuration
         /// <summary>
         /// Attempts to get a descriptor for the specified resource type.
         /// </summary>
-        public ResourceDescriptor? TryGetResourceDescriptor(Type? type)
+        public ResourceDescriptor? ResolveResourceDescriptor(Type? type)
         {
             if (type != null && type.IsOrImplementsInterface(typeof(IIdentifiable)))
             {
-                Type? idType = TryGetIdType(type);
+                Type? idType = LookupIdType(type);
 
                 if (idType != null)
                 {

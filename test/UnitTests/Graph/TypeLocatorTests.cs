@@ -62,7 +62,7 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            Type? idType = typeLocator.TryGetIdType(type);
+            Type? idType = typeLocator.LookupIdType(type);
 
             // Assert
             idType.Should().Be(typeof(int));
@@ -77,14 +77,14 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            Type? idType = typeLocator.TryGetIdType(type);
+            Type? idType = typeLocator.LookupIdType(type);
 
             // Assert
             idType.Should().BeNull();
         }
 
         [Fact]
-        public void TryGetResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
+        public void ResolveResourceDescriptor_Returns_Type_If_Type_Is_IIdentifiable()
         {
             // Arrange
             Type resourceClrType = typeof(Model);
@@ -92,7 +92,7 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor? descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
+            ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
             // Assert
             descriptor.ShouldNotBeNull();
@@ -101,7 +101,7 @@ namespace UnitTests.Graph
         }
 
         [Fact]
-        public void TryGetResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
+        public void ResolveResourceDescriptor_Returns_False_If_Type_Is_IIdentifiable()
         {
             // Arrange
             Type resourceClrType = typeof(string);
@@ -109,7 +109,7 @@ namespace UnitTests.Graph
             var typeLocator = new TypeLocator();
 
             // Act
-            ResourceDescriptor? descriptor = typeLocator.TryGetResourceDescriptor(resourceClrType);
+            ResourceDescriptor? descriptor = typeLocator.ResolveResourceDescriptor(resourceClrType);
 
             // Assert
             descriptor.Should().BeNull();
