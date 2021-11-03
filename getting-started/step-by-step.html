@@ -116,9 +116,9 @@ The easiest way to do this is to inherit from <code>Identifiable&lt;TId&gt;</cod
 where <code>TResource</code> is the model that inherits from <code>Identifiable&lt;TId&gt;</code>.</p>
 <pre><code class="lang-c#">public class PeopleController : JsonApiController&lt;Person, int&gt;
 {
-    public PeopleController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Person, int&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public PeopleController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;Person, int&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }

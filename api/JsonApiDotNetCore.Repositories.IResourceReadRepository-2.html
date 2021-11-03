@@ -174,7 +174,7 @@ public interface IResourceReadRepository&lt;TResource, in TId&gt;
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync(QueryLayer layer, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync(QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -188,7 +188,7 @@ public interface IResourceReadRepository&lt;TResource, in TId&gt;
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
-        <td><span class="parametername">layer</span></td>
+        <td><span class="parametername">queryLayer</span></td>
         <td></td>
       </tr>
       <tr>

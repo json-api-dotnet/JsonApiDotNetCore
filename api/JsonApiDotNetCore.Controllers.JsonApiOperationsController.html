@@ -88,7 +88,7 @@ attributes for routing templates. If you want to provide routing templates yours
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Resources_OperationContainer__">BaseJsonApiOperationsController.ValidateModelState(IEnumerable&lt;OperationContainer&gt;)</a>
+      <a class="xref" href="JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html#JsonApiDotNetCore_Controllers_BaseJsonApiOperationsController_ValidateModelState_System_Collections_Generic_IList_JsonApiDotNetCore_Resources_OperationContainer__">BaseJsonApiOperationsController.ValidateModelState(IList&lt;OperationContainer&gt;)</a>
     </div>
     <div>
       <a class="xref" href="JsonApiDotNetCore.Controllers.CoreJsonApiController.html#JsonApiDotNetCore_Controllers_CoreJsonApiController_Error_JsonApiDotNetCore_Serialization_Objects_ErrorObject_">CoreJsonApiController.Error(ErrorObject)</a>
@@ -641,18 +641,18 @@ attributes for routing templates. If you want to provide routing templates yours
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiOperationsController.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.AtomicOperations.IOperationsProcessor%2CJsonApiDotNetCore.Middleware.IJsonApiRequest%2CJsonApiDotNetCore.Resources.ITargetedFields)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Controllers.JsonApiOperationsController.%23ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CMicrosoft.Extensions.Logging.ILoggerFactory%2CJsonApiDotNetCore.AtomicOperations.IOperationsProcessor%2CJsonApiDotNetCore.Middleware.IJsonApiRequest%2CJsonApiDotNetCore.Resources.ITargetedFields)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Controllers/JsonApiOperationsController.cs/#L19">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)">JsonApiOperationsController(IJsonApiOptions, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)</h4>
+  <h4 id="JsonApiDotNetCore_Controllers_JsonApiOperationsController__ctor_JsonApiDotNetCore_Configuration_IJsonApiOptions_JsonApiDotNetCore_Configuration_IResourceGraph_Microsoft_Extensions_Logging_ILoggerFactory_JsonApiDotNetCore_AtomicOperations_IOperationsProcessor_JsonApiDotNetCore_Middleware_IJsonApiRequest_JsonApiDotNetCore_Resources_ITargetedFields_" data-uid="JsonApiDotNetCore.Controllers.JsonApiOperationsController.#ctor(JsonApiDotNetCore.Configuration.IJsonApiOptions,JsonApiDotNetCore.Configuration.IResourceGraph,Microsoft.Extensions.Logging.ILoggerFactory,JsonApiDotNetCore.AtomicOperations.IOperationsProcessor,JsonApiDotNetCore.Middleware.IJsonApiRequest,JsonApiDotNetCore.Resources.ITargetedFields)">JsonApiOperationsController(IJsonApiOptions, IResourceGraph, ILoggerFactory, IOperationsProcessor, IJsonApiRequest, ITargetedFields)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected JsonApiOperationsController(IJsonApiOptions options, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)</code></pre>
+    <pre><code class="lang-csharp hljs">protected JsonApiOperationsController(IJsonApiOptions options, IResourceGraph resourceGraph, ILoggerFactory loggerFactory, IOperationsProcessor processor, IJsonApiRequest request, ITargetedFields targetedFields)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -667,6 +667,11 @@ attributes for routing templates. If you want to provide routing templates yours
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Configuration.IJsonApiOptions.html">IJsonApiOptions</a></td>
         <td><span class="parametername">options</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">resourceGraph</span></td>
         <td></td>
       </tr>
       <tr>

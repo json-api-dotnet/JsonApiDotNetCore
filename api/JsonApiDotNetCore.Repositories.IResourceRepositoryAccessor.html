@@ -392,7 +392,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;IIdentifiable&gt;&gt; GetAsync(ResourceType resourceType, QueryLayer layer, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;IIdentifiable&gt;&gt; GetAsync(ResourceType resourceType, QueryLayer queryLayer, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -411,7 +411,7 @@
       </tr>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
-        <td><span class="parametername">layer</span></td>
+        <td><span class="parametername">queryLayer</span></td>
         <td></td>
       </tr>
       <tr>
@@ -450,7 +450,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync&lt;TResource&gt;(QueryLayer layer, CancellationToken cancellationToken)
+    <pre><code class="lang-csharp hljs">Task&lt;IReadOnlyCollection&lt;TResource&gt;&gt; GetAsync&lt;TResource&gt;(QueryLayer queryLayer, CancellationToken cancellationToken)
     where TResource : class, IIdentifiable</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -465,7 +465,7 @@
     <tbody>
       <tr>
         <td><a class="xref" href="JsonApiDotNetCore.Queries.QueryLayer.html">QueryLayer</a></td>
-        <td><span class="parametername">layer</span></td>
+        <td><span class="parametername">queryLayer</span></td>
         <td></td>
       </tr>
       <tr>

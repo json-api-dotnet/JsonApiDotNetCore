@@ -72,9 +72,9 @@
 <p>You need to create controllers that inherit from <code>JsonApiController&lt;TResource, TId&gt;</code></p>
 <pre><code class="lang-c#">public class ArticlesController : JsonApiController&lt;Article, Guid&gt;
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article, Guid&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;Article, Guid&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -84,9 +84,9 @@
 <p>This approach is ok, but introduces some boilerplate that can easily be avoided.</p>
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article, int&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;Article, int&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 
@@ -116,9 +116,9 @@ An attempt to use one of the blacklisted methods will result in a HTTP 405 Metho
 <pre><code class="lang-c#">[HttpReadOnly]
 public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;Article, int&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;Article, int&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -128,9 +128,9 @@ public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 <p>For more information about resource service injection, see <a href="layer-overview.html#replacing-injected-services">Replacing injected services</a> and <a href="services.html">Resource Services</a>.</p>
 <pre><code class="lang-c#">public class ReportsController : BaseJsonApiController&lt;Report, int&gt;
 {
-    public ReportsController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IGetAllService&lt;Report, int&gt; getAllService)
-        : base(options, loggerFactory, getAllService)
+    public ReportsController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IGetAllService&lt;Report, int&gt; getAllService)
+        : base(options, resourceGraph, loggerFactory, getAllService)
     {
     }
 

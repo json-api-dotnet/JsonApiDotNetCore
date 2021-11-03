@@ -71,7 +71,7 @@
 
 <p><em>since v4.0</em></p>
 <p>The query pipeline roughly looks like this:</p>
-<pre><code>HTTP --[ASP.NET Core]--&gt; QueryString --[JADNC:QueryStringParameterReader]--&gt; QueryExpression[] --[JADNC:ResourceService]--&gt; QueryLayer --[JADNC:Repository]--&gt; IQueryable --[EF Core]--&gt; SQL
+<pre><code>HTTP --[ASP.NET]--&gt; QueryString --[JADNC:QueryStringParameterReader]--&gt; QueryExpression[] --[JADNC:ResourceService]--&gt; QueryLayer --[JADNC:Repository]--&gt; IQueryable --[Entity Framework Core]--&gt; SQL
 </code></pre><p>Processing a request involves the following steps:</p>
 <ul>
 <li><code>JsonApiMiddleware</code> collects resource info from routing data for the current request.</li>
@@ -91,7 +91,7 @@
 </li>
 <li><code>EntityFrameworkCoreRepository</code> delegates to <code>QueryableBuilder</code> to transform the <code>QueryLayer</code> tree into <code>IQueryable</code> expression trees.
   <code>QueryBuilder</code> depends on <code>QueryClauseBuilder</code> implementations that visit the tree nodes, transforming them to <code>System.Linq.Expression</code> equivalents.
-  The <code>IQueryable</code> expression trees are executed by EF Core, which produces SQL statements out of them.</li>
+  The <code>IQueryable</code> expression trees are executed by Entity Framework Core, which produces SQL statements out of them.</li>
 <li><code>JsonApiWriter</code> transforms resource objects into json response.</li>
 </ul>
 <h1 id="example">Example</h1>

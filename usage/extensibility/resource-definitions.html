@@ -241,7 +241,7 @@ Content-Type: application/vnd.api+json
 <p><em>since v3</em></p>
 <p>You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.</p>
-<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of EF Core operators. 
+<p>Note this directly influences the Entity Framework Core <code>IQueryable</code>. As opposed to using <code>OnApplyFilter</code>, this enables the full range of Entity Framework Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).</p>
 <pre><code class="lang-c#">public class ItemDefinition : JsonApiResourceDefinition&lt;Item, int&gt;
 {

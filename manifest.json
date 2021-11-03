@@ -357,7 +357,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.IInverseNavigationResolver.html",
-          "hash": "YE6erm8ktXAfPgNVoScSCT3d1KLnoCxnc3Tv9crVN1w="
+          "hash": "0Qx/u2dmADQOj4i7g8sgDtwEjvxtYuLVSS2lDE84+v4="
         }
       },
       "is_incremental": false,
@@ -369,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.IJsonApiOptions.html",
-          "hash": "lCEgPqkHsvNig7l6kgblbBV4YA2K13TRh3r8FnT9mNk="
+          "hash": "ux+qli/+eSYAFJEMM+96oIqs1YIL1efZKI1IW9/KMtg="
         }
       },
       "is_incremental": false,
@@ -381,7 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.IResourceGraph.html",
-          "hash": "eTgjxJXxt7YEdZ7U6AkscBRrzcgIakSqLoOYvxBfA3Y="
+          "hash": "SmXzPbeyvaNQtzza1qXKzSsRSXn+jJlOeU2kgVZ+p98="
         }
       },
       "is_incremental": false,
@@ -393,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.InverseNavigationResolver.html",
-          "hash": "tBn4/gz6/JyWT5V0nhN7ckWDvXG/HGzYQH1Ys/R/tXg="
+          "hash": "DBAp6BXYHayN+I//lubpnXFJslANXErwcGFJi+U9s7o="
         }
       },
       "is_incremental": false,
@@ -405,7 +405,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.JsonApiOptions.html",
-          "hash": "bImNgYoQjgjPHeyTNUH0OODl8eERv2ktn1+Qi6EcLCI="
+          "hash": "0MX+vZMg9XXx1roL4yOyWJDYevlbEz/f3SXdVlVj7kc="
         }
       },
       "is_incremental": false,
@@ -441,7 +441,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.ResourceGraph.html",
-          "hash": "jFo0SHNQbQPntV2uFrluXTSHZrk4y/nPZgdXQMZaFeA="
+          "hash": "27QJOdd8FxufnKwg07HuG/AmWr8b/XKfURHE+hClblY="
         }
       },
       "is_incremental": false,
@@ -465,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.ResourceType.html",
-          "hash": "BA+JUr4pyUcFoEjXvC9PIb4HAp46PTSgUlfqjBYunWU="
+          "hash": "TErrBpxIprEj9z2CAQRFTvN16ZX3of2GT/gcQz6GbSg="
         }
       },
       "is_incremental": false,
@@ -501,7 +501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Configuration.html",
-          "hash": "1Neq8kN3MOS72850UZQmN9kD8/CjmoUNW+PtXY9uqE8="
+          "hash": "aYQ7dXkxzoKnAoYdvBqbXU8oQBCRz9eb+cSTF6bdOdI="
         }
       },
       "is_incremental": false,
@@ -513,7 +513,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.DisableQueryStringAttribute.html",
-          "hash": "JWUdltCVZvozgUCl3/p4Bid6RdTyTU9PInV7q20yJTs="
+          "hash": "ZWALZmZCajJL9Hn0TfL4VBHVlw87bq4nXsAPOn+1J1M="
         }
       },
       "is_incremental": false,
@@ -525,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.DisableRoutingConventionAttribute.html",
-          "hash": "2KqFzBPMgOCyxjLV8KS8OtyEcyGcjJ43EQsJXq5/ivE="
+          "hash": "hzNocN1F5Wqp++e187Tqjo5FTi/9BPfkgOtZsiDpLdI="
         }
       },
       "is_incremental": false,
@@ -537,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.HttpReadOnlyAttribute.html",
-          "hash": "yZeseB21U9m4HuPJ229fwhwVOq+29QO39vAvIH5Pzvk="
+          "hash": "3bpeQwCfbnogL/WjaXTK7IDnHys72TW7h3B0KJMemQo="
         }
       },
       "is_incremental": false,
@@ -561,7 +561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.NoHttpDeleteAttribute.html",
-          "hash": "BLg6A+0awPqCsjTJLmAglF6g7m5PfGJTD7Afi0O8X7E="
+          "hash": "vz8PU8uWzE8HoPy+7Wm4y/sUCWNsNnSM9obLJezZoR8="
         }
       },
       "is_incremental": false,
@@ -573,7 +573,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPatchAttribute.html",
-          "hash": "67iS3tRtXJ3QoJIjUTrzlFcO37oTWzX8ch7wcOqKupY="
+          "hash": "XwaB3SaEgai44NF30GaQZ12CpLGY1TtrVsGl0tLin7s="
         }
       },
       "is_incremental": false,
@@ -585,7 +585,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.NoHttpPostAttribute.html",
-          "hash": "rEoIsem4VdPL2hjxKSTCs5TEVChzNZ9izjiTJw1JtCc="
+          "hash": "aQPouI3Bah0Q24+sUdPwIFRjCvwmrqZgXdP76tH/c0E="
         }
       },
       "is_incremental": false,
@@ -597,7 +597,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.Annotations.html",
-          "hash": "iRMpYbKb6ZcedTjxeo2ksT+Eqp4Q5IkIA9C3f8ewluE="
+          "hash": "s+1avVo1418vZHQFttfYbx3Xo3/EJypvpLwXv3dXPsM="
         }
       },
       "is_incremental": false,
@@ -609,7 +609,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiController-2.html",
-          "hash": "qg+hWREG8nz7uFwhKBbptjymIKWZFhDM+id3G6pXcpI="
+          "hash": "e1ZWd2Td+/15hPPyWik9mEzrieXUSbeLr+7Iw/bMsNw="
         }
       },
       "is_incremental": false,
@@ -621,7 +621,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.BaseJsonApiOperationsController.html",
-          "hash": "lnNu3ilXD7zSQj2tH60bQpNwd8bFJoYRkjS8oeFQ38U="
+          "hash": "l1fXt8herJvGX8KBsPS+G9nBKu1REuZErN1jkYClu+M="
         }
       },
       "is_incremental": false,
@@ -645,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiCommandController-2.html",
-          "hash": "F5bq1xGAV8bCRjKTIC0TKYioJuJQD+wBBblA84T+om0="
+          "hash": "WYhLg5WSkwneOrIqvsK2H81jRTAaso9cPYZ5o6UFNJQ="
         }
       },
       "is_incremental": false,
@@ -657,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiController-2.html",
-          "hash": "CD/uaJNgGwi4odGx/u6kub0K3XVCjuPgr2qsuyNbH7M="
+          "hash": "H7JLeaRnoQgwmI4KGnxgBbhhe51npqAX60r6BLErUUs="
         }
       },
       "is_incremental": false,
@@ -669,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiOperationsController.html",
-          "hash": "fUNkKD/bUYX/eZn/CS5a8RaL9iggLRiqghB3ya/VCT8="
+          "hash": "gYvBpVPPa8Ij1TvriesXCrSAQAlAAi8eNpHONNkAFTs="
         }
       },
       "is_incremental": false,
@@ -681,19 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.JsonApiQueryController-2.html",
-          "hash": "QPA2HhN9aJmWB5AWDJE+Ide/GGjdgXwIiVuqoebG354="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Controllers.ModelStateViolation.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Controllers.ModelStateViolation.html",
-          "hash": "U2UCfDAOpP0wO3Ph7TgEFtJC7oNLjFEcuV0uY8x8++c="
+          "hash": "rQlt5nvdCcI50WjVV2x7STvSF+LkJV/Mvf4MWqx/6Q4="
         }
       },
       "is_incremental": false,
@@ -705,7 +693,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Controllers.html",
-          "hash": "+GPrPmOhBiaLDgm5DUGKaQVn3iXae5j50hnsEZ51QNo="
+          "hash": "nND5ZIwJYEusOHr5iDm0TwaJF73p3J0Di24V//bSbZk="
         }
       },
       "is_incremental": false,
@@ -849,7 +837,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidModelStateException.html",
-          "hash": "KWdAq7RYzlIXumcE1jhC6sbl8ymPkRIMAa7pvVJzFys="
+          "hash": "aAWdN+EUw9o2KbX5CoDwHRAXLPwSRs9yMo6wKGoE/jY="
         }
       },
       "is_incremental": false,
@@ -861,7 +849,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidQueryException.html",
-          "hash": "EIAS/ZpWUyNTv1kFXaA6jIC1JwDGc6Fp125y5zVZ28Q="
+          "hash": "+KU4F409ew+QCs9Fwbi5NsrJawMyFFCdTQuF+KDQ62c="
         }
       },
       "is_incremental": false,
@@ -873,7 +861,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.InvalidQueryStringParameterException.html",
-          "hash": "3nqhWCc42TqyAqp+wgkvlN6TwnA51DR3iTzg/4IEkWM="
+          "hash": "KDMn8yMJAWk87++m3hoFmuW3TjEHmnUgwhdlQ04stO8="
         }
       },
       "is_incremental": false,
@@ -897,7 +885,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.JsonApiException.html",
-          "hash": "/bKLHO/TuMm1CfqcOwCXiONFPVUKxcRFVR7/8KzIm9M="
+          "hash": "uQWFIlY1HG3vpKlZ7jzkE37HeEBcI3Tay6hzz9kJb5U="
         }
       },
       "is_incremental": false,
@@ -1041,7 +1029,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Errors.html",
-          "hash": "y0rsjQpSSZrEQkurxnYLpRcbh7ULDw8QBOLSLeTVGRo="
+          "hash": "Wwa94WKsopLIrxj4kzBqH7NirbdOdN6DleYR1idy6Xw="
         }
       },
       "is_incremental": false,
@@ -1173,7 +1161,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IControllerResourceMapping.html",
-          "hash": "s2jpQNJQWy0t9Tc3bx2PeIemUL5SlB53Cmf2bkCQYm8="
+          "hash": "ipkKfsdvf5jARzKHiJ3r1YEhVIK8HhBTkvo7Q+cIogY="
         }
       },
       "is_incremental": false,
@@ -1221,7 +1209,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiRequest.html",
-          "hash": "XO94QnBk/GPB0aTOws8w5bdfycA3s/sMi6QgrplKqNU="
+          "hash": "9XocqEW/vDR3VjVjbS85LQesjNoALlLCwsZoXF2QiY8="
         }
       },
       "is_incremental": false,
@@ -1233,7 +1221,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.IJsonApiRoutingConvention.html",
-          "hash": "qx/CV/i7MrghnvbyB81V8y14ochZSS5qtK9uNdVgzb8="
+          "hash": "A6KrZ8/kQcvT9cnGZbzF/60iicHwyDxTdJKja/T1oZs="
         }
       },
       "is_incremental": false,
@@ -1281,7 +1269,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiRequest.html",
-          "hash": "PWsLOftNRao+AgIvy+r0TG239uVP80y9XNV0f9K4Vac="
+          "hash": "QyLjOvszRE7zztN+slI+r9+GCCS58800oMf/j0fAr7Y="
         }
       },
       "is_incremental": false,
@@ -1293,7 +1281,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Middleware.JsonApiRoutingConvention.html",
-          "hash": "ajC9Qonw8/YV03uVr/9lnSNRQpXdqjzFd3Yc4CPBitQ="
+          "hash": "bqDkSxVz7BauDcq5a63KUfcU0Y7ZtcSwzTqWjgcH4/0="
         }
       },
       "is_incremental": false,
@@ -1521,7 +1509,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.NullConstantExpression.html",
-          "hash": "mZYQgWbPzisacdMEW2aoG8oO53oqraNW9H/SJpGU3iw="
+          "hash": "EOd/kUSL0GtN/yPX5JnoitUkSRW0ohMByUDdEwCSlD4="
         }
       },
       "is_incremental": false,
@@ -1581,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.QueryExpressionRewriter-1.html",
-          "hash": "sPFnOn6ax327fTqngC3wH2RztyYJmVEFSNk8jRbi0xM="
+          "hash": "nhU6fMC4RMzIGHDPHD6At9cWVX/ziwwQ38zNiB5viXk="
         }
       },
       "is_incremental": false,
@@ -1641,7 +1629,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Expressions.SortElementExpression.html",
-          "hash": "i9qkjPjN6Hob4jPa+ZDwKI/nwhS3pHtKMXMilEgg99w="
+          "hash": "2S1fi87IFdIEmDpzO/HkG0SjyK7omqfxaOU6CkPoMms="
         }
       },
       "is_incremental": false,
@@ -1845,7 +1833,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Internal.Parsing.QueryExpressionParser.html",
-          "hash": "EilR6O3jnRFFJhW/WPp9uwclGUIePLUtDjFpu311LJ8="
+          "hash": "9EktVN1aCnOPm0qkSX4rf/apcfk6kH7R47j9g44dtg4="
         }
       },
       "is_incremental": false,
@@ -1965,7 +1953,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryLayerComposer.html",
-          "hash": "fUfdL3x/chal77f8/NCLzskcNudS4Pnr9GCcTOrh2os="
+          "hash": "k4RolTXt3iVhgdTx9mYxTXyFApvSpG9oz6c5g/kkBdc="
         }
       },
       "is_incremental": false,
@@ -2049,7 +2037,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.QueryClauseBuilder-1.html",
-          "hash": "eduLTGhcmzGdSseabRWkyf6ISmkbmMxnDaUDaJRgaOM="
+          "hash": "JcltWKdUijG1SkqcFGDCQPdOJiyI0/cMsPj8ZPceH8g="
         }
       },
       "is_incremental": false,
@@ -2097,7 +2085,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Internal.QueryableBuilding.WhereClauseBuilder.html",
-          "hash": "94TPARPgmkgnrwnbKRZEt2BGDtpfTS/et86/tx2pRsg="
+          "hash": "gEip7Atvq1eJHzCAfjhLU/eg9f09QEcR7pjZX/xyZTQ="
         }
       },
       "is_incremental": false,
@@ -2121,7 +2109,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Queries.Internal.SparseFieldSetCache.html",
-          "hash": "aO1dp2vF248YZge9KINQL2xNr6dIc6YDp+KrecqmDuI="
+          "hash": "bidsmUWzFYgicFk3jaDsk+x05+Jl5jIH9y48guOSn7I="
         }
       },
       "is_incremental": false,
@@ -2337,7 +2325,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.QueryStrings.Internal.QueryStringParameterReader.html",
-          "hash": "olXocjeW6cPHHhjvoBMcLo6GEn9+GOOA5qClnYUlHW0="
+          "hash": "Lxz75nr7jX2Y+QV3SFcUCwbxC4sDqb0rsDJ2mq9Sp1E="
         }
       },
       "is_incremental": false,
@@ -2433,7 +2421,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Repositories.DataStoreUpdateException.html",
-          "hash": "GD613Mx8WSXzf4uvrxuMco80Jdp0ewZz3uHnGKBtBsA="
+          "hash": "0UHh/QoKcBCPp0LySnL8/DQlvPy9najSB47vclZQe58="
         }
       },
       "is_incremental": false,
@@ -2469,7 +2457,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Repositories.EntityFrameworkCoreRepository-2.html",
-          "hash": "hbeJdxnHHPCdHWxkYjF9R+ALmFHD9KsqDkI90fHn9G0="
+          "hash": "58DdnU3iVw91Nh654vjCc4k2VlJZEz2HJ08LlrpbTYI="
         }
       },
       "is_incremental": false,
@@ -2505,7 +2493,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Repositories.IResourceReadRepository-2.html",
-          "hash": "03kqW7Z4xOo4IRxZxEfNCpZOczJvL6Gj5bs5BMhTRtA="
+          "hash": "0R2hI9qTlPc4kknx+vrRhQnLsUbwgSM993VCBuGTM84="
         }
       },
       "is_incremental": false,
@@ -2529,7 +2517,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Repositories.IResourceRepositoryAccessor.html",
-          "hash": "E8sb19GtnuDUhNEvcBor+UYTknCflFQaTqeqbqJnSCs="
+          "hash": "b2p1cPBVWPB63/T3oksLSp2i6cZBQKQ5cPCaAPO1ttQ="
         }
       },
       "is_incremental": false,
@@ -2553,7 +2541,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Repositories.ResourceRepositoryAccessor.html",
-          "hash": "7oGYinn/w5ElcJ+vb6UidVyzIdX2m+e1xJOBe9q59AY="
+          "hash": "y6MoHAtQuWfcQbWEunB+2YRR8vJRIsY2s7r+sZIQlAQ="
         }
       },
       "is_incremental": false,
@@ -2577,7 +2565,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.AttrAttribute.html",
-          "hash": "Z6nu9FROLhKM5qpk5+Md0YlVbRUFuOk/R/bbF3fg/KU="
+          "hash": "kr9dhoQjUnByIEBV6FMK0qdoqqWnloEJSsxeKCZ4tLE="
         }
       },
       "is_incremental": false,
@@ -2601,7 +2589,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.EagerLoadAttribute.html",
-          "hash": "+cH9fFzTadtVED7DSUm/ytnQStwsgi4oBqPMzwtRbC8="
+          "hash": "5tB6sH8xmbek0P79v+ktIltQPPGE9z4AcUy+8pVYbzw="
         }
       },
       "is_incremental": false,
@@ -2613,7 +2601,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.HasManyAttribute.html",
-          "hash": "y4uZH27UKbbL2teT532lQzzeXEyCK32BQ6pVKX6hl8s="
+          "hash": "9ifIyAExjAAul9S21G1fUEVQDw9tBNp1sg9iyryPuOw="
         }
       },
       "is_incremental": false,
@@ -2625,7 +2613,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.HasOneAttribute.html",
-          "hash": "qzPeG5SPTitagoqEmvGzz9xBRWNCnplY9a0c8X1IeFI="
+          "hash": "fJjpyuIA0QiDbLFcwlwFckVG8AMdDQJVGNNKhXpzURA="
         }
       },
       "is_incremental": false,
@@ -2649,7 +2637,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.RelationshipAttribute.html",
-          "hash": "b+cH3FaYiGbBKpbJoGc9WFjoDDHYv4ysR5mbnL8hbYI="
+          "hash": "PgoOJR2D2BdE5WWRE4MKq/HnXo1gOkyyowXQ6fewfhc="
         }
       },
       "is_incremental": false,
@@ -2673,7 +2661,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.Annotations.ResourceFieldAttribute.html",
-          "hash": "4kkANP757ttaEDgBhhdxgnjD7HG9b5+FBy+JYoNIWrI="
+          "hash": "pjbH4cXkPDlNF1zqAtr2Uz4eAzgwABeabsFMvZo+IzM="
         }
       },
       "is_incremental": false,
@@ -2805,7 +2793,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.IdentifiableComparer.html",
-          "hash": "IPzXIG7g6m0nJnNKU9t9uUJ/nNl1LFynydXnHo5dwp4="
+          "hash": "3nxWOXuuZN0yb9eAMG275lcEGal72OB3EmpMKaXreg0="
         }
       },
       "is_incremental": false,
@@ -2901,7 +2889,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Resources.ResourceDefinitionAccessor.html",
-          "hash": "+i3IdsInRINvaDiwNxNeCqUyNX/SToPZ3U5S8pKulFM="
+          "hash": "DZRgk9KNqqwY/9JVu9x8KlJ7Wj1ODlfjz8IIL4RwPZ4="
         }
       },
       "is_incremental": false,
@@ -3189,7 +3177,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Objects.SingleOrManyData-1.html",
-          "hash": "aqziIE7UkYJZPZaBYefGlpvHTgv+X0QhVv7q5YaC66c="
+          "hash": "AME8FDtLrQ6cssD7d+E4TLD9ZnP4eNjBQhYpkhuKq+Q="
         }
       },
       "is_incremental": false,
@@ -3237,7 +3225,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.AtomicReferenceAdapter.html",
-          "hash": "um4vJsYzwQGTQ8rxk9D2GQcXX7jIKEpN7lCoZ4kIA2Y="
+          "hash": "65XFHrk7/aQwP06hwJ1UFtEPejav9N0ADhrTsCTMpZE="
         }
       },
       "is_incremental": false,
@@ -3257,11 +3245,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.yml",
+      "source_relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.yml",
       "output": {
         ".html": {
-          "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.html",
-          "hash": "lzcZtvfp6x8T88IXhMrvTBVmdxqai8sA6GHHJx5VU/o="
+          "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html",
+          "hash": "D2lMY26EzjT3s80kcG1V9fg1NjttF1Pfd6njLQIqyrM="
         }
       },
       "is_incremental": false,
@@ -3285,7 +3273,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.DocumentInOperationsRequestAdapter.html",
-          "hash": "jSAkCF6QqEPHkzNjseWXb5b+aTnwPaW1zFzS8E29zMo="
+          "hash": "L0Ummz3+8pITJA4PJrGg3HalXnv7KTf1dItsXuftpmc="
         }
       },
       "is_incremental": false,
@@ -3393,7 +3381,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.IResourceDataInOperationsRequestAdapter.html",
-          "hash": "tX8nN40XeiiIaUYOO9IPd7rhJ6UzFc17slB1svljDPQ="
+          "hash": "Ln+RJ0ugsT8x5AXn6Je9NHJgCrPyU6t2/l+6A73o4ew="
         }
       },
       "is_incremental": false,
@@ -3441,7 +3429,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.RelationshipDataAdapter.html",
-          "hash": "alkTThrM1AjUzkywLtDruAKmzYTyAaBOnnnMBQRHFBI="
+          "hash": "tXAD6m3BSDGFA+v0gcTcsOhrOhbbe2JOwAjv5iyKu6s="
         }
       },
       "is_incremental": false,
@@ -3477,7 +3465,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceDataAdapter.html",
-          "hash": "Ojp/HEYC8jPDnwtxPxRZAeyS6FdpleA3viJnVMYW/oo="
+          "hash": "qVOiJGgOhUNSIYmGEgtgt03mJ6GOCxjlXzzPVU1Cve0="
         }
       },
       "is_incremental": false,
@@ -3489,7 +3477,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceDataInOperationsRequestAdapter.html",
-          "hash": "MmSyk+Kzmme3Eua1LxmMZhScSqyUOJmF6uKROUgaqHA="
+          "hash": "vUJn4c8rU9mW2hJZX2S40hRSd91+aYhpcXzKHCHvGCU="
         }
       },
       "is_incremental": false,
@@ -3501,7 +3489,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentifierObjectAdapter.html",
-          "hash": "lOT2ofTqyKSwZ3mPbhMMINMhciGtL7szSUDPsM3opMs="
+          "hash": "PQj73K7FKjx3pQ7INBnqt9DmrbJtbn/N7hPoUxQj7PQ="
         }
       },
       "is_incremental": false,
@@ -3513,7 +3501,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceIdentityAdapter.html",
-          "hash": "qjHY4LmRAmQ+UllMefpbcMOHFD3AdtIi0jGTBiDL5Pg="
+          "hash": "lWoC1PRLNt6WFOhx/a9wb/8W5ZHzjumzBRIa4henS+I="
         }
       },
       "is_incremental": false,
@@ -3537,7 +3525,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.ResourceObjectAdapter.html",
-          "hash": "xDHDrwpXCwxC2z7g4IYv+oHC8YzWG3TpXLs91HdUTBo="
+          "hash": "LGb9RUp43BUTs11eNi7FbD1orGRfbEX7wGs2e2Uu8e4="
         }
       },
       "is_incremental": false,
@@ -3549,7 +3537,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.Adapters.html",
-          "hash": "xV3ezNhn+zz9AQ6M21W5LoSLwSxlPOyNr8wHVzMt/v4="
+          "hash": "8Vjb+VgJMMXrKFqkQ525OmMbPhzobHSwqToMK24it1s="
         }
       },
       "is_incremental": false,
@@ -3561,7 +3549,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.IJsonApiReader.html",
-          "hash": "SjErHZY9cahgx9iGse59AW9HrmloBc9gvu0x9QwBdeg="
+          "hash": "PG+atOZqHSLf7C3RAYcHwto1G4bbXvgGoGj6mdf+RTI="
         }
       },
       "is_incremental": false,
@@ -3573,7 +3561,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.JsonApiReader.html",
-          "hash": "R55+H4qsF2R1wRq7r+/s+nYW0OK19gvLJEojg2QzP2s="
+          "hash": "uLzsIiBqoT6ffi6PDFTFbUvtm9LM7WXB9O4OKJmChrY="
         }
       },
       "is_incremental": false,
@@ -3597,7 +3585,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Request.html",
-          "hash": "y4IQ9iuQr4snfbWr0TSjthNTHUIw32BoT9CiTJJBzXU="
+          "hash": "+XQMFxVzz0rBxSbe+xf0luI4p+XU+TXKnAbNo04jU/c="
         }
       },
       "is_incremental": false,
@@ -3657,7 +3645,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Response.ILinkBuilder.html",
-          "hash": "q41G+WShVOvMw0JvegSkchqds0afokqbTB7fj48ntGU="
+          "hash": "YDI26dSVhvtBhvL+KuazTJs+VmWaLxw9KybNkvh0cFA="
         }
       },
       "is_incremental": false,
@@ -3693,7 +3681,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Response.IResponseModelAdapter.html",
-          "hash": "mYOit8R2XoZdz13FLQMKavXMA+6tPbcjmpqT8THZIpc="
+          "hash": "mXDDeKJ8UINIP/iMecL57aIsZRV7R7pQUskX+SJIU5Q="
         }
       },
       "is_incremental": false,
@@ -3717,7 +3705,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Response.LinkBuilder.html",
-          "hash": "r4y1rbmgblbMUYB6wCrZHi14+6nrZDqab5gxB8LiY/M="
+          "hash": "xybkBq+vzi76Q3SIWXdutDgOxltPCzn4y95AoIkPa04="
         }
       },
       "is_incremental": false,
@@ -3741,7 +3729,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Serialization.Response.ResponseModelAdapter.html",
-          "hash": "F9bWFHQBNhyFXW3t4+o2DKKc0QyHo82RePWNmrCNpn4="
+          "hash": "SrkxOV9Sv+KdIIv+E67N6P435FBSqKaWw+/yXCn7vYQ="
         }
       },
       "is_incremental": false,
@@ -3933,7 +3921,7 @@
       "output": {
         ".html": {
           "relative_path": "api/JsonApiDotNetCore.Services.JsonApiResourceService-2.html",
-          "hash": "4IY8ENxZq43WgLL/ppGTgDhAgh6Ttu6vUfGdX9W3LAM="
+          "hash": "gGMLshhcs3huD9cDW2BjRbQoFid3eRxg2pVIQ996p3k="
         }
       },
       "is_incremental": false,
@@ -3969,7 +3957,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "mliNEbFZXUE31mEPt7afmyv15wtiRLOG0hkvPbSJWMk="
+          "hash": "dJt+Yvc22/5Y+wNH9zFVbTwBX05NSZHVBMYU+ak9PCE="
         }
       },
       "is_incremental": false,
@@ -4037,7 +4025,7 @@
       "output": {
         ".html": {
           "relative_path": "getting-started/step-by-step.html",
-          "hash": "E4sDgz4BmF8Of+aJVkjfyjPfu0BNfgAHNcFkLxiG8Is="
+          "hash": "klPvqzmTeicE1ep5Nt0+Jh05ykSCUZD96C5DnTDm9z8="
         }
       },
       "is_incremental": false,
@@ -4073,7 +4061,7 @@
       "output": {
         ".html": {
           "relative_path": "internals/queries.html",
-          "hash": "C3XmfoSJrOhjlMRPzVGxdL7q0jLs7n0O/jIgdNtQIPk="
+          "hash": "bPE4XnaV1GJrf4bJTaXHrFuq3UpmkCC23G8UHts2ZTo="
         }
       },
       "is_incremental": false,
@@ -4157,7 +4145,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/controllers.html",
-          "hash": "Vei98rPO6LV+Mx3e46aWvlYek5gFdg5TxgLRyzgyM/0="
+          "hash": "0VRgyG3wxUE3/fEZKeaJGPWXyECUk4RYfjLq20igkjI="
         }
       },
       "is_incremental": false,
@@ -4217,7 +4205,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/resource-definitions.html",
-          "hash": "WxFnB4FClDbnFNyhE0yn2AyCUjg6NmKfnRZqZMGeR5c="
+          "hash": "wdXrh8pd8lcH5lLpNznZVB2ZB4hOYJn2pXdFMztsfgo="
         }
       },
       "is_incremental": false,
@@ -4229,7 +4217,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/extensibility/services.html",
-          "hash": "ahQluJphfRf6nDjP2admS9xRuFDrU+RzzxcFAX6qEgA="
+          "hash": "VmO/Cll2cgPv19lD1ZmYEL6nO7EtgFA2RAG2+N6QwhE="
         }
       },
       "is_incremental": false,
@@ -4265,7 +4253,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/options.html",
-          "hash": "JZRYkC7kdqVd5K3r4mVGcb+x7CIU5MvRbwdcPbcIZ40="
+          "hash": "/sp1NI+FO7iW3FRysjpp4BMZCEhG4FIYCjhs3X59lfE="
         }
       },
       "is_incremental": false,
@@ -4369,11 +4357,23 @@
     },
     {
       "type": "Conceptual",
+      "source_relative_path": "usage/resources/nullability.md",
+      "output": {
+        ".html": {
+          "relative_path": "usage/resources/nullability.html",
+          "hash": "1FYlx7uxYi0d4SvtVgzKz6dOC04FnNJdHKw1dId2xmo="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
       "source_relative_path": "usage/resources/relationships.md",
       "output": {
         ".html": {
           "relative_path": "usage/resources/relationships.html",
-          "hash": "ZviV8UDfHrGwOOrcsA6nepBY2cnZwgERTGlvNrE5X2o="
+          "hash": "XU4Ktbae9G+sILWGeA/LgJ02hHtYHLD0NmYpog8KbYk="
         }
       },
       "is_incremental": false,
@@ -4385,7 +4385,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/routing.html",
-          "hash": "69czer9Ugp8wDHDtMWN3m2LQqik7ObHCmv/M5HB1PA8="
+          "hash": "IcIYszGwdq99GIga5zy3VZNUN/ZUS6HKJK87/7p78zI="
         }
       },
       "is_incremental": false,
@@ -4397,7 +4397,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/toc.html",
-          "hash": "NK34GIxNQ1+fi5wsjKP9u/KoRSJkpfYYhIATx+/tts8="
+          "hash": "W7pHapK4pN2OSu5rQHXwNJIp3RqcBop9WuBcGq1lJmM="
         }
       },
       "is_incremental": false,
@@ -4409,7 +4409,7 @@
       "output": {
         ".html": {
           "relative_path": "usage/writing/bulk-batch-operations.html",
-          "hash": "4WJYdVDtaOZhm0oarPKl1iP8KaR+Jjqmwc8YgoIiLbM="
+          "hash": "bppRyYAzk8OWKZjyaaRJLHx1T6fMpT02fc74hfMXGBU="
         }
       },
       "is_incremental": false,
@@ -4466,13 +4466,13 @@
         "ConceptualDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 34,
+          "total_file_count": 35,
           "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 328,
+          "total_file_count": 327,
           "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {

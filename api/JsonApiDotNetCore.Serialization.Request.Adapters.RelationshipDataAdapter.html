@@ -81,7 +81,7 @@ resource.</p>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.html">BaseDataAdapter</a></div>
+    <div class="level1"><a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html">BaseAdapter</a></div>
     <div class="level2"><span class="xref">RelationshipDataAdapter</span></div>
   </div>
   <div classs="implements">
@@ -91,13 +91,16 @@ resource.</p>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseDataAdapter_AssertHasData__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseDataAdapter.AssertHasData&lt;T&gt;(SingleOrManyData&lt;T&gt;, RequestAdapterState)</a>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseAdapter_AssertHasData__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseAdapter.AssertHasData&lt;T&gt;(SingleOrManyData&lt;T&gt;, RequestAdapterState)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseDataAdapter_AssertHasSingleValue__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseDataAdapter.AssertHasSingleValue&lt;T&gt;(SingleOrManyData&lt;T&gt;, Boolean, RequestAdapterState)</a>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseAdapter_AssertDataHasSingleValue__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__System_Boolean_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseAdapter.AssertDataHasSingleValue&lt;T&gt;(SingleOrManyData&lt;T&gt;, Boolean, RequestAdapterState)</a>
     </div>
     <div>
-      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseDataAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseDataAdapter_AssertHasManyValue__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseDataAdapter.AssertHasManyValue&lt;T&gt;(SingleOrManyData&lt;T&gt;, RequestAdapterState)</a>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseAdapter_AssertDataHasManyValue__1_JsonApiDotNetCore_Serialization_Objects_SingleOrManyData___0__JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseAdapter.AssertDataHasManyValue&lt;T&gt;(SingleOrManyData&lt;T&gt;, RequestAdapterState)</a>
+    </div>
+    <div>
+      <a class="xref" href="JsonApiDotNetCore.Serialization.Request.Adapters.BaseAdapter.html#JsonApiDotNetCore_Serialization_Request_Adapters_BaseAdapter_AssertObjectIsNotNull__1___0_JsonApiDotNetCore_Serialization_Request_Adapters_RequestAdapterState_">BaseAdapter.AssertObjectIsNotNull&lt;T&gt;(T, RequestAdapterState)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -125,7 +128,7 @@ resource.</p>
   <h6><strong>Assembly</strong>: JsonApiDotNetCore.dll</h6>
   <h5 id="JsonApiDotNetCore_Serialization_Request_Adapters_RelationshipDataAdapter_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class RelationshipDataAdapter : BaseDataAdapter, IRelationshipDataAdapter</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class RelationshipDataAdapter : BaseAdapter, IRelationshipDataAdapter</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>

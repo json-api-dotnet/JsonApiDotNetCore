@@ -196,9 +196,10 @@ This is helpful when you implement (a subset of) the resource interfaces and wan
 </code></pre><p>Then in the controller, you should inherit from the base controller and pass the services into the named, optional base parameters:</p>
 <pre><code class="lang-c#">public class ArticlesController : BaseJsonApiController&lt;Article, int&gt;
 {
-    public ArticlesController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        ICreateService&lt;Article, int&gt; create, IDeleteService&lt;Article, int&gt; delete)
-        : base(options, loggerFactory, create: create, delete: delete)
+    public ArticlesController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, ICreateService&lt;Article, int&gt; create,
+        IDeleteService&lt;Article, int&gt; delete)
+        : base(options, resourceGraph, loggerFactory, create: create, delete: delete)
     {
     }
 

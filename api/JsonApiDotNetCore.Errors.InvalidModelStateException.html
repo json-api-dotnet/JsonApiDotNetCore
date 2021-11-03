@@ -73,7 +73,7 @@
   
   <h1 id="JsonApiDotNetCore_Errors_InvalidModelStateException" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException" class="text-break">Class InvalidModelStateException
   </h1>
-  <div class="markdown level0 summary"><p>The error that is thrown when model state validation fails.</p>
+  <div class="markdown level0 summary"><p>The error that is thrown when ASP.NET ModelState validation fails.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -161,18 +161,18 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateDictionary_System_Type_System_Boolean_System_Text_Json_JsonNamingPolicy_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.InvalidModelStateException.%23ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary%2CSystem.Type%2CSystem.Boolean%2CSystem.Text.Json.JsonNamingPolicy)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateEntry__System_Type_System_Boolean_JsonApiDotNetCore_Configuration_IResourceGraph_System_Func_System_Type_System_Int32_System_Type__.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.InvalidModelStateException.%23ctor(System.Collections.Generic.IReadOnlyDictionary%7BSystem.String%2CMicrosoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry%7D%2CSystem.Type%2CSystem.Boolean%2CJsonApiDotNetCore.Configuration.IResourceGraph%2CSystem.Func%7BSystem.Type%2CSystem.Int32%2CSystem.Type%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L22">View Source</a>
+    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L23">View Source</a>
   </span>
   <a id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateDictionary_System_Type_System_Boolean_System_Text_Json_JsonNamingPolicy_" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary,System.Type,System.Boolean,System.Text.Json.JsonNamingPolicy)">InvalidModelStateException(ModelStateDictionary, Type, Boolean, JsonNamingPolicy)</h4>
+  <h4 id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IReadOnlyDictionary_System_String_Microsoft_AspNetCore_Mvc_ModelBinding_ModelStateEntry__System_Type_System_Boolean_JsonApiDotNetCore_Configuration_IResourceGraph_System_Func_System_Type_System_Int32_System_Type__" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IReadOnlyDictionary{System.String,Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry},System.Type,System.Boolean,JsonApiDotNetCore.Configuration.IResourceGraph,System.Func{System.Type,System.Int32,System.Type})">InvalidModelStateException(IReadOnlyDictionary&lt;String, ModelStateEntry&gt;, Type, Boolean, IResourceGraph, Func&lt;Type, Int32, Type&gt;)</h4>
   <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InvalidModelStateException(ModelStateDictionary modelState, Type resourceClrType, bool includeExceptionStackTraceInErrors, JsonNamingPolicy namingPolicy)</code></pre>
+    <pre><code class="lang-csharp hljs">public InvalidModelStateException(IReadOnlyDictionary&lt;string, ModelStateEntry&gt; modelState, Type modelType, bool includeExceptionStackTraceInErrors, IResourceGraph resourceGraph, Func&lt;Type, int, Type&gt; getCollectionElementTypeCallback = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,13 +185,13 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary</span></td>
+        <td><span class="xref">System.Collections.Generic.IReadOnlyDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateEntry</span>&gt;</td>
         <td><span class="parametername">modelState</span></td>
         <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Type</span></td>
-        <td><span class="parametername">resourceClrType</span></td>
+        <td><span class="parametername">modelType</span></td>
         <td></td>
       </tr>
       <tr>
@@ -200,50 +200,13 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Text.Json.JsonNamingPolicy</span></td>
-        <td><span class="parametername">namingPolicy</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Controllers_ModelStateViolation__System_Boolean_System_Text_Json_JsonNamingPolicy_.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.InvalidModelStateException.%23ctor(System.Collections.Generic.IEnumerable%7BJsonApiDotNetCore.Controllers.ModelStateViolation%7D%2CSystem.Boolean%2CSystem.Text.Json.JsonNamingPolicy)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L28">View Source</a>
-  </span>
-  <a id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor*"></a>
-  <h4 id="JsonApiDotNetCore_Errors_InvalidModelStateException__ctor_System_Collections_Generic_IEnumerable_JsonApiDotNetCore_Controllers_ModelStateViolation__System_Boolean_System_Text_Json_JsonNamingPolicy_" data-uid="JsonApiDotNetCore.Errors.InvalidModelStateException.#ctor(System.Collections.Generic.IEnumerable{JsonApiDotNetCore.Controllers.ModelStateViolation},System.Boolean,System.Text.Json.JsonNamingPolicy)">InvalidModelStateException(IEnumerable&lt;ModelStateViolation&gt;, Boolean, JsonNamingPolicy)</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public InvalidModelStateException(IEnumerable&lt;ModelStateViolation&gt; violations, bool includeExceptionStackTraceInErrors, JsonNamingPolicy namingPolicy)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="JsonApiDotNetCore.Controllers.ModelStateViolation.html">ModelStateViolation</a>&gt;</td>
-        <td><span class="parametername">violations</span></td>
+        <td><a class="xref" href="JsonApiDotNetCore.Configuration.IResourceGraph.html">IResourceGraph</a></td>
+        <td><span class="parametername">resourceGraph</span></td>
         <td></td>
       </tr>
       <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">includeExceptionStackTraceInErrors</span></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Text.Json.JsonNamingPolicy</span></td>
-        <td><span class="parametername">namingPolicy</span></td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Type</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Type</span>&gt;</td>
+        <td><span class="parametername">getCollectionElementTypeCallback</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -263,7 +226,7 @@ public sealed class InvalidModelStateException : JsonApiException, ISerializable
                     <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/new/master/apiSpec/new?filename=JsonApiDotNetCore_Errors_InvalidModelStateException.md&amp;value=---%0Auid%3A%20JsonApiDotNetCore.Errors.InvalidModelStateException%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/json-api-dotnet/JsonApiDotNetCore/blob/master/src/JsonApiDotNetCore/Errors/InvalidModelStateException.cs/#L20" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

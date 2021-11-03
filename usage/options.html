@@ -125,8 +125,10 @@ options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 options.SerializerOptions.PropertyNamingPolicy = null;
 options.SerializerOptions.DictionaryKeyPolicy = null;
 </code></pre><p>Because we copy resource properties into an intermediate object before serialization, JSON annotations such as <code>[JsonPropertyName]</code> and <code>[JsonIgnore]</code> on <code>[Attr]</code> properties are ignored.</p>
-<h2 id="enable-modelstate-validation">Enable ModelState Validation</h2>
-<p>If you would like to use ASP.NET Core ModelState validation into your controllers when creating / updating resources, set <code>ValidateModelState</code> to <code>true</code>. By default, no model validation is performed.</p>
+<h2 id="modelstate-validation">ModelState Validation</h2>
+<p><a href="https://docs.microsoft.com/en-us/aspnet/core/mvc/models/validation">ASP.NET ModelState validation</a> can be used to validate incoming request bodies when creating and updating resources. Since v5.0, this is enabled by default.
+When <code>ValidateModelState</code> is set to <code>false</code>, no model validation is performed.</p>
+<p>How nullability affects ModelState validation is described <a href="resources/nullability.html">here</a>.</p>
 <pre><code class="lang-c#">options.ValidateModelState = true;
 </code></pre><pre><code class="lang-c#">public class Person : Identifiable&lt;int&gt;
 {
@@ -134,6 +136,9 @@ options.SerializerOptions.DictionaryKeyPolicy = null;
     [Required]
     [MinLength(3)]
     public string FirstName { get; set; }
+
+    [Required]
+    public LoginAccount Account : get; set; }
 }
 </code></pre></article>
           </div>

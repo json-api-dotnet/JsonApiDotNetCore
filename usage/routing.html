@@ -90,9 +90,9 @@
 
 public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
 {
-    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;OrderLine, int&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, int&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
@@ -109,9 +109,9 @@ public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
 <pre><code class="lang-c#">[Route(&quot;v1/custom/route/lines-in-order&quot;), DisableRoutingConvention]
 public class OrderLineController : JsonApiController&lt;OrderLine, int&gt;
 {
-    public OrderLineController(IJsonApiOptions options, ILoggerFactory loggerFactory,
-        IResourceService&lt;OrderLine, int&gt; resourceService)
-        : base(options, loggerFactory, resourceService)
+    public OrderLineController(IJsonApiOptions options, IResourceGraph resourceGraph,
+        ILoggerFactory loggerFactory, IResourceService&lt;OrderLine, int&gt; resourceService)
+        : base(options, resourceGraph, loggerFactory, resourceService)
     {
     }
 }
