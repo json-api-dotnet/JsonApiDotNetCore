@@ -123,10 +123,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 
@@ -275,10 +275,10 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.ResourceDefin
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnDeserialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize),
-                (typeof(RecordCompany), ResourceDefinitionHitCounter.ExtensibilityPoint.OnSerialize)
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnDeserialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize),
+                (typeof(RecordCompany), ResourceDefinitionExtensibilityPoint.OnSerialize)
             }, options => options.WithStrictOrdering());
         }
 

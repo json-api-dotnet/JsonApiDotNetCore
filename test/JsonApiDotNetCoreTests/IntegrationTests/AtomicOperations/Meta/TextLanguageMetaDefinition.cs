@@ -9,17 +9,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
     {
         internal const string NoticeText = "See https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes for ISO 639-1 language codes.";
 
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.GetMeta;
 
-        public TextLanguageMetaDefinition(IResourceGraph resourceGraph, OperationsDbContext dbContext, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph, dbContext)
+        public TextLanguageMetaDefinition(IResourceGraph resourceGraph, ResourceDefinitionHitCounter hitCounter, OperationsDbContext dbContext)
+            : base(resourceGraph, hitCounter, dbContext)
         {
-            _hitCounter = hitCounter;
         }
 
         public override IDictionary<string, object?> GetMeta(TextLanguage resource)
         {
-            _hitCounter.TrackInvocation<TextLanguage>(ResourceDefinitionHitCounter.ExtensibilityPoint.GetMeta);
+            base.GetMeta(resource);
 
             return new Dictionary<string, object?>
             {

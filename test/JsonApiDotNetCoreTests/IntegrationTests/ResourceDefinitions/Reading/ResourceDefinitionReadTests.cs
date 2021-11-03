@@ -81,9 +81,12 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes)
             }, options => options.WithStrictOrdering());
         }
 
@@ -130,8 +133,17 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -178,10 +190,21 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -225,9 +248,15 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -278,9 +307,14 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyFilter),
-                (typeof(Planet), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Planet), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -323,10 +357,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -369,10 +409,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -403,10 +449,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -440,10 +494,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -478,10 +535,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -515,10 +575,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -552,10 +615,13 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyPagination),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySort),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet),
-                (typeof(Star), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplySparseFieldSet)
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Star), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -593,9 +659,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -643,9 +716,16 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes)
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyPagination),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyFilter),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySort),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplyIncludes),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnApplySparseFieldSet),
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.GetMeta)
             }, options => options.WithStrictOrdering());
         }
 
@@ -683,7 +763,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(Moon), ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters)
+                (typeof(Moon), ResourceDefinitionExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters)
             }, options => options.WithStrictOrdering());
         }
     }

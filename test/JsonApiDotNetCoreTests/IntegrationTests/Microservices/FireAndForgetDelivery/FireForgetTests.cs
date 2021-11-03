@@ -65,7 +65,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoint.OnWritingAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.Should().BeEmpty();
@@ -106,8 +106,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
 
             hitCounter.HitExtensibilityPoints.Should().BeEquivalentTo(new[]
             {
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync),
-                (typeof(DomainUser), ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync)
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoint.OnWritingAsync),
+                (typeof(DomainUser), ResourceDefinitionExtensibilityPoint.OnWriteSucceededAsync)
             }, options => options.WithStrictOrdering());
 
             messageBroker.SentMessages.ShouldHaveCount(1);

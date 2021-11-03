@@ -10,24 +10,24 @@ using Microsoft.Extensions.Primitives;
 namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-    public sealed class MoonDefinition : JsonApiResourceDefinition<Moon, int>
+    public sealed class MoonDefinition : HitCountingResourceDefinition<Moon, int>
     {
         private readonly IClientSettingsProvider _clientSettingsProvider;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
+
+        protected override ResourceDefinitionExtensibilityPoint ExtensibilityPointsToTrack => ResourceDefinitionExtensibilityPoint.Reading;
 
         public MoonDefinition(IResourceGraph resourceGraph, IClientSettingsProvider clientSettingsProvider, ResourceDefinitionHitCounter hitCounter)
-            : base(resourceGraph)
+            : base(resourceGraph, hitCounter)
         {
             // This constructor will be resolved from the container, which means
             // you can take on any dependency that is also defined in the container.
 
             _clientSettingsProvider = clientSettingsProvider;
-            _hitCounter = hitCounter;
         }
 
         public override IImmutableSet<IncludeElementExpression> OnApplyIncludes(IImmutableSet<IncludeElementExpression> existingIncludes)
         {
-            _hitCounter.TrackInvocation<Moon>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnApplyIncludes);
+            base.OnApplyIncludes(existingIncludes);
 
             if (!_clientSettingsProvider.IsMoonOrbitingPlanetAutoIncluded ||
                 existingIncludes.Any(include => include.Relationship.Property.Name == nameof(Moon.OrbitsAround)))
@@ -42,7 +42,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
 
         public override QueryStringParameterHandlers<Moon> OnRegisterQueryableHandlersForQueryStringParameters()
         {
-            _hitCounter.TrackInvocation<Moon>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnRegisterQueryableHandlersForQueryStringParameters);
+            base.OnRegisterQueryableHandlersForQueryStringParameters();
 
             return new QueryStringParameterHandlers<Moon>
             {

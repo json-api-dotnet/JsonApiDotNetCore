@@ -29,6 +29,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Creating
             testContext.ConfigureServicesAfterStartup(services =>
             {
                 services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
+
+                services.AddSingleton<ResourceDefinitionHitCounter>();
             });
 
             var options = (JsonApiOptions)testContext.Factory.Services.GetRequiredService<IJsonApiOptions>();

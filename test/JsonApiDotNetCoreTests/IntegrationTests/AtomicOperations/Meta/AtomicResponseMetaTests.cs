@@ -28,6 +28,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.AtomicOperations.Meta
             {
                 services.AddResourceDefinition<ImplicitlyChangingTextLanguageDefinition>();
 
+                services.AddSingleton<ResourceDefinitionHitCounter>();
                 services.AddSingleton<IResponseMeta, AtomicResponseMeta>();
             });
         }

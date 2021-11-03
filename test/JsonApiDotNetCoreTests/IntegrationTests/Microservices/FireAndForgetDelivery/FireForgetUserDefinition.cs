@@ -12,7 +12,6 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
     public sealed class FireForgetUserDefinition : MessagingUserDefinition
     {
         private readonly MessageBroker _messageBroker;
-        private readonly ResourceDefinitionHitCounter _hitCounter;
         private DomainUser? _userToDelete;
 
         public FireForgetUserDefinition(IResourceGraph resourceGraph, FireForgetDbContext dbContext, MessageBroker messageBroker,
@@ -20,12 +19,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             : base(resourceGraph, dbContext.Users, hitCounter)
         {
             _messageBroker = messageBroker;
-            _hitCounter = hitCounter;
         }
 
         public override async Task OnWritingAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWritingAsync);
+            await base.OnWritingAsync(user, writeOperation, cancellationToken);
 
             if (writeOperation == WriteOperationKind.DeleteResource)
             {
@@ -33,11 +31,11 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Microservices.FireAndForgetDel
             }
         }
 
-        public override Task OnWriteSucceededAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
+        public override async Task OnWriteSucceededAsync(DomainUser user, WriteOperationKind writeOperation, CancellationToken cancellationToken)
         {
-            _hitCounter.TrackInvocation<DomainUser>(ResourceDefinitionHitCounter.ExtensibilityPoint.OnWriteSucceededAsync);
+            await base.OnWriteSucceededAsync(user, writeOperation, cancellationToken);
 
-            return FinishWriteAsync(user, writeOperation, cancellationToken);
+            await FinishWriteAsync(user, writeOperation, cancellationToken);
         }
 
         protected override Task FlushMessageAsync(OutgoingMessage message, CancellationToken cancellationToken)
