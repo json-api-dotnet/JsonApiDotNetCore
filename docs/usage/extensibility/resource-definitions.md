@@ -223,7 +223,7 @@ _since v3_
 You can define additional query string parameters with the LINQ expression that should be used.
 If the key is present in a query string, the supplied LINQ expression will be added to the database query.
 
-Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of EF Core operators. 
+Note this directly influences the Entity Framework Core `IQueryable`. As opposed to using `OnApplyFilter`, this enables the full range of Entity Framework Core operators. 
 But it only works on primary resource endpoints (for example: /articles, but not on /blogs/1/articles or /blogs?include=articles).
 
 ```c#

@@ -20,7 +20,7 @@ public sealed class User : Identifiable<int>
 }
 ```
 
-This makes EF Core generate non-nullable columns. And model errors are returned when nullable fields are omitted.
+This makes Entity Framework Core generate non-nullable columns. And model errors are returned when nullable fields are omitted.
 
 # Reference types
 
@@ -28,7 +28,7 @@ When the [nullable reference types](https://docs.microsoft.com/en-us/dotnet/csha
 
 ## NRT turned off
 
-When NRT is turned off, use `[Required]` on required attributes and relationships. This makes EF Core generate non-nullable columns. And model errors are returned when required fields are omitted.
+When NRT is turned off, use `[Required]` on required attributes and relationships. This makes Entity Framework Core generate non-nullable columns. And model errors are returned when required fields are omitted.
 
 Example:
 
@@ -56,9 +56,9 @@ public sealed class Label : Identifiable<int>
 
 ## NRT turned on
 
-When NRT is turned on, use nullability annotations (?) on attributes and relationships. This makes EF Core generate non-nullable columns. And model errors are returned when non-nullable fields are omitted.
+When NRT is turned on, use nullability annotations (?) on attributes and relationships. This makes Entity Framework Core generate non-nullable columns. And model errors are returned when non-nullable fields are omitted.
 
-The [EF Core guidance on NRT](https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types) recommends to use constructor binding to initialize non-nullable properties, but JsonApiDotNetCore does not support that. For required navigation properties, it suggests to use a non-nullable property with a nullable backing field. JsonApiDotNetCore does not support that either. In both cases, just use the null-forgiving operator (!).
+The [Entity Framework Core guide on NRT](https://docs.microsoft.com/en-us/ef/core/miscellaneous/nullable-reference-types) recommends to use constructor binding to initialize non-nullable properties, but JsonApiDotNetCore does not support that. For required navigation properties, it suggests to use a non-nullable property with a nullable backing field. JsonApiDotNetCore does not support that either. In both cases, just use the null-forgiving operator (!).
 
 When ModelState validation is turned on, to-many relationships must be assigned an empty collection. Otherwise an error is returned when they don't occur in the request body.
 
