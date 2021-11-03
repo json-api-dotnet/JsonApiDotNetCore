@@ -106,7 +106,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
             responseDocument.Links.Last.Should().BeNull();
-            responseDocument.Links.Prev.Should().Be($"{HostPrefix}/blogPosts?foo=bar");
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
             responseDocument.Links.Next.Should().BeNull();
         }
 

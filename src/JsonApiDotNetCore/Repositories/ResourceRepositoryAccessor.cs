@@ -50,11 +50,10 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public async Task<int> CountAsync<TResource>(FilterExpression? topFilter, CancellationToken cancellationToken)
-            where TResource : class, IIdentifiable
+        public async Task<int> CountAsync(ResourceType resourceType, FilterExpression? filter, CancellationToken cancellationToken)
         {
-            dynamic repository = ResolveReadRepository(typeof(TResource));
-            return (int)await repository.CountAsync(topFilter, cancellationToken);
+            dynamic repository = ResolveReadRepository(resourceType);
+            return (int)await repository.CountAsync(filter, cancellationToken);
         }
 
         /// <inheritdoc />

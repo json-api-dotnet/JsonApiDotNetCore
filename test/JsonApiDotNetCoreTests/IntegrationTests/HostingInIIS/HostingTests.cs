@@ -49,8 +49,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 
@@ -117,8 +117,8 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.HostingInIIS
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.Related.Should().BeNull();
-            responseDocument.Links.First.Should().Be($"{HostPrefix}{route}");
-            responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
+            responseDocument.Links.Last.Should().Be(responseDocument.Links.Self);
             responseDocument.Links.Prev.Should().BeNull();
             responseDocument.Links.Next.Should().BeNull();
 

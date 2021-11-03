@@ -106,15 +106,18 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
-            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts = _fakers.BlogPost.Generate(5);
+
+            Blog otherBlog = _fakers.Blog.Generate();
+            otherBlog.Posts = _fakers.BlogPost.Generate(1);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
-                dbContext.Blogs.Add(blog);
+                dbContext.Blogs.AddRange(blog, otherBlog);
                 await dbContext.SaveChangesAsync();
             });
 
-            string route = $"/blogs/{blog.StringId}/posts?page[number]=2&page[size]=1";
+            string route = $"/blogs/{blog.StringId}/posts?page[number]=3&page[size]=1";
 
             // Act
             (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
@@ -123,14 +126,46 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
 
             responseDocument.Data.ManyValue.ShouldHaveCount(1);
-            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[1].StringId);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(blog.Posts[2].StringId);
 
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=5&page%5Bsize%5D=1");
+            responseDocument.Links.Prev.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=2&page%5Bsize%5D=1");
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=4&page%5Bsize%5D=1");
+        }
+
+        [Fact]
+        public async Task Can_paginate_in_secondary_resources_without_inverse_relationship()
+        {
+            // Arrange
+            WebAccount? account = _fakers.WebAccount.Generate();
+            account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Accounts.Add(account);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/webAccounts/{account.StringId}/loginAttempts?page[number]=2&page[size]=1";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
+
+            responseDocument.Links.ShouldNotBeNull();
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/loginAttempts?page%5Bsize%5D=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=3&page%5Bsize%5D=1");
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/webAccounts/{account.StringId}/loginAttempts?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -239,7 +274,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             Blog blog = _fakers.Blog.Generate();
-            blog.Posts = _fakers.BlogPost.Generate(2);
+            blog.Posts = _fakers.BlogPost.Generate(4);
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -261,9 +296,43 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bsize%5D=1");
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bnumber%5D=4&page%5Bsize%5D=1");
+            responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/relationships/posts?page%5Bnumber%5D=3&page%5Bsize%5D=1");
+        }
+
+        [Fact]
+        public async Task Can_paginate_OneToMany_relationship_on_relationship_endpoint_without_inverse_relationship()
+        {
+            // Arrange
+            WebAccount? account = _fakers.WebAccount.Generate();
+            account.LoginAttempts = _fakers.LoginAttempt.Generate(2);
+
+            await _testContext.RunOnDatabaseAsync(async dbContext =>
+            {
+                dbContext.Accounts.Add(account);
+                await dbContext.SaveChangesAsync();
+            });
+
+            string route = $"/webAccounts/{account.StringId}/relationships/loginAttempts?page[number]=2&page[size]=1";
+
+            // Act
+            (HttpResponseMessage httpResponse, Document responseDocument) = await _testContext.ExecuteGetAsync<Document>(route);
+
+            // Assert
+            httpResponse.Should().HaveStatusCode(HttpStatusCode.OK);
+
+            responseDocument.Data.ManyValue.ShouldHaveCount(1);
+            responseDocument.Data.ManyValue[0].Id.Should().Be(account.LoginAttempts[1].StringId);
+
+            string basePath = $"{HostPrefix}/webAccounts/{account.StringId}/relationships/loginAttempts";
+
+            responseDocument.Links.ShouldNotBeNull();
+            responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
+            responseDocument.Links.First.Should().Be(basePath + "?page%5Bsize%5D=1");
             responseDocument.Links.Last.Should().BeNull();
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().BeNull();
+            responseDocument.Links.Next.Should().Be(basePath + "?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -313,7 +382,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
         {
             // Arrange
             BlogPost post = _fakers.BlogPost.Generate();
-            post.Labels = _fakers.Label.Generate(2).ToHashSet();
+            post.Labels = _fakers.Label.Generate(4).ToHashSet();
 
             await _testContext.RunOnDatabaseAsync(async dbContext =>
             {
@@ -336,9 +405,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bsize%5D=1");
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bnumber%5D=4&page%5Bsize%5D=1");
             responseDocument.Links.Prev.Should().Be(responseDocument.Links.First);
-            responseDocument.Links.Next.Should().BeNull();
+            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogPosts/{post.StringId}/relationships/labels?page%5Bnumber%5D=3&page%5Bsize%5D=1");
         }
 
         [Fact]
@@ -465,9 +534,9 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.QueryStrings.Pagination
             responseDocument.Links.ShouldNotBeNull();
             responseDocument.Links.Self.Should().Be($"{HostPrefix}{route}");
             responseDocument.Links.First.Should().Be(responseDocument.Links.Self);
-            responseDocument.Links.Last.Should().BeNull();
+            responseDocument.Links.Last.Should().Be($"{HostPrefix}{route}?page%5Bnumber%5D=2");
             responseDocument.Links.Prev.Should().BeNull();
-            responseDocument.Links.Next.Should().Be($"{HostPrefix}/blogs/{blog.StringId}/posts?page%5Bnumber%5D=2");
+            responseDocument.Links.Next.Should().Be(responseDocument.Links.Last);
         }
 
         [Fact]

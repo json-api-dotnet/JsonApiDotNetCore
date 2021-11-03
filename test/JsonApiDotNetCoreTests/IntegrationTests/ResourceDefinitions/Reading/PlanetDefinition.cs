@@ -53,7 +53,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.ResourceDefinitions.Reading
                 FilterExpression hasNoPrivateName = new ComparisonExpression(ComparisonOperator.Equals, new ResourceFieldChainExpression(privateNameAttribute),
                     NullConstantExpression.Instance);
 
-                return existingFilter == null ? hasNoPrivateName : new LogicalExpression(LogicalOperator.And, hasNoPrivateName, existingFilter);
+                return LogicalExpression.Compose(LogicalOperator.And, hasNoPrivateName, existingFilter);
             }
 
             return existingFilter;

@@ -85,11 +85,11 @@ namespace JsonApiDotNetCore.Repositories
         }
 
         /// <inheritdoc />
-        public virtual async Task<int> CountAsync(FilterExpression? topFilter, CancellationToken cancellationToken)
+        public virtual async Task<int> CountAsync(FilterExpression? filter, CancellationToken cancellationToken)
         {
             _traceWriter.LogMethodStart(new
             {
-                topFilter
+                filter
             });
 
             using (CodeTimingSessionManager.Current.Measure("Repository - Count resources"))
@@ -98,7 +98,7 @@ namespace JsonApiDotNetCore.Repositories
 
                 var layer = new QueryLayer(resourceType)
                 {
-                    Filter = topFilter
+                    Filter = filter
                 };
 
                 IQueryable<TResource> query = ApplyQueryLayer(layer);

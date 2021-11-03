@@ -46,7 +46,7 @@ namespace JsonApiDotNetCore.Queries.Internal
         }
 
         /// <inheritdoc />
-        public FilterExpression? GetTopFilterFromConstraints(ResourceType primaryResourceType)
+        public FilterExpression? GetPrimaryFilterFromConstraints(ResourceType primaryResourceType)
         {
             ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
 
@@ -63,6 +63,75 @@ namespace JsonApiDotNetCore.Queries.Internal
             // @formatter:wrap_chained_method_calls restore
 
             return GetFilter(filtersInTopScope, primaryResourceType);
+        }
+
+        /// <inheritdoc />
+        public FilterExpression? GetSecondaryFilterFromConstraints<TId>(TId primaryId, HasManyAttribute hasManyRelationship)
+        {
+            ArgumentGuard.NotNull(hasManyRelationship, nameof(hasManyRelationship));
+
+            if (hasManyRelationship.InverseNavigationProperty == null)
+            {
+                return null;
+            }
+
+            RelationshipAttribute? inverseRelationship =
+                hasManyRelationship.RightType.FindRelationshipByPropertyName(hasManyRelationship.InverseNavigationProperty.Name);
+
+            if (inverseRelationship == null)
+            {
+                return null;
+            }
+
+            ExpressionInScope[] constraints = _constraintProviders.SelectMany(provider => provider.GetConstraints()).ToArray();
+
+            var secondaryScope = new ResourceFieldChainExpression(hasManyRelationship);
+
+            // @formatter:wrap_chained_method_calls chop_always
+            // @formatter:keep_existing_linebreaks true
+
+            FilterExpression[] filtersInSecondaryScope = constraints
+                .Where(constraint => secondaryScope.Equals(constraint.Scope))
+                .Select(constraint => constraint.Expression)
+                .OfType<FilterExpression>()
+                .ToArray();
+
+            // @formatter:keep_existing_linebreaks restore
+            // @formatter:wrap_chained_method_calls restore
+
+            FilterExpression? primaryFilter = GetFilter(Array.Empty<QueryExpression>(), hasManyRelationship.LeftType);
+            FilterExpression? secondaryFilter = GetFilter(filtersInSecondaryScope, hasManyRelationship.RightType);
+
+            FilterExpression inverseFilter = GetInverseRelationshipFilter(primaryId, hasManyRelationship, inverseRelationship);
+
+            return LogicalExpression.Compose(LogicalOperator.And, inverseFilter, primaryFilter, secondaryFilter);
+        }
+
+        private static FilterExpression GetInverseRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
+            RelationshipAttribute inverseRelationship)
+        {
+            return inverseRelationship is HasManyAttribute hasManyInverseRelationship
+                ? GetInverseHasManyRelationshipFilter(primaryId, relationship, hasManyInverseRelationship)
+                : GetInverseHasOneRelationshipFilter(primaryId, relationship, (HasOneAttribute)inverseRelationship);
+        }
+
+        private static FilterExpression GetInverseHasOneRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
+            HasOneAttribute inverseRelationship)
+        {
+            AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
+            var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(inverseRelationship, idAttribute));
+
+            return new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!.ToString()!));
+        }
+
+        private static FilterExpression GetInverseHasManyRelationshipFilter<TId>(TId primaryId, HasManyAttribute relationship,
+            HasManyAttribute inverseRelationship)
+        {
+            AttrAttribute idAttribute = GetIdAttribute(relationship.LeftType);
+            var idChain = new ResourceFieldChainExpression(ImmutableArray.Create<ResourceFieldAttribute>(idAttribute));
+            var idComparison = new ComparisonExpression(ComparisonOperator.Equals, idChain, new LiteralConstantExpression(primaryId!.ToString()!));
+
+            return new HasExpression(new ResourceFieldChainExpression(inverseRelationship), idComparison);
         }
 
         /// <inheritdoc />
@@ -309,7 +378,7 @@ namespace JsonApiDotNetCore.Queries.Internal
                 filter = new AnyExpression(idChain, constants);
             }
 
-            return filter == null ? existingFilter : existingFilter == null ? filter : new LogicalExpression(LogicalOperator.And, filter, existingFilter);
+            return LogicalExpression.Compose(LogicalOperator.And, filter, existingFilter);
         }
 
         /// <inheritdoc />
@@ -419,8 +488,8 @@ namespace JsonApiDotNetCore.Queries.Internal
             ArgumentGuard.NotNull(expressionsInScope, nameof(expressionsInScope));
             ArgumentGuard.NotNull(resourceType, nameof(resourceType));
 
-            ImmutableArray<FilterExpression> filters = expressionsInScope.OfType<FilterExpression>().ToImmutableArray();
-            FilterExpression? filter = filters.Length > 1 ? new LogicalExpression(LogicalOperator.And, filters) : filters.FirstOrDefault();
+            FilterExpression[] filters = expressionsInScope.OfType<FilterExpression>().ToArray();
+            FilterExpression? filter = LogicalExpression.Compose(LogicalOperator.And, filters);
 
             return _resourceDefinitionAccessor.OnApplyFilter(resourceType, filter);
         }

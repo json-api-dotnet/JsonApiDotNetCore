@@ -48,7 +48,7 @@ namespace JsonApiDotNetCoreTests.IntegrationTests.Archiving
 
                     FilterExpression isUnarchived = new ComparisonExpression(ComparisonOperator.Equals, archivedAtChain, NullConstantExpression.Instance);
 
-                    return existingFilter == null ? isUnarchived : new LogicalExpression(LogicalOperator.And, existingFilter, isUnarchived);
+                    return LogicalExpression.Compose(LogicalOperator.And, existingFilter, isUnarchived);
                 }
             }
 
