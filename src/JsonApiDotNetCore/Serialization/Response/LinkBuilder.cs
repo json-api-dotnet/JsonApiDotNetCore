@@ -114,6 +114,7 @@ namespace JsonApiDotNetCore.Serialization.Response
 
         private string GetLinkForTopLevelSelf()
         {
+            // Note: in tests, this does not properly escape special characters due to WebApplicationFactory short-circuiting.
             return _options.UseRelativeLinks ? HttpContext.Request.GetEncodedPathAndQuery() : HttpContext.Request.GetEncodedUrl();
         }
 
@@ -223,13 +224,7 @@ namespace JsonApiDotNetCore.Serialization.Response
                 parameters[PageNumberParameterName] = pageOffset.ToString();
             }
 
-            string queryStringValue = QueryString.Create(parameters).Value ?? string.Empty;
-            return DecodeSpecialCharacters(queryStringValue);
-        }
-
-        private static string DecodeSpecialCharacters(string uri)
-        {
-            return uri.Replace("%5B", "[").Replace("%5D", "]").Replace("%27", "'").Replace("%3A", ":");
+            return QueryString.Create(parameters).Value ?? string.Empty;
         }
 
         /// <inheritdoc />
